@@ -29,7 +29,8 @@ def set_occupancy(atoms, site, symbol, concentration):
     # get the spacegroup
     sg = get_spacegroup(atoms)
     # get the number of unique sites
-    sites = sg.unique_sites(atoms.positions)
+    #sites = sg.unique_sites(atoms.positions)
+    sites = atoms.get_scaled_positions()
     n = len(sites)
     if site >= n:
         raise ValueError(f"The site number should be <= {n:d}")
@@ -44,7 +45,8 @@ def set_occupancy(atoms, site, symbol, concentration):
 def get_occupancy(atoms):
     occupancy = atoms.info.get('occupancy', {})
     sg = get_spacegroup(atoms)
-    sites = sg.unique_sites(atoms.get_scaled_positions())
+    #sites = sg.unique_sites(atoms.get_scaled_positions())
+    sites = atoms.get_scaled_positions()
     for site in range(len(sites)):
         site_occ = occupancy.get(site, {})
         if not site_occ:

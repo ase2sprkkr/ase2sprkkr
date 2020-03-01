@@ -21,8 +21,6 @@ from ase.calculators.calculator import FileIOCalculator
 from .misc import LOGGER
 from .calcio import InputFile, PotFile
 
-
-
 class SPRKKR(FileIOCalculator):
     command = 'kkrscf < kkr.inp > kkr.out'
     implemented_properties = []

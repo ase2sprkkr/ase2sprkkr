@@ -112,13 +112,21 @@ class InputFile(object):
         tau_section = Section("TAU")
         tau_section.add_variables(
             Variable("BZINT", default="POINTS", always_show=True),
-            Variable("NKTAB", fmt="{:d}", default=300, always_show=True)
+            Variable("NKTAB", fmt="{:d}", default=250, always_show=True)
             )
 
+        scf_section=Section("SCF")
+        scf_section.add_variables(
+            Variable("NITER",fmt="{:d}",default=200,always_show=True),
+            Variable("MIX",fmt="{:f}",default=0.05,always_show=True),
+            Variable("VXC",fmt="{}",default="VWN",always_show=True),
+            Variable("TOL",fmt="{:f}",default=0.00001,always_show=True), 
+            Variable("ISTBRY",fmt="{:d}",default=1,always_show=True) )
 
         self.sections = OrderedDict({
                         "control": control_section, 
                          "tau"    : tau_section,
+                         "scf":scf_section,
                          "sites"  : sites_section})
         for key, section in self.sections.items():
             setattr(self, key + "_section", section)
@@ -149,10 +157,6 @@ class InputFile(object):
             s += "\n"
 
         return s
-
-
-
-
 
 class LatticeData(object):
     sym = OrderedDict({
@@ -192,7 +196,9 @@ class SiteData(object):
     def __init__(self, coords, occupancy=[]):
         self.x, self.y, self.z = coords
         self.occupancy = occupancy
-        self.noq = len(occupancy)
+        self.noq = len(occupancy) 
+        self.irefq=1
+        self.imq=1
         self.qmtet = 0.
         self.qmphi = 0.
         self.__class__.SITES_LIST.append(self)
@@ -257,29 +263,33 @@ class ExponentialMeshData(MeshData):
 
 
 class PotFile(object):
-    VERSION_STRING = "VERSION  3  (13.11.2000)"
+    VERSION_STRING = "6  (21.05.2007)"
 
     def __init__(self, atoms, filename=None, title=None, system=None):
         self.filename = filename
         self.atoms = atoms
         self.title = None
-
         self.system = system
         if system is None:
             self.system = atoms.get_chemical_formula()
+        self.package='SPRKKR'
         
         self.nm = 1
         self.nq = 1
         self.nt = 2
         self.ns = 2
         self.ne = 30
-        self.irel = 2
+        self.irel = 3
         self.ibzint = 2
         self.nktab = 0
-
+        self.scf_status='START'
         self.info = None
         self.xc_pot = "VWM"
         self.scf_alg = "BROYDEN2"
+        self.fullpot=False
+        self.nonmag=False
+        self.semicore=False
+        self.lloyd='F'
         self.scf_iter = 0
         self.scf_mix = 2e-1
         self.scf_tol = 1e-5
@@ -289,27 +299,51 @@ class PotFile(object):
         self.blcoupl = False
         self.bext = 0.
         self.kmrot = 0
+        self.rmsavv=999999.
+        self.rmsavb=999999.
+        
         self.qmvec = np.array([0,0,0])
-        self.ef = 0
+        self.ef = 999999.
+        self.vmtz=0.7
+        self.cartesian=True
+        self.basscale = np.array([1.0,1.0,1.0])
+        
+        self.vref=4.0000
+        self.rmtref=0.00000
 
+        self.tabncore=[0,0,0,2,2,2,2,2,2,2,2,10,10,10,10,10,10,10,10,18,18,
+                       18,18,18,18,18,18,18,18,18,28,28,28,28,28,28,28,36,
+                       36,36,36,36,36,36,36,36,36,36,46,46,46,46,46,46,46,
+                       54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,
+                       68,68,68,68,68,68,68,68,78,78,78,78,78,78,78,86,86,
+                       86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,86,
+                       86,86,86,86,86]
+
+        # create lattice, mesh, site and types from ase.atoms
         self.ld = LatticeData(atoms)
-        self.md = ExponentialMeshData()
         self.all_at = self.get_atom_types()
         self.all_sd = SiteData.get_sites()
 
+        self.nq=len(self.all_sd)
+        self.nt=len(self.all_at)
+
         # set the mesh to the atom types
+        self.md = ExponentialMeshData()
         for at in self.all_at:
             at.mesh = self.md
 
     def get_atom_types(self):
         atoms = self.atoms
         sg = get_spacegroup(atoms)
-        sites = sg.unique_sites(atoms.get_scaled_positions())
+#        sites = sg.unique_sites(atoms.get_scaled_positions())
+        sites = atoms.get_scaled_positions()
         occupancy = get_occupancy(atoms)
+        print(atoms)
         all_types = []
         for i, sitexyz in enumerate(sites):
             # create a SiteData object
-            sd = SiteData(sitexyz) 
+            sd = SiteData(sitexyz)
+            sd.noq=len(occupancy[i])
             for symbol, concentration in occupancy[i].items():
                 # create a TypeData object
                 td = TypeData(symbol, concentration, site=sd)
@@ -324,91 +358,124 @@ class PotFile(object):
 
     def __str__(self):
         separator = "*"*80 + "\n"
-        s  = 'SPRKKR    SCF-start data created by Python sprkkr package '
+        #**************************************************
+        s  = separator
+        s += 'HEADER    SCF-start data created by ase2sprkkr'
         s +=  datetime.now().ctime() + "\n"
-        s += "{:<10}{}\n".format("FORMAT", self.VERSION_STRING)
+        #**************************************************
+        s += separator
+        #**************************************************
         s += "{:<10s}{}\n".format("TITLE", self.title)
         s += "{:<10s}{}\n".format("SYSTEM", self.system)
-
-        s += "{:<18}{:>2d}\n".format("NM", self.nm)
+        s += "{:<10s}{}\n".format("PACKAGE", self.package)
+        s += "{:<10}{}\n".format("FORMAT", self.VERSION_STRING)
+        #**************************************************
+        s += separator
+        #**************************************************
+        s += "{}\n".format("GLOBAL SYSTEM PARAMETER")
         s += "{:<18}{:>2d}\n".format("NQ", self.nq)
         s += "{:<18}{:>2d}\n".format("NT", self.nt)
-        s += "{:<18}{:>2d}\n".format("NS", self.ns)
-        s += "{:<18}{:>2d}\n".format("NE", self.ne)
-        s += "{:<18}{:>2d}{:>8}\n".format("IREL", self.irel, "FREL")
+        s += "{:<18}{:>2d}\n".format("NM", self.nm)
+        s += "{:<18}{:>2d}\n".format("IREL", self.irel)
+        #**************************************************
+        s += separator
+        #**************************************************
+        s += "{}\n".format("SCF-INFO")
+        s += "{:<10}{}\n".format("INFO", "NONE" if self.info is None else self.info)
+        s += "{:<10}{}\n".format("SCFSTATUS",self.scf_status)  
+        s += "{:<10}{}\n".format("FULLPOT", "F" if not self.fullpot else "T")
+        s += "{:<12}{}\n".format("BREITINT", "F" if not self.breitint else "T")  
+        s += "{:<10}{}\n".format("NONMAG","F" if not self.nonmag else "T")
+        s += "{:<10}{}\n".format("ORBPOL", "NONE" if self.orbpol is None else
+                                self.orbpol)
+        s += "{:<12}{}\n".format("EXTFIELD", "F" if not self.extfield else "T")
+        s += "{:<12}{}\n".format("BLCOUPL", "F" if not self.blcoupl else "T")
+        s += "{:<18}{:1.10f}\n".format("BEXT", self.bext)  
+        s += "{:<10}{}\n".format("SEMICORE",self.semicore)
+        s += "{:<10}{}\n".format("LLOYD",self.lloyd)
+        s += "{:<18}{:>2d}\n".format("NE", self.ne)  
         s += "{:<18}{:>2d}\n".format("IBZINT", self.ibzint)
         s += "{:<18}{:>2d}\n".format("NKTAB", self.nktab)
-
-        s += "{:<10}{}\n".format("INFO", "NONE" if self.info is None else self.info)
         s += "{:<10}{}\n".format("XC-POT", self.xc_pot)
         s += "{:<10}{}\n".format("SCF-ALG", self.scf_alg)
         s += "{:<18}{:d}\n".format("SCF-ITER", self.scf_iter)
         s += "{:<18}{:1.10f}\n".format("SCF-MIX", self.scf_mix)
         s += "{:<18}{:1.10f}\n".format("SCF-TOL", self.scf_tol)
-
-        s += "{:<12}{}\n".format("BREITINT", "F" if not self.breitint else "T")
-        s += "{:<10}{}\n".format("ORBPOL", "NONE" if self.orbpol is None else
-                                 self.orbpol)
-        s += "{:<12}{}\n".format("EXTFIELD", "F" if not self.breitint else "T")
-        s += "{:<12}{}\n".format("BLCOUPL", "F" if not self.breitint else "T")
-        s += "{:<18}{:1.10f}\n".format("BEXT", self.bext)
-        s += "{:<18}{:>2d}\n".format("KMROT", self.kmrot)
-        s += ("{:<10}" + "{:>20.10f}"*3 + "\n").format("QMVEC", *self.qmvec)
+        s += "{:<18}{:1.10f}\n".format("RMSAVV", self.rmsavv)
+        s += "{:<18}{:1.10f}\n".format("RMSAVB", self.rmsavb)
         s += "{:<10}{:>20.10f}\n".format("EF", self.ef)
-
-
+        s += "{:<10}{:1.10f}\n".format("VMTZ", self.vmtz)
+        s += separator
+        #**************************************************
+        s += "{}\n".format("LATTICE")    
+        s += "{}\n".format("SYSDIM    3D")
+        s += "{}\n".format("SYSTYPE   BULK")
         desc = self.ld.bravais.longname
         pg = ""
         s += "{:<18}{:>2d}  {:>31}  {}  {}\n".format("BRAVAIS", 
              self.ld.bravais_number, desc, pg, self.ld.schoenflies_symbol)
-        s += "{:<18}{:>2d}\n".format("BASIS", self.ld.basis)
-        s += "{:<18}{:1.10f}\n".format("ALAT", self.ld.alat)
-        s += "{:<18}{:1.10f}\n".format("BOA", self.ld.boa)
-        s += "{:<18}{:1.10f}\n".format("COA", self.ld.coa)
+        s += "{:<12}{:1.10f}\n".format("ALAT", self.ld.alat)
         for i, row in enumerate(self.ld.rbas):
-            s += ("R-BAS A({:d})" + "{:>20.10f}" * 3 + "\n").format(i+1, *row)
-
+            s += ("A({:d})" + "{:>20.10f}" * 3 + "\n").format(i+1, *row)       
         s += separator
-
-        s += "MESH INFORMATION\n"
-        s += "MESH-TYPE {}\n".format(self.md.type.upper())
-        s += "MESH{:>16d}\n".format(self.md.id)
-        s += "{:<18s}{:1.10f}\n".format("RWS", self.md.rws)
-        s += "{:<18s}{:1.10f}\n".format("RMT", self.md.rmt)
-        s += "{}{:>17d}\n".format("JWS", self.md.jws)
-        s += "{}{:>17d}\n".format("JMT", self.md.jmt)
-        s += "{:<18s}{:1.10f}\n".format("R(1)", self.md.r_1)
-        s += "{:<18s}{:1.10f}\n".format("DX", self.md.dx)
-
-        s += separator
-    
-        s += "SITES{:>17d}\n".format(len(self.all_sd))
+        #**************************************************
+        s += "{}\n".format("SITES")       
+        s += "{:<12}{}\n".format("CARTESIAN", "F" if not self.cartesian else "T")
+        s += ("{:<10}" + "{:>15.10f}"*3 + "\n").format("BASSCALE", *self.basscale)
+        s += "{}\n".format("        IQ      QX              QY              QZ")
         for sd in self.all_sd:
-            s += ("{:>4d} Q= ({:>3.10f},{:>3.10f},{:>3.10f})"
-                  "   NOQ={:>3d}").format(sd.id, sd.x, sd.y, sd.z, sd.noq)
-            s += "  IT,CONC="
+            s += ("{:>10d}"+"{:>15.10f}"*3+"\n").format(sd.id, sd.x, sd.y, sd.z)
+        s += separator
+        #**************************************************
+        s += "{}\n".format("OCCUPATION")
+        s += "{}\n".format("        IQ     IREFQ       IMQ       NOQ  ITOQ  CONC")
+        for sd in self.all_sd:
+            s += ("{:>10d}"+
+                  "{:>10d}"*3).format(sd.id, sd.irefq,sd.imq,sd.noq)
             for at in sd.occupancy:
-                s += "{:>3d} {:1.3f}".format(at.id, at.concentration)
+                if at.site.id == sd.id:
+                    s += "{:>3d} {:1.3f}".format(at.id, at.concentration)
             s += "\n"
+        s += separator
+        #**************************************************
+        s += "{}\n".format("REFERENCE SYSTEM")    
+        s += "{:<18}{:>2d}\n".format("NREF", self.nm)
+        s += "{}\n".format("      IREF      VREF            RMTREF")
+        for iref in range(self.nm):
+            s += ("{:>10d}"+"{:>15.10f}"*2+"\n").format(iref+1, self.vref, self.rmtref)
+        s += separator
+        #**************************************************
+        s += "{}\n".format("MAGNETISATION DIRECTION")       
+        s += "{:<18}{:>2d}\n".format("KMROT", self.kmrot)
+        s += ("{:<10}" + "{:>15.10f}"*3 + "\n").format("QMVEC", *self.qmvec)
+        s += "{}\n".format("         IQ      QMTET           QMPHI")
         for sd in self.all_sd:
-            s += "{:>4d} QMTET = {:>5.10f} QMPHI = {:5.10f}\n".format(sd.id, 
+            s += "{:>10d} {:>15.10f} {:15.10f}\n".format(sd.id, 
                   sd.qmtet, sd.qmphi)
-
         s += separator
-
-        s += "MADELUNG MATRIX SMAD\n\n"
-
+        #**************************************************
+        s += "{}\n".format("MESH INFORMATION")       
+        s += "MESH-TYPE {}\n".format(self.md.type.upper())
+        s += "{}\n".format("   IM      R(1)            DX         JRMT      RMT        JRWS      RWS")
+        s += "{:>5d}".format(self.md.id)
+        s += "{:>18.10f}".format(self.md.r_1)
+        s += "{:>18.10f}".format(self.md.dx)
+        s += "{:>5d}".format(self.md.jmt)
+        s += "{:>18.10f}".format(self.md.rmt)
+        s += "{:>5d}".format(self.md.jws)
+        s += "{:>18.10f}\n".format(self.md.rws)
         s += separator
-
+        #**************************************************
+        s += "{}\n".format("TYPES")
+        s += "{}\n".format("   IT     TXTT        ZT     NCORT     NVALT    NSEMCORSHLT")
+       
         for iat, at in enumerate(self.all_at):
-            s += "TYPE{:>16d}\n".format(at.id)
-            s += "{}\n".format(at.symbol)
-            s += "Z{:>19d}\n".format(at.atomic_number)
-            s += "NAT{:>17d}\n".format(at.nat)
-            s += "CONC{:>26.10f}\n".format(at.concentration)
-            s += "MESH{:>16d}\n".format(at.mesh.id)
-            s += "SITES Q{:>13d}\n".format(at.site.id)
-            if iat < len(self.all_at) - 1:
-                s += separator
+            s += "{:>5d}".format(at.id)
+            s += "{:>9}".format(at.symbol)
+            s += "{:>10d}".format(at.atomic_number)
+            s += "{:>10d}".format(self.tabncore[at.atomic_number])
+            s += "{:>10d}".format(at.atomic_number-self.tabncore[at.atomic_number])
+            s += "{:>10d}\n".format(0)
+        s += separator
 
         return s
