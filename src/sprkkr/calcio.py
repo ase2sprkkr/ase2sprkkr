@@ -113,7 +113,7 @@ def make_sections(pars):
                 dim = len(item)
 
             else:
-                fmt = '{}'
+                fmt = '{:s}'
 
             var = Variable(key, default=item, fmt=fmt, dim=dim,
                            always_show=True)
@@ -122,6 +122,10 @@ def make_sections(pars):
         sections[name] = section
 
     return sections
+
+def compare_sections(s1, s2):
+    is_eq = {name : (section == s2[name]) for name, section in s1.items()}
+    return is_eq
 
 class Section(object):
     def __init__(self, name):
@@ -160,11 +164,23 @@ class Section(object):
                 s += " " * indent
             s += f" {variable}\n"
         return s
-        
+
+    def __eq__(self, other):
+        if len(self.variables) != len(other.variables):
+            return False
+
+        if len(self.switches) != len(other.switches):
+            return False
+
+        for ii, var in enumerate(self.variables):
+            if var != other.variables[ii]:
+                return False
+
+        return True
 
 class Variable(object):
-    def __init__(self, name, default=None, fmt="{:s}", dim=0, 
-                 always_show=False):
+    def __init__(self, name, default=None, fmt="{:s}", dim=0,
+                 always_show=True):
         self.name = name
         self.fmt = fmt
         self.dim = dim
@@ -199,6 +215,11 @@ class Variable(object):
             s = key + "=" + self.fmt.format(self.value)
         return s
 
+    def __eq__(self, other):
+        is_eq = ((self.name == other.name)
+                 and (self.value == other.value)
+                 and (self.dim == other.dim))
+        return is_eq
 
 class InputFile(object):
     def __init__(self, filename="test.inp"):
@@ -212,7 +233,7 @@ class InputFile(object):
 
         sites_section = Section("SITES")
         sites_section.add_variables(
-            Variable("NL", fmt="{:d}", default=3, dim=1, always_show=True))
+            Variable("NL", fmt="{:d}", default=[3], dim=1, always_show=True))
 
         tau_section = Section("TAU")
         tau_section.add_variables(
