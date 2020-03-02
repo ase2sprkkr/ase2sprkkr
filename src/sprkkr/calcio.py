@@ -76,6 +76,7 @@ def load_parameters(filename):
         items = section.split('\n')
         name = items[0].split()[0]
         items[0] = items[0].replace(name, '')
+        name = name.lower()
 
         # Parse section items.
         vals = OrderedDict()
