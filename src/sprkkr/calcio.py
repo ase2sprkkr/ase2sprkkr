@@ -10,6 +10,7 @@ Module calcio
 import numpy as np
 from datetime import datetime
 from collections import OrderedDict
+from ast import literal_eval
 
 from ase import Atom
 from ase.units import Bohr
@@ -17,10 +18,26 @@ from ase.spacegroup import get_spacegroup
 
 from .misc import LOGGER, get_occupancy
 
+_tr = str.maketrans('{}', '()')
+
 def _parse_value(val):
-    # WIP
-    val = val.strip()
-    return val
+    aux = val.strip().translate(_tr)
+    try:
+        out = literal_eval(aux)
+
+    except (ValueError, SyntaxError):
+        aux2 = aux.split()
+        if len(aux2) == 2: # Treat value with a unit.
+            try:
+                out = literal_eval(aux2[0])
+
+            except (ValueError, SyntaxError):
+                out = aux
+
+        else:
+            out = aux
+
+    return out
 
 def load_parameters(filename):
     """
@@ -81,7 +98,26 @@ def make_sections(pars):
     sections = OrderedDict()
     for name, vals in pars.items():
         section = Section(name)
-        section.set(**vals)
+
+        for key, item in vals.items():
+            dim = 0
+            if isinstance(item, int):
+                fmt = '{:d}'
+
+            elif isinstance(item, float):
+                fmt = '{:f}'
+
+            elif isinstance(item, tuple):
+                fmt = '{}'
+                dim = len(item)
+
+            else:
+                fmt = '{}'
+
+            var = Variable(key, default=item, fmt=fmt, dim=dim,
+                           always_show=True)
+            section.add_variables(var)
+
         sections[name] = section
 
     return sections
