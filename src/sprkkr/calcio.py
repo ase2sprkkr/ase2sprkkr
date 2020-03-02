@@ -18,7 +18,7 @@ from ase.spacegroup import get_spacegroup
 
 from .misc import LOGGER, get_occupancy
 
-_tr = str.maketrans('{}', '()')
+_tr = str.maketrans('{}', '[]')
 
 def _parse_value(val):
     aux = val.strip().translate(_tr)
@@ -108,7 +108,7 @@ def make_sections(pars):
             elif isinstance(item, float):
                 fmt = '{:f}'
 
-            elif isinstance(item, tuple):
+            elif isinstance(item, list):
                 fmt = '{}'
                 dim = len(item)
 
