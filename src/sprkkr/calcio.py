@@ -17,6 +17,74 @@ from ase.spacegroup import get_spacegroup
 
 from .misc import LOGGER, get_occupancy
 
+def _parse_value(val):
+    # WIP
+    val = val.strip()
+    return val
+
+def load_parameters(filename):
+    """
+    Load parameters.
+
+    Notes
+    -----
+    The following assumptions should hold:
+    - The section name is the first word on a line.
+    - The sections are separated by empty lines or comments.
+    - Each entry is on a separate line, with the exception of the first entry
+      following the section name.
+
+    Returns
+    -------
+    pars : dict
+        The parameters as {section_name : section_dict}. When a parameter takes
+        no value, the returned value is '@defined'.
+    """
+    with open(filename) as fd:
+        lines = fd.readlines()
+
+    # Replace comments.
+    lines = [line.strip() if not line.startswith('#') else ''
+             for line in lines]
+    # Split sections.
+    sections = '\n'.join(lines).split('\n\n')
+
+    # Parse sections.
+    pars = OrderedDict()
+    for section in sections:
+        section = section.strip()
+        if not len(section): continue
+
+        # Get section name.
+        items = section.split('\n')
+        name = items[0].split()[0]
+        items[0] = items[0].replace(name, '')
+
+        # Parse section items.
+        vals = OrderedDict()
+        for item in items:
+            aux = item.split('=')
+            key = aux[0].strip()
+            if len(aux) == 2: # item is key = value
+                val = _parse_value(aux[1])
+
+            else: # item is flag
+                val = '@defined'
+
+            vals[key] = val
+
+        pars[name] = vals
+
+    return pars
+
+def make_sections(pars):
+    sections = OrderedDict()
+    for name, vals in pars.items():
+        section = Section(name)
+        section.set(**vals)
+        sections[name] = section
+
+    return sections
 
 class Section(object):
     def __init__(self, name):
