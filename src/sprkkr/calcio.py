@@ -222,38 +222,31 @@ class Variable(object):
         return is_eq
 
 class InputFile(object):
-    def __init__(self, filename="test.inp"):
+    def __init__(self, filename="test.inp", defaults_filename=None):
         self.filename = filename
-        control_section = Section("CONTROL")
-        control_section.add_variables(
-            Variable("DATASET"),
-            Variable("ADSI"),
-            Variable("POTFIL"),
-            Variable("PRINT", fmt="{:d}", default=0))
+        self.set_defaults(filename=defaults_filename)
 
-        sites_section = Section("SITES")
-        sites_section.add_variables(
-            Variable("NL", fmt="{:d}", default=[3], dim=1, always_show=True))
+    def set_defaults(self, sections=None, filename=None):
+        if sections is not None:
+            self.sections = sections
 
-        tau_section = Section("TAU")
-        tau_section.add_variables(
-            Variable("BZINT", default="POINTS", always_show=True),
-            Variable("NKTAB", fmt="{:d}", default=250, always_show=True)
-            )
+        elif filename is not None:
+            pars = load_parameters(filename)
+            self.sections = make_sections(pars)
 
-        scf_section=Section("SCF")
-        scf_section.add_variables(
-            Variable("NITER",fmt="{:d}",default=200,always_show=True),
-            Variable("MIX",fmt="{:f}",default=0.05,always_show=True),
-            Variable("VXC",fmt="{}",default="VWN",always_show=True),
-            Variable("TOL",fmt="{:f}",default=0.00001,always_show=True), 
-            Variable("ISTBRY",fmt="{:d}",default=1,always_show=True) )
+        else: # Empty sections - to remove?
+            control_section = Section("CONTROL")
+            sites_section = Section("SITES")
+            tau_section = Section("TAU")
+            scf_section=Section("SCF")
 
-        self.sections = OrderedDict({
-                        "control": control_section, 
-                         "tau"    : tau_section,
-                         "scf":scf_section,
-                         "sites"  : sites_section})
+            self.sections = OrderedDict({
+                "control": control_section,
+                "tau"    : tau_section,
+                "scf"    : scf_section,
+                "sites"  : sites_section,
+            })
+
         for key, section in self.sections.items():
             setattr(self, key + "_section", section)
 
