@@ -17,6 +17,7 @@ from ase.units import Bohr
 from ase.spacegroup import get_spacegroup
 
 from .misc import LOGGER, get_occupancy
+from .data import get_sprkkr_input
 
 _tr = str.maketrans('{}', '[]')
 
@@ -39,7 +40,7 @@ def _parse_value(val):
 
     return out
 
-def load_parameters(filename):
+def load_parameters(lines):
     """
     Load parameters.
 
@@ -57,8 +58,8 @@ def load_parameters(filename):
         The parameters as {section_name : section_dict}. When a parameter takes
         no value, the returned value is '@defined'.
     """
-    with open(filename) as fd:
-        lines = fd.readlines()
+#    with open(filename) as fd:
+#        lines = fd.readlines()
 
     # Replace comments.
     lines = [line.strip() if not line.startswith('#') else ''
@@ -222,7 +223,7 @@ class Variable(object):
         return is_eq
 
 class InputFile(object):
-    def __init__(self, filename="test.inp", defaults_filename=None):
+    def __init__(self, filename="test.inp", defaults_filename=None,task='scf'):
         self.filename = filename
         self.set_defaults(filename=defaults_filename)
 
@@ -322,6 +323,8 @@ class SiteData(object):
         self.qmphi = 0.
         self.__class__.SITES_LIST.append(self)
         self.id = len(self.__class__.SITES_LIST)
+        self.itoq=0
+
 
     @classmethod
     def get_sites(cls):
@@ -335,23 +338,25 @@ class SiteData(object):
 class TypeData(object):
     TYPES_LIST = []
 
-    def __init__(self, symbol, concentration=1., site=None, mesh=None):
+    def __init__(self, symbol, concentration=1., iq=None,site=None, mesh=None,iqat=None):
         self.symbol = symbol
         self.atomic_number = Atom(symbol).number
         self.nat = 1
         self.concentration = concentration
         self.mesh = None
         self.site = site
+        self.iqat = iqat
         self.__class__.TYPES_LIST.append(self)
-        self.id = len(self.__class__.TYPES_LIST)
+        self.id = iq 
+        #len(self.__class__.TYPES_LIST)
 
     @classmethod
     def get_types(cls):
         return cls.TYPES_LIST
 
     def __repr__(self):
-        s = "<TypeData(\'{}\', id={:d}, concentration={:.4f}, site={:d})>".format(
-            self.symbol, self.id, self.concentration, self.site.id)
+        s = "<TypeData(\'{}\', id={:d}, concentration={:.4f}, site={:d},iqat={})>".format(
+            self.symbol, self.id, self.concentration, self.site.id,self.iqat)
         return s
 
 
@@ -443,8 +448,6 @@ class PotFile(object):
         self.all_at = self.get_atom_types()
         self.all_sd = SiteData.get_sites()
 
-        self.nq=len(self.all_sd)
-        self.nt=len(self.all_at)
 
         # set the mesh to the atom types
         self.md = ExponentialMeshData()
@@ -453,21 +456,71 @@ class PotFile(object):
 
     def get_atom_types(self):
         atoms = self.atoms
+#Use symmetry in order to find equivalet sites 
         sg = get_spacegroup(atoms)
-#        sites = sg.unique_sites(atoms.get_scaled_positions())
-        sites = atoms.get_scaled_positions()
+        unique_sites=sg.unique_sites(atoms.get_scaled_positions())
+        all_sites = atoms.get_scaled_positions()
         occupancy = get_occupancy(atoms)
-        print(atoms)
+        type_table=np.zeros(shape=(len(unique_sites),len(all_sites)),dtype=int)
+        tol=1e-5
+        iqat={}
+        iqref=[]
+        itoq={}
+        for i in range(len(all_sites)):
+            iqref.append(-1)
+        if len(unique_sites)!=len(all_sites):
+            LOGGER.info(f"==========================================")
+            LOGGER.info(f"Symmetry adaped list of types will be used")
+            LOGGER.info(f"==========================================")
+
+            for ui in range(len(unique_sites)):
+                su,k=sg.equivalent_sites(unique_sites[ui])
+                lst=[]
+                for i in range(len(su)):    
+                    for j in range(len(all_sites)):
+                        diff=np.abs(su[i]-all_sites[j])<=[tol,tol,tol]
+                        if diff.all():
+                            type_table[ui][j]=1
+                            lst.append(j)
+                            iqref[j]=ui
+                            if occupancy[j]!=occupancy[ui]:
+                                LOGGER.warning(f"\n OCCUPANCY NOT CONFORM WITH THE CRYSTAL SYMMETRY \n")
+                                LOGGER.warning(f"Occupation of SITE {j:d} will be taken from SITE {ui:d} \n")
+                                occupancy[j]=occupancy[ui]           
+                iqat[ui]=lst
+            LOGGER.info(f"Table of equivalent types \n \"{type_table}\"")
+        else:
+            for j in range(len(all_sites)):
+                type_table[j][j]=1
+                iqat[j]=[j]
+                iqref[j]=j
+#       
         all_types = []
-        for i, sitexyz in enumerate(sites):
-            # create a SiteData object
+        dsf={}
+        it=0
+
+        for ui in range(len(unique_sites)):
+            lsf=[]
+            for symbol, concentration in occupancy[ui].items():
+                lsf.append(it)
+                it=it+1
+            dsf[ui]=lsf
+        for i, sitexyz in enumerate(all_sites):
+            ui=iqref[i]
             sd = SiteData(sitexyz)
-            sd.noq=len(occupancy[i])
-            for symbol, concentration in occupancy[i].items():
-                # create a TypeData object
-                td = TypeData(symbol, concentration, site=sd)
+            sd.noq=len(occupancy[ui])
+            sd.itoq=ui
+            ll=0
+            lsf=dsf[ui]
+            for symbol, concentration in occupancy[ui].items():
+                td = TypeData(symbol, concentration,iq=i, site=lsf[ll],iqat=iqat[ui])
                 sd.occupancy.append(td)
                 all_types.append(td)
+                ll=ll+1
+        key_max = max(dsf.keys(), key=(lambda k: dsf[k]))
+        self.nq=len(all_sites)
+        self.nt=max(dsf[key_max])+1
+ 
         return all_types
         
     def write(self):
@@ -552,8 +605,8 @@ class PotFile(object):
             s += ("{:>10d}"+
                   "{:>10d}"*3).format(sd.id, sd.irefq,sd.imq,sd.noq)
             for at in sd.occupancy:
-                if at.site.id == sd.id:
-                    s += "{:>3d} {:1.3f}".format(at.id, at.concentration)
+                if at.id+1 == sd.id:
+                    s += "{:>3d} {:1.3f}".format(at.site+1,at.concentration)
             s += "\n"
         s += separator
         #**************************************************
@@ -588,13 +641,19 @@ class PotFile(object):
         s += "{}\n".format("TYPES")
         s += "{}\n".format("   IT     TXTT        ZT     NCORT     NVALT    NSEMCORSHLT")
        
+        itdone= [False for i in range(self.nt)]
+        
+        
         for iat, at in enumerate(self.all_at):
-            s += "{:>5d}".format(at.id)
-            s += "{:>9}".format(at.symbol)
-            s += "{:>10d}".format(at.atomic_number)
-            s += "{:>10d}".format(self.tabncore[at.atomic_number])
-            s += "{:>10d}".format(at.atomic_number-self.tabncore[at.atomic_number])
-            s += "{:>10d}\n".format(0)
+            if (not itdone[at.site]):
+                s += "{:>5d}".format(at.site+1)
+                s += "{:>9}".format(at.symbol)
+                s += "{:>10d}".format(at.atomic_number)
+                s += "{:>10d}".format(self.tabncore[at.atomic_number])
+                s += "{:>10d}".format(at.atomic_number-self.tabncore[at.atomic_number])
+                s += "{:>10d}\n".format(0)
+                itdone[at.site]=True
+                
         s += separator
 
         return s

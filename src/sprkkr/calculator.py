@@ -26,7 +26,7 @@ class SPRKKR(FileIOCalculator):
     implemented_properties = []
     
     def __init__(self, restart=None, ignore_bad_restart_file=False,
-                 label="kkr", atoms=None, **kwargs):    
+                 label="kkr", task='scf',atoms=None, **kwargs):    
         """
         Construct SPRKKR calculator.
 
@@ -38,10 +38,10 @@ class SPRKKR(FileIOCalculator):
         LOGGER.debug(f'Output directory is: {self.directory}')
         LOGGER.debug(f'Output prefix is   : {self.prefix}')
 
-        filename = os.path.join(self.directory, self.prefix + ".inp")
-        self.input = InputFile(filename)
         self.atoms = None
 
+        filename = os.path.join(self.directory, self.prefix + ".inp")
+        self.input = InputFile(filename,task)
 
     def set_atoms(self, atoms):
         self.atoms = atoms
@@ -64,7 +64,7 @@ class SPRKKR(FileIOCalculator):
         input_filename = os.path.abspath(self.input.filename)
         output_filename = input_filename.replace(".inp", ".out")
         pot_filename = os.path.abspath(os.path.join(self.directory, self.prefix + ".pot"))
-        self.command = "kkrscf < " + input_filename + " > " + output_filename
+        self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + input_filename + " > " + output_filename
         self.calculate(self.atoms, None, None)
 
 
