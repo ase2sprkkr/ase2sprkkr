@@ -9,6 +9,8 @@ This function contains input templates for various tasks
 New template include into dict_inp_data.
 It returns list of strings which can be proceeded by 
 load_parameters
+Please be carefull, each keyword in given section has to be 
+on the new line
 .. code-block:: python
 
     from sprkkr.data import sprkkr_inputs
@@ -36,8 +38,9 @@ ENERGY  GRID={5}
       EMIN=-0.2
 
 SCF NITER=200
-    MIX=0.050000
-    VXC=VWN
+    MIX=0.20000
+    VXC=VWN 
+    EFGUESS=0.7
     TOL=0.000010
     ISTBRY=1
 

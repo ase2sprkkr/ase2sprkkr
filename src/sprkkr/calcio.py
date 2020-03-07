@@ -223,19 +223,15 @@ class Variable(object):
         return is_eq
 
 class InputFile(object):
-    def __init__(self, filename="test.inp", defaults_filename=None,task='scf'):
+    def __init__(self, filename="kkr.inp", task='scf'):
         self.filename = filename
-        self.set_defaults(filename=defaults_filename)
+        self.task=task
+        self.set_defaults()
 
-    def set_defaults(self, sections=None, filename=None):
-        if sections is not None:
-            self.sections = sections
-
-        elif filename is not None:
-            pars = load_parameters(filename)
-            self.sections = make_sections(pars)
-
-        else: # Empty sections - to remove?
+    def set_defaults(self):
+        lines=get_sprkkr_input(self.task)
+        
+        if lines == 'None': # Empty sections - to remove?
             control_section = Section("CONTROL")
             sites_section = Section("SITES")
             tau_section = Section("TAU")
@@ -247,7 +243,10 @@ class InputFile(object):
                 "scf"    : scf_section,
                 "sites"  : sites_section,
             })
-
+        else:
+            lines=get_sprkkr_input(self.task)
+            pars = load_parameters(lines)
+            self.sections = make_sections(pars)
         for key, section in self.sections.items():
             setattr(self, key + "_section", section)
 
@@ -311,7 +310,6 @@ class LatticeData(object):
 
 
 class SiteData(object):
-    SITES_LIST = []
 
     def __init__(self, coords, occupancy=[]):
         self.x, self.y, self.z = coords
@@ -321,14 +319,9 @@ class SiteData(object):
         self.imq=1
         self.qmtet = 0.
         self.qmphi = 0.
-        self.__class__.SITES_LIST.append(self)
-        self.id = len(self.__class__.SITES_LIST)
+#        self.__class__.SITES_LIST.append(self)
+        self.id = 1 #len(self.__class__.SITES_LIST)
         self.itoq=0
-
-
-    @classmethod
-    def get_sites(cls):
-        return cls.SITES_LIST
 
     def __repr__(self):
         s = "<SiteData(id={:d}, noq={:d})>".format(self.id, self.noq)
@@ -336,8 +329,7 @@ class SiteData(object):
 
 
 class TypeData(object):
-    TYPES_LIST = []
-
+   
     def __init__(self, symbol, concentration=1., iq=None,site=None, mesh=None,iqat=None):
         self.symbol = symbol
         self.atomic_number = Atom(symbol).number
@@ -346,13 +338,7 @@ class TypeData(object):
         self.mesh = None
         self.site = site
         self.iqat = iqat
-        self.__class__.TYPES_LIST.append(self)
         self.id = iq 
-        #len(self.__class__.TYPES_LIST)
-
-    @classmethod
-    def get_types(cls):
-        return cls.TYPES_LIST
 
     def __repr__(self):
         s = "<TypeData(\'{}\', id={:d}, concentration={:.4f}, site={:d},iqat={})>".format(
@@ -360,23 +346,10 @@ class TypeData(object):
         return s
 
 
-class MeshData(object):
-    MESH_ID = 0
-
+class ExponentialMeshData(object):
     def __init__(self):
-        self.__class__.MESH_ID += 1
-        self.id = self.MESH_ID
-        self.type = ""
-
-    def __repr__(self):
-        s = "<{}(id={:d}, type=\"{}\")>".format(self.__class__.__name, self.id,
-             self.type)
-        return s
-
-
-class ExponentialMeshData(MeshData):
-    def __init__(self):
-        super().__init__()
+        self.meshid= 1
+        self.id = self.meshid        
         self.type = "exponential"
         self.rws = 2.6
         self.rmt = 2.2
@@ -384,6 +357,10 @@ class ExponentialMeshData(MeshData):
         self.jmt = 0
         self.r_1 = 1e-6
         self.dx  = 2e-2
+    def __repr__(self):
+        s = "<{}(id={:d}, type=\"{}\")>".format(self.__class__.__name, self.id,
+             self.type)
+        return s
 
 
 class PotFile(object):
@@ -445,16 +422,10 @@ class PotFile(object):
 
         # create lattice, mesh, site and types from ase.atoms
         self.ld = LatticeData(atoms)
-        self.all_at = self.get_atom_types()
-        self.all_sd = SiteData.get_sites()
+        self.all_at = []
+        self.all_sd = []
 
 
-        # set the mesh to the atom types
-        self.md = ExponentialMeshData()
-        for at in self.all_at:
-            at.mesh = self.md
-
-    def get_atom_types(self):
         atoms = self.atoms
 #Use symmetry in order to find equivalet sites 
         sg = get_spacegroup(atoms)
@@ -495,7 +466,6 @@ class PotFile(object):
                 iqat[j]=[j]
                 iqref[j]=j
 #       
-        all_types = []
         dsf={}
         it=0
 
@@ -515,14 +485,21 @@ class PotFile(object):
             for symbol, concentration in occupancy[ui].items():
                 td = TypeData(symbol, concentration,iq=i, site=lsf[ll],iqat=iqat[ui])
                 sd.occupancy.append(td)
-                all_types.append(td)
+                self.all_at.append(td)
                 ll=ll+1
+            self.all_sd.append(sd)
+            self.all_sd[-1].id=len(self.all_sd)
         key_max = max(dsf.keys(), key=(lambda k: dsf[k]))
+
         self.nq=len(all_sites)
         self.nt=max(dsf[key_max])+1
  
-        return all_types
-        
+         # set the mesh to the atom types
+        self.md = ExponentialMeshData()
+        for at in self.all_at:
+            at.mesh = self.md
+
+       
     def write(self):
         with open(self.filename, "w") as fd:
             fd.write(str(self))

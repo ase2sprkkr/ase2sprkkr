@@ -88,7 +88,8 @@ calc.input.tau_section.set(foo="2")
 calc.input.set('foobar', foo="3")
 
 # launch kkrscf
-calc.scf()
+#calc.scf()
+calc.get_potential_energy()
 # This will write the input *.inp and *.pot file
 # and run the kkrscf command
 

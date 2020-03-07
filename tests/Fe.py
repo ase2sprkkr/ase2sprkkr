@@ -20,7 +20,7 @@ calc = SPRKKR(label="Fe/Fe")
 calc.set_atoms(Fe)
 
 # Here is how to modify input file
-calc.input.control_section.set(DATASET="Fe", ADSI="SCF", POTFIL="Fe.pot")
-calc.input.tau_section.set(nktab=250)
+#calc.input.control_section.set(DATASET="Fe", ADSI="SCF", POTFIL="Fe.pot")
+#calc.input.tau_section.set(nktab=250)
 # launch kkrscf
-calc.scf()
+calc.get_potential_energy()
