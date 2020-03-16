@@ -46,6 +46,7 @@ class SPRKKR(FileIOCalculator):
         self.inpfile=os.path.join(self.directory, self.prefix + ".inp")
         self.output= self.inpfile.replace(".inp", ".out")
         self.potfile=self.inpfile.replace(".inp", ".pot")
+        self.sysfile=self.inpfile.replace(".inp", ".sys")
         
         LOGGER.debug(f'INP FILE:{self.inpfile}')
         LOGGER.debug(f'POT FILE:{self.potfile}')        
@@ -76,9 +77,10 @@ class SPRKKR(FileIOCalculator):
         self.atoms = atoms
  
     def write_pot(self):
-        self.pot=PotFile(self.atoms, filename=self.potfile)
+        self.pot=PotFile(self.atoms, filename=self.potfile,sysfilename=self.sysfile)
         self.pot.write()
-
+        self.pot.write_sys()
+        
     def write_input(self, atoms, properties=None, system_changes=None):
         # this will create directories
         FileIOCalculator.write_input(self, self.atoms)
