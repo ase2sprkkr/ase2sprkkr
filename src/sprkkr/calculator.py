@@ -90,14 +90,25 @@ class SPRKKR(FileIOCalculator):
         self.input.write()
         # create the start pot file
         self.write_pot()
-        
-    def _skip_lines(self,fd, num):
+
+    @staticmethod
+    def _skip_lines(fd, num):
         for ii in range(num):
             line = next(fd)
         return line
 
-  
-        
+    @staticmethod
+    def _skip_lines_to(fd, key):
+        while 1:
+            try:
+                line = next(fd)
+
+            except StopIteration:
+                return ''
+
+            if key in line:
+                return line
+
     def read_output(self,filename):
         out = {
             'it' : [],
@@ -106,9 +117,9 @@ class SPRKKR(FileIOCalculator):
             'EF' : [],
             'M' : [],
             'converged' : [],
-            'E_band' : [],
+            'atom_confs' : [],
         }
-#        ebs = {}
+        atom_confs = {}
         with open(filename, 'r') as fd:
             for line in fd:
                 if 'ERR' in line and 'EF' in line:
@@ -121,32 +132,38 @@ class SPRKKR(FileIOCalculator):
                     out['ETOT'].append(float(items[1]))
                     flag = items[5] == 'converged'
                     out['converged'].append(flag)
-    
- #                   out['E_band'].append(ebs)
- #                   ebs = {}
-    
-                    line = next(fd)
+
+                    out['atom_confs'].append(atom_confs)
+                    atom_confs = {}
+
+                    self._skip_lines(fd, 1)
+
                 elif 'SPRKKR-run for:' in line:
                     run = line.replace('SPRKKR-run for:', '').strip()
                     out['run'] = run
-    
-#                elif ' E= ' in line:
-#                    atom = line.split()[-1]
-#                    line = self._skip_lines(fd, 6)
-#                    ebs[atom] = float(line.split()[1])
-    
+
+                elif ' E= ' in line:
+                    atom = line.split()[-1]
+                    akeys = self._skip_lines(fd, 1).split()
+                    line = self._skip_lines_to(fd, 'sum').split()
+                    avals = list(map(float, line[1:8])) + [float(line[9])]
+                    line = self._skip_lines(fd, 1).split()
+                    akeys.append(line[0])
+                    avals.append(line[1])
+                    atom_conf = dict(zip(akeys, avals))
+                    atom_confs[atom] = atom_conf
+
         return out
 
-
-        
     def read_results(self):
        outstrg=self.read_output(self.output)
        lastiter=len(outstrg['it'])
        self.niter=lastiter
        converged = outstrg['converged'][lastiter-1]
        if not converged:
-             raise RuntimeError('SPRKKR did not converge! Check ' + self.output)
-             
+           raise RuntimeError('SPRKKR did not converge! Check ' + self.output)
+
+       self.results['raw_output'] = outstrg
        self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
 #        if not converged:
 #            raise RuntimeError('ELK did not converge! Check ' + self.out)
