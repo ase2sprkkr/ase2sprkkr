@@ -111,7 +111,7 @@ class SPRKKR(FileIOCalculator):
 #        ebs = {}
         with open(filename, 'r') as fd:
             for line in fd:
-                if 'ERR' in line:
+                if 'ERR' in line and 'EF' in line:
                     items = line.split()
                     out['it'].append(int(items[0]))
                     out['ERR'].append(float(items[2]))
