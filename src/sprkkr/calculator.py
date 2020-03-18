@@ -20,7 +20,7 @@ from ase.calculators.calculator import FileIOCalculator
 from ase.units import Rydberg
 
 from .misc import LOGGER
-from .calcio import InputFile, PotFile
+from .calcio import _skip_lines, _skip_lines_to, InputFile, PotFile
 
 class SPRKKR(FileIOCalculator):
     command = 'kkrscf < kkr.inp > kkr.out'
@@ -91,24 +91,6 @@ class SPRKKR(FileIOCalculator):
         # create the start pot file
         self.write_pot()
 
-    @staticmethod
-    def _skip_lines(fd, num):
-        for ii in range(num):
-            line = next(fd)
-        return line
-
-    @staticmethod
-    def _skip_lines_to(fd, key):
-        while 1:
-            try:
-                line = next(fd)
-
-            except StopIteration:
-                return ''
-
-            if key in line:
-                return line
-
     def read_output(self,filename):
         out = {
             'it' : [],
@@ -128,7 +110,7 @@ class SPRKKR(FileIOCalculator):
                     out['ERR'].append(float(items[2]))
                     out['EF'].append(float(items[5]))
                     out['M'].append((float(items[10]), float(items[11])))
-                    items = self._skip_lines(fd, 1).split()
+                    items = _skip_lines(fd, 1).split()
                     out['ETOT'].append(float(items[1]))
                     flag = items[5] == 'converged'
                     out['converged'].append(flag)
@@ -136,7 +118,7 @@ class SPRKKR(FileIOCalculator):
                     out['atom_confs'].append(atom_confs)
                     atom_confs = {}
 
-                    self._skip_lines(fd, 1)
+                    _skip_lines(fd, 1)
 
                 elif 'SPRKKR-run for:' in line:
                     run = line.replace('SPRKKR-run for:', '').strip()
@@ -144,10 +126,10 @@ class SPRKKR(FileIOCalculator):
 
                 elif ' E= ' in line:
                     atom = line.split()[-1]
-                    akeys = self._skip_lines(fd, 1).split()
-                    line = self._skip_lines_to(fd, 'sum').split()
+                    akeys = _skip_lines(fd, 1).split()
+                    line = _skip_lines_to(fd, 'sum').split()
                     avals = list(map(float, line[1:8])) + [float(line[9])]
-                    line = self._skip_lines(fd, 1).split()
+                    line = _skip_lines(fd, 1).split()
                     akeys.append(line[0])
                     avals.append(line[1])
                     atom_conf = dict(zip(akeys, avals))

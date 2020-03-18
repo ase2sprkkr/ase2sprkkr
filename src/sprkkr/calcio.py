@@ -280,6 +280,22 @@ class InputFile(object):
 
         return s
 
+def _skip_lines(fd, num):
+    for ii in range(num):
+        line = next(fd)
+    return line
+
+def _skip_lines_to(fd, key):
+    while 1:
+        try:
+            line = next(fd)
+
+        except StopIteration:
+            return ''
+
+        if key in line:
+            return line
+
 class LatticeData(object):
     sym = OrderedDict({
             'aP': 'C_i',
