@@ -858,7 +858,7 @@ class PotFile(object):
     def __init__(self, atoms, filename=None, title=None, system=None,sysfilename=None):
         self.filename = filename
         self.atoms = atoms
-        self.title = None
+        self.title = title
         self.system = system
         if system is None:
             self.system = atoms.get_chemical_formula()
