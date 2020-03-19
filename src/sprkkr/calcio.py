@@ -397,7 +397,8 @@ def read_potential(filename):
         assert('SITES' in _dec(line))
         for key, val in _gen_next_key_val(fd):
             if key == 'iq':
-                out.qbas = np.loadtxt(fd, usecols=(1, 2, 3), max_rows=out.nq)
+                out.qbas = np.loadtxt(fd, usecols=(1, 2, 3), max_rows=out.nq,
+                                      ndmin=2)
                 break
             out[key] = _convert(val, key, _sites_dtypes)
 
@@ -418,7 +419,8 @@ def read_potential(filename):
         assert('REFERENCE SYSTEM' in _dec(line))
         for key, val in _gen_next_key_val(fd):
             if key == 'iref':
-                out.ref = np.loadtxt(fd, usecols=(1, 2), max_rows=out.nref)
+                out.ref = np.loadtxt(fd, usecols=(1, 2), max_rows=out.nref,
+                                     ndmin=2)
                 break
             out[key] = _convert(val, key, _reference_dtypes)
 
@@ -428,7 +430,8 @@ def read_potential(filename):
         out.nlmtop_pot_num = int(line[1])
         out.nlmtop_pot = np.loadtxt(
             fd, dtype=np.dtype('i4, i4, f8'),
-            max_rows=out.nq * out.nlmtop_pot_num
+            max_rows=out.nq * out.nlmtop_pot_num,
+            ndmin=1,
         )
 
         line = _skip_lines(fd, 2)
@@ -437,7 +440,8 @@ def read_potential(filename):
         out.nlmtop_chr_num = int(line[1])
         out.nlmtop_chr = np.loadtxt(
             fd, dtype=np.dtype('i4, i4, f8'),
-            max_rows=out.nq * out.nlmtop_chr_num
+            max_rows=out.nq * out.nlmtop_chr_num,
+            ndmin=1,
         )
 
         line = _skip_lines(fd, 2)
@@ -445,7 +449,7 @@ def read_potential(filename):
         # Ignores M*_T entries.
         for key, val in _gen_next_key_val(fd):
             if key == 'iq':
-                aux = np.loadtxt(fd, max_rows=out.nq)
+                aux = np.loadtxt(fd, max_rows=out.nq, ndmin=2)
                 out.mag_dir = aux[:, 1:]
                 break
             out[key] = _convert(val, key, _magdir_dtypes)
@@ -457,7 +461,8 @@ def read_potential(filename):
             fd, dtype=np.dtype([('im', 'i4'), ('r_1', 'f8'), ('dx', 'f8'),
                                 ('jrmt', 'i4'), ('rmt', 'f8'), ('jrws', 'i4'),
                                 ('rws', 'f8')]),
-            max_rows=out.nm
+            max_rows=out.nm,
+            ndmin=1,
         )
 
         line = _skip_lines(fd, 2)
@@ -467,7 +472,8 @@ def read_potential(filename):
             fd, dtype=np.dtype([('it', 'i4'), ('txt_t', 'U10'), ('zt', 'i4'),
                                 ('ncort', 'i4'), ('nvalt', 'i4'),
                                 ('nsemcorshlt', 'i4')]),
-            max_rows=out.nt
+            max_rows=out.nt,
+            ndmin=1,
         )
 
         line = _skip_lines(fd, 2)
