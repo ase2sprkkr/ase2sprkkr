@@ -38,7 +38,6 @@ class SPRKKR(FileIOCalculator):
 
         LOGGER.debug(f'Output directory is: {self.directory}')
         LOGGER.debug(f'Output prefix is   : {self.prefix}')
-        
 
         self.atoms = None
         self.task = task
@@ -51,13 +50,10 @@ class SPRKKR(FileIOCalculator):
         LOGGER.debug(f'INP FILE:{self.inpfile}')
         LOGGER.debug(f'POT FILE:{self.potfile}')        
         LOGGER.debug(f'OUT FILE:{self.output}')                
+
         self.input = InputFile(self.inpfile,self.task)
         if (self.task.upper()=='SCF'):
-            input_filename = os.path.abspath(self.input.filename)
-            output_filename = input_filename.replace(".inp", ".out")
-            pot_filename = os.path.abspath(os.path.join(self.directory, self.prefix + ".pot"))
-            self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + input_filename + " > " + output_filename
-
+            self.command = "/opt/openmpi/bin/mpirun -np 4 kkrscfMPI  " + self.inpfile + " > " + self.output
         else:
             print("TASK {} not implemeted in ASE",format(self.task))
             raise NotImplementedError    
@@ -65,14 +61,14 @@ class SPRKKR(FileIOCalculator):
     def set_potfile(self,filename):
         self.potfile=filename
         self.pot=PotFile(self.atoms, filename=self.potfile)
-        
+        LOGGER.debug(f'POT FILE:{self.potfile}')        
     def set_inpfile(self,filename):
         self.inpfile=filename
         self.input= InputFile(self.inpfile,self.task)
-
+        LOGGER.debug(f'INP FILE:{self.inpfile}')
     def set_outfile(self,filename):
-        self.outfile=filename
-            
+        self.output=filename
+        LOGGER.debug(f'OUT FILE:{self.output}')                
     def set_atoms(self, atoms):
         self.atoms = atoms
  
@@ -84,12 +80,19 @@ class SPRKKR(FileIOCalculator):
     def write_input(self, atoms, properties=None, system_changes=None):
         # this will create directories
         FileIOCalculator.write_input(self, self.atoms)
-        potline=os.path.join(self.prefix + ".pot")
-        self.input.control_section.set(POTFIL=potline)
+        potfile=os.path.abspath(self.potfile)
+        self.input.control_section.set(POTFIL=potfile)
         # create the input file
         self.input.write()
         # create the start pot file
         self.write_pot()
+        if (self.task.upper()=='SCF'):
+            inp=os.path.abspath(self.inpfile)
+            out=os.path.abspath(self.output)
+            self.command = "/opt/openmpi/bin/mpirun -np 4 kkrscfMPI  " + inp + " > " + out
+        else:
+            print("TASK {} not implemeted in ASE",format(self.task))
+            raise NotImplementedError    
 
     @staticmethod
     def _skip_lines(fd, num):
@@ -147,9 +150,10 @@ class SPRKKR(FileIOCalculator):
                     akeys = self._skip_lines(fd, 1).split()
                     line = self._skip_lines_to(fd, 'sum').split()
                     avals = list(map(float, line[1:8])) + [float(line[9])]
-                    line = self._skip_lines(fd, 1).split()
+                    line = self._skip_lines_to(fd, 'E_band').split()
                     akeys.append(line[0])
-                    avals.append(line[1])
+                    if len(line) >= 2: 
+                       avals.append(line[1])
                     atom_conf = dict(zip(akeys, avals))
                     atom_confs[atom] = atom_conf
 
@@ -159,8 +163,8 @@ class SPRKKR(FileIOCalculator):
        outstrg=self.read_output(self.output)
        lastiter=len(outstrg['it'])
        self.niter=lastiter
-       converged = outstrg['converged'][lastiter-1]
-       if not converged:
+       self.converged = outstrg['converged'][lastiter-1]
+       if not self.converged:
            raise RuntimeError('SPRKKR did not converge! Check ' + self.output)
 
        self.results['raw_output'] = outstrg
