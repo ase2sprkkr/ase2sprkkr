@@ -479,6 +479,7 @@ def read_potential(filename):
         line = _skip_lines(fd, 2)
         assert('POTENTIAL' in _dec(line))
         out.potentials = []
+        out.potentials_bt = []
         for ii in range(out.nt):
             line = _skip_lines(fd, 1).split()
             assert((_dec(line[0]) == 'TYPE') and
@@ -486,11 +487,15 @@ def read_potential(filename):
             val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
                               dtype=np.float64)
             out.potentials.append(val)
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.potentials_bt.append(val)
             _skip_lines_to(fd, '========')
 
         line = _skip_lines(fd, 2)
         assert('CHARGE' in _dec(line))
         out.charges = []
+        out.charges_bt = []
         for ii in range(out.nt):
             line = _skip_lines(fd, 1).split()
             assert((_dec(line[0]) == 'TYPE') and
@@ -498,6 +503,9 @@ def read_potential(filename):
             val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
                               dtype=np.float64)
             out.charges.append(val)
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.charges_bt.append(val)
             _skip_lines_to(fd, '========')
 
         line = _dec(_skip_lines(fd, 2)).split()
