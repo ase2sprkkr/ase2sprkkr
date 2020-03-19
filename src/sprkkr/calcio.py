@@ -16,7 +16,7 @@ from ase import Atom
 from ase.units import Bohr
 from ase.spacegroup import get_spacegroup
 
-from .misc import LOGGER, get_occupancy
+from .misc import LOGGER, get_occupancy, AttrDict
 from .data import get_sprkkr_input
 
 _tr = str.maketrans('{}', '[]')
@@ -279,6 +279,235 @@ class InputFile(object):
             s += "\n"
 
         return s
+
+def _skip_lines(fd, num):
+    for ii in range(num):
+        line = next(fd)
+    return line
+
+def _skip_lines_to(fd, key):
+    while 1:
+        try:
+            line = next(fd)
+
+        except StopIteration:
+            return ''
+
+        if key in _dec(line):
+            return line
+
+def _dec(val):
+    if isinstance(val, bytes):
+        return val.decode('utf-8')
+
+    else:
+        return val
+
+def _next_key_val(fd, dtype=bytes):
+    aux = next(fd).split(maxsplit=1)
+    return _dec(aux[0].lower()), dtype(aux[1].strip())
+
+def _gen_next_key_val(fd, dtype=bytes):
+    for line in fd:
+        aux = line.split(maxsplit=1)
+        if len(aux) == 2:
+            yield _dec(aux[0].lower()), dtype(aux[1].strip())
+
+        else:
+            return
+
+def _convert_array(x, dtype):
+    return np.array([dtype(ii) for ii in _dec(x).split()])
+
+_scf_info_dtypes = {
+    int
+    : {'ibzint', 'nktab', 'scf-iter'},
+    float
+    : {'scf-mix', 'scf-tol', 'rmsavv', 'rmsavb', 'ef', 'vmtz'},
+    lambda x: _convert_array(x, int)
+    : {'ne'},
+}
+
+_lattice_dtypes = {
+    lambda x: [fun(x.split()[ii]) for ii, fun in enumerate([int] + 4 * [str])]
+    : {'bravais'},
+    float
+    : {'alat'},
+    lambda x: _convert_array(x, float)
+    : {'a(1)', 'a(2)', 'a(3)'},
+}
+
+_sites_dtypes = {
+    lambda x: _convert_array(x, float)
+    : {'basscale'},
+}
+
+_reference_dtypes = {
+    int
+    : {'nref'},
+}
+
+_magdir_dtypes = {
+    int
+    : {'kmrot'},
+    lambda x: _convert_array(x, float)
+    : {'qmvec'},
+}
+
+def _convert(val, key, dtypes):
+    for dtype, keys in dtypes.items():
+        if key in keys:
+            return dtype(val)
+
+    else:
+        return _dec(val)
+
+def read_potential(filename):
+    class PotFromFile(AttrDict):
+        pass
+
+    out = PotFromFile(filename=filename)
+
+    with open(filename, 'rb') as fd:
+        _skip_lines(fd, 1)
+        setattr(out, *_next_key_val(fd))
+        assert(out.get('header') is not None)
+
+        _skip_lines(fd, 1)
+        for _ in range(4):
+            setattr(out, *_next_key_val(fd))
+        assert(out.get('title') is not None)
+
+        line = _skip_lines(fd, 2)
+        assert('GLOBAL SYSTEM PARAMETER' in _dec(line))
+        for _ in range(5):
+            setattr(out, *_next_key_val(fd, dtype=int))
+
+        line = _skip_lines(fd, 2)
+        assert('SCF-INFO' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            out[key] = _convert(val, key, _scf_info_dtypes)
+
+        line = _skip_lines(fd, 1)
+        assert('LATTICE' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            out[key] = _convert(val, key, _lattice_dtypes)
+
+        line = _skip_lines(fd, 1)
+        assert('SITES' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iq':
+                out.qbas = np.loadtxt(fd, usecols=(1, 2, 3), max_rows=out.nq)
+                break
+            out[key] = _convert(val, key, _sites_dtypes)
+
+        line = _skip_lines(fd, 2)
+        assert('OCCUPATION' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iq':
+                out.occupation = []
+                for iq in range(out.nq):
+                    line = next(fd).split()
+                    aux1 = list(map(int, line[1:4]))
+                    aux2 = [fun(line[4+ii])
+                            for ii, fun in enumerate([int, float] * aux1[2])]
+                    out.occupation.append(aux1 + [aux2])
+                break
+
+        line = _skip_lines(fd, 2)
+        assert('REFERENCE SYSTEM' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iref':
+                out.ref = np.loadtxt(fd, usecols=(1, 2), max_rows=out.nref)
+                break
+            out[key] = _convert(val, key, _reference_dtypes)
+
+        line = _skip_lines(fd, 2)
+        assert('HOST MADELUNG POTENTIAL' in _dec(line))
+        line = _skip_lines_to(fd, 'NLMTOP-POT').split()
+        out.nlmtop_pot_num = int(line[1])
+        out.nlmtop_pot = np.loadtxt(
+            fd, dtype=np.dtype('i4, i4, f8'),
+            max_rows=out.nq * out.nlmtop_pot_num
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('CHARGE MOMENTS' in _dec(line))
+        line = _skip_lines_to(fd, 'NLMTOP-CHR').split()
+        out.nlmtop_chr_num = int(line[1])
+        out.nlmtop_chr = np.loadtxt(
+            fd, dtype=np.dtype('i4, i4, f8'),
+            max_rows=out.nq * out.nlmtop_chr_num
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('MAGNETISATION DIRECTION' in _dec(line))
+        # Ignores M*_T entries.
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iq':
+                aux = np.loadtxt(fd, max_rows=out.nq)
+                out.mag_dir = aux[:, 1:]
+                break
+            out[key] = _convert(val, key, _magdir_dtypes)
+
+        _skip_lines_to(fd, 'MESH INFORMATION')
+        setattr(out, *_next_key_val(fd))
+        _skip_lines(fd, 1)
+        out.mesh = np.loadtxt(
+            fd, dtype=np.dtype([('im', 'i4'), ('r_1', 'f8'), ('dx', 'f8'),
+                                ('jrmt', 'i4'), ('rmt', 'f8'), ('jrws', 'i4'),
+                                ('rws', 'f8')]),
+            max_rows=out.nm
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('TYPES' in _dec(line))
+        line = _skip_lines(fd, 1).split()
+        out.types = np.loadtxt(
+            fd, dtype=np.dtype([('it', 'i4'), ('txt_t', 'U10'), ('zt', 'i4'),
+                                ('ncort', 'i4'), ('nvalt', 'i4'),
+                                ('nsemcorshlt', 'i4')]),
+            max_rows=out.nt
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('POTENTIAL' in _dec(line))
+        out.potentials = []
+        for ii in range(out.nt):
+            line = _skip_lines(fd, 1).split()
+            assert((_dec(line[0]) == 'TYPE') and
+                   (int(line[1]) == out.types[ii]['it']))
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.potentials.append(val)
+            _skip_lines_to(fd, '========')
+
+        line = _skip_lines(fd, 2)
+        assert('CHARGE' in _dec(line))
+        out.charges = []
+        for ii in range(out.nt):
+            line = _skip_lines(fd, 1).split()
+            assert((_dec(line[0]) == 'TYPE') and
+                   (int(line[1]) == out.types[ii]['it']))
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.charges.append(val)
+            _skip_lines_to(fd, '========')
+
+        line = _dec(_skip_lines(fd, 2)).split()
+        assert('MOMENTS' in line[0])
+        num = len(line[1:])
+        out.moments_names = line[1:]
+        out.moments = []
+        for ii in range(out.nt):
+            line = _skip_lines(fd, 1).split()
+            assert((_dec(line[0]) == 'TYPE') and
+                   (int(line[1]) == out.types[ii]['it']))
+            val = np.fromfile(fd, count=num, sep=' ', dtype=np.float64)
+            out.moments.append(val)
+            _skip_lines_to(fd, '========')
+
+    return out
 
 class LatticeData(object):
     sym = OrderedDict({
@@ -629,7 +858,7 @@ class PotFile(object):
     def __init__(self, atoms, filename=None, title=None, system=None,sysfilename=None):
         self.filename = filename
         self.atoms = atoms
-        self.title = None
+        self.title = title
         self.system = system
         if system is None:
             self.system = atoms.get_chemical_formula()

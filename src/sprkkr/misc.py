@@ -54,4 +54,41 @@ def get_occupancy(atoms):
     return occupancy
 
 
+class AttrDict(dict):
+    """
+    A dict with the attribute access to its items.
+    """
 
+    def __getattr__(self, name):
+        try:
+            return self[name]
+
+        except KeyError:
+            raise AttributeError(name)
+
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+    def __str__(self):
+        if self.keys():
+            return '\n'.join(
+                [self.__class__.__name__ + ':'] +
+                self.format_items()
+            )
+
+        else:
+            return self.__class__.__name__
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+    def __dir__(self):
+        return list(self.keys())
+
+    def copy(self):
+        return type(self)(self)
+
+    def format_items(self):
+        num = max(map(len, list(self.keys()))) + 1
+        return [key.rjust(num) + ': ' + repr(val)
+                for key, val in sorted(self.items())]
