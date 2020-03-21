@@ -6,7 +6,7 @@ Module calcio
 =============
 
 """
-
+import os
 import numpy as np
 from datetime import datetime
 from collections import OrderedDict
@@ -226,14 +226,14 @@ class Variable(object):
         return is_eq
 
 class InputFile(object):
-    def __init__(self, filename="kkr.inp", task='scf'):
+    def __init__(self, filename="kkr.inp", task='scf',directory='./'):
         self.filename = filename
+        self.directory=directory
         self.task=task
         self.set_defaults()
 
     def set_defaults(self):
         lines=get_sprkkr_input(self.task)
-        
         if lines == 'None': # Empty sections - to remove?
             control_section = Section("CONTROL")
             sites_section = Section("SITES")
@@ -261,9 +261,10 @@ class InputFile(object):
         section = getattr(self, section_name + "_section")
         section.set(**variables)
         self.sections["section_name"] = section
-        
+
     def write(self):
-        with open(self.filename, "w") as fd:
+        inp=os.path.join(self.directory, self.filename)
+        with open(inp, "w") as fd:
             fd.write(str(self))
 
     def __str__(self):
@@ -478,7 +479,7 @@ def read_potential(filename):
 
         line = _skip_lines(fd, 2)
         assert('POTENTIAL' in _dec(line))
-        out.potentials = []
+        out.potentials_vt = []
         out.potentials_bt = []
         for ii in range(out.nt):
             line = _skip_lines(fd, 1).split()
@@ -486,7 +487,7 @@ def read_potential(filename):
                    (int(line[1]) == out.types[ii]['it']))
             val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
                               dtype=np.float64)
-            out.potentials.append(val)
+            out.potentials_vt.append(val)
             val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
                               dtype=np.float64)
             out.potentials_bt.append(val)
@@ -534,22 +535,22 @@ class LatticeData(object):
             'cP': 'O_h', 'cI': 'O_h', 'cF': 'O_h'})
     csym = OrderedDict({
                 'aP': '1  triclinic   primitive      -1     C_i \n',
-                'mP': '2  monoclinic  primitive      2/m    C_2h\n', 
+                'mP': '2  monoclinic  primitive      2/m    C_2h\n',
                 'mS': '3  monoclinic  primitive      2/m    C_2h\n',
-                'oP': '4  orthorombic primitive      mmm    D_2h\n', 
-                'oS': '5  orthorombic body-centered  mmm    D_2h\n', 
-                'oI': '6  orthorombic body-centered  mmm    D_2h\n', 
+                'oP': '4  orthorombic primitive      mmm    D_2h\n',
+                'oS': '5  orthorombic body-centered  mmm    D_2h\n',
+                'oI': '6  orthorombic body-centered  mmm    D_2h\n',
                 'oF': '7  orthorombic face-centered  mmm    D_2h\n',
-                'tP': '8  tetragonal  primitive      4/mmm  D_4h\n', 
+                'tP': '8  tetragonal  primitive      4/mmm  D_4h\n',
                 'tI': '9  tetragonal  body-centered  4/mmm  D_4h\n',
                 'hR': '10 trigonal    primitive      -3m    D_3d\n',
                 'hP': '11 hexagonal   primitive      6/mmm  D_6h\n',
-                'cP': '12 cubic       primitive      m3m    O_h \n', 
-                'cI': '13 cubic       face-centered  m3m    O_h \b', 
+                'cP': '12 cubic       primitive      m3m    O_h \n',
+                'cI': '13 cubic       face-centered  m3m    O_h \b',
                 'cF': '14 cubic       body-centered  m3m    O_h \n'})
     # international tables numbers -> A. Perlovs numbering
     Number2AP = {
-                    1 : 1,  
+                    1 : 1,
                     2 : 2,
                     3 : 3,
                     4 : 5,
@@ -779,8 +780,8 @@ class LatticeData(object):
                     227 : 494,
                     229 : 498,
                     230 : 499
-                    }   
-    
+                    }
+
     def __init__(self, atoms):
         cell = atoms.get_cell()
         bl = cell.get_bravais_lattice()
@@ -793,7 +794,7 @@ class LatticeData(object):
         self.basis = 0
         self.sgno=sg.no
         self.apno=self.Number2AP[sg.no]
-        
+
 
         self.bravais = cell.get_bravais_lattice()
         self.alat = bl.a / Bohr
@@ -818,7 +819,7 @@ class SiteData(object):
     def __init__(self, coords, occupancy=[]):
         self.x, self.y, self.z = coords
         self.occupancy = occupancy
-        self.noq = len(occupancy) 
+        self.noq = len(occupancy)
         self.irefq=1
         self.imq=1
         self.qmtet = 0.
@@ -833,7 +834,7 @@ class SiteData(object):
 
 
 class TypeData(object):
-   
+
     def __init__(self, symbol, concentration=1., iq=None,site=None, mesh=None,iqat=None):
         self.symbol = symbol
         self.atomic_number = Atom(symbol).number
@@ -842,7 +843,7 @@ class TypeData(object):
         self.im = 1
         self.site = site
         self.iqat = iqat
-        self.id = iq 
+        self.id = iq
 
     def __repr__(self):
         s = "<TypeData(\'{}\', id={:d}, concentration={:.4f}, site={:d},iqat={})>".format(
@@ -852,7 +853,7 @@ class TypeData(object):
 
 class ExponentialMeshData(object):
     def __init__(self):
-        self.id = 1      
+        self.id = 1
         self.type = "exponential"
         self.rws = 0.0
         self.rmt = 0.0
@@ -869,8 +870,9 @@ class ExponentialMeshData(object):
 class PotFile(object):
     VERSION_STRING = "6  (21.05.2007)"
 
-    def __init__(self, atoms, filename=None, title=None, system=None,sysfilename=None):
+    def __init__(self, atoms, filename=None, title=None, system=None,sysfilename=None,directory=None):
         self.filename = filename
+        self.directory = directory
         self.atoms = atoms
         self.title = title
         self.system = system
@@ -878,8 +880,8 @@ class PotFile(object):
             self.system = atoms.get_chemical_formula()
         self.package='SPRKKR'
         self.sysfilename=sysfilename
-    
-        
+
+
         self.nm = 1
         self.nq = 1
         self.nt = 2
@@ -907,13 +909,13 @@ class PotFile(object):
         self.kmrot = 0
         self.rmsavv=999999.
         self.rmsavb=999999.
-        
+
         self.qmvec = np.array([0,0,0])
         self.ef = 999999.
         self.vmtz=0.7
         self.cartesian=True
         self.basscale = np.array([1.0,1.0,1.0])
-        
+
         self.vref=4.0000
         self.rmtref=0.00000
 
@@ -932,7 +934,7 @@ class PotFile(object):
         self.all_nm = []
 
         atoms = self.atoms
-#Use symmetry in order to find equivalet sites 
+#Use symmetry in order to find equivalet sites
         sg = get_spacegroup(atoms)
         unique_sites=sg.unique_sites(atoms.get_scaled_positions())
         all_sites = atoms.get_scaled_positions()
@@ -942,7 +944,7 @@ class PotFile(object):
         iqat={}
         iqref=[]
         itoq={}
-        
+
         for i in range(len(all_sites)):
             iqref.append(-1)
 
@@ -954,7 +956,7 @@ class PotFile(object):
             for ui in range(len(unique_sites)):
                 su,k=sg.equivalent_sites(unique_sites[ui])
                 lst=[]
-                for i in range(len(su)):    
+                for i in range(len(su)):
                     for j in range(len(all_sites)):
                         diff=np.abs(su[i]-all_sites[j])<=[tol,tol,tol]
                         if diff.all():
@@ -964,7 +966,7 @@ class PotFile(object):
                             if occupancy[j]!=occupancy[ui]:
                                 LOGGER.warning(f"\n OCCUPANCY NOT CONFORM WITH THE CRYSTAL SYMMETRY \n")
                                 LOGGER.warning(f"Occupation of SITE {j:d} will be taken from SITE {ui:d} \n")
-                                occupancy[j]=occupancy[ui]           
+                                occupancy[j]=occupancy[ui]
                 iqat[ui]=lst
             LOGGER.info(f"Table of equivalent types \n \"{type_table}\"")
         else:
@@ -972,7 +974,7 @@ class PotFile(object):
                 type_table[j][j]=1
                 iqat[j]=[j]
                 iqref[j]=j
-#       
+#
         dsf={} #dictionary connecting unique site with occupation
         it=0
         for ui in range(len(unique_sites)):
@@ -981,7 +983,7 @@ class PotFile(object):
                 lsf.append(it)
                 it=it+1
             dsf[ui]=lsf
-            
+
         for i, sitexyz in enumerate(all_sites):
             ui=iqref[i]
             sd = SiteData(sitexyz)
@@ -989,7 +991,7 @@ class PotFile(object):
             sd.itoq=ui
             sd.irefq=ui
             sd.imq=ui
-            
+
             ll=0
             lsf=dsf[ui]
             for symbol, concentration in occupancy[ui].items():
@@ -999,26 +1001,28 @@ class PotFile(object):
                 ll=ll+1
             self.all_sd.append(sd)
             self.all_sd[-1].id=len(self.all_sd)
- 
+
         # set the mesh to the atom types
         for ui in range(len(unique_sites)):
             md = ExponentialMeshData()
             md.id=ui
             self.all_nm.append(md)
-            
+
         key_max = max(dsf.keys(), key=(lambda k: dsf[k]))
         self.nq=len(all_sites)
         self.nt=max(dsf[key_max])+1
         self.nm=len(self.all_nm)
-      
+
     def write(self):
-        with open(self.filename, "w") as fd:
+        pot=os.path.join(self.directory, self.filename)
+        with open(pot, "w") as fd:
             fd.write(str(self))
-            
+
     def write_sys(self):
-         with open(self.sysfilename, "w") as fd:
+         sys=os.path.join(self.directory, self.sysfilename)
+         with open(sys, "w") as fd:
             fd.write(str(self.sysfile()))
-            
+
     def sysfile(self):
         filestring = "system data-file created by python ase2sprkkr \n"
         filestring += self.sysfilename+"\n"
@@ -1030,7 +1034,7 @@ class PotFile(object):
         filestring += "Bravais lattice\n"
         filestring += self.ld.crys_sys
         filestring += "space group number (ITXC and AP)\n"
-        filestring += "%5i%5i"%(self.ld.sgno,self.ld.apno)+"\n"            
+        filestring += "%5i%5i"%(self.ld.sgno,self.ld.apno)+"\n"
         filestring += "structure type\n"
         filestring += "UNKNOWN\n"
         filestring += "lattice parameter A  [a.u.]\n"
@@ -1043,14 +1047,14 @@ class PotFile(object):
         filestring += "%18.12f%18.12f%18.12f\n"%(self.ld.alpha,self.ld.beta,self.ld.gamma)
         filestring += "primitive vectors     (cart. coord.) [A]\n"
         for vec in self.ld.rbas:
-            for p in vec:   
+            for p in vec:
                 filestring += "%18.12f"%p
             filestring += "\n"
         # Get number of sites and fill out with empty spheres if the sites are not fully filled
         filestring += "number of sites NQ\n"
         filestring += "%3i\n"%self.nq
         filestring += " IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ\n"
-        s="" 
+        s=""
         rws=0.0
         angmom=4
         for sd in self.all_sd:
@@ -1065,15 +1069,15 @@ class PotFile(object):
         itdone= [False for i in range(self.nt)]
         for iat, at in enumerate(self.all_at):
             if (not itdone[at.site]):
-                filestring += "%3i   %1s%5i"%(at.site+1,'-',len(at.iqat))   
+                filestring += "%3i   %1s%5i"%(at.site+1,'-',len(at.iqat))
                 for key in at.iqat:
                     filestring += "%3i"%(key+1)
                 filestring+="\n"
                 itdone[at.site]=True
-        
+
         filestring += "number of atom types NT\n"
         filestring += "%3i\n"%self.nt
-        
+
         filestring += " IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)\n"
         itdone= [False for i in range(self.nt)]
         for iat, at in enumerate(self.all_at):
@@ -1140,7 +1144,7 @@ class PotFile(object):
 # =============================================================================
         return filestring
 
-  
+
 
     def __str__(self):
         separator = "*"*80 + "\n"
@@ -1168,18 +1172,18 @@ class PotFile(object):
         #**************************************************
         s += "{}\n".format("SCF-INFO")
         s += "{:<10}{}\n".format("INFO", "NONE" if self.info is None else self.info)
-        s += "{:<10}{}\n".format("SCFSTATUS",self.scf_status)  
+        s += "{:<10}{}\n".format("SCFSTATUS",self.scf_status)
         s += "{:<10}{}\n".format("FULLPOT", "F" if not self.fullpot else "T")
-        s += "{:<12}{}\n".format("BREITINT", "F" if not self.breitint else "T")  
+        s += "{:<12}{}\n".format("BREITINT", "F" if not self.breitint else "T")
         s += "{:<10}{}\n".format("NONMAG","F" if not self.nonmag else "T")
         s += "{:<10}{}\n".format("ORBPOL", "NONE" if self.orbpol is None else
                                 self.orbpol)
         s += "{:<12}{}\n".format("EXTFIELD", "F" if not self.extfield else "T")
         s += "{:<12}{}\n".format("BLCOUPL", "F" if not self.blcoupl else "T")
-        s += "{:<18}{:1.10f}\n".format("BEXT", self.bext)  
+        s += "{:<18}{:1.10f}\n".format("BEXT", self.bext)
         s += "{:<10}{}\n".format("SEMICORE",self.semicore)
         s += "{:<10}{}\n".format("LLOYD",self.lloyd)
-        s += "{:<18}{:>2d}\n".format("NE", self.ne)  
+        s += "{:<18}{:>2d}\n".format("NE", self.ne)
         s += "{:<18}{:>2d}\n".format("IBZINT", self.ibzint)
         s += "{:<18}{:>2d}\n".format("NKTAB", self.nktab)
         s += "{:<10}{}\n".format("XC-POT", self.xc_pot)
@@ -1193,19 +1197,19 @@ class PotFile(object):
         s += "{:<10}{:1.10f}\n".format("VMTZ", self.vmtz)
         s += separator
         #**************************************************
-        s += "{}\n".format("LATTICE")    
+        s += "{}\n".format("LATTICE")
         s += "{}\n".format("SYSDIM    3D")
         s += "{}\n".format("SYSTYPE   BULK")
         desc = self.ld.bravais.longname
         pg = ""
-        s += "{:<18}{:>2d}  {:>31}  {}  {}\n".format("BRAVAIS", 
+        s += "{:<18}{:>2d}  {:>31}  {}  {}\n".format("BRAVAIS",
              self.ld.bravais_number, desc, pg, self.ld.schoenflies_symbol)
         s += "{:<12}{:1.10f}\n".format("ALAT", self.ld.alat)
         for i, row in enumerate(self.ld.rbas):
-            s += ("A({:d})" + "{:>20.10f}" * 3 + "\n").format(i+1, *row)       
+            s += ("A({:d})" + "{:>20.10f}" * 3 + "\n").format(i+1, *row)
         s += separator
         #**************************************************
-        s += "{}\n".format("SITES")       
+        s += "{}\n".format("SITES")
         s += "{:<12}{}\n".format("CARTESIAN", "F" if not self.cartesian else "T")
         s += ("{:<10}" + "{:>15.10f}"*3 + "\n").format("BASSCALE", *self.basscale)
         s += "{}\n".format("        IQ      QX              QY              QZ")
@@ -1224,23 +1228,23 @@ class PotFile(object):
             s += "\n"
         s += separator
         #**************************************************
-        s += "{}\n".format("REFERENCE SYSTEM")    
+        s += "{}\n".format("REFERENCE SYSTEM")
         s += "{:<18}{:>2d}\n".format("NREF", self.nm)
         s += "{}\n".format("      IREF      VREF            RMTREF")
         for iref in range(self.nm):
             s += ("{:>10d}"+"{:>15.10f}"*2+"\n").format(iref+1, self.vref, self.rmtref)
         s += separator
         #**************************************************
-        s += "{}\n".format("MAGNETISATION DIRECTION")       
+        s += "{}\n".format("MAGNETISATION DIRECTION")
         s += "{:<18}{:>2d}\n".format("KMROT", self.kmrot)
         s += ("{:<10}" + "{:>15.10f}"*3 + "\n").format("QMVEC", *self.qmvec)
         s += "{}\n".format("         IQ      QMTET           QMPHI")
         for sd in self.all_sd:
-            s += "{:>10d} {:>15.10f} {:15.10f}\n".format(sd.id, 
+            s += "{:>10d} {:>15.10f} {:15.10f}\n".format(sd.id,
                   sd.qmtet, sd.qmphi)
         s += separator
         #**************************************************
-        s += "{}\n".format("MESH INFORMATION")       
+        s += "{}\n".format("MESH INFORMATION")
         s += "MESH-TYPE {}\n".format(self.all_nm[0].type.upper())
         s += "{}\n".format("   IM      R(1)            DX         JRMT      RMT        JRWS      RWS")
         for md in self.all_nm:
@@ -1255,7 +1259,7 @@ class PotFile(object):
         #**************************************************
         s += "{}\n".format("TYPES")
         s += "{}\n".format("   IT     TXTT        ZT     NCORT     NVALT    NSEMCORSHLT")
-       
+
         itdone= [False for i in range(self.nt)]
         for iat, at in enumerate(self.all_at):
             if (not itdone[at.site]):
@@ -1266,7 +1270,7 @@ class PotFile(object):
                 s += "{:>10d}".format(at.atomic_number-self.tabncore[at.atomic_number])
                 s += "{:>10d}\n".format(0)
                 itdone[at.site]=True
-                
+
         s += separator
 
         return s

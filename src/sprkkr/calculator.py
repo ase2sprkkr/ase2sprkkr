@@ -35,64 +35,83 @@ class SPRKKR(FileIOCalculator):
 
         FileIOCalculator.__init__(self, restart, ignore_bad_restart_file,
                                   label, atoms, **kwargs)
-
-        LOGGER.debug(f'Output directory is: {self.directory}')
-        LOGGER.debug(f'Output prefix is   : {self.prefix}')
-
         self.atoms = None
         self.task = task
+        if restart is None:
+            if task.upper() == 'SCF':
+                self.restart = False
+            else:
+                self.restart = True
 
-        self.inpfile=os.path.join(self.directory, self.prefix + ".inp")
-        self.output= self.inpfile.replace(".inp", ".out")
+        self.inpfile=os.path.join(self.prefix + ".inp")
+        self.outfile= self.inpfile.replace(".inp", ".out")
         self.potfile=self.inpfile.replace(".inp", ".pot")
         self.sysfile=self.inpfile.replace(".inp", ".sys")
 
+        LOGGER.debug(f'Calculation will run in  directory: {self.directory}')
+        LOGGER.debug(f'Prefix is   : {self.prefix}')
         LOGGER.debug(f'INP FILE:{self.inpfile}')
         LOGGER.debug(f'POT FILE:{self.potfile}')
-        LOGGER.debug(f'OUT FILE:{self.output}')
+        LOGGER.debug(f'OUT FILE:{self.outfile}')
+        LOGGER.debug(f'OUT FILE:{self.sysfile}')
 
-        self.input = InputFile(self.inpfile,self.task)
+        self.input = InputFile(filename=self.inpfile, task=self.task,directory=self.directory)
+
         if (self.task.upper()=='SCF'):
-            self.command = "/opt/openmpi/bin/mpirun -np 4 kkrscfMPI  " + self.inpfile + " > " + self.output
+            self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
+            self.command = "echo"
+        elif (self.task.upper()=='PHAGEN'):
+            self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
         else:
             print("TASK {} not implemeted in ASE",format(self.task))
             raise NotImplementedError
 
     def set_potfile(self,filename):
         self.potfile=filename
-        self.pot=PotFile(self.atoms, filename=self.potfile)
+        if not self.restart:
+            self.pot=PotFile(self.atoms, filename=self.potfile,sysfilename=self.sysfile,directory=self.directory)
+            self.pot.write()
+            self.pot.write_sys()
+        else:
+            LOGGER.debug(f'POTENTIAL FILE WILL BE USED:{self.potfile}')
+
+
         LOGGER.debug(f'POT FILE:{self.potfile}')
     def set_inpfile(self,filename):
         self.inpfile=filename
-        self.input= InputFile(self.inpfile,self.task)
+        self.input= InputFile(filename=self.inpfile, task=self.task,directory=self.directory)
         LOGGER.debug(f'INP FILE:{self.inpfile}')
     def set_outfile(self,filename):
-        self.output=filename
-        LOGGER.debug(f'OUT FILE:{self.output}')
+        self.outfile=filename
+        LOGGER.debug(f'OUT FILE:{self.outfile}')
     def set_atoms(self, atoms):
         self.atoms = atoms
 
-    def write_pot(self):
-        self.pot=PotFile(self.atoms, filename=self.potfile,sysfilename=self.sysfile)
-        self.pot.write()
-        self.pot.write_sys()
+    def set_command(self,task):
+        self.task=task.upper()
+        print("TASK:",self.task)
+        if (self.task.upper()=='SCF'):
+            self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
+        elif (self.task.upper()=='PHAGEN'):
+            self.restart=True
+            self.command = "kkrscf <  " + self.inpfile + " > " + self.outfile
+        elif (self.task.upper()=='PHAGEN'):
+            self.restart=True
+            self.command = "kkrgen <  " + self.inpfile + " > " + self.outfile
+            self.command = "echo  GEN > mumlak"
+        else:
+            print("TASK {} not implemeted in ASE",format(self.task))
+            raise NotImplementedError
 
     def write_input(self, atoms, properties=None, system_changes=None):
         # this will create directories
         FileIOCalculator.write_input(self, self.atoms)
-        potfile=os.path.abspath(self.potfile)
-        self.input.control_section.set(POTFIL=potfile)
+        self.input.control_section.set(POTFIL=self.potfile)
         # create the input file
         self.input.write()
         # create the start pot file
-        self.write_pot()
-        if (self.task.upper()=='SCF'):
-            inp=os.path.abspath(self.inpfile)
-            out=os.path.abspath(self.output)
-            self.command = "/opt/openmpi/bin/mpirun -np 4 kkrscfMPI  " + inp + " > " + out
-        else:
-            print("TASK {} not implemeted in ASE",format(self.task))
-            raise NotImplementedError
+        self.set_command(self.task)
+        self.set_potfile(self.potfile)
 
     def read_output(self,filename):
         out = {
@@ -132,7 +151,7 @@ class SPRKKR(FileIOCalculator):
                     akeys = _skip_lines(fd, 1).split()
                     line = _skip_lines_to(fd, 'sum').split()
                     avals = list(map(float, line[1:8])) + [float(line[9])]
-                    line = self._skip_lines_to(fd, 'E_band').split()
+                    line = _skip_lines_to(fd, 'E_band').split()
                     akeys.append(line[0])
                     if len(line) >= 2:
                        avals.append(line[1])
@@ -142,37 +161,20 @@ class SPRKKR(FileIOCalculator):
         return out
 
     def read_results(self):
-       outstrg=self.read_output(self.output)
+       outstrg=self.read_output(os.path.join(self.directory,self.outfile))
        lastiter=len(outstrg['it'])
        self.niter=lastiter
        self.converged = outstrg['converged'][lastiter-1]
        if not self.converged:
-           raise RuntimeError('SPRKKR did not converge! Check ' + self.output)
+           raise RuntimeError('SPRKKR did not converge! Check ' + self.outfile)
 
-       self.results['raw_output'] = outstrg
+       self.results['raw_outfile'] = outstrg
        self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
-#        if not converged:
-#            raise RuntimeError('ELK did not converge! Check ' + self.out)
-#        self.read_energy()
-#        if self.parameters.get('tforce'):
-#            self.read_forces()
-#        self.width = self.read_electronic_temperature()
-#        self.nbands = self.read_number_of_bands()
-#        self.nelect = self.read_number_of_electrons()
-#        self.niter = self.read_number_of_iterations()
-#        self.magnetic_moment = self.read_magnetic_moment()
 
+    def phagen(self):
+         print("PHAGEN")
+         self.calculate(self.atoms, None, None)
 
 
     def read(self):
         raise NotImplementedError
-
-
-
-
-#    def scf(self):
-#        input_filename = os.path.abspath(self.input.filename)
-#        output_filename = input_filename.replace(".inp", ".out")
-#        pot_filename = os.path.abspath(os.path.join(self.directory, self.prefix + ".pot"))
-#        self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + input_filename + " > " + output_filename
-#        self.calculate(self.atoms, None, None)

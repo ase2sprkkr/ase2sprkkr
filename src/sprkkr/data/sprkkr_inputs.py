@@ -7,9 +7,9 @@ Module sprkkr_inputs
 
 This function contains input templates for various tasks
 New template include into dict_inp_data.
-It returns list of strings which can be proceeded by 
+It returns list of strings which can be proceeded by
 load_parameters
-Please be carefull, each keyword in given section has to be 
+Please be carefull, each keyword in given section has to be
 on the new line
 .. code-block:: python
 
@@ -27,23 +27,23 @@ dict_inp_data['SCF']='''
 CONTROL DATASET=case
         ADSI=SCF
         POTFIL=case.pot
-
+        KRWS=1
 
 TAU BZINT=POINTS
     NKTAB=250
 
 ENERGY  GRID={5}
       NE={32}
-      ImE=0.00 
+      ImE=0.00
       EMIN=-0.2
 
 SCF NITER=200
     MIX=0.20000
-    VXC=VWN 
+    VXC=VWN
     EFGUESS=0.7
     TOL=0.000010
     ISTBRY=1
-    FULLPOT
+
 
 SITES NL={3}
 '''
@@ -89,7 +89,7 @@ ENERGY   GRID={1}
       IMV_INI_EV=0.05
       IMV_FIN_EV=5.
 
-SITES 	 NL={4,4,4,4}
+SITES 	 NL=4
 
 TASK     ARPES
          STRVER=0
@@ -117,10 +117,34 @@ SPEC_EL THETA={-10.,10.}
          POL_E=PZ
 '''
 ########################################################
+# INPUT TEMPLATE SCF
+dict_inp_data['PHAGEN']='''
+CONTROL DATASET=case
+        ADSI=PHAGEN
+        POTFIL=case.pot_new
+
+TAU BZINT=POINTS
+    NKTAB=250
+
+ENERGY  GRID={5}
+      NE={32}
+      ImE=0.00
+      EMIN=-0.2
+
+SCF NITER=200
+    MIX=0.20000
+    VXC=VWN
+    EFGUESS=0.7
+    TOL=0.000010
+    ISTBRY=1
+
+TASK PHAGEN
+'''
 ########################################################
-def str2lines(string): 
-    li = list(string.split("\n")) 
-    return li 
+########################################################
+def str2lines(string):
+    li = list(string.split("\n"))
+    return li
 
 def get_sprkkr_input(task):
 
@@ -132,7 +156,8 @@ def get_sprkkr_input(task):
         lines=dict_inp_data['SCF']
     elif task.upper() == 'DOS':
         lines=dict_inp_data['DOS']
+    elif task.upper() == 'PHAGEN':
+        lines=dict_inp_data['PHAGEN']
     else:
         lines='None'
     return  str2lines(lines)
-
