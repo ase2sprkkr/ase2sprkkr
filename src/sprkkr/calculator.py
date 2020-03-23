@@ -62,6 +62,8 @@ class SPRKKR(FileIOCalculator):
             self.command = "echo"
         elif (self.task.upper()=='PHAGEN'):
             self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
+        elif (self.task.upper()=='GEN'):
+            self.command = "mpirun.openmpi -np 4 kkrgenMPI  " + self.inpfile + " > " + self.outfile
         else:
             print("TASK {} not implemeted in ASE",format(self.task))
             raise NotImplementedError
@@ -98,7 +100,6 @@ class SPRKKR(FileIOCalculator):
         elif (self.task.upper()=='PHAGEN'):
             self.restart=True
             self.command = "kkrgen <  " + self.inpfile + " > " + self.outfile
-            self.command = "echo  GEN > mumlak"
         else:
             print("TASK {} not implemeted in ASE",format(self.task))
             raise NotImplementedError
@@ -172,9 +173,16 @@ class SPRKKR(FileIOCalculator):
        self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
 
     def phagen(self):
-         print("PHAGEN")
          self.calculate(self.atoms, None, None)
 
+    def kkrgen(self):
+         self.calculate(self.atoms, None, None)
+
+    def kkrspec(self):
+         self.calculate(self.atoms, None, None)
+
+    def kkrchi(self):
+         self.calculate(self.atoms, None, None)
 
     def read(self):
         raise NotImplementedError
