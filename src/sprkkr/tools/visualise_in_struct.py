@@ -34,7 +34,7 @@ class LayerData(object):
         s+=">\n"
         return s
 
-filename='in_structur.inp2'
+filename='GeTe.inp'
 
 with open(filename) as f:
     data = f.readlines()
@@ -88,10 +88,40 @@ for key,lay in layers.items():
     for atm in lay.atoms:
         typeid_to_symbol[atm.typeid]=''
 
-typeid_to_symbol[3]='Te'
-typeid_to_symbol[1]='Hf'
-typeid_to_symbol[2]='Te'
-typeid_to_symbol[4]='H'
+typeid_to_symbol[5]='Ge'
+typeid_to_symbol[6]='H'
+typeid_to_symbol[7]='Te'
+typeid_to_symbol[8]='H'
+typeid_to_symbol[9]='Ge'
+typeid_to_symbol[10]='H'
+typeid_to_symbol[11]='Te'
+typeid_to_symbol[12]='H'
+typeid_to_symbol[13]='Ge'
+typeid_to_symbol[14]='H'
+typeid_to_symbol[15]='Te'
+typeid_to_symbol[16]='H'
+typeid_to_symbol[17]='Ge'
+typeid_to_symbol[18]='H'
+typeid_to_symbol[19]='Te'
+typeid_to_symbol[20]='H'
+typeid_to_symbol[21]='Ge'
+typeid_to_symbol[22]='H'
+typeid_to_symbol[23]='Te'
+typeid_to_symbol[24]='H'
+typeid_to_symbol[25]='Ge'
+typeid_to_symbol[26]='H'
+typeid_to_symbol[27]='Te'
+typeid_to_symbol[28]='H'
+typeid_to_symbol[29]='Ge'
+typeid_to_symbol[30]='H'
+typeid_to_symbol[31]='Te'
+typeid_to_symbol[32]='H'
+typeid_to_symbol[33]='Ge'
+typeid_to_symbol[34]='H'
+typeid_to_symbol[35]='Te'
+typeid_to_symbol[36]='H'
+typeid_to_symbol[37]='H'
+typeid_to_symbol[38]='H'
 
 nbulk=5 #how many bulk repetation will be used
 # expand list of layers in order to visualise bulk region
@@ -135,7 +165,7 @@ for ilay in range(new_nlayer):
 allpos[:,2]=allpos[:,2]*alat/cell[2,2]
 print(allpos[:,2])
 structure.set_scaled_positions(allpos)
-
+structure.set_positions(structure.get_positions(wrap=True))
 structure.write('str.cif', format = 'cif')
 
 view(structure)
