@@ -34,7 +34,7 @@ class LayerData(object):
         s+=">\n"
         return s
 
-filename='in_structur.inp'
+filename='in_structur.inp2'
 
 with open(filename) as f:
     data = f.readlines()
