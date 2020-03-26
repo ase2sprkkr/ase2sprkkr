@@ -4,8 +4,14 @@ from ase import Atoms,Atom
 from ase import io
 from ase.visualize import view
 from ase.units import Bohr
+from ase.data import chemical_symbols
 import copy
+import argparse
 
+__author__='JM'
+###############################################################################################
+# Some usefull objects
+###############################################################################################
 class AtomData(object):
 
     def __init__(self):
@@ -33,18 +39,335 @@ class LayerData(object):
             s+= "   Atom in Layer id={:d}, pos={},{},{},type={:d} ".format(atoms.id,atoms.pos[0],atoms.pos[1],atoms.pos[2],atoms.typeid)
         s+=">\n"
         return s
+###############################################################################################
+# Parser for SPRKKR potential file
+###############################################################################################
+def _skip_lines(fd, num):
+    for ii in range(num):
+        line = next(fd)
+    return line
 
-filename='GeTe.inp'
+def _skip_lines_to(fd, key):
+    while 1:
+        try:
+            line = next(fd)
 
+        except StopIteration:
+            return ''
+
+        if key in _dec(line):
+            return line
+class AttrDict(dict):
+    """
+    A dict with the attribute access to its items.
+    """
+
+    def __getattr__(self, name):
+        try:
+            return self[name]
+
+        except KeyError:
+            raise AttributeError(name)
+
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+    def __str__(self):
+        if self.keys():
+            return '\n'.join(
+                [self.__class__.__name__ + ':'] +
+                self.format_items()
+            )
+
+        else:
+            return self.__class__.__name__
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+    def __dir__(self):
+        return list(self.keys())
+
+    def copy(self):
+        return type(self)(self)
+
+    def format_items(self):
+        num = max(map(len, list(self.keys()))) + 1
+        return [key.rjust(num) + ': ' + repr(val)
+                for key, val in sorted(self.items())]
+def _dec(val):
+    if isinstance(val, bytes):
+        return val.decode('utf-8')
+
+    else:
+        return val
+
+def _next_key_val(fd, dtype=bytes):
+    aux = next(fd).split(maxsplit=1)
+    return _dec(aux[0].lower()), dtype(aux[1].strip())
+
+def _gen_next_key_val(fd, dtype=bytes):
+    for line in fd:
+        aux = line.split(maxsplit=1)
+        if len(aux) == 2:
+            yield _dec(aux[0].lower()), dtype(aux[1].strip())
+
+        else:
+            return
+
+def _convert_array(x, dtype):
+    return np.array([dtype(ii) for ii in _dec(x).split()])
+
+_scf_info_dtypes = {
+    int
+    : {'ibzint', 'nktab', 'scf-iter'},
+    float
+    : {'scf-mix', 'scf-tol', 'rmsavv', 'rmsavb', 'ef', 'vmtz'},
+    lambda x: _convert_array(x, int)
+    : {'ne'},
+}
+
+_lattice_dtypes = {
+    lambda x: [fun(x.split()[ii]) for ii, fun in enumerate([int] + 4 * [str])]
+    : {'bravais'},
+    float
+    : {'alat'},
+    lambda x: _convert_array(x, float)
+    : {'a(1)', 'a(2)', 'a(3)'},
+}
+
+_sites_dtypes = {
+    lambda x: _convert_array(x, float)
+    : {'basscale'},
+}
+
+_reference_dtypes = {
+    int
+    : {'nref'},
+}
+
+_magdir_dtypes = {
+    int
+    : {'kmrot'},
+    lambda x: _convert_array(x, float)
+    : {'qmvec'},
+}
+
+def _convert(val, key, dtypes):
+    for dtype, keys in dtypes.items():
+        if key in keys:
+            return dtype(val)
+
+    else:
+        return _dec(val)
+
+
+def read_potential(filename):
+    class PotFromFile(AttrDict):
+        pass
+
+    out = PotFromFile(filename=filename)
+
+    with open(filename, 'rb') as fd:
+        _skip_lines(fd, 1)
+        setattr(out, *_next_key_val(fd))
+        assert(out.get('header') is not None)
+
+        _skip_lines(fd, 1)
+        for _ in range(4):
+            setattr(out, *_next_key_val(fd))
+        assert(out.get('title') is not None)
+
+        line = _skip_lines(fd, 2)
+        assert('GLOBAL SYSTEM PARAMETER' in _dec(line))
+        for _ in range(5):
+            setattr(out, *_next_key_val(fd, dtype=int))
+
+        line = _skip_lines(fd, 2)
+        assert('SCF-INFO' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            out[key] = _convert(val, key, _scf_info_dtypes)
+
+        line = _skip_lines(fd, 1)
+        assert('LATTICE' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            out[key] = _convert(val, key, _lattice_dtypes)
+
+        line = _skip_lines(fd, 1)
+        assert('SITES' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iq':
+                out.qbas = np.loadtxt(fd, usecols=(1, 2, 3), max_rows=out.nq,
+                                      ndmin=2)
+                break
+            out[key] = _convert(val, key, _sites_dtypes)
+
+        line = _skip_lines(fd, 2)
+        assert('OCCUPATION' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iq':
+                out.occupation = []
+                for iq in range(out.nq):
+                    line = next(fd).split()
+                    aux1 = list(map(int, line[1:4]))
+                    aux2 = [fun(line[4+ii])
+                            for ii, fun in enumerate([int, float] * aux1[2])]
+                    out.occupation.append(aux1 + [aux2])
+                break
+
+        line = _skip_lines(fd, 2)
+        assert('REFERENCE SYSTEM' in _dec(line))
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iref':
+                out.ref = np.loadtxt(fd, usecols=(1, 2), max_rows=out.nref,
+                                     ndmin=2)
+                break
+            out[key] = _convert(val, key, _reference_dtypes)
+
+        line = _skip_lines(fd, 2)
+        assert('HOST MADELUNG POTENTIAL' in _dec(line))
+        line = _skip_lines_to(fd, 'NLMTOP-POT').split()
+        out.nlmtop_pot_num = int(line[1])
+        out.nlmtop_pot = np.loadtxt(
+            fd, dtype=np.dtype('i4, i4, f8'),
+            max_rows=out.nq * out.nlmtop_pot_num,
+            ndmin=1,
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('CHARGE MOMENTS' in _dec(line))
+        line = _skip_lines_to(fd, 'NLMTOP-CHR').split()
+        out.nlmtop_chr_num = int(line[1])
+        out.nlmtop_chr = np.loadtxt(
+            fd, dtype=np.dtype('i4, i4, f8'),
+            max_rows=out.nq * out.nlmtop_chr_num,
+            ndmin=1,
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('MAGNETISATION DIRECTION' in _dec(line))
+        # Ignores M*_T entries.
+        for key, val in _gen_next_key_val(fd):
+            if key == 'iq':
+                aux = np.loadtxt(fd, max_rows=out.nq, ndmin=2)
+                out.mag_dir = aux[:, 1:]
+                break
+            out[key] = _convert(val, key, _magdir_dtypes)
+
+        _skip_lines_to(fd, 'MESH INFORMATION')
+        setattr(out, *_next_key_val(fd))
+        _skip_lines(fd, 1)
+        out.mesh = np.loadtxt(
+            fd, dtype=np.dtype([('im', 'i4'), ('r_1', 'f8'), ('dx', 'f8'),
+                                ('jrmt', 'i4'), ('rmt', 'f8'), ('jrws', 'i4'),
+                                ('rws', 'f8')]),
+            max_rows=out.nm,
+            ndmin=1,
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('TYPES' in _dec(line))
+        line = _skip_lines(fd, 1).split()
+        out.types = np.loadtxt(
+            fd, dtype=np.dtype([('it', 'i4'), ('txt_t', 'U10'), ('zt', 'i4'),
+                                ('ncort', 'i4'), ('nvalt', 'i4'),
+                                ('nsemcorshlt', 'i4')]),
+            max_rows=out.nt,
+            ndmin=1,
+        )
+
+        line = _skip_lines(fd, 2)
+        assert('POTENTIAL' in _dec(line))
+        out.potentials_vt = []
+        out.potentials_bt = []
+        for ii in range(out.nt):
+            line = _skip_lines(fd, 1).split()
+            assert((_dec(line[0]) == 'TYPE') and
+                   (int(line[1]) == out.types[ii]['it']))
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.potentials_vt.append(val)
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.potentials_bt.append(val)
+            _skip_lines_to(fd, '========')
+
+        line = _skip_lines(fd, 2)
+        assert('CHARGE' in _dec(line))
+        out.charges = []
+        out.charges_bt = []
+        for ii in range(out.nt):
+            line = _skip_lines(fd, 1).split()
+            assert((_dec(line[0]) == 'TYPE') and
+                   (int(line[1]) == out.types[ii]['it']))
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.charges.append(val)
+            val = np.fromfile(fd, count=out.mesh[0]['jrws'], sep=' ',
+                              dtype=np.float64)
+            out.charges_bt.append(val)
+            _skip_lines_to(fd, '========')
+
+        line = _dec(_skip_lines(fd, 2)).split()
+        assert('MOMENTS' in line[0])
+        num = len(line[1:])
+        out.moments_names = line[1:]
+        out.moments = []
+        for ii in range(out.nt):
+            line = _skip_lines(fd, 1).split()
+            assert((_dec(line[0]) == 'TYPE') and
+                   (int(line[1]) == out.types[ii]['it']))
+            val = np.fromfile(fd, count=num, sep=' ', dtype=np.float64)
+            out.moments.append(val)
+            _skip_lines_to(fd, '========')
+
+    return out
+###############################################################################################
+#
+###############################################################################################
+ase_vis=False
+# Some defaults and initialisations
+filename='in_struct.inp'
+layers={}
+latvec=np.zeros(shape=(2,2), dtype=float)
+#READ IN COMAND LINE PARAMETERS
+description='This is a sctipt to visualise in_struct.inp files. '
+description+='     You can either use ase visualisation tools or export it to cif file'
+parser = argparse.ArgumentParser(description=description)
+parser.add_argument('-i','--input', help='in_struct.inp file name',required=True)
+parser.add_argument('-p','--pot', help='Filemane of scf Potential',required=True)
+
+parser.add_argument('-o','--out',type=str,help='Output file name for structure (default strcuture.cif)', default='strcuture.cif',required=False)
+parser.add_argument('-f','--format',type=str,help='Output file fomrmat for structure (see ase allowed formats, default cif)', default='cif',required=False)
+parser.add_argument('-a','--ase',help='Use ase visualisation', action='store_true',required=False)
+parser.add_argument('-v','--vac',type=float,help='Size of added vacuum in AA (default=10.0)',default=10.0,required=False)
+parser.add_argument('-b','--nbulk',type=int,help='Repetition of bulk unit (default=2)',default=2,required=False)
+
+
+args = parser.parse_args()
+Vac=args.vac
+ciffile=args.out
+outformat=args.format
+ase_vis=args.ase
+nbulk=args.nbulk #how many bulk repetirions will be used
+filename=args.input
+potfile=args.pot
+
+Potfile=read_potential(potfile)
+
+typeid_to_symbol={}
+
+for iq in range(Potfile.nq):
+    it_iq=Potfile.occupation[iq][3][0]
+    Z=Potfile.types[it_iq-1][2]
+    typeid_to_symbol[iq+1]=chemical_symbols[Z]
+
+# Extract data from structure file
 with open(filename) as f:
     data = f.readlines()
-# Extract data
+
 alat=float(data[1])*Bohr
 nlayer=int(data[4])
-layers={}
-
-latvec=np.zeros(shape=(2,2), dtype=float)
-
 
 for k in range(2,4):
     i=0
@@ -83,47 +406,6 @@ for ivec in range(nvec):
     line=line+1
 
 #
-typeid_to_symbol={}
-for key,lay in layers.items():
-    for atm in lay.atoms:
-        typeid_to_symbol[atm.typeid]=''
-
-typeid_to_symbol[5]='Ge'
-typeid_to_symbol[6]='H'
-typeid_to_symbol[7]='Te'
-typeid_to_symbol[8]='H'
-typeid_to_symbol[9]='Ge'
-typeid_to_symbol[10]='H'
-typeid_to_symbol[11]='Te'
-typeid_to_symbol[12]='H'
-typeid_to_symbol[13]='Ge'
-typeid_to_symbol[14]='H'
-typeid_to_symbol[15]='Te'
-typeid_to_symbol[16]='H'
-typeid_to_symbol[17]='Ge'
-typeid_to_symbol[18]='H'
-typeid_to_symbol[19]='Te'
-typeid_to_symbol[20]='H'
-typeid_to_symbol[21]='Ge'
-typeid_to_symbol[22]='H'
-typeid_to_symbol[23]='Te'
-typeid_to_symbol[24]='H'
-typeid_to_symbol[25]='Ge'
-typeid_to_symbol[26]='H'
-typeid_to_symbol[27]='Te'
-typeid_to_symbol[28]='H'
-typeid_to_symbol[29]='Ge'
-typeid_to_symbol[30]='H'
-typeid_to_symbol[31]='Te'
-typeid_to_symbol[32]='H'
-typeid_to_symbol[33]='Ge'
-typeid_to_symbol[34]='H'
-typeid_to_symbol[35]='Te'
-typeid_to_symbol[36]='H'
-typeid_to_symbol[37]='H'
-typeid_to_symbol[38]='H'
-
-nbulk=5 #how many bulk repetation will be used
 # expand list of layers in order to visualise bulk region
 new_nlayer=nlayer
 for i in range(nbulk):
@@ -132,22 +414,21 @@ for i in range(nbulk):
         new_nlayer+=1
 # move origins of all atoms back wrt. to first layer
 zmax=-99999.
-
+zmin= 10000.
 for ilay in range(1,new_nlayer):
         for atoms in layers[ilay].atoms:
                 for jlay in range(0,ilay):
                         atoms.pos=atoms.pos+layers[jlay].layvec
                 zmax=max(atoms.pos[2],zmax)
+                zmin=min(atoms.pos[2],zmin)
 
-# Create Atoms and Atom objects from ASE
-print(zmax)
+# Create Atoms and Atom ASE-objects from structural data
 structure=Atoms()
 cell=np.zeros(shape=(3,3), dtype=float)
 cell[0:2,0:2]=latvec[0:2,0:2]
 cell[2,2]= zmax
 cell=cell*alat
-cell[2,2]= cell[2,2]+10.0 #add 10 AA of vacuum region
-print(cell)
+cell[2,2]= cell[2,2]+Vac #add XX AA of vacuum region
 structure.set_cell(cell)
 structure.set_pbc([True,True,True])
 #Add atom into the Atoms
@@ -156,16 +437,21 @@ for ilay in range(new_nlayer):
     for atoms in layers[ilay].atoms:
         pos=atoms.pos.reshape(1,3)
         allpos=np.append(allpos,pos,axis=0)
-#        allpos=np.append(allpos,pos,axis=0)
         atm=Atom()
         atm.symbol=typeid_to_symbol[atoms.typeid]
         structure.append(atm)
-#z-components needs to be transformed to the cryst. coordinates
-#all others are already in cryst. cooridnates
-allpos[:,2]=allpos[:,2]*alat/cell[2,2]
-print(allpos[:,2])
+#
+# z-components needs to be transformed to the cryst. coordinates
+# all others are already in cryst. cooridnates
+# zmin is minum z-position and is used to shift the origin in order to avoid
+# that this minimum atom will end up in the next unit cell
+#
+allpos[:,2]=(allpos[:,2]+zmin)*alat/cell[2,2]
 structure.set_scaled_positions(allpos)
 structure.set_positions(structure.get_positions(wrap=True))
-structure.write('str.cif', format = 'cif')
+# Visualise the structure or write out to the file
 
-view(structure)
+structure.write(ciffile, format = outformat)
+
+if (ase_vis):
+    view(structure)
