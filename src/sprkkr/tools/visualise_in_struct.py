@@ -347,6 +347,7 @@ parser.add_argument('-b','--nbulk',type=int,help='Repetition of bulk unit (defau
 args = parser.parse_args()
 Vac=args.vac
 ciffile=args.out
+cifpotfile=ciffile+'_pot'
 outformat=args.format
 ase_vis=args.ase
 nbulk=args.nbulk #how many bulk repetirions will be used
@@ -354,6 +355,7 @@ filename=args.input
 potfile=args.pot
 
 Potfile=read_potential(potfile)
+Pot_Atoms=Atoms()
 
 typeid_to_symbol={}
 
@@ -361,6 +363,28 @@ for iq in range(Potfile.nq):
     it_iq=Potfile.occupation[iq][3][0]
     Z=Potfile.types[it_iq-1][2]
     typeid_to_symbol[iq+1]=chemical_symbols[Z]
+
+Pot_cell=np.zeros(shape=(3,3), dtype=float)
+Pot_alat=Potfile.alat*Bohr
+Pot_cell[0,:]=Potfile['a(1)']
+Pot_cell[1,:]=Potfile['a(2)']
+Pot_cell[2,:]=Potfile['a(3)']
+Pot_cell*=Pot_alat
+Pot_Atoms.set_cell(Pot_cell)
+Pot_pos = np.empty((0,3), float)
+for iq in range(Potfile.nq):
+    it_iq=Potfile.occupation[iq][3][0]
+    Z=Potfile.types[it_iq-1][2]
+    atm=Atom(tag=it_iq)
+    atm.symbol=chemical_symbols[Potfile.types[it_iq-1][2]]
+    Pot_Atoms.append(atm)
+Pot_Atoms.set_positions(Potfile.qbas*Pot_alat)
+
+if (ase_vis):
+    view(Pot_Atoms)
+Pot_Atoms.write(cifpotfile, format = outformat)
+
+#From here on visualisation of in_structure.inp
 
 # Extract data from structure file
 with open(filename) as f:
