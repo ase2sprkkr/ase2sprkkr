@@ -323,6 +323,14 @@ def read_potential(filename):
 
     return out
 ###############################################################################################
+def floatjm(inp):
+        try:
+                result=float(inp)
+        except ValueError:
+                print ("Wrong float {}, set to 0.0!".format(inp))
+                result=0.0
+        return result
+
 #
 ###############################################################################################
 ase_vis=False
@@ -390,15 +398,16 @@ Pot_Atoms.write(cifpotfile, format = outformat)
 with open(filename) as f:
     data = f.readlines()
 
-alat=float(data[1])*Bohr
+alat=floatjm(data[1])*Bohr
 nlayer=int(data[4])
 
 for k in range(2,4):
     i=0
     for pos  in data[k].split():
-        latvec[k-2,i]=float(pos)
+        latvec[k-2,i]=floatjm(pos)
         i=i+1
 line=5
+
 for ilayer in range(nlayer):
     layer=LayerData()
     layer.nat=int(data[line])
@@ -409,9 +418,9 @@ for ilayer in range(nlayer):
         atom.id=int(data[line].split()[0])
         atom.typeid=int(data[line].split()[1])
         line=line+1
-        x=float(data[line].split()[1])
-        y=float(data[line].split()[2])
-        z=float(data[line].split()[0])
+        x=floatjm(data[line].split()[1])
+        y=floatjm(data[line].split()[2])
+        z=floatjm(data[line].split()[0])
         atom.pos[0]=x
         atom.pos[1]=y
         atom.pos[2]=z
@@ -424,9 +433,9 @@ bulk_rep_unit=int(data[line].split()[1])
 line=line+2
 for ivec in range(nvec):
     line=line+1
-    layers[ivec].layvec[0]=float(data[line].split()[1])
-    layers[ivec].layvec[1]=float(data[line].split()[2])
-    layers[ivec].layvec[2]=float(data[line].split()[0])
+    layers[ivec].layvec[0]=floatjm(data[line].split()[1])
+    layers[ivec].layvec[1]=floatjm(data[line].split()[2])
+    layers[ivec].layvec[2]=floatjm(data[line].split()[0])
     line=line+1
 
 #
@@ -470,7 +479,7 @@ for ilay in range(new_nlayer):
 # zmin is minum z-position and is used to shift the origin in order to avoid
 # that this minimum atom will end up in the next unit cell
 #
-allpos[:,2]=(allpos[:,2]+zmin)*alat/cell[2,2]
+allpos[:,2]=(allpos[:,2]-zmax-zmin)*alat/cell[2,2]
 structure.set_scaled_positions(allpos)
 structure.set_positions(structure.get_positions(wrap=True))
 # Visualise the structure or write out to the file
