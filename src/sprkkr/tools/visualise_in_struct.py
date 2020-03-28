@@ -335,15 +335,15 @@ def floatjm(inp):
 ###############################################################################################
 ase_vis=False
 # Some defaults and initialisations
-filename='in_struct.inp'
+filename=None
 layers={}
 latvec=np.zeros(shape=(2,2), dtype=float)
 #READ IN COMAND LINE PARAMETERS
 description='This is a sctipt to visualise in_struct.inp files. '
 description+='     You can either use ase visualisation tools or export it to cif file'
 parser = argparse.ArgumentParser(description=description)
-parser.add_argument('-i','--input', help='in_struct.inp file name',required=True)
-parser.add_argument('-p','--pot', help='Filemane of scf Potential',required=True)
+parser.add_argument('-i','--input', help='in_struct.inp file name (if not specified only pot file will be ploted)',required=False)
+parser.add_argument('-p','--pot', help='Filemane of scf Potential (always needed to be specified)',required=True)
 
 parser.add_argument('-o','--out',type=str,help='Output file name for structure (default strcuture.cif)', default='strcuture.cif',required=False)
 parser.add_argument('-f','--format',type=str,help='Output file fomrmat for structure (see ase allowed formats, default cif)', default='cif',required=False)
@@ -360,6 +360,9 @@ outformat=args.format
 ase_vis=args.ase
 nbulk=args.nbulk #how many bulk repetirions will be used
 filename=args.input
+vis_in_structure=True
+if filename == None:
+   vis_in_structure=False
 potfile=args.pot
 
 Potfile=read_potential(potfile)
@@ -393,7 +396,8 @@ if (ase_vis):
 Pot_Atoms.write(cifpotfile, format = outformat)
 
 #From here on visualisation of in_structure.inp
-
+if not vis_in_structure:
+   exit()
 # Extract data from structure file
 with open(filename) as f:
     data = f.readlines()
