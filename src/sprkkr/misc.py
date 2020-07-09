@@ -16,7 +16,6 @@ import numpy as np
 from ase.spacegroup import get_spacegroup
 
 
-logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger('sprkkr')
 
 
