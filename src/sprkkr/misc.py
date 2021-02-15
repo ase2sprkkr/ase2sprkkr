@@ -16,7 +16,6 @@ import numpy as np
 from ase.spacegroup import get_spacegroup
 
 
-logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger('sprkkr')
 
 
@@ -26,10 +25,6 @@ def set_log_level(level):
 
 
 def set_occupancy(atoms, site, symbol, concentration):
-    # get the spacegroup
-    sg = get_spacegroup(atoms)
-    # get the number of unique sites
-    #sites = sg.unique_sites(atoms.positions)
     sites = atoms.get_scaled_positions()
     n = len(sites)
     if site >= n:
@@ -44,8 +39,6 @@ def set_occupancy(atoms, site, symbol, concentration):
 
 def get_occupancy(atoms):
     occupancy = atoms.info.get('occupancy', {})
-    sg = get_spacegroup(atoms)
-    #sites = sg.unique_sites(atoms.get_scaled_positions())
     sites = atoms.get_scaled_positions()
     for site in range(len(sites)):
         site_occ = occupancy.get(site, {})
@@ -60,4 +53,41 @@ def get_occupancy(atoms):
     return occupancy
 
 
+class AttrDict(dict):
+    """
+    A dict with the attribute access to its items.
+    """
 
+    def __getattr__(self, name):
+        try:
+            return self[name]
+
+        except KeyError:
+            raise AttributeError(name)
+
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+    def __str__(self):
+        if self.keys():
+            return '\n'.join(
+                [self.__class__.__name__ + ':'] +
+                self.format_items()
+            )
+
+        else:
+            return self.__class__.__name__
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+    def __dir__(self):
+        return list(self.keys())
+
+    def copy(self):
+        return type(self)(self)
+
+    def format_items(self):
+        num = max(map(len, list(self.keys()))) + 1
+        return [key.rjust(num) + ': ' + repr(val)
+                for key, val in sorted(self.items())]

@@ -1,0 +1,16 @@
+# Default parameters for SCF calculations.
+CONTROL DATASET
+        ADSI
+        POTFIL
+        PRINT=0
+
+TAU BZINT=POINTS
+    NKTAB=250
+
+SCF NITER=200
+    MIX=0.050000
+    VXC=VWN
+    TOL=0.000010
+    ISTBRY=1
+
+SITES NL={3}
