@@ -1,15 +1,10 @@
-from .sprkkr_io_types  import map_type
+from sprkkr.common.grammar_types  import type_from_type, type_from_value, Base, mixed, flag
+from sprkkr.common.grammar  import BaseGrammar
+
 import pyparsing as pp
-from contextlib import contextmanager
-
-class BaseEntry:
-   def grammar(self):
-       with generate_grammar():
-         return self._grammar()
 
 
-
-class EntryValueDef(BaseEntry):
+class ValueDefinition(BaseGrammar):
 
   def __init__(self, name, type, default_value=None,
                fixed_value=None, required=False, help=None):
@@ -32,8 +27,13 @@ class EntryValueDef(BaseEntry):
     Is this option required?
     """
     self.name = name
-    self.type = map_type(type)
-    self.default_value = default_value
+    self.type = type_from_type(type)
+    if default_value is None and not isinstance(self.type, Base):
+       self.default_value = type
+       self.type = type_from_value(type)
+    else:
+       self.default_value = default_value
+
     self.fixed_value = fixed_value
     self.required = required
     self.help = None
@@ -103,8 +103,19 @@ def _dict_from_named_values(args, values=None):
        values[value.name] = value
     return values
 
+def add_excluded_names_condition(element, names):
+    if not names:
+       return
+    names = set((i.upper() for i in names))
+    element.addCondition(lambda x: x[0].upper() not in names)
 
-class EntrySectionDef(BaseEntry):
+def custom_value(value_names = []):
+    name = pp.Word(pp.alphanums)
+    add_excluded_names_condition(name, value_names)
+    value = (pp.Suppress(pp.Keyword("=")) + mixed.grammar ) | flag.grammar
+    return (name + value).setParseAction(lambda x: tuple(x))
+
+class SectionDefinition(BaseGrammar):
 
    def __init__(self, name, *args, values=None):
        self.name = name
@@ -119,8 +130,9 @@ class EntrySectionDef(BaseEntry):
    def _grammar(self):
         out = pp.CaselessKeyword(self.name)
 
-        anyvalue = pp.MatchFirst((i._grammar() for i in self.values.values()))
-        values = pp.OneOrMore(pp.Optional(pp.Suppress(pp.LineEnd())) + anyvalue)
+        values = pp.MatchFirst((i._grammar() for i in self.values.values()))
+        values |= custom_value(self.values.keys())
+        values = pp.OneOrMore(values + pp.Optional(pp.Suppress(pp.LineEnd())))
         values.setParseAction(lambda x: dict(x.asList()))
 
         out = (
@@ -138,26 +150,34 @@ class EntrySectionDef(BaseEntry):
        del self.values[name]
        return self
 
+def custom_section(section_names = []):
+  name = pp.Word(pp.alphanums)
+  add_excluded_names_condition(name, section_names)
+  return (
+      name + pp.OneOrMore(custom_value()).setParseAction(lambda x: dict(x.asList()))
+  ).setParseAction(lambda x: tuple(x))
 
-class EntryDef(BaseEntry):
+class TaskDefinition(BaseGrammar):
 
    @staticmethod
    def from_dict(defs):
 
        def gen(i):
            section = defs[i]
-           if not isinstance(defs, EntrySectionDef):
-              section = EntrySectionDef(i, *section)
+           if not isinstance(defs, SectionDefinition):
+              section = SectionDefinition(i, *section)
            return section
 
-       return EntryDef(*[ gen(i) for i in defs])
+       return TaskDefinition(*[ gen(i) for i in defs])
 
    def __init__(self, *sections, help=None):
        self.help = help
        self.sections = _dict_from_named_values(sections)
 
    def _grammar(self):
-       anysection=pp.MatchFirst(( i._grammar() for i in self.sections.values() ))
+       sections=pp.MatchFirst(( i._grammar() for i in self.sections.values() ))
+       anysection = sections
+       sections |= custom_section( self.sections.keys() )
        delimited = anysection + \
             ( pp.Suppress(pp.LineEnd() + pp.OneOrMore(pp.LineEnd())) | pp.StringEnd())
        out = pp.OneOrMore(delimited)
@@ -167,18 +187,3 @@ class EntryDef(BaseEntry):
 
    def __getitem__(self, key):
        return self.sections[key]
-
-
-@contextmanager
-def generate_grammar():
-    """ Set the pyparsing and then restore to the original state """
-    try:
-      old = None
-      pe = pp.ParserElement
-      if hasattr(pe, "DEFAULT_WHITE_CHARS"):
-          old = pe.DEFAULT_WHITE_CHARS
-      pe.setDefaultWhitespaceChars(' \t')
-      yield
-    finally:
-      if old is not None:
-        pe.setDefaultWhitespaceChars(old)
