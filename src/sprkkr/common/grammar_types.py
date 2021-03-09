@@ -6,8 +6,12 @@ import functools
 import numpy as np
 from collections import OrderedDict
 ppc = pp.pyparsing_common
+from .grammar import generate_grammar, separator as separator_grammar
 
-class Base:
+context =  generate_grammar()
+context.__enter__()
+
+class BaseType:
   """ Base class for definition of configuration option types """
 
   def __str__(self):
@@ -19,9 +23,18 @@ class Base:
     self._grammar.addCondition(lambda x: self.validate(x[0]))
     return self._grammar
 
-  def is_optional(self):
-    """ The =value flag can be ommited in the confing file"""
-    return False
+  def missing_value(self):
+    """ The =value flag can be ommited in the confing file
+    Return
+    ------
+    can_be_ommited : bool
+        Is an ommision of the value possible, e.g. the option is given as Flag (only by name of the option)
+    default_value
+        The value used if the value is ommitted
+    do_not_output_value
+        The value, with which the variable should not be outputed at all (e.g. False for a flag)
+    """
+    return False, None, None
 
   def validate(self, value, param_name='<Unknown>'):
     """ Validate either the pyparsing result or a user given value
@@ -64,7 +77,7 @@ class Base:
     self.write(s, val)
     return s.getvalue()
 
-class Unsigned(Base):
+class Unsigned(BaseType):
 
   _grammar = ppc.integer.copy().setParseAction(lambda x:int(x[0]))
 
@@ -79,7 +92,7 @@ class Unsigned(Base):
 
 Unsigned.I = Unsigned()
 
-class Integer(Base):
+class Integer(BaseType):
 
   _grammar = ppc.signed_integer.copy().setParseAction(lambda x:int(x[0]))
 
@@ -93,7 +106,7 @@ class Integer(Base):
 
 Integer.I = Integer()
 
-class Bool(Base):
+class Bool(BaseType):
 
   _grammar = (pp.Keyword('T') | pp.Keyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
@@ -103,12 +116,16 @@ class Bool(Base):
   def grammar_name(self):
     return '<T|F>'
 
+  def write(self, f, val):
+    f.write('T' if val else 'F')
+
+
   numpy_type = bool
 
 Bool.I = Bool()
 
 
-class Real(Base):
+class Real(BaseType):
 
   _grammar = ppc.fnumber.setParseAction(lambda x: float(x[0]))
 
@@ -122,7 +139,7 @@ class Real(Base):
 
 Real.I = Real()
 
-class String(Base):
+class String(BaseType):
 
   _grammar = Word(pp.printables).setParseAction(lambda x:x[0])
 
@@ -142,7 +159,7 @@ class QString(String):
 
 QString.I = QString()
 
-class Keyword(Base):
+class Keyword(BaseType):
 
   def __init__(self, *keywords):
     self.keywords = keywords
@@ -157,7 +174,7 @@ class Keyword(Base):
   def __str__(self):
       return self.grammar_name()
 
-class Flag(Base):
+class Flag(BaseType):
 
   def grammar_name(self):
       return None
@@ -165,8 +182,8 @@ class Flag(Base):
   def str(self):
       return "(Flag)"
 
-  def is_optional(self):
-      return True
+  def missing_value(self):
+      return (True, True, False)
 
   def _validate(self, value):
       return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
@@ -194,7 +211,7 @@ def type_from_type(type):
 
 
 
-class SetOf(Base):
+class SetOf(BaseType):
   """ Set of values, e.g. {1,2,3} """
   def __init__(self, type, length=None, max_length=None):
     self.min_length = length
@@ -210,14 +227,14 @@ class SetOf(Base):
 
   def write(self, f,val):
     f.write('{')
-    if not isinstance(val, (list, tuple)):
+    if not isinstance(val, (list, tuple, np.ndarray)):
       val = [ val ]
     it = iter(val)
-    v = next(it)
-    self.type.write(f, v)
+    i = next(it)
+    self.type.write(f, i)
     for i in it:
        f.write(",")
-       self.type.write(f, val)
+       self.type.write(f, i)
     f.write('}')
 
   def _validate(self, value):
@@ -249,7 +266,7 @@ def type_from_value(value):
      return type_from_set_map[value[0].__class__] if len(value) else Integer.I
   return type_from_type(value.__class__)
 
-class Mixed(Base):
+class Mixed(BaseType):
 
   _grammar = pp.Or((
     i.grammar() for i in
@@ -268,9 +285,30 @@ class Mixed(Base):
   def grammar_name(self):
     return '<mixed>'
 
+  def write(self, f, val):
+    if isinstance(val, bool):
+       boolean.write(f, val)
+    else:
+       super().write(f, val)
+
 Mixed.I = Mixed()
 
-class Sequence(Base):
+class Separator(BaseType):
+  """ Special class for **** separator inside a section """
+
+  _grammar = grammar.separator_grammar
+  has_value = False
+
+  def _validate(self, value):
+      return 'Can not set a value to a separator'
+
+  def _grammar_name(self):
+      return '****...****\n'
+
+  def write(self, f, val=None):
+      f.write('*'*80)
+
+class Sequence(BaseType):
   """ A sequence of values of given types """
 
   def __init__(self, *types):
@@ -291,7 +329,7 @@ class Sequence(Base):
 
 Mixed.I = Mixed()
 
-class Table(Base):
+class Table(BaseType):
   """ Table with named columns, e.g.
       IQ     IREFQ       IMQ       NOQ  ITOQ  CONC
        1         1         1         1     1 1.000
@@ -314,7 +352,6 @@ class Table(Base):
       data = " ".join( (f'{i}:{j.grammar_name()}' for i,j in zip(self.names, self.sequence.types) ) )
       return f"<TABLE of {data}>"
 
-
 integer = Integer.I
 unsigned = Unsigned.I
 boolean = Bool.I
@@ -322,3 +359,9 @@ flag = Flag.I
 real = Real.I
 string = String.I
 mixed = Mixed.I
+separator = Separator.I
+
+
+
+context.__exit__(None, None, None)
+del context

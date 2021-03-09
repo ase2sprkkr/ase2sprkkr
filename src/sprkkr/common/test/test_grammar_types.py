@@ -1,6 +1,9 @@
-from init_tests import patch_package, TestCase
-__package__ = patch_package()
-print(__package__)
+if __package__:
+   from .init_tests import TestCase
+else:
+   from init_tests import TestCase, patch_package
+   __package__ = patch_package()
+
 import pyparsing
 from .. import grammar_types as gt
 import numpy as np
