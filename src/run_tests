@@ -1,0 +1,9 @@
+#!/bin/bash
+if which python3 >> /dev/null ; then
+	 PYTHON=python3
+else
+	 PYTHON=python
+fi
+
+cd $(dirname "$0")
+$PYTHON -m $@ unittest sprkkr/*/test/test_*.py
