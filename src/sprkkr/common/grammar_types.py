@@ -253,6 +253,7 @@ class SetOf(BaseType):
     self._grammar = (Suppress("{") + delimitedList(self.type.grammar()) + Suppress("}"))
     self._grammar |= self.type.grammar()
     self._grammar.setParseAction(lambda x: np.array(x.asList()))
+    self._grammar.setName(f"'{{<{self.type._grammar.name}>,...}}'")
 
   def __str__(self):
     return "SetOf({})".format(str(self.type))

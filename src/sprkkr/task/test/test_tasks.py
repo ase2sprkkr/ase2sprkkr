@@ -50,7 +50,7 @@ class TestTask(TestCase):
         return grammar.parseString(text, True)
 
     def assertNotValid(text):
-      self.assertRaises(pp.ParseException, lambda: parse(text))
+      self.assertRaises(pp.ParseBaseException, lambda: parse(text))
 
     def assertParse(text, value):
       out = parse(text).asList()

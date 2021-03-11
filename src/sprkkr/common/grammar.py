@@ -30,7 +30,7 @@ class BaseGrammar:
               name += delimiter
         else:
             name = pp.Empty().setParseAction(lambda x: self.name)
-        out = name + expr
+        out = name - expr
         out.setParseAction(lambda x: tuple(x))
         return out
 

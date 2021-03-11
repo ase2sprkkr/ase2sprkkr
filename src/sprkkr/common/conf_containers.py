@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
+import pyparsing as pp
 
 class ConfContainer:
 
@@ -146,6 +147,10 @@ class RootConfContainer(ConfContainer):
 
   def read_from_file(self, file, clear_first=True):
       values = self._definition.grammar().parseFile(file, True)
+      #except Exception as e:
+      #   print(e)
+      #   breakpoint()
+      #   print(e)
       assert len(values) == 1
       values = values[0]
       if clear_first:

@@ -59,24 +59,34 @@ class BaseValueDefinition(BaseGrammar):
     return str(self)
 
   def _grammar(self):
-    suffix = self.type.grammar()
+    body = self.type.grammar()
+
+    if self.fixed_value is not None:
+      def check_fixed(s, loc, x, body=body):
+          if x[0]==self.fixed_value:
+             return x
+          message="The value of {} is {} and it should be {}".format(self.name, x[0], self.fixed_value)
+          raise pp.ParseException(s,loc,message, body)
+      body.addParseAction(check_fixed)
+
     if self.name_in_grammar:
        god = self._grammar_of_delimiter()
-       suffix = god + suffix
+       body = god + body
+
+    def fail(s,loc, expr, err):
+        err.__class__ = pp.ParseFatalException
+        breakpoint()
+        raise err
 
     optional, df, np = self.type.missing_value()
     if optional:
-      suffix = pp.Optional(suffix).setParseAction( lambda x: x or df )
-      nsuffix=''
+      body = pp.Optional(body).setParseAction( lambda x: x or df )
+      nbody=''
     else:
-      nsuffix=str(god) + self.type.grammar_name()
-    if self.fixed_value is not None:
-      suffix.addCondition(lambda x: x[0]==self.fixed_value,
-         message="Value {} should be fixed to {}".format(self.name, self.fixed_value)
-      )
+      nbody=str(god) + self.type.grammar_name()
 
-    out = self._tuple_with_my_name(suffix)
-    out.setName(self.name + nsuffix)
+    out = self._tuple_with_my_name(body)
+    out.setName(self.name + nbody)
     return out
 
   def get_value(self):

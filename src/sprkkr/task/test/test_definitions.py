@@ -21,8 +21,9 @@ class TestDefinitions(TestCase):
           if name != 'scf':
             self.assertEqual(t['TASK'][uname](), True)
 
-      for i in os.listdir( path ):
-      #for i in ['arpes.in']:
+      #for i in os.listdir( path ):
+      for i in ['arpes.in']:
+        try:
           if not i.endswith('.in'):
              continue
           filename = os.path.join(path, i)
@@ -34,4 +35,6 @@ class TestDefinitions(TestCase):
           check(t, name)
           t = Task.from_file(filename)
           check(t, name)
+        except Exception as e:
+          raise Exception(f'Parsing of "{i}" failed')
 
