@@ -1,4 +1,5 @@
 #!/bin/bash
+
 if which python3 >> /dev/null ; then
 	 PYTHON=python3
 else
@@ -6,4 +7,10 @@ else
 fi
 
 cd $(dirname "$0")
-$PYTHON -m $@ unittest sprkkr/*/test/test_*.py
+if echo 'import nose' | $PYTHON ; then
+	MODULE="nose -s"
+else
+	MODULE=unittest
+fi
+
+$PYTHON -m $MODULE $@ sprkkr/*/test/test_*.py
