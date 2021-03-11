@@ -1,15 +1,15 @@
-from .option_types  import *
-from .configuration_definitions import \
+from ...common.grammar_types  import *
+from .sections import *
+from ..task_definitions import \
     TaskDefinition as Task, \
-    SectionDefinition as Section, \
-    OptionDefinition as O
+    ValueDefinition as V \
 
 task = Task(
       'dos', [
       CONTROL('DOS'),
       TAU,
       ENERGY.copy([
-          O('EMAX', 1)
+          V('EMAX', 1.0)
       ], defaults= {
           'GRID' : 5
       }),

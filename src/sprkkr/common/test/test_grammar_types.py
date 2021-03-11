@@ -7,6 +7,7 @@ else:
 import pyparsing
 from .. import grammar_types as gt
 import numpy as np
+from ase.units import Rydberg
 
 class GrammarTest(TestCase):
 
@@ -63,6 +64,17 @@ class GrammarTest(TestCase):
          ('1','1')
          ]:
          test(val, res)
+
+    type = gt.Energy()
+    for val, res in [
+         ('1', 1.0),
+         ('Ry', Error),
+         ('1 Ry',1.0),
+         ('1 eV', 1.0/Rydberg),
+         ]:
+         test(val, res)
+
+
 
     type = gt.SetOf(int)
     for val, res in [

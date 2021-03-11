@@ -174,7 +174,7 @@ class TestTask(TestCase):
                               'XSITES':{'NR':3, 'FLAG' : True, 'FLOAT': 3.5}
       })
 
-    task=task_def.read(io.StringIO(""" ENERGY GRID={3}
+    task=task_def.read_from_file(io.StringIO(""" ENERGY GRID={3}
                      NE={300,200}
                      NXXX
 
@@ -195,5 +195,5 @@ class TestTask(TestCase):
     output = io.StringIO()
     task.save_to_file(output)
     output.seek(0)
-    task2 = task_def.read(output)
+    task2 = task_def.read_from_file(output)
     self.assertEqual(str(task.to_dict()), str(task2.to_dict()))

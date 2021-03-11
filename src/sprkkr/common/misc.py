@@ -1,5 +1,6 @@
 import functools
 _x = object()
+from collections import OrderedDict
 
 def lazy_value(fce):
     """ The decorator for only once computed value """
@@ -15,3 +16,15 @@ def lazy_value(fce):
            x.append(fce())
         return x[0]
     return cached_fce
+
+
+class classproperty:
+    """
+    Decorator that converts a method with a single cls argument into a property
+    that can be accessed directly from the class.
+    """
+    def __init__(self, method=None):
+        self.fget = method
+
+    def __get__(self, instance, cls=None):
+        return self.fget(cls)

@@ -4,6 +4,7 @@ from pathlib import Path
 import unittest
 import numpy as np
 import inspect
+import sys
 
 def patch_package():
     """ Set the package name for the test """

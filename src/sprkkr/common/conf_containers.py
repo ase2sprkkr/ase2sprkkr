@@ -12,6 +12,9 @@ class ConfContainer:
       for v in definition.members():
           self._members[v.name] = self._item_class(v)
 
+  def members(self):
+      return self._members
+
   def __getattr__(self, name):
       return self._members[name]
 
@@ -46,13 +49,13 @@ class ConfContainer:
          raise TypeError(f'Can not add custom members to a configuration class {self._definition}')
       cc = self._definition.custom_class
       self._members[name] = cc(self, name)
-      if value:
+      if value is not None:
           self._members[name].set(value)
 
 
   def remove(self, name):
       cclass = getattr('custom_class', self._definition, False)
-      if not cclass: 
+      if not cclass:
          raise TypeError("Can not remove items of {}".format(name))
       if not getattr(self._members[name], 'remove'):
          raise KeyError("No custom member with name {} to remove".format(name))

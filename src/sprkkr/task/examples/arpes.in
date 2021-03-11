@@ -1,0 +1,41 @@
+CONTROL  DATASET     = case
+         ADSI        = ARPES
+         POTFIL      = case.pot_new
+         PRINT = 0
+
+TAU      BZINT= POINTS
+         NKTAB= 250
+
+ENERGY   GRID={1}
+         NE={300}
+      ImE=0.0 Ry
+      EMINEV=-10.
+      EMAXEV=10.0
+      EWORK_EV=4.2
+      IMV_INI_EV=0.05
+      IMV_FIN_EV=5.
+
+SITES 	 NL=4
+
+TASK     ARPES
+         STRVER=0
+         IQ_AT_SURF=2
+         TMPMIN=11.
+         CTMPMAX=11.
+         VIBRA CNVIBRA=14
+
+SPEC_PH THETA=45.
+         PHI=0.
+         POL_P=P
+         EPHOT= 6675.
+
+SPEC_STR N_LAYDBL={10,10}
+         NLAT_G_VEC=57
+         N_LAYER=120
+         SURF_BAR={0.25,0.25} #TRANSP_BAR
+
+SPEC_EL THETA={-10.,10.}
+         PHI={0.,0.}
+         NT=300
+         NP=1
+         POL_E=PZ

@@ -4,15 +4,21 @@ from pyparsing import Word, Suppress, delimitedList
 import itertools
 import functools
 import numpy as np
-from collections import OrderedDict
+from collections import OrderedDict, Hashable
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar
+from .misc import classproperty
+
+from ase.units import Rydberg
 
 context =  generate_grammar()
 context.__enter__()
 
 class BaseType:
   """ Base class for definition of configuration option types """
+
+  """ Common types have values, only the Separator does not """
+  has_value = True
 
   def __str__(self):
     return self.__class__.__name__
@@ -119,7 +125,6 @@ class Bool(BaseType):
   def write(self, f, val):
     f.write('T' if val else 'F')
 
-
   numpy_type = bool
 
 Bool.I = Bool()
@@ -138,6 +143,34 @@ class Real(BaseType):
   numpy_type = float
 
 Real.I = Real()
+
+
+class RealWithUnits(BaseType):
+
+  @classproperty
+  def _grammar(cls):
+    units = pp.Or((pp.Keyword(v).setParseAction(lambda x,*args, u=u: u)  for v,u in  cls.units.items()))
+    units = units | pp.Empty().setParseAction(lambda x: 1.)
+    cls._grammar = ppc.fnumber.setParseAction(lambda x: float(x[0])) + pp.Or(units)
+    cls._grammar.setParseAction(lambda x: x[0]*x[1])
+    return cls._grammar
+
+  def _validate(self, value):
+    return isinstance(value, float) or "Float value required"
+
+  def grammar_name(self):
+    return '<float>[{}]'.format("|".join(self.units))
+
+  numpy_type = float
+
+class Energy(RealWithUnits):
+
+  units = {
+      'Ry' : 1.,
+      'eV' : 1. / Rydberg
+  }
+
+Energy.I = Energy()
 
 class String(BaseType):
 
@@ -166,7 +199,7 @@ class Keyword(BaseType):
     self._grammar = pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper())
 
   def _validate(self, value):
-    return value in keywords or "Required one of [" + "|".join(self.keywords) + "]"
+    return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
   def grammar_name(self):
       return '|'.join(('"'+i+'"' for i in self.keywords ))
@@ -189,15 +222,15 @@ class Flag(BaseType):
       return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
 
   _grammar = pp.Empty().setParseAction(lambda x: True)
-      
+
 Flag.I = Flag()
 
 
 type_from_type_map = OrderedDict([
-    (int  , Integer.I),
-    (np.int64  , Integer.I),
     (float, Real.I),
     (np.float64, Real.I),
+    (int  , Integer.I),
+    (np.int64  , Integer.I),
     (bool,  Bool.I),
     (np.bool_,  Bool.I),
     (str  , String.I)]
@@ -205,7 +238,7 @@ type_from_type_map = OrderedDict([
 
 def type_from_type(type):
   """ Gues the option type from a python type. E.g. int => Integer """
-  if type in type_from_type_map:
+  if isinstance(type, Hashable) and type in type_from_type_map:
     return type_from_type_map[type]
   return type
 
@@ -217,7 +250,9 @@ class SetOf(BaseType):
     self.min_length = length
     self.max_length = max_length or length
     self.type = type_from_type(type)
-    self._grammar = (Suppress("{") + delimitedList(self.type.grammar()) + Suppress("}")).setParseAction(lambda x: np.array(x.asList()))
+    self._grammar = (Suppress("{") + delimitedList(self.type.grammar()) + Suppress("}"))
+    self._grammar |= self.type.grammar()
+    self._grammar.setParseAction(lambda x: np.array(x.asList()))
 
   def __str__(self):
     return "SetOf({})".format(str(self.type))
@@ -246,15 +281,14 @@ class SetOf(BaseType):
 
   def convert(self, value):
     if self.length is None and not isinstance(list(value)):
-      return [ value ]
+      return np.ndarray( value )
 
 
 """ Map python native types to configuration value types """
 
-
 type_from_set_map = OrderedDict([
+    (float, SetOf(float)),
     (int  , SetOf(int)),
-    (float, SetOf(float))
 ])
 type_from_set_map[np.int64] = type_from_set_map[int]
 type_from_set_map[np.float64] = type_from_set_map[float]
@@ -264,16 +298,28 @@ def type_from_value(value):
   """ Gues the option type from a python value. E.g. 2 => Integer """
   if isinstance(value, (list, np.ndarray)):
      return type_from_set_map[value[0].__class__] if len(value) else Integer.I
+  if isinstance(value, str):
+     try:
+        String._grammar.parseString(value, True)
+        return String.I
+     except Exception:
+        return QString.I
+
   return type_from_type(value.__class__)
 
 class Mixed(BaseType):
 
   _grammar = pp.Or((
-    i.grammar() for i in
-    itertools.chain(
-      type_from_set_map.values(),
-      type_from_type_map.values(), 
-    )
+    i.grammar() for i in [
+      Real.I,
+      Integer.I,
+      Bool.I,
+      Energy.I,
+      type_from_set_map[int],
+      type_from_set_map[float],
+      QString.I,
+      String.I,
+    ]
   ))
 
   def _validate(self, value):
@@ -296,7 +342,7 @@ Mixed.I = Mixed()
 class Separator(BaseType):
   """ Special class for **** separator inside a section """
 
-  _grammar = grammar.separator_grammar
+  _grammar = separator_grammar
   has_value = False
 
   def _validate(self, value):
@@ -308,6 +354,8 @@ class Separator(BaseType):
   def write(self, f, val=None):
       f.write('*'*80)
 
+Separator.I = Separator()
+
 class Sequence(BaseType):
   """ A sequence of values of given types """
 
@@ -317,7 +365,6 @@ class Sequence(BaseType):
 
   def _validate(self, value):
       if not isinstance(value, tuple) or len(value) != len(self.types):
-          breakpoint()
           return f'A tuple of {len(self.types)} values is required'
       for i,j in zip(self.types, value):
           out = i.validate(j)
@@ -326,8 +373,6 @@ class Sequence(BaseType):
 
   def grammar_name(self):
       return "(" + join( (f'{i}:{j.grammar_name()}' for i,j in zip(self.names, self.types) ) ) + ")"
-
-Mixed.I = Mixed()
 
 class Table(BaseType):
   """ Table with named columns, e.g.
@@ -358,9 +403,10 @@ boolean = Bool.I
 flag = Flag.I
 real = Real.I
 string = String.I
+qstring = QString.I
 mixed = Mixed.I
 separator = Separator.I
-
+energy = Energy.I
 
 
 context.__exit__(None, None, None)

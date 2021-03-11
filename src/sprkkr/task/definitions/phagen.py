@@ -5,14 +5,11 @@ from ..task_definitions import \
     ValueDefinition as V
 
 task = Task(
-      'scf', [
-        CONTROL('SCF').copy([
-          V('KRWS', 1)
-        ]),
+      'phagen', [
+        CONTROL('PHAGEN'),
         TAU,
         ENERGY.copy( defaults = {'NE' : 32}),
         SCF,
-        SITES
       ],
       description = "SCF calculation",
       help = "Set at least options ..., ...., ....."

@@ -16,7 +16,7 @@ from ..common.configuration_definitions import \
     unique_dict
 from ..common.options import CustomOption
 from ..common.conf_containers import CustomSection
-from ..common.grammar_types import mixed, flag
+from ..common.grammar_types import mixed, flag, Keyword
 from ..common.misc import lazy_value
 from .tasks import Task
 
@@ -46,7 +46,7 @@ class SectionDefinition(BaseSectionDefinition):
   delimiter = '\n'
   @staticmethod
   def _grammar_of_delimiter():
-   return optional_line_end
+      return optional_line_end
 
 
 class TaskDefinition(ConfDefinition):
@@ -60,7 +60,9 @@ class TaskDefinition(ConfDefinition):
   @lazy_value
   @staticmethod
   def _grammar_of_delimiter():
-    return line_end + pp.OneOrMore(line_end)
+      out = line_end + pp.OneOrMore(line_end)
+      out.setName('<2*newline>')
+      return out
 
   custom_class = staticmethod(CustomSection.factory(SectionDefinition))
   @lazy_value
@@ -68,3 +70,10 @@ class TaskDefinition(ConfDefinition):
   def _custom_section_value():
       value  = SectionDefinition._grammar_of_delimiter() + SectionDefinition.custom_value()
       return pp.OneOrMore(value).setParseAction(lambda x: unique_dict(x.asList()))
+
+  def __init__(self, name, sections=None, **kwargs):
+      super().__init__(name, sections, **kwargs)
+      if not 'TASK' in self:
+         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', Keyword(self.name)) ] )
+      elif not 'TASK' in self['TASK']:
+         self['TASK']['TASK'] = ValueDefinition(Keyword(self.name))

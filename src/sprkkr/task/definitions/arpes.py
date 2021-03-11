@@ -1,47 +1,48 @@
-from .option_types  import *
+from ...common.grammar_types  import *
 from .sections import *
-from .configuration_definitions import \
+from ..task_definitions import \
     TaskDefinition as Task, \
-    OptionDefinition as O
+    ValueDefinition as V, \
+    SectionDefinition as Section
 
-taks = Task(
+task = Task(
     'arpes', [
     CONTROL('ARPES'),
     TAU,
     ENERGY.copy([
-        O('EMINEV', -10.),
-        O('EMAXEV', -10),
-        O('EWORKEV', 4.2),
-        O('IMV_INI_EV', 0.05),
-        O('IMV_FIN_EV', 5.),
+        V('EMINEV', -10.),
+        V('EMAXEV', -10.),
+        V('EWORKEV', 4.2),
+        V('IMV_INI_EV', 0.05),
+        V('IMV_FIN_EV', 5.),
       ],
       remove = ['EMIN'],
       defaults = { 'GRID' : 1 }
     ),
     SITES.copy(defaults = {'NL' : 4 }),
     TASK('ARPES').copy([
-      O('STRVER', 0),
-      O('IQ_AT_SURF', 2),
-      O('MILLER_HKL', SetOf(Integer, length=0), [0,0,1]),
-      O('NTMP', 1),
-      O('TMPMIN', 11.),
-      O('CTMPMAX', 11.),
-      O('CTMPMAX', 11.),
-      O('VIBRA', Flag, True),
-      O('CNVIBRA', 14),
+      V('STRVER', 0),
+      V('IQ_AT_SURF', 2),
+      V('MILLER_HKL', SetOf(int, length=0), [0,0,1]),
+      V('NTMP', 1),
+      V('TMPMIN', 11.),
+      V('CTMPMAX', 11.),
+      V('CTMPMAX', 11.),
+      V('VIBRA', flag, True),
+      V('CNVIBRA', 14),
     ]),
     Section('SPEC_PH', [
-      O('THETA', 45.),
-      O('PHI', 0.),
-      O('POL_P', 'P'),
-      O('EPHOT', 6675),
+      V('THETA', 45.),
+      V('PHI', 0.),
+      V('POL_P', 'P'),
+      V('EPHOT', 6675.),
     ]),
     Section('SPEC_STR', [
-      O('N_LAYDBL', SetOf(int), [10,10]),
-      O('NLAT_G_VEC', 57),
-      O('N_LAYER', 120),
-      O('SURF_BAR', SetOf(float), [0.25,0.25]),
-      O('TRANSP_BAR', Flag, False)
+      V('N_LAYDBL', SetOf(int), [10,10]),
+      V('NLAT_G_VEC', 57),
+      V('N_LAYER', 120),
+      V('SURF_BAR', SetOf(float), [0.25,0.25]),
+      V('TRANSP_BAR', flag, False)
     ])
   ])
 
