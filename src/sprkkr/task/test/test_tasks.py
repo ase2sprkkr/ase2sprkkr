@@ -16,6 +16,15 @@ import numpy as np
 
 class TestTask(TestCase):
 
+  def test_section_delimiter_value(self):
+     grammar = cd.TaskDefinition._grammar_of_delimiter()
+     grammar = 'a' + grammar + 'b'
+     for w in ['a b','a\n b','a\n\n b','a\n \n b','a \n\n b', 'a\n\n\n b']:
+         self.assertRaises(pp.ParseException, lambda: grammar.parseString(w, True))
+     for w in ['a\nb','a \nb','a\n  \nb','a  \n \nb','a \n\t\nb', 'a\n\n\nb']:
+         self.assertEqual(['a','b'], grammar.parseString(w, True).asList())
+
+
   def test_custom_value(self):
 
      cv = cd.SectionDefinition.custom_value(['aaa'])
@@ -70,9 +79,13 @@ class TestTask(TestCase):
     assertParse("ENERGY Ime= 0.5 NE={5}",('ENERGY', {'Ime':0.5, 'NE':5}) )
     assertParse("""ENERGY Ime= 0.5
                                    NE={5}""", ('ENERGY', {'Ime':0.5, 'NE':5}) )
+    assertParse("""ENERGY Ime= 0.5
+
+                                   NE={5}""", ('ENERGY', {'Ime':0.5, 'NE':5}) )
     assertNotValid("""ENERGY Ime= 0.5
 
-                                   NE={5}""")
+NE={5}""")
+
     assertNotValid(""" ENERGY GRID={1}""")
     assertParse(""" ENERGY GRID={3}""", ('ENERGY', {'GRID':3}))
 
@@ -88,7 +101,7 @@ class TestTask(TestCase):
                      NE={300}
 
 
-              SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300}, 'SITES':{'NL':2}} )
+SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300}, 'SITES':{'NL':2}} )
 
     #custom values and sections
 
@@ -97,7 +110,7 @@ class TestTask(TestCase):
                      NXXX
 
 
-              SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300, 'NXXX': True},
+SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300, 'NXXX': True},
                               'SITES':{'NL':2}}
     )
 
@@ -106,11 +119,21 @@ class TestTask(TestCase):
                      NE={300}
                      NXXX
 
-              SITES NL=2
+SITES NL=2
 
               """, {'ENERGY': {'GRID':3, 'NE':300, 'NXXX': True},
                               'SITES':{'NL':2}}
     )
+
+    assertParse(""" ENERGY GRID={3}
+                     NE={300}
+                     NXXX
+
+  SITES NL=2
+
+              """, {'ENERGY': {'GRID':3, 'NE':300, 'NXXX': True, 'SITES': True, 'NL': 2}}
+    )
+
 
 
 
@@ -119,9 +142,9 @@ class TestTask(TestCase):
                      NXXX
 
 
-              SITES NL=2
+SITES NL=2
 
-              SITES NL=3
+SITES NL=3
               """)
 
     #custom section
@@ -130,9 +153,9 @@ class TestTask(TestCase):
                      NXXX
 
 
-              SITES NL=2
+SITES NL=2
 
-              XSITES NR=3
+XSITES NR=3
               """,
 
       {'ENERGY': {'GRID':3, 'NE':300, 'NXXX': True},
@@ -141,14 +164,14 @@ class TestTask(TestCase):
       })
 
     #multiline custom section
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
 
-              SITES NL=2
+SITES NL=2
 
-              XSITES NR=3 NF=1
+XSITES NR=3 NF=1
                      NZ=5.5
               """,
 
@@ -158,14 +181,14 @@ class TestTask(TestCase):
       })
 
     #custom section with a flag
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
 
-              SITES NL=2
-
-              XSITES NR=3 FLAG
+SITES NL=2
+ 
+XSITES NR=3 FLAG
                      FLOAT=3.5
               """,
 
@@ -179,9 +202,9 @@ class TestTask(TestCase):
                      NXXX
 
 
-              SITES NL=2
+SITES NL=2
 
-              XSITES NR=3 FLAG
+XSITES NR=3 FLAG
                      FLOAT=3.5
               """))
     self.assertTrue(isinstance(task, tasks.Task))
@@ -197,3 +220,6 @@ class TestTask(TestCase):
     output.seek(0)
     task2 = task_def.read_from_file(output)
     self.assertEqual(str(task.to_dict()), str(task2.to_dict()))
+
+
+

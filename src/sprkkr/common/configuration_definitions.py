@@ -1,5 +1,5 @@
 from ..common.grammar_types  import type_from_type, type_from_value, BaseType, mixed
-from ..common.grammar  import BaseGrammar, delimitedList
+from ..common.grammar  import BaseGrammar, delimitedList, end_of_file
 import pyparsing as pp
 from ..common.misc import OrderedDict
 from .conf_containers import Section
@@ -324,7 +324,7 @@ class ConfDefinition(BaseDefinitionContainer):
    def _grammar(self):
        sections = pp.MatchFirst(( i._grammar() for i in self.sections.values() ))
        sections |= self.custom_section( self.sections.keys() )
-       delimited = sections + (self.__class__._grammar_of_delimiter() | pp.StringEnd())
+       delimited = sections + (self.__class__._grammar_of_delimiter() | end_of_file)
        out = pp.OneOrMore(delimited)
        out.setParseAction(lambda x: unique_dict(x.asList()))
        out.ignore("#" + pp.restOfLine + pp.LineEnd())

@@ -8,7 +8,6 @@ sprkkr.common.configuration_definitions
 
 import functools
 import pyparsing as pp
-from ..common.grammar import optional_line_end, line_end
 from ..common.configuration_definitions import \
     BaseValueDefinition, \
     BaseSectionDefinition, \
@@ -17,8 +16,12 @@ from ..common.configuration_definitions import \
 from ..common.options import CustomOption
 from ..common.conf_containers import CustomSection
 from ..common.grammar_types import mixed, flag, Keyword
+from ..common.grammar import generate_grammar
 from ..common.misc import lazy_value
 from .tasks import Task
+
+with generate_grammar():
+  section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
 
 class ValueDefinition(BaseValueDefinition):
   """ This class describes the format of one value of
@@ -45,8 +48,10 @@ class SectionDefinition(BaseSectionDefinition):
   """ options are delimited by newline in ouptut. """
   delimiter = '\n'
   @staticmethod
+  @lazy_value
   def _grammar_of_delimiter():
-      return optional_line_end
+      out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
+      return out
 
 
 class TaskDefinition(ConfDefinition):
@@ -60,8 +65,11 @@ class TaskDefinition(ConfDefinition):
   @lazy_value
   @staticmethod
   def _grammar_of_delimiter():
-      out = line_end + pp.OneOrMore(line_end)
-      out.setName('<2*newline>')
+      #out = (pp.ZeroOrMore(pp.Optional(pp.LineEnd()) + pp.White(' \t')) + pp.OneOrMore(pp.LineEnd().setWhitespaceChars(''))+ pp.FollowedBy(pp.Regex(r'[^\s]'))).suppress()
+      def ws(x):
+          return x.setWhitespaceChars('')
+      out = (pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r'[^\s]'))) ).suppress()
+      out.setName('<newline><printable>')
       return out
 
   custom_class = staticmethod(CustomSection.factory(SectionDefinition))

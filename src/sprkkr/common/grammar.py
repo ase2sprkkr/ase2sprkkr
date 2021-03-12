@@ -38,7 +38,8 @@ class BaseGrammar:
 with generate_grammar():
   optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).setName(' ')
   line_end = pp.Suppress(pp.LineEnd()).setName('\n')
-  end_of_file = pp.Suppress(pp.ZeroOrMore(pp.LineEnd()) + pp.StringEnd()).setName('')
+  end_of_file = (pp.Regex('[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
+  pp.Suppress(pp.ZeroOrMore(pp.LineEnd()) + pp.StringEnd()).setName('')
   separator = pp.Suppress(pp.Literal('*'*10) + pp.ZeroOrMore('*'))
 
 def delimitedList(expr, delim):
