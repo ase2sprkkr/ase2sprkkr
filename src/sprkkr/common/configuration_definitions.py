@@ -2,13 +2,15 @@ from ..common.grammar_types  import type_from_type, type_from_value, BaseType, m
 from ..common.grammar  import BaseGrammar, delimitedList
 import pyparsing as pp
 from ..common.misc import OrderedDict
+from .conf_containers import Section
+from .options import Option
 
 def unique_dict(values):
     out = dict(values)
     if len(values) != len(out):
        seen = set()
        duplicates = [x for x,y in values if x not in seen and not seen.add(x)]
-       raise pp.ParseException(f"There are unique KEYS: {duplicates}")
+       raise pp.ParseException(f"There are non-unique keys: {duplicates}")
     return out
 
 
@@ -17,26 +19,37 @@ class BaseValueDefinition(BaseGrammar):
   name_in_grammar = True
 
   def __init__(self, name, type, default_value=None,
-               fixed_value=None, required=False, help=None):
+               fixed_value=None, required=False, help=None,
+               is_hidden=False, name_in_grammar=True):
     """
     Parameters
     ----------
     name: str
-    Name of the configuration value
+      Name of the configuration value
 
     type: BaseType
-    Configuration value type
+      Configuration value type
 
     default: mixed
-    Default value for configuration
+      Default value for configuration
 
     fixed: mixed
-    If given, this option is not user given, but with fixed_value value (provided by this parameter)
+      If given, this option is not user given, but with fixed_value value (provided by this parameter)
+
+    is_hidden: boolean
+      A hidden value is not offered to a user, usually they are
+      set by another another object (and so their direct settings
+      has no sense)
+
+    name_in_grammar: boolean
+      If False, there the name of the variable is not printed in the configuration file. The variable is recognized by its      position.
+
 
     required: bool
-    Is this option required?
+      Is this option required?
     """
     self.name = name
+    self.name_in_grammar = name_in_grammar
     self.type = type_from_type(type)
     if default_value is None and not isinstance(self.type, BaseType):
        self.default_value = type
@@ -45,8 +58,12 @@ class BaseValueDefinition(BaseGrammar):
        self.default_value = default_value
 
     self.fixed_value = fixed_value
-    self.required = required
+    self.required = default_value is not None if required is None else required
     self.help = None
+    self.is_hidden = is_hidden
+
+  def create_object(self, container=None):
+    return Option(self)
 
   def __str__(self):
     out="SPRKKR({} of {})".format(self.name, str(self.type))
@@ -149,13 +166,15 @@ class BaseDefinitionContainer(BaseGrammar):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], help=None, description=None):
+    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False):
        self.help = help
        self.name = name
        self.description = description
+       self.is_hidden = is_hidden
        if not isinstance(members, OrderedDict):
           members = self._dict_from_named_values(members)
        self._members = members
+       self.has_hidden_members = has_hidden_members
 
     def __iter__(self):
         return iter(self._members)
@@ -176,7 +195,7 @@ class BaseDefinitionContainer(BaseGrammar):
         del self._members[name]
         return self
 
-    def copy(self, args=[], items=[], remove=[], defaults={}, help=None, description=None):
+    def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
         """ copy the section with the contained values modified """
         members = self._members.copy()
         for i in remove:
@@ -184,11 +203,19 @@ class BaseDefinitionContainer(BaseGrammar):
         members.update(self._dict_from_named_values(args, items))
         for i,v in defaults.items():
             members[i].default_value = v
-        if help is None: help = self.help
-        if description is None: description = self.description
-        return self.__class__(self.name, members=members, help=help, description=description)
 
+        k=['help', 'description', 'is_hidden', 'has_hidden_members']
+        for i in k:
+            if not i in kwargs:
+               kwargs[i] = getattr(self, i)
+        if len(kwargs) > len(k):
+            missing = set(kwargs.keys()) - set(k)
+            raise TypeError(f'No {",".join(missing)} keyword arguments for copying sections')
 
+        return self.__class__(self.name, members=members, **kwargs)
+
+    def create_object(self, container=None):
+        return Section(self)
 
 
 class BaseSectionDefinition(BaseDefinitionContainer):
@@ -200,18 +227,39 @@ class BaseSectionDefinition(BaseDefinitionContainer):
        the section and its predecessor
    """
    name_in_grammar = True
+
    """ Force order of its members """
    force_order = False
 
+   def __init__(self, name, members=[], name_in_grammar=True, **kwargs):
+       """
+       Parameters
+       ----------
+       name: str
+           Name of the section
+
+       members: iterable
+           Members of the section.
+
+       name_in_grammar: boolean
+           If True, the section (in the file) begins with its name
+           If False, there are only member name - member value in the file
+
+       **kwargs
+           See BaseDefinitionContainer.__init__
+       """
+       super().__init__(name, members, *kwargs)
+       self.name_in_grammar = name_in_grammar
+
    @property
    def values(self):
-        return self._members
+       return self._members
 
    def _grammar(self):
-        out = pp.CaselessKeyword(self.name)
-        custom_value = self.custom_value(self._members.keys())
-        delimiter = self._grammar_of_delimiter()
-        if self.force_order:
+       out = pp.CaselessKeyword(self.name)
+       custom_value = self.custom_value(self._members.keys())
+       delimiter = self._grammar_of_delimiter()
+       if self.force_order:
            out = []
            cvs = pp.ZeroOrMore(custom_value + delimiter)
            def generator():
@@ -221,15 +269,15 @@ class BaseSectionDefinition(BaseDefinitionContainer):
                    yield i._grammar()
                yield cvs
            out = pp.An,d(*generator())
-        else:
+       else:
           values = pp.MatchFirst((i._grammar() for i in self.members()))
           values |= custom_value
           values = delimitedList(values, delimiter)
 
-        values.setParseAction(lambda x: unique_dict(x.asList()))
-        out = self._tuple_with_my_name(values, delimiter)
-        out.setName(self.name)
-        return out
+       values.setParseAction(lambda x: unique_dict(x.asList()))
+       out = self._tuple_with_my_name(values, delimiter)
+       out.setName(self.name)
+       return out
 
    @classmethod
    def custom_value(cls, value_names = []):

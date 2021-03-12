@@ -5,19 +5,22 @@ import pyparsing as pp
 
 class ConfContainer:
 
-  _item_class = Option
-
   def __init__(self, definition):
       self._definition = definition
       self._members = OrderedDict()
       for v in definition.members():
-          self._members[v.name] = self._item_class(v)
+          self._members[v.name] = v.create_object(self)
 
   def members(self):
       return self._members
 
   def __getattr__(self, name):
-      return self._members[name]
+      if not name in self._members:
+          raise AttributeError(f'No {name} member of {self._definition}')
+      out = self._members[name]
+      if out._definition.is_hidden:
+          raise AttributeError(f'Member {name} of {self._definition} is not directly accessible')
+      return out
 
   def __getitem__(self, name):
     return self._members[name]
@@ -36,7 +39,7 @@ class ConfContainer:
   def name(self):
       return self._definition.name
 
-  def set(self, values, allow_add=True):
+  def set(self, values, allow_add=True, ):
       for i in values:
           if not i in self._members:
              if not allow_add:
@@ -48,6 +51,8 @@ class ConfContainer:
   def add(self, name, value=None):
       if not getattr(self._definition, 'custom_class', False):
          raise TypeError(f'Can not add custom members to a configuration class {self._definition}')
+      if name in self._members:
+         raise TypeError(f'Section member {name} is already in the section {self._definition}')
       cc = self._definition.custom_class
       self._members[name] = cc(self, name)
       if value is not None:

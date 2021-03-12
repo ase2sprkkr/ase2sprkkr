@@ -1,6 +1,6 @@
 import functools
 _x = object()
-from collections import OrderedDict
+from collections import OrderedDict as _OrderedDict
 
 def lazy_value(fce):
     """ The decorator for only once computed value """
@@ -28,3 +28,10 @@ class classproperty:
 
     def __get__(self, instance, cls=None):
         return self.fget(cls)
+
+class OrderedDict(_OrderedDict):
+
+    def index(self, key):
+        for i,k in enumerate(self.keys()):
+            if k == key: return i
+        raise KeyError(f"No suych key {key}");

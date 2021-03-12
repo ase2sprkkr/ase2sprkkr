@@ -43,4 +43,15 @@ with generate_grammar():
 
 def delimitedList(expr, delim):
   """ Delimited list with already suppressed delimiter (or with a in-results-wanted one) """
-  return delim + pp.ZeroOrMore(delim + expr)
+  return expr + pp.ZeroOrMore(delim + expr)
+
+def addConditionEx(self, condition, message):
+  def check_condition(s, loc, tocs):
+      if condition(tocs):
+         return tocs
+      if not isinstance(message, str):
+         message = message(toc)
+      raise pp.ParseException(s, loc, message)
+  self.addParseAction(check_condition)
+
+pp.ParserElement.addConditionEx = addConditionEx
