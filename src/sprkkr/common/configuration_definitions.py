@@ -48,7 +48,7 @@ class BaseValueDefinition(BaseDefinition):
 
   def __init__(self, name, type, default_value=None,
                fixed_value=None, required=False, help=None,
-               is_hidden=False, name_in_grammar=True,
+               is_hidden=False, name_in_grammar=None,
                is_optional=False):
     """
     Parameters
@@ -80,7 +80,6 @@ class BaseValueDefinition(BaseDefinition):
       Is this option required?
     """
     self.name = name
-    self.name_in_grammar = name_in_grammar
     self.type = type_from_type(type)
     if default_value is None and not isinstance(self.type, BaseType):
        self.default_value = type
@@ -91,6 +90,7 @@ class BaseValueDefinition(BaseDefinition):
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
 
+    self.name_in_grammar = self.type.name_in_grammar if name_in_grammar is None else name_in_grammar
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = default_value is not None if required is None else required
     self.help = None

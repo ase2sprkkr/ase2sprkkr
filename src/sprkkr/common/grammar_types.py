@@ -22,6 +22,7 @@ class BaseType:
   """ Common types have values, only the Separator does not """
   has_value = True
   default_value = None
+  name_in_grammar = True
 
   def __init__(self, prefix=None, postfix=None, print_width=0):
       self.prefix = prefix
@@ -485,7 +486,12 @@ class Table(BaseType):
        1         1         1         1     1 1.000
        2         2         2         1     2 1.000
   """
-  def __init__(self, columns=None, column_widths = 16, header=None, numbering=None, prefix=None, postfix=None, length=None, **kwargs):
+
+  name_in_grammar = False
+
+  def __init__(self, columns=None, column_widths = 16, header=None,
+                     numbering=None, numbering_label=None,
+                     prefix=None, postfix=None, length=None, **kwargs):
       super().__init__(prefix=None, postfix=None)
       if columns is None:
          columns = kwargs
@@ -498,7 +504,11 @@ class Table(BaseType):
          header = self.names
       self.sequence = Sequence( *columns, column_widths = column_widths )
       self.header = header
+      if numbering.__class__ is str:
+         numbering_label=numbering
+         self.numbering=True
       self.numbering = Integer.I if numbering is True else numbering
+      self.numbering_label = numbering_label
 
       line = self.sequence.grammar() + pp.Suppress(pp.lineEnd)
       if self.numbering:
@@ -521,14 +531,19 @@ class Table(BaseType):
          grammar.addConditionEx(lambda x: len(x[0]) == length, lambda x: f'Just {length} rows are required, {len(x[0])} found.')
       self._grammar = grammar
 
-  def _string(self, f, data):
+  def _string(self, data):
       out = []
       if self.header:
          def gen():
              for n,t in zip(self.names, self.sequence.types):
                  yield n
                  yield t.print_width
-         fstr = (" {:>{}}"*len(self.names))[1:]
+         fstr = (" {:>{}}"*len(self.names))
+
+         if self.numbering_label:
+             fstr += String(print_width=self.numbering.print_width).string(self.numbering_label)
+         else:
+             fstr = fstr[1:]
          out.append(fstr.format(*gen))
          newline = True
       else:
