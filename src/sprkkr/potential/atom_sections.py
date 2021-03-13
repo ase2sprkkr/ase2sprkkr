@@ -1,5 +1,4 @@
 from ..common.conf_containers import Section
-from ase.spacegroup import get_spacegroup
 
 class AtomSection(Section):
   """ Section, that sets the ASE atoms properties """

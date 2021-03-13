@@ -28,8 +28,6 @@ cell_symmetries_lookup = {v : k for k,v in cell_symmetries.items() }
 
 class LatticeSection(AtomSection):
 
-  __setattr__ = object.__setattr__
-
   _lattice_params = {
         'a' : 'ALAT',
         'b': 'BLAT',
