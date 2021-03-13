@@ -1,5 +1,5 @@
-from ..common.misc import OrderedDict
-from .potential_defintions import \
+from ...common.misc import OrderedDict
+from ..potential_defintions import \
       PotSectionDefinition, \
       PotValueDefinition as V,\
       Separator
