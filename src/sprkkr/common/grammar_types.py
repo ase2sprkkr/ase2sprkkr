@@ -11,6 +11,7 @@ from .grammar import generate_grammar, separator as separator_grammar, delimited
 from .misc import classproperty
 
 from ase.units import Rydberg
+import copy
 
 context =  generate_grammar()
 context.__enter__()
@@ -35,10 +36,15 @@ class BaseType:
     """ Return a pyparsing grammar for the type """
     grammar = self._grammar
     if self.prefix:
-       grammar = pp.Literal(self.prefix).suppress() + grammar
+       grammar = pp.Literal(self.prefix).suppress().setName('{') + grammar
     if self.postfix:
-       grammar += pp.Literal(self.postfix).suppress()
+       grammar += pp.Literal(self.postfix).suppress().setName('}')
+    grammar = self.transform_grammar(grammar)
     grammar.addCondition(lambda x: self.validate(x[0]))
+    return grammar
+
+  def transform_grammar(self, grammar):
+    """ Chance for the resulting class to alter the resulting prefixed grammar """
     return grammar
 
   def missing_value(self):
@@ -87,24 +93,31 @@ class BaseType:
     """ Convert a value from user to a "cannonical form" """
     return value
 
-  def value_to_str(self, val):
-      return str(val)
+  def _string(self, val):
+    return str(val)
 
-  def write(self, f, val):
-    val = self.value_to_str(val)
+  def string(self, val):
+    val = self._string(val)
     if self.prefix:
        val = self.prefix + val
     if self.postfix:
        val += self.postfix
-    spaces = self.print_width - len(val)
-    if spaces > 0:
-       val = " "*spaces + val
-    f.write(val)
+    if self.print_width:
+       spaces = self.print_width - len(val)
+       if spaces > 0:
+          val = " "*spaces + val
+    return val
+
+  def write(self, f, val):
+    f.write(self.string(val))
 
   def print(self, val):
     s = io.StringIO()
     self.write(s, val)
     return s.getvalue()
+
+  def copy(self):
+    return copy.copy(self)
 
 class Unsigned(BaseType):
 
@@ -145,8 +158,8 @@ class Bool(BaseType):
   def grammar_name(self):
     return '<T|F>'
 
-  def write(self, f, val):
-    f.write('T' if val else 'F')
+  def _string(self, val):
+    return 'T' if val else 'F'
 
   numpy_type = bool
 
@@ -285,11 +298,10 @@ def type_from_type(type):
   return type
 
 
+class Array(BaseType):
 
-class SetOf(BaseType):
-  """ Set of values, e.g. {1,2,3} """
-
-  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | pp.White(' \t')).setName('[,; ]')
+  delimiter=pp.White(' \t').suppress()
+  delimiter_str = ' '
 
   def __init__(self, type, length=None, max_length=None, min_length=None, **kwargs):
     super().__init__(**kwargs)
@@ -298,29 +310,27 @@ class SetOf(BaseType):
     self.type = type_from_type(type)
     grammar = self.type.grammar()
     grammar = delimitedList(grammar, self.delimiter)
-    grammar = pp.And((Suppress("{"),  grammar, Suppress("}")))
-    grammar |= self.type.grammar()
-    grammar.setParseAction(lambda x: np.array(x.asList()))
-    grammar.setName(f"'{{<{self.type._grammar.name}>,...}}'")
+    grammar.setParseAction(lambda x: np.atleast_1d(x.asList()))
+    grammar.setName(self.grammar_name())
     self._grammar = grammar
 
   def __str__(self):
-    return "SetOf({})".format(str(self.type))
+    return "Array({})".format(str(self.type))
 
   def grammar_name(self):
-      return '{' + self.type.grammar_name() + ",...}"
+      gn = self.type.grammar_name()
+      if self.min_length is not None and self.min_length == self.max_length:
+        return f'{self.min_length}*{gn}'
+      return f'{gn}{self.delimiter_str}{gn}{self.delimiter_str}...'
 
-  def write(self, f,val):
-    f.write('{')
-    if not isinstance(val, (list, tuple, np.ndarray)):
-      val = [ val ]
+  def _string(self, val):
     it = iter(val)
     i = next(it)
-    self.type.write(f, i)
+    out = self.type.string(i)
     for i in it:
-       f.write(",")
-       self.type.write(f, i)
-    f.write('}')
+       out += self.delimiter_str
+       out += self.type.string(i)
+    return out
 
   def _validate(self, value):
     for i,v in enumerate(value):
@@ -328,15 +338,34 @@ class SetOf(BaseType):
         if out is not True:
            return "Value {} in the set is incorrect: {}".format(i, out)
     if self.min_length is not None and len(value) < self.min_length:
-       return "The set shoud be at least {self.length} items long, it has {} items".format(self.min_length, len(value))
+       return f"The set shoud be at least {self.min_length} items long, it has {len(value)} items"
     if self.max_length is not None and len(value) > self.min_length:
-       return "The set can not have more than {self.length} items, it has {} items".format(self.max_length, len(value))
+       return f"The set can not have more than {self.max_length} items, it has {len(value)} items"
     return True
 
   def convert(self, value):
     if not isinstance(value, np.ndarray):
        return np.atleast_1d( value )
     return value
+
+
+class SetOf(Array):
+  """ Set of values, e.g. {1,2,3} """
+
+  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | pp.White(' \t')).setName('[,; ]')
+  delimiter_str = ','
+
+  def __init__(self, type, **kwargs):
+    kwargs.setdefault('prefix', '{')
+    kwargs.setdefault('postfix', '}')
+    super().__init__(type, **kwargs)
+
+  def transform_grammar(self, grammar):
+    return grammar | self.type.grammar.copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
+
+  def __str__(self):
+    return "SetOf({})".format(str(self.type))
+
 
 
 """ Map python native types to configuration value types """
@@ -386,11 +415,11 @@ class Mixed(BaseType):
   def grammar_name(self):
     return '<mixed>'
 
-  def write(self, f, val):
+  def _string(self, val):
     if isinstance(val, bool):
-       boolean.write(f, val)
+       return Bool._string(self, val)
     else:
-       super().write(f, val)
+       return super()._string(val)
 
 Mixed.I = Mixed()
 
@@ -406,8 +435,8 @@ class Separator(BaseType):
   def _grammar_name(self):
       return '****...****\n'
 
-  def write(self, f, val=None):
-      f.write('*'*80)
+  def _string(self, val=None):
+      return '*'*80
 
 Separator.I = Separator()
 
@@ -419,8 +448,9 @@ class Sequence(BaseType):
       self.types = list(map(type_from_type, types))
       self.column_widths=column_widths
       if column_widths:
+         self.types = [ t.copy() for t in self.types ]
          if isinstance(column_widths, int):
-           for t in self.types: t.print_width = column_widths
+           for t in self.types: print_width = column_widths
          else:
            for t,w in zip(self.types, coulumn_widths):
              t.print_width = w
@@ -441,13 +471,12 @@ class Sequence(BaseType):
   def grammar_name(self):
       return  " ".join( (f'{j.grammar_name()}' for j in self.types) )
 
-  def write(self, f, val):
-      space = False
+  def _string(self, val):
+      out = []
       for i,v in zip(self.types, val):
-          if space:
-             f.write(' ')
-          i.write(f,v)
-          space=True
+          out.append(' ')
+          out.append(i.string(v))
+      return ''.join(out)
 
 
 class Table(BaseType):
@@ -492,14 +521,15 @@ class Table(BaseType):
          grammar.addConditionEx(lambda x: len(x[0]) == length, lambda x: f'Just {length} rows are required, {len(x[0])} found.')
       self._grammar = grammar
 
-  def write(self, f, data):
+  def _string(self, f, data):
+      out = []
       if self.header:
          def gen():
              for n,t in zip(self.names, self.sequence.types):
                  yield n
                  yield t.print_width
          fstr = (" {:>{}}"*len(self.names))[1:]
-         f.write(fstr, *gen())
+         out.append(fstr.format(*gen))
          newline = True
       else:
          newline = False
@@ -507,12 +537,14 @@ class Table(BaseType):
       line = 1
       for i in data:
          if newline:
-            f.write('\n')
+            out.append('\n')
          newline = True
          if self.numbering is not None:
-            self.numbering.write(f, line)
+            out.append(self.numbering.string(line))
             line+=1
-         self.sequence.write(f, i)
+         out.append(self.sequence.string(i))
+      return ''.join(out)
+
 
   @functools.cached_property
   def numpy_type(self):

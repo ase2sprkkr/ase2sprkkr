@@ -87,6 +87,16 @@ class GrammarTest(TestCase):
         ]:
         test(val, res)
 
+    type = gt.Array(int, min_length=3)
+    for val, res in [
+        ('a{} 3 4 4', Error),
+        ('{a}', Error),
+        ('1 2 3 4', np.array([1,2,3,4])),
+        ('1 2', Error),
+        ('{1,a}', Error)
+        ]:
+        test(val, res)
+
     type = gt.Sequence(int, str, float)
     for val, res in [
         ('a{}', Error),
