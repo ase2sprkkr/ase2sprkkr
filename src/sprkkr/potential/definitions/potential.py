@@ -5,6 +5,7 @@ from .potential_defintions import \
       Separator
 from  ...common.grammar_types import *
 from  ..lattice_section import LatticeSectionDefinition
+from  ..sites_section import SitesSectionDefinition
 
 sections = []
 def Section(*args, cls=PotSectionDefinition, **kwargs):
@@ -52,3 +53,4 @@ Section('SCF-INFO', [
 ])
 
 Section('LATTICE',   cls = LatticeSectionDefinition)
+Section('SITES',   cls = LatticeSectionDefinition)

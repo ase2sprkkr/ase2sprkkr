@@ -1,6 +1,8 @@
 from ..common.conf_containers import Section
+from ase.spacegroup import get_spacegroup
 
 class AtomSection(Section):
+  """ Section, that sets the ASE atoms properties """
 
   __setattr__ = object.__setattr__
 
@@ -9,8 +11,16 @@ class AtomSection(Section):
      self._hook_disabled = 0
 
   @property
-  def atoms(self):
+  def _atoms(self):
      return self._container.atoms
+
+  @property
+  def _bravais_lattice(self):
+     return self._container.bravais_lattice
+
+  @property
+  def _cell_spacegroup(self):
+     return self._container.cell_spacegroup
 
   def _add(self, v):
       super()._add(v)

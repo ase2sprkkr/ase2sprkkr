@@ -38,9 +38,7 @@ class LatticeSection(AtomSection):
   }
 
   def _set_from_atoms(self):
-      atoms = self.atoms
-      cell = atoms.cell
-      bravais_lattice = cell.get_bravais_lattice()
+      bravais_lattice = self._bravais_lattice
       pearson_symbol = bravais_lattice.pearson_symbol
       lattice_type = cell_symmetries[pearson_symbol]
 
@@ -51,7 +49,7 @@ class LatticeSection(AtomSection):
               self[k].clear()
           else:
               self[k].set(val / Bohr)
-      self['RBAS'].set(get_spacegroup(atoms).scaled_primitive_cell)
+      self['RBAS'].set(self._cell_spacegroup.scaled_primitive_cell)
 
   def _process(self):
       try:
@@ -61,11 +59,10 @@ class LatticeSection(AtomSection):
         for n,k in self._lattice_params.items():
             if self[k]():
                args[n] = self[k]() * Bohr
-        bravais_lattice = bravais_class(**args)
-        self.atoms.set_cell(bravais_lattice.tocell())
+        cell = bravais_class(**args)
       except KeyError:
-        self.atoms.set_cell(None)
-
+        cell = None
+      self._container.set_atoms_cell(cell)
 
 class LatticeSectionDefinition(PotSectionDefinition):
 
