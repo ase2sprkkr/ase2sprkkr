@@ -13,4 +13,11 @@ else
 	MODULE=unittest
 fi
 
-$PYTHON -m $MODULE $@ sprkkr/*/test/test_*.py
+ADD=sprkkr/*/test/test_*.py
+for i in "$@" ; do
+	if [[ $i == -* ]] ; then
+		ADD=
+	fi
+done
+
+$PYTHON -m $MODULE $@ $ADD
