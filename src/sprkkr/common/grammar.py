@@ -16,24 +16,6 @@ def generate_grammar():
       if old is not None:
         pe.setDefaultWhitespaceChars(old)
 
-class BaseGrammar:
-   def grammar(self):
-       """ Generate grammar with the correct settings of pyparsing """
-       with generate_grammar():
-         return self._grammar()
-
-   def _tuple_with_my_name(self, expr, delimiter=None):
-        """ Create the grammar returning tuple (self.name, <result of the expr>) """
-        if self.name_in_grammar:
-            name = pp.CaselessKeyword(self.name).setParseAction(lambda x: self.name)
-            if delimiter:
-              name += delimiter
-        else:
-            name = pp.Empty().setParseAction(lambda x: self.name)
-        out = name - expr
-        out.setParseAction(lambda x: tuple(x))
-        return out
-
 
 with generate_grammar():
   optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).setName(' ')
@@ -48,11 +30,12 @@ def delimitedList(expr, delim):
 
 def addConditionEx(self, condition, message):
   def check_condition(s, loc, tocs):
+      m = message
       if condition(tocs):
          return tocs
-      if not isinstance(message, str):
-         message = message(toc)
-      raise pp.ParseException(s, loc, message)
+      if not isinstance(m, str):
+         m = m(tocs)
+      raise pp.ParseException(s, loc, m)
   self.addParseAction(check_condition)
 
 pp.ParserElement.addConditionEx = addConditionEx

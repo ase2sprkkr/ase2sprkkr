@@ -1,25 +1,30 @@
-from collections import OrderedDict
+from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
 import pyparsing as pp
 
 class ConfContainer:
+  """ Custom task section. Section created by user with no definition """
 
   def __init__(self, definition):
       self._definition = definition
       self._members = OrderedDict()
       for v in definition.members():
-          self._members[v.name] = v.create_object(self)
+          self._add(v.create_object(self))
 
   def members(self):
       return self._members
 
-  def __getattr__(self, name):
+  def _get_member(self, name):
       if not name in self._members:
           raise AttributeError(f'No {name} member of {self._definition}')
       out = self._members[name]
       if out._definition.is_hidden:
           raise AttributeError(f'Member {name} of {self._definition} is not directly accessible')
+      return out
+
+  def __getattr__(self, name):
+      out = self._get_member(name)
       return out
 
   def __getitem__(self, name):
@@ -31,9 +36,11 @@ class ConfContainer:
   def __contains__(self, name):
       return name in self._members
 
-  def clear(self):
+  def clear(self, do_not_check_required=False):
+      if not do_not_check_required and self._definition.required:
+         raise ValueError(f'Section {self._definition.name} cannot be cleared')
       for i in self._members.values():
-          i.clear()
+          i.clear(True)
 
   @property
   def name(self):
@@ -54,10 +61,12 @@ class ConfContainer:
       if name in self._members:
          raise TypeError(f'Section member {name} is already in the section {self._definition}')
       cc = self._definition.custom_class
-      self._members[name] = cc(self, name)
+      self._add(cc(self, name))
       if value is not None:
           self._members[name].set(value)
 
+  def _add(self, member):
+      self._members[member.name] = member
 
   def remove(self, name):
       cclass = getattr('custom_class', self._definition, False)
@@ -81,11 +90,16 @@ class ConfContainer:
 class BaseSection(ConfContainer):
   """ A section of SPRKKR configuration  """
 
+  def __init__(self, definition, container=None):
+      super().__init__(definition)
+      self._container = container
+
   def __setattr__(self, name, value):
       if name[0]=='_':
         super().__setattr__(name, value)
       else:
-        self._options[name].set(value)
+        val = self._get_member(name)
+        val.set(value)
 
   def has_any_value(self):
       for i in self:
@@ -116,9 +130,6 @@ class Section(BaseSection):
 
 class CustomSection(BaseSection):
   """ Custom task section. Section created by user with no definition """
-  def __init__(self, container, definition):
-      super().__init__(definition)
-      self._container = container
 
   def remove(self):
       self._container.remove(self.name)
@@ -128,14 +139,11 @@ class CustomSection(BaseSection):
       def create(container, name):
           definition = definition_type(name)
           definition.removable = True
-          return cls(container, definition)
+          return cls(definition, container)
       return create
 
 
-
 class RootConfContainer(ConfContainer):
-
-  _item_class = Section
 
   def save_to_file(self, file):
       if not hasattr(file, 'write'):
@@ -159,7 +167,5 @@ class RootConfContainer(ConfContainer):
       assert len(values) == 1
       values = values[0]
       if clear_first:
-         self.clear()
+         self.clear(True)
       self.set(values)
-
-

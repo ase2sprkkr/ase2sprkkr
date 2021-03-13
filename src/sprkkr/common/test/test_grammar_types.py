@@ -16,6 +16,8 @@ class GrammarTest(TestCase):
 
     type = gt.Integer()
 
+
+
     def test(val, res):
       #try:
         try:
@@ -97,7 +99,7 @@ class GrammarTest(TestCase):
     for val, res in [(
         """ X YY ZZZ
         1 dog 2.5
-        3 cat 3e-2""", np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', str), ('ZZZ', float)])
+        3 cat 3e-2""", np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)])
         ),
         (""" XX YY ZZZ
         1 dog 2.5
@@ -110,11 +112,12 @@ class GrammarTest(TestCase):
         ]:
         test(val, res)
 
-    type = gt.Table(X=int, YY=str, ZZZ=float)
+
+    type = gt.Table(X=int, YY=str, ZZZ=float, numbering=True)
     for val, res in [(
         """ X YY ZZZ
-        1 dog 2.5
-        3 cat 3e-2""", np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', str), ('ZZZ', float)])
+        1 1 dog 2.5
+        2 3 cat 3e-2""", np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)])
         )]:
         test(val, res)
 

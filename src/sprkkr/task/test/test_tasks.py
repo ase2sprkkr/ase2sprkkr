@@ -47,7 +47,7 @@ class TestTask(TestCase):
     task_def = cd.TaskDefinition.from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
-        V('NE', gt.SetOf(int, length=1)),
+        V('NE', gt.SetOf(int, min_length=1)),
         V('Ime', float, 0.0),
       ],
       'SITES' : [

@@ -1,9 +1,10 @@
 from ..common.grammar_types  import type_from_type, type_from_value, BaseType, mixed
-from ..common.grammar  import BaseGrammar, delimitedList, end_of_file
+from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 import pyparsing as pp
 from ..common.misc import OrderedDict
 from .conf_containers import Section
 from .options import Option
+import numpy as np
 
 def unique_dict(values):
     out = dict(values)
@@ -13,14 +14,42 @@ def unique_dict(values):
        raise pp.ParseException(f"There are non-unique keys: {duplicates}")
     return out
 
+class BaseDefinition:
 
-class BaseValueDefinition(BaseGrammar):
+   """ Redefine in descendants """
+   result_class = None
+
+   def create_object(self, container=None):
+       return self.result_class(self, container)
+
+   def grammar(self):
+       """ Generate grammar with the correct settings of pyparsing """
+       with generate_grammar():
+         return self._grammar()
+
+   def _tuple_with_my_name(self, expr, delimiter=None):
+        """ Create the grammar returning tuple (self.name, <result of the expr>) """
+        if self.name_in_grammar:
+            name = pp.CaselessKeyword(self.name).setParseAction(lambda x: self.name)
+            if delimiter:
+              name += delimiter
+        else:
+            name = pp.Empty().setParseAction(lambda x: self.name)
+        out = name - expr
+        out.setParseAction(lambda x: tuple(x))
+        return out
+
+
+
+class BaseValueDefinition(BaseDefinition):
 
   name_in_grammar = True
+  result_class = Option
 
   def __init__(self, name, type, default_value=None,
                fixed_value=None, required=False, help=None,
-               is_hidden=False, name_in_grammar=True):
+               is_hidden=False, name_in_grammar=True,
+               is_optional=False):
     """
     Parameters
     ----------
@@ -44,6 +73,8 @@ class BaseValueDefinition(BaseGrammar):
     name_in_grammar: boolean
       If False, there the name of the variable is not printed in the configuration file. The variable is recognized by its      position.
 
+    is_optional: boolean
+      If True, value can be missing in the .pot file
 
     required: bool
       Is this option required?
@@ -57,13 +88,27 @@ class BaseValueDefinition(BaseGrammar):
     else:
        self.default_value = default_value
 
-    self.fixed_value = fixed_value
+    if self.default_value is None and self.type.default_value is not None:
+       self.default_value = self.type.default_value
+
+    self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = default_value is not None if required is None else required
     self.help = None
     self.is_hidden = is_hidden
+    self.is_optional = is_optional
 
-  def create_object(self, container=None):
-    return Option(self)
+  def validate(self, value):
+    if value is None:
+       if self.required:
+          raise ValueError(f"The value is required for {self.name}, cannot set it to None")
+       return True
+    if self.fixed_value and not np.array_equal(self.fixed_value, value):
+       raise ValueError(f'The value of {self.name} is required to be {self.fixed_value}, cannot set it to {value}')
+    self.type.validate(value, self.name)
+
+  @property
+  def optional_value(self):
+    return self.name, None
 
   def __str__(self):
     out="SPRKKR({} of {})".format(self.name, str(self.type))
@@ -100,7 +145,9 @@ class BaseValueDefinition(BaseGrammar):
       body = pp.Optional(body).setParseAction( lambda x: x or df )
       nbody=''
     else:
-      nbody=str(god) + self.type.grammar_name()
+      nbody=self.type.grammar_name()
+      if self.name_in_grammar:
+         nbody = str(god) + nbody
 
     out = self._tuple_with_my_name(body)
     out.setName(self.name + nbody)
@@ -156,7 +203,7 @@ def add_excluded_names_condition(element, names):
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
 
-class BaseDefinitionContainer(BaseGrammar):
+class BaseDefinitionContainer(BaseDefinition):
 
     @staticmethod
     def _dict_from_named_values(args, items=None):
@@ -166,8 +213,9 @@ class BaseDefinitionContainer(BaseGrammar):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False):
+    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False, required=True):
        self.help = help
+       self.required = True
        self.name = name
        self.description = description
        self.is_hidden = is_hidden
@@ -215,7 +263,7 @@ class BaseDefinitionContainer(BaseGrammar):
         return self.__class__(self.name, members=members, **kwargs)
 
     def create_object(self, container=None):
-        return Section(self)
+        return self.result_class(self, container)
 
 
 class BaseSectionDefinition(BaseDefinitionContainer):
@@ -227,6 +275,7 @@ class BaseSectionDefinition(BaseDefinitionContainer):
        the section and its predecessor
    """
    name_in_grammar = True
+   result_class = Section
 
    """ Force order of its members """
    force_order = False
@@ -256,23 +305,37 @@ class BaseSectionDefinition(BaseDefinitionContainer):
        return self._members
 
    def _grammar(self):
-       out = pp.CaselessKeyword(self.name)
        custom_value = self.custom_value(self._members.keys())
        delimiter = self._grammar_of_delimiter()
        if self.force_order:
            out = []
            cvs = pp.ZeroOrMore(custom_value + delimiter)
-           def generator():
-               for i in self._members.values:
-                   if i.name_in_grammar:
-                       yield cvs
-                   yield i._grammar()
-               yield cvs
-           out = pp.An,d(*generator())
+           first = True
+           def grammar(i):
+               nonlocal first
+               was_first = first
+               grammar = i._grammar()
+               if first:
+                  first = False
+               else:
+                  grammar = delimiter + grammar
+               if i.is_optional:
+                   """ If the first item is optional, the delimiter is included and the next item
+                       is considered to be the first (without the delimiter)
+                       Limitation: there can not be a section with just one optional item
+                   """
+                   if was_first:
+                      first = True
+                      grammar += delimiter
+                   grammar = (grammar | pp.Empty().setParseAction(lambda x: i.optional_value))
+               if i.name_in_grammar:
+                   grammar = cvs + grammar
+               return grammar
+           values  = pp.And([ grammar(i) for i in self._members.values()])
        else:
-          values = pp.MatchFirst((i._grammar() for i in self.members()))
-          values |= custom_value
-          values = delimitedList(values, delimiter)
+           values = pp.MatchFirst((i._grammar() for i in self.members()))
+           values |= custom_value
+           values = delimitedList(values, delimiter)
 
        values.setParseAction(lambda x: unique_dict(x.asList()))
        out = self._tuple_with_my_name(values, delimiter)

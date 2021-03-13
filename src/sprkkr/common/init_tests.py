@@ -6,8 +6,10 @@ import numpy as np
 import inspect
 import sys
 
-def patch_package():
+def patch_package(package=None):
     """ Set the package name for the test """
+    if package and package.count('.') >= 3:
+       return __package
     frame=inspect.stack()[1]
     path = frame.filename
     file = Path(path).resolve()
@@ -19,17 +21,45 @@ def patch_package():
     return str(current)[len(top)+1:].replace('/','.')
 
 
+__package__ = patch_package(__package__)
+from .misc import OrderedDict
+
 class TestCase(unittest.TestCase):
 
   def setUp(self):
       """ Register numpy array for the equality """
-      def np_array_equal(a, b, msg='NumPy arrays are not equal'):
+
+      def testfce(fce, msg=''):
+        def np_array_equal(a, b, msg):
           try:
-            np.testing.assert_array_equal(a,b)
-          except AssertionError:
-             raise self.failureException(msg)
+            fce(a,b)
+          except AssertionError as e:
+            if msg:
+               msg = msg + '\n' + str(e)
+               raise self.failureException(msg)
+            else:
+               raise
+        return np_array_equal
+
+      assert_equals = testfce(np.testing.assert_equal)
+      assert_almost_equals = testfce(np.testing.assert_almost_equal)
+
+      def arr_testfce(a,b,msg):
+         """ assert_almost_equal does not work for non-numeric dtypes """
+         if a.dtype == 'O':
+            return assert_equals(a,b,msg)
+         if a.dtype.names:
+            for i in range(len(a.dtype)):
+                if a.dtype[1] == 'O':
+                   return assert_equals(a,b,msg)
+         return assert_almost_equals(a,b,msg)
 
       self.addTypeEqualityFunc(
          np.ndarray,
-         np_array_equal
+         arr_testfce
+      )
+
+      self.addTypeEqualityFunc(
+         OrderedDict,
+         assert_equals
       )

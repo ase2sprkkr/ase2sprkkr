@@ -1,7 +1,8 @@
 from ..common.grammar_types import string
 from ..common.options import Option
+from ..common.configuration_definitions import BaseValueDefinition
 
-class CustomPotentialSectionDefinition(BaseValueDefintion):
+class CustomPotentialSectionDefinition(BaseValueDefinition):
   """ There is no grammar in custom potential section -
   custom sections are readed by Potential class
   """

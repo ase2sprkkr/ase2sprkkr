@@ -4,7 +4,8 @@ from pyparsing import Word, Suppress
 import itertools
 import functools
 import numpy as np
-from collections import OrderedDict, Hashable
+from collections import Hashable
+from .misc import OrderedDict
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, delimitedList
 from .misc import classproperty
@@ -19,6 +20,7 @@ class BaseType:
 
   """ Common types have values, only the Separator does not """
   has_value = True
+  default_value = None
 
   def __init__(self, prefix=None, postfix=None, print_width=0):
       self.prefix = prefix
@@ -89,15 +91,15 @@ class BaseType:
       return str(val)
 
   def write(self, f, val):
-    if self.prefix:
-       f.write(self.prefix)
     val = self.value_to_str(val)
+    if self.prefix:
+       val = self.prefix + val
+    if self.postfix:
+       val += self.postfix
     spaces = self.print_width - len(val)
     if spaces > 0:
        val = " "*spaces + val
     f.write(val)
-    if self.postfix:
-       f.write(self.postfix)
 
   def print(self, val):
     s = io.StringIO()
@@ -215,7 +217,7 @@ class String(BaseType):
   def grammar_name(self):
     return '<str>'
 
-  numpy_type = str
+  numpy_type = object
 
 String.I = String()
 
@@ -240,6 +242,12 @@ class Keyword(BaseType):
 
   def __str__(self):
       return self.grammar_name()
+
+class DefKeyword(Keyword):
+
+  @property
+  def default_value(self):
+      return self.keywords[0]
 
 class Flag(BaseType):
 
@@ -283,9 +291,9 @@ class SetOf(BaseType):
 
   delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | pp.White(' \t')).setName('[,; ]')
 
-  def __init__(self, type, length=None, max_length=None, **kwargs):
+  def __init__(self, type, length=None, max_length=None, min_length=None, **kwargs):
     super().__init__(**kwargs)
-    self.min_length = length
+    self.min_length = min_length or length
     self.max_length = max_length or length
     self.type = type_from_type(type)
     grammar = self.type.grammar()
@@ -319,11 +327,16 @@ class SetOf(BaseType):
         out = self.type._validate(v)
         if out is not True:
            return "Value {} in the set is incorrect: {}".format(i, out)
+    if self.min_length is not None and len(value) < self.min_length:
+       return "The set shoud be at least {self.length} items long, it has {} items".format(self.min_length, len(value))
+    if self.max_length is not None and len(value) > self.min_length:
+       return "The set can not have more than {self.length} items, it has {} items".format(self.max_length, len(value))
     return True
 
   def convert(self, value):
-    if self.length is None and not isinstance(list(value)):
-      return np.ndarray( value )
+    if not isinstance(value, np.ndarray):
+       return np.atleast_1d( value )
+    return value
 
 
 """ Map python native types to configuration value types """
@@ -415,7 +428,7 @@ class Sequence(BaseType):
       if allowed_values is not None:
          if not isinstance(allowed_values, set):
             allowed_values = set(allowed_values)
-         self._grammar.addConditionEx(lambda x: x in allowed_values, lambda x: f'{x} is not in the list of allowed values')
+         self._grammar.addConditionEx(lambda x: x[0] in allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
 
   def _validate(self, value):
       if not isinstance(value, tuple) or len(value) != len(self.types):
@@ -426,14 +439,14 @@ class Sequence(BaseType):
       return True
 
   def grammar_name(self):
-      return "(" + join( (f'{i}:{j.grammar_name()}' for i,j in zip(self.names, self.types) ) ) + ")"
+      return  " ".join( (f'{j.grammar_name()}' for j in self.types) )
 
   def write(self, f, val):
       space = False
       for i,v in zip(self.types, val):
           if space:
              f.write(' ')
-          self.types.write(f,v)
+          i.write(f,v)
           space=True
 
 
@@ -443,7 +456,7 @@ class Table(BaseType):
        1         1         1         1     1 1.000
        2         2         2         1     2 1.000
   """
-  def __init__(self, columns=None, column_widths = 16, header=None, numbering=None, prefix=None, postfix=None, **kwargs):
+  def __init__(self, columns=None, column_widths = 16, header=None, numbering=None, prefix=None, postfix=None, length=None, **kwargs):
       super().__init__(prefix=None, postfix=None)
       if columns is None:
          columns = kwargs
@@ -456,28 +469,27 @@ class Table(BaseType):
          header = self.names
       self.sequence = Sequence( *columns, column_widths = column_widths )
       self.header = header
-      self.numbering = None
+      self.numbering = Integer.I if numbering is True else numbering
 
-      grammar = pp.OneOrMore(self.sequence.grammar() + pp.Suppress(pp.lineEnd))
+      line = self.sequence.grammar() + pp.Suppress(pp.lineEnd)
+      if self.numbering:
+         line = self.numbering.grammar() + line
+      grammar = pp.OneOrMore(line)
       if self.names:
          grammar = pp.Suppress(pp.And(self.names) + pp.lineEnd) + grammar
-      grammar.setParseAction( lambda x:  np.array(x.asList(), self.numpy_type))
 
       def ensure_numbering(s, loc, x):
-          dtype = self.numpy_type
-          sa = isinstance(self.numpy_type, list)
-          numbering = x[dtype.names[self.numbering]] if sa else x[self.numbering]
-          if not numbering == range(1, len(numbering)+1):
-             raise pp.ParseException(s, loc, '{self.numbering+1}st column should contain row numbering')
-          if sa:
-             names = dtype.names[:self.numbering] + dtype.names[self.numbering+1:]
-             x = x[names]
-          else:
-             x = np.delete(x, obj=self.numbering, axis=1)
-          return x
-      if self.numbering:
-         grammar.addParseAction(ensure_numbering)
+          numbers = x[::2]
+          datas = x[1::2]
+          if not numbers == [*range(1, len(numbers)+1)]:
+             raise pp.ParseException(s, loc, 'First column should contain row numbering')
+          return datas
 
+      if self.numbering is not None:
+         grammar.addParseAction(ensure_numbering)
+      grammar.addParseAction( lambda x: np.array(x.asList(), self.numpy_type))
+      if length:
+         grammar.addConditionEx(lambda x: len(x[0]) == length, lambda x: f'Just {length} rows are required, {len(x[0])} found.')
       self._grammar = grammar
 
   def write(self, f, data):
@@ -488,8 +500,18 @@ class Table(BaseType):
                  yield t.print_width
          fstr = (" {:>{}}"*len(self.names))[1:]
          f.write(fstr, *gen())
+         newline = True
+      else:
+         newline = False
 
+      line = 1
       for i in data:
+         if newline:
+            f.write('\n')
+         newline = True
+         if self.numbering is not None:
+            self.numbering.write(f, line)
+            line+=1
          self.sequence.write(f, i)
 
   @functools.cached_property
@@ -507,7 +529,7 @@ class Table(BaseType):
       if self.names:
         data = " ".join( (f'{i}:{j.grammar_name()}' for i,j in zip(self.names, self.sequence.types) ) )
       else:
-        data = " ".join( (f'{j.grammar_name()}' for i,j in self.sequence.types) )
+        data = self.sequence.grammar_name()
       return f"<TABLE of {data}>"
 
 integer = Integer.I

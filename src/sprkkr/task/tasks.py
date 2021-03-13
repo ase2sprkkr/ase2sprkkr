@@ -1,11 +1,10 @@
-from collections import OrderedDict
 import os
 import tempfile
 import pkgutil
 import importlib
 from . import definitions
 from ..common.conf_containers import RootConfContainer
-from ..common.misc import lazy_value
+from ..common.misc import lazy_value, OrderedDict
 
 class Task(RootConfContainer):
   def __init__(self, definition, inputfile=None, outputfile=False):

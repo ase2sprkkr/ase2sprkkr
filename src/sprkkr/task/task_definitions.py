@@ -65,7 +65,6 @@ class TaskDefinition(ConfDefinition):
   @lazy_value
   @staticmethod
   def _grammar_of_delimiter():
-      #out = (pp.ZeroOrMore(pp.Optional(pp.LineEnd()) + pp.White(' \t')) + pp.OneOrMore(pp.LineEnd().setWhitespaceChars(''))+ pp.FollowedBy(pp.Regex(r'[^\s]'))).suppress()
       def ws(x):
           return x.setWhitespaceChars('')
       out = (pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r'[^\s]'))) ).suppress()
