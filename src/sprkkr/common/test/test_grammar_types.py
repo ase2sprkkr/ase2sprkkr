@@ -14,10 +14,6 @@ class GrammarTest(TestCase):
   def test_types(self):
     Error = "ERROR"
 
-    type = gt.Integer()
-
-
-
     def test(val, res):
       #try:
         try:
@@ -39,7 +35,7 @@ class GrammarTest(TestCase):
       #    raise
       #  raise AssertionError(f"Error '{val}' should be validated to '{res}', {str(e)} occurs")
 
-
+    type = gt.Integer()
     for val, res in [
         ('1', 1),
         ('a', Error),
