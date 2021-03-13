@@ -3,7 +3,7 @@ __package__ = patch_package(__package__)
 
 import os
 from ..lattice_section import LatticeSection, LatticeSectionDefinition
-from ..potential import AtomsWrapper
+from ..potential.potentials import Potential
 from ..potential_definitions import PotentialDefinition
 from ase.build import bulk
 import io
@@ -12,10 +12,10 @@ import io
 class TestLattice(TestCase):
 
   def test_lattice(self):
-    pot = AtomsWrapper()
     df=LatticeSectionDefinition('LATTICE')
-    sec=LatticeSection(df, pot)
     pd=PotentialDefinition('pot', [df])
+    pot = Potential(definition = pd)
+    sec=LatticeSection(df, pot)
 
     for e in ['Co', 'Ni', 'U', 'Ge', 'As', 'Na', 'In', 'Pr']:
      #for e in ['As']:

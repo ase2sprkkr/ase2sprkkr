@@ -36,7 +36,8 @@ class LatticeSection(AtomSection):
   }
 
   def _set_from_atoms(self):
-      bravais_lattice = self._bravais_lattice
+      aw = self._atoms_wrapper
+      bravais_lattice = aw.bravais_lattice
       pearson_symbol = bravais_lattice.pearson_symbol
       lattice_type = cell_symmetries[pearson_symbol]
 
@@ -47,7 +48,7 @@ class LatticeSection(AtomSection):
               self[k].clear()
           else:
               self[k].set(val / Bohr)
-      self['RBAS'].set(self._cell_spacegroup.scaled_primitive_cell)
+      self['SCALED_PRIMITIVE_CELL'].set(aw.scaled_primitive_cell)
 
   def _process(self):
       try:
@@ -60,7 +61,7 @@ class LatticeSection(AtomSection):
         cell = bravais_class(**args)
       except KeyError:
         cell = None
-      self._container.set_atoms_cell(cell)
+      self._atoms_io_data.cell = cell
 
 class LatticeSectionDefinition(PotSectionDefinition):
 
@@ -71,12 +72,11 @@ class LatticeSectionDefinition(PotSectionDefinition):
           V('SYSTYPE', DefKeyword('BULK')),
           V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = cell_symmetries.values())),
           V('ALAT', float)
-      ] + [
+        ] + [
           V(i, float, is_optional=i!='ALAT') for
                i in LatticeSection._lattice_params.values()
-      ] + [
-          V('RBAS', Table([float]*3, numbering=Integer(prefix='A(', postfix=')'),length=3 ),
-            name_in_grammar=False)
+        ] + [
+          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')'),length=3 )),
       ]
       super().__init__(name, members, has_hidden_members=True)
 
