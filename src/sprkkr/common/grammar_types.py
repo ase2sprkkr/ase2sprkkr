@@ -506,7 +506,7 @@ class Table(BaseType):
       self.header = header
       if numbering.__class__ is str:
          numbering_label=numbering
-         self.numbering=True
+         numbering=True
       self.numbering = Integer.I if numbering is True else numbering
       self.numbering_label = numbering_label
 
@@ -541,10 +541,10 @@ class Table(BaseType):
          fstr = (" {:>{}}"*len(self.names))
 
          if self.numbering_label:
-             fstr += String(print_width=self.numbering.print_width).string(self.numbering_label)
+             fstr = String(print_width=self.numbering.print_width).string(self.numbering_label) + fstr
          else:
              fstr = fstr[1:]
-         out.append(fstr.format(*gen))
+         out.append(fstr.format(*gen()))
          newline = True
       else:
          newline = False
