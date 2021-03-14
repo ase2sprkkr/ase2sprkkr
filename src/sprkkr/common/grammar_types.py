@@ -7,7 +7,7 @@ import numpy as np
 from collections import Hashable
 from .misc import OrderedDict
 ppc = pp.pyparsing_common
-from .grammar import generate_grammar, separator as separator_grammar, delimitedList
+from .grammar import generate_grammar, separator as separator_grammar, delimitedList, line_end
 from .misc import classproperty
 
 from ase.units import Rydberg
@@ -497,7 +497,8 @@ class Table(BaseType):
 
   def __init__(self, columns=None, column_widths = 16, header=None,
                      numbering=None, numbering_label=None,
-                     prefix=None, postfix=None, length=None, **kwargs):
+                     prefix=None, postfix=None, length=None,
+                     named_result = False, **kwargs):
       super().__init__(prefix=None, postfix=None)
       if columns is None:
          columns = kwargs
@@ -515,13 +516,16 @@ class Table(BaseType):
          numbering=True
       self.numbering = Integer.I if numbering is True else numbering
       self.numbering_label = numbering_label
+      self.named_result = named_result
 
-      line = self.sequence.grammar() + pp.Suppress(pp.lineEnd)
+      line = self.sequence.grammar()
       if self.numbering:
          line = self.numbering.grammar() + line
-      grammar = pp.OneOrMore(line)
+      grammar = delimitedList(line, line_end)
       if self.names:
          grammar = pp.Suppress(pp.And(self.names) + pp.lineEnd) + grammar
+         if self.numbering_label:
+           grammar = pp.Keyword(self.numbering_label).suppress() + grammar
 
       def ensure_numbering(s, loc, x):
           numbers = x[::2]
@@ -532,7 +536,8 @@ class Table(BaseType):
 
       if self.numbering is not None:
          grammar.addParseAction(ensure_numbering)
-      grammar.addParseAction( lambda x: np.array(x.asList(), self.numpy_type))
+
+      grammar.addParseActionEx( lambda x: np.array(x.asList(), self.numpy_type), "Cannot retype to numpy array")
       if length:
          grammar.addConditionEx(lambda x: len(x[0]) == length, lambda x: f'Just {length} rows are required, {len(x[0])} found.')
       self._grammar = grammar
@@ -570,13 +575,17 @@ class Table(BaseType):
   @functools.cached_property
   def numpy_type(self):
       types = self.sequence.types
-      if self.names:
-         return list(zip(self.names, (i.numpy_type for i in types)))
-      dtype = types[0].numpy_type
-      for t in types[1:]:
-          if t.numpy_type != dtype:
-             return list(('', i.numpy_type) for i in types)
-      return dtype
+      nr = self.names and self.named_result
+      if not nr:
+         dtype = types[0].numpy_type
+         for t in types[1:]:
+             if t.numpy_type != dtype:
+                 nr = True
+                 break
+         else:
+             return dtype
+      names = self.names or itertools.repeat('')
+      return list(zip(names, (i.numpy_type for i in types)))
 
   def grammar_name(self):
       if self.names:
