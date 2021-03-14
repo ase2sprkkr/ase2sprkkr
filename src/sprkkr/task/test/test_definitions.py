@@ -36,5 +36,5 @@ class TestDefinitions(TestCase):
           t = Task.from_file(filename)
           check(t, name)
         except Exception as e:
-          raise Exception(f'Parsing of "{i}" failed')
+          raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)
 
