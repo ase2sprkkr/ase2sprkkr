@@ -110,8 +110,9 @@ class BaseSection(ConfContainer):
   def save_to_file(self, file):
       if not self.has_any_value():
          return
-      file.write(self._definition.name)
-      file.write('\n')
+      if self._definition.name_in_grammar:
+         file.write(self._definition.name)
+         file.write('\n')
       for o in self:
           if o.save_to_file(file):
              file.write(self._definition.delimiter)

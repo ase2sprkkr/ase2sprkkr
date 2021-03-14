@@ -5,6 +5,7 @@ from ..common.misc import OrderedDict
 from .conf_containers import Section
 from .options import Option
 import numpy as np
+import inspect
 
 def unique_dict(values):
     out = dict(values)
@@ -42,8 +43,8 @@ class BaseDefinition:
 
        self.is_optional = is_optional
        self.is_required = is_hidden
-       self.name_in_grammar = name_in_grammar if name_in_grammar else \
-                              self.__class__.name_in_grammar
+       self.name_in_grammar = self.__class__.name_in_grammar \
+                               if name_in_grammar is None else name_in_grammar
 
    def create_object(self, container=None):
        """ Creates Section/Option/.... object (whose properties I define) """
@@ -68,7 +69,6 @@ class BaseDefinition:
 
 class BaseValueDefinition(BaseDefinition):
 
-  name_in_grammar = True
   result_class = Option
 
   def __init__(self, name, type, default_value=None,
@@ -117,6 +117,7 @@ class BaseValueDefinition(BaseDefinition):
 
     if name_in_grammar is None:
         name_in_grammar = self.type.name_in_grammar
+
     super().__init__(
          is_optional = is_optional,
          is_hidden = is_hidden,
@@ -134,7 +135,7 @@ class BaseValueDefinition(BaseDefinition):
        if self.required:
           raise ValueError(f"The value is required for {self.name}, cannot set it to None")
        return True
-    if self.fixed_value and not np.array_equal(self.fixed_value, value):
+    if self.fixed_value is not None and not np.array_equal(self.fixed_value, value):
        raise ValueError(f'The value of {self.name} is required to be {self.fixed_value}, cannot set it to {value}')
     self.type.validate(value, self.name)
 
@@ -157,7 +158,11 @@ class BaseValueDefinition(BaseDefinition):
 
     if self.fixed_value is not None:
       def check_fixed(s, loc, x, body=body):
-          if x[0]==self.fixed_value:
+          if self.fixed_value.__class__ is np.ndarray:
+             eq = np.array_equal(x[0], self.fixed_value)
+          else:
+             eq = x[0]==self.fixed_value
+          if eq:
              return x
           message="The value of {} is {} and it should be {}".format(self.name, x[0], self.fixed_value)
           raise pp.ParseException(s,loc,message, body)
@@ -167,7 +172,7 @@ class BaseValueDefinition(BaseDefinition):
        god = self._grammar_of_delimiter()
        body = god + body
 
-    optional, df, np = self.type.missing_value()
+    optional, df, _ = self.type.missing_value()
     if optional:
       body = pp.Optional(body).setParseAction( lambda x: x or df )
       nbody=''
@@ -210,15 +215,12 @@ class BaseValueDefinition(BaseDefinition):
         self.type.write(f, value)
      return True
 
+  _init_args = inspect.getfullargspec(__init__).args[1:]
+
   def copy(self, **kwargs):
-     default = {
-         'default_value' : self.default_value,
-         'fixed_value' : fixed_value,
-         'required' : required,
-         'help' : help
-     }
+     default = { k: getattr(self, k) for k in self._init_args }
      default.update(kwargs)
-     self.__class__(self.name, self.type, **kwargs)
+     self.__class__(args)
 
   def remove(self, name):
      del self.section[name]
@@ -243,7 +245,7 @@ class BaseDefinitionContainer(BaseDefinition):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False, required=True, is_optional=False, name_in_grammar=None):
+    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None):
        super().__init__(
            is_optional = is_optional,
            is_hidden = is_hidden,
@@ -278,6 +280,8 @@ class BaseDefinitionContainer(BaseDefinition):
         del self._members[name]
         return self
 
+    _init_args = inspect.getfullargspec(__init__).args[3:]
+
     def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
         """ copy the section with the contained values modified """
         members = self._members.copy()
@@ -287,15 +291,9 @@ class BaseDefinitionContainer(BaseDefinition):
         for i,v in defaults.items():
             members[i].default_value = v
 
-        k=['help', 'description', 'is_hidden', 'has_hidden_members']
-        for i in k:
-            if not i in kwargs:
-               kwargs[i] = getattr(self, i)
-        if len(kwargs) > len(k):
-            missing = set(kwargs.keys()) - set(k)
-            raise TypeError(f'No {",".join(missing)} keyword arguments for copying sections')
-
-        return self.__class__(self.name, members=members, **kwargs)
+        default = { k: getattr(self, k) for k in self._init_args }
+        default.update(kwargs)
+        return self.__class__(self.name, members=members, **default)
 
     def create_object(self, container=None):
         return self.result_class(self, container)
