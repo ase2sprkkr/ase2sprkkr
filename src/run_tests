@@ -15,7 +15,8 @@ fi
 
 ADD=sprkkr/*/test/test_*.py
 for i in "$@" ; do
-	if [[ $i == -* ]] ; then
+	if [[ $i != -* ]] ; then
+		echo $i
 		ADD=
 	fi
 done
