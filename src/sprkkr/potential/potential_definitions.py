@@ -8,13 +8,14 @@ sprkkr.common.configuration_definitions
 
 import functools
 import pyparsing as pp
-from ..common.grammar import line_end, separator
+from ..common.grammar import line_end, separator as separator_grammar
+from ..common.grammar_types import separator
 from ..common.configuration_definitions import \
     BaseValueDefinition, \
     BaseSectionDefinition, \
     ConfDefinition
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition
-from .potential import Potential
+from .potentials import Potential
 from ..common.misc import lazy_value
 
 class PotValueDefinition(BaseValueDefinition):
@@ -31,19 +32,14 @@ class PotValueDefinition(BaseValueDefinition):
       super().__init__(*args, required=required, **kwargs)
 
 
-class PotDataDefinition(PotValueDefinition):
-  name_in_grammar = False
-
 class Separator(PotValueDefinition):
-
-  name_in_grammar = False
 
   _counter = 0
   def __init__(self, name = None):
       if not name:
-         Separator.counter += 1
-         name = '_separator_{Separator.counter}'
-      super.__init__(name, separator, hidden=True)
+         Separator._counter += 1
+         name = f'_Separator_{Separator._counter}'
+      super().__init__(name, separator, is_hidden=True, name_in_grammar=False)
 
 class PotSectionDefinition(BaseSectionDefinition):
   """ This class describes the format of one
@@ -77,13 +73,20 @@ class PotentialDefinition(ConfDefinition):
   """ The order of items in potential file is fixed """
   force_order = True
 
-  @lazy_value
+  delimiter="*"*80 + "\n"
+
   @staticmethod
+  @lazy_value
   def _grammar_of_delimiter():
-      return (pp.OneOrMore(line_end) + separator + pp.OneOrMore(line_end)).setName('*'*80 + '\n')
+      return pp.And([
+                     pp.OneOrMore(line_end),
+                     separator_grammar,
+                     pp.OneOrMore(line_end)
+             ]).setName('*'*80 + '<newline>')
 
   custom_class = CustomPotentialSection
-  @lazy_value
+
   @staticmethod
+  @lazy_value
   def _custom_section_value():
-      return pp.SkipTo(separator | pp.StringEnd())
+      return pp.SkipTo(separator_grammar | pp.StringEnd()).setName('SkipTo ******|EndOfFile')

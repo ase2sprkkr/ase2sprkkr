@@ -1,7 +1,10 @@
 from ..common.conf_containers import Section
 
 class AtomsSection(Section):
-  """ Section, that sets the ASE atoms properties """
+  """ Section, that sets/retrieve the ASE atoms properties.
+      Its values should not be (generally) edited directly,
+      since they will be overwrited during saving the POT file
+  """
 
   __setattr__ = object.__setattr__
 
@@ -11,11 +14,13 @@ class AtomsSection(Section):
 
   @property
   def _atoms(self):
-     return self._container.atoms_io_data.atoms
+     """ Atoms object, from which the values are readed """
+     return self._container._atoms_io_data.atoms
 
   @property
   def _atoms_io_data(self):
-     return self._container.atoms_io_data
+     """ Object for storing temporary datas during reading/writing """
+     return self._container._atoms_io_data
 
   def _add(self, v):
       super()._add(v)

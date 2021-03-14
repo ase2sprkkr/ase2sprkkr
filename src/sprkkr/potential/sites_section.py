@@ -1,26 +1,31 @@
 from .potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from .atom_sections import AtomSection
+from .atoms_sections import AtomsSection
 
-from  ..common.grammar_types import DefKeyword, Sequence, Table, Integer
+from  ..common.grammar_types import DefKeyword, Array, Table, Integer
 
-class SitesSection(AtomSection):
+class SitesSection(AtomsSection):
+  """ This section retrieves the atomic positions and
+      it creates (during reading) the ASE Atoms object """
 
   def _set_from_atoms(self):
+      aoid=self._atoms_io_data
       self['SCALED_ATOMIC_POSITIONS'].set(
-        self.atoms.get_scaled_positions()
+        aoid.bravais_cell.scaled_positions(
+          aoid.atoms.positions
+        )
       )
 
   def _process(self):
       sap = self['SCALED_ATOMIC_POSITIONS']()
       if sap is not None:
           aiod = self._atoms_io_data
-          pos = aiod.cell.cartesian_positions(sap)
-          aiod.set_new_positions(pos)
+          pos = aiod.bravais_cell.cartesian_positions(sap)
+          aiod.set_atoms_positions(pos)
 
 class SitesSectionDefinition(PotSectionDefinition):
 
-  def __init__(self, name, **kwargs):
+  def __init__(self, name='SITES', **kwargs):
       V = PotValueDefinition
       members = [
           V('CARTESIAN', bool, fixed_value=True),

@@ -15,7 +15,7 @@ class AtomsIOData:
   def __init__(self, atoms=None):
       self.atoms = atoms
 
-  def set_atoms(self):
+  def set_atoms(self, atoms):
       """ Set the Atom object to be computed with"""
       self._atoms = SprKkrAtoms.convert_from_ase_atoms(atoms)
       self.clear_cache()
@@ -25,7 +25,7 @@ class AtomsIOData:
       self._atoms = SprKkrAtoms(cell = self._cell, **kwargs)
       self.clear_cache()
 
-  def set_new_positions(self, positions):
+  def set_atoms_positions(self, positions):
       """ Set new positions. Creates a new Atoms object, 
           if the numbers of atoms differ.
       """
@@ -41,21 +41,14 @@ class AtomsIOData:
       self._cell = None
 
   @property
-  def cell(self):
-      """ Return the Cell object, either from the current Atoms object or the one prepared
-          for creating of the new Atoms class (during reading of POT file) """
-      if self._atoms:
-          return self._atoms.cell
+  def bravais_cell(self):
+      """ Return the Cell object, that will be used for generating the POT file.
+      It is the cell given by bravais lattice of the current atoms. So, it can
+      and can not be the same as the atoms cell """
+      if not self._cell:
+         cell = self._atoms.cell
+         self.bravais_lattice = cell.get_bravais_lattice()
       return self._cell
-
-  @cell.setter
-  def cell(self, cell):
-      if isinstance(cell, BravaisLattice):
-         self._bravais_lattice = cell
-         cell = cell.tocell()
-      if self._atoms:
-         self._atoms.cell = cell
-      self._cell = cell
 
   @property
   def atoms(self):
@@ -67,9 +60,16 @@ class AtomsIOData:
 
   @property
   def bravais_lattice(self):
+      """ Bravais_lattice, beware, still in atomic units, so scaling on
+          output is required """
       if self._bravais_lattice is None:
-          self._bravais_lattice = self.cell.get_bravais_lattice()
+          self._bravais_lattice = self._atoms.cell.get_bravais_lattice()
       return self._bravais_lattice
+
+  @bravais_lattice.setter
+  def bravais_lattice(self, bl):
+      self._bravais_lattice = bl
+      self._cell = bl.tocell() if bl else None
 
   @property
   def cell_spacegroup(self):

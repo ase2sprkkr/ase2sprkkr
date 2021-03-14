@@ -1,15 +1,16 @@
 from ...common.misc import OrderedDict
-from ..potential_defintions import \
+from  ...common.grammar_types import *
+from ..potential_definitions import \
       PotSectionDefinition, \
       PotValueDefinition as V,\
+      PotentialDefinition, \
       Separator
-from  ...common.grammar_types import *
 from  ..lattice_section import LatticeSectionDefinition
 from  ..sites_section import SitesSectionDefinition
 
 sections = []
 def Section(*args, cls=PotSectionDefinition, **kwargs):
-   x=cls(name, values)
+   x=cls(*args, **kwargs)
    sections.append(x)
    return x
 
@@ -54,3 +55,5 @@ Section('SCF-INFO', [
 
 Section('LATTICE',   cls = LatticeSectionDefinition)
 Section('SITES',   cls = LatticeSectionDefinition)
+
+potential_definition=PotentialDefinition(sections)
