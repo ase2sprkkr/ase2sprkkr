@@ -44,6 +44,12 @@ class BaseType:
     grammar.addCondition(lambda x: self.validate(x[0]))
     return grammar
 
+  def grammar_name(self):
+    """ Human readable expression of the grammar. By default,
+        this is what is set by grammar.setName, however, sometimes
+        is desirable to set even shorter string """
+    return str(self.grammar)
+
   def transform_grammar(self, grammar):
     """ Chance for the resulting class to alter the resulting prefixed grammar """
     return grammar
