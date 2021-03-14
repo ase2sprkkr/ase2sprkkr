@@ -19,7 +19,34 @@ class BaseDefinition:
    """ Redefine in descendants """
    result_class = None
 
+   """ By default, all values,sections.... are named (in the configuration file)"""
+   name_in_grammar = True
+
+   def __init__(self, is_optional=False, is_hidden=False, name_in_grammar=None):
+       """
+       Parameters
+       ----------
+        is_hidden: boolean
+          Hidden values are not offered to a user, usually they are
+          set by another object (and so a direct setting of their values
+          has no sense)
+
+        name_in_grammar: boolean or None
+          If False, there the name of the variable is not printed in the
+          configuration file. The variable is recognized by its position.
+          If None, the default class value is used
+
+        is_optional: boolean
+          If True, this section/value can be missing in the .poti/task file
+       """
+
+       self.is_optional = is_optional
+       self.is_required = is_hidden
+       self.name_in_grammar = name_in_grammar if name_in_grammar else \
+                              self.__class__.name_in_grammar
+
    def create_object(self, container=None):
+       """ Creates Section/Option/.... object (whose properties I define) """
        return self.result_class(self, container)
 
    def grammar(self):
@@ -38,8 +65,6 @@ class BaseDefinition:
         out = name - expr
         out.setParseAction(lambda x: tuple(x))
         return out
-
-
 
 class BaseValueDefinition(BaseDefinition):
 
@@ -65,19 +90,19 @@ class BaseValueDefinition(BaseDefinition):
     fixed: mixed
       If given, this option is not user given, but with fixed_value value (provided by this parameter)
 
-    is_hidden: boolean
-      A hidden value is not offered to a user, usually they are
-      set by another another object (and so their direct settings
-      has no sense)
-
-    name_in_grammar: boolean
-      If False, there the name of the variable is not printed in the configuration file. The variable is recognized by its      position.
-
-    is_optional: boolean
-      If True, value can be missing in the .pot file
-
     required: bool
-      Is this option required?
+      Required option can not be set to None (however, required can be still be optional, if it has
+      default values)
+
+    name_in_grammar: bool or None
+      The value in the conf file is prefixed by <name><name_value_delimiter>
+      If None, the default type value (type.name_in_grammar) is used
+
+    is_optional: bool
+      If True, the value can be omited, if fixed order is required
+
+    is_hidden: bool
+      The value is hidden from the user (no container.name access to the value)
     """
     self.name = name
     self.type = type_from_type(type)
@@ -90,7 +115,14 @@ class BaseValueDefinition(BaseDefinition):
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
 
-    self.name_in_grammar = self.type.name_in_grammar if name_in_grammar is None else name_in_grammar
+    if name_in_grammar is None:
+        name_in_grammar = self.type.name_in_grammar
+    super().__init__(
+         is_optional = is_optional,
+         is_hidden = is_hidden,
+         name_in_grammar = name_in_grammar
+    )
+
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = default_value is not None if required is None else required
     self.help = None
@@ -134,11 +166,6 @@ class BaseValueDefinition(BaseDefinition):
     if self.name_in_grammar:
        god = self._grammar_of_delimiter()
        body = god + body
-
-    def fail(s,loc, expr, err):
-        err.__class__ = pp.ParseFatalException
-        breakpoint()
-        raise err
 
     optional, df, np = self.type.missing_value()
     if optional:
@@ -205,6 +232,9 @@ def add_excluded_names_condition(element, names):
 
 class BaseDefinitionContainer(BaseDefinition):
 
+    """ Force order of its members """
+    force_order = False
+
     @staticmethod
     def _dict_from_named_values(args, items=None):
         """auxiliary method that creates dictionary from the arguments"""
@@ -213,9 +243,14 @@ class BaseDefinitionContainer(BaseDefinition):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False, required=True):
+    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False, required=True, is_optional=False, name_in_grammar=None):
+       super().__init__(
+           is_optional = is_optional,
+           is_hidden = is_hidden,
+           name_in_grammar = name_in_grammar
+       )
+
        self.help = help
-       self.required = True
        self.name = name
        self.description = description
        self.is_hidden = is_hidden
@@ -265,46 +300,7 @@ class BaseDefinitionContainer(BaseDefinition):
     def create_object(self, container=None):
         return self.result_class(self, container)
 
-
-class BaseSectionDefinition(BaseDefinitionContainer):
-   """ Base class for sections in Pot or Task file """
-
-
-   """ Is the sectio named, or it is its position given by position?
-       In the second case, a custom value is not allowed between
-       the section and its predecessor
-   """
-   name_in_grammar = True
-   result_class = Section
-
-   """ Force order of its members """
-   force_order = False
-
-   def __init__(self, name, members=[], name_in_grammar=True, **kwargs):
-       """
-       Parameters
-       ----------
-       name: str
-           Name of the section
-
-       members: iterable
-           Members of the section.
-
-       name_in_grammar: boolean
-           If True, the section (in the file) begins with its name
-           If False, there are only member name - member value in the file
-
-       **kwargs
-           See BaseDefinitionContainer.__init__
-       """
-       super().__init__(name, members, *kwargs)
-       self.name_in_grammar = name_in_grammar
-
-   @property
-   def values(self):
-       return self._members
-
-   def _grammar(self):
+    def _grammar(self):
        custom_value = self.custom_value(self._members.keys())
        delimiter = self._grammar_of_delimiter()
        if self.force_order:
@@ -333,7 +329,7 @@ class BaseSectionDefinition(BaseDefinitionContainer):
                return grammar
            values  = pp.And([ grammar(i) for i in self._members.values()])
        else:
-           values = pp.MatchFirst((i._grammar() for i in self.members()))
+           values = pp.MatchFirst([i._grammar() for i in self.members()])
            values |= custom_value
            values = delimitedList(values, delimiter)
 
@@ -341,6 +337,22 @@ class BaseSectionDefinition(BaseDefinitionContainer):
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
        return out
+
+
+
+class BaseSectionDefinition(BaseDefinitionContainer):
+   """ Base class for sections in Pot or Task file """
+
+
+   """ Is the sectio named, or it is its position given by position?
+       In the second case, a custom value is not allowed between
+       the section and its predecessor
+   """
+   result_class = Section
+
+   @property
+   def values(self):
+       return self._members
 
    @classmethod
    def custom_value(cls, value_names = []):
@@ -359,6 +371,8 @@ class BaseSectionDefinition(BaseDefinitionContainer):
       return mixed
 
 class ConfDefinition(BaseDefinitionContainer):
+
+   name_in_grammar = False
 
    @classmethod
    def from_dict(cls, name, defs=None):
@@ -384,17 +398,8 @@ class ConfDefinition(BaseDefinitionContainer):
    def sections(self):
        return self._members
 
-   def _grammar(self):
-       sections = pp.MatchFirst(( i._grammar() for i in self.sections.values() ))
-       sections |= self.custom_section( self.sections.keys() )
-       delimited = sections + (self.__class__._grammar_of_delimiter() | end_of_file)
-       out = pp.OneOrMore(delimited)
-       out.setParseAction(lambda x: unique_dict(x.asList()))
-       out.ignore("#" + pp.restOfLine + pp.LineEnd())
-       return out
-
    @classmethod
-   def custom_section(cls, section_names = []):
+   def custom_value(cls, section_names = []):
        name = pp.Word(pp.alphanums + '_')
        add_excluded_names_condition(name, section_names)
        value = cls.section_class._grammar_of_delimiter() + cls._custom_section_value()
@@ -403,6 +408,16 @@ class ConfDefinition(BaseDefinitionContainer):
        return out
 
    def read_from_file(self, file):
-       out = self.result_class(self)
+       out = self.result_class(definition = self)
        out.read_from_file(file)
+       return out
+
+   def _tuple_with_my_name(self, expr, delimiter=None):
+       """ Do not create tuple (name, value) for the root class """
+       return expr
+
+   def _grammar(self):
+       """Ignore comments"""
+       out=super()._grammar()
+       out.ignore("#" + pp.restOfLine + pp.LineEnd())
        return out
