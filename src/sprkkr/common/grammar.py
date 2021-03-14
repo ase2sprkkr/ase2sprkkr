@@ -38,4 +38,18 @@ def addConditionEx(self, condition, message):
       raise pp.ParseException(s, loc, m)
   self.addParseAction(check_condition)
 
+def addParseActionEx(self, pa, message = None):
+
+  def parse_action(s, loc, x):
+      try:
+        return pa(x)
+      except Exception as e:
+        if message:
+           msg = '{message}\n{e}'
+        else:
+           msg = str(e)
+        raise pp.ParseException(s, loc, msg).with_traceback(e.__traceback__) from e
+
+  self.addParseAction(parse_action)
 pp.ParserElement.addConditionEx = addConditionEx
+pp.ParserElement.addParseActionEx = addParseActionEx
