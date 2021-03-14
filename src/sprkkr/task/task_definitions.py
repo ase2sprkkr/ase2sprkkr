@@ -62,8 +62,8 @@ class TaskDefinition(ConfDefinition):
   result_class = Task
 
   delimiter = "\n"
-  @lazy_value
   @staticmethod
+  @lazy_value
   def _grammar_of_delimiter():
       def ws(x):
           return x.setWhitespaceChars('')
