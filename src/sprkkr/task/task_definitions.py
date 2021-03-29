@@ -15,7 +15,7 @@ from ..common.configuration_definitions import \
     unique_dict
 from ..common.options import CustomOption
 from ..common.conf_containers import CustomSection
-from ..common.grammar_types import mixed, flag, Keyword
+from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar
 from ..common.misc import lazy_value
 from .tasks import Task
@@ -81,6 +81,6 @@ class TaskDefinition(ConfDefinition):
   def __init__(self, name, sections=None, **kwargs):
       super().__init__(name, sections, **kwargs)
       if not 'TASK' in self:
-         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', Keyword(self.name)) ] )
+         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', DefKeyword(self.name)) ] )
       elif not 'TASK' in self['TASK']:
-         self['TASK']['TASK'] = ValueDefinition(Keyword(self.name))
+         self['TASK']['TASK'] = ValueDefinition(DefKeyword(self.name))
