@@ -8,7 +8,7 @@ import numpy as np
 from collections import Hashable
 from .misc import OrderedDict
 ppc = pp.pyparsing_common
-from .grammar import generate_grammar, separator as separator_grammar, delimitedList, line_end
+from .grammar import generate_grammar, separator as separator_grammar, delimitedList, line_end, optional_quote
 from .misc import class_property, copy_list
 
 from ase.units import Rydberg
@@ -317,7 +317,7 @@ class Keyword(BaseType):
   def __init__(self, *keywords, **kwargs):
     super().__init__(**kwargs)
     self.keywords = [ i.upper() for i in keywords ]
-    self._grammar = pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper())
+    self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
 
   def _validate(self, value, parse_check=False):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"

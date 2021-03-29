@@ -23,6 +23,7 @@ with generate_grammar():
   end_of_file = (pp.Regex('[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
   pp.Suppress(pp.ZeroOrMore(pp.LineEnd()) + pp.StringEnd()).setName('')
   separator = pp.Regex(r'\*{10,}').setName("**********[***....]").suppress()
+  optional_quote = pp.Optional("'").suppress()
 
 def delimitedList(expr, delim):
   """ Delimited list with already suppressed delimiter (or with a in-results-wanted one) """
