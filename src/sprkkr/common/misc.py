@@ -104,6 +104,10 @@ class OrderedDict(_OrderedDict):
         for i,k in enumerate(self.keys()):
             if k == key: return i
         raise KeyError(f"No suych key {key}");
+
+    def first_item(self):
+        return self[next(iter(self))]
+
 @njit
 def numpy_index(array, item):
     """ Returns index of the first occurence of item in the list
