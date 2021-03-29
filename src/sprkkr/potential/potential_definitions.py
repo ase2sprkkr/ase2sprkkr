@@ -10,12 +10,14 @@ import functools
 import pyparsing as pp
 from ..common.grammar import line_end, separator as separator_grammar
 from ..common.grammar_types import separator
+from ..common.misc import add_to_signature
 from ..common.configuration_definitions import \
     BaseValueDefinition, \
     BaseSectionDefinition, \
     ConfDefinition
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition
 from .potentials import Potential
+from .potential_sections import PotentialSection, ASEArraySection
 from ..common.misc import lazy_value
 
 class PotValueDefinition(BaseValueDefinition):
@@ -47,6 +49,7 @@ class PotSectionDefinition(BaseSectionDefinition):
 
   """ The order of items in potential file is fixed """
   force_order = True
+  value_name_format = '<12'
 
   """ standard child class """
   value_class = PotValueDefinition
@@ -61,6 +64,29 @@ class PotSectionDefinition(BaseSectionDefinition):
   def _grammar_of_delimiter():
     return line_end
 
+  def depends_on(self):
+      """ The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.
+
+      Return
+      ------
+      prerequisites: [ str, str, ... ]
+      """
+      return []
+
+  result_class = PotentialSection
+
+class ASEArraySectionDefinition(PotSectionDefinition):
+
+  @add_to_signature(PotSectionDefinition.__init__)
+  def __init__(self, *args, array_name, **kwargs):
+      super().__init__(*args, **kwargs)
+      self.array_name = array_name
+
+  def depends_on(self):
+      """ Array size is required """
+      return [ 'SITES' ]
+
+  result_class = ASEArraySection
 
 class PotentialDefinition(ConfDefinition):
   """ This class describes the format of a potential file """

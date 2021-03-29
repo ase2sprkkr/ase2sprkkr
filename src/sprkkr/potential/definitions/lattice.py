@@ -1,12 +1,11 @@
-from .potential_definitions import PotSectionDefinition, \
+from ..potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from .atoms_sections import AtomsSection
+from ..potential_sections import PotentialSection
 
 from ase.units import Bohr
-from ase.spacegroup import get_spacegroup
 from ase.lattice import bravais_classes
-from  ..common.grammar_types import DefKeyword, Sequence, Table, Integer
-from ..ase.cell import lattice_params_from_cell, cell_from_lattice_params
+from ase.cell import Cell
+from  ...common.grammar_types import DefKeyword, Sequence, Table, Integer
 
 cell_symmetries = {
     'aP': (1,  'triclinic',   'primitive',      '-1',     'C_i'),
@@ -27,51 +26,26 @@ cell_symmetries = {
 
 cell_symmetries_lookup = {v : k for k,v in cell_symmetries.items() }
 
-def _scaled(name, value, factor):
-  """ Scale the firtst three lattice params """
-  if len(name) == 1:
-     return value * factor
-  return value
-
-class LatticeSection(AtomsSection):
+class LatticeSection(PotentialSection):
 
   """ This section retrieves the lattice geometry and
       it creates (during reading) the ASE Cell object """
 
-  _lattice_params = {
-        'a' : 'ALAT',
-        'b': 'BLAT',
-        'c': 'CLAT',
-        'alpha' : 'ALPHALAT',
-        'beta' : 'BETALAT',
-        'gamma' : 'GAMMALAT'
-  }
-
-  def _set_from_atoms(self):
-      aiod = self._atoms_io_data
-      bravais_lattice = aiod.bravais_lattice
+  def _set_from_atoms(self, atoms, write_io_data):
+      bravais_lattice = atoms.cell.get_bravais_lattice()
       pearson_symbol = bravais_lattice.pearson_symbol
-
       self['BRAVAIS'].set(cell_symmetries[pearson_symbol])
-      for n,k in self._lattice_params.items():
-          if par := getattr(bravais_lattice, n, None):
-              self[k].set(_scaled(n, par, 1. / Bohr))
-          else:
-              self[k].clear()
-      self['SCALED_PRIMITIVE_CELL'].set(aiod.cell_spacegroup.scaled_primitive_cell)
+      alat = bravais_lattice.a / Bohr
+      self['ALAT'].set(alat)
+      self['SCALED_PRIMITIVE_CELL'].set(atoms.cell / alat)
+      write_io_data['lattice.alat'] = alat
 
-  def _process(self):
-      try:
-        code = cell_symmetries_lookup[self['BRAVAIS']()]
-        bravais_class = bravais_classes[code]
-        args = {}
-        for n,k in self._lattice_params.items():
-            if self[k]():
-               args[n] = _scaled(n, self[k](), Bohr)
-        bravais_lattice = bravais_class(**args)
-      except KeyError:
-        bravais_lattice = None
-      self._atoms_io_data.bravais_lattice = bravais_lattice
+  def _update_atoms(self, atoms, read_io_data):
+      cell = Cell(self['SCALED_PRIMITIVE_CELL']() * self['ALAT']())
+      read_io_data['lattice.cell'] = cell
+      read_io_data['lattice.alat'] = self['ALAT']()
+      if atoms:
+         atoms.cell = cell
 
 class LatticeSectionDefinition(PotSectionDefinition):
 
@@ -81,12 +55,8 @@ class LatticeSectionDefinition(PotSectionDefinition):
           V('SYSDIM', DefKeyword('3D')),
           V('SYSTYPE', DefKeyword('BULK')),
           V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = cell_symmetries.values())),
-          V('ALAT', float)
-        ] + [
-          V(i, float, is_optional=i!='ALAT') for
-               i in LatticeSection._lattice_params.values()
-        ] + [
-          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')'),length=3 )),
+          V('ALAT', float),
+          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', format='<6'),length=3)),
       ]
       super().__init__(name, members, has_hidden_members=True)
 
