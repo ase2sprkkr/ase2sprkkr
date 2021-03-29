@@ -381,9 +381,25 @@ class BaseDefinitionContainer(BaseDefinition):
                return grammar
            values  = pp.And([ grammar(i) for i in self._members.values()])
        else:
-           values = pp.MatchFirst([i._grammar() for i in self.members()])
+           first_fixed = None
+           def grammars():
+             """ Iterate over grammar, join all with no name_in_grammar """
+             it = iter(self._members.values())
+             curr = next(it)._grammar()
+             for i in it:
+                 if i.name_in_grammar:
+                   yield curr
+                   curr = i._grammar()
+                 else:
+                   curr += delimiter + i._grammar()
+             yield curr
+           it = grammars()
+           first = not self._members.first_item().name_in_grammar and next(it)
+           values = pp.MatchFirst([i for i in it])
            values |= custom_value
            values = delimitedList(values, delimiter)
+           if first:
+              values = first + delimiter + values
 
        values.setParseAction(lambda x: unique_dict(x.asList()))
        out = self._tuple_with_my_name(values, delimiter)
