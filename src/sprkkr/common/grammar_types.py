@@ -8,7 +8,7 @@ from collections import Hashable
 from .misc import OrderedDict
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, delimitedList, line_end
-from .misc import classproperty
+from .misc import class_property, copy_list
 
 from ase.units import Rydberg
 import copy
@@ -21,13 +21,27 @@ class BaseType:
 
   """ Common types have values, only the Separator does not """
   has_value = True
-  default_value = None
+
+  """ Default value for BaseValueDefinition.name_in_grammar.
+      Some types (e.g. Tables) commonly have no name (are identified
+      by its position in the potential file.
+  """
+
   name_in_grammar = True
 
-  def __init__(self, prefix=None, postfix=None, print_width=0):
+  """ Default value for the given type. It can be overriden in the constructor. """
+  default_value = None
+
+
+  def __init__(self, prefix=None, postfix=None, format='', default_value=None, condition=None):
       self.prefix = prefix
       self.postfix = postfix
-      self.print_width = 0
+      self.format = format
+      self.condition = condition
+
+      """ Some subclasses has default_value defined via read-only property. """
+      if default_value is not None:
+         self.default_value = self.convert(default_value)
 
   def __str__(self):
       return self.__class__.__name__
@@ -202,7 +216,7 @@ Date.I = Date()
 
 class RealWithUnits(BaseType):
 
-  @classproperty
+  @class_property
   def _grammar(cls):
     units = pp.Or((pp.Keyword(v).setParseAction(lambda x,*args, u=u: u)  for v,u in  cls.units.items()))
     units = units | pp.Empty().setParseAction(lambda x: 1.)
@@ -263,11 +277,12 @@ class Keyword(BaseType):
   def __str__(self):
       return self.grammar_name()
 
-class DefKeyword(Keyword):
+  def convert(self, value):
+      return value.upper()
 
-  @property
-  def default_value(self):
-      return self.keywords[0]
+def DefKeyword(default, *others, **kwargs):
+  return Keyword(default, *others, default_value=default, **kwargs)
+
 
 class Flag(BaseType):
 
@@ -287,21 +302,67 @@ class Flag(BaseType):
 
 Flag.I = Flag()
 
+normalize_type_map = {
+    np.int64 : int,
+    np.float64: float,
+    np.bool: bool
+}
+
+def normalize_type(type):
+    return normalize_type_map.get(type, type)
 
 type_from_type_map = OrderedDict([
     (float, Real.I),
-    (np.float64, Real.I),
     (int  , Integer.I),
-    (np.int64  , Integer.I),
     (bool,  Bool.I),
-    (np.bool_,  Bool.I),
     (str  , String.I)]
 )
 
-def type_from_type(type):
-  """ Gues the option type from a python type. E.g. int => Integer """
+def format_for_type(format, type):
+  """
+  Returns the format appropriate to the given type
+
+  Parameters
+  ----------
+  format: str or dict
+    If it is str, just return it.
+    Dict should has the form { type : format_for_the_type } + { None : default_format }
+  """
+  if isinstance(format, dict):
+     if type in format:
+        return format[type]
+     return format[None]
+  return format
+
+def type_from_type(type, format='', format_all=False):
+  """ Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int => Integer.
+
+      The given format can be optionally set to the returned grammar element.
+
+      Paramteres
+      ----------
+      type: A python type or BaseType
+        A type to be converted to a grammar element (BaseType class descendant)
+
+      format: str or dict
+        The format to be applied to the resulting class. If dict is given, see 'format_for_type'
+        for the way how the format is determined
+
+      format_all: boolean
+        If False (default), the format is not applied, if instance of BaseType is given as
+        the type parameter. Otherwise, a copy of the input type with the applied format is returned
+  """
   if isinstance(type, Hashable) and type in type_from_type_map:
-    return type_from_type_map[type]
+    type = normalize_type(type)
+    format = format_for_type(format, type)
+    type = type_from_type_map[type]
+    if format:
+        type = type.copy()
+        type.format = format
+    return type
+  elif format_all:
+    type = type.copy()
+    type.format = format_for_type(format, normalize_type(type.numpy_type))
   return type
 
 
@@ -381,14 +442,11 @@ type_from_set_map = OrderedDict([
     (float, SetOf(float)),
     (int  , SetOf(int)),
 ])
-type_from_set_map[np.int64] = type_from_set_map[int]
-type_from_set_map[np.float64] = type_from_set_map[float]
-
 
 def type_from_value(value):
   """ Gues the option type from a python value. E.g. 2 => Integer """
   if isinstance(value, (list, np.ndarray)):
-     return type_from_set_map[value[0].__class__] if len(value) else Integer.I
+     return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else Integer.I
   if isinstance(value, str):
      try:
         String._grammar.parseString(value, True)
@@ -396,7 +454,14 @@ def type_from_value(value):
      except Exception:
         return QString.I
 
-  return type_from_type(value.__class__)
+  return type_from_type(value.__class__).__class__(default_value = value)
+
+def type_from_default_value(value, format='', format_all=False):
+   if inspect.isclass(value) or isinstance(value, BaseType):
+      return type_from_type(value, format=format, format_all=format_all)
+   ptype = normalize_type(value.__class__)
+   gtype = type_from_type(value.__class__).__class__
+   return gtype(default_value = value, format=format_for_type(format, ptype))
 
 class Mixed(BaseType):
 
@@ -450,17 +515,11 @@ Separator.I = Separator()
 class Sequence(BaseType):
   """ A sequence of values of given types """
 
-  def __init__(self, *types, column_widths=0, allowed_values=None, **kwargs):
+  def __init__(self, *types, format='', format_all=False, allowed_values=None, **kwargs):
       super().__init__(**kwargs)
-      self.types = list(map(type_from_type, types))
-      self.column_widths=column_widths
-      if column_widths:
-         self.types = [ t.copy() for t in self.types ]
-         if isinstance(column_widths, int):
-           for t in self.types: print_width = column_widths
-         else:
-           for t,w in zip(self.types, coulumn_widths):
-             t.print_width = w
+      if isinstance(format, (str, dict)):
+        format = itertools.repeat(format)
+      self.types = [ type_from_default_value(i, dfs, format_all=format_all) for i,dfs in zip(types, format) ]
       self._grammar = pp.And([i.grammar for i in self.types]).setParseAction(lambda x: tuple(x))
       if allowed_values is not None:
          if not isinstance(allowed_values, set):
