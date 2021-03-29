@@ -6,10 +6,10 @@ import numpy as np
 import inspect
 import sys
 
-def patch_package(package=None):
+def patch_package(package, name):
     """ Set the package name for the test """
     if package and package.count('.') >= 3:
-       return __package
+       return package, name
     frame=inspect.stack()[1]
     path = frame.filename
     file = Path(path).resolve()
@@ -18,10 +18,10 @@ def patch_package(package=None):
       file = file.parent
     top = str(file.parent)
     sys.path.append(top)
-    return str(current)[len(top)+1:].replace('/','.')
+    package=str(current)[len(top)+1:].replace('/','.')
+    return package, package + '.' + name.rsplit('.', 1)[-1]
 
-
-__package__ = patch_package(__package__)
+__package__, __name__ = patch_package(__package__,__name__)
 from .misc import OrderedDict
 
 class TestCase(unittest.TestCase):

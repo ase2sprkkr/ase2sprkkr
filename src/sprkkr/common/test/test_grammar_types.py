@@ -1,8 +1,8 @@
 if __package__:
-   from .init_tests import TestCase
+   from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
-   __package__ = patch_package()
+__package__, __name__ = patch_package(__package__, __name__)
 
 import pyparsing
 from .. import grammar_types as gt
