@@ -404,8 +404,19 @@ class BaseDefinitionContainer(BaseDefinition):
        values.setParseAction(lambda x: unique_dict(x.asList()))
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
+
+       if self.validate:
+          def _validate(s, loc, value):
+              #just pass the dict to the validate function
+              is_ok = self.validate(value[0][1])
+              if is_ok is not True:
+                raise pp.ParseException(s, loc, is_ok)
+              return value
+          out.addParseAction(_validate)
        return out
 
+    """ A function for validation of just the parsed result (not the user input) """
+    validate = None
 
 
 class BaseSectionDefinition(BaseDefinitionContainer):
