@@ -2,6 +2,7 @@ import functools
 import inspect
 import heapq
 import copy
+import numpy as np
 _x = object()
 from collections import OrderedDict as _OrderedDict
 
@@ -103,3 +104,13 @@ class OrderedDict(_OrderedDict):
         for i,k in enumerate(self.keys()):
             if k == key: return i
         raise KeyError(f"No suych key {key}");
+@njit
+def numpy_index(array, item):
+    """ Returns index of the first occurence of item in the list
+    If numba is installed, the function is accelerated.
+    """
+    for idx, val in np.ndenumerate(array):
+        if val == item:
+            return idx
+    # If no item was found return None, other return types might be a problem due to
+    # numbas type inference.
