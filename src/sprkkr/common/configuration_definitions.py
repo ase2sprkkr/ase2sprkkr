@@ -45,7 +45,7 @@ class BaseDefinition:
           If None, the default class value is used
 
         is_optional: boolean
-          If True, this section/value can be missing in the .poti/task file
+          If True, this section/value can be missing in the .pot/task file
 
         description: str
           Short help message
@@ -59,7 +59,6 @@ class BaseDefinition:
        else:
           self.alternative_names = alternative_names
        self.is_optional = is_optional
-       self.is_required = is_hidden
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
        self.help = help
@@ -118,15 +117,15 @@ class BaseValueDefinition(BaseDefinition):
       If given, this option is not user given, but with fixed_value value (provided by this parameter)
 
     required: bool
-      Required option can not be set to None (however, required can be still be optional, if it has
-      default values)
+      Required option can not be set to None (however, a required one
+      can be still be optional, if it has a default values)
 
     name_in_grammar: bool or None
       The value in the conf file is prefixed by <name><name_value_delimiter>
       If None, the default type value (type.name_in_grammar) is used
 
     is_optional: bool
-      If True, the value can be omited, if fixed order is required
+      If True, the value can be omited, if the fixed order is required
 
     is_hidden: bool
       The value is hidden from the user (no container.name access to the value)
