@@ -17,7 +17,7 @@ class AtomsIOData:
 
   def set_atoms(self, atoms):
       """ Set the Atom object to be computed with"""
-      self._atoms = SprKkrAtoms.convert_from_ase_atoms(atoms)
+      self._atoms = SprKkrAtoms.promote_ase_atoms(atoms)
       self.clear_cache()
 
   def create_atoms(self, **kwargs):
@@ -26,7 +26,7 @@ class AtomsIOData:
       self.clear_cache()
 
   def set_atoms_positions(self, positions):
-      """ Set new positions. Creates a new Atoms object, 
+      """ Set new positions. Creates a new Atoms object,
           if the numbers of atoms differ.
       """
       if self._atoms and len(self._atoms) == len(self.positions):
