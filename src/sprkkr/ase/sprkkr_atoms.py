@@ -16,25 +16,23 @@ class SprKkrAtoms(Atoms):
            is replaced so the extra methods and properties of the objects will
            be available.
        """
-       if isinstance(obj, SprKkrAtoms):
-          return obj
-       if obj:
+       if obj and not isinstance(obj, SprKkrAtoms):
           if obj.__class__ is Atoms:
              obj.__class__ = SprKkrAtoms
           else:
-             if not isinstance(obj, SprKkrAtoms):
-                raise(f'Can not promote class {obj} to {SprKkrAtoms}')
+             if not isinstance(obj, Atoms):
+                raise(f'Can not promote class {obj} of class {obj.__class__} to {SprKkrAtoms}')
+
              class SprKKrAtomsEx(obj.__class__, SprKkrAtoms):
                    pass
              obj.__class__ = SprKKrAtomsEx
 
-
-             obj._init()
+          obj._init()
        return obj
 
    def __init__(self, *args, **kwargs):
-       super().__init__(*args, **kwargs)
        self._init()
+       super().__init__(*args, **kwargs)
 
    def _init(self):
        """ The initialization of the additional (not-in-ASE) properties. To be used
@@ -94,6 +92,8 @@ class SprKkrAtoms(Atoms):
             mapping = UniqueValuesMapping(atomic_numbers)
 
           spacegroup = self.compute_spacegroup_for_atomic_numbers(mapping.mapping, symprec=symprec)
+
+        self.info['spacegroup'] = spacegroup
 
         tags = spacegroup.tag_sites(self.get_scaled_positions())
         sites = np.empty(len(tags), dtype=object)
