@@ -6,19 +6,22 @@ else
 	 PYTHON=python
 fi
 
-cd $(dirname "$0")
 if echo 'import nose' | $PYTHON ; then
 	MODULE="nose -s"
 else
 	MODULE=unittest
 fi
 
-ADD=sprkkr/*/test/test_*.py
+
 for i in "$@" ; do
 	if [[ $i != -* ]] ; then
-		echo $i
-		ADD=
+		ANY=1
 	fi
 done
 
+ADD=
+if [[ ! "$ANY" ]] ; then
+	cd $(dirname "$0")
+	ADD=sprkkr/*/test/test_*.py
+fi
 $PYTHON -m $MODULE $@ $ADD
