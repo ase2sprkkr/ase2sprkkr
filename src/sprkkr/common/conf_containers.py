@@ -2,12 +2,13 @@ from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
 import pyparsing as pp
+from .conf_common import ConfCommon
 
-class ConfContainer:
+class ConfContainer(ConfCommon):
   """ Custom task section. Section created by user with no definition """
 
-  def __init__(self, definition):
-      self._definition = definition
+  def __init__(self, definition, container=None):
+      super().__init__(definition, container)
       self._members = OrderedDict()
       for v in definition.members():
           self._add(v.create_object(self))
@@ -67,6 +68,8 @@ class ConfContainer:
 
   def _add(self, member):
       self._members[member.name] = member
+      if hasattr(self._definition, 'value_name_format'):
+         member._definition.value_name_format = self._definition.value_name_format
 
   def remove(self, name):
       cclass = getattr('custom_class', self._definition, False)
@@ -87,12 +90,15 @@ class ConfContainer:
           dct[self.name] = out
       return out
 
+  def _find_value(self, name):
+      for i in self:
+          if i._definition.is_hidden:
+             continue
+          if out := i._find_value(name):
+             return out
+
 class BaseSection(ConfContainer):
   """ A section of SPRKKR configuration  """
-
-  def __init__(self, definition, container=None):
-      super().__init__(definition)
-      self._container = container
 
   def __setattr__(self, name, value):
       if name[0]=='_':
@@ -109,6 +115,8 @@ class BaseSection(ConfContainer):
 
   def save_to_file(self, file):
       if not self.has_any_value():
+         if not self._definition.is_optional:
+            raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
          return
       if self._definition.name_in_grammar:
          file.write(self._definition.name)
@@ -170,3 +178,6 @@ class RootConfContainer(ConfContainer):
       if clear_first:
          self.clear(True)
       self.set(values)
+
+  def find(self, name):
+      return self._find_value(name)

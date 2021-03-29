@@ -23,10 +23,17 @@ class BaseDefinition:
    """ By default, all values,sections.... are named (in the configuration file)"""
    name_in_grammar = True
 
-   def __init__(self, is_optional=False, is_hidden=False, name_in_grammar=None):
+   def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
+                name_in_grammar=None, description=None, help=None):
        """
        Parameters
        ----------
+        name: str
+          Name of the value/section
+
+        alternative_names: str or [str]
+          Alternative names that can denotes the value
+
         is_hidden: boolean
           Hidden values are not offered to a user, usually they are
           set by another object (and so a direct setting of their values
@@ -39,12 +46,24 @@ class BaseDefinition:
 
         is_optional: boolean
           If True, this section/value can be missing in the .poti/task file
-       """
 
+        description: str
+          Short help message
+
+        help: str
+          (Long) help message for the value/section
+       """
+       self.name = name
+       if isinstance(alternative_names, str):
+          self.alternative_names = [ alternative_names ]
+       else:
+          self.alternative_names = alternative_names
        self.is_optional = is_optional
        self.is_required = is_hidden
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
+       self.help = help
+       self.description = description
 
    def create_object(self, container=None):
        """ Creates Section/Option/.... object (whose properties I define) """
@@ -55,25 +74,30 @@ class BaseDefinition:
        with generate_grammar():
          return self._grammar()
 
-   def _tuple_with_my_name(self, expr, delimiter=None):
+   def _tuple_with_my_name(self, expr, delimiter=None, has_value=True):
         """ Create the grammar returning tuple (self.name, <result of the expr>) """
         if self.name_in_grammar:
-            name = pp.CaselessKeyword(self.name).setParseAction(lambda x: self.name)
+            name = pp.CaselessKeyword(self.name)
+            if self.alternative_names:
+               name = name | pp.Or( pp.CaselessKeyword(n) for n in self.alternative_names)
+            name.setParseAction(lambda x: self.name)
             if delimiter:
               name += delimiter
         else:
             name = pp.Empty().setParseAction(lambda x: self.name)
         out = name - expr
-        out.setParseAction(lambda x: tuple(x))
-        return out
+        if has_value:
+            return out.setParseAction(lambda x: tuple(x))
+        else:
+            return out.suppress()
 
 class BaseValueDefinition(BaseDefinition):
 
   result_class = Option
 
-  def __init__(self, name, type, default_value=None,
-               fixed_value=None, required=False, help=None,
-               is_hidden=False, name_in_grammar=None,
+  def __init__(self, name, type, default_value=None, alternative_names=None,
+               fixed_value=None, required=False, help=None, description=None,
+               is_hidden=False, name_in_grammar=None, name_format=None,
                is_optional=False):
     """
     Parameters
@@ -86,6 +110,9 @@ class BaseValueDefinition(BaseDefinition):
 
     default: mixed
       Default value for configuration
+
+    alternative_names: str or [str]
+      Value can have an alternative name (that alternativelly denotes the value)
 
     fixed: mixed
       If given, this option is not user given, but with fixed_value value (provided by this parameter)
@@ -103,8 +130,10 @@ class BaseValueDefinition(BaseDefinition):
 
     is_hidden: bool
       The value is hidden from the user (no container.name access to the value)
+
+    name_format: str or None
+      The way the name is written
     """
-    self.name = name
     self.type = type_from_type(type)
     if default_value is None and not isinstance(self.type, BaseType):
        self.default_value = type
@@ -119,9 +148,13 @@ class BaseValueDefinition(BaseDefinition):
         name_in_grammar = self.type.name_in_grammar
 
     super().__init__(
+         name = name,
+         alternative_names = alternative_names,
          is_optional = is_optional,
          is_hidden = is_hidden,
-         name_in_grammar = name_in_grammar
+         name_in_grammar = name_in_grammar,
+         help = help,
+         description = description
     )
 
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
@@ -129,6 +162,13 @@ class BaseValueDefinition(BaseDefinition):
     self.help = None
     self.is_hidden = is_hidden
     self.is_optional = is_optional
+    self.name_format = name_format
+
+  @property
+  def formated_name(self):
+    if self.name_format:
+       return "{:{}}".format(self.name, self.name_format)
+    return self.name
 
   def validate(self, value):
     if value is None:
@@ -142,6 +182,14 @@ class BaseValueDefinition(BaseDefinition):
   @property
   def optional_value(self):
     return self.name, None
+
+  @property
+  def value_name_format(self):
+    return self.name_format
+
+  @value_name_format.setter
+  def value_name_format(self, value):
+      self.name_format = value
 
   def __str__(self):
     out="SPRKKR({} of {})".format(self.name, str(self.type))
@@ -185,10 +233,12 @@ class BaseValueDefinition(BaseDefinition):
     out.setName(self.name + nbody)
     return out
 
-  def get_value(self):
+  def get_value(self, option=None):
      if self.fixed_value is not None:
         return self.fixed_value
      if self.default_value is not None:
+        if callable(self.default_value):
+           return self.default_value(option)
         return self.default_value
      return None
 
@@ -207,7 +257,7 @@ class BaseValueDefinition(BaseDefinition):
         write_value=True
      f.write(self.prefix)
      if self.name_in_grammar:
-        f.write(self.name)
+        f.write(self.formated_name)
         if write_value:
            f.write(self.name_value_delimiter)
            self.type.write(f, value)
@@ -245,16 +295,17 @@ class BaseDefinitionContainer(BaseDefinition):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], help=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None):
+    def __init__(self, name, members=[], alternative_names=[], help=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None):
        super().__init__(
+           name = name,
+           alternative_names = alternative_names,
            is_optional = is_optional,
            is_hidden = is_hidden,
-           name_in_grammar = name_in_grammar
+           name_in_grammar = name_in_grammar,
+           help = help,
+           description = description
        )
 
-       self.help = help
-       self.name = name
-       self.description = description
        self.is_hidden = is_hidden
        if not isinstance(members, OrderedDict):
           members = self._dict_from_named_values(members)
@@ -262,7 +313,7 @@ class BaseDefinitionContainer(BaseDefinition):
        self.has_hidden_members = has_hidden_members
 
     def __iter__(self):
-        return iter(self._members)
+        return self._members.values()
 
     def members(self):
         return self._members.values()
@@ -275,6 +326,9 @@ class BaseDefinitionContainer(BaseDefinition):
 
     def __setitem__(self, key, value):
         self._members[key]=value
+
+    def __contains__(self, key):
+        return key in self._members
 
     def remove(self, name):
         del self._members[name]
