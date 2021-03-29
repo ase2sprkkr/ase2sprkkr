@@ -1,8 +1,8 @@
 if __package__:
-   from .init_tests import TestCase
+   from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
-   __package__ = patch_package()
+_package__, __name__ = patch_package(__package__, __name__)
 
 import unittest
 import pyparsing as pp
@@ -213,6 +213,9 @@ XSITES NR=3 FLAG
     self.assertTrue(isinstance(task['ENERGY']['NXXX'], CustomOption))
     self.assertEqual(task['ENERGY'].NE(), np.array((300,200)))
     self.assertEqual(task['SITES'].NL(), 2)
+    self.assertEqual(task.find('NL').get_path(), 'SITES.NL')
+    task.find('NL').set(3)
+    self.assertEqual(task['SITES'].NL(), 3)
     self.assertTrue(isinstance(task['XSITES'], CustomSection))
 
     output = io.StringIO()
@@ -220,6 +223,3 @@ XSITES NR=3 FLAG
     output.seek(0)
     task2 = task_def.read_from_file(output)
     self.assertEqual(str(task.to_dict()), str(task2.to_dict()))
-
-
-
