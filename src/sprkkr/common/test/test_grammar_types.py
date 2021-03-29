@@ -141,3 +141,10 @@ class GrammarTest(TestCase):
         ]:
         test(val, res)
 
+    type = gt.Table(X=int, YY=str, ZZZ=float, numbering=True, format='>20', numbering_format='<4')
+    data = """ X YY ZZZ
+        1 2 dog 2.5"""
+    parsed = type.parse(data)
+    data2 = type.string(parsed)
+    #propper column widths: numbering + 3 columns + newline, no newline on the end of the string
+    self.assertEquals(len(data2),  2 * (4 + 3 * 21 +1) - 1)
