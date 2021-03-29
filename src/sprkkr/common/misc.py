@@ -1,4 +1,6 @@
 import functools
+import inspect
+import heapq
 import copy
 _x = object()
 from collections import OrderedDict as _OrderedDict
@@ -24,6 +26,42 @@ def lazy_value(fce):
         return x[0]
     return cached_fce
 
+def add_to_signature(func, add=set()):
+  """ Add the arguments in the <func> function to the list of arguments
+  of the resulting function (as keyword_only arguments)
+  The modified function has to have its arguments defined as
+  in the following example:
+
+  def parent(.....):
+      ....
+
+  @add_to_signature(parent)
+  def child(*args, new_param, **kwargs):
+      print(f'New param is {new_param})
+      parent(*args, **kwargs)
+  """
+
+  signature = inspect.signature(func)
+  pars = list( signature.parameters.values())
+  P = inspect.Parameter
+  names = set((i.name for i in pars))
+
+  def modify(mod_func):
+      mod_sig = inspect.signature(mod_func)
+      pars2 = mod_sig.parameters.values()
+      forbidden = set((P.VAR_KEYWORD, P.VAR_POSITIONAL)) - add
+      if forbidden:
+         pars2 = (i for i in pars2 if i.kind not in forbidden and i.name not in names)
+      result = heapq.merge(pars, pars2, key = lambda x: x.kind)
+
+      @functools.wraps(mod_func)
+      def wrapper(*args, **kwargs):
+          return mod_func(*args, **kwargs)
+      wrapper.__signature__ = mod_sig.replace(parameters = list(result))
+
+      return wrapper
+
+  return modify
 
 def copy_list(src):
     """ Copy list of objects. Each object is copied just once (so
