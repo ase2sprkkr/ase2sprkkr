@@ -6,12 +6,17 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 import pyparsing
 from .. import grammar_types as gt
+from ..grammar import generate_grammar
 import numpy as np
 from ase.units import Rydberg
 
 class GrammarTest(TestCase):
 
   def test_types(self):
+    with generate_grammar():
+       self._test_types()
+
+  def _test_types(self):
     Error = "ERROR"
 
     def test(val, res):
@@ -127,7 +132,7 @@ class GrammarTest(TestCase):
         )]:
         test(val, res)
 
-    type = gt.Mixed.I
+    type = gt.PotMixed.I
     for val, res in [
         ('1', 1),
         ('-2',-2),
@@ -135,6 +140,19 @@ class GrammarTest(TestCase):
         ('AHOJ', 'AHOJ'),
         ('T', True),
         ('F', False),
+        ('aaaa aaaa', 'aaaa aaaa'),
+        ('{1,2,3}', np.array([1,2,3])),
+        ('{1.,2.,3.}', np.array([1.,2.,3.]))
+        ]:
+        test(val, res)
+
+    type = gt.Mixed.I
+    for val, res in [
+        ('1', 1),
+        ('-2',-2),
+        ('-2.4',-2.4),
+        ('AHOJ', 'AHOJ'),
+        ('', True),
         ('aaaa aaaa', Error),
         ('{1,2,3}', np.array([1,2,3])),
         ('{1.,2.,3.}', np.array([1.,2.,3.]))
