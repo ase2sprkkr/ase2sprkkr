@@ -3,7 +3,7 @@ from ..potential_definitions import PotSectionDefinition, \
 from ..potential_sections import PotentialSection
 
 from  ...common.grammar_types import DefKeyword, Array, Table, Integer
-from ...ase.sprkkr_atoms import SprKkrAtoms
+from ...sprkkr.sprkkr_atoms import SprKkrAtoms
 
 class SitesSection(PotentialSection):
   """ This section retrieves the atomic positions and

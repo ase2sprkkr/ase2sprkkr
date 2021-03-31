@@ -1,3 +1,7 @@
+""" This file contains SprKkrAtoms - an enhanced version of Atoms to be used
+with SPRKKR """
+
+
 from ase import Atoms
 from ..common.unique_values import UniqueValuesMapping
 import spglib

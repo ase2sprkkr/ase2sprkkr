@@ -1,6 +1,6 @@
 from ..common.conf_containers import RootConfContainer
 from .io_data import ReadIoData, WriteIoData
-from ..ase.sprkkr_atoms import SprKkrAtoms
+from ..sprkkr.sprkkr_atoms import SprKkrAtoms
 from ..common.misc import class_property, cache
 
 class Potential(RootConfContainer):

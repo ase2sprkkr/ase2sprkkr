@@ -1,3 +1,7 @@
+""" A potential file for SPRKKR is divided to sections. In this module,
+there are a generic classes for these sections.
+"""
+
 from ..common.conf_containers import Section
 from functools import partial
 
@@ -9,7 +13,7 @@ class PotentialSection(Section):
 
         Parameters
         ----------
-        atoms : sprkkr.ase.SprKkrAtoms
+        atoms : sprkkr.sprkkr.SprKkrAtoms
           Atoms that will be used to create
 
         write_io_data: sprkkr.potential.WriteIoData
@@ -23,7 +27,7 @@ class PotentialSection(Section):
 
         Parameters
         ----------
-        atoms : sprkkr.ase.SprKkrAtoms
+        atoms : sprkkr.sprkkr.SprKkrAtoms
           Atoms, whose properties should be set to the values from readed file. Can be None in some sections, then the object will be created
         read_io_data: sprkkr.potential.ReadIoData
           Object for storing values from one section to be used in another one. This mechanism is used to be the sections as independent (and independently testable) as they can be.
@@ -31,7 +35,7 @@ class PotentialSection(Section):
 
         Return
         ------
-        atoms: None or sprkkr.ase.SprKkrAtoms
+        atoms: None or sprkkr.sprkkr.SprKkrAtoms
           If the function creates a new Atoms obejct (either when None has been passed to the atoms args, or when the atoms cannot be adapted to the values readed from the file - e.g. when number of atoms differs) it should return it.
         """
         return None
@@ -49,7 +53,10 @@ class PotentialSection(Section):
 class UniqueListSection(PotentialSection):
     """ Class in a section, which data is list of something,
         e.g. of meshes, reference systems etc. Following class
-        properties has to be redefined in the descendants
+        properties has to be redefined in the descendants.
+
+        The list of sections object (with numbering of the (unique)
+        objects) is stored to io_data to be used by other sections.
     """
 
     """ Name of the property of write_io_data to get the list """
@@ -68,7 +75,9 @@ class UniqueListSection(PotentialSection):
 
 
 class ASEArraySection(PotentialSection):
-    """ Section, that get and set the given ase array """
+    """ Section, that get and set the given ASE array, e.g. magnetization direction.
+        Name of the array is given by the section definition in the property array_name
+    """
 
     def has_any_value(self):
         return self['DATA'] is not None
