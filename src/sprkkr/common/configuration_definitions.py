@@ -11,7 +11,7 @@ def unique_dict(values):
     out = dict(values)
     if len(values) != len(out):
        seen = set()
-       duplicates = [x for x,y in values if x not in seen and not seen.add(x)]
+       duplicates = {x for x,y in values if x not in seen and seen.add(x)}
        raise pp.ParseException(f"There are non-unique keys: {duplicates}")
     return out
 
@@ -226,7 +226,7 @@ class BaseValueDefinition(BaseDefinition):
              return x
           message="The value of {} is {} and it should be {}".format(self.name, x[0], self.fixed_value)
           raise pp.ParseException(s,loc,message, body)
-      body.addParseAction(check_fixed)
+      body=body.copy().addParseAction(check_fixed)
 
     if self.name_in_grammar:
        god = self._grammar_of_delimiter()
