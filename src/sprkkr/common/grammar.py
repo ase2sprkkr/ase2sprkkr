@@ -16,6 +16,11 @@ def generate_grammar():
       if old is not None:
         pe.setDefaultWhitespaceChars(old)
 
+def replace_whitechars(expr):
+    expr = expr.copy()
+    expr.setWhitespaceChars(' \t\r')
+    return expr
+
 
 with generate_grammar():
   optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).setName(' ')

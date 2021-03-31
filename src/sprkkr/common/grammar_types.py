@@ -8,7 +8,9 @@ import numpy as np
 from collections import Hashable
 from .misc import OrderedDict
 ppc = pp.pyparsing_common
-from .grammar import generate_grammar, separator as separator_grammar, delimitedList, line_end, optional_quote
+from .grammar import generate_grammar, separator as separator_grammar, \
+                     delimitedList, line_end, optional_quote,\
+                     replace_whitechars
 from .misc import class_property, copy_list
 
 from ase.units import Rydberg
@@ -178,7 +180,7 @@ class BaseType:
 
 class Unsigned(BaseType):
 
-  _grammar = ppc.integer.copy().setParseAction(lambda x:int(x[0]))
+  _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
     if not isinstance(value, int): return "Integer value required"
@@ -193,7 +195,7 @@ Unsigned.I = Unsigned()
 
 class Integer(BaseType):
 
-  _grammar = ppc.signed_integer.copy().setParseAction(lambda x:int(x[0]))
+  _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
     return isinstance(value, (int, np.int64) ) or f'Integer value required ({value.__class__} was given)'
@@ -225,7 +227,7 @@ Bool.I = Bool()
 
 class Real(BaseType):
 
-  _grammar = ppc.fnumber.setParseAction(lambda x: float(x[0]))
+  _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
 
   def _validate(self, value, parse_check=False):
     return isinstance(value, float) or "Float value required"
