@@ -14,7 +14,9 @@ class TypesSectionDefinition(PotSectionDefinition):
   def __init__(self, name='TYPES', **kwargs):
       V = PotValueDefinition
       members = [
-          V('DATA', Table({'TXT': str, 'ZT' :int, 'NCORT': int, 'NVALT': int, 'NSEMCORSHLT': int}, numbering='IT')),
+          V('DATA', Table({'TXT': str, 'ZT' :int, 'NCORT': int, 'NVALT': int, 'NSEMCORSHLT': int},
+                          numbering='IT', free_header=True)
+          ),
       ]
       super().__init__(name, members, has_hidden_members=True)
 

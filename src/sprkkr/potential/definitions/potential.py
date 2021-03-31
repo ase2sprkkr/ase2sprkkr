@@ -1,6 +1,8 @@
 def fce():
   from ...common.misc import OrderedDict
-  from  ...common.grammar_types import DefKeyword, Table, Array, Sequence, integer, Date, boolean, line_string
+  from  ...common.grammar_types import \
+        Keyword, DefKeyword, Table, Array, Sequence, \
+        integer, Date, boolean, line_string
   from ..potential_definitions import \
         PotSectionDefinition, \
         ASEArraySectionDefinition, \
@@ -28,11 +30,11 @@ def fce():
 
   Section('HEADER', [
     Separator(),
-    V('HEADER', line_string, lambda x: f'SPRKKR potential file, created at {datetime.datetime.now()}'),
+    V('HEADER', line_string, lambda x: f'SPR-KKR potential file, created at {datetime.datetime.now()}'),
     Separator(),
-    V('TITLE', 'SPR-KKR '),
+    V('TITLE', line_string, 'Created by ASE-SPR-KKR wrapper'),
     V('SYSTEM', line_string, lambda x: 'System: {}'.format(x._get_root_container().atoms.symbols) ),
-    V('PACKAGE', DefKeyword('SPRKKR')),
+    V('PACKAGE', line_string, 'SPR-KKR'),
     V('FORMAT', Sequence(int, Date(prefix='(', postfix=')')),
           default_value = [7, datetime.datetime(2007,5,21)]),
   ], name_in_grammar = False)
@@ -41,21 +43,27 @@ def fce():
     V('NQ', 1),
     V('NT', 2),
     V('NM', 1),
-    V('IREL', 3)
+    V('IREL', 3),
+    V('NSPIN', 1, None, required = False, is_optional = True)
   ])
 
   Section('SCF-INFO', [
-    V('INFO', str, 'NONE'),
-    V('SCFSTATUS', DefKeyword('START')),
+    V('INFO', line_string, 'NONE'),
+    V('SCFSTATUS', DefKeyword('START', 'CONVERGED')),
     V('FULLPOT', False),
     V('BREITINT', False),
-    V('NOMAG', False),
+    V('NONMAG', False, alternative_names='NOMAG'),
     V('ORBPOL', str, 'NONE'),
     V('EXTFIELD', False),
     V('BLCOUPL', False),
     V('BEXT', 0.0),
     V('SEMICORE', False),
     V('LLOYD', False),
+    V('NE', Array(int), is_optional = True),
+    V('IBZINT', int, is_optional = True),
+    V('NKTAB', int, is_optional = True),
+#   V('XC-POT', str, is_optional = True),
+    V('SCF-ALG', Keyword('BROYDEN', 'BROYDEN2'), is_optional = True),
     V('SCF-ITER', 0),
     V('SCF-MIX', 0.2),
     V('SCF-TOL', 1e-5),
@@ -63,7 +71,7 @@ def fce():
     V('RMSAVB', 999999.),
     V('EF', 999999.),
     V('VMTZ', 0.7),
-  ])
+  ], )
 
   Section('LATTICE', cls = LatticeSectionDefinition)
   Section('SITES',   cls = SitesSectionDefinition)

@@ -35,7 +35,7 @@ class SitesSectionDefinition(PotSectionDefinition):
       members = [
           V('CARTESIAN', bool, fixed_value=True),
           V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),
-          V('SCALED_ATOMIC_POSITIONS', Table({'QX': float, 'QY' : float, 'QZ': float}, numbering='IQ')),
+          V('SCALED_ATOMIC_POSITIONS', Table({'QBAS(X)': float, 'QBAS(Y)' : float, 'QBAS(Z)': float}, numbering='IQ',free_header=True)),
       ]
       super().__init__(name, members, has_hidden_members=True)
 

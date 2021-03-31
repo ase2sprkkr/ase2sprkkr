@@ -15,7 +15,7 @@ class MeshInformationSectionDefinition(PotSectionDefinition):
       V = PotValueDefinition
       members = [
           V('MESH-TYPE', DefKeyword('EXPONENTIAL')),
-          V('DATA', Table({'R(1)': 0., 'DX' :0., 'JRMT': 0, 'RMT': 0., 'JWRS': 0, 'RWS': 0.}, numbering='IM')),
+          V('DATA', Table({'R(1)': 0., 'DX' :0., 'JRMT': 0, 'RMT': 0., 'JRWS': 0, 'RWS': 0.}, numbering='IM')),
       ]
       super().__init__(name, members, has_hidden_members=True)
 

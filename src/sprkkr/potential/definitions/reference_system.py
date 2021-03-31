@@ -17,6 +17,7 @@ class ReferenceSystemSectionDefinition(PotSectionDefinition):
 
   def __init__(self, name='REFERENCE SYSTEM',
                      alternative_names='REFERENCE SYSTEM FOR TIGHT BINDING MODE',
+                     write_alternative_name=True,
                      **kwargs):
       V = PotValueDefinition
       members = [
