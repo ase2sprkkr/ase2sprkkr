@@ -181,10 +181,6 @@ class BaseValueDefinition(BaseDefinition):
     self.type.validate(value, self.name)
 
   @property
-  def optional_value(self):
-    return self.name, None
-
-  @property
   def value_name_format(self):
     return self.name_format
 
