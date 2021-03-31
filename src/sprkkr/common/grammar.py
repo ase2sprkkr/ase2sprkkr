@@ -22,7 +22,9 @@ with generate_grammar():
   line_end = pp.Suppress(pp.LineEnd()).setName('\n')
   end_of_file = (pp.Regex('[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
   pp.Suppress(pp.ZeroOrMore(pp.LineEnd()) + pp.StringEnd()).setName('')
-  separator = pp.Regex(r'\*{10,}').setName("**********[***....]").suppress()
+  separator_pattern = r'\*'*10+'\**'
+  separator = pp.Regex(separator_pattern).setName("**********[***....]").suppress()
+  separator.pattern = separator_pattern
   optional_quote = pp.Optional("'").suppress()
 
 def delimitedList(expr, delim):
