@@ -61,4 +61,6 @@ class Site:
       return self._occupation
 
   def update_atoms(self):
-      self.atoms.symbols[ self.atoms.sites == self ] = self.occupation.just_one_symbol()
+      an = self.atoms.get_atomic_numbers()
+      an[ self.atoms.sites == self ] = self.occupation.primary_atomic_number()
+      self.atoms.set_atomic_numbers(an)

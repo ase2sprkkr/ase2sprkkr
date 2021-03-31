@@ -117,8 +117,10 @@ class SprKkrAtoms(Atoms):
 
    @sites.setter
    def sites(self, v):
+       an = np.zeros(len(v), dtype= int)
        for i,j in enumerate(v):
-           self.symbols[i] = j.occupation.just_one_symbol()
+           an[i] = j.occupation.primary_atomic_number()
+       self.set_atomic_numbers(an)
        self._unique_sites = v
 
    @property

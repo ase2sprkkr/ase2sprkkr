@@ -48,12 +48,16 @@ class Occupation:
           return
       self._update_atoms()
 
-  def just_one_symbol(self):
+  def primary_atomic_number(self):
       """ Return the chemical symbol of the atom.
           If there are more atoms on the site, then return X. """
-      if len(self._occupation) != 1:
-         return 'X'
-      return next(iter(self._occupation)).symbol
+      m = 0.
+      an = 0
+      for at,occ in self._occupation.items():
+          if occ > m:
+             m = occ
+             an = at.atomic_number
+      return an
 
   def __len__(self):
       return len(self._occupation)

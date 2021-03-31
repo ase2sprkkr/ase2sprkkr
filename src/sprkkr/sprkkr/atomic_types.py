@@ -49,6 +49,10 @@ class AtomicType:
     def to_tuple(self):
         return (self.symbol, self.n_electrons, self.n_core, self.n_valence, self.n_semicore)
 
+    @property
+    def atomic_number(self):
+        return self.n_electrons
+
     @classmethod
     def to_atomic_type(cls, value):
         if isinstance(value, cls):
