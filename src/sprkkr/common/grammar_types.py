@@ -284,10 +284,7 @@ class Energy(RealWithUnits):
 
 Energy.I = Energy()
 
-class String(BaseType):
-
-  _grammar = Word(pp.printables,excludeChars=",;{}").setParseAction(lambda x:x[0])
-
+class BaseString(BaseType):
   def _validate(self, value, parse_check=False):
     if not isinstance(value, str): return "String value required"
     if not parse_check:
@@ -297,20 +294,28 @@ class String(BaseType):
         return "Forbidden character '{e.line[e.col]}' in the string"
     return True
 
+class String(BaseString):
+  _grammar = Word(pp.printables,excludeChars=",;{}").setParseAction(lambda x:x[0])
+
   def grammar_name(self):
     return '<str>'
-
 String.I = String()
 
-class QString(String):
+class QString(BaseString):
   """ Quoted string"""
-  _grammar = (pp.Word(pp.printables) or pp.QuotedString("'")).setParseAction(lambda x:x[0])
+  _grammar = (pp.Word(pp.printables, excludeChars=",;{}") or pp.QuotedString("'")).setParseAction(lambda x:x[0])
 
-QString.I = QString()
+  def grammar_name(self):
+    return "'<str>'"
 
-class LineString(String):
+QString.I = String()
+
+class LineString(BaseString):
   """ String up to the end of line """
   _grammar = pp.SkipTo(pp.LineEnd() | pp.StringEnd())
+
+  def grammar_name(self):
+    return "'<str....>\n'"
 
 LineString.I = LineString()
 
@@ -551,23 +556,19 @@ def type_from_default_value(value, format='', format_all=False):
    gtype = type_from_type(value.__class__).__class__
    return gtype(default_value = value, format=format_for_type(format, ptype))
 
-class Mixed(BaseType):
+class BaseMixed(BaseType):
 
-  _grammar = pp.Or((
-    i.grammar() for i in [
-      Real.I,
-      Integer.I,
-      Bool.I,
-      Energy.I,
-      type_from_set_map[int],
-      type_from_set_map[float],
-      QString.I,
-      String.I,
-    ]
-  ))
+  @classmethod
+  def _grammar(cls, param_name=False):
+    return pp.MatchFirst((
+      i.grammar(param_name) for i in cls.types
+    ))
+
+  def get_type(self, value):
+      return self.string_type if isinstance(value, str) else type_from_value(value)
 
   def _validate(self, value, parse_check=False):
-    type = type_from_value(value)
+    type = self.get_type(value)
     if type is value:
        return 'Can not determine the type of value {}'.format(value)
     return type.validate(value, parse_check)
@@ -575,13 +576,48 @@ class Mixed(BaseType):
   def grammar_name(self):
     return '<mixed>'
 
+
+class Mixed(BaseMixed):
+
+  string_type = QString.I
+
+  types = [
+      Energy.I,
+      Real.I,
+      Integer.I,
+      type_from_set_map[int],
+      type_from_set_map[float],
+      QString.I,
+      Flag.I,
+  ]
+
+  def missing_value(self):
+    return True, True, False
+
+Mixed.I = Mixed()
+
+class PotMixed(BaseMixed):
+
+  string_type = LineString.I
+
+  types = [
+      Energy.I,
+      Real.I,
+      Integer.I,
+      Bool.I,
+      type_from_set_map[int],
+      type_from_set_map[float],
+      LineString.I,
+  ]
+
   def _string(self, val):
     if isinstance(val, bool):
        return Bool._string(self, val)
     else:
        return super()._string(val)
 
-Mixed.I = Mixed()
+PotMixed.I = PotMixed()
+
 
 class Separator(BaseType):
   """ Special class for **** separator inside a section """
@@ -798,6 +834,7 @@ string = String.I
 qstring = QString.I
 line_string = LineString.I
 mixed = Mixed.I
+pot_mixed = PotMixed.I
 separator = Separator.I
 energy = Energy.I
 
