@@ -33,9 +33,9 @@ class Option(ConfCommon):
       return self._definition.get_value(self)
 
   def set(self, value):
-      value = self._definition.type.convert(value)
       if value is None:
           return self.clear()
+      value = self._definition.type.convert(value)
       self._definition.validate(value)
       self._value = value
       if self._hook:
