@@ -13,7 +13,9 @@ except ImportError:
       return fce
 
 def lazy_value(fce):
-    """ The decorator for only once computed value """
+    """ The decorator for only once computed value. Same a functools.cache,
+        but there is no need to take care of arguments.
+    """
     x = []
 
     """ Hack for staticmethod decorator, which is in fact binded by the descriptor protocol """
@@ -25,7 +27,17 @@ def lazy_value(fce):
         if not x:
            x.append(fce())
         return x[0]
+    def clear():
+        x = []
+
+    cached_fce.clear = clear
     return cached_fce
+
+""" Python 3.8 does not have functools.cache """
+if hasattr(functools,'cache'):
+   cache = functools.cache
+else:
+   cache = functools.lru_cache(maxsize=None)
 
 def add_to_signature(func, add=set()):
   """ Add the arguments in the <func> function to the list of arguments
