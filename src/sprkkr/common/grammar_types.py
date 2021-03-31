@@ -11,7 +11,7 @@ ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
                      replace_whitechars
-from .misc import class_property, copy_list
+from .misc import class_property, copy_list, cache
 
 from ase.units import Rydberg
 import copy
@@ -64,29 +64,34 @@ class BaseType:
   def __str__(self):
       return self.__class__.__name__
 
-  @functools.cached_property
-  def grammar(self):
+  @cache
+  def grammar(self, param_name=False):
     """ Return a pyparsing grammar for the type """
     grammar = self._grammar
-    if self.prefix:
-       grammar = pp.Literal(self.prefix).suppress().setName('{') + grammar
-    if self.postfix:
-       grammar += pp.Literal(self.postfix).suppress().setName('}')
-    grammar = self.transform_grammar(grammar)
-    if self.has_value:
+    if not isinstance(grammar, pp.ParserElement):
+       grammar = grammar(param_name)
+    if self.prefix or self.postfix:
+       with generate_grammar():
+        if self.prefix:
+           grammar = pp.Literal(self.prefix).suppress().setName(self.prefix) + grammar
+        if self.postfix:
+           grammar += pp.Literal(self.postfix).suppress().setName(self.postfix)
+        grammar = self.transform_grammar(grammar, param_name)
 
+    if self.has_value:
        def validate(s, loc, x):
            try:
-             out = self.validate(x[0], parse_check=True, param_name=False)
+             out = self.validate(x[0], parse_check=True, param_name=param_name)
            except ValueError as e:
              raise pp.ParseException(s, loc, str(e) + '\nValidating of the parsed value failed') from e
            return x
 
        grammar.addParseAction(validate)
+    grammar.grammar_type = self
     return grammar
 
   def parse(self, str, whole_string=True):
-    return self.grammar.parseString(str, whole_string)[0]
+    return self.grammar().parseString(str, whole_string)[0]
 
   def grammar_name(self):
     """ Human readable expression of the grammar. By default,
@@ -94,7 +99,7 @@ class BaseType:
         is desirable to set even shorter string """
     return str(self.grammar)
 
-  def transform_grammar(self, grammar):
+  def transform_grammar(self, grammar, param_name=False):
     """ Chance for the resulting class to alter the resulting prefixed grammar """
     return grammar
 
@@ -122,7 +127,10 @@ class BaseType:
       Parameter name to be used in possible throwed exception (Optional)
       If it is callable, it should be a function that returns the param_name
     """
-    err = self._validate(value, parse_check)
+    try:
+      err = self._validate(value, parse_check)
+    except ValueError as err:
+      self._valueError(value, err, param_name)
     if err is not True:
       self._valueError(value, err, param_name)
     if self.condition:
@@ -135,7 +143,7 @@ class BaseType:
     """ Return error message if the value is not valid """
     return True
 
-  def _valueError(self, value, error_message=False, param_name = False):
+  def _valueError(self, value, error_message=False, param_name=False):
     if callable(param_name):
        param_name = param_name()
     if param_name:
@@ -145,7 +153,10 @@ class BaseType:
 
     if error_message is False:
        error_message = 'invalid value'
-    raise ValueError("Value '{}' {} is not valid: {}".format(value, param, error_message))
+    if isinstance(error_message, Exception):
+      raise ValueError("Value '{}' {} is not valid: {}".format(value, param, error_message)) from error_message
+    else:
+      raise ValueError("Value '{}' {} is not valid: {}".format(value, param, error_message))
 
   def read(self, token, parameterName='<Unknown>'):
     """ Transform pyparsing token to a validated value """
@@ -259,11 +270,11 @@ Date.I = Date()
 
 class RealWithUnits(BaseType):
 
-  @class_property
-  def _grammar(cls):
+  @classmethod
+  def _grammar(cls, param_name):
     units = pp.Or((pp.CaselessKeyword(v).setParseAction(lambda x,*args, u=u: u)  for v,u in  cls.units.items()))
     units = units | pp.Empty().setParseAction(lambda x: 1.)
-    cls._grammar = ppc.fnumber.setParseAction(lambda x: float(x[0])) + pp.Or(units)
+    cls._grammar = Real.I.grammar(param_name) + pp.Or(units)
     cls._grammar.setParseAction(lambda x: x[0]*x[1])
     return cls._grammar
 
@@ -487,9 +498,9 @@ class Array(BaseType):
         try:
           self.type.validate(v, parse_check=False)
         except ValueError as e:
-           raise ValueError("Value {} in the set is incorrect: {}".format(i, out)) from e
+           raise ValueError("Value {} in the set is incorrect: {}".format(i, str(e))) from e
     if self.min_length is not None and len(value) < self.min_length:
-       return f"The array shoud be at least {self.min_length} items long, it has {len(value)} items"
+       return f"The array should be at least {self.min_length} items long, it has {len(value)} items"
     if self.max_length is not None and len(value) > self.min_length:
        return f"The array can not have more than {self.max_length} items, it has {len(value)} items"
     return True
@@ -521,8 +532,8 @@ class SetOf(Array):
     kwargs.setdefault('postfix', '}')
     super().__init__(type, **kwargs)
 
-  def transform_grammar(self, grammar):
-    return grammar | self.type.grammar.copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
+  def transform_grammar(self, grammar, param_name=False):
+    return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
 
   def __str__(self):
     return "SetOf({})".format(str(self.type))
@@ -644,11 +655,15 @@ class Sequence(BaseType):
       if isinstance(format, (str, dict)):
         format = itertools.repeat(format)
       self.types = [ type_from_default_value(i, dfs, format_all=format_all) for i,dfs in zip(types, format) ]
-      self._grammar = pp.And([i.grammar for i in self.types]).setParseAction(lambda x: tuple(x))
-      if allowed_values is not None:
-         if not isinstance(allowed_values, set):
-            allowed_values = set(allowed_values)
-         self._grammar.addConditionEx(lambda x: x[0] in allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
+      if allowed_values and not isinstance(allowed_values, set):
+         allowed_values = set(allowed_values)
+      self.allowed_values=allowed_values
+
+  def _grammar(self, param_name = False):
+      grammar = pp.And([i.grammar(param_name) for i in self.types]).setParseAction(lambda x: tuple(x))
+      if self.allowed_values is not None:
+         grammar.addConditionEx(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
+      return grammar
 
   def _validate(self, value, parse_check=False):
       if not isinstance(value, tuple) or len(value) != len(self.types):
@@ -677,7 +692,8 @@ class Table(BaseType):
 
   name_in_grammar = False
 
-  def __init__(self, columns=None, header=None,
+  def __init__(self, columns=None,
+                     header=None, free_header=False,
                      format = {float: '>21.17', None: '>16'}, format_all=True,
                      numbering=None, numbering_label=None, numbering_format=True,
                      prefix=None, postfix=None, length=None,
@@ -695,6 +711,7 @@ class Table(BaseType):
          header = self.names
       self.sequence = Sequence( *columns, format=format, format_all=format_all, condition = row_condition )
       self.header = header
+      self.free_header = free_header
       if numbering.__class__ is str:
          numbering_label=numbering
          numbering=True
@@ -705,26 +722,30 @@ class Table(BaseType):
          self.numbering = self.numbering.copy()
          self.numbering.format = numbering_format
       self.numbering_label = numbering_label
-
-
       self.named_result = named_result
-      line = self.sequence.grammar()
+      self.length = length
+
+  def _grammar(self, param_name=False):
+      line = self.sequence.grammar(param_name)
       if self.numbering:
          line = self.numbering.grammar() + line # + pp.And._ErrorStop()
       grammar = delimitedList(line, line_end)
       if self.names:
-         def names():
-            for n in self.names:
-                if ' ' in n:
-                  """ multiple column headers for one column are allowed
-                      -- see Occupation section"""
-                  yield from map(pp.CaselessKeyword, n.split(' '))
-                else:
-                  yield pp.CaselessKeyword(n)
+         if self.free_header:
+             grammar = pp.Suppress(pp.SkipTo(line_end) + line_end) + grammar
+         else:
+             def names():
+                for n in self.names:
+                    if ' ' in n:
+                      """ multiple column headers for one column are allowed
+                          -- see Occupation section"""
+                      yield from map(pp.CaselessKeyword, n.split(' '))
+                    else:
+                      yield pp.CaselessKeyword(n)
 
-         grammar = pp.Suppress(pp.And(list(names())) + pp.lineEnd) + grammar
-         if self.numbering_label:
-           grammar = pp.CaselessKeyword(self.numbering_label).suppress() + grammar
+             grammar = pp.Suppress(pp.And(list(names())) + pp.lineEnd) + grammar
+             if self.numbering_label:
+               grammar = pp.CaselessKeyword(self.numbering_label).suppress() + grammar
 
       def ensure_numbering(s, loc, x):
           numbers = x[::2]
@@ -737,8 +758,7 @@ class Table(BaseType):
          grammar.addParseAction(ensure_numbering)
 
       grammar.addParseActionEx( lambda x: np.array(x.asList(), self.numpy_type), "Cannot retype to numpy array")
-      self.length = length
-      self._grammar = grammar
+      return grammar
 
   def _string(self, data):
       out = []
@@ -789,7 +809,6 @@ class Table(BaseType):
   def convert(self, value):
       return np.asarray(value, dtype = self.numpy_type)
 
-  #  @cached_redefined_property
   @functools.cached_property
   def numpy_type(self):
       types = self.sequence.types

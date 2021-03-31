@@ -16,8 +16,8 @@ from ..common.configuration_definitions import \
 from ..common.options import CustomOption
 from ..common.conf_containers import CustomSection
 from ..common.grammar_types import mixed, flag, DefKeyword
-from ..common.grammar import generate_grammar
-from ..common.misc import lazy_value
+from ..common.grammar import generate_grammar, delimitedList
+from ..common.misc import lazy_value, cache
 from .tasks import Task
 
 with generate_grammar():
@@ -28,7 +28,7 @@ class ValueDefinition(BaseValueDefinition):
   a task configuration """
   @staticmethod
   @lazy_value
-  def _grammar_of_delimiter():
+  def grammar_of_delimiter():
     return pp.Suppress("=").setName('=')
 
   prefix = "\t"
@@ -39,32 +39,31 @@ class SectionDefinition(BaseSectionDefinition):
   value of a task section """
 
   """ standard child class """
-  value_class = ValueDefinition
+  child_class = ValueDefinition
   """ This class is used for user-added values. """
-  custom_class = staticmethod(CustomOption.factory(ValueDefinition))
-  """ Missing value means the flag type """
-  optional_value = flag
+  custom_class = staticmethod(CustomOption.factory(ValueDefinition, mixed))
 
   """ options are delimited by newline in ouptut. """
   delimiter = '\n'
   @staticmethod
   @lazy_value
-  def _grammar_of_delimiter():
+  def grammar_of_delimiter():
       out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
       return out
 
+  do_not_skip_whitespaces_before_name = True
 
 class TaskDefinition(ConfDefinition):
   """ This class describes the format of a task file. """
 
   """ standard child class """
-  section_class = SectionDefinition
+  child_class = SectionDefinition
   result_class = Task
 
   delimiter = "\n"
   @staticmethod
   @lazy_value
-  def _grammar_of_delimiter():
+  def grammar_of_delimiter():
       def ws(x):
           return x.setWhitespaceChars('')
       out = (pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r'[^\s]'))) ).suppress()
@@ -72,11 +71,13 @@ class TaskDefinition(ConfDefinition):
       return out
 
   custom_class = staticmethod(CustomSection.factory(SectionDefinition))
-  @lazy_value
-  @staticmethod
-  def _custom_section_value():
-      value  = SectionDefinition._grammar_of_delimiter() + SectionDefinition.custom_value()
-      return pp.OneOrMore(value).setParseAction(lambda x: unique_dict(x.asList()))
+
+  @classmethod
+  @cache
+  def custom_value_grammar(cls):
+      value  = cls.child_class.custom_member_grammar()
+      delim = cls.child_class.grammar_of_delimiter()
+      return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
 
   def __init__(self, name, sections=None, **kwargs):
       super().__init__(name, sections, **kwargs)

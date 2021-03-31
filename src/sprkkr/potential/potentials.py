@@ -1,6 +1,7 @@
 from ..common.conf_containers import RootConfContainer
 from .io_data import ReadIoData, WriteIoData
 from ..ase.sprkkr_atoms import SprKkrAtoms
+from ..common.misc import class_property, cache
 
 class Potential(RootConfContainer):
 
@@ -52,15 +53,19 @@ class Potential(RootConfContainer):
       for i in self:
           i._set_from_atoms(atoms, iodata)
 
+  @class_property
+  @cache
+  def potential_definition(cls):
+      #import he to avoid the circular import issues
+      from .definitions import potential as definition
+      return definition.potential_definition
+
   @staticmethod
   def from_file(filename):
-      pd = definition.potential_definition
+      pd = Potential.potential_definition
       return pd.read_from_file(filename)
 
   @classmethod
   def from_atoms(cls, atoms, set_to_atoms=True):
-      pd = definition.potential_definition
+      pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd, set_to_atoms=set_to_atoms)
-
-#on the last line to avoid the circular import issues
-from .definitions import potential as definition

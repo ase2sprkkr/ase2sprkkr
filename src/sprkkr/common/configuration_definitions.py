@@ -1,4 +1,4 @@
-from ..common.grammar_types  import type_from_type, type_from_value, BaseType, mixed
+from ..common.grammar_types  import type_from_type, type_from_value, BaseType
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 import pyparsing as pp
 from ..common.misc import OrderedDict
@@ -6,6 +6,8 @@ from .conf_containers import Section
 from .options import Option
 import numpy as np
 import inspect
+from .misc import cache
+import itertools
 
 def unique_dict(values):
     out = dict(values)
@@ -214,7 +216,7 @@ class BaseValueDefinition(BaseDefinition):
     return str(self)
 
   def _grammar(self):
-    body = self.type.grammar()
+    body = self.type.grammar(self.name)
 
     if self.fixed_value is not None:
       def check_fixed(s, loc, x, body=body):
@@ -229,7 +231,7 @@ class BaseValueDefinition(BaseDefinition):
       body=body.copy().addParseAction(check_fixed)
 
     if self.name_in_grammar:
-       god = self._grammar_of_delimiter()
+       god = self.grammar_of_delimiter()
        body = god + body
 
     optional, df, _ = self.type.missing_value()
@@ -241,7 +243,7 @@ class BaseValueDefinition(BaseDefinition):
       if self.name_in_grammar:
          nbody = str(god) + nbody
 
-    out = self._tuple_with_my_name(body)
+    out = self._tuple_with_my_name(body, has_value=self.type.has_value)
     out.setName(self.name + nbody)
     return out
 
@@ -299,6 +301,9 @@ class BaseDefinitionContainer(BaseDefinition):
     """ Force order of its members """
     force_order = False
 
+    """ The (print) format, how the name is written """
+    value_name_format = None
+
     @staticmethod
     def _dict_from_named_values(args, items=None):
         """auxiliary method that creates dictionary from the arguments"""
@@ -307,7 +312,7 @@ class BaseDefinitionContainer(BaseDefinition):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], alternative_names=[], help=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None):
+    def __init__(self, name, members=[], alternative_names=[], help=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None, force_order=None):
        super().__init__(
            name = name,
            alternative_names = alternative_names,
@@ -323,9 +328,11 @@ class BaseDefinitionContainer(BaseDefinition):
           members = self._dict_from_named_values(members)
        self._members = members
        self.has_hidden_members = has_hidden_members
+       if force_order is not None:
+          self.force_order = force_order
 
     def __iter__(self):
-        return self._members.values()
+        return iter(self._members.values())
 
     def members(self):
         return self._members.values()
@@ -364,71 +371,112 @@ class BaseDefinitionContainer(BaseDefinition):
     def create_object(self, container=None):
         return self.result_class(self, container)
 
-    def _grammar(self):
-       custom_value = self.custom_value(self._members.keys())
-       delimiter = self._grammar_of_delimiter()
+    def all_member_names(self):
+        return itertools.chain(
+          (i.name for i in self),
+          itertools.chain.from_iterable((
+            i.alternative_names for i in self if i.alternative_names
+          ))
+        )
+
+    def _values_grammar(self, delimiter=None):
+       custom_value = self.custom_member_grammar(self.all_member_names())
+       delimiter = delimiter or self.grammar_of_delimiter()
+
+       def grammars():
+         """ Iterate over grammar, join all with no name_in_grammar with the previous """
+         it = iter(self._members.values())
+         head = next(it)
+         curr = head._grammar()
+         for i in it:
+             if i.name_in_grammar:
+               yield head, curr
+               head = i
+               curr = i._grammar()
+             else:
+               curr = curr + delimiter + i._grammar()
+         yield head, curr
+
        if self.force_order:
-           out = []
            cvs = pp.ZeroOrMore(custom_value + delimiter)
            first = True
-           def grammar(i):
+           def not_first(x):
                nonlocal first
-               was_first = first
-               grammar = i._grammar()
-               if first:
-                  first = False
-               else:
-                  grammar = delimiter + grammar
-               if i.is_optional:
-                   """ If the first item is optional, the delimiter is included and the next item
-                       is considered to be the first (without the delimiter)
-                       Limitation: there can not be a section with just one optional item
-                   """
-                   if was_first:
-                      first = True
-                      grammar += delimiter
-                   grammar = (grammar | pp.Empty().setParseAction(lambda x: i.optional_value))
-               if i.name_in_grammar:
-                   grammar = cvs + grammar
-               return grammar
-           values  = pp.And([ grammar(i) for i in self._members.values()])
+               first = False
+               return x
+
+           inter = pp.Empty().addCondition(lambda x: first).setName('<is_first>') | \
+                   (delimiter + cvs)
+           inter.setName('<is first>|[<custom section>...]<delimiter>')
+
+           def sequence():
+               for head,g in grammars():
+                   g.addParseAction(not_first)
+                   g = inter + g
+                   if head.is_optional:
+                      g = pp.Optional(g)
+                   yield g
+
+
+           values  = pp.And([ i for i in sequence()])
+           if not self._first_section_is_fixed():
+              values = cvs + values
+           values += pp.ZeroOrMore(delimiter + custom_value)
        else:
-           first_fixed = None
-           def grammars():
-             """ Iterate over grammar, join all with no name_in_grammar """
-             it = iter(self._members.values())
-             curr = next(it)._grammar()
-             for i in it:
-                 if i.name_in_grammar:
-                   yield curr
-                   curr = i._grammar()
-                 else:
-                   curr += delimiter + i._grammar()
-             yield curr
            it = grammars()
-           first = not self._members.first_item().name_in_grammar and next(it)
-           values = pp.MatchFirst([i for i in it])
+           #store the first fixed "chain of sections"
+           first = self._first_section_is_fixed() and next(it)
+           #the reset has any order
+           values = pp.MatchFirst([i for head,i in it])
            values |= custom_value
            values = delimitedList(values, delimiter)
            if first:
               values = first + delimiter + values
 
        values.setParseAction(lambda x: unique_dict(x.asList()))
-       out = self._tuple_with_my_name(values, delimiter)
-       out.setName(self.name)
 
        if self.validate:
           def _validate(s, loc, value):
               #just pass the dict to the validate function
-              is_ok = self.validate(value[0][1])
+              is_ok = self.validate(value[0])
               if is_ok is not True:
                 raise pp.ParseException(s, loc, is_ok)
               return value
-          out.addParseAction(_validate)
+          values.addParseAction(_validate)
+
+       return values
+
+
+    def _grammar(self):
+       delimiter = self.grammar_of_delimiter()
+       values = self._values_grammar(delimiter)
+       out = self._tuple_with_my_name(values, delimiter)
+       out.setName(self.name)
+
        return out
 
     """ A function for validation of just the parsed result (not the user input) """
     validate = None
+
+
+    @classmethod
+    @cache
+    def delimited_value_grammar(cls):
+        return cls.child_class.grammar_of_delimiter() + cls.custom_value_grammar()
+
+    custom_name_characters = pp.alphanums + '_-'
+
+    @classmethod
+    def custom_member_grammar(cls, value_names = []):
+       name = pp.Word(cls.custom_name_characters).setParseAction(lambda x: x[0].strip())
+       add_excluded_names_condition(name, value_names)
+       out = (name + cls.delimited_value_grammar()).setParseAction(lambda x: tuple(x))
+       out.setName(cls.custom_value_name)
+       return out
+
+
+    def _first_section_is_fixed(self):
+       return not self._members.first_item().name_in_grammar
 
 
 class BaseSectionDefinition(BaseDefinitionContainer):
@@ -445,32 +493,34 @@ class BaseSectionDefinition(BaseDefinitionContainer):
    def values(self):
        return self._members
 
+
+   """ Type for a not-specified value (e.g. flag) """
+   custom_value_name = 'CUSTOM_VALUE'
+
    @classmethod
-   def custom_value(cls, value_names = []):
-      name = pp.Word(pp.alphanums + '_')
-      add_excluded_names_condition(name, value_names)
-      value = cls.value_class._grammar_of_delimiter() + mixed.grammar()
-      if cls.optional_value:
-        value |= cls.optional_value.grammar()
-      return (name + value).setParseAction(lambda x: tuple(x))
+   @cache
+   def delimited_value_grammar(cls):
+        gt = cls.custom_class.grammar_type
+        #here the child (Value) class delimiter should be used
+        out = cls.child_class.grammar_of_delimiter() + gt.grammar()
+        optional, df, _ = gt.missing_value()
+        if optional:
+           out = out | pp.Empty().setParseAction(lambda x: df)
+        return out
 
-   """ Type for not-specified value (e.g. flag) """
-   optional_value = None
-
-   def _custom_value():
-      """ Type for value given by user """
-      return mixed
 
 class ConfDefinition(BaseDefinitionContainer):
 
    name_in_grammar = False
+   """ No data are given just by a section name - no Flag equivalent for sections """
+   optional_value = None
 
    @classmethod
    def from_dict(cls, name, defs=None):
        def gen(i):
            section = defs[i]
            if not isinstance(defs, BaseSectionDefinition):
-              section = cls.section_class(i, section)
+              section = cls.child_class(i, section)
            return section
 
        if defs is None:
@@ -489,14 +539,7 @@ class ConfDefinition(BaseDefinitionContainer):
    def sections(self):
        return self._members
 
-   @classmethod
-   def custom_value(cls, section_names = []):
-       name = pp.Word(pp.alphanums + '_')
-       add_excluded_names_condition(name, section_names)
-       value = cls.section_class._grammar_of_delimiter() + cls._custom_section_value()
-       out = (name + value).setParseAction(lambda x: tuple(x))
-       out.setName('CUSTOM SECTION')
-       return out
+   custom_value_name = 'CUSTOM_SECTION'
 
    def read_from_file(self, file):
        out = self.result_class(definition = self)

@@ -62,7 +62,7 @@ class ConfContainer(ConfCommon):
       if name in self._members:
          raise TypeError(f'Section member {name} is already in the section {self._definition}')
       cc = self._definition.custom_class
-      self._add(cc(self, name))
+      self._add(cc(name, self))
       if value is not None:
           self._members[name].set(value)
 
@@ -145,7 +145,7 @@ class CustomSection(BaseSection):
 
   @classmethod
   def factory(cls, definition_type):
-      def create(container, name):
+      def create(name, container):
           definition = definition_type(name)
           definition.removable = True
           return cls(definition, container)

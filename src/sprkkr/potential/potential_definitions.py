@@ -9,22 +9,23 @@ sprkkr.common.configuration_definitions
 import functools
 import pyparsing as pp
 from ..common.grammar import line_end, separator as separator_grammar
-from ..common.grammar_types import separator
+from ..common.grammar_types import separator, pot_mixed
 from ..common.misc import add_to_signature
+from ..common.options import CustomOption
 from ..common.configuration_definitions import \
     BaseValueDefinition, \
     BaseSectionDefinition, \
     ConfDefinition
-from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition
+from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
 from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
-from ..common.misc import lazy_value
+from ..common.misc import lazy_value, cache
 
 class PotValueDefinition(BaseValueDefinition):
 
   @staticmethod
   @lazy_value
-  def _grammar_of_delimiter():
+  def grammar_of_delimiter():
     return pp.Empty().setName(' ')
 
   prefix = ''
@@ -52,16 +53,14 @@ class PotSectionDefinition(BaseSectionDefinition):
   value_name_format = '<12'
 
   """ standard child class """
-  value_class = PotValueDefinition
-  """ Adding a custom values is not allowed """
-  #custom_class = staticmethod(CustomOption.factory(PotValueDefinition))
-  """ A missing value is not allowed in a potential file """
-  optional_value = None
+  child_class = PotValueDefinition
+  """ Adding a custom values is allowed """
+  custom_class = staticmethod(CustomOption.factory(PotValueDefinition, pot_mixed))
 
   """ options are delimited by newline in ouptut. """
   delimiter = '\n'
   @staticmethod
-  def _grammar_of_delimiter():
+  def grammar_of_delimiter():
     return line_end
 
   def depends_on(self):
@@ -92,7 +91,7 @@ class PotentialDefinition(ConfDefinition):
   """ This class describes the format of a potential file """
 
   """ standard child class """
-  section_class = PotSectionDefinition
+  child_class = PotSectionDefinition
   result_class = Potential
 
 
@@ -103,16 +102,14 @@ class PotentialDefinition(ConfDefinition):
 
   @staticmethod
   @lazy_value
-  def _grammar_of_delimiter():
-      return pp.And([
-                     pp.OneOrMore(line_end),
-                     separator_grammar,
-                     pp.OneOrMore(line_end)
-             ]).setName('*'*80 + '<newline>')
+  def grammar_of_delimiter():
+      return SectionString.grammar_of_delimiter()
 
   custom_class = CustomPotentialSection
 
-  @staticmethod
-  @lazy_value
-  def _custom_section_value():
-      return pp.SkipTo(separator_grammar | pp.StringEnd()).setName('SkipTo ******|EndOfFile')
+  @classmethod
+  @cache
+  def custom_value_grammar(cls):
+    return SectionString._grammar
+
+  custom_name_characters = ConfDefinition.custom_name_characters + ' '

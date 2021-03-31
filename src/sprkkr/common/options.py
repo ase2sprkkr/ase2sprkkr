@@ -87,8 +87,10 @@ class CustomOption(Option):
   def factory(cls, value_definition, type = mixed):
       """ Returns factory function for the given value definition """
 
-      def create(section, name):
+      def create(name, section):
           definition = value_definition(name, type)
           definition.removable = True
           return cls(definition, section)
+
+      create.grammar_type = type
       return create
