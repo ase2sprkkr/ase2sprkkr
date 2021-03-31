@@ -905,7 +905,7 @@ class PotFile(object):
         self.orbpol = None
         self.extfield = False
         self.blcoupl = False
-        self.bext = 0.
+        self.bext = 0
         self.kmrot = 0
         self.rmsavv=999999.
         self.rmsavb=999999.
@@ -940,6 +940,10 @@ class PotFile(object):
         all_sites = atoms.get_scaled_positions()
         occupancy = get_occupancy(atoms)
         type_table=np.zeros(shape=(len(unique_sites),len(all_sites)),dtype=int)
+        #type_table [ unique_sites x all_sites ]: 1 if the site belongs to theequivalence class
+        #iqref [ all_sites ] = equivalence class number
+        #iqat { unique_site_no } = [ all_sites of given class ]
+
         tol=1e-5
         iqat={}
         iqref=[]
