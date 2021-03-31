@@ -46,6 +46,8 @@ class Option(ConfCommon):
       return self._definition.help
 
   def clear(self, do_not_check_required=False):
+      if not self._definition.type.has_value:
+         return
       if not do_not_check_required and self._definition.required:
          raise ValueError(f'Option {self._definition.name} have to had a value')
       self._value = None
