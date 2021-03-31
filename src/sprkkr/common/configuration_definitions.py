@@ -96,7 +96,7 @@ class BaseValueDefinition(BaseDefinition):
   result_class = Option
 
   def __init__(self, name, type, default_value=None, alternative_names=None,
-               fixed_value=None, required=False, help=None, description=None,
+               fixed_value=None, required=None, help=None, description=None,
                is_hidden=False, name_in_grammar=None, name_format=None,
                is_optional=False):
     """
@@ -119,7 +119,8 @@ class BaseValueDefinition(BaseDefinition):
 
     required: bool
       Required option can not be set to None (however, a required one
-      can be still be optional, if it has a default values)
+      can be still be optional, if it has a default values).
+      If required = None, required = not is_optional and default_value is None
 
     name_in_grammar: bool or None
       The value in the conf file is prefixed by <name><name_value_delimiter>
@@ -143,6 +144,10 @@ class BaseValueDefinition(BaseDefinition):
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
+
+    if required is None:
+       required = not is_optional and default_value is None
+
 
     if name_in_grammar is None:
         name_in_grammar = self.type.name_in_grammar
