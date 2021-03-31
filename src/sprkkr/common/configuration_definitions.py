@@ -24,7 +24,7 @@ class BaseDefinition:
    name_in_grammar = True
 
    def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
-                name_in_grammar=None, description=None, help=None):
+                name_in_grammar=None, description=None, help=None, write_alternative_name=False):
        """
        Parameters
        ----------
@@ -59,6 +59,7 @@ class BaseDefinition:
        else:
           self.alternative_names = alternative_names
        self.is_optional = is_optional
+       self.write_alternative_name = write_alternative_name
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
        self.help = help
@@ -165,9 +166,10 @@ class BaseValueDefinition(BaseDefinition):
 
   @property
   def formated_name(self):
+    name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
     if self.name_format:
-       return "{:{}}".format(self.name, self.name_format)
-    return self.name
+       return "{:{}}".format(name, self.name_format)
+    return name
 
   def validate(self, value):
     if value is None:
