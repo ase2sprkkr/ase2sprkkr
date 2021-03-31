@@ -78,8 +78,16 @@ class BaseDefinition:
         """ Create the grammar returning tuple (self.name, <result of the expr>) """
         if self.name_in_grammar:
             name = pp.CaselessKeyword(self.name)
+            if self.do_not_skip_whitespaces_before_name:
+               name.leaveWhitespace()
+
             if self.alternative_names:
-               name = name | pp.Or( pp.CaselessKeyword(n) for n in self.alternative_names)
+               alt_names = ( pp.CaselessKeyword(n) for n in self.alternative_names )
+               if self.do_not_skip_whitespaces_before_name:
+                  alt_names = ( i.leaveWhitespace() for i in alt_names )
+               name = name ^ pp.Or(alt_names)
+               if self.do_not_skip_whitespaces_before_name:
+                  name.leaveWhitespace()
             name.setParseAction(lambda x: self.name)
             if delimiter:
               name += delimiter
@@ -90,6 +98,8 @@ class BaseDefinition:
             return out.setParseAction(lambda x: tuple(x))
         else:
             return out.suppress()
+
+   do_not_skip_whitespaces_before_name = False
 
 class BaseValueDefinition(BaseDefinition):
 
