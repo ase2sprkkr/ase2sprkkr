@@ -36,9 +36,9 @@ class LatticeSection(PotentialSection):
       pearson_symbol = bravais_lattice.pearson_symbol
       self['BRAVAIS'].set(cell_symmetries[pearson_symbol])
       alat = bravais_lattice.a
-      self['ALAT'].set(alat)
+      self['ALAT'].set(alat / Bohr)
       self['SCALED_PRIMITIVE_CELL'].set(atoms.cell / alat)
-      write_io_data['lattice.alat'] = alat / Bohr
+      write_io_data['lattice.alat'] = alat
 
   def _update_atoms(self, atoms, read_io_data):
       alat = self['ALAT']() * Bohr
