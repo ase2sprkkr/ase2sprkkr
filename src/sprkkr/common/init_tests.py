@@ -14,7 +14,7 @@ def patch_package(package, name):
     path = frame.filename
     file = Path(path).resolve()
     current = file.parents[0]
-    while file.name != 'sprkkr':
+    while file.name != 'sprkkr' or (file.parent and file.parent.name == 'sprkkr'):
       file = file.parent
     top = str(file.parent)
     sys.path.append(top)
