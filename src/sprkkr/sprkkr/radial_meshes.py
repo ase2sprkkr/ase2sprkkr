@@ -2,7 +2,7 @@ class Mesh:
   @staticmethod
   def default():
       """ SPR-KKR computes the mesh itself, if zeros are given """
-      return ExponentialMesh(0.,0.,0,0.,0,0.)
+      return ExponentialMesh(1e-6,2e-2,0,0.,721, 0.)
 
 class ExponentialMesh(Mesh):
   """ 
