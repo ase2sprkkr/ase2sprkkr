@@ -47,14 +47,34 @@ class ConfContainer(ConfCommon):
   def name(self):
       return self._definition.name
 
-  def set(self, values, allow_add=True, ):
-      for i in values:
+  def set(self, values, unknown='add'):
+      """
+      Set the values of the container
+
+      Parameters
+      ----------
+
+      values: dict
+        Values to be set
+
+      unkwnown: 'add', 'find' or None
+        If add, add unkwnown values as Custom values.
+        If find, try to find the values in descendant containers.
+      """
+
+      for i,v in values.items():
           if not i in self._members:
-             if not allow_add:
+             if unknown == 'find':
+                value = self.find(i)
+                if value:
+                   value.set(v)
+                   continue
+             if not unknown == 'add':
                 raise KeyError("No option with name {} in {}".format(i, str(self)))
-             self.add(i, values[i])
+                continue
+             self.add(i, v)
           else:
-             self._members[i].set(values[i])
+             self._members[i].set(v)
 
   def add(self, name, value=None):
       if not getattr(self._definition, 'custom_class', False):
