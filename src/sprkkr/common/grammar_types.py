@@ -557,8 +557,10 @@ def type_from_value(value):
         return String.I
      except Exception:
         return QString.I
-
-  return type_from_type(value.__class__).__class__(default_value = value)
+  type = type_from_type(value.__class__)
+  if type is value.__class__:
+     raise ValueError('Cannot determine grammar type from value {value}')
+  return type.__class__(default_value = value)
 
 def type_from_default_value(value, format='', format_all=False):
    if inspect.isclass(value) or isinstance(value, BaseType):
