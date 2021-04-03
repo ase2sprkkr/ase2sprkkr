@@ -1,3 +1,5 @@
+from .sections import *
+
 def fce():
   from ...common.misc import OrderedDict
   from  ...common.grammar_types import \
@@ -9,12 +11,6 @@ def fce():
         PotValueDefinition as V,\
         PotentialDefinition, \
         Separator
-  from  .lattice import LatticeSectionDefinition
-  from  .sites import SitesSectionDefinition
-  from  .occupation import OccupationSectionDefinition
-  from  .reference_system import ReferenceSystemSectionDefinition
-  from  .types import TypesSectionDefinition
-  from  .mesh_information import MeshInformationSectionDefinition
   import datetime
 
   sections = []

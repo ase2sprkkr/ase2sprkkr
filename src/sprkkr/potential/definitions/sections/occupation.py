@@ -1,11 +1,11 @@
-from ..potential_definitions import PotSectionDefinition, \
+from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from ..potential_sections import PotentialSection
+from ...potential_sections import PotentialSection
 
-from ...common.grammar_types import Table, unsigned, Array, Sequence
-from ...common.unique_values import UniqueValuesMapping
+from ....common.grammar_types import Table, unsigned, Array, Sequence
+from ....common.unique_values import UniqueValuesMapping
 import numpy as np
-from ...sprkkr.sites import Site, Occupation
+from ....sprkkr.sites import Site, Occupation
 
 class OccupationSection(PotentialSection):
   """ This section retrieves the atomic positions and
@@ -70,3 +70,5 @@ class OccupationSectionDefinition(PotSectionDefinition):
       return ['REFERENCE SYSTEM', 'MESH INFORMATION', 'TYPES']
 
   result_class = OccupationSection
+
+section = OccupationSectionDefinition

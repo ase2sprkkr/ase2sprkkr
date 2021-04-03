@@ -1,9 +1,9 @@
-from ..potential_definitions import PotSectionDefinition, \
+from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from ..potential_sections import PotentialSection
+from ...potential_sections import PotentialSection
 
-from  ...common.grammar_types import DefKeyword, Array, Table, Integer
-from ...sprkkr.sprkkr_atoms import SprKkrAtoms
+from ....common.grammar_types import DefKeyword, Array, Table, Integer
+from ....sprkkr.sprkkr_atoms import SprKkrAtoms
 
 class SitesSection(PotentialSection):
   """ This section retrieves the atomic positions and
@@ -40,3 +40,5 @@ class SitesSectionDefinition(PotSectionDefinition):
       super().__init__(name, members, has_hidden_members=True)
 
   result_class = SitesSection
+
+section = SitesSectionDefinition

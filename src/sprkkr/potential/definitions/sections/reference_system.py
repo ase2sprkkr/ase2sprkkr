@@ -1,9 +1,9 @@
-from ..potential_definitions import PotSectionDefinition, \
+from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from ..potential_sections import UniqueListSection
+from ...potential_sections import UniqueListSection
 
-from  ...common.grammar_types import Table
-from ...sprkkr.reference_systems import ReferenceSystem
+from ....common.grammar_types import Table
+from ....sprkkr.reference_systems import ReferenceSystem
 
 class ReferenceSystemSection(UniqueListSection):
   _value_name = 'reference_systems'
@@ -31,3 +31,5 @@ class ReferenceSystemSectionDefinition(PotSectionDefinition):
              'Number of reference systems differs from NREF'
 
   result_class = ReferenceSystemSection
+
+section = ReferenceSystemSectionDefinition

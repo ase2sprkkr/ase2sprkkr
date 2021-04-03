@@ -1,11 +1,11 @@
-from ..potential_definitions import PotSectionDefinition, \
+from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from ..potential_sections import PotentialSection
+from ...potential_sections import PotentialSection
 
 from ase.units import Bohr
 from ase.lattice import bravais_classes
 from ase.cell import Cell
-from  ...common.grammar_types import DefKeyword, Sequence, Table, Integer
+from  ....common.grammar_types import DefKeyword, Sequence, Table, Integer
 
 cell_symmetries = {
     'aP': (1,  'triclinic',   'primitive',      '-1',     'C_i'),
@@ -35,15 +35,16 @@ class LatticeSection(PotentialSection):
       bravais_lattice = atoms.cell.get_bravais_lattice()
       pearson_symbol = bravais_lattice.pearson_symbol
       self['BRAVAIS'].set(cell_symmetries[pearson_symbol])
-      alat = bravais_lattice.a / Bohr
+      alat = bravais_lattice.a
       self['ALAT'].set(alat)
       self['SCALED_PRIMITIVE_CELL'].set(atoms.cell / alat)
-      write_io_data['lattice.alat'] = alat
+      write_io_data['lattice.alat'] = alat / Bohr
 
   def _update_atoms(self, atoms, read_io_data):
-      cell = Cell(self['SCALED_PRIMITIVE_CELL']() * self['ALAT']())
+      alat = self['ALAT']() * Bohr
+      cell = Cell(self['SCALED_PRIMITIVE_CELL']() * alat)
       read_io_data['lattice.cell'] = cell
-      read_io_data['lattice.alat'] = self['ALAT']()
+      read_io_data['lattice.alat'] = alat
       if atoms:
          atoms.cell = cell
 
@@ -56,8 +57,11 @@ class LatticeSectionDefinition(PotSectionDefinition):
           V('SYSTYPE', DefKeyword('BULK')),
           V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = cell_symmetries.values())),
           V('ALAT', float),
-          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', format='<6'),length=3)),
+          #Keywords and thus the numbering has just (or at least) 10 char long
+          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', format='<10'),length=3)),
       ]
       super().__init__(name, members, has_hidden_members=True)
 
   result_class = LatticeSection
+
+section = LatticeSectionDefinition

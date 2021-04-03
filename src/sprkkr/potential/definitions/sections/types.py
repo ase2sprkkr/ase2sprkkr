@@ -1,9 +1,9 @@
-from ..potential_definitions import PotSectionDefinition, \
+from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
-from ..potential_sections import UniqueListSection
+from ...potential_sections import UniqueListSection
 
-from  ...common.grammar_types import DefKeyword, Array, Table, Integer
-from ...sprkkr.atomic_types import AtomicType
+from ....common.grammar_types import DefKeyword, Array, Table, Integer
+from ....sprkkr.atomic_types import AtomicType
 
 class TypesSection(UniqueListSection):
   _value_name = 'types'
@@ -21,3 +21,5 @@ class TypesSectionDefinition(PotSectionDefinition):
       super().__init__(name, members, has_hidden_members=True)
 
   result_class = TypesSection
+
+section = TypesSectionDefinition
