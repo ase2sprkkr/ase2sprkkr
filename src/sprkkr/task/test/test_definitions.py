@@ -27,8 +27,8 @@ class TestDefinitions(TestCase):
           if not i.endswith('.in'):
              continue
           filename = os.path.join(path, i)
-          self.assertTrue(i[:-3] in Task.definitions())
-          td = Task.definitions()[i[:-3]]
+          self.assertTrue(i[:-3].upper() in Task.definitions())
+          td = Task.definitions()[i[:-3].upper()]
           t = td.read_from_file(filename)
 
           name = i[:-3]

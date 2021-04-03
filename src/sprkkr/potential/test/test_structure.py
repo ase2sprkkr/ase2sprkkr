@@ -5,8 +5,8 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 import os
-from ..definitions.lattice import LatticeSection, LatticeSectionDefinition
-from ..definitions.sites import SitesSectionDefinition
+from ..definitions.sections.lattice import LatticeSection, LatticeSectionDefinition
+from ..definitions.sections.sites import SitesSectionDefinition
 from ..potentials import Potential
 from ..potential_definitions import PotentialDefinition
 from ase.build import bulk
