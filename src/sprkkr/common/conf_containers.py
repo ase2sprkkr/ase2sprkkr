@@ -144,6 +144,7 @@ class BaseSection(ConfContainer):
       for o in self:
           if o.save_to_file(file):
              file.write(self._definition.delimiter)
+      file.flush()
 
   @property
   def seciton_name(self):
@@ -186,6 +187,7 @@ class RootConfContainer(ConfContainer):
         for i in it:
           file.write(self._definition.delimiter)
           i.save_to_file(file)
+      file.flush()
 
   def read_from_file(self, file, clear_first=True):
       values = self._definition.grammar().parseFile(file, True)
