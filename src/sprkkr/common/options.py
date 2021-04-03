@@ -61,7 +61,8 @@ class Option(ConfCommon):
       if value is not None:
         return self._definition.write(file, value)
       elif not self._definition.is_optional:
-        raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the potential file')
+        name = self._get_root_container().__class__.__name__.lower()
+        raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
 
   @property
   def name(self):
