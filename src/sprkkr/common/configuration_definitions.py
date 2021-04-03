@@ -153,6 +153,7 @@ class BaseValueDefinition(BaseDefinition):
        self.default_value = self.type.convert(type)
     else:
        self.default_value = self.type.convert(default_value) if default_value is not None else None
+    assert isinstance(self.type, BaseType), "grammar_type (sprkkr.common.grammar_types.BaseType descendat) required as a value type"
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
