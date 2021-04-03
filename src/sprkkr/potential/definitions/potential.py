@@ -35,13 +35,7 @@ def fce():
           default_value = [7, datetime.datetime(2007,5,21)]),
   ], name_in_grammar = False)
 
-  Section('GLOBAL SYSTEM PARAMETER', [
-    V('NQ', 1),
-    V('NT', 2),
-    V('NM', 1),
-    V('IREL', 3),
-    V('NSPIN', 1, None, required = False, is_optional = True)
-  ])
+  Section('GLOBAL SYSTEM PARAMETER', cls = GlobalSystemParameterDefinition)
 
   Section('SCF-INFO', [
     V('INFO', line_string, 'NONE'),
