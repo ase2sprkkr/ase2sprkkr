@@ -149,10 +149,10 @@ class BaseValueDefinition(BaseDefinition):
     """
     self.type = type_from_type(type)
     if default_value is None and not isinstance(self.type, BaseType):
-       self.default_value = type
        self.type = type_from_value(type)
+       self.default_value = self.type.convert(type)
     else:
-       self.default_value = default_value
+       self.default_value = self.type.convert(default_value) if default_value is not None else None
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
@@ -175,7 +175,7 @@ class BaseValueDefinition(BaseDefinition):
     )
 
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
-    self.required = default_value is not None if required is None else required
+    self.required = self.default_value is not None if required is None else required
     self.help = None
     self.is_hidden = is_hidden
     self.is_optional = is_optional
@@ -362,7 +362,7 @@ class BaseDefinitionContainer(BaseDefinition):
             del members[i]
         members.update(self._dict_from_named_values(args, items))
         for i,v in defaults.items():
-            members[i].default_value = v
+            members[i].default_value = members[i].type.convert(v)
 
         default = { k: getattr(self, k) for k in self._init_args }
         default.update(kwargs)
