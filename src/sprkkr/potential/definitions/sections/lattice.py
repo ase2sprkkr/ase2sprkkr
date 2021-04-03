@@ -20,8 +20,8 @@ cell_symmetries = {
     'hR': (10, 'trigonal',    'primitive',      '-3m',    'D_3d'),
     'hP': (11, 'hexagonal',   'primitive',      '6/mmm',  'D_6h'),
     'cP': (12, 'cubic',       'primitive',      'm3m',    'O_h'),
-    'cI': (13, 'cubic',       'face-centered',  'm3m',    'O_h'),
-    'cF': (14, 'cubic',       'body-centered',  'm3m',    'O_h')
+    'cF': (13, 'cubic',       'face-centered',  'm3m',    'O_h'),
+    'cI': (14, 'cubic',       'body-centered',  'm3m',    'O_h')
 }
 
 cell_symmetries_lookup = {v : k for k,v in cell_symmetries.items() }
