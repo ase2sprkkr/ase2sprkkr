@@ -1,4 +1,5 @@
 import os
+import io
 import tempfile
 import pkgutil
 import importlib
@@ -16,20 +17,24 @@ class Task(RootConfContainer):
   def task_name(self):
       return self._definition.name
 
+  def run_task_process(self, calculator, task_file, output_file, print_output=False):
+      d = self._definition
+      command = d.command
+      if d.mpi and calculator.mpi:
+           command = calculator.mpi + [ command + 'MPI' ]
+      else:
+           command = [ command ]
+
+      process = d.result_reader(command, output_file, stdin = task_file, print_output=print_output)
+      process.run()
+      return process
+
   def executable_params(self, directory=None, ):
       """
       Return
       ------
       ([command], stdin, stdout) params for process.Popen
       """
-      def filename(self, filename, dir=None):
-         if filename is None:
-            return tempfile.TemporaryFile()
-         if dir:
-            filename = os.path.join(filename, dir)
-         return open(filename, "w+b")
-
-      return self._definition.command, filename(self._inputfile), filename(self._outputfile)
 
   def __str__(self):
       from io import StringIO
@@ -50,11 +55,35 @@ class Task(RootConfContainer):
       names = (i for i in pkgutil.iter_modules(definitions.__path__) if i.name != 'sections')
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
-      return { m.task.name: m.task for m in modules }
+      return { m.task.name.upper(): m.task for m in modules }
 
-  @staticmethod
-  def from_file(filename):
-      definitions = Task.definitions()
+  @classmethod
+  def is_it_a_task_name(cls, name):
+      name = name.upper()
+      return name if name in cls.definitions() else False
+
+  @classmethod
+  def create_task(cls, arg):
+      if isinstance(arg, str):
+         name = cls.is_it_a_task_name(arg)
+         if name:
+            return cls.create(arg), False
+         return cls.from_file(arg), True
+      if isinstance(arg, io.IOBase):
+         return cls.from_file(arg), False
+      return arg
+
+  @classmethod
+  def create(cls, name):
+      return Task(cls.definitions()[name.upper()])
+
+  @classmethod
+  def default_task(cls):
+      return cls.create('SCF')
+
+  @classmethod
+  def from_file(cls, filename):
+      definitions = cls.definitions()
       for d in definitions.values():
           try:
              out = d.read_from_file(filename)

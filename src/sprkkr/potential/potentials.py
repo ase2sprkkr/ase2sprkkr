@@ -5,23 +5,38 @@ from ..common.misc import class_property, cache
 
 class Potential(RootConfContainer):
 
-  def __init__(self, atoms=None, definition=None,set_to_atoms=True):
+  def __init__(self, atoms=None, definition=None):
       if definition is None:
          from .definitions.potential import potential_definition as definition
-      self.atoms = atoms
+      self._atoms = atoms
+      self._complete = False
       super().__init__(definition)
-      if set_to_atoms and atoms:
-         atoms.potential = self
 
   def read_from_file(self, file, atoms=None):
       super().read_from_file(file)
+      self.make_complete()
       if atoms is not False:
-         self.atoms = self.update_atoms(atoms)
+         self._atoms = self.update_atoms(atoms or self._atoms)
+
+  def make_complete(self):
+      """ Call this function, if you set manually all the properties necessary
+      to create the atoms object """
+      self._complete = True
+
+  @property
+  def atoms(self):
+      if not self._atoms and self._complete:
+         self._atoms = self.update_atoms()
+      return self._atoms
+
+  @atoms.setter
+  def atoms(self, atoms):
+      self._atoms = atoms
 
   def update_atoms(self, atoms=None):
       """ Update the ASE object from the values contained in the sections
       of the potential """
-      atoms = SprKkrAtoms.promote_ase_atoms(atoms or self.atoms)
+      atoms = SprKkrAtoms.promote_ase_atoms(atoms or self._atoms)
       iodata = ReadIoData()
       readed = set()
 
@@ -43,12 +58,13 @@ class Potential(RootConfContainer):
 
   def save_to_file(self, file, atoms=None):
       if atoms is not False:
-         self.set_from_atoms(atoms or self.atoms)
+         self.set_from_atoms(atoms or self._atoms)
+      self.make_complete()
       super().save_to_file(file)
 
   def set_from_atoms(self, atoms = None):
       """ Set the sections of the potential accoring to an ASE atoms object. """
-      atoms = SprKkrAtoms.promote_ase_atoms(atoms or self.atoms)
+      atoms = SprKkrAtoms.promote_ase_atoms(atoms or self._atoms)
       iodata = WriteIoData(self.atoms)
       for i in self:
           i._set_from_atoms(atoms, iodata)
@@ -66,6 +82,6 @@ class Potential(RootConfContainer):
       return pd.read_from_file(filename)
 
   @classmethod
-  def from_atoms(cls, atoms, set_to_atoms=True):
+  def from_atoms(cls, atoms):
       pd = Potential.potential_definition
-      return cls(atoms = atoms, definition = pd, set_to_atoms=set_to_atoms)
+      return cls(atoms = atoms, definition = pd)

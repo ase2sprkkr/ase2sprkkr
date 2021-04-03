@@ -15,5 +15,7 @@ task = Task(
         SITES
       ],
       description = "SCF calculation",
-      help = "Set at least options ..., ...., ....."
+      help = "Set at least options ..., ...., .....",
+      command = 'kkrscf',
+      mpi = True
 )
