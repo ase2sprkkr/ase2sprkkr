@@ -114,7 +114,8 @@ class ConfContainer(ConfCommon):
       for i in self:
           if i._definition.is_hidden:
              continue
-          if out := i._find_value(name):
+          out = i._find_value(name)
+          if out:
              return out
 
 class BaseSection(ConfContainer):
