@@ -27,6 +27,7 @@ class SprKkr(Calculator):
                  input_file=True, output_file=True, potential_file=True,
                  print_output=False,
                  mpi=True, task=None, potential=None,
+                 command_postfix=True,
                  **kwargs):
         """
         Parameters
@@ -39,25 +40,37 @@ class SprKkr(Calculator):
           Directory, where the files will be created.
 
         input_file: str or file or None or True
-          Input file. None means use temporary file. Can use placeholders
-          for task name, date, etc....
-          True means default template form the label.
+          Template according to the task (input) file name will be created.
+          None means to use a temporary file.
+          The placeholders for task name, date, etc... can be used.
+          True means the default template.
 
-        output_file: str or file or None or True (default)
-          Same as the input file. Moreover, True means use the input file name,
-          with replaced .in[p] by .out or appended .out suffix.
+        output_file: str or file or None or True (default).
+          The template for the output file name (see the input_file parameter).
+          True means use the input file name, with replaced .in[p] by .out
+          or appended .out suffix
+
+        potential_file: str or file or None
+          The template for the potential file name (see the input_file parameter).
 
         print_output: bool
           Write the output of runned executables to stdout (in addition to output file).
           (Default value for are calculations)
 
-        potential_file: str or file or None
-          Same as the input_file
-
         mpi: list or string or True
           Runner for mpi to run mpi calculation. True means autodetect.
           E.g. 'mpirun'
 
+        potential: sprkkr.potential.Potential or str or None
+          Potential to be used.
+          If string is given, the potential will be read from the file.
+          The atoms will be created (or updated, if it is given) from this potential.
+
+        command_postfix: str or boolean
+          String to be added to the runned command. In some environments, the version
+          and the hostname is added to the name of sprkkr executables.
+          True: use SPRKKR_COMMAND_SUFFIX environment variable
+          False: do not append anything (the same as '')
 
         task: sprkkr.task.tasks.Task or str or None
           Task to compute. Can be None, if no task is specified before calculate,
@@ -65,14 +78,17 @@ class SprKkr(Calculator):
           If str is given, it is interpreted as name of task (if no dot and no slash is contained
           in it), or filename contained the task
         """
-
-        if atoms:
-           atoms = SprKkrAtoms.promote_ase_atoms(atoms)
-        elif potential:
+        if potential:
+           if isinstance(potential, str):
+               potential = Potential.read_from_file(potential, atoms = atoms)
            atoms = potential.atoms
+        elif atoms:
+           atoms = SprKkrAtoms.promote_ase_atoms(atoms)
+
         self._potential = None
         self.atoms = atoms
         self.potential = potential
+        self.command_postfix = command_postfix
 
         super().__init__(restart,
                          label=label, atoms=atoms, directory=directory)
@@ -167,7 +183,7 @@ class SprKkr(Calculator):
 
     def calculate(self, atoms=None, task=None, system_changes=all_changes,
                   potential = None, output_file=False, print_output=True,
-                  options = {}):
+                  command_postfix=None, options = {}):
         """
         Do the calculation.
 
@@ -210,12 +226,15 @@ class SprKkr(Calculator):
             If str, then it is the filename of the potential, that is left unchanged on input
                 (however, it will be modified by SPRKKR itself)
 
-        output_file: str or False or True
-            Filename to store output of the SPRKKR. False mean do not store (just read), True
-            mean to use the default template. An open binary file can be also given.
+        output_file: str or False or True or a file object
+            Filename or open file to store output of the SPRKKR. False mean do not store (just read),
+            True mean to use the default template.
 
         print_output: bool
             Print output to stdout, too.
+
+        command_postfix: str or bool or None
+            If not None, override command_postifx specified when the calculator have been created.
 
         options: dict
             Options to set to the task. If task is given by filename, it is readed, altered by the
@@ -265,7 +284,16 @@ class SprKkr(Calculator):
                task.set(options, unknown = 'find')
            task_file = self._open_file(self.input_file, templator, False)
            if potential_file.name:
-              task.CONTROL.POTFIL = potential_file.name
+              potname = potential_file.name
+              #use the relative potential file name to avoid too-long-
+              #-potential-file-name problem
+              try:
+                  common = os.path.commonpath([self.directory, potname])
+                  if common:
+                      potname = potname[len(common)+1:]
+              except ValueError:
+                 pass
+              task.CONTROL.POTFIL = potname
            task.save_to_file(task_file)
            task_file.seek(0)
 
@@ -280,7 +308,9 @@ class SprKkr(Calculator):
         elif output_file:
               output_file = self._open_file(output_file, templator, False, mode='wb')
 
-        task.run_task_process(self, task_file, output_file, print_output=print_output if print_output is not None else self.print_output)
+        task.run_task_process(self, task_file, output_file, print_output,
+                                    command_postfix = command_postfix
+                             )
 
 
     def phagen(self):
