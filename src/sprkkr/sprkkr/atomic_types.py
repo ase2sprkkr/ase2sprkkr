@@ -1,9 +1,9 @@
-import functools
+from ..common.misc import cached_property
 class AtomicType:
 
     _mendeleev_module = None
 
-    @functools.cached_property
+    @cached_property
     def mendeleev(self):
         if not AtomicType._mendeleev_module:
           try:
