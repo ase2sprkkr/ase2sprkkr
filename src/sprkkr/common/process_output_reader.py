@@ -1,5 +1,6 @@
 import asyncio
 import subprocess
+import os
 
 class BaseProcessOutputReader:
   """ 
@@ -8,18 +9,26 @@ class BaseProcessOutputReader:
   and read_output
   """
 
-  def __init__(self, cmd, outfile, print_output=False, **kwargs):
+  def __init__(self, cmd, outfile, print_output=False, directory=None, **kwargs):
       self.cmd = cmd
       self.kwargs = kwargs
       self.outfile = outfile
       self.print_output = print_output
+      self.directory = directory
 
   async def run_subprocess(self):
       loop = asyncio.get_event_loop()
 
+      if self.directory:
+         dr = os.getcwd()
+         os.chdir(self.directory)
+      else:
+         dr = None
       proc = await asyncio.create_subprocess_exec(*self.cmd,
                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                         **self.kwargs)
+      if dr:
+         os.chdir(dr)
 
       exception = None
       def replace_feed_data(stream_reader):
