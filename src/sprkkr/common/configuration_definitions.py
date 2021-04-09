@@ -542,8 +542,8 @@ class ConfDefinition(BaseDefinitionContainer):
 
    custom_value_name = 'CUSTOM_SECTION'
 
-   def read_from_file(self, file):
-       out = self.result_class(definition = self)
+   def read_from_file(self, file, **kwargs):
+       out = self.result_class(definition = self, **kwargs)
        out.read_from_file(file)
        return out
 

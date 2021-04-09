@@ -55,7 +55,6 @@ class Potential(RootConfContainer):
 
       return atoms
 
-
   def save_to_file(self, file, atoms=None):
       if atoms is not False:
          self.set_from_atoms(atoms or self._atoms)
@@ -77,9 +76,9 @@ class Potential(RootConfContainer):
       return definition.potential_definition
 
   @staticmethod
-  def from_file(filename):
+  def from_file(filename, atoms=None):
       pd = Potential.potential_definition
-      return pd.read_from_file(filename)
+      return pd.read_from_file(filename, atoms=atoms)
 
   @classmethod
   def from_atoms(cls, atoms):
