@@ -3,10 +3,9 @@ import io
 import inspect
 from pyparsing import Word, Suppress
 import itertools
-import functools
 import numpy as np
 from collections import Hashable
-from .misc import OrderedDict
+from .misc import OrderedDict, cached_property
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
@@ -811,7 +810,7 @@ class Table(BaseType):
   def convert(self, value):
       return np.asarray(value, dtype = self.numpy_type)
 
-  @functools.cached_property
+  @cached_property
   def numpy_type(self):
       types = self.sequence.types
       nr = self.names and self.named_result

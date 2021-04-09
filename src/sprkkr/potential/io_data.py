@@ -1,4 +1,4 @@
-from functools import cached_property
+from ..common.misc import cached_property
 from ..common.unique_values import UniqueValuesMapping
 
 
