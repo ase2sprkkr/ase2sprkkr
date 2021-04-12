@@ -112,6 +112,8 @@ class BaseValueDefinition(BaseDefinition):
 
   result_class = Option
 
+  name_in_grammar = None
+
   def __init__(self, name, type, default_value=None, alternative_names=None,
                fixed_value=None, required=None, help=None, description=None,
                is_hidden=False, name_in_grammar=None, name_format=None,
@@ -166,10 +168,6 @@ class BaseValueDefinition(BaseDefinition):
     if required is None:
        required = not is_optional and default_value is None
 
-
-    if name_in_grammar is None:
-        name_in_grammar = self.type.name_in_grammar
-
     super().__init__(
          name = name,
          alternative_names = alternative_names,
@@ -179,6 +177,9 @@ class BaseValueDefinition(BaseDefinition):
          help = help,
          description = description
     )
+
+    if self.name_in_grammar is None:
+        self.name_in_grammar = self.type.name_in_grammar
 
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = self.default_value is not None if required is None else required
