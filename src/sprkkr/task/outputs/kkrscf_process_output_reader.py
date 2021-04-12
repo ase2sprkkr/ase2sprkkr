@@ -1,70 +1,96 @@
 from ...common.process_output_reader import BaseProcessOutputReader
+from ..output_definitions import OutputSectionDefinition as Section, \
+                                 OutputValueDefinition as V, \
+                                 OutputValueEqualDefinition as VE, \
+                                 OutputNonameValueDefinition as VN
+from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
+import pyparsing as pp
+from ase.units import Rydberg
 
 class KkrScfProcessOutputReader(BaseProcessOutputReader):
 
+  atoms_conf_type = Section('atoms', [
+    VN('IECURR', integer),
+    VE('E', float),
+    VN('L', float),
+    VE('IT', integer),
+    VN('atom', string),
+    VN('orbitals', Table({
+        'l' : string,
+        'DOS': float,
+        'NOS': float,
+        'P_spin' : float,
+        'm_spin' : float,
+        'P_orb' : float,
+        'm_orb' : float,
+        'B_val' : float,
+        'B_val_desc': String(default_value = ''),
+        'B_core' : Real(default_value = float('NaN'))
+        }, free_header=True, default_values=True)),
+    V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
+    V('dipole moment', Sequence(int, Array(float, length=3)))
+  ])
+
   def __init__(self, cmd, outfile, **kwargs):
       super().__init__(cmd, outfile, **kwargs)
-      self.iterations = []
 
-      #TODO - remove
-      self.data = {
-            'it' : [],
-            'ERR' : [],
-            'ETOT' : [],
-            'EF' : [],
-            'M' : [],
-            'converged' : [],
-            'atom_confs' : [],
-      }
+  async def read_output(self, stdout):
 
-  async def read_output(self, stdin):
+        iterations = []
 
-      try:
-        while True:
-          line = await stdin.readline()
+        async def readline():
+          line = await stdout.readline()
           if not line:
-             break
+             raise EOFError()
+          return line.decode('utf8')
 
-          if 'ERR' in line and 'EF' in line:
-              items = line.split()
-              self.iterations.append(
-                  {'iteration' : int(items[0]),
-                    'error'    : float(items[2]),
-                    'EF'       : float(items[5]),
-                    'M'        : (float(items[10]), float(items[11])),
-                  }
-              )
-      except StopIteration:
-        pass
+        async def readlinecond(cond, canend=True):
+          while True:
+            line = await stdout.readline()
+            if not line:
+               if canend:
+                  return ''
+               raise EOFError()
+            if cond(line):
+              return line.decode('utf8')
+        try:
+          while True:
+            out = {}
+            line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
+            if not line:
+                return iterations
+            run = line.replace('SPRKKR-run for:', '').strip()
+            out['run'] = run
 
-  def not_considered(self):
-                if conitn:
-                    items = _skip_lines(fd, 1).split()
-                    out['ETOT'].append(float(items[1]))
-                    flag = items[5] == 'converged'
-                    out['converged'].append(flag)
+            line = await readlinecond(lambda line: b' E=' in line)
+            atoms = []
+            while True:
+              atoms.append(await self.atoms_conf_type.parse_from_stream(stdout,
+                up_to=b'\n -------------------------------------------------------------------------------',
+                start=line
+              ))
+              line = await readlinecond(lambda line: line!=b'\n')
+              if not 'E=' in line:
+                break
+            out['atoms'] = atoms
 
-                    out['atom_confs'].append(atom_confs)
-                    atom_confs = {}
+            line = await readlinecond(lambda line: b' ERR' in line and b'EF' in line)
+            items = line.split()
+            out['iteration'] = int(items[0])
+            out['error']=float(items[2])
+            out['EF']=float(items[5])
+            out['M']= float(items[10]), float(items[11])
 
-                    _skip_lines(fd, 1)
+            line = (await readline()).split()
+            out['ETOT'] = float(line[1]) * Rydberg
+            out['converged'] = line[5] == 'converged'
+            iterations.append(out)
+            out = {}
 
-                elif 'SPRKKR-run for:' in line:
-                    run = line.replace('SPRKKR-run for:', '').strip()
-                    out['run'] = run
+        except EOFError:
+          raise Exception('The output ends unexpectedly')
 
-                elif ' E= ' in line:
-                    atom = line.split()[-1]
-                    akeys = _skip_lines(fd, 1).split()
-                    line = _skip_lines_to(fd, 'sum').split()
-                    avals = list(map(float, line[1:8])) + [float(line[9])]
-                    line = _skip_lines_to(fd, 'E_band').split()
-                    akeys.append(line[0])
-                    if len(line) >= 2:
-                       avals.append(line[1])
-                    atom_conf = dict(zip(akeys, avals))
-                    atom_confs[atom] = atom_conf
-
+  """
   def read_results(self):
        outstrg=self.read_output(os.path.join(self.directory,self.outfile))
        lastiter=len(outstrg['it'])
@@ -75,5 +101,4 @@ class KkrScfProcessOutputReader(BaseProcessOutputReader):
 
        self.results['raw_outfile'] = outstrg
        self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
-
-
+  """
