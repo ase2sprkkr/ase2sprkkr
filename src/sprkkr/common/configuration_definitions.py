@@ -26,7 +26,7 @@ class BaseDefinition:
    name_in_grammar = True
 
    def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
-                name_in_grammar=None, description=None, help=None, write_alternative_name=False):
+                name_in_grammar=None, description=None, help=None, write_alternative_name=False, grammar_of_delimiter=None):
        """
        Parameters
        ----------
@@ -66,6 +66,11 @@ class BaseDefinition:
                                if name_in_grammar is None else name_in_grammar
        self.help = help
        self.description = description
+
+       if grammar_of_delimiter is not None:
+          if not callable(grammar_of_delimiter):
+             grammar_of_delimiter = lambda x: grammar_of_delimiter
+          self.grammar_of_delimiter = grammar_of_delimiter
 
    def create_object(self, container=None):
        """ Creates Section/Option/.... object (whose properties I define) """
