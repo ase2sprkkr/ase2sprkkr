@@ -258,7 +258,7 @@ class SprKkr(Calculator):
 
         """ Get the potential file """
         if potential:
-           if isinstance(name, str):
+           if isinstance(potential, str):
               potential_file = makepath(task, "'{path}' is not a task file nor a known name of task.")
               potential = None
         elif potential is not False:
@@ -269,7 +269,7 @@ class SprKkr(Calculator):
 
         """ Get the task file """
         if task:
-           if isinstance(name, str):
+           if isinstance(task, str):
               if Task.is_it_a_task_name(task):
                  task = task.create_task(task)
               else:

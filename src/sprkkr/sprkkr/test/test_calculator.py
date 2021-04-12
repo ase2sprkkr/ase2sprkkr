@@ -34,3 +34,18 @@ class CalculatorTest(TestCase):
      for i in out.iterations[-1]['atoms']:
         self.assertEqual(5, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
+
+     atoms = bulk('Li')
+     calculator = SprKkr(atoms = atoms, mpi=False, directory = os.path.dirname(__file__), input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
+     task = SprKkr.Task.create('scf')
+     task.SCF.NITER = 1
+     out = calculator.calculate(task = task, print_output=print_output)
+     self.assertEqual(out.atoms, out.potential.atoms)
+     self.assertEqual(1, len(out.iterations))
+     self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
+     self.assertFalse(out.converged)
+
+     calculator = SprKkr(mpi=False, directory = os.path.dirname(__file__), input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
+     out = calculator.calculate(potential = out.potential, task = task)
+     self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
+     self.assertEqual(1, len(out.iterations))
