@@ -185,7 +185,7 @@ class SprKkr(Calculator):
 
 
     def calculate(self, atoms=None, task=None, system_changes=all_changes,
-                  potential = None, output_file=False, print_output=True,
+                  potential = None, output_file=False, print_output=False,
                   command_postfix=None, options = {}):
         """
         Do the calculation.
