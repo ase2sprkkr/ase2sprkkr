@@ -37,6 +37,7 @@ class BaseProcessOutputReader:
              if self.print_output:
                 print(stream_reader._buffer.decode('utf8'))
              self.outfile.write(stream_reader._buffer)
+
           def feed_data(data):
               nonlocal exception
               try:
@@ -47,38 +48,48 @@ class BaseProcessOutputReader:
                 if not exception:
                     exception = e
                 raise
-
+              fd(data)
+          fd = stream_reader.feed_data
           stream_reader.feed_data = feed_data
 
       if self.outfile:
         replace_feed_data(proc.stdout)
         replace_feed_data(proc.stderr)
 
-      await asyncio.gather(
+      out = await asyncio.gather(
           self.read_output(proc.stdout),
           self.read_error(proc.stderr),
           proc.wait(),
         )
+
       if exception:
          raise exception
 
+      return self.result(*out)
 
+  def result(self, output, error, wait):
+      if wait != 0:
+         raise ValueError("Process ended with return value {wait}")
+      if error is not None:
+         return output, error
+      return output
 
   def run(self):
       loop = asyncio.get_event_loop()
 
       import logging
       logging.getLogger("asyncio").setLevel(logging.WARNING)
-      loop.run_until_complete( self.run_subprocess() )
+      out = loop.run_until_complete( self.run_subprocess() )
       if self.outfile:
          self.outfile.close()
+      return out
 
   async def read_error(self, stderr):
       while True:
           line=await stderr.readline()
           if not line:
              return
-          print(stderr.decode('utf8'))
+          print(line.decode('utf8'))
 
   async def read_output(self, stdout):
       raise NotImplemented('Please, redefine BaseProcess.read_output coroutine')
