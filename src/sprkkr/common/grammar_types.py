@@ -325,7 +325,7 @@ class BaseString(BaseType):
       try:
         self._grammar.parseString(value, True)
       except pp.ParseException as e:
-        return "Forbidden character '{e.line[e.col]}' in the string"
+        return f"Forbidden character '{e.line[e.col]}' in the string"
     return True
 
 class String(BaseString):
