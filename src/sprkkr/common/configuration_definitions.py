@@ -392,7 +392,10 @@ class BaseDefinitionContainer(BaseDefinition):
         )
 
     def _values_grammar(self, delimiter=None):
-       custom_value = self.custom_member_grammar(self.all_member_names())
+       if self.custom_class:
+          custom_value = self.custom_member_grammar(self.all_member_names())
+       else:
+          custom_value = None
        delimiter = delimiter or self.grammar_of_delimiter()
 
        def grammars():
@@ -410,7 +413,10 @@ class BaseDefinitionContainer(BaseDefinition):
          yield head, curr
 
        if self.force_order:
-           cvs = pp.ZeroOrMore(custom_value + delimiter)
+           if custom_value:
+              cvs = pp.ZeroOrMore(custom_value + delimiter)
+           else:
+              cvs = None
            first = True
            def not_first(x):
                nonlocal first
@@ -418,7 +424,7 @@ class BaseDefinitionContainer(BaseDefinition):
                return x
 
            inter = pp.Empty().addCondition(lambda x: first).setName('<is_first>') | \
-                   (delimiter + cvs)
+                   ((delimiter + cvs) if cvs else delimiter)
            inter.setName('<is first>|[<custom section>...]<delimiter>')
 
            def sequence():
@@ -431,16 +437,18 @@ class BaseDefinitionContainer(BaseDefinition):
 
 
            values  = pp.And([ i for i in sequence()])
-           if not self._first_section_is_fixed():
-              values = cvs + values
-           values += pp.ZeroOrMore(delimiter + custom_value)
+           if custom_value:
+              if not self._first_section_is_fixed():
+                  values = cvs + values
+              values += pp.ZeroOrMore(delimiter + custom_value)
        else:
            it = grammars()
            #store the first fixed "chain of sections"
            first = self._first_section_is_fixed() and next(it)
            #the reset has any order
            values = pp.MatchFirst([i for head,i in it])
-           values |= custom_value
+           if custom_value:
+               values |= custom_value
            values = delimitedList(values, delimiter)
            if first:
               values = first + delimiter + values
@@ -458,7 +466,6 @@ class BaseDefinitionContainer(BaseDefinition):
 
        return values
 
-
     def _grammar(self):
        delimiter = self.grammar_of_delimiter()
        values = self._values_grammar(delimiter)
@@ -473,7 +480,7 @@ class BaseDefinitionContainer(BaseDefinition):
 
     @classmethod
     @cache
-    def delimited_value_grammar(cls):
+    def delimited_custom_value_grammar(cls):
         return cls.child_class.grammar_of_delimiter() + cls.custom_value_grammar()
 
     custom_name_characters = pp.alphanums + '_-'
@@ -482,7 +489,7 @@ class BaseDefinitionContainer(BaseDefinition):
     def custom_member_grammar(cls, value_names = []):
        name = pp.Word(cls.custom_name_characters).setParseAction(lambda x: x[0].strip())
        add_excluded_names_condition(name, value_names)
-       out = (name + cls.delimited_value_grammar()).setParseAction(lambda x: tuple(x))
+       out = (name + cls.delimited_custom_value_grammar()).setParseAction(lambda x: tuple(x))
        out.setName(cls.custom_value_name)
        return out
 
@@ -531,7 +538,7 @@ class BaseSectionDefinition(BaseDefinitionContainer):
 
    @classmethod
    @cache
-   def delimited_value_grammar(cls):
+   def delimited_custom_value_grammar(cls):
         gt = cls.custom_class.grammar_type
         #here the child (Value) class delimiter should be used
         out = cls.child_class.grammar_of_delimiter() + gt.grammar()
