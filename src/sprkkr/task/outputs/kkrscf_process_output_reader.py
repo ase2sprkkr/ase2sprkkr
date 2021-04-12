@@ -1,4 +1,3 @@
-from ...common.process_output_reader import BaseProcessOutputReader
 from ..output_definitions import OutputSectionDefinition as Section, \
                                  OutputValueDefinition as V, \
                                  OutputValueEqualDefinition as VE, \
@@ -6,8 +5,36 @@ from ..output_definitions import OutputSectionDefinition as Section, \
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
 import pyparsing as pp
 from ase.units import Rydberg
+from ..task_result import TaskResult, TaskResultReader
 
-class KkrScfProcessOutputReader(BaseProcessOutputReader):
+class ScfResult(TaskResult):
+
+  def __init__(self, task, iterations, error, return_code):
+      self.iterations = iterations
+      super().__init__(task, return_code)
+
+  @property
+  def energy(self):
+      return self.iterations[-1]['ETOT']
+
+  @property
+  def converged(self):
+      return self.iterations[-1]['converged']
+
+  """
+  def read_results(self):
+       outstrg=self.read_output(os.path.join(self.directory,self.outfile))
+       lastiter=len(outstrg['it'])
+       self.niter=lastiter
+       self.converged = outstrg['converged'][lastiter-1]
+       if not self.converged:
+           raise RuntimeError('SPRKKR did not converge! Check ' + self.outfile)
+
+       self.results['raw_outfile'] = outstrg
+       self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
+  """
+
+class KkrScfProcessOutputReader(TaskResultReader):
 
   atoms_conf_type = Section('atoms', [
     VN('IECURR', integer),
@@ -90,15 +117,5 @@ class KkrScfProcessOutputReader(BaseProcessOutputReader):
         except EOFError:
           raise Exception('The output ends unexpectedly')
 
-  """
-  def read_results(self):
-       outstrg=self.read_output(os.path.join(self.directory,self.outfile))
-       lastiter=len(outstrg['it'])
-       self.niter=lastiter
-       self.converged = outstrg['converged'][lastiter-1]
-       if not self.converged:
-           raise RuntimeError('SPRKKR did not converge! Check ' + self.outfile)
+  result_class = ScfResult
 
-       self.results['raw_outfile'] = outstrg
-       self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
-  """

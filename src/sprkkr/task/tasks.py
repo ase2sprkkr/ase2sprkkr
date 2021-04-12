@@ -34,7 +34,8 @@ class Task(RootConfContainer):
            command = calculator.mpi + [ command + 'MPI' ]
       else:
            command = [ command ]
-      process = d.result_reader(command, output_file, stdin = task_file, print_output=print_output, directory=calculator.directory)
+      self.directory = calculator._directory
+      process = d.result_reader(command, output_file, stdin = task_file, print_output=print_output, directory=self.directory, task=self)
       try:
         return process.run()
       except FileNotFoundError as e:
