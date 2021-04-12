@@ -39,7 +39,7 @@ def fce():
 
   Section('SCF-INFO', [
     V('INFO', line_string, 'NONE'),
-    V('SCFSTATUS', DefKeyword('START', 'CONVERGED')),
+    V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK')),
     V('FULLPOT', False),
     V('BREITINT', False),
     V('NONMAG', False, alternative_names='NOMAG'),
@@ -70,7 +70,9 @@ def fce():
   Section('MAGNETISATION DIRECTION', [
     V('KMROT', int, 0),
     V('QMVEC', Array([0.,0.,0.])),
-    V('DATA', Table({'QMTET' : float, 'QMPHI' : float }, numbering='IQ')),
+    V('DATA', Table({'MTET_Q' : float, 'MPHI_Q' : float }, numbering='IQ', free_header = True)),
+    V('IT_DATA', Table({'MTET_Q' : float, 'MPHI_T' : float, 'MGAM_T': float}, numbering='IT', free_header = True),
+      is_optional=True),
     ],
     cls = ArraySection('magnetisation_direction')
   )
