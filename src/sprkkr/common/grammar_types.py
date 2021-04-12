@@ -274,15 +274,25 @@ Date.I = Date()
 
 
 
-class RealWithUnits(BaseType):
+class BaseRealWithUnits(BaseType):
 
-  @classmethod
-  def _grammar(cls, param_name):
-    units = pp.Or((pp.CaselessKeyword(v).setParseAction(lambda x,*args, u=u: u)  for v,u in  cls.units.items()))
-    units = units | pp.Empty().setParseAction(lambda x: 1.)
-    cls._grammar = Real.I.grammar(param_name) + pp.Or(units)
-    cls._grammar.setParseAction(lambda x: x[0]*x[1])
-    return cls._grammar
+  grammar_cache = {}
+
+  def _grammar_units(self, units):
+    i = id(units)
+    if not i in self.grammar_cache:
+      units = pp.Or(
+        (pp.Empty() if v is None else pp.CaselessKeyword(v))
+                .setParseAction(lambda x,*args, u=u: u) for v,u in  units.items()
+        )
+      out =  Real.I.grammar() + pp.Or(units)
+      out.setParseAction(lambda x: x[0]*x[1])
+      self.grammar_cache[i] = out
+      return out
+    return self.grammar_cache[i]
+
+  def _grammar(self, param_name):
+    return self._grammar_units(self.units)
 
   def _validate(self, value, parse_check=False):
     return isinstance(value, float) or "Float value required"
@@ -292,11 +302,18 @@ class RealWithUnits(BaseType):
 
   numpy_type = float
 
-class Energy(RealWithUnits):
+class RealWithUnits(BaseRealWithUnits):
+
+  def __init__(self, *args, units, **kwargs):
+     self.units = units
+     super().__init__(*args, **kwargs)
+
+class Energy(BaseRealWithUnits):
 
   units = {
       'Ry' : 1.,
-      'eV' : 1. / Rydberg
+      'eV' : 1. / Rydberg,
+      None : 1.,
   }
 
 Energy.I = Energy()
