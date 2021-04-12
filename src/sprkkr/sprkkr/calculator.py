@@ -22,6 +22,9 @@ import shutil
 class SprKkr(Calculator):
     implemented_properties = ['energy']
 
+    Task = Task
+    Potential = Potential
+
     def __init__(self, restart=None,
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
