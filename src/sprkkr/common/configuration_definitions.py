@@ -484,6 +484,26 @@ class BaseDefinitionContainer(BaseDefinition):
     def _first_section_is_fixed(self):
        return not self._members.first_item().name_in_grammar
 
+    def parse_file(self, file, return_value_only=True):
+        return self.parse_return(self.grammar().parseFile(file, True), return_value_only)
+
+    def parse(self, str, whole_string=True, return_value_only=True):
+        return self.parse_return(self.grammar().parseString(str, whole_string), return_value_only)
+
+    def parse_return(self, val, return_value_only=True):
+        val = val[0]
+        if return_value_only:
+           val = val[1]
+        return val
+
+    async def parse_from_stream(self, stream, up_to, start=None, whole_string=True, return_value_only=True):
+      result = await stream.readuntil(up_to)
+      result = result[:-len(up_to)].decode('utf8')
+      if start:
+         result = start + result
+      return self.parse(result, whole_string)
+
+
 
 class BaseSectionDefinition(BaseDefinitionContainer):
    """ Base class for sections in Pot or Task file """

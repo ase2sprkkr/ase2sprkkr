@@ -190,7 +190,7 @@ class RootConfContainer(ConfContainer):
       file.flush()
 
   def read_from_file(self, file, clear_first=True):
-      values = self._definition.grammar().parseFile(file, True)
+      values = self._definition.parse_file(file)
       #except Exception as e:
       #   print(e)
       #   breakpoint()

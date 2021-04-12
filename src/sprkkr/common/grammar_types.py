@@ -92,6 +92,13 @@ class BaseType:
   def parse(self, str, whole_string=True):
     return self.grammar().parseString(str, whole_string)[0]
 
+  async def parse_from_stream(self, stream, up_to, start=None, whole_string=True):
+    result = await stream.readuntil(up_to)
+    result = result[:-len(up_to)].decode('utf8')
+    if start:
+       result = start + result
+    return self.parse(result, whole_string)
+
   def grammar_name(self):
     """ Human readable expression of the grammar. By default,
         this is what is set by grammar.setName, however, sometimes
