@@ -675,7 +675,8 @@ Separator.I = Separator()
 class Sequence(BaseType):
   """ A sequence of values of given types """
 
-  def __init__(self, *types, format='', format_all=False, allowed_values=None, **kwargs):
+  def __init__(self, *types, format='', format_all=False, allowed_values=None,
+               default_values=False, **kwargs):
       super().__init__(**kwargs)
       if isinstance(format, (str, dict)):
         format = itertools.repeat(format)
@@ -683,9 +684,17 @@ class Sequence(BaseType):
       if allowed_values and not isinstance(allowed_values, set):
          allowed_values = set(allowed_values)
       self.allowed_values=allowed_values
+      self.default_values=default_values
 
   def _grammar(self, param_name = False):
-      grammar = pp.And([i.grammar(param_name) for i in self.types]).setParseAction(lambda x: tuple(x))
+      def grm(type):
+          g = type.grammar(param_name)
+          if self.default_values and type.default_value is not None:
+             g = g | pp.Empty().setParseAction(lambda x: type.default_value)
+          return g
+
+      grammars = [grm(i) for i in self.types]
+      grammar = pp.And(grammars).setParseAction(lambda x: tuple(x))
       if self.allowed_values is not None:
          grammar.addConditionEx(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
       return grammar
@@ -694,7 +703,7 @@ class Sequence(BaseType):
       if not isinstance(value, tuple) or len(value) != len(self.types):
           return f'A tuple of {len(self.types)} values is required'
       for i,j in zip(self.types, value):
-          out = i.validate(j)
+          out = i.validate(j, parse_check=parse_check)
       return True
 
   def grammar_name(self):
@@ -723,6 +732,7 @@ class Table(BaseType):
                      numbering=None, numbering_label=None, numbering_format=True,
                      prefix=None, postfix=None, length=None,
                      row_condition=None,
+                     default_values=False,
                      named_result = False, **kwargs):
       super().__init__(prefix=None, postfix=None)
       if columns is None:
@@ -734,7 +744,7 @@ class Table(BaseType):
          self.names = None
       if header is None:
          header = self.names
-      self.sequence = Sequence( *columns, format=format, format_all=format_all, condition = row_condition )
+      self.sequence = Sequence( *columns, format=format, format_all=format_all, condition = row_condition, default_values=default_values )
       self.header = header
       self.free_header = free_header
       if numbering.__class__ is str:
