@@ -327,7 +327,12 @@ class BaseDefinitionContainer(BaseDefinition):
        self.is_hidden = is_hidden
        if not isinstance(members, OrderedDict):
           members = self._dict_from_named_values(members)
+
+       if self.value_name_format:
+          for i in members.values():
+              i.value_name_format = self.value_name_format
        self._members = members
+
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
           self.force_order = force_order

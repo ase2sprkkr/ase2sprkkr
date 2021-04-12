@@ -86,11 +86,6 @@ class ConfContainer(ConfCommon):
       if value is not None:
           self._members[name].set(value)
 
-  def _add(self, member):
-      self._members[member.name] = member
-      if hasattr(self._definition, 'value_name_format'):
-         member._definition.value_name_format = self._definition.value_name_format
-
   def remove(self, name):
       cclass = getattr('custom_class', self._definition, False)
       if not cclass:
@@ -117,6 +112,10 @@ class ConfContainer(ConfCommon):
           out = i._find_value(name)
           if out:
              return out
+
+  def _add(self, member):
+      self._members[member.name] = member
+
 
 class BaseSection(ConfContainer):
   """ A section of SPRKKR configuration  """
