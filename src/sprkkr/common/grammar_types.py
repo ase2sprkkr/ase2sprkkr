@@ -5,12 +5,11 @@ from pyparsing import Word, Suppress
 import itertools
 import numpy as np
 from collections import Hashable
-from .misc import OrderedDict, cached_property
+from .misc import OrderedDict, cached_property, cache
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
                      replace_whitechars
-from .misc import class_property, copy_list, cache
 
 from ase.units import Rydberg
 import copy
@@ -39,7 +38,6 @@ class BaseType:
       Some types (e.g. Tables) commonly have no name (are identified
       by its position in the potential file.
   """
-
   name_in_grammar = True
 
   """ Default value for the given type. It can be overriden in the constructor. """
