@@ -308,7 +308,7 @@ class SprKkr(Calculator):
         elif output_file:
               output_file = self._open_file(output_file, templator, False, mode='wb')
 
-        task.run_task_process(self, task_file, output_file, print_output,
+        return task.run_task_process(self, task_file, output_file, print_output,
                                     command_postfix = command_postfix
                              )
 

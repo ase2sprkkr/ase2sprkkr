@@ -27,7 +27,7 @@ class Task(RootConfContainer):
   def run_task_process(self, calculator, task_file, output_file, print_output=False, command_postfix=None):
       d = self._definition
       command = d.command
-      print_output = print_output if print_output is not None else calculator.print_output,
+      print_output = print_output if print_output is not None else calculator.print_output
       command_postfix = calculator.command_postfix if command_postfix is None else command_postfix
       command += resolve_command_postfix(calculator.command_postfix)
       if d.mpi and calculator.mpi:
@@ -35,8 +35,12 @@ class Task(RootConfContainer):
       else:
            command = [ command ]
       process = d.result_reader(command, output_file, stdin = task_file, print_output=print_output, directory=calculator.directory)
-      process.run()
-      return process
+      try:
+        return process.run()
+      except FileNotFoundError as e:
+        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_COMMAND_SUFFIX environment variable should set?\n' + \
+                     e.strerror
+        raise
 
   def executable_params(self, directory=None, ):
       """
