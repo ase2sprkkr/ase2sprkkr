@@ -195,8 +195,6 @@ class RootConfContainer(ConfContainer):
       #   print(e)
       #   breakpoint()
       #   print(e)
-      assert len(values) == 1
-      values = values[0]
       if clear_first:
          self.clear(True)
       self.set(values)

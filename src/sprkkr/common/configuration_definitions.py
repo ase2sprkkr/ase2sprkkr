@@ -589,6 +589,13 @@ class ConfDefinition(BaseDefinitionContainer):
        """ Do not create tuple (name, value) for the root class """
        return expr
 
+   def parse_return(self, val, return_value_only=True):
+        """ There is no name in the parsed results (see how
+            ConfDefinition._tuple_with_my_name is redefined)
+        """
+        val = val[0]
+        return val
+
    def _grammar(self):
        """Ignore comments"""
        out=super()._grammar()
