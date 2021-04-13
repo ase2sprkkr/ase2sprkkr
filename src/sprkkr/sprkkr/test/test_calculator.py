@@ -9,9 +9,6 @@ from ..calculator import SprKkr
 import os
 import sys
 
-
-from ...calcio import PotFile
-
 class CalculatorTest(TestCase):
 
   def test_calculator(self):
@@ -26,6 +23,11 @@ class CalculatorTest(TestCase):
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
 
+     #read again the output from a file - the results should be the same
+     SprKkr.Task.create('scf').read_output_from_file(os.path.join(os.path.dirname(__file__), 'output_test_calc.out'))
+     self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
+     self.assertEqual(2, len(out.iterations))
+
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      calculator = SprKkr(atoms = atoms, mpi=False, directory = os.path.dirname(__file__), input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
      out = calculator.calculate(options = {'NITER' : 1, 'NE' : 12 }, print_output=print_output)
@@ -34,6 +36,10 @@ class CalculatorTest(TestCase):
      for i in out.iterations[-1]['atoms']:
         self.assertEqual(5, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
+
+     SprKkr.Task.create('scf').read_output_from_file(os.path.join(os.path.dirname(__file__), 'output_test_calc.out'))
+     self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
+     self.assertEqual(1, len(out.iterations))
 
      atoms = bulk('Li')
      calculator = SprKkr(atoms = atoms, mpi=False, directory = os.path.dirname(__file__), input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
