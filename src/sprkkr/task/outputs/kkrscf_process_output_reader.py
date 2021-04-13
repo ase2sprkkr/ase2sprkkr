@@ -58,9 +58,6 @@ class KkrScfProcessOutputReader(TaskResultReader):
     V('dipole moment', Sequence(int, Array(float, length=3)))
   ])
 
-  def __init__(self, cmd, outfile, **kwargs):
-      super().__init__(cmd, outfile, **kwargs)
-
   async def read_output(self, stdout):
 
         iterations = []

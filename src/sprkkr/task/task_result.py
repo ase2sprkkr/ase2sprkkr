@@ -27,11 +27,9 @@ class TaskResultReader(BaseProcessOutputReader):
   """ Process reader, that construct (a descendant of) TaskResult as a result. 
       Subclasses should specify result_class class property.
   """
-
   @add_to_signature(BaseProcessOutputReader.__init__)
-  def __init__(self, *args, task, **kwargs):
+  def __init__(self, task):
       self.task = task
-      super().__init__(*args, **kwargs)
 
   def result(self, *args):
       return self.result_class(self.task, *args)

@@ -8,14 +8,6 @@ class BaseProcessOutputReader:
   and pass the stdout and stderr of the process to its two asyn routines, read_error
   and read_output
   """
-
-  def __init__(self, cmd, outfile, print_output=False, directory=None, **kwargs):
-      self.cmd = cmd
-      self.kwargs = kwargs
-      self.outfile = outfile
-      self.print_output = print_output
-      self.directory = directory
-
   async def run_subprocess(self):
       loop = asyncio.get_event_loop()
 
@@ -74,7 +66,13 @@ class BaseProcessOutputReader:
          return output, error
       return output
 
-  def run(self):
+  def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
+      self.cmd = cmd
+      self.kwargs = kwargs
+      self.outfile = outfile
+      self.print_output = print_output
+      self.directory = directory
+
       loop = asyncio.get_event_loop()
 
       import logging

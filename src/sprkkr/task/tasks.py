@@ -35,14 +35,16 @@ class Task(RootConfContainer):
       else:
            command = [ command ]
       self.directory = calculator._directory
-      process = d.result_reader(command, output_file, stdin = task_file, print_output=print_output, directory=self.directory, task=self)
+      process = self.result_reader()
       try:
-        return process.run()
+        return process.run(command, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
       except FileNotFoundError as e:
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_COMMAND_SUFFIX environment variable should set?\n' + \
                      e.strerror
         raise
 
+  def result_reader(self):
+      return self._definition.result_reader(self)
   def executable_params(self, directory=None, ):
       """
       Return
