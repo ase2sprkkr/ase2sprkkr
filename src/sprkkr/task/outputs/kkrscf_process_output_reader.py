@@ -4,6 +4,7 @@ from ..output_definitions import OutputSectionDefinition as Section, \
                                  OutputNonameValueDefinition as VN
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
 import pyparsing as pp
+import numpy as np
 from ase.units import Rydberg
 from ..task_result import TaskResult, TaskResultReader
 
@@ -21,18 +22,40 @@ class ScfResult(TaskResult):
   def converged(self):
       return self.iterations[-1]['converged']
 
-  """
-  def read_results(self):
-       outstrg=self.read_output(os.path.join(self.directory,self.outfile))
-       lastiter=len(outstrg['it'])
-       self.niter=lastiter
-       self.converged = outstrg['converged'][lastiter-1]
-       if not self.converged:
-           raise RuntimeError('SPRKKR did not converge! Check ' + self.outfile)
+  def iteration_values(self, name):
+      if not name in self.iterations[0]:
+         raise KeyError(f"No such iteration value: {name}")
 
-       self.results['raw_outfile'] = outstrg
-       self.results['energy']=outstrg['ETOT'][lastiter-1]*Rydberg
-  """
+      return np.fromiter(
+              (i[name] for i in self.iterations),
+              count = len(self.iterations),
+              dtype = self.iterations[0][name].__class__
+            )
+
+  def plot(self, what=['error', 'ETOT'], filename=None, logscale = set(['err']), **kwargs):
+      import matplotlib.pyplot as pyplot
+
+      fig, axs = pyplot.subplots(len(what), sharex=True)
+      iterations = self.iteration_values('iteration')
+      for name, ax in zip(what, axs):
+        data = self.iteration_values(name)
+        if name in logscale:
+           ax.set_yscale("log")
+        kwargs.update({
+            'ls' : None,
+            'mfc': None,
+            'mew': 2,
+            'ms' : 6
+        })
+        ax.plot(iterations, data, '+', **kwargs)
+        ax.set_ylabel(name)
+
+      ax.set_xlabel('Iteration')
+      fig.tight_layout()
+      if filename:
+        fig.savefig(filename)
+      else:
+        pyplot.show()
 
 class KkrScfProcessOutputReader(TaskResultReader):
 
