@@ -5,6 +5,7 @@ import unittest
 import numpy as np
 import inspect
 import sys
+import asyncio
 
 def patch_package(package, name):
     """ Set the package name for the test """
@@ -25,6 +26,18 @@ __package__, __name__ = patch_package(__package__,__name__)
 from .misc import OrderedDict
 
 class TestCase(unittest.TestCase):
+
+  def assertAsyncEqual(self, a,b):
+      return self.assertEqual(a, self.runAsync(b))
+
+  def assertAsyncRaises(self, a,b):
+      return self.assertRaises(a, self.runAsync(b))
+
+  @staticmethod
+  def runAsync(corr):
+      loop = asyncio.get_event_loop()
+      task = loop.create_task(corr)
+      return loop.run_until_complete(task)
 
   def setUp(self):
       """ Register numpy array for the equality """

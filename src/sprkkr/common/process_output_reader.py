@@ -1,6 +1,8 @@
 import asyncio
+import functools
 import subprocess
 import os
+import numpy as np
 
 class BaseProcessOutputReader:
   """ 
@@ -91,3 +93,87 @@ class BaseProcessOutputReader:
 
   async def read_output(self, stdout):
       raise NotImplemented('Please, redefine BaseProcess.read_output coroutine')
+
+  def read_from_file(self, output, error=None, return_code=0):
+
+      loop = asyncio.get_event_loop()
+
+      def out():
+          air = AsyncioFileReader(output)
+          task = loop.create_task(self.read_output(air))
+          return loop.run_until_complete(task)
+
+      def err():
+          if not error: return None
+          air = AsyncioFileReader(error)
+          task = loop.create_task(self.read_error(air))
+          return loop.run_until_complete(task)
+
+      return self.result(out(), err(), return_code)
+
+
+class AsyncioFileReader:
+  """ `Async' file reader that mimics asyncio StreamReader
+      It is in fact not async, but offers the same interface.
+  """
+
+  def __init__(self, filename, buffersize=8192):
+      self.file = open(filename, 'rb') if isinstance(filename, str) else filename
+      self.buffersize = buffersize
+
+  async def readline(self):
+      return self.file.readline()
+
+  @staticmethod
+  @functools.lru_cache(maxsize=128)
+  def separator_shifts(sep):
+      shifts = np.ones(len(sep) + 1, dtype=int)
+      shift = 1
+      for pos in range(len(sep)):
+        while shift <= pos and sep[pos] != sep[pos-shift]:
+            shift += shifts[pos-shift]
+        shifts[pos+1] = shift
+      return shifts
+
+  async def readuntil(self, sep=b'\n'):
+      lsep = len(sep)
+      if lsep == 0:
+          return b''
+
+      #https://stackoverflow.com/questions/14128763/how-to-find-the-overlap-between-2-sequences-and-return-it
+      shifts = self.separator_shifts(sep)
+
+      # do the actual search
+      # read the bytes into the array to avoid incrementing the array one by one
+      out =  b''
+      buffer = bytearray(self.buffersize + lsep)
+      bufEnd = 0
+      bufPos = 0
+
+      def result():
+          if not out:
+             return bytes(buffer[:bufPos])
+          return out + bytes(buffer[:bufPos])
+
+      startPos = 0
+      matchLen = 0
+      while True:
+        if bufPos == bufEnd:
+           if bufEnd >= self.buffersize:
+              out += buffer[:bufEnd]
+              bufEnd = bufPos = 0
+           n = lsep - matchLen
+           data = self.file.read(n)
+           ldata = len(data)
+           buffer[bufPos:bufPos+ldata] = data
+           bufEnd += ldata
+           if len(data) < n:
+              raise asyncio.IncompleteReadError(result(), sep)
+        c = buffer[bufPos]
+        bufPos += 1
+        while matchLen >= 0 and sep[matchLen] != c:
+          startPos += shifts[matchLen]
+          matchLen -= shifts[matchLen]
+        matchLen += 1
+        if matchLen == lsep:
+           return result()
