@@ -12,6 +12,9 @@ class TaskResult:
 
   @cached_property
   def potential(self):
+      potfil = self.task.CONTROL.POTFIL()
+      if not potfil:
+         raise ValueError("Please set CONTROL.POTFIL of the task to read the potential")
       fname = self.task.CONTROL.POTFIL() + '_new'
       if self.directory:
          fname = os.path.join(self.directory, fname)
