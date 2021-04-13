@@ -98,9 +98,10 @@ class BaseDefinition:
             name.setParseAction(lambda x: self.name)
             if delimiter:
               name += delimiter
+            out = name - expr
         else:
             name = pp.Empty().setParseAction(lambda x: self.name)
-        out = name - expr
+            out = name + expr
         if has_value:
             return out.setParseAction(lambda x: tuple(x))
         else:
@@ -403,13 +404,17 @@ class BaseDefinitionContainer(BaseDefinition):
          it = iter(self._members.values())
          head = next(it)
          curr = head._grammar()
+
          for i in it:
              if i.name_in_grammar:
                yield head, curr
                head = i
                curr = i._grammar()
              else:
-               curr = curr + delimiter + i._grammar()
+               add = delimiter + i._grammar()
+               if i.is_optional:
+                  add = pp.Optional(add)
+               curr = curr + add
          yield head, curr
 
        if self.force_order:
@@ -434,7 +439,6 @@ class BaseDefinitionContainer(BaseDefinition):
                    if head.is_optional:
                       g = pp.Optional(g)
                    yield g
-
 
            values  = pp.And([ i for i in sequence()])
            if custom_value:
