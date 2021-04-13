@@ -763,7 +763,11 @@ class Table(BaseType):
       grammar = delimitedList(line, line_end)
       if self.names:
          if self.free_header:
-             grammar = pp.Suppress(pp.SkipTo(line_end) + line_end) + grammar
+             fh = pp.SkipTo(line_end) + line_end
+             if callable(self.free_header):
+               fh.addConditionEx(lambda x: self.free_header(x[0]),
+                                    lambda x: f"This is not an allowed header for table {param_name}: {x[0]}" )
+             grammar = pp.Suppress(fh) + grammar
          else:
              def names():
                 for n in self.names:
