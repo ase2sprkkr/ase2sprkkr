@@ -39,7 +39,7 @@ class Task(RootConfContainer):
       try:
         return process.run(command, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_COMMAND_SUFFIX environment variable should set?\n' + \
+        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_COMMAND_SUFFIX environment variable should be set?\n' + \
                      e.strerror
         raise
 
