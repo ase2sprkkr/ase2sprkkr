@@ -48,7 +48,7 @@ class Task(RootConfContainer):
 
   def read_output_from_file(self, filename, directory=None):
       self.directory = directory or os.path.dirname(filename)
-      self.result_reader().read_from_file(filename)
+      return self.result_reader().read_from_file(filename)
 
   def executable_params(self, directory=None, ):
       """
