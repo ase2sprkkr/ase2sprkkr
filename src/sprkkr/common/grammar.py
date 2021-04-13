@@ -45,6 +45,7 @@ def addConditionEx(self, condition, message):
          m = m(tocs)
       raise pp.ParseException(s, loc, m)
   self.addParseAction(check_condition)
+  return self
 
 def addParseActionEx(self, pa, message = None):
 
