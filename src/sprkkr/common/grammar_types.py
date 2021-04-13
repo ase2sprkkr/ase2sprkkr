@@ -270,8 +270,6 @@ class Date(BaseType):
 Date.I = Date()
 
 
-
-
 class BaseRealWithUnits(BaseType):
 
   grammar_cache = {}
@@ -296,7 +294,7 @@ class BaseRealWithUnits(BaseType):
     return isinstance(value, float) or "Float value required"
 
   def grammar_name(self):
-    return '<float>[{}]'.format("|".join(self.units))
+    return '<float>[{}]'.format("|".join(('' if i is None else i for i in self.units)))
 
   numpy_type = float
 
