@@ -165,4 +165,4 @@ class GrammarTest(TestCase):
     parsed = type.parse(data)
     data2 = type.string(parsed)
     #propper column widths: numbering + 3 columns + newline, no newline on the end of the string
-    self.assertEquals(len(data2),  2 * (4 + 3 * 21 +1) - 1)
+    self.assertEqual(len(data2),  2 * (4 + 3 * 21 +1) - 1)
