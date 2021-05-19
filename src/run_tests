@@ -6,7 +6,7 @@ else
 	 PYTHON=python
 fi
 
-if echo 'import nose' | $PYTHON ; then
+if echo 'import nose' | $PYTHON >> /dev/null ; then
 	MODULE="nose -s"
 else
 	MODULE=unittest
