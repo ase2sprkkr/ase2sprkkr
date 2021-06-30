@@ -3,7 +3,7 @@ from ..common.grammar_types import mixed
 from .options import Option
 import pyparsing as pp
 from .conf_common import ConfCommon
-
+import itertools
 class ConfContainer(ConfCommon):
   """ Custom task section. Section created by user with no definition """
 
@@ -33,6 +33,9 @@ class ConfContainer(ConfCommon):
 
   def __iter__(self):
       yield from self._members.values()
+
+  def __dir__(self):
+      return itertools.chain(self._members.keys(), super().__dir__())
 
   def __contains__(self, name):
       return name in self._members
