@@ -22,6 +22,6 @@ done
 ADD=
 if [[ ! "$ANY" ]] ; then
 	cd $(dirname "$0")
-	ADD=sprkkr/*/test/test_*.py
+	ADD=ase2sprkkr/*/test/test_*.py
 fi
 $PYTHON -m $MODULE $@ $ADD
