@@ -14,11 +14,18 @@ class Occupation:
       if isinstance(dct, (int, str, AtomicType)):
          dct = {dct : 1.0}
       if hasattr(dct, 'items'):
-         iterator = dct.items() #dict 
+         iterator = dct.items() #dict
       else:
          iterator = dct
       self._occupation = { AtomicType.to_atomic_type(i): j for i,j in iterator }
       self._normalize()
+      self._update_atoms()
+
+  def __repr__(self):
+      return f"Occupation {self._occupation}"
+
+  def __str__(self):
+      return f"Occupation {self._occupation}"
 
   def _update_atoms(self):
       if self._site:
@@ -32,7 +39,7 @@ class Occupation:
           return name
       for i in self:
           if i.symbol == name: return i
-      raise KeyError("No {name} in occupation")
+      raise KeyError(f"No {name} in occupation")
 
   def __getitem__(self, name):
       name = self._find_key(name)
@@ -67,7 +74,7 @@ class Occupation:
       if value is None:
          value = 1. / (len(self) + 1.)
       self._normalize(1. - value)
-      self._occupation[AtomicType.to_atomic_type(i)] = value
+      self._occupation[AtomicType.to_atomic_type(name)] = value
       self._update_atoms()
 
   def __delitem__(self, name):
@@ -76,7 +83,7 @@ class Occupation:
       self._normalize()
 
   def _normalize(self, to=1., except_from=None):
-      """ 
+      """
       Normalizes occupation so the sum will be equal to value
 
       Parameters
