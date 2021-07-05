@@ -35,7 +35,7 @@ class AtomicType:
            if n_electrons != 0 and n_electrons != symbol:
               raise ValueError(f'Number of electrons in symbol ({symbol}) and n_electrons ({n_electrons})differs')
            self.n_electrons = symbol
-           self.symbol = null
+           self.symbol = None
         else:
            self.symbol = symbol
            self.n_electrons = n_electrons
