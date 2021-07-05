@@ -108,7 +108,9 @@ class BaseType:
     return grammar
 
   def missing_value(self):
-    """ The =value flag can be ommited in the confing file
+    """ Is the configuraion value a flag? I.e. can be =<value> ommited
+    in the configuration
+
     Return
     ------
     can_be_ommited : bool

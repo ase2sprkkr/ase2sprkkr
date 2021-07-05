@@ -2,7 +2,7 @@ import numpy as np
 from .atomic_types import AtomicType
 
 class Occupation:
-  """ Occupation of the atomic site, given by 
+  """ Occupation of the atomic site, given by
       AtomicSite : value
   """
 

@@ -1,3 +1,6 @@
+""" In this file the common containers of configuration values are,
+either for task or potential """
+
 from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
@@ -155,6 +158,7 @@ class BaseSection(ConfContainer):
 
 
 class Section(BaseSection):
+  """ A standard section of a task or potential (whose content is predefinded by SectionDefinition) """
 
   @property
   def definition(self):
@@ -179,6 +183,7 @@ class CustomSection(BaseSection):
 class RootConfContainer(ConfContainer):
 
   def save_to_file(self, file):
+      """ Save the configuration to a file in a format readable by SPR-KKR """
       if not hasattr(file, 'write'):
          with open(file, "w") as file:
            return self.save_to_file(file)
@@ -203,4 +208,5 @@ class RootConfContainer(ConfContainer):
       self.set(values)
 
   def find(self, name):
+      """ Find a configuration value of a given name in the owned sections """
       return self._find_value(name)

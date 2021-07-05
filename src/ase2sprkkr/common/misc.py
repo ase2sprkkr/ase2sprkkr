@@ -41,7 +41,8 @@ else:
    cache = functools.lru_cache(maxsize=None)
 
 def add_to_signature(func, add=set()):
-  """ Add the arguments in the <func> function to the list of arguments
+  """
+  Add the arguments in the <func> function to the list of arguments
   of the resulting function (as keyword_only arguments)
   The modified function has to have its arguments defined as
   in the following example:

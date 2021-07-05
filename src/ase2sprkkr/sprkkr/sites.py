@@ -4,10 +4,10 @@ from .occupations import Occupation
 
 class Site:
   """
-  Definition of the atomic site.
+  Definition of an atomic site.
   (By symmetry) equivalent sites should share the same definition.
   However, two same (by their atomic number) atoms in a spatially
-  different position (i.e. not by symmetry equal) should not share
+  different positions (i.e. not by symmetry equal) should not share
   the same property.
   """
 

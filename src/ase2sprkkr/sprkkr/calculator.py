@@ -7,10 +7,10 @@ specific spectroscopies understood by MsSpec.
 
 For more informations about SPR-KKR, follow this
 `link <http://olymp.cup.uni-muenchen.de/index.php?option=com_content&
-view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`__
+view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`
 
 """
-import os
+import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
 from .sprkkr_atoms import SprKkrAtoms
@@ -20,10 +20,14 @@ from ..common.misc import add_to_signature
 import shutil
 
 class SprKkr(Calculator):
-    implemented_properties = ['energy']
+    """
+    ASE calculator for SPR-KKR.
 
-    Task = Task
-    Potential = Potential
+    :cvar ase2sprkkr.task.tasks.Task Task: (just for an easier access to the class)
+    :cvar ase2sprkkr.potential.potentials.Potential Potential: (dto.)
+
+    """
+    implemented_properties = ['energy']
 
     def __init__(self, restart=None,
                  label=None, atoms=None, directory='.',
@@ -103,16 +107,26 @@ class SprKkr(Calculator):
         else:
            self.mpi = [ mpi ] if isinstance(mpi, str) else mpi
 
-        self.input_file = (self.label or '') + 'a_%t.inp' if input_file is True else input_file
+        self.input_file = (self.label or '') + '%a_%t.inp' if input_file is True else input_file
         self.output_file = output_file
         self.potential_file = potential_file
         self.task = Task.create_task(task)
 
-        """ For %c template in file names """
+        #For %c template in file names
         self._counter = 0
 
     @property
-    def potential(self):
+    def potential(self) -> Potential:
+       """ The potential associated with the calculator. It will be used in
+       calculate and save_input methods, if it is not explicitly overriden by
+       the potential argument.
+       By default, the potential is created from atoms object (if it is set).
+
+       Return
+       ------
+       potential: ase2sprkkr.potential.potentials.Potential
+
+       """
        if self._potential is None:
           if not self._atoms:
              return None
@@ -130,7 +144,13 @@ class SprKkr(Calculator):
            pot._atoms = self._atoms
 
     @property
-    def atoms(self):
+    def atoms(self) -> SprKkrAtoms:
+       """ Atoms object, associate with the calculator.
+
+       Return
+       ------
+       atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms
+       """
        if self._atoms is None:
           if not self._potential:
              return None
@@ -143,7 +163,8 @@ class SprKkr(Calculator):
        if self._potential:
           self._potential.atoms = at
 
-    def advance_counter(self):
+    def _advance_counter(self):
+        """ Advance counter for generating filenames with %c counter placeholder """
         self._counter+=1
         return self.counter
 
@@ -205,7 +226,7 @@ class SprKkr(Calculator):
                   create_subdirs=False,
                   options = {}, return_files=False):
         """
-        Save input for calculations
+        Save input (task) and potential files for a calculation.
 
         Paramters
         ---------
@@ -233,7 +254,6 @@ class SprKkr(Calculator):
             If False, the potential file is specified in the task.
             If None, create the potential according to the atoms and self.potential_file property.
             If str, then it is the filename of the potential, that is left unchanged on input
-                (however, it will be modified by SPRKKR itself)
 
         task_file: str or None
             Filename or template (see FilenameTemplator class) where to save the task file.
@@ -273,6 +293,7 @@ class SprKkr(Calculator):
 
         output_filename: str or file
             Output file. See return_files
+
         """
 
         def makepath(path, must_exist):
@@ -396,13 +417,18 @@ class SprKkr(Calculator):
                             'magmoms': np.zeros(len(atoms))}
         Parameters
         ----------
-        For other parameters, see save_input() method
 
         print_output: bool
             Print output to stdout, too.
 
         command_postfix: str or bool or None
-            If not None, override command_postifx specified when the calculator have been created.
+            If not None, it overrides the command_postifx, that have been specified when the
+            calculator have been created.
+
+
+
+        ---------
+        For other parameters, see save_input() method
         """
 
         super().calculate(atoms, system_changes)
@@ -433,6 +459,10 @@ class SprKkr(Calculator):
     def read(self):
         raise NotImplementedError
 
+#is there a better way to not document an inner classes?
+if os.path.basename(sys.argv[0]) != 'sphinx-build':
+    SprKkr.Task = Task
+    SprKkr.Potential = Potential
 
 
 class FilenameTemplator:
