@@ -444,20 +444,25 @@ class SprKkr(Calculator):
                                     command_postfix = command_postfix)
 
 
-    def phagen(self):
-         self.calculate(self.atoms, None, None)
+    def scf(self, *args, **kwargs):
+         """A shortcut for calculating a SCF task"""
+         self.calculate(task='SCF', *args, **kwargs)
 
-    def kkrgen(self):
-         self.calculate(self.atoms, None, None)
+    def phagen(self, *args, **kwargs):
+         """A shortcut for calculating a PHAGEN task"""
+         self.calculate(task='PHAGEN', *args, **kwargs)
 
-    def kkrspec(self):
-         self.calculate(self.atoms, None, None)
+    def kkrgen(self, *args, **kwargs):
+         """A shortcut for calculating a KKRGEN task"""
+         self.calculate(task='KKRGEN', *args, **kwargs)
 
-    def kkrchi(self):
-         self.calculate(self.atoms, None, None)
+    def kkrspec(self, *args, **kwargs):
+         """A shortcut for calculating a KKRSPEC task"""
+         self.calculate(task='KKRSPEC', *args, **kwargs)
 
-    def read(self):
-        raise NotImplementedError
+    def kkrch(self, *args, **kwargs):
+         """A shortcut for calculating a KKRCH task"""
+         self.calculate(task='KKRCH', *args, **kwargs)
 
 #is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != 'sphinx-build':
