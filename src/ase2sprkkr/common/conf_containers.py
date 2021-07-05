@@ -7,12 +7,17 @@ from .options import Option
 import pyparsing as pp
 from .conf_common import ConfCommon
 import itertools
+import re
+
 class ConfContainer(ConfCommon):
   """ Custom task section. Section created by user with no definition """
 
   def __init__(self, definition, container=None):
       super().__init__(definition, container)
       self._members = OrderedDict()
+      #to acces the member via container.member notation, the forbidden
+      #characters in the name are replaced by _
+      self._interactive_members = OrderedDict()
       for v in definition.members():
           self._add(v.create_object(self))
 
@@ -20,9 +25,12 @@ class ConfContainer(ConfCommon):
       return self._members
 
   def _get_member(self, name):
-      if not name in self._members:
+      if name in self._members:
+          out = self._members[name]
+      elif name in self._interactive_members:
+          out = self._interactive_members[name]
+      else:
           raise AttributeError(f'No {name} member of {self._definition}')
-      out = self._members[name]
       if out._definition.is_hidden:
           raise AttributeError(f'Member {name} of {self._definition} is not directly accessible')
       return out
@@ -38,7 +46,7 @@ class ConfContainer(ConfCommon):
       yield from self._members.values()
 
   def __dir__(self):
-      return itertools.chain(self._members.keys(), super().__dir__())
+      return itertools.chain(self._interactive_members.keys(), super().__dir__())
 
   def __contains__(self, name):
       return name in self._members
@@ -92,13 +100,19 @@ class ConfContainer(ConfCommon):
       if value is not None:
           self._members[name].set(value)
 
+
   def remove(self, name):
       cclass = getattr('custom_class', self._definition, False)
       if not cclass:
          raise TypeError("Can not remove items of {}".format(name))
       if not getattr(self._members[name], 'remove'):
          raise KeyError("No custom member with name {} to remove".format(name))
+      member = self._members[name]
       del self._members[name]
+      iname = self._interactive_member_name(name)
+      if iname in self._interactive_member_name and \
+          self._interactive_member_name[iname] == member:
+            del self._interactive_member_name[iname]
 
   def __iter__(self):
       yield from self._members.values()
@@ -119,8 +133,17 @@ class ConfContainer(ConfCommon):
           if out:
              return out
 
+  @staticmethod
+  def _interactive_member_name(name):
+      return re.sub(r'[ -]','_',name)
+
   def _add(self, member):
-      self._members[member.name] = member
+      name = member.name
+      self._members[name] = member
+      if not member._definition.is_hidden:
+          iname = self._interactive_member_name(name)
+          if not iname in self._interactive_members:
+              self._interactive_members[iname] = member
 
 
 class BaseSection(ConfContainer):
