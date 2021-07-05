@@ -46,4 +46,4 @@ echo "Building the wheel package"
 $PYTHON -m build
 
 echo "Installing the package"
-python -m pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+$PYTHON -m pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
