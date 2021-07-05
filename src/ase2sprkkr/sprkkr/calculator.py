@@ -316,18 +316,19 @@ class SprKkr(Calculator):
         templator = FilenameTemplator(self)
 
         """ Get the task file """
+        save_task = True
         if task:
            if isinstance(task, str):
               if Task.is_it_a_task_name(task):
                  task = task.create_task(task)
               else:
                  task_file = makepath(task, "'{path}' is not a task file nor a known name of task.")
-                 if options or potname:
-                    task = task.from_file(task_file)
-                 else:
-                    task = None
+                 task = task.from_file(task_file)
+                 if not options and not potname and not potential:
+                   save_task = False
         else:
            task = self.task or Task.default_task()
+        templator.task = task
 
         task_file = self._open_file(task_file or self.input_file, templator, False,
                                     allow_temporary=return_files,
@@ -342,7 +343,7 @@ class SprKkr(Calculator):
               potential = None
               potname = potential_file
         elif potential is not False:
-           potential = Potential.from_atoms(self.atoms)
+           potential = self.potential
         else:
            potname = potential_file = None
 
@@ -357,7 +358,7 @@ class SprKkr(Calculator):
            potname = potential_file.name
 
         """ update task by the potential """
-        if task:
+        if save_task:
           if options:
             task.set(options, unknown = 'find')
           if potname:
@@ -370,7 +371,6 @@ class SprKkr(Calculator):
         #This branch can occures only if the potential have been explicitly set to False,
         #which means not to create the potential (and take it from the task file)
         else:
-            task = task.from_file(task_file)
             potname = task.CONTROL.POTFIL
 
         if output_file is not False:
@@ -480,21 +480,22 @@ class FilenameTemplator:
     def __init__(self, calculator):
         self.data = {}
         self.calculator = calculator
+        self.task = None
 
     def _get(self, name, default, calculator):
         if not name in self.data:
-            self.data[name] = default(calculator)
+            self.data[name] = default(self, calculator)
         return self.data[name]
 
     replacements = {
-          "%d" : lambda calc: datetime.today().strftime('%Y-%m-%d_%H:%M'),
-          "%t" : lambda calc: calc.task.task_name if calc.task else 'sprkkr',
-          "%a" : lambda calc: str(calc.atoms.symbols) if calc.atoms else 'custom',
-          "%c" : lambda calc: calc.advance_counter()
+          "%d" : lambda self, calc: datetime.today().strftime('%Y-%m-%d_%H:%M'),
+          "%t" : lambda self, calc: self.task.task_name if self.task else 'SPRKKR',
+          "%a" : lambda self, calc: str(calc.atoms.symbols) if calc.atoms else 'custom',
+          "%c" : lambda self, calc: calc._advance_counter()
         }
 
     def __call__(self, template):
         for i,v in self.replacements.items():
           if i in template:
-             template.replace(i, self._get(i, v, self.calculator))
+             template = template.replace(i, self._get(i, v, self.calculator))
         return template
