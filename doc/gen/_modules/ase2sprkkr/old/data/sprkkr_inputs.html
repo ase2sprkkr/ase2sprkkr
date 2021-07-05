@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ase2sprkkr.old.data.sprkkr_inputs &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">src</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ase2sprkkr.old.data.sprkkr_inputs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ase2sprkkr.old.data.sprkkr_inputs</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+<span class="c1"># vim: set et ts=4 sw=4 nu fdm=indent cc=80:</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module sprkkr_inputs</span>
+<span class="sd">===============</span>
+
+<span class="sd">This function contains input templates for various tasks</span>
+<span class="sd">New template include into dict_inp_data.</span>
+<span class="sd">It returns list of strings which can be proceeded by</span>
+<span class="sd">load_parameters</span>
+<span class="sd">Please be carefull, each keyword in given section has to be</span>
+<span class="sd">on the new line</span>
+<span class="sd">.. code-block:: python</span>
+
+<span class="sd">    from sprkkr.data import sprkkr_inputs</span>
+<span class="sd">    task=&#39;scf&#39;</span>
+<span class="sd">    print(get_sprkkr_input(task))</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="n">dict_inp_data</span><span class="o">=</span><span class="p">{}</span>
+<span class="c1">########################################################</span>
+<span class="c1"># INPUT TEMPLATE SCF</span>
+<span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;SCF&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">CONTROL DATASET=case</span>
+<span class="s1">        ADSI=SCF</span>
+<span class="s1">        POTFIL=case.pot</span>
+<span class="s1">        KRWS=1</span>
+
+<span class="s1">TAU BZINT=POINTS</span>
+<span class="s1">    NKTAB=250</span>
+
+<span class="s1">ENERGY  GRID=</span><span class="si">{5}</span><span class="s1"></span>
+<span class="s1">      NE=</span><span class="si">{32}</span><span class="s1"></span>
+<span class="s1">      ImE=0.00</span>
+<span class="s1">      EMIN=-0.2</span>
+
+<span class="s1">SCF NITER=200</span>
+<span class="s1">    MIX=0.20000</span>
+<span class="s1">    VXC=VWN</span>
+<span class="s1">    EFGUESS=0.7</span>
+<span class="s1">    TOL=0.000010</span>
+<span class="s1">    ISTBRY=1</span>
+
+
+<span class="s1">SITES NL=</span><span class="si">{3}</span><span class="s1"></span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1">########################################################</span>
+<span class="c1"># INPUT TEMPLATE DOS</span>
+<span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;DOS&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">CONTROL DATASET=case</span>
+<span class="s1">        ADSI=DOS</span>
+<span class="s1">        POTFIL=case.pot_new</span>
+
+
+<span class="s1">TAU BZINT=POINTS</span>
+<span class="s1">    NKTAB=250</span>
+
+<span class="s1">ENERGY  GRID=</span><span class="si">{3}</span><span class="s1"></span>
+<span class="s1">      NE=</span><span class="si">{300}</span><span class="s1"></span>
+<span class="s1">      ImE=0.01</span>
+<span class="s1">      EMIN=-0.2</span>
+<span class="s1">      EMAX= 1.0</span>
+
+<span class="s1">TASK DOS</span>
+
+<span class="s1">SITES NL=</span><span class="si">{3}</span><span class="s1"></span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="c1">########################################################</span>
+<span class="c1"># INPUT TEMPLATE ARPES</span>
+<span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;ARPES&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">CONTROL  DATASET     = case</span>
+<span class="s1">         ADSI        = ARPES</span>
+<span class="s1">         POTFIL      = case.pot_new</span>
+<span class="s1">         PRINT = 0</span>
+
+<span class="s1">TAU      BZINT= POINTS</span>
+<span class="s1">         NKTAB= 250</span>
+
+<span class="s1">ENERGY   GRID=</span><span class="si">{1}</span><span class="s1"></span>
+<span class="s1">         NE=</span><span class="si">{300}</span><span class="s1"></span>
+<span class="s1">      ImE=0.0 Ry</span>
+<span class="s1">      EMINEV=-10.</span>
+<span class="s1">      EMAXEV=10.0</span>
+<span class="s1">      EWORK_EV=4.2</span>
+<span class="s1">      IMV_INI_EV=0.05</span>
+<span class="s1">      IMV_FIN_EV=5.</span>
+
+<span class="s1">SITES 	 NL=4</span>
+
+<span class="s1">TASK     ARPES</span>
+<span class="s1">         STRVER=0</span>
+<span class="s1">         IQ_AT_SURF=2</span>
+<span class="s1">         MILLER_HKL={0,0,1}</span>
+<span class="s1">         NTMP=1</span>
+<span class="s1">         TMPMIN=11.</span>
+<span class="s1">         CTMPMAX=11.</span>
+<span class="s1">         VIBRA CNVIBRA=14</span>
+
+<span class="s1">SPEC_PH THETA=45.</span>
+<span class="s1">         PHI=0.</span>
+<span class="s1">         POL_P=P</span>
+<span class="s1">         EPHOT= 6675.</span>
+
+<span class="s1">SPEC_STR N_LAYDBL={10,10}</span>
+<span class="s1">         NLAT_G_VEC=57</span>
+<span class="s1">         N_LAYER=120</span>
+<span class="s1">         SURF_BAR={0.25,0.25} #TRANSP_BAR</span>
+
+<span class="s1">SPEC_EL THETA={-10.,10.}</span>
+<span class="s1">         PHI={0.,0.}</span>
+<span class="s1">         NT=300</span>
+<span class="s1">         NP=1</span>
+<span class="s1">         POL_E=PZ</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1">########################################################</span>
+<span class="c1"># INPUT TEMPLATE SCF</span>
+<span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">CONTROL DATASET=case</span>
+<span class="s1">        ADSI=PHAGEN</span>
+<span class="s1">        POTFIL=case.pot_new</span>
+
+<span class="s1">TAU BZINT=POINTS</span>
+<span class="s1">    NKTAB=250</span>
+
+<span class="s1">ENERGY  GRID=</span><span class="si">{5}</span><span class="s1"></span>
+<span class="s1">      NE=</span><span class="si">{32}</span><span class="s1"></span>
+<span class="s1">      ImE=0.00</span>
+<span class="s1">      EMIN=-0.2</span>
+
+<span class="s1">SCF NITER=200</span>
+<span class="s1">    MIX=0.20000</span>
+<span class="s1">    VXC=VWN</span>
+<span class="s1">    EFGUESS=0.7</span>
+<span class="s1">    TOL=0.000010</span>
+<span class="s1">    ISTBRY=1</span>
+
+<span class="s1">TASK PHAGEN</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="c1">########################################################</span>
+<span class="c1">########################################################</span>
+<div class="viewcode-block" id="str2lines"><a class="viewcode-back" href="../../../../ase2sprkkr.old.data.sprkkr_inputs.html#ase2sprkkr.old.data.sprkkr_inputs.str2lines">[docs]</a><span class="k">def</span> <span class="nf">str2lines</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="n">li</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">li</span></div>
+
+<div class="viewcode-block" id="get_sprkkr_input"><a class="viewcode-back" href="../../../../ase2sprkkr.old.data.sprkkr_inputs.html#ase2sprkkr.old.data.sprkkr_inputs.get_sprkkr_input">[docs]</a><span class="k">def</span> <span class="nf">get_sprkkr_input</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+
+    <span class="n">lines</span><span class="o">=</span><span class="s1">&#39;None&#39;</span>
+
+    <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;ARPES&#39;</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">=</span><span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;ARPES&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;SCF&#39;</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">=</span><span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;SCF&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;DOS&#39;</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">=</span><span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;DOS&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">task</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;PHAGEN&#39;</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">=</span><span class="n">dict_inp_data</span><span class="p">[</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">=</span><span class="s1">&#39;None&#39;</span>
+    <span class="k">return</span>  <span class="n">str2lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

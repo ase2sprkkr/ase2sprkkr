@@ -1,0 +1,78 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" type="text/css" href="https://andremaha.github.io/md2html/css/foghorn.css"></link><body><h1>Introduction</h1>
+<p>This package is the Python interface for SPR-KKR package for electronic structure computation,
+build upon Atomic Simulation Environment (ASE) framework.</p>
+<p>See</p>
+<ul>
+<li>https://software.pan-data.eu/software/111/spr-kkr for documentation of the SPR-KRR and</li>
+<li>https://wiki.fysik.dtu.dk/ase/ for documentation of the ASE</li>
+</ul>
+<h1>Installation of the package</h1>
+<h2>Requirements</h2>
+<ul>
+<li>Python &gt;= 3.8</li>
+<li>SprKkr (not checked by the installer)</li>
+</ul>
+<p>Optional, to obtain and install the package</p>
+<ul>
+<li>Git (to obtain the sources)</li>
+<li>Pip (to install the package)</li>
+</ul>
+<h2>Obtaining the package</h2>
+<pre><code class="language-Bash">git clone github.com:ramntczcu/ase2sprkkr.git
+git checkout origin/release
+</code></pre>
+<p>The first line fetches the code of the package. The second one
+checks out the recommended production version of the code.</p>
+<p>If you want to obtain the current version of the (earlier-downloaded)
+code, run</p>
+<pre><code class="language-Bash">git fetch
+git checkout origin/release
+</code></pre>
+<h2>Using the package</h2>
+<p>You can either just add the src directory to your PYTHONPATH, or you
+can build and install the package, as it is described below.</p>
+<h2>Installation of the package</h2>
+<p>To install the package, you have to build the &quot;wheel package&quot; from
+the sources and install it</p>
+<h3>Building the wheel (installation) package</h3>
+<p>If you do not have the wheel package built, you can do it
+with the following steps.</p>
+<pre><code class="language-Bash">python3 -m pip install --upgrade build
+python3 -m build
+</code></pre>
+<p>The first line installs the tool to build the package
+(it is possible that you have it already installed).
+The second one builds the package.</p>
+<h3>Installing the package</h3>
+<p>To install the package (either system-wide or in an active
+virtual environment), you can run</p>
+<pre><code class="language-Bash">pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+</code></pre>
+<p>Note, that in some systems, the pip utility for python3 is called
+pip3. If it is not installed, you can install it using the system
+package manager, e.g. in Debian/Ubuntu</p>
+<pre><code class="language-Bash">apt install pip3
+</code></pre>
+<p>or</p>
+<pre><code class="language-Bash">zypper install pip
+</code></pre>
+<p>in OpenSUSE</p>
+<h2>One step install</h2>
+<p>To do all the stuff (after cloning the GIT repository) in one step,
+you can run</p>
+<pre><code class="language-Bash">make
+</code></pre>
+<p>To clean up the source directory after installing the package,
+you can run</p>
+<pre><code class="language-Bash">make clean
+</code></pre>
+<p>To regenerate the source code documentation, you can run</p>
+<pre><code class="language-Bash">make docs
+</code></pre>
+<p>Sphinx and python package md2html are needed for it.</p>
+<h2>Further documentation</h2>
+<p>Run</p>
+<pre><code>open doc/documentation.html
+</code></pre>
+<p>to open further documentation in the browser.</p>
+</body></head></html>

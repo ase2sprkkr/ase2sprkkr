@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ASE2SPRKKR - a short introduction &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ase2sprkkr package" href="auto/ase2sprkkr.html" />
+    <link rel="prev" title="Instalation of the pacakage" href="readme.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>ASE2SPRKKR - a short introduction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/documentation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <style>
+h1:first-of-type  { display:none }
+html body { margin: 0 }
+</style><div class="section" id="ase2sprkkr-a-short-introduction">
+<h1>ASE2SPRKKR - a short introduction<a class="headerlink" href="#ase2sprkkr-a-short-introduction" title="Permalink to this headline">¶</a></h1>
+<html>
+<head>
+<style>
+	body {
+		max-width: 50em;
+		text-align: justify;
+		margin: auto;
+
+	}
+	pre {
+	background: rgb(205,205,205);
+	padding-left: 1em;
+	margin-
+	}
+</style>
+</head>
+<body>
+<h1>ASE2SPRKKR</h1>
+		ASE2SPRKKR package is the interface to allow use of the <a href="https://www.ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr" target="_blank">SPR-KKR package</a> to electronic structure calculation within <a href="https://wiki.fysik.dtu.dk/ase/" target="_blank">Atomic Simulation Environment</a> (abbreviated as ASE) --- Python tool that integrates the various tools for electronic structure calculation.
+
+<h2>Installation</h2>
+Just run <pre>install.sh</pre> For more verbose documentation, please see <a href='README.md.html'>READ ME</a>
+
+You are encouraged to run the test after installation, using
+<pre>
+make test
+</pre>
+
+<h2>Usage</h2>
+The package allows us to define the problem to be computed using Python and ASE. The current version of the package is aimed primarily at defining the problem. The capabilities of obtaining the results and their postprocessing are still limited: it is assumed, that the user of the package is experienced with SPR-KKR package and is capable to analyze the resulting output of SPR-KKR.
+
+Bellow, you can see several basic examples of how to use the package.
+
+<h3>Computing a bulk material</h3>
+The basic usage of the package is to use ASE to define the computed structure and, using SPR-KKR calculator, run the calculation:
+<pre>
+from ase.build import bulk
+from ase2sprkkr.sprkkr.calculator import SprKkr
+
+atoms = bulk('Li')
+calculator = SprKkr(atoms=atoms)
+calculator.calculate()
+</pre>
+Calculation requires to have SPR-KKR in the PATH. In some cases, SPR-KKR is compiled with a version (and/or hostname) suffix. In this case, please
+define environmental variable <tt>SPRKKR_COMMAND_SUFFIX</tt>  if the SPR-KKR executable for SCF task has the name <tt>kkrscf8.6</tt>, please run
+(the example is for the bash shell):
+<pre>
+export SPRKKR_COMMAND_SUFFIX=8.6
+</pre>
+
+<h3>Defining the material properties</h3>
+Most of the properties of the material can be defined as is described in the <a href='https://wiki.fysik.dtu.dk/ase/' target='_blank'>ASE documentation.</a>
+However, ASE do not support occupation of the sites. To define it, you most promote the atoms object to the ASE2SPRKKR one. It is done automatically,
+if you pass the atoms object into the SprKkr calculator constructor, however, you can do it manually, if needed.
+<pre>
+from ase.build import bulk
+from ase2sprkkr.sprkkr.sprkkr_atoms import SprKkrAtoms
+atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+atoms = SprKkrAtoms.promote_ase_atoms(atoms)
+</pre>
+Promoted atoms have the sites attribute, which is an array of the sites in the primitive cell.
+If two sites are indistinguishable, they share the sites object --- this is computed automatically according to the symmetry of the structure (see the
+SprKkrAtoms.compute_sites_symmetry method).
+
+Sites object in the sites array holds all the SprKkr specific properties of the sites.
+You can change the occupation of a given site by calling the <tt>Site.occupation.set</tt> method:
+<pre>
+atoms.sites[3].occupation.set({'Cl':0.5, 'I' : 0.5 })
+</pre>
+Atomic type can be given both by a chemical symbol or atomic number. You can also just add an atomic type
+to the site:
+<pre>
+atoms.sites[3].occupation['Br'] = 0.2
+</pre>
+-- the occupations of the currently presented atomic types are lowered accordingly --- or just query
+the occupation of a given atomic type:
+<pre>
+atoms.sites[3].occupation['Br']
+</pre>
+
+<h3>Setting the task type and its options</h3>
+SPRKKR allows users to compute different tasks. The default task is SCF: to do a self-consistent
+cycle to compute the wavefunctions.
+You can either change the task and/or add or modify its options using arguments
+of the calculate function
+<pre>
+calculator.calculate(task='PHAGEN', options={'NE': 5})
+</pre>
+...or create the Task object, set its properties and pass it to the calculate function:
+<pre>
+from ase2sprkkr.task.tasks import Task
+task = Task.create('SCF')
+task.ENERGY.NE = 5
+task.TAU.NKTAB = 13
+calculator.calculate(task=task)
+</pre>
+Of course, during interactive work, you can use tab-completion to see the predefined sections and their members. You can also add your own custom (not-predefined) configuration options if there is a need.
+
+If you want to repeat a calculation, you can read the task from the file. In this case, it may be
+useful to use task own method calculate to avoid necessity to create the calculator.
+<pre>
+task = Task.from_file('a_task_file.inp')
+task.add('MY_CUSTOM_SECTION')
+task.MY_CUSTOM_SECTION.add('MY_CUSTOM_VALUE', 17)
+task.calculate()
+</pre>
+
+<h3>Working with potential file</h3>
+The most of the properties that determine the computed problem in SPR-KKR are given in potential file. The potential file is created from the atoms automatically by the calculator. However, it is possible to pass your own manually (or earlier) created
+potential file to the calculation:
+<pre>
+calculator.calculate(potential = 'my_potential_file')
+</pre>
+or to create the Potential object manually from ASE atoms object and to alter/check its properties before the computation
+<pre>
+from ase2sprkkr.potential.potentials import Potential
+potential = Potential.from_atoms(atoms)
+print(potential.GLOBAL_SYSTEM_PARAMETER.IREL())
+calculator.calculate(potential = potential)
+</pre>
+
+<h3>Generating input files</h3>
+If you just want to generate the input files (and not to run the calculation), you can
+use method <tt>calculator.save_input</tt>. It acceps, same as the method <tt>calculate</tt>, the
+arguments to specify the filenames of the task and potential (and, for the <tt>calculate</tt> method, output) file.
+<pre>
+calculator.calculate(input_file = ..., potential_file = ..., output_file = ....)
+</pre>
+If you pass <tt>None</tt> to any of the arguments above, the temp file will be used. String argument will be interpreted as filename where to store the input and output files. However, these strings are interpereted as templates, where the following placeholders can be used:
+<table border>
+	<tr><td>%d</td><td>Current date and time</td></tr>
+	<tr><td>%t</td><td>Task name (SCF, PHAGEN, ...)</td></tr>
+	<tr><td>%a</td><td>Chemical structure (e.g. CF4)</td></tr>
+	<tr><td>%c</td><td>Counter, starting from one, advanced each function call (that uses the counter)</td></tr>
+</table>
+
+
+<h3>Classes and functions documentation</h3>
+Plesae visit the link  <a href='./gen/index.html'>Documentation of classes and functions</a>. You can rebuild it using
+<pre>
+make docs
+</pre>
+Sphinx and md2html will be needed.
+
+</body>
+</html>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="auto/ase2sprkkr.html" class="btn btn-neutral float-right" title="ase2sprkkr package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="readme.html" class="btn btn-neutral float-left" title="Instalation of the pacakage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

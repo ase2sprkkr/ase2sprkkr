@@ -1,0 +1,29 @@
+ase2sprkkr package
+==================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.common
+   ase2sprkkr.potential
+   ase2sprkkr.sprkkr
+   ase2sprkkr.task
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.version
+
+Module contents
+---------------
+
+.. automodule:: ase2sprkkr
+   :members:
+   :undoc-members:
+   :show-inheritance:

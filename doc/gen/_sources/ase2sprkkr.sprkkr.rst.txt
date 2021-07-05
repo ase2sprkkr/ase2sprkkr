@@ -1,0 +1,24 @@
+ase2sprkkr.sprkkr package
+=========================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.sprkkr.atomic_types
+   ase2sprkkr.sprkkr.calculator
+   ase2sprkkr.sprkkr.occupations
+   ase2sprkkr.sprkkr.radial_meshes
+   ase2sprkkr.sprkkr.reference_systems
+   ase2sprkkr.sprkkr.sites
+   ase2sprkkr.sprkkr.sprkkr_atoms
+
+Module contents
+---------------
+
+.. automodule:: ase2sprkkr.sprkkr
+   :members:
+   :undoc-members:
+   :show-inheritance:

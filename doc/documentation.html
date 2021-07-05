@@ -1,0 +1,146 @@
+<html>
+<head>
+<style>
+	body {
+		max-width: 50em;
+		text-align: justify;
+		margin: auto;
+
+	}
+	pre {
+	background: rgb(205,205,205);
+	padding-left: 1em;
+	margin-
+	}
+</style>
+</head>
+<body>
+<h1>ASE2SPRKKR</h1>
+		ASE2SPRKKR package is the interface to allow use of the <a href="https://www.ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr" target="_blank">SPR-KKR package</a> to electronic structure calculation within <a href="https://wiki.fysik.dtu.dk/ase/" target="_blank">Atomic Simulation Environment</a> (abbreviated as ASE) --- Python tool that integrates the various tools for electronic structure calculation.
+
+<h2>Installation</h2>
+Just run <pre>install.sh</pre> For more verbose documentation, please see <a href='README.md.html'>READ ME</a>
+
+You are encouraged to run the test after installation, using
+<pre>
+make test
+</pre>
+
+<h2>Usage</h2>
+The package allows us to define the problem to be computed using Python and ASE. The current version of the package is aimed primarily at defining the problem. The capabilities of obtaining the results and their postprocessing are still limited: it is assumed, that the user of the package is experienced with SPR-KKR package and is capable to analyze the resulting output of SPR-KKR.
+
+Bellow, you can see several basic examples of how to use the package.
+
+<h3>Computing a bulk material</h3>
+The basic usage of the package is to use ASE to define the computed structure and, using SPR-KKR calculator, run the calculation:
+<pre>
+from ase.build import bulk
+from ase2sprkkr.sprkkr.calculator import SprKkr
+
+atoms = bulk('Li')
+calculator = SprKkr(atoms=atoms)
+calculator.calculate()
+</pre>
+Calculation requires to have SPR-KKR in the PATH. In some cases, SPR-KKR is compiled with a version (and/or hostname) suffix. In this case, please
+define environmental variable <tt>SPRKKR_COMMAND_SUFFIX</tt>  if the SPR-KKR executable for SCF task has the name <tt>kkrscf8.6</tt>, please run
+(the example is for the bash shell):
+<pre>
+export SPRKKR_COMMAND_SUFFIX=8.6
+</pre>
+
+<h3>Defining the material properties</h3>
+Most of the properties of the material can be defined as is described in the <a href='https://wiki.fysik.dtu.dk/ase/' target='_blank'>ASE documentation.</a>
+However, ASE do not support occupation of the sites. To define it, you most promote the atoms object to the ASE2SPRKKR one. It is done automatically,
+if you pass the atoms object into the SprKkr calculator constructor, however, you can do it manually, if needed.
+<pre>
+from ase.build import bulk
+from ase2sprkkr.sprkkr.sprkkr_atoms import SprKkrAtoms
+atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+atoms = SprKkrAtoms.promote_ase_atoms(atoms)
+</pre>
+Promoted atoms have the sites attribute, which is an array of the sites in the primitive cell.
+If two sites are indistinguishable, they share the sites object --- this is computed automatically according to the symmetry of the structure (see the
+SprKkrAtoms.compute_sites_symmetry method).
+
+Sites object in the sites array holds all the SprKkr specific properties of the sites.
+You can change the occupation of a given site by calling the <tt>Site.occupation.set</tt> method:
+<pre>
+atoms.sites[3].occupation.set({'Cl':0.5, 'I' : 0.5 })
+</pre>
+Atomic type can be given both by a chemical symbol or atomic number. You can also just add an atomic type
+to the site:
+<pre>
+atoms.sites[3].occupation['Br'] = 0.2
+</pre>
+-- the occupations of the currently presented atomic types are lowered accordingly --- or just query
+the occupation of a given atomic type:
+<pre>
+atoms.sites[3].occupation['Br']
+</pre>
+
+<h3>Setting the task type and its options</h3>
+SPRKKR allows users to compute different tasks. The default task is SCF: to do a self-consistent
+cycle to compute the wavefunctions.
+You can either change the task and/or add or modify its options using arguments
+of the calculate function
+<pre>
+calculator.calculate(task='PHAGEN', options={'NE': 5})
+</pre>
+...or create the Task object, set its properties and pass it to the calculate function:
+<pre>
+from ase2sprkkr.task.tasks import Task
+task = Task.create('SCF')
+task.ENERGY.NE = 5
+task.TAU.NKTAB = 13
+calculator.calculate(task=task)
+</pre>
+Of course, during interactive work, you can use tab-completion to see the predefined sections and their members. You can also add your own custom (not-predefined) configuration options if there is a need.
+
+If you want to repeat a calculation, you can read the task from the file. In this case, it may be
+useful to use task own method calculate to avoid necessity to create the calculator.
+<pre>
+task = Task.from_file('a_task_file.inp')
+task.add('MY_CUSTOM_SECTION')
+task.MY_CUSTOM_SECTION.add('MY_CUSTOM_VALUE', 17)
+task.calculate()
+</pre>
+
+<h3>Working with potential file</h3>
+The most of the properties that determine the computed problem in SPR-KKR are given in potential file. The potential file is created from the atoms automatically by the calculator. However, it is possible to pass your own manually (or earlier) created
+potential file to the calculation:
+<pre>
+calculator.calculate(potential = 'my_potential_file')
+</pre>
+or to create the Potential object manually from ASE atoms object and to alter/check its properties before the computation
+<pre>
+from ase2sprkkr.potential.potentials import Potential
+potential = Potential.from_atoms(atoms)
+print(potential.GLOBAL_SYSTEM_PARAMETER.IREL())
+calculator.calculate(potential = potential)
+</pre>
+
+<h3>Generating input files</h3>
+If you just want to generate the input files (and not to run the calculation), you can
+use method <tt>calculator.save_input</tt>. It acceps, same as the method <tt>calculate</tt>, the
+arguments to specify the filenames of the task and potential (and, for the <tt>calculate</tt> method, output) file.
+<pre>
+calculator.calculate(input_file = ..., potential_file = ..., output_file = ....)
+</pre>
+If you pass <tt>None</tt> to any of the arguments above, the temp file will be used. String argument will be interpreted as filename where to store the input and output files. However, these strings are interpereted as templates, where the following placeholders can be used:
+<table border>
+	<tr><td>%d</td><td>Current date and time</td></tr>
+	<tr><td>%t</td><td>Task name (SCF, PHAGEN, ...)</td></tr>
+	<tr><td>%a</td><td>Chemical structure (e.g. CF4)</td></tr>
+	<tr><td>%c</td><td>Counter, starting from one, advanced each function call (that uses the counter)</td></tr>
+</table>
+
+
+<h3>Classes and functions documentation</h3>
+Plesae visit the link  <a href='./gen/index.html'>Documentation of classes and functions</a>. You can rebuild it using
+<pre>
+make docs
+</pre>
+Sphinx and md2html will be needed.
+
+</body>
+</html>

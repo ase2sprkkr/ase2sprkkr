@@ -6,15 +6,15 @@ build upon Atomic Simulation Environment (ASE) framework.
 
 See
  - https://software.pan-data.eu/software/111/spr-kkr for documentation of the SPR-KRR and
- - https://wiki.fysik.dtu.dk/ase/
+ - https://wiki.fysik.dtu.dk/ase/ for documentation of the ASE
 
-Installation of the devel package
-=================================
+Installation of the package
+===========================
 
 Requirements
 ------------
-
 - Python >= 3.8
+- SprKkr (not checked by the installer)
 
 Optional, to obtain and install the package
 - Git (to obtain the sources)
@@ -44,8 +44,14 @@ Using the package
 You can either just add the src directory to your PYTHONPATH, or you
 can build and install the package, as it is described below.
 
-Building the wheel (instalation) package
-----------------------------------------
+
+Installation of the package
+---------------------------
+To install the package, you have to build the "wheel package" from
+the sources and install it
+
+### Building the wheel (installation) package
+
 If you do not have the wheel package built, you can do it
 with the following steps.
 
@@ -55,12 +61,12 @@ python3 -m build
 ```
 The first line installs the tool to build the package
 (it is possible that you have it already installed).
-The second one build the package
+The second one builds the package.
 
-Installation the package
-------------------------
-To install the package (either system-wide, or in an active
-virtual environment), run
+### Installing the package
+
+To install the package (either system-wide or in an active
+virtual environment), you can run
 ```Bash
 pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
 ```
@@ -77,7 +83,8 @@ zypper install pip
 in OpenSUSE
 
 One step install
-----------------
+-------------------
+
 To do all the stuff (after cloning the GIT repository) in one step,
 you can run
 ```Bash
@@ -89,3 +96,18 @@ you can run
 ```Bash
 make clean
 ```
+
+To regenerate the source code documentation, you can run
+```Bash
+make docs
+```
+Sphinx and python package md2html are needed for it.
+
+Further documentation
+---------------------
+Run
+```
+open doc/documentation.html
+```
+to open further documentation in the browser.
+

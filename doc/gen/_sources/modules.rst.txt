@@ -1,0 +1,9 @@
+src
+===
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr
+   setup
+   test

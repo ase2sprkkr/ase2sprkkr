@@ -1,0 +1,21 @@
+ase2sprkkr.task.test package
+============================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.task.test.init_tests
+   ase2sprkkr.task.test.test_definitions
+   ase2sprkkr.task.test.test_output
+   ase2sprkkr.task.test.test_tasks
+
+Module contents
+---------------
+
+.. automodule:: ase2sprkkr.task.test
+   :members:
+   :undoc-members:
+   :show-inheritance:
