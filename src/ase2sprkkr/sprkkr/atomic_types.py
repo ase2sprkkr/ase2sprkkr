@@ -46,6 +46,12 @@ class AtomicType:
         self.n_core = self.n_electrons - self.n_valence if n_core is None else n_core;
         self.n_semicore = self.n_electrons - self.n_core - self.n_valence  if n_semicore is None else n_semicore
 
+    def __repr__(self):
+        return f"({self.n_electrons})" if self.symbol == 'X' else self.symbol
+
+    def __str__(self):
+        return self.__repr__()
+
     def to_tuple(self):
         return (self.symbol, self.n_electrons, self.n_core, self.n_valence, self.n_semicore)
 
