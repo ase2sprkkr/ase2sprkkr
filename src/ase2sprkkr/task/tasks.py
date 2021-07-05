@@ -112,3 +112,8 @@ class Task(RootConfContainer):
           except Exception as e:
              last = e
       raise last
+
+  def calculate(self, *args, **kwargs):
+      """ Create a calculator and run the task. See SprKkr.calculate for the arguments """
+      calculator = SprKkr()
+      calculator.calculate(task = task, *args, **kwargs)
