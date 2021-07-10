@@ -110,4 +110,3 @@ Run
 open doc/documentation.html
 ```
 to open further documentation in the browser.
-
