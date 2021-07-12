@@ -182,8 +182,24 @@
 <span id="ase2sprkkr-task-outputs-kkrscf-process-output-reader-module"></span><h1>ase2sprkkr.task.outputs.kkrscf_process_output_reader module<a class="headerlink" href="#module-ase2sprkkr.task.outputs.kkrscf_process_output_reader" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.task.outputs.kkrscf_process_output_reader.</span></code><code class="sig-name descname"><span class="pre">ScfResult</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/outputs/kkrscf_process_output_reader.html#ScfResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.task.outputs.kkrscf_process_output_reader.</span></code><code class="sig-name descname"><span class="pre">ScfResult</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/outputs/kkrscf_process_output_reader.html#ScfResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ase2sprkkr.task.task_result.html#ase2sprkkr.task.task_result.TaskResult" title="ase2sprkkr.task.task_result.TaskResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.task.task_result.TaskResult</span></code></a></p>
+<dl class="py method">
+<dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.potential_filename">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">potential_filename</span></code><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.potential_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>New (output) potential file name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.potential">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">potential</span></code><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.potential" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.calculator">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">calculator</span></code><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.calculator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.energy">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">energy</span></code><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.energy" title="Permalink to this definition">¶</a></dt>
@@ -200,6 +216,11 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.last_iteration">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">last_iteration</span></code><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.last_iteration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.plot">
 <code class="sig-name descname"><span class="pre">plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['error',</span> <span class="pre">'ETOT']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'err'}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/outputs/kkrscf_process_output_reader.html#ScfResult.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.plot" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -208,7 +229,7 @@
 
 <dl class="py class">
 <dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.task.outputs.kkrscf_process_output_reader.</span></code><code class="sig-name descname"><span class="pre">KkrScfProcessOutputReader</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/outputs/kkrscf_process_output_reader.html#KkrScfProcessOutputReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.task.outputs.kkrscf_process_output_reader.</span></code><code class="sig-name descname"><span class="pre">KkrScfProcessOutputReader</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/outputs/kkrscf_process_output_reader.html#KkrScfProcessOutputReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ase2sprkkr.task.task_result.html#ase2sprkkr.task.task_result.TaskResultReader" title="ase2sprkkr.task.task_result.TaskResultReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.task.task_result.TaskResultReader</span></code></a></p>
 <dl class="py attribute">
 <dt id="ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader.atoms_conf_type">

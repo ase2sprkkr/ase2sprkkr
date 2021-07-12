@@ -173,6 +173,7 @@
 <span class="kn">from</span> <span class="nn">..potential.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">add_to_signature</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 
 <div class="viewcode-block" id="SprKkr"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr">[docs]</a><span class="k">class</span> <span class="nc">SprKkr</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -187,8 +188,8 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
                  <span class="n">input_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">print_output</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span>
+                 <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">command_postfix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -215,18 +216,20 @@
 <span class="sd">        potential_file: str or file or None</span>
 <span class="sd">          The template for the potential file name (see the input_file parameter).</span>
 
-<span class="sd">        print_output: bool</span>
-<span class="sd">          Write the output of runned executables to stdout (in addition to output file).</span>
-<span class="sd">          (Default value for are calculations)</span>
+<span class="sd">        print_output: bool or str</span>
+<span class="sd">          Write the output of runned executables to stdout (in addition to the output file)?</span>
+<span class="sd">          (Default value for the calculator)</span>
+<span class="sd">          If print_output = &#39;info&#39;, only a few info lines per iteration will be printed.</span>
 
 <span class="sd">        mpi: list or string or True</span>
 <span class="sd">          Runner for mpi to run mpi calculation. True means autodetect.</span>
 <span class="sd">          E.g. &#39;mpirun&#39;</span>
 
-<span class="sd">        potential: sprkkr.potential.Potential or str or None</span>
-<span class="sd">          Potential to be used.</span>
-<span class="sd">          If string is given, the potential will be read from the file.</span>
-<span class="sd">          The atoms will be created (or updated, if it is given) from this potential.</span>
+<span class="sd">        potential: sprkkr.potential.Potential or str or bool</span>
+<span class="sd">          The (default) potential to be used in calculations.</span>
+<span class="sd">          If a string is given, the potential will be read from the given filename.</span>
+<span class="sd">          True means to generate the potential from atoms.</span>
+<span class="sd">          False means that the potential will be given by the task.</span>
 
 <span class="sd">        command_postfix: str or boolean</span>
 <span class="sd">          String to be added to the runned command. In some environments, the version</span>
@@ -235,12 +238,12 @@
 <span class="sd">          False: do not append anything (the same as &#39;&#39;)</span>
 
 <span class="sd">        task: sprkkr.task.tasks.Task or str or None</span>
-<span class="sd">          Task to compute. Can be None, if no task is specified before calculate,</span>
+<span class="sd">          The (default) task to compute. Can be None, if no task is specified before calculate,</span>
 <span class="sd">          SCF task is created.</span>
-<span class="sd">          If str is given, it is interpreted as name of task (if no dot and no slash is contained</span>
-<span class="sd">          in it), or filename contained the task</span>
+<span class="sd">          If str is given, it is interpreted as a name of the task (if no dot and no slash</span>
+<span class="sd">          are contained in it), or as a filename contained the task</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">)</span>
            <span class="n">atoms</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">atoms</span>
@@ -256,16 +259,12 @@
                          <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
-
-        <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;mpirun&#39;</span> <span class="p">]</span> <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;mpirun&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="p">[]</span>
-        <span class="k">else</span><span class="p">:</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mpi</span> <span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">mpi</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;a_%t.inp&#39;</span> <span class="k">if</span> <span class="n">input_file</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">input_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">_%t.inp&#39;</span> <span class="k">if</span> <span class="n">input_file</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">input_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential_file</span> <span class="o">=</span> <span class="n">potential_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
 
         <span class="c1">#For %c template in file names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -291,7 +290,7 @@
     <span class="nd">@potential</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pot</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">pot</span>
-       <span class="k">if</span> <span class="n">pot</span><span class="p">:</span>
+       <span class="k">if</span> <span class="n">pot</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pot</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
          <span class="n">atoms</span> <span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">atoms</span>
          <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">atoms</span>
@@ -307,7 +306,7 @@
 <span class="sd">       atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms</span>
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">:</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">,</span> <span class="p">(</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
              <span class="k">return</span> <span class="kc">None</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span>
@@ -315,7 +314,7 @@
     <span class="nd">@atoms</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">at</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">at</span>
-       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="p">:</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">at</span>
 
 <div class="viewcode-block" id="SprKkr._advance_counter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr._advance_counter">[docs]</a>    <span class="k">def</span> <span class="nf">_advance_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -359,7 +358,7 @@
            <span class="n">f</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span> <span class="k">if</span> <span class="n">named</span> <span class="k">else</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span>
            <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-           <span class="k">return</span> <span class="n">tem</span>
+           <span class="k">return</span> <span class="n">filename</span>
 
         <span class="k">if</span> <span class="n">templator</span><span class="p">:</span>
            <span class="n">filename</span> <span class="o">=</span> <span class="n">templator</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -376,7 +375,7 @@
 
         <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SprKkr.save_input"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.save_input">[docs]</a>    <span class="k">def</span> <span class="nf">save_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">,</span>
+<div class="viewcode-block" id="SprKkr.save_input"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.save_input">[docs]</a>    <span class="k">def</span> <span class="nf">save_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">options</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">return_files</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -398,16 +397,10 @@
 <span class="sd">               Otherwise the task is interpreted as task file, which will be left unchanged.</span>
 <span class="sd">            The task is written into the location given by self.input_file.</span>
 
-<span class="sd">        system_changes: list of str</span>
-<span class="sd">            List of what has changed since last calculation.  Can be</span>
-<span class="sd">            any combination of these six: &#39;positions&#39;, &#39;numbers&#39;, &#39;cell&#39;,</span>
-<span class="sd">            &#39;pbc&#39;, &#39;initial_charges&#39; and &#39;initial_magmoms&#39;.</span>
-
-<span class="sd">            This calculator ignore properties and system_changes.</span>
-
 <span class="sd">        potential: sprkkr.potential.potentials.Potential or str or None or False</span>
-<span class="sd">            If False, the potential file is specified in the task.</span>
-<span class="sd">            If None, create the potential according to the atoms and self.potential_file property.</span>
+<span class="sd">            If it is None, the self.potential value is used instead (see the later options)</span>
+<span class="sd">            If False, the potential filename is specified in the task.</span>
+<span class="sd">            If True or None, create the potential according to the atoms and self.potential_file property.</span>
 <span class="sd">            If str, then it is the filename of the potential, that is left unchanged on input</span>
 
 <span class="sd">        task_file: str or None</span>
@@ -454,7 +447,7 @@
         <span class="k">def</span> <span class="nf">makepath</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">must_exist</span><span class="p">):</span>
            <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span><span class="p">:</span>
               <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_directory</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
-           <span class="k">if</span> <span class="n">must_exist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">task</span><span class="p">):</span>
+           <span class="k">if</span> <span class="n">must_exist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
               <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">must_exist</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
            <span class="k">return</span> <span class="n">path</span>
 
@@ -470,6 +463,10 @@
 
         <span class="n">templator</span> <span class="o">=</span> <span class="n">FilenameTemplator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+        <span class="sd">&quot;&quot;&quot; Resolve potential argument - whether is in fact given or not&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">potential</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span>
+
         <span class="sd">&quot;&quot;&quot; Get the task file &quot;&quot;&quot;</span>
         <span class="n">save_task</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">task</span><span class="p">:</span>
@@ -478,8 +475,8 @@
                  <span class="n">task</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
               <span class="k">else</span><span class="p">:</span>
                  <span class="n">task_file</span> <span class="o">=</span> <span class="n">makepath</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="s2">&quot;&#39;</span><span class="si">{path}</span><span class="s2">&#39; is not a task file nor a known name of task.&quot;</span><span class="p">)</span>
-                 <span class="n">task</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">task_file</span><span class="p">)</span>
-                 <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">potname</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">potential</span><span class="p">:</span>
+                 <span class="n">task</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">task_file</span><span class="p">)</span>
+                 <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">potential</span><span class="p">:</span>
                    <span class="n">save_task</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
            <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="ow">or</span> <span class="n">Task</span><span class="o">.</span><span class="n">default_task</span><span class="p">()</span>
@@ -487,46 +484,55 @@
 
         <span class="n">task_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_file</span><span class="p">(</span><span class="n">task_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="n">templator</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span>
                                     <span class="n">allow_temporary</span><span class="o">=</span><span class="n">return_files</span><span class="p">,</span>
-                                    <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span>
+                                    <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">,</span>
+                                    <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;w+&#39;</span> <span class="k">if</span> <span class="n">save_task</span> <span class="k">else</span> <span class="s1">&#39;r&#39;</span>
                                     <span class="p">)</span>
 
+        <span class="n">used_atoms</span> <span class="o">=</span> <span class="n">atoms</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span>
         <span class="sd">&quot;&quot;&quot; Get the potential file &quot;&quot;&quot;</span>
-        <span class="c1"># potential - potntial object</span>
+        <span class="c1"># potential_file - the file containing the potential (possibly a template)</span>
+        <span class="c1"># potential - potential object (to be updated by atoms) </span>
+        <span class="n">potential_file</span> <span class="o">=</span> <span class="n">potential_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_file</span>
         <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>
            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
               <span class="n">potential_file</span> <span class="o">=</span> <span class="n">makepath</span><span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="s2">&quot;&#39;</span><span class="si">{path}</span><span class="s2">&#39; is not a potential file&quot;</span><span class="p">)</span>
               <span class="n">potential</span> <span class="o">=</span> <span class="kc">None</span>
-              <span class="n">potname</span> <span class="o">=</span> <span class="n">potential_file</span>
-        <span class="k">elif</span> <span class="n">potential</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-           <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span>
+           <span class="k">elif</span> <span class="n">used_atoms</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">potential</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                  <span class="n">potential</span><span class="o">=</span><span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">used_atoms</span><span class="p">)</span>
+              <span class="k">elif</span> <span class="n">atoms</span><span class="p">:</span>
+                  <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You can not provide both potential and atoms object to the SprKkr calculate method&quot;</span><span class="p">)</span>
+           <span class="k">elif</span> <span class="n">potential</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+              <span class="n">potential</span> <span class="o">=</span> <span class="n">potential_file</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="n">potname</span> <span class="o">=</span> <span class="n">potential_file</span> <span class="o">=</span> <span class="kc">None</span>
+           <span class="n">potential_file</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>
-           <span class="n">pf</span> <span class="o">=</span> <span class="n">potential_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_file</span>
-           <span class="n">pf</span> <span class="o">=</span> <span class="n">from_task_name</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="s1">&#39;.pot&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">.pot&#39;</span><span class="p">)</span>
-           <span class="n">potential_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_file</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="n">templator</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
+           <span class="n">pf</span> <span class="o">=</span> <span class="n">from_task_name</span><span class="p">(</span><span class="n">potential_file</span><span class="p">,</span> <span class="s1">&#39;.pot&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%a</span><span class="s1">.pot&#39;</span><span class="p">)</span>
+           <span class="n">pf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_file</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="n">templator</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span>
                                             <span class="n">allow_temporary</span><span class="o">=</span><span class="n">return_files</span><span class="p">,</span>
                                             <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">)</span>
-           <span class="n">potential</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">potential_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
-           <span class="n">potential_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-           <span class="n">potname</span> <span class="o">=</span> <span class="n">potential_file</span><span class="o">.</span><span class="n">name</span>
+           <span class="n">potential</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="n">used_atoms</span><span class="p">)</span>
+           <span class="n">pf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+           <span class="n">potential_file</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">name</span>
 
         <span class="sd">&quot;&quot;&quot; update task by the potential &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">save_task</span><span class="p">:</span>
           <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
             <span class="n">task</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;find&#39;</span><span class="p">)</span>
-          <span class="k">if</span> <span class="n">potname</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">potential_file</span><span class="p">:</span>
             <span class="c1">#use the relative potential file name to avoid too-long-</span>
             <span class="c1">#-potential-file-name problem</span>
             <span class="n">dirr</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span> <span class="n">task_file</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span> <span class="k">if</span> <span class="n">task_file</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span>
-            <span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span> <span class="n">potname</span><span class="p">,</span> <span class="n">dirr</span> <span class="p">)</span>
-            <span class="n">task</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">task_file</span><span class="p">)</span>
-            <span class="n">task_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="c1">#This branch can occures only if the potential have been explicitly set to False,</span>
+            <span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span> <span class="n">potential_file</span><span class="p">,</span> <span class="n">dirr</span> <span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">potential_file</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span>
+          <span class="n">task</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">task_file</span><span class="p">)</span>
+          <span class="n">task_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1">#This branch can occur if the potential have been explicitly set to False,</span>
         <span class="c1">#which means not to create the potential (and take it from the task file)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">potname</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span>
+            <span class="n">potential_file</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span>
 
         <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
           <span class="sd">&quot;&quot;&quot; Get the output file &quot;&quot;&quot;</span>
@@ -537,7 +543,6 @@
                                             <span class="n">create_subdirs</span><span class="o">=</span><span class="n">create_subdirs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">return_files</span><span class="p">:</span>
-          <span class="n">task_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
           <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">:</span>
               <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="s1">&#39;close&#39;</span><span class="p">):</span>
                  <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -546,19 +551,85 @@
              <span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span><span class="o">.</span><span class="n">name</span>
 
         <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
-           <span class="k">return</span> <span class="n">task</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">potname</span><span class="p">,</span> <span class="n">output_file</span>
+           <span class="k">return</span> <span class="n">task</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">potential_file</span><span class="p">,</span> <span class="n">output_file</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="k">return</span> <span class="n">task</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">potname</span></div>
+           <span class="k">return</span> <span class="n">task</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">potential_file</span></div>
 
 
 
-<div class="viewcode-block" id="SprKkr.calculate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">,</span>
+<div class="viewcode-block" id="SprKkr.run"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span>
-                  <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">command_postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command_postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Do the calculation.</span>
+<span class="sd">        Do the calculation, return various results.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        print_output: bool or str or None</span>
+<span class="sd">            Print output to stdout, too.</span>
+<span class="sd">            If print_output==&#39;info&#39; only a few lines per iteration will be printed.</span>
+<span class="sd">            None means to use a default value (specified in constructor)</span>
+
+<span class="sd">        command_postfix: str or bool or None</span>
+<span class="sd">            If not None, it overrides the command_postifx, that have been specified when the</span>
+<span class="sd">            calculator have been created.</span>
+
+<span class="sd">        mpi: bool or None</span>
+<span class="sd">            Run the calculation using mpi? None means use the default value (specified in the</span>
+<span class="sd">            calculator&#39;s contructor)</span>
+
+<span class="sd">        ---------</span>
+<span class="sd">        For the other parameters, see the save_input() method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">print_output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">print_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span>
+
+        <span class="k">if</span> <span class="n">output_file</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+           <span class="n">output_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">task</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
+                            <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+                            <span class="n">return_files</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run_task_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">print_output</span> <span class="k">if</span> <span class="n">print_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span><span class="p">,</span>
+                                     <span class="n">command_postfix</span> <span class="o">=</span> <span class="n">command_postfix</span><span class="p">,</span>
+                                     <span class="n">mpi</span><span class="o">=</span><span class="n">mpi</span> <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span>
+                                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SprKkr.calculate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">,</span>
+                  <span class="n">task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">task_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                  <span class="n">options</span><span class="o">=</span><span class="p">{},</span>
+                  <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command_postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ASE-interface method for the calculation.  This method runs the appropriate task(s)</span>
+<span class="sd">        for the requested properties (currently always the SCF one) and updates the</span>
+<span class="sd">        calculator object with the results.</span>
+
+<span class="sd">        See</span>
+<span class="sd">        https://wiki.fysik.dtu.dk/ase/development/calculators.html#ase.calculators.calculator.Calculator.calculate</span>
+<span class="sd">        for the documentation of ASE interface.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        properties: list or str</span>
+<span class="sd">            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’ and ‘magmoms’.</span>
+
+<span class="sd">        system_changes: list of str</span>
+<span class="sd">            List of what has changed since last calculation.  Can be</span>
+<span class="sd">            any combination of these six: &#39;positions&#39;, &#39;numbers&#39;, &#39;cell&#39;,</span>
+<span class="sd">            &#39;pbc&#39;, &#39;initial_charges&#39; and &#39;initial_magmoms&#39;.</span>
+
+<span class="sd">            This calculator ignore properties and system_changes.</span>
+
+<span class="sd">        ---------</span>
+<span class="sd">        For the other parameters, see the run() and save_input() methods</span>
+
+<span class="sd">        ---------</span>
 
 <span class="sd">        From ASE documentation: Calculated properties should be</span>
 <span class="sd">        inserted into results dictionary like shown in this dummy example::</span>
@@ -570,33 +641,20 @@
 <span class="sd">                            &#39;charges&#39;: np.zeros(len(atoms)),</span>
 <span class="sd">                            &#39;magmom&#39;: 0.0,</span>
 <span class="sd">                            &#39;magmoms&#39;: np.zeros(len(atoms))}</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
 
-<span class="sd">        print_output: bool</span>
-<span class="sd">            Print output to stdout, too.</span>
-
-<span class="sd">        command_postfix: str or bool or None</span>
-<span class="sd">            If not None, it overrides the command_postifx, that have been specified when the</span>
-<span class="sd">            calculator have been created.</span>
-
-
-
-<span class="sd">        ---------</span>
-<span class="sd">        For other parameters, see save_input() method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">output_file</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
-           <span class="n">output_file</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="n">task</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="n">task</span><span class="p">,</span>
-                            <span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
-                            <span class="n">return_files</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">task</span><span class="o">.</span><span class="n">run_task_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">print_output</span><span class="p">,</span>
-                                    <span class="n">command_postfix</span> <span class="o">=</span> <span class="n">command_postfix</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                  <span class="n">atoms</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span>
+                  <span class="n">potential</span><span class="p">,</span> <span class="n">task_file</span><span class="p">,</span> <span class="n">potential_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span>
+                  <span class="n">create_subdirs</span><span class="p">,</span>
+                  <span class="n">options</span><span class="p">,</span>
+                  <span class="n">print_output</span><span class="p">,</span> <span class="n">command_postfix</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="n">mpi</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;energy&#39;</span> <span class="p">:</span> <span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="SprKkr.scf"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.scf">[docs]</a>    <span class="k">def</span> <span class="nf">scf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -617,7 +675,23 @@
 
 <div class="viewcode-block" id="SprKkr.kkrch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.kkrch">[docs]</a>    <span class="k">def</span> <span class="nf">kkrch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;A shortcut for calculating a KKRCH task&quot;&quot;&quot;</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;KKRCH&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+         <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="s1">&#39;KKRCH&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SprKkr.copy_with_potential"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SprKkr.copy_with_potential">[docs]</a>    <span class="k">def</span> <span class="nf">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return copy of self, with the potential variable set.</span>
+<span class="sd">            Use the method to create a new calculator with the given &quot;result potential&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">potential_object</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convert self.potential to a Potential object &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span></div>
 
 <span class="c1">#is there a better way to not document an inner classes?</span>
 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="s1">&#39;sphinx-build&#39;</span><span class="p">:</span>
@@ -639,20 +713,20 @@
 
 <div class="viewcode-block" id="FilenameTemplator._get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator._get">[docs]</a>    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span><span class="p">(</span><span class="n">calculator</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
     <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
-          <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">calc</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M&#39;</span><span class="p">),</span>
-          <span class="s2">&quot;%t&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">calc</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">task_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="k">else</span> <span class="s1">&#39;SPRKKR&#39;</span><span class="p">,</span>
-          <span class="s2">&quot;</span><span class="si">%a</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">calc</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span> <span class="k">if</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span> <span class="k">else</span> <span class="s1">&#39;custom&#39;</span><span class="p">,</span>
-          <span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">calc</span><span class="p">:</span> <span class="n">calc</span><span class="o">.</span><span class="n">_advance_counter</span><span class="p">()</span>
+          <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H:%M&#39;</span><span class="p">),</span>
+          <span class="s2">&quot;%t&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">task_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="k">else</span> <span class="s1">&#39;SPRKKR&#39;</span><span class="p">,</span>
+          <span class="s2">&quot;</span><span class="si">%a</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span> <span class="k">if</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span> <span class="k">else</span> <span class="s1">&#39;custom&#39;</span><span class="p">,</span>
+          <span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">:</span> <span class="n">calc</span><span class="o">.</span><span class="n">_advance_counter</span><span class="p">()</span>
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
           <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">template</span><span class="p">:</span>
-             <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="p">))</span>
+             <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">template</span></div>
 </pre></div>
 

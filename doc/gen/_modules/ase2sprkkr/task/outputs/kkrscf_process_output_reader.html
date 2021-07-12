@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -160,12 +162,39 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 <span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">TaskResultReader</span>
+<span class="kn">from</span> <span class="nn">...common.misc</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">...potential.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">...sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SprKkr</span>
 
-<div class="viewcode-block" id="ScfResult"><a class="viewcode-back" href="../../../../ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult">[docs]</a><span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult">[docs]</a><span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
 
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span> <span class="o">=</span> <span class="n">iterations</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">return_code</span><span class="p">)</span>
+
+  <span class="nd">@cached_property</span>
+  <span class="k">def</span> <span class="nf">potential_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; New (output) potential file name &quot;&quot;&quot;</span>
+      <span class="n">potfil</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">potfil</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set CONTROL.POTFIL of the task to read the potential&quot;</span><span class="p">)</span>
+      <span class="n">fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">POTFIL</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_new&#39;</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
+         <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">fname</span>
+
+  <span class="nd">@cached_property</span>
+  <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+
+  <span class="nd">@cached_property</span>
+  <span class="k">def</span> <span class="nf">calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span><span class="p">:</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span><span class="o">.</span><span class="n">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="n">SprKkr</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -175,7 +204,7 @@
   <span class="k">def</span> <span class="nf">converged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ScfResult.iteration_values"><a class="viewcode-back" href="../../../../ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.iteration_values">[docs]</a>  <span class="k">def</span> <span class="nf">iteration_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult.iteration_values"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.iteration_values">[docs]</a>  <span class="k">def</span> <span class="nf">iteration_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
          <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No such iteration value: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -184,8 +213,11 @@
               <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">),</span>
               <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span>
             <span class="p">)</span></div>
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">last_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ScfResult.plot"><a class="viewcode-back" href="../../../../ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.plot">[docs]</a>  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;ETOT&#39;</span><span class="p">],</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logscale</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;err&#39;</span><span class="p">]),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult.plot"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult.plot">[docs]</a>  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;ETOT&#39;</span><span class="p">],</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logscale</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;err&#39;</span><span class="p">]),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">pyplot</span>
 
       <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">what</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -210,7 +242,7 @@
       <span class="k">else</span><span class="p">:</span>
         <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
 
-<div class="viewcode-block" id="KkrScfProcessOutputReader"><a class="viewcode-back" href="../../../../ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader">[docs]</a><span class="k">class</span> <span class="nc">KkrScfProcessOutputReader</span><span class="p">(</span><span class="n">TaskResultReader</span><span class="p">):</span>
+<div class="viewcode-block" id="KkrScfProcessOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader">[docs]</a><span class="k">class</span> <span class="nc">KkrScfProcessOutputReader</span><span class="p">(</span><span class="n">TaskResultReader</span><span class="p">):</span>
 
   <span class="n">atoms_conf_type</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">,</span> <span class="p">[</span>
     <span class="n">VN</span><span class="p">(</span><span class="s1">&#39;IECURR&#39;</span><span class="p">,</span> <span class="n">integer</span><span class="p">),</span>
@@ -231,10 +263,10 @@
         <span class="s1">&#39;B_core&#39;</span> <span class="p">:</span> <span class="n">Real</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">))</span>
         <span class="p">},</span> <span class="n">free_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)),</span>
     <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E_band&#39;</span><span class="p">,</span> <span class="n">RealWithUnits</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;[Ry]&#39;</span> <span class="p">:</span> <span class="n">Rydberg</span> <span class="p">}),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;dipole moment&#39;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">)))</span>
+    <span class="n">V</span><span class="p">(</span><span class="s1">&#39;dipole moment&#39;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">)),</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
   <span class="p">])</span>
 
-<div class="viewcode-block" id="KkrScfProcessOutputReader.read_output"><a class="viewcode-back" href="../../../../ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
+<div class="viewcode-block" id="KkrScfProcessOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.task.outputs.kkrscf_process_output_reader.html#ase2sprkkr.task.outputs.kkrscf_process_output_reader.KkrScfProcessOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
 
         <span class="n">iterations</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -253,13 +285,19 @@
                <span class="k">raise</span> <span class="ne">EOFError</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">cond</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
               <span class="k">return</span> <span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
+          <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
           <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;SPRKKR-run for: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">iterations</span>
-            <span class="n">run</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;SPRKKR-run for:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">first</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
+               <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+               <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">run</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;SPRKKR-run for:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run</span>
 
             <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39; E=&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
@@ -279,13 +317,21 @@
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;iteration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;EF&#39;</span><span class="p">]</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
-            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">]</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">10</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">11</span><span class="p">])</span>
-
+            <span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;spin&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">10</span><span class="p">]),</span>
+                             <span class="s1">&#39;orbital&#39;</span> <span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">11</span><span class="p">])</span> <span class="p">}</span>
             <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="n">readline</span><span class="p">())</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ETOT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">Rydberg</span>
             <span class="n">out</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;converged&#39;</span>
             <span class="n">iterations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
+               <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;iteration&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2"> error </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;12e</span><span class="si">}</span><span class="s2"> &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;moment-spin: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">][</span><span class="s1">&#39;spin&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;13.6e</span><span class="si">}</span><span class="s2"> &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;moment-orbital: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">][</span><span class="s1">&#39;orbital&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;13.6e</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">iterations</span> <span class="ow">and</span> <span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The computation converged.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The computation not converged!!!&quot;</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span></div>

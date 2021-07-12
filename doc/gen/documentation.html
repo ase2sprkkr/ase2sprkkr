@@ -241,6 +241,26 @@ the occupation of a given atomic type:
 atoms.sites[3].occupation['Br']
 </pre>
 
+<h3>Reading the results</h3>
+Some of the results of the computation are returned by the calculate method (see e.g. ase2sprkkr.task.outputs.kkrscf_process_output_reader.ScfResult).
+
+<pre>
+out = calculator.calculate()
+print(f"Energy is {out.energy}")
+print(f"There were {len(out.iterations}")
+print(f"The convergence error is {out.iterations[-1]['error']}")
+print(f"The moments are {out.last_iteration['moment']}")
+</pre>
+For the SCF task, you can request the newly-created potential file, either by filename,
+or by a Potential object, from which you can read the other results in a text format
+(you are encouraged to contribute to ase2sprkkr to define the format of not-yet-implemented
+sections of potential).
+<pre>
+print(f"Potential has been saved to: {out.potential_filename})
+potential = out.potential
+print(potential.CHARGE())
+</pre>
+
 <h3>Setting the task type and its options</h3>
 SPRKKR allows users to compute different tasks. The default task is SCF: to do a self-consistent
 cycle to compute the wavefunctions.
@@ -268,7 +288,7 @@ task.MY_CUSTOM_SECTION.add('MY_CUSTOM_VALUE', 17)
 task.calculate()
 </pre>
 
-<h3>Working with potential file</h3>
+<h3>Working with potential files</h3>
 The most of the properties that determine the computed problem in SPR-KKR are given in potential file. The potential file is created from the atoms automatically by the calculator. However, it is possible to pass your own manually (or earlier) created
 potential file to the calculation:
 <pre>
@@ -297,9 +317,33 @@ If you pass <tt>None</tt> to any of the arguments above, the temp file will be u
 	<tr><td>%c</td><td>Counter, starting from one, advanced each function call (that uses the counter)</td></tr>
 </table>
 
+<h3>Running more subsequent tasks</h3>
+A common usecase is to run more subseuent tasks. You can do it e.g. in a following way:
+<pre>
+calculator = SprKkr(atoms=atoms)
+out = calculator.calculate(task='SCF')
+calculator.calculate(task='PHAGEN', potential_file=out.potential_filename)
+</pre>
+or just use the <tt>output.calculator</tt> property:
+<pre>
+out = calculator.calculate(task='SCF')
+out.calculator.calculate(task='PHAGEN')
+</pre>
 
-<h3>Classes and functions documentation</h3>
-Plesae visit the link  <a href='./gen/index.html'>Documentation of classes and functions</a>. You can rebuild it using
+<h3>A note about potentials and atoms and tasks</h3>
+<p>Using the calculator, one can (in various methods) specify either atoms object or/and potential, which can lead to the duplicity of the provided information to the calculator. Therefore, there is the following logic behind the scenes:</p><p>
+If the potential is not provided, it is created according to the atoms object (which in this case has to be supplied). If the potential is given by a filename, it is used "as is", while if it is given by an object (of a <tt>Potential</tt> class), this object is updated according to the atoms, if the latter is given. The special value False for the potential means to use the potential file specified by the task: in this case, the Task object or task file (with specified potential) has to be supplied (as the argument).
+</p>
+<p>The task can be given either by a filename (containing the "input file"), by a string (SCF, PHAGEN,...) or by object (of a class <tt>Task</tt>). If it is given by object, the input file is created. If it is given by filename, the file is readed and modified if a modification is required, i.e. if the potential filename should be written (i.e. the potential argument of <tt>save_input</tt>, <tt>run</tt> or <tt>calculate</tt> methods is not False, or the non-empty options argument is specified.</p>
+
+<p>Note, that:
+<ul><li>
+		If the potential is set to SprKkr Calculator (either by the <tt>potential</tt> property setter or in a constructor), the atoms object is created from the potential (and stored in the <tt>calculator.atoms</tt> property). However, this object does not reflect the changes made to the potential thereafter.
+		<li>After the computation of the SCF task, the result provide a new potential (in the <tt>result.potential</tt> property), the old one is not updated, nor the calculator potential property.
+</ul>
+
+<h2>Classes and functions documentation</h2>
+Please visit the link  <a href='./gen/index.html'>Documentation of classes and functions</a>. You can rebuild it using
 <pre>
 make docs
 </pre>
