@@ -532,6 +532,12 @@ class SprKkr(Calculator):
         return out
 
     @property
+    def potential_object(self):
+        """ Convert self.potential to a Potential object """
+        if isinstance(self.potential, str):
+          self.potential = Potential.from_file(self.potential)
+        return self.potential
+
 #is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != 'sphinx-build':
     SprKkr.Task = Task
