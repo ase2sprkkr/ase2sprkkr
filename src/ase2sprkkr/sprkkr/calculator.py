@@ -32,7 +32,7 @@ class SprKkr(Calculator):
     def __init__(self, restart=None,
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
-                 print_output=False,
+                 print_output='info',
                  mpi=True, task=None, potential=None,
                  command_postfix=True,
                  **kwargs):
@@ -60,9 +60,10 @@ class SprKkr(Calculator):
         potential_file: str or file or None
           The template for the potential file name (see the input_file parameter).
 
-        print_output: bool
-          Write the output of runned executables to stdout (in addition to output file).
-          (Default value for are calculations)
+        print_output: bool or str
+          Write the output of runned executables to stdout (in addition to the output file)?
+          (Default value for the calculator)
+          If print_output = 'info', only a few info lines per iteration will be printed.
 
         mpi: list or string or True
           Runner for mpi to run mpi calculation. True means autodetect.
@@ -111,6 +112,7 @@ class SprKkr(Calculator):
         self.output_file = output_file
         self.potential_file = potential_file
         self.task = Task.create_task(task)
+        self.print_output = print_output
 
         #For %c template in file names
         self._counter = 0
@@ -418,8 +420,10 @@ class SprKkr(Calculator):
         Parameters
         ----------
 
-        print_output: bool
+        print_output: bool or str or None
             Print output to stdout, too.
+            If print_output=='info' only a few lines per iteration will be printed.
+            None means to use a default value (specified in constructor)
 
         command_postfix: str or bool or None
             If not None, it overrides the command_postifx, that have been specified when the
@@ -440,8 +444,9 @@ class SprKkr(Calculator):
                             potential=potential, output_file=output_file, options=options,
                             return_files=True)
 
-        return task.run_task_process(self, task_file, output_file, print_output,
-                                    command_postfix = command_postfix)
+        return task.run_task_process(self, task_file, output_file, print_output if print_output is not None else self.print_output,
+                                     command_postfix = command_postfix,
+                                    )
 
 
     def scf(self, *args, **kwargs):

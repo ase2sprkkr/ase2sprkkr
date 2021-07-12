@@ -116,13 +116,19 @@ class KkrScfProcessOutputReader(TaskResultReader):
                raise EOFError()
             if cond(line):
               return line.decode('utf8')
+
         try:
+          first = True
           while True:
             out = {}
             line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
             if not line:
                 return iterations
-            run = line.replace('SPRKKR-run for:', '').strip()
+            line=line.strip()
+            if first and self.print_output == 'info':
+               print(line)
+               first = False
+            run = line.replace('SPRKKR-run for:', '')
             out['run'] = run
 
             line = await readlinecond(lambda line: b' E=' in line)
@@ -142,13 +148,21 @@ class KkrScfProcessOutputReader(TaskResultReader):
             out['iteration'] = int(items[0])
             out['error']=float(items[2])
             out['EF']=float(items[5])
-            out['M']= float(items[10]), float(items[11])
-
+            out['moment'] = {'spin' : float(items[10]),
+                             'orbital' : float(items[11]) }
             line = (await readline()).split()
             out['ETOT'] = float(line[1]) * Rydberg
             out['converged'] = line[5] == 'converged'
             iterations.append(out)
-            out = {}
+            if self.print_output == 'info':
+               print(f"Iteration {out['iteration']:>5} error {out['error']:>12e} "
+                     f"moment-spin: {out['moment']['spin']:>13.6e} "
+                     f"moment-orbital: {out['moment']['orbital']:>13.6e} ")
+          if self.print_output == 'info':
+            if iterations and iterations[-1]['converged']:
+                print("The computation converged.")
+            else:
+                print("The computation not converged!!!")
 
         except EOFError:
           raise Exception('The output ends unexpectedly')

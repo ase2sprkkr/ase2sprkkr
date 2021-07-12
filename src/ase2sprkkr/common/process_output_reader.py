@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 class BaseProcessOutputReader:
-  """ 
+  """
   Class, that run a process, optionally saves all the output of the process to the file
   and pass the stdout and stderr of the process to its two asyn routines, read_error
   and read_output
@@ -28,14 +28,14 @@ class BaseProcessOutputReader:
       def replace_feed_data(stream_reader):
           nonlocal exception
           if stream_reader._buffer:
-             if self.print_output:
+             if self.print_output is True:
                 print(stream_reader._buffer.decode('utf8'))
              self.outfile.write(stream_reader._buffer)
 
           def feed_data(data):
               nonlocal exception
               try:
-                if self.print_output:
+                if self.print_output is True:
                   print(data.decode('utf8'))
                 self.outfile.write(data)
               except Exception as e:
@@ -94,9 +94,10 @@ class BaseProcessOutputReader:
   async def read_output(self, stdout):
       raise NotImplemented('Please, redefine BaseProcess.read_output coroutine')
 
-  def read_from_file(self, output, error=None, return_code=0):
+  def read_from_file(self, output, error=None, return_code=0, print_output=False):
 
       loop = asyncio.get_event_loop()
+      self.print_output = print_output
 
       def out():
           air = AsyncioFileReader(output)
