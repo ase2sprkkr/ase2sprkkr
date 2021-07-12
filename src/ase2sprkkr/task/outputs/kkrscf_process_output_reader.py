@@ -78,7 +78,7 @@ class KkrScfProcessOutputReader(TaskResultReader):
         'B_core' : Real(default_value = float('NaN'))
         }, free_header=True, default_values=True)),
     V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
-    V('dipole moment', Sequence(int, Array(float, length=3)))
+    V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
   ])
 
   async def read_output(self, stdout):
