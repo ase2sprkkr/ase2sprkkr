@@ -33,7 +33,7 @@ class SprKkr(Calculator):
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
                  print_output='info',
-                 mpi=True, task=None, potential=None,
+                 mpi=True, task=None, potential=True,
                  command_postfix=True,
                  **kwargs):
         """
@@ -69,10 +69,11 @@ class SprKkr(Calculator):
           Runner for mpi to run mpi calculation. True means autodetect.
           E.g. 'mpirun'
 
-        potential: sprkkr.potential.Potential or str or None
-          Potential to be used.
-          If string is given, the potential will be read from the file.
-          The atoms will be created (or updated, if it is given) from this potential.
+        potential: sprkkr.potential.Potential or str or bool
+          The (default) potential to be used in calculations.
+          If a string is given, the potential will be read from the given filename.
+          True means to generate the potential from atoms.
+          False means that the potential will be given by the task.
 
         command_postfix: str or boolean
           String to be added to the runned command. In some environments, the version
@@ -81,12 +82,12 @@ class SprKkr(Calculator):
           False: do not append anything (the same as '')
 
         task: sprkkr.task.tasks.Task or str or None
-          Task to compute. Can be None, if no task is specified before calculate,
+          The (default) task to compute. Can be None, if no task is specified before calculate,
           SCF task is created.
-          If str is given, it is interpreted as name of task (if no dot and no slash is contained
-          in it), or filename contained the task
+          If str is given, it is interpreted as a name of the task (if no dot and no slash
+          are contained in it), or as a filename contained the task
         """
-        if potential:
+        if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
                potential = Potential.read_from_file(potential, atoms = atoms)
            atoms = potential.atoms
@@ -138,7 +139,7 @@ class SprKkr(Calculator):
     @potential.setter
     def potential(self, pot):
        self._potential = pot
-       if pot:
+       if pot and not isinstance(pot, (bool, str)):
          atoms = pot.atoms
          if atoms:
             self._atoms = atoms
@@ -154,7 +155,7 @@ class SprKkr(Calculator):
        atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms
        """
        if self._atoms is None:
-          if not self._potential:
+          if not self._potential or isinstance(self._potential, (bool, str)):
              return None
           self._atoms = self._potential.atoms
        return self._atoms
@@ -162,7 +163,7 @@ class SprKkr(Calculator):
     @atoms.setter
     def atoms(self, at):
        self._atoms = at
-       if self._potential:
+       if self._potential and not self._potential is True:
           self._potential.atoms = at
 
     def _advance_counter(self):
@@ -206,7 +207,7 @@ class SprKkr(Calculator):
            f = tempfile.NamedTemporaryFile if named else tempfile.TemporaryFile
            return f(mode = mode)
         if not isinstance(filename, str):
-           return tem
+           return filename
 
         if templator:
            filename = templator(filename)
@@ -253,8 +254,9 @@ class SprKkr(Calculator):
             This calculator ignore properties and system_changes.
 
         potential: sprkkr.potential.potentials.Potential or str or None or False
-            If False, the potential file is specified in the task.
-            If None, create the potential according to the atoms and self.potential_file property.
+            If it is None, the self.potential value is used instead (see the later options)
+            If False, the potential filename is specified in the task.
+            If True or None, create the potential according to the atoms and self.potential_file property.
             If str, then it is the filename of the potential, that is left unchanged on input
 
         task_file: str or None
@@ -301,7 +303,7 @@ class SprKkr(Calculator):
         def makepath(path, must_exist):
            if '/' not in path and self._directory:
               path = os.path.join(self._directory, path)
-           if must_exist and not os.path.isfile(task):
+           if must_exist and not os.path.isfile(path):
               raise ValueError(must_exist.format(path))
            return path
 
@@ -317,6 +319,10 @@ class SprKkr(Calculator):
 
         templator = FilenameTemplator(self)
 
+        """ Resolve potential argument - whether is in fact given or not"""
+        if potential is None:
+           potential = self.potential
+
         """ Get the task file """
         save_task = True
         if task:
@@ -325,8 +331,8 @@ class SprKkr(Calculator):
                  task = task.create_task(task)
               else:
                  task_file = makepath(task, "'{path}' is not a task file nor a known name of task.")
-                 task = task.from_file(task_file)
-                 if not options and not potname and not potential:
+                 task = Task.from_file(task_file)
+                 if not options and not potential:
                    save_task = False
         else:
            task = self.task or Task.default_task()
@@ -334,46 +340,55 @@ class SprKkr(Calculator):
 
         task_file = self._open_file(task_file or self.input_file, templator, False,
                                     allow_temporary=return_files,
-                                    create_subdirs=create_subdirs
+                                    create_subdirs=create_subdirs,
+                                    mode = 'w+' if save_task else 'r'
                                     )
 
+        used_atoms = atoms or self._atoms
         """ Get the potential file """
-        # potential - potntial object
+        # potential_file - the file containing the potential (possibly a template)
+        # potential - potential object (to be updated by atoms) 
+        potential_file = potential_file or self.potential_file
         if potential:
            if isinstance(potential, str):
               potential_file = makepath(potential, "'{path}' is not a potential file")
               potential = None
-              potname = potential_file
-        elif potential is not False:
-           potential = self.potential
+           elif used_atoms:
+              if potential is True:
+                  potential=Potential.from_atoms(used_atoms)
+              elif atoms:
+                  raise ValueError("You can not provide both potential and atoms object to the SprKkr calculate method")
+           elif potential is True:
+              potential = potential_file = None
         else:
-           potname = potential_file = None
+           potential_file = None
 
         if potential:
-           pf = potential_file or self.potential_file
-           pf = from_task_name(pf, '.pot', '%a.pot')
-           potential_file = self._open_file(pf, templator, True,
+           pf = from_task_name(potential_file, '.pot', '%a.pot')
+           pf = self._open_file(pf, templator, True,
                                             allow_temporary=return_files,
                                             create_subdirs=create_subdirs)
-           potential.save_to_file(potential_file, self.atoms)
-           potential_file.close()
-           potname = potential_file.name
+           potential.save_to_file(pf, used_atoms)
+           pf.close()
+           potential_file = pf.name
 
         """ update task by the potential """
         if save_task:
           if options:
             task.set(options, unknown = 'find')
-          if potname:
+          if potential_file:
             #use the relative potential file name to avoid too-long-
             #-potential-file-name problem
             dirr = os.path.dirname( task_file.name ) if task_file.name else self.directory
-            task.CONTROL.POTFIL = os.path.relpath( potname, dirr )
-            task.save_to_file(task_file)
-            task_file.seek(0)
-        #This branch can occures only if the potential have been explicitly set to False,
+            task.CONTROL.POTFIL = os.path.relpath( potential_file, dirr )
+          else:
+            potential_file = task.CONTROL.POTFIL
+          task.save_to_file(task_file)
+          task_file.seek(0)
+        #This branch can occur if the potential have been explicitly set to False,
         #which means not to create the potential (and take it from the task file)
         else:
-            potname = task.CONTROL.POTFIL
+            potential_file = task.CONTROL.POTFIL
 
         if output_file is not False:
           """ Get the output file """
@@ -384,7 +399,6 @@ class SprKkr(Calculator):
                                             create_subdirs=create_subdirs)
 
         if not return_files:
-          task_file.close()
           for f in task_file, output_file:
               if hasattr(f,'close'):
                  f.close()
@@ -393,9 +407,9 @@ class SprKkr(Calculator):
              output_file = output_file.name
 
         if output_file:
-           return task, task_file, potname, output_file
+           return task, task_file, potential_file, output_file
         else:
-           return task, task_file, potname
+           return task, task_file, potential_file
 
 
 
