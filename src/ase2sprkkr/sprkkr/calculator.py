@@ -103,12 +103,7 @@ class SprKkr(Calculator):
                          label=label, atoms=atoms, directory=directory)
         self.atoms = atoms
         self.potential = potential
-
-        if mpi is True:
-           self.mpi = [ 'mpirun' ] if shutil.which('mpirun') else []
-        else:
-           self.mpi = [ mpi ] if isinstance(mpi, str) else mpi
-
+        self.mpi = mpi
         self.input_file = (self.label or '') + '%a_%t.inp' if input_file is True else input_file
         self.output_file = output_file
         self.potential_file = potential_file
@@ -443,7 +438,9 @@ class SprKkr(Calculator):
             If not None, it overrides the command_postifx, that have been specified when the
             calculator have been created.
 
-
+        mpi: bool or None
+            Run the calculation using mpi? None means use the default value (specified in the
+            calculator's contructor)
 
         ---------
         For other parameters, see save_input() method
@@ -460,6 +457,7 @@ class SprKkr(Calculator):
 
         return task.run_task_process(self, task_file, output_file, print_output if print_output is not None else self.print_output,
                                      command_postfix = command_postfix,
+                                     mpi=mpi if mpi is not None else self.mpi
                                     )
 
 

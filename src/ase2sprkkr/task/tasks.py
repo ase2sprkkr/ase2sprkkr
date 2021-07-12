@@ -24,14 +24,29 @@ class Task(RootConfContainer):
   def task_name(self):
       return self._definition.name
 
-  def run_task_process(self, calculator, task_file, output_file, print_output=False, command_postfix=None):
+  _default_mpi_runner = None
+
+  @classmethod
+  def default_mpi_runner(cls):
+      """ Return the command to run mpi obtained by an autodetection """
+      if cls._default_mpi_runner is None:
+         cls._default_mpi_runner = [ 'mpirun' ] if shutil.which('mpirun') else []
+      return cls._default_mpi_runner
+
+  @classmethod
+  def mpi_runner(cls, mpi):
+        if mpi is True:
+           return cls.default_mpi_runner
+        return [ mpi ] if isinstance(mpi, str) else mpi
+
+  def run_task_process(self, calculator, task_file, output_file, print_output=False, command_postfix=None, mpi=None):
       d = self._definition
       command = d.command
       print_output = print_output if print_output is not None else calculator.print_output
       command_postfix = calculator.command_postfix if command_postfix is None else command_postfix
       command += resolve_command_postfix(calculator.command_postfix)
-      if d.mpi and calculator.mpi:
-           command = calculator.mpi + [ command + 'MPI' ]
+      if d.mpi and mpi:
+           command = self.mpi_runner(mpi) + [ command + 'MPI' ]
       else:
            command = [ command ]
       self.directory = calculator._directory
