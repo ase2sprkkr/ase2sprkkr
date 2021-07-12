@@ -7,12 +7,28 @@ import pyparsing as pp
 import numpy as np
 from ase.units import Rydberg
 from ..task_result import TaskResult, TaskResultReader
+from ...common.misc import cached_property
 
 class ScfResult(TaskResult):
 
   def __init__(self, task, iterations, error, return_code):
       self.iterations = iterations
       super().__init__(task, return_code)
+
+  @cached_property
+  def potential_filename(self):
+      """ New (output) potential file name """
+      potfil = self.task.CONTROL.POTFIL()
+      if not potfil:
+         raise ValueError("Please set CONTROL.POTFIL of the task to read the potential")
+      fname = self.task.CONTROL.POTFIL() + '_new'
+      if self.directory:
+         fname = os.path.join(self.directory, fname)
+      return fname
+
+  @cached_property
+  def potential(self):
+      return Potential.from_file(self.potential_filename)
 
   @property
   def energy(self):

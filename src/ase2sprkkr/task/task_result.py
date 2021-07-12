@@ -11,23 +11,13 @@ class TaskResult:
       self.return_code = return_code
 
   @cached_property
-  def potential(self):
-      potfil = self.task.CONTROL.POTFIL()
-      if not potfil:
-         raise ValueError("Please set CONTROL.POTFIL of the task to read the potential")
-      fname = self.task.CONTROL.POTFIL() + '_new'
-      if self.directory:
-         fname = os.path.join(self.directory, fname)
-      return Potential.from_file(fname)
-
-  @cached_property
   def atoms(self):
       return self.potential.atoms
 
 
 class TaskResultReader(BaseProcessOutputReader):
 
-  """ Process reader, that construct (a descendant of) TaskResult as a result. 
+  """ Process reader, that construct (a descendant of) TaskResult as a result.
       Subclasses should specify result_class class property.
   """
   @add_to_signature(BaseProcessOutputReader.__init__)
