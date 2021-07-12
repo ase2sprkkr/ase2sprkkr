@@ -50,7 +50,7 @@ class Task(RootConfContainer):
       else:
            command = [ command ]
       self.directory = calculator._directory
-      process = self.result_reader()
+      process = self.result_reader(calculator)
       try:
         return process.run(command, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
       except FileNotFoundError as e:
@@ -58,8 +58,8 @@ class Task(RootConfContainer):
                      e.strerror
         raise
 
-  def result_reader(self):
-      return self._definition.result_reader(self)
+  def result_reader(self, calculator=None):
+      return self._definition.result_reader(self, calculator)
 
   def read_output_from_file(self, filename, directory=None):
       self.directory = directory or os.path.dirname(filename)

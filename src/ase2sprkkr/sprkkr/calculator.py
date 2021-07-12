@@ -18,6 +18,7 @@ from ..task.tasks import Task
 from ..potential.potentials import Potential
 from ..common.misc import add_to_signature
 import shutil
+import copy
 
 class SprKkr(Calculator):
     """
@@ -481,6 +482,16 @@ class SprKkr(Calculator):
          """A shortcut for calculating a KKRCH task"""
          self.calculate(task='KKRCH', *args, **kwargs)
 
+    def copy_with_potential(self, potential):
+        """ Return copy of self, with the potential variable set.
+            Use the method to create a new calculator with the given "result potential"
+        """
+        out = copy.copy(self)
+        out.potential = potential
+        out.results = out.results.copy()
+        return out
+
+    @property
 #is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != 'sphinx-build':
     SprKkr.Task = Task

@@ -8,12 +8,16 @@ import numpy as np
 from ase.units import Rydberg
 from ..task_result import TaskResult, TaskResultReader
 from ...common.misc import cached_property
+from ...potential.potentials import Potential
+import os
+import copy
+from ...sprkkr.calculator import SprKkr
 
 class ScfResult(TaskResult):
 
-  def __init__(self, task, iterations, error, return_code):
+  def __init__(self, task, calculator, iterations, error, return_code):
       self.iterations = iterations
-      super().__init__(task, return_code)
+      super().__init__(task, calculator, return_code)
 
   @cached_property
   def potential_filename(self):
@@ -29,6 +33,13 @@ class ScfResult(TaskResult):
   @cached_property
   def potential(self):
       return Potential.from_file(self.potential_filename)
+
+  @cached_property
+  def calculator(self):
+      if self._calculator:
+         return self._calculator.copy_with_potential(self.potential_filename)
+      else:
+         SprKkr(potential = self.potential_filename)
 
   @property
   def energy(self):
@@ -47,6 +58,9 @@ class ScfResult(TaskResult):
               count = len(self.iterations),
               dtype = self.iterations[0][name].__class__
             )
+  @property
+  def last_iteration(self):
+      return self.iterations[-1]
 
   def plot(self, what=['error', 'ETOT'], filename=None, logscale = set(['err']), **kwargs):
       import matplotlib.pyplot as pyplot
