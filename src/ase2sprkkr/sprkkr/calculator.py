@@ -220,7 +220,7 @@ class SprKkr(Calculator):
 
         return open(filename, mode)
 
-    def save_input(self, atoms=None, task=None, system_changes=all_changes,
+    def save_input(self, atoms=None, task=None,
                   potential=None, task_file=None, potential_file=None, output_file=False,
                   create_subdirs=False,
                   options = {}, return_files=False):
@@ -241,13 +241,6 @@ class SprKkr(Calculator):
                and the task file created using it.
                Otherwise the task is interpreted as task file, which will be left unchanged.
             The task is written into the location given by self.input_file.
-
-        system_changes: list of str
-            List of what has changed since last calculation.  Can be
-            any combination of these six: 'positions', 'numbers', 'cell',
-            'pbc', 'initial_charges' and 'initial_magmoms'.
-
-            This calculator ignore properties and system_changes.
 
         potential: sprkkr.potential.potentials.Potential or str or None or False
             If it is None, the self.potential value is used instead (see the later options)
@@ -409,24 +402,14 @@ class SprKkr(Calculator):
 
 
 
-    def calculate(self, atoms=None, task=None, system_changes=all_changes,
+    def run(self, atoms=None, task=None,
                   potential=None, task_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
                   options={},
-                  print_output=False, command_postfix=None):
+                  print_output=None, command_postfix=None, mpi=None):
         """
-        Do the calculation.
+        Do the calculation, return various results.
 
-        From ASE documentation: Calculated properties should be
-        inserted into results dictionary like shown in this dummy example::
-
-            self.results = {'energy': 0.0,
-                            'forces': np.zeros((len(atoms), 3)),
-                            'stress': np.zeros(6),
-                            'dipole': np.zeros(3),
-                            'charges': np.zeros(len(atoms)),
-                            'magmom': 0.0,
-                            'magmoms': np.zeros(len(atoms))}
         Parameters
         ----------
 
@@ -444,10 +427,11 @@ class SprKkr(Calculator):
             calculator's contructor)
 
         ---------
-        For other parameters, see save_input() method
+        For the other parameters, see the save_input() method
         """
 
-        super().calculate(atoms, system_changes)
+        if print_output is None:
+           print_output = self.print_output
 
         if output_file==False:
            output_file = None
@@ -460,6 +444,62 @@ class SprKkr(Calculator):
                                      command_postfix = command_postfix,
                                      mpi=mpi if mpi is not None else self.mpi
                                     )
+
+    def calculate(self, atoms=None, properties=['energy'], system_changes=all_changes,
+                  task=None, potential=None, task_file=None, potential_file=None, output_file=None,
+                  create_subdirs=False,
+                  options={},
+                  print_output=None, command_postfix=None, mpi=None):
+        """
+        ASE-interface method for the calculation.  This method runs the appropriate task(s)
+        for the requested properties (currently always the SCF one) and updates the
+        calculator object with the results.
+
+        See
+        https://wiki.fysik.dtu.dk/ase/development/calculators.html#ase.calculators.calculator.Calculator.calculate
+        for the documentation of ASE interface.
+
+        Parameters
+        ----------
+        properties: list or str
+            List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’ and ‘magmoms’.
+
+        system_changes: list of str
+            List of what has changed since last calculation.  Can be
+            any combination of these six: 'positions', 'numbers', 'cell',
+            'pbc', 'initial_charges' and 'initial_magmoms'.
+
+            This calculator ignore properties and system_changes.
+
+        ---------
+        For the other parameters, see the run() and save_input() methods
+
+        ---------
+
+        From ASE documentation: Calculated properties should be
+        inserted into results dictionary like shown in this dummy example::
+
+            self.results = {'energy': 0.0,
+                            'forces': np.zeros((len(atoms), 3)),
+                            'stress': np.zeros(6),
+                            'dipole': np.zeros(3),
+                            'charges': np.zeros(len(atoms)),
+                            'magmom': 0.0,
+                            'magmoms': np.zeros(len(atoms))}
+
+        """
+        super().calculate(atoms, properties, system_changes)
+        out = self.run(
+                  atoms, task,
+                  potential, task_file, potential_file, output_file,
+                  create_subdirs,
+                  options,
+                  print_output, command_postfix, mpi=mpi
+        )
+        self.results.update({
+            'energy' : out.energy,
+        })
+        return out
 
 
     def scf(self, *args, **kwargs):
