@@ -64,3 +64,9 @@ class Site:
       an = self.atoms.get_atomic_numbers()
       an[ self.atoms.sites == self ] = self.occupation.primary_atomic_number()
       self.atoms.set_atomic_numbers(an)
+
+  def __str__(self):
+      return f"Site:{self.occupation}"
+
+  def __repr__(self):
+      return f"Site:{self.occupation}"
