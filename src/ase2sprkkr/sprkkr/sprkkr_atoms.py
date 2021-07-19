@@ -9,6 +9,7 @@ from ase.spacegroup import Spacegroup
 import numpy as np
 from ..sprkkr.sites import Site
 from ..common.misc import numpy_index
+from ..potential import potentials
 
 class SprKkrAtoms(Atoms):
    """ ASE Atoms object extended by the data necessary for SPR-KKR calculations """
@@ -178,5 +179,5 @@ class SprKkrAtoms(Atoms):
    @property
    def potential(self):
        if self._potential is None:
-          self._potential = Potential.from_atoms(self)
+          self._potential = potentials.Potential.from_atoms(self)
        return self._potential
