@@ -57,11 +57,11 @@ class Occupation:
 
   def primary_atomic_number(self):
       """ Return the chemical symbol of the atom.
-          If there are more atoms on the site, then return X. """
+          If there are more atoms on the site, return the "main one". """
       m = 0.
       an = 0
       for at,occ in self._occupation.items():
-          if occ > m:
+          if occ > m and at.atomic_number > 0:
              m = occ
              an = at.atomic_number
       return an

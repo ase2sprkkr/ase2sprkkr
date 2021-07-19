@@ -5,6 +5,8 @@ class AtomicType:
 
     @cached_property
     def mendeleev(self):
+        if self.n_electrons == 0:
+           raise Exception("Vaccuum (pseudo)atom is not in Mendeleev package database")
         if not AtomicType._mendeleev_module:
           try:
             import mendeleev
@@ -40,11 +42,15 @@ class AtomicType:
            self.symbol = symbol
            self.n_electrons = n_electrons
 
-        if not self.symbol: self.symbol = self.mendeleev.symbol
-        if not self.n_electrons: self.n_electrons = self.mendeleev.atomic_number
-        self.n_valence = self.mendeleev.nvalence() if n_valence is None else n_valence
-        self.n_core = self.n_electrons - self.n_valence if n_core is None else n_core;
-        self.n_semicore = self.n_electrons - self.n_core - self.n_valence  if n_semicore is None else n_semicore
+        if self.symbol == 'Vc' or self.n_electrons == 0:
+           self.symbol = 'Vc'
+           self.n_electrons = self.n_core = self.n_valence = self.n_semicore = 0
+        else:
+          if not self.symbol: self.symbol = self.mendeleev.symbol
+          if not self.n_electrons: self.n_electrons = self.mendeleev.atomic_number
+          self.n_valence = self.mendeleev.nvalence() if n_valence is None else n_valence
+          self.n_core = self.n_electrons - self.n_valence if n_core is None else n_core;
+          self.n_semicore = self.n_electrons - self.n_core - self.n_valence  if n_semicore is None else n_semicore
 
     def __repr__(self):
         return f"({self.n_electrons})" if self.symbol == 'X' else self.symbol
