@@ -1,4 +1,6 @@
 from ..common.misc import cached_property
+import copy
+
 class AtomicType:
 
     _mendeleev_module = None
@@ -15,7 +17,7 @@ class AtomicType:
           _mendeleev_module = mendeleev
         return _mendeleev_module.element(self.n_electrons or self.symbol)
 
-    def __init__(self, symbol, n_electrons=0, n_core=None, n_valence=None, n_semicore=None):
+    def __init__(self, symbol, n_electrons=None, n_core=None, n_valence=None, n_semicore=None):
         """
         Parameters
         ----------
@@ -34,7 +36,7 @@ class AtomicType:
         """
         self._mendeleev = None
         if isinstance(symbol, int):
-           if n_electrons != 0 and n_electrons != symbol:
+           if n_electrons is not None and n_electrons != symbol:
               raise ValueError(f'Number of electrons in symbol ({symbol}) and n_electrons ({n_electrons})differs')
            self.n_electrons = symbol
            self.symbol = None
@@ -51,6 +53,9 @@ class AtomicType:
           self.n_valence = self.mendeleev.nvalence() if n_valence is None else n_valence
           self.n_core = self.n_electrons - self.n_valence if n_core is None else n_core;
           self.n_semicore = self.n_electrons - self.n_core - self.n_valence  if n_semicore is None else n_semicore
+
+    def copy(self):
+        return copy.copy(self)
 
     def __repr__(self):
         return f"({self.n_electrons})" if self.symbol == 'X' else self.symbol

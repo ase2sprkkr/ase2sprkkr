@@ -10,6 +10,9 @@ class Occupation:
       self._site = site
       self.set(dct)
 
+  def copy(self):
+      return Occupation({ a.copy(): v for a,v in self._occupation.items() })
+
   def set(self, dct):
       if isinstance(dct, (int, str, AtomicType)):
          dct = {dct : 1.0}
@@ -55,16 +58,32 @@ class Occupation:
           return
       self._update_atoms()
 
-  def primary_atomic_number(self):
-      """ Return the chemical symbol of the atom.
-          If there are more atoms on the site, return the "main one". """
+  @property
+  def primary_atomic_type(self):
+      """ Return the atomic type.
+          If there are more atoms on the site, return the one
+          with the largest occupation """
       m = 0.
-      an = 0
+      prim = None
       for at,occ in self._occupation.items():
           if occ > m and at.atomic_number > 0:
              m = occ
-             an = at.atomic_number
-      return an
+             prim = at
+      return prim
+
+  @property
+  def primary_atomic_number(self):
+      """ Return the atomic number of the atom at the site.
+          If there are more atoms on the site, return the "main one". """
+      primary = self.primary_atomic_type
+      return primary.atomic_number if primary else 0
+
+  @property
+  def primary_symbol(self):
+      """ Return the chemical symbol of the atom at the site.
+          If there are more atoms on the site, return the "main one". """
+      primary = self.primary_atomic_type
+      return primary.symbol if primary else 'X'
 
   def __len__(self):
       return len(self._occupation)
@@ -105,11 +124,24 @@ class Occupation:
             self._occupation[i] *= ratio
 
   @property
+  def as_dict(self):
+      occ = {}
+      for at in self:
+         if at.atomic_number == 0:
+            continue
+         occ[at.symbol] = occ.get(at.symbol, 0) + self[at]
+      return occ
+
+  @as_dict.setter
+  def as_dict(self, x):
+      self.set(x)
+
+  @property
   def total_occupation(self):
       return sum(self._occupation.values())
 
   @staticmethod
-  def to_occupation(self, occupation):
+  def to_occupation(occupation):
       if not isinstance(occupation, Occupation):
          occupation = Occupation(occupation)
       return occupation
@@ -120,14 +152,6 @@ class Occupation:
 
   def to_tuple(self):
       return zip(self.keys(), self.values())
-
-  @classmethod
-  def to_occupation(cls, occupation):
-      if isinstance(occupation, (int, str)):
-        occupation = AtomicType(occupation)
-      if isinstance(occupation, AtomicType):
-        occupation = cls({ occupation : 1. })
-      return occupation
 
   def atomic_types(self):
       return self._occupation.keys()

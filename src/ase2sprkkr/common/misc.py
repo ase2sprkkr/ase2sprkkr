@@ -124,7 +124,7 @@ class OrderedDict(_OrderedDict):
 
 @njit
 def numpy_index(array, item):
-    """ Returns index of the first occurence of item in the list
+    """ Returns index of the first occurence of the item in the array
     If numba is installed, the function is accelerated.
     """
     for idx, val in np.ndenumerate(array):

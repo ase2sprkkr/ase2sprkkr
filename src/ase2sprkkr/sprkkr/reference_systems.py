@@ -1,3 +1,5 @@
+import copy
+
 class ReferenceSystem:
   """
   #TODO - doc
@@ -13,3 +15,6 @@ class ReferenceSystem:
   @staticmethod
   def default():
       return ReferenceSystem(4.0,0.0)
+
+  def copy(self):
+      return copy.copy(self)

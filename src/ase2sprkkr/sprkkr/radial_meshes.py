@@ -1,3 +1,5 @@
+import copy
+
 class Mesh:
   @staticmethod
   def default():
@@ -5,8 +7,8 @@ class Mesh:
       return ExponentialMesh(1e-6,2e-2,0,0.,721, 0.)
 
 class ExponentialMesh(Mesh):
-  """ 
-  Radial mesh definition for an atomic site 
+  """
+  Radial mesh definition for an atomic site
   """
 
   def __init__(self, r1, dx, jrmt, rmt, jrws, rws):
@@ -20,7 +22,7 @@ class ExponentialMesh(Mesh):
         Multiplier: r_n = r_{n-1} * dx
 
       jrmt: int
-        
+
       rmt: float
 
       jrws: int
@@ -36,3 +38,6 @@ class ExponentialMesh(Mesh):
 
   def to_tuple(self):
       return (self.r1, self.dx, self.jrmt, self.rmt, self.jrws, self.rws)
+
+  def copy(self):
+      copy.copy(self)

@@ -55,7 +55,7 @@ class SprKkrAtoms(Atoms):
                              atomic_numbers),
                              symprec=symprec)
        if sg is None:
-          raise RuntimeError('Spacegroup not found')
+           return None
        sg_no = int(sg[sg.find('(') + 1:sg.find(')')])
        spacegroup = Spacegroup(sg_no)
        return spacegroup
@@ -89,45 +89,94 @@ class SprKkrAtoms(Atoms):
               A threshold for spatial error for symmetry computing. See spglib.get_spacegroup
         """
         if not spacegroup:
-          mapping = UniqueValuesMapping(self.get_atomic_numbers())
-          if consider_old and self._unique_sites:
-            mapping = mapping.merge(self._unique_sites)
           if atomic_numbers:
             mapping = UniqueValuesMapping(atomic_numbers)
-
+          else:
+            mapping = UniqueValuesMapping(self.get_atomic_numbers())
+            if consider_old and self._unique_sites:
+              mapping = mapping.merge(self._unique_sites)
           spacegroup = self.compute_spacegroup_for_atomic_numbers(mapping.mapping, symprec=symprec)
 
         self.info['spacegroup'] = spacegroup
 
-        tags = spacegroup.tag_sites(self.get_scaled_positions())
-        sites = np.empty(len(tags), dtype=object)
+        occupation = self.info.get('occupancy', {})
+        if spacegroup:
+            tags = spacegroup.tag_sites(self.get_scaled_positions())
+            sites = np.empty(len(tags), dtype=object)
 
-        uniq, umap = np.unique(tags, return_inverse = True)
-        for i in range(len(uniq)):
-             index = umap == i
-             if self._unique_sites is not None:
-                #first non-none of the given index
-                unique = next(filter(None, self._unique_sites[index]), None)
-             else:
-                unique = None
-             sites[index] = unique or Site(self, self.symbols[ numpy_index(umap,i)])
+            uniq, umap = np.unique(tags, return_inverse = True)
+            used = set()
+            for i in range(len(uniq)):
+                 index = umap == i
+                 if self._unique_sites is not None:
+                    #first non-none of the given index
+                    possible =  (i for i in self._unique_sites[index])
+                    site = next(filter(None, possible), None)
+                    if site in used:
+                       site = site.copy()
+                    else:
+                       used.add(site)
+                 else:
+                    site = None
+                 if not site:
+                    symbol = self.symbols[ numpy_index(umap,i)]
+                    for ai in np.where(index)[0]:
+                        if ai in occupation and occupation[ai]:
+                           symbol = occupation[ai]
+                    site = Site(self, symbol)
+                 sites[index] = site
+
+        else:
+            sites = np.empty(len(self), dtype=object)
+            used = set()
+            for i in range(len(self)):
+                if self._unique_sites is not None:
+                    site=self._unique_sites[i]
+                    if site in used:
+                       site = site.copy()
+                    else:
+                       used.add(site)
+                else:
+                    symbol = occupation[i] if i in occupation and occupation[i] else \
+                             self.symbols[i]
+                    site = Site(self, symbol)
+                sites[i] = site
+
         self.sites = sites
 
    @property
    def sites(self):
+       """ The sites property holds all the information for the SPR-KKR package:
+           atomic types (including number of semicore and valence electrons),
+           occupancy, symmetries, meshes...
+           Some of the properties are stored in the ASE atoms properties
+           (e.g. occupancy, atomic symbol), however, ASE is not able to hold them
+           all and/or to describe fully the SPR-KKR options; thus, these properties
+           are hold in this array.
+
+           The changes made on this array are reflected (as is possible)
+           to the ASE properties, but the opposite does not hold - to reflect the changes
+           in these properties please create a new Atoms object with given properties.
+       """
        if self._unique_sites is None:
           self.compute_sites_symmetry()
        return self._unique_sites
 
    @sites.setter
    def sites(self, v):
+       """ Set the sites property and update all other dependent
+       properties (symbols, occupancy) according to the sites """
        an = np.zeros(len(v), dtype= int)
+       occ = {}
        for i,j in enumerate(v):
-           an[i] = j.occupation.primary_atomic_number()
+           occ[i] = j.occupation.as_dict
+           an[i] = j.occupation.primary_atomic_number
        self.set_atomic_numbers(an)
+       self.info['occupancy'] = occ
        self._unique_sites = v
 
    @property
    def potential(self):
        if self._potential is None:
-          self._potential
+          self._potential = Potential.from_atoms(self)
+       return self._potential
