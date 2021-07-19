@@ -71,7 +71,7 @@ def fce():
     V('KMROT', int, 0),
     V('QMVEC', Array([0.,0.,0.])),
     V('DATA', Table({'MTET_Q' : float, 'MPHI_Q' : float }, numbering='IQ', free_header = True)),
-    V('IT_DATA', Table({'MTET_Q' : float, 'MPHI_T' : float, 'MGAM_T': float}, numbering='IT', free_header = lambda x: '*' not in x),
+    V('IT_DATA', Table({'IT': int, 'MTET_Q' : float, 'MPHI_T' : float, 'MGAM_T': float}, free_header = lambda x: '*' not in x),
       is_optional=True),
     ],
     cls = ArraySection('magnetisation_direction')
