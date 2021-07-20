@@ -179,6 +179,19 @@ If the potential is not provided, it is created according to the atoms object (w
 		<li>After the computation of the SCF task, the result provide a new potential (in the <tt>result.potential</tt> property), the old one is not updated, nor the calculator potential property.
 </ul>
 
+<h3>Bundled tools</h3>
+In <tt>tools</tt> subdirectory of the package, there is a tool visualise_in_struct for visualisation
+of the surfaces computed by the SPR-KKR package. To view a surface, you can run
+<pre>
+python visualise_in_struct.py -i in_structure.inp -p potential.pot
+<pre>
+where <tt>potential.pot</tt> is a potential file and <tt>in_structure.inp</tt> is a file containing the
+structure of the surface. Run
+<pre>
+python visualise_in_struct.py --help
+</pre>
+for further option of this tool.
+
 <h2>Classes and functions documentation</h2>
 Please visit the link  <a href='./gen/index.html'>Documentation of classes and functions</a>. You can rebuild it using
 <pre>
