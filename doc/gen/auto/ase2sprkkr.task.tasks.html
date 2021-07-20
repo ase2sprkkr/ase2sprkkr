@@ -179,8 +179,8 @@
   <div class="section" id="module-ase2sprkkr.task.tasks">
 <span id="ase2sprkkr-task-tasks-module"></span><h1>ase2sprkkr.task.tasks module<a class="headerlink" href="#module-ase2sprkkr.task.tasks" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="ase2sprkkr.task.tasks.resolve_command_postfix">
-<code class="sig-prename descclassname"><span class="pre">ase2sprkkr.task.tasks.</span></code><code class="sig-name descname"><span class="pre">resolve_command_postfix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">postfix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/tasks.html#resolve_command_postfix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.tasks.resolve_command_postfix" title="Permalink to this definition">¶</a></dt>
+<dt id="ase2sprkkr.task.tasks.resolve_executable_postfix">
+<code class="sig-prename descclassname"><span class="pre">ase2sprkkr.task.tasks.</span></code><code class="sig-name descname"><span class="pre">resolve_executable_postfix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">postfix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/tasks.html#resolve_executable_postfix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.tasks.resolve_executable_postfix" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
@@ -200,7 +200,7 @@
 <dl class="py method">
 <dt id="ase2sprkkr.task.tasks.Task.default_mpi_runner">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">default_mpi_runner</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/tasks.html#Task.default_mpi_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.tasks.Task.default_mpi_runner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the command to run mpi obtained by an autodetection</p>
+<dd><p>Return the executable to run mpi obtained by an autodetection</p>
 </dd></dl>
 
 <dl class="py method">
@@ -210,7 +210,7 @@
 
 <dl class="py method">
 <dt id="ase2sprkkr.task.tasks.Task.run_task_process">
-<code class="sig-name descname"><span class="pre">run_task_process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/tasks.html#Task.run_task_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.tasks.Task.run_task_process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">run_task_process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/task/tasks.html#Task.run_task_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.task.tasks.Task.run_task_process" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -231,7 +231,7 @@
 <dd class="field-odd"><p></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>([command], stdin, stdout) params for process.Popen</p>
+<dd class="field-even"><p>([executable], stdin, stdout) params for process.Popen</p>
 </dd>
 </dl>
 </dd></dl>

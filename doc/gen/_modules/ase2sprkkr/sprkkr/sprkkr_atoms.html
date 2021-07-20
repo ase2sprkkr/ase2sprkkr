@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -162,11 +164,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">..sprkkr.sites</span> <span class="kn">import</span> <span class="n">Site</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">numpy_index</span>
+<span class="kn">from</span> <span class="nn">..potential</span> <span class="kn">import</span> <span class="n">potentials</span>
 
-<div class="viewcode-block" id="SprKkrAtoms"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms">[docs]</a><span class="k">class</span> <span class="nc">SprKkrAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="SprKkrAtoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms">[docs]</a><span class="k">class</span> <span class="nc">SprKkrAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
    <span class="sd">&quot;&quot;&quot; ASE Atoms object extended by the data necessary for SPR-KKR calculations &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SprKkrAtoms.promote_ase_atoms"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.promote_ase_atoms">[docs]</a>   <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SprKkrAtoms.promote_ase_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.promote_ase_atoms">[docs]</a>   <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">promote_ase_atoms</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Convert ASE Atoms object to the one usable by SprKkr.</span>
 <span class="sd">           For the case of the usability it is a bit ugly hack: The __class__ attribute</span>
@@ -191,13 +194,13 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">()</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-   <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SprKkrAtoms._init"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms._init">[docs]</a>   <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; The initialization of the additional (not-in-ASE) properties. To be used</span>
 <span class="sd">       by constructor and by promote_ase_atoms&quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="o">=</span> <span class="kc">None</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="SprKkrAtoms.compute_spacegroup_for_atomic_numbers"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.compute_spacegroup_for_atomic_numbers">[docs]</a>   <span class="k">def</span> <span class="nf">compute_spacegroup_for_atomic_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<div class="viewcode-block" id="SprKkrAtoms.compute_spacegroup_for_atomic_numbers"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.compute_spacegroup_for_atomic_numbers">[docs]</a>   <span class="k">def</span> <span class="nf">compute_spacegroup_for_atomic_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Return spacegroup that suits to the atoms&#39; cell structure and to the given</span>
 <span class="sd">           atomic_numbers (not necessary the real ones, they can be just &#39;&#39;labels&#39;&#39;).</span>
 <span class="sd">       &quot;&quot;&quot;</span>
@@ -208,12 +211,12 @@
                              <span class="n">atomic_numbers</span><span class="p">),</span>
                              <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">)</span>
        <span class="k">if</span> <span class="n">sg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Spacegroup not found&#39;</span><span class="p">)</span>
+           <span class="k">return</span> <span class="kc">None</span>
        <span class="n">sg_no</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sg</span><span class="p">[</span><span class="n">sg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">sg</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)])</span>
        <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_no</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">spacegroup</span></div>
 
-<div class="viewcode-block" id="SprKkrAtoms.compute_sites_symmetry"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.compute_sites_symmetry">[docs]</a>   <span class="k">def</span> <span class="nf">compute_sites_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacegroup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<div class="viewcode-block" id="SprKkrAtoms.compute_sites_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.compute_sites_symmetry">[docs]</a>   <span class="k">def</span> <span class="nf">compute_sites_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacegroup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; SPRKKR has some properties shared by all by-symmetry-equal sites.</span>
 <span class="sd">           This method initializes _sites property, that hold these properties:</span>
 <span class="sd">           makes identical all atoms on the &quot;symmetry identical positions with</span>
@@ -242,48 +245,97 @@
 <span class="sd">              A threshold for spatial error for symmetry computing. See spglib.get_spacegroup</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">spacegroup</span><span class="p">:</span>
-          <span class="n">mapping</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">())</span>
-          <span class="k">if</span> <span class="n">consider_old</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">:</span>
-            <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">)</span>
           <span class="k">if</span> <span class="n">atomic_numbers</span><span class="p">:</span>
             <span class="n">mapping</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">atomic_numbers</span><span class="p">)</span>
-
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">mapping</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">consider_old</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">:</span>
+              <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">)</span>
           <span class="n">spacegroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_spacegroup_for_atomic_numbers</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="n">symprec</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;spacegroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">spacegroup</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="n">spacegroup</span><span class="o">.</span><span class="n">tag_sites</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">())</span>
-        <span class="n">sites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+        <span class="n">occupation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;occupancy&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="n">spacegroup</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">spacegroup</span><span class="o">.</span><span class="n">tag_sites</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">())</span>
+            <span class="n">sites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tags</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
 
-        <span class="n">uniq</span><span class="p">,</span> <span class="n">umap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">return_inverse</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">uniq</span><span class="p">)):</span>
-             <span class="n">index</span> <span class="o">=</span> <span class="n">umap</span> <span class="o">==</span> <span class="n">i</span>
-             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1">#first non-none of the given index</span>
-                <span class="n">unique</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">[</span><span class="n">index</span><span class="p">]),</span> <span class="kc">None</span><span class="p">)</span>
-             <span class="k">else</span><span class="p">:</span>
-                <span class="n">unique</span> <span class="o">=</span> <span class="kc">None</span>
-             <span class="n">sites</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique</span> <span class="ow">or</span> <span class="n">Site</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span> <span class="n">numpy_index</span><span class="p">(</span><span class="n">umap</span><span class="p">,</span><span class="n">i</span><span class="p">)])</span>
+            <span class="n">uniq</span><span class="p">,</span> <span class="n">umap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span> <span class="n">return_inverse</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">uniq</span><span class="p">)):</span>
+                 <span class="n">index</span> <span class="o">=</span> <span class="n">umap</span> <span class="o">==</span> <span class="n">i</span>
+                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1">#first non-none of the given index</span>
+                    <span class="n">possible</span> <span class="o">=</span>  <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                    <span class="n">site</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">possible</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">used</span><span class="p">:</span>
+                       <span class="n">site</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                       <span class="n">used</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+                 <span class="k">else</span><span class="p">:</span>
+                    <span class="n">site</span> <span class="o">=</span> <span class="kc">None</span>
+                 <span class="k">if</span> <span class="ow">not</span> <span class="n">site</span><span class="p">:</span>
+                    <span class="n">symbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span> <span class="n">numpy_index</span><span class="p">(</span><span class="n">umap</span><span class="p">,</span><span class="n">i</span><span class="p">)]</span>
+                    <span class="k">for</span> <span class="n">ai</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">index</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">ai</span> <span class="ow">in</span> <span class="n">occupation</span> <span class="ow">and</span> <span class="n">occupation</span><span class="p">[</span><span class="n">ai</span><span class="p">]:</span>
+                           <span class="n">symbol</span> <span class="o">=</span> <span class="n">occupation</span><span class="p">[</span><span class="n">ai</span><span class="p">]</span>
+                    <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">)</span>
+                 <span class="n">sites</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">site</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sites</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+            <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">site</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">used</span><span class="p">:</span>
+                       <span class="n">site</span> <span class="o">=</span> <span class="n">site</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                       <span class="n">used</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">symbol</span> <span class="o">=</span> <span class="n">occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">occupation</span> <span class="ow">and</span> <span class="n">occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">else</span> \
+                             <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">)</span>
+                <span class="n">sites</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">site</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">sites</span> <span class="o">=</span> <span class="n">sites</span></div>
 
    <span class="nd">@property</span>
    <span class="k">def</span> <span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; The sites property holds all the information for the SPR-KKR package:</span>
+<span class="sd">           atomic types (including number of semicore and valence electrons),</span>
+<span class="sd">           occupancy, symmetries, meshes...</span>
+<span class="sd">           Some of the properties are stored in the ASE atoms properties</span>
+<span class="sd">           (e.g. occupancy, atomic symbol), however, ASE is not able to hold them</span>
+<span class="sd">           all and/or to describe fully the SPR-KKR options; thus, these properties</span>
+<span class="sd">           are hold in this array.</span>
+
+<span class="sd">           The changes made on this array are reflected (as is possible)</span>
+<span class="sd">           to the ASE properties, but the opposite does not hold - to reflect the changes</span>
+<span class="sd">           in these properties please create a new Atoms object with given properties.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">compute_sites_symmetry</span><span class="p">()</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span>
 
    <span class="nd">@sites</span><span class="o">.</span><span class="n">setter</span>
    <span class="k">def</span> <span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; Set the sites property and update all other dependent</span>
+<span class="sd">       properties (symbols, occupancy) according to the sites &quot;&quot;&quot;</span>
        <span class="n">an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span> <span class="nb">int</span><span class="p">)</span>
+       <span class="n">occ</span> <span class="o">=</span> <span class="p">{}</span>
        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-           <span class="n">an</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_atomic_number</span><span class="p">()</span>
+           <span class="n">occ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">as_dict</span>
+           <span class="n">an</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_atomic_number</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">set_atomic_numbers</span><span class="p">(</span><span class="n">an</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;occupancy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">occ</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="o">=</span> <span class="n">v</span>
 
    <span class="nd">@property</span>
    <span class="k">def</span> <span class="nf">potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span></div>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potentials</span><span class="o">.</span><span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span></div>
 </pre></div>
 
            </div>

@@ -331,10 +331,10 @@ out.calculator.calculate(task='PHAGEN')
 </pre>
 
 <h3>A note about potentials and atoms and tasks</h3>
-<p>Using the calculator, one can (in various methods) specify either atoms object or/and potential, which can lead to the duplicity of the provided information to the calculator. Therefore, there is the following logic behind the scenes:</p><p>
-If the potential is not provided, it is created according to the atoms object (which in this case has to be supplied). If the potential is given by a filename, it is used "as is", while if it is given by an object (of a <tt>Potential</tt> class), this object is updated according to the atoms, if the latter is given. The special value False for the potential means to use the potential file specified by the task: in this case, the Task object or task file (with specified potential) has to be supplied (as the argument).
+<p>Using the calculator, one can (in various methods) specify either atoms object or/and potential, which can lead to the duplicity of the information provided to the calculator. Therefore, there is the following logic behind the scenes:</p><p>
+If the potential is not provided, it is created according to the atoms object (which in this case has to be supplied). If the potential is given by a filename, it is used "as is", while if it is given by an object (of a <tt>Potential</tt> class), this object is updated according to the atoms object (if the latter is supplied). The special value False for the potential means to use the potential file specified by the task: in this case, the Task object or task file (with specified potential) has to be supplied (as the argument).
 </p>
-<p>The task can be given either by a filename (containing the "input file"), by a string (SCF, PHAGEN,...) or by object (of a class <tt>Task</tt>). If it is given by object, the input file is created. If it is given by filename, the file is readed and modified if a modification is required, i.e. if the potential filename should be written (i.e. the potential argument of <tt>save_input</tt>, <tt>run</tt> or <tt>calculate</tt> methods is not False, or the non-empty options argument is specified.</p>
+<p>The task can be given either by a filename (containing the "input file"), by a string (SCF, PHAGEN,...) or by object (of class <tt>Task</tt>). If it is given by object, the input file is created. If it is given by filename, the file is readed and modified only if a modification is required, i.e. if the potential filename should be written into it (i.e. the potential argument of <tt>save_input</tt>, <tt>run</tt> or <tt>calculate</tt> methods is not False, or if the non-empty options argument is specified.</p>
 
 <p>Note, that:
 <ul><li>

@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -151,15 +153,17 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.sprkkr.radial_meshes</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.Mesh">[docs]</a><span></span><span class="k">class</span> <span class="nc">Mesh</span><span class="p">:</span>
-<div class="viewcode-block" id="Mesh.default"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.default">[docs]</a>  <span class="nd">@staticmethod</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="Mesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.Mesh">[docs]</a><span class="k">class</span> <span class="nc">Mesh</span><span class="p">:</span>
+<div class="viewcode-block" id="Mesh.default"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.default">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">default</span><span class="p">():</span>
       <span class="sd">&quot;&quot;&quot; SPR-KKR computes the mesh itself, if zeros are given &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">ExponentialMesh</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span><span class="mf">2e-2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mi">721</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="ExponentialMesh"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh">[docs]</a><span class="k">class</span> <span class="nc">ExponentialMesh</span><span class="p">(</span><span class="n">Mesh</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">  Radial mesh definition for an atomic site </span>
+<div class="viewcode-block" id="ExponentialMesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh">[docs]</a><span class="k">class</span> <span class="nc">ExponentialMesh</span><span class="p">(</span><span class="n">Mesh</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Radial mesh definition for an atomic site</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">jrmt</span><span class="p">,</span> <span class="n">rmt</span><span class="p">,</span> <span class="n">jrws</span><span class="p">,</span> <span class="n">rws</span><span class="p">):</span>
@@ -173,7 +177,7 @@
 <span class="sd">        Multiplier: r_n = r_{n-1} * dx</span>
 
 <span class="sd">      jrmt: int</span>
-<span class="sd">        </span>
+
 <span class="sd">      rmt: float</span>
 
 <span class="sd">      jrws: int</span>
@@ -187,8 +191,11 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span> <span class="o">=</span> <span class="n">jrws</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">rws</span> <span class="o">=</span> <span class="n">rws</span>
 
-<div class="viewcode-block" id="ExponentialMesh.to_tuple"><a class="viewcode-back" href="../../../ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple">[docs]</a>  <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rws</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="ExponentialMesh.to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple">[docs]</a>  <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rws</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ExponentialMesh.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

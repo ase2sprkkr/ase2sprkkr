@@ -184,6 +184,11 @@
 <p>Occupation of the atomic site, given by
 AtomicSite : value</p>
 <dl class="py method">
+<dt id="ase2sprkkr.sprkkr.occupations.Occupation.copy">
+<code class="sig-name descname"><span class="pre">copy</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="ase2sprkkr.sprkkr.occupations.Occupation.set">
 <code class="sig-name descname"><span class="pre">set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -199,10 +204,25 @@ AtomicSite : value</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt id="ase2sprkkr.sprkkr.occupations.Occupation.primary_atomic_type">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">primary_atomic_type</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.primary_atomic_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the atomic type.
+If there are more atoms on the site, return the one
+with the largest occupation</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="ase2sprkkr.sprkkr.occupations.Occupation.primary_atomic_number">
-<code class="sig-name descname"><span class="pre">primary_atomic_number</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.primary_atomic_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.primary_atomic_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the chemical symbol of the atom.
-If there are more atoms on the site, then return X.</p>
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">primary_atomic_number</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.primary_atomic_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the atomic number of the atom at the site.
+If there are more atoms on the site, return the “main one”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.sprkkr.occupations.Occupation.primary_symbol">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">primary_symbol</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.primary_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the chemical symbol of the atom at the site.
+If there are more atoms on the site, return the “main one”.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -226,8 +246,18 @@ If there are more atoms on the site, then return X.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="ase2sprkkr.sprkkr.occupations.Occupation.as_dict">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">as_dict</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="ase2sprkkr.sprkkr.occupations.Occupation.total_occupation">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">total_occupation</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.total_occupation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">to_occupation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.to_occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -238,11 +268,6 @@ If there are more atoms on the site, then return X.</p>
 <dl class="py method">
 <dt id="ase2sprkkr.sprkkr.occupations.Occupation.to_tuple">
 <code class="sig-name descname"><span class="pre">to_tuple</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.to_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.to_tuple" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">to_occupation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.to_occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

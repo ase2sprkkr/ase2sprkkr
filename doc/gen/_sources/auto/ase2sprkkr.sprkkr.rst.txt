@@ -14,6 +14,7 @@ Submodules
    ase2sprkkr.sprkkr.reference_systems
    ase2sprkkr.sprkkr.sites
    ase2sprkkr.sprkkr.sprkkr_atoms
+   ase2sprkkr.sprkkr.structure
 
 Module contents
 ---------------

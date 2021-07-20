@@ -82,8 +82,13 @@
               
             
             
-              <!-- Local TOC -->
-              <div class="local-toc"></div>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
+</ul>
+
             
           
         </div>
@@ -274,7 +279,7 @@
 
 <div class="viewcode-block" id="numpy_index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.numpy_index">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">numpy_index</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Returns index of the first occurence of item in the list</span>
+    <span class="sd">&quot;&quot;&quot; Returns index of the first occurence of the item in the array</span>
 <span class="sd">    If numba is installed, the function is accelerated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>

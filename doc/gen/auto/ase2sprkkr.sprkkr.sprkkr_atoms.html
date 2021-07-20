@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ase2sprkkr.task package" href="ase2sprkkr.task.html" />
+    <link rel="next" title="ase2sprkkr.sprkkr.structure module" href="ase2sprkkr.sprkkr.structure.html" />
     <link rel="prev" title="ase2sprkkr.sprkkr.sites module" href="ase2sprkkr.sprkkr.sites.html" /> 
 </head>
 
@@ -241,7 +241,17 @@ be equivalent in the newly computed symmetry.</p>
 <dl class="py method">
 <dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.sites">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">sites</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.sites" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The sites property holds all the information for the SPR-KKR package:
+atomic types (including number of semicore and valence electrons),
+occupancy, symmetries, meshes…
+Some of the properties are stored in the ASE atoms properties
+(e.g. occupancy, atomic symbol), however, ASE is not able to hold them
+all and/or to describe fully the SPR-KKR options; thus, these properties
+are hold in this array.</p>
+<p>The changes made on this array are reflected (as is possible)
+to the ASE properties, but the opposite does not hold - to reflect the changes
+in these properties please create a new Atoms object with given properties.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.potential">
@@ -258,7 +268,7 @@ be equivalent in the newly computed symmetry.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.task.html" class="btn btn-neutral float-right" title="ase2sprkkr.task package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.sprkkr.structure.html" class="btn btn-neutral float-right" title="ase2sprkkr.sprkkr.structure module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="ase2sprkkr.sprkkr.sites.html" class="btn btn-neutral float-left" title="ase2sprkkr.sprkkr.sites module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
