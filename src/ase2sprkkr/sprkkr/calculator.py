@@ -35,7 +35,7 @@ class SprKkr(Calculator):
                  input_file=True, output_file=True, potential_file=True,
                  print_output='info',
                  mpi=True, task=None, potential=True,
-                 command_postfix=True,
+                 executable_postfix=True,
                  **kwargs):
         """
         Parameters
@@ -76,10 +76,10 @@ class SprKkr(Calculator):
           True means to generate the potential from atoms.
           False means that the potential will be given by the task.
 
-        command_postfix: str or boolean
-          String to be added to the runned command. In some environments, the version
+        executable_postfix: str or boolean
+          String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
-          True: use SPRKKR_COMMAND_SUFFIX environment variable
+          True: use SPRKKR_EXECUTABLE_SUFFIX environment variable
           False: do not append anything (the same as '')
 
         task: sprkkr.task.tasks.Task or str or None
@@ -98,7 +98,7 @@ class SprKkr(Calculator):
         self._potential = None
         self.atoms = atoms
         self.potential = potential
-        self.command_postfix = command_postfix
+        self.executable_postfix = executable_postfix
 
         super().__init__(restart,
                          label=label, atoms=atoms, directory=directory)
@@ -406,7 +406,7 @@ class SprKkr(Calculator):
                   potential=None, task_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
                   options={},
-                  print_output=None, command_postfix=None, mpi=None):
+                  print_output=None, executable_postfix=None, mpi=None):
         """
         Do the calculation, return various results.
 
@@ -418,8 +418,8 @@ class SprKkr(Calculator):
             If print_output=='info' only a few lines per iteration will be printed.
             None means to use a default value (specified in constructor)
 
-        command_postfix: str or bool or None
-            If not None, it overrides the command_postifx, that have been specified when the
+        executable_postfix: str or bool or None
+            If not None, it overrides the executable_postifx, that have been specified when the
             calculator have been created.
 
         mpi: bool or None
@@ -441,7 +441,7 @@ class SprKkr(Calculator):
                             return_files=True)
 
         return task.run_task_process(self, task_file, output_file, print_output if print_output is not None else self.print_output,
-                                     command_postfix = command_postfix,
+                                     executable_postfix = executable_postfix,
                                      mpi=mpi if mpi is not None else self.mpi
                                     )
 
@@ -449,7 +449,7 @@ class SprKkr(Calculator):
                   task=None, potential=None, task_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
                   options={},
-                  print_output=None, command_postfix=None, mpi=None):
+                  print_output=None, executable_postfix=None, mpi=None):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
         for the requested properties (currently always the SCF one) and updates the
@@ -494,7 +494,7 @@ class SprKkr(Calculator):
                   potential, task_file, potential_file, output_file,
                   create_subdirs,
                   options,
-                  print_output, command_postfix, mpi=mpi
+                  print_output, executable_postfix, mpi=mpi
         )
         self.results.update({
             'energy' : out.energy,

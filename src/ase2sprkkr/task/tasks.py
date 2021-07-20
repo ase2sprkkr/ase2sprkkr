@@ -7,11 +7,11 @@ from . import definitions
 from ..common.conf_containers import RootConfContainer
 from ..common.misc import lazy_value, OrderedDict
 
-def resolve_command_postfix(postfix):
+def resolve_executable_postfix(postfix):
     if postfix is False:
         return ''
     if postfix is True:
-        return os.getenv('SPRKKR_COMMAND_SUFFIX', '')
+        return os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
     return postfix
 
 class Task(RootConfContainer):
@@ -28,7 +28,7 @@ class Task(RootConfContainer):
 
   @classmethod
   def default_mpi_runner(cls):
-      """ Return the command to run mpi obtained by an autodetection """
+      """ Return the executable to run mpi obtained by an autodetection """
       if cls._default_mpi_runner is None:
          cls._default_mpi_runner = [ 'mpirun' ] if shutil.which('mpirun') else []
       return cls._default_mpi_runner
@@ -39,22 +39,22 @@ class Task(RootConfContainer):
            return cls.default_mpi_runner
         return [ mpi ] if isinstance(mpi, str) else mpi
 
-  def run_task_process(self, calculator, task_file, output_file, print_output=False, command_postfix=None, mpi=None):
+  def run_task_process(self, calculator, task_file, output_file, print_output=False, executable_postfix=None, mpi=None):
       d = self._definition
-      command = d.command
+      executable = d.executable
       print_output = print_output if print_output is not None else calculator.print_output
-      command_postfix = calculator.command_postfix if command_postfix is None else command_postfix
-      command += resolve_command_postfix(calculator.command_postfix)
+      executable_postfix = calculator.executable_postfix if executable_postfix is None else executable_postfix
+      executable += resolve_executable_postfix(calculator.executable_postfix)
       if d.mpi and mpi:
-           command = self.mpi_runner(mpi) + [ command + 'MPI' ]
+           executable = self.mpi_runner(mpi) + [ executable + 'MPI' ]
       else:
-           command = [ command ]
+           executable = [ executable ]
       self.directory = calculator._directory
       process = self.result_reader(calculator)
       try:
-        return process.run(command, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
+        return process.run(executable, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_COMMAND_SUFFIX environment variable should be set?\n' + \
+        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?\n' + \
                      e.strerror
         raise
 
@@ -69,7 +69,7 @@ class Task(RootConfContainer):
       """
       Return
       ------
-      ([command], stdin, stdout) params for process.Popen
+      ([executable], stdin, stdout) params for process.Popen
       """
 
   def __str__(self):

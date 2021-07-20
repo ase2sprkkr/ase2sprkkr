@@ -13,5 +13,5 @@ task = Task(
       ],
       description = "SCF calculation",
       help = "Set at least options ..., ...., .....",
-      command = 'phagen'
+      executable = 'phagen'
 )

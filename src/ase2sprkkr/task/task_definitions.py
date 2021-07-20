@@ -82,22 +82,22 @@ class TaskDefinition(ConfDefinition):
       return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
 
   def __init__(self, name, sections=None,
-               command='kkrscf', mpi=False, result_reader=KkrScfProcessOutputReader,
+               executable='kkrscf', mpi=False, result_reader=KkrScfProcessOutputReader,
                **kwargs):
       """
       Parameters
       ---------
       ....
-      command: str
+      executable: str
         Executable to run
 
       mpi: bool
-        Whether to run MPI version of the command
+        Whether to run MPI version of the executable
 
       process_class: common.process_output_reader.BaseProcessOutputReader
         Class, that runs the process and read the results
       """
-      self.command = command
+      self.executable = executable
       self.mpi = mpi
       self.result_reader = result_reader
 
