@@ -4,7 +4,7 @@ from ..potential.potentials import Potential
 from ase.units import Bohr
 import copy
 from ase.data import chemical_symbols
-
+import numpy as np
 """
 This file contains function structure_file_to_atoms, which is used for
 visualisation of a surface structure, using .pot and in_structure.inp
@@ -22,7 +22,7 @@ class AtomData(object):
         self.x=None
         self.y=None
         self.z=None
-        self.typeid=None
+        self.type_id=None
         self.id=None
         self.symbol=None
         self.pos=np.array([0.,0.,0.])
@@ -32,23 +32,29 @@ class AtomData(object):
         """ Create the Atom data object from the two text lines
         :from a in_structure.inp file """
         atom = AtomData()
-        atom.id, atom.type_id = map(int, data[0].split()[:2])
-        atom.pos[:] = map(floatjm, data[1].split()[:3])
+        atom.id, atom.type_id = map(int, lines[0].split()[:2])
+        atom.pos[:] = list(map(floatjm, lines[1].split()[:3]))
+        return atom
 
     def __repr__(self):
-        s = "<SiteData(id={:d}, pos={},{},{},type={:d})>".format(self.id, self.pos[0],self.pos[1],self.pos[2],self.typeid)
+        s = "<SiteData(id={:d}, pos={},{},{},type={:d})>".format(self.id, self.pos[0],self.pos[1],self.pos[2],self.type_id)
         return s
 
+    def get_symbol(self, potential):
+        IT = potential.OCCUPATION.DATA()[self.type_id - 1][3][0][0]
+        z = potential.TYPES.DATA()[IT - 1]['ZT']
+        return chemical_symbols[z]
 class LayerData(object):
     def __init__(self):
         self.id=1
         self.nat=1
         self.atoms=[]
         self.layvec=np.array([0.,0.,0.])
+
     def __repr__(self):
         s = "<LayerData(id={:d}, number of atoms in layer={:d})".format(self.id, self.nat)
-        for atoms in self.atoms:
-            s+= "   Atom in Layer id={:d}, pos={},{},{},type={:d} ".format(atoms.id,atoms.pos[0],atoms.pos[1],atoms.pos[2],atoms.typeid)
+        for atom in self.atoms:
+            s+= "   Atom in Layer id={:d}, pos={},{},{},type={:d} ".format(atom.id,atom.pos[0],atom.pos[1],atom.pos[2],atom.type_id)
         s+=">\n"
         return s
 
@@ -102,21 +108,20 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
       layer.nat=int(data[line])
       layer.id=ilayer+1
       for iat in range(layer.nat):
-          atom=AtomData.from_text(data[line:line+2])
-          line+=2
+          line+=3
+          atom=AtomData.from_text(data[line-2:line])
           layer.atoms.append(atom)
-      line=line+1
       layers[ilayer]=layer
 
   nvec=int(data[line].split()[0])
   bulk_rep_unit=int(data[line].split()[1])
   line=line+2
   for ivec in range(nvec):
-      line=line+1
+      line+=1
       layers[ivec].layvec[0]=floatjm(data[line].split()[1])
       layers[ivec].layvec[1]=floatjm(data[line].split()[2])
       layers[ivec].layvec[2]=floatjm(data[line].split()[0])
-      line=line+1
+      line+=1
 
   #
   # expand list of layers in order to visualise bulk region
@@ -129,11 +134,11 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
   zmax=-99999.
   zmin= 10000.
   for ilay in range(1,new_nlayer):
-          for atoms in layers[ilay].atoms:
+          for atom in layers[ilay].atoms:
                   for jlay in range(0,ilay):
-                          atoms.pos=atoms.pos+layers[jlay].layvec
-                  zmax=max(atoms.pos[2],zmax)
-                  zmin=min(atoms.pos[2],zmin)
+                          atom.pos=atom.pos+layers[jlay].layvec
+                  zmax=max(atom.pos[2],zmax)
+                  zmin=min(atom.pos[2],zmin)
 
   # Create Atoms and Atom ASE-objects from structural data
   structure=SprKkrAtoms()
@@ -146,16 +151,17 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
   structure.set_pbc([True,True,True])
   #Add atom into the Atoms
   num_atoms = 0
-  for layer in layers:
+  for layer in layers.values():
       num_atoms += len(layer.atoms)
   allpos = np.empty((num_atoms,3), float)
   i = 0
 
-  for layer in layers:
+  for layer in layers.values():
       for atom in layer.atoms:
           allpos[i,:] = atom.pos
+          i+=1
           atm=Atom()
-          atm.symbol= chemical_symbols[ potential.TYPES.DATA()[atom.typeid - 1]['ZT'] ]
+          atm.symbol=atom.get_symbol(potential)
           structure.append(atm)
   #
   # z-components needs to be transformed to the cryst. coordinates

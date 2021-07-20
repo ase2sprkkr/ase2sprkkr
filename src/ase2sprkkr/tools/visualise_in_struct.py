@@ -48,7 +48,7 @@ pot_atoms.write(cifpotfile, format = outformat)
 if not structure_filename:
    exit()
 # Extract data from structure file
-structure = structure_file_to_atoms(file, potential, n_bulk=args.nbulk, vacuum_height = args.vacuum_height)
+structure = structure_file_to_atoms(args.input, potential, n_bulk=args.nbulk, vacuum_height = args.vacuum_height)
 # Visualise the structure or write out to the file
 structure.write(ciffile, format = outformat)
 
