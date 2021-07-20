@@ -1,6 +1,6 @@
 from ase import Atom
-from ..sprkkr.sprkkr_atoms import SprKkrAtoms
-from ..poetntial.potentials import Potential
+from .sprkkr_atoms import SprKkrAtoms
+from ..potential.potentials import Potential
 from ase.units import Bohr
 import copy
 from ase.data import chemical_symbols

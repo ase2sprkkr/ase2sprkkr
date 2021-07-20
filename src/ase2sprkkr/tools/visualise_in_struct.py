@@ -2,7 +2,12 @@ import numpy as np
 from collections import OrderedDict
 from ase.visualize import view
 import argparse
-from ..potential.potentials import potential
+import os
+
+if not __package__:
+  __package__ = 'ase2sprkkr.tools'
+
+from ..potential.potentials import Potential
 from ..sprkkr.structure import structure_file_to_atoms
 
 __author__='JM'
@@ -22,7 +27,7 @@ parser.add_argument('-p','--pot', help='Filemane of scf Potential (always needed
 parser.add_argument('-o','--out',type=str,help='Output file name for structure (default strcuture.cif)', default='strcuture.cif',required=False)
 parser.add_argument('-f','--format',type=str,help='Output file fomrmat for structure (see ase allowed formats, default cif)', default='cif',required=False)
 parser.add_argument('-a','--ase',help='Use ase visualisation', action='store_true',required=False)
-parser.add_argument('-v','--vac',name='vacuum_height', type=float,help='Size of added vacuum in AA (default=10.0)',default=10.0,required=False)
+parser.add_argument('-v','--vac',dest='vacuum_height', type=float,help='Size of added vacuum in AA (default=10.0)',default=10.0,required=False)
 parser.add_argument('-b','--nbulk',type=int,help='Repetition of bulk unit (default=2)',default=2,required=False)
 
 args = parser.parse_args()
