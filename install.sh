@@ -1,10 +1,11 @@
 #!/bin/bash
 CURRENT=
-while getopts "c" opt; do
+FORCE=
+
+while getopts "cf" opt; do
   case ${opt} in
-    c ) 
-				 CURRENT=1
-			;;
+		f )  FORCE="--force-reinstall --no-deps";;
+    c )  CURRENT=1 ;;
     \? ) echo "Install the ase2sprkkr package. Use -c to install the current version of the
 		           code (do not the git checkout release command)"
 				 exit
@@ -18,8 +19,8 @@ if [[ -z "$CURRENT" ]] ; then
 	echo "Checking out the current version of the code"
 	if ! git fetch ; then
 		echo "Warning - either git is not installed, or the package source
-		is not a git repository, the origin of the repository is not available.	
-		Attemp to get the latest version of the package failed!!!"	
+		is not a git repository, the origin of the repository is not available.
+		Attemp to get the latest version of the package failed!!!"
 	fi
 	if ! git checkout origin/release ; then
 		echo "Warning - either git is not installed, or the package source
@@ -46,4 +47,4 @@ echo "Building the wheel package"
 $PYTHON -m build
 
 echo "Installing the package"
-$PYTHON -m pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+$PYTHON -m pip install $FORCE `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
