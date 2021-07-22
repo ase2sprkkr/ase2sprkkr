@@ -116,6 +116,12 @@ class SPRKKR(Calculator):
         #For %c template in file names
         self._counter = 0
 
+    def set(self, options={}, **kwargs):
+        if kwargs:
+           self.input_parameters.set(kwargs, unkwnown='find')
+        if options:
+           self.input_parameters.set(kwargs, unknown='find')
+
     @property
     def potential(self) -> Potential:
        """ The potential associated with the calculator. It will be used in
