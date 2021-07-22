@@ -118,7 +118,7 @@ class BaseValueDefinition(BaseDefinition):
   def __init__(self, name, type, default_value=None, alternative_names=None,
                fixed_value=None, required=None, help=None, description=None,
                is_hidden=False, name_in_grammar=None, name_format=None,
-               is_optional=False):
+               is_optional=None):
     """
     Parameters
     ----------
@@ -146,8 +146,9 @@ class BaseValueDefinition(BaseDefinition):
       The value in the conf file is prefixed by <name><name_value_delimiter>
       If None, the default type value (type.name_in_grammar) is used
 
-    is_optional: bool
+    is_optional: bool or None
       If True, the value can be omited, if the fixed order is required
+      None means True if required is False
 
     is_hidden: bool
       The value is hidden from the user (no container.name access to the value)
@@ -168,6 +169,9 @@ class BaseValueDefinition(BaseDefinition):
 
     if required is None:
        required = not is_optional and default_value is None
+
+    if is_optional is None:
+       is_optional = required is False
 
     super().__init__(
          name = name,
