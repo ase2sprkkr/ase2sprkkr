@@ -1,11 +1,11 @@
 from ...common.grammar_types  import *
 from .sections import *
-from ..task_definitions import \
-    TaskDefinition as Task, \
+from ..input_parameters_definitions import \
+    InputParametersDefinition as InputParameters, \
     ValueDefinition as V, \
     SectionDefinition as Section
 
-task = Task(
+input_parameters = InputParameters(
     'arpes', [
     CONTROL('ARPES'),
     TAU,

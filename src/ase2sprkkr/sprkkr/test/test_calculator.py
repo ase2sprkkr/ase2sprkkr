@@ -45,15 +45,15 @@ class CalculatorTest(TestCase):
      calculator.save_input()
      assert_change(True, True)
      assert_change(False, False)
-     calculator.save_input(task = inp_file)
+     calculator.save_input(input_parameters = inp_file)
      assert_change(True, True)
-     calculator.save_input(task = inp_file, potential = False)
+     calculator.save_input(input_parameters = inp_file, potential = False)
      assert_change(False, False)
-     calculator.save_input(task = inp_file, options = {'NITER' : 2}, potential = False)
+     calculator.save_input(input_parameters = inp_file, options = {'NITER' : 2}, potential = False)
      assert_change(True, False)
-     calculator.save_input(task = inp_file, potential = atoms.potential)
+     calculator.save_input(input_parameters = inp_file, potential = atoms.potential)
      assert_change(True, True)
-     calculator.save_input(task = inp_file, potential = pot_file)
+     calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
      #use methods of atoms
@@ -69,7 +69,7 @@ class CalculatorTest(TestCase):
      self.assertTrue(isinstance(out.calculator.potential_object, Potential))
 
      #read again the output from a file - the results should be the same
-     out = SPRKKR.Task.create('scf').read_output_from_file(here('output_test_calc.out'))
+     out = SPRKKR.InputParameters.create('scf').read_output_from_file(here('output_test_calc.out'))
      self.assertEqual(2, len(out.iterations))
      out.plot(filename = here('output_test_calc.png'))
 
@@ -86,21 +86,21 @@ class CalculatorTest(TestCase):
         self.assertEqual(5, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
 
-     out = SPRKKR.Task.from_file(here('output_test_calc.inp')).read_output_from_file(here('output_test_calc.out'))
+     out = SPRKKR.InputParameters.from_file(here('output_test_calc.inp')).read_output_from_file(here('output_test_calc.out'))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
-     task = SPRKKR.Task.create('scf')
-     task.SCF.NITER = 1
-     out = calculator.calculate(task = task, print_output=print_output)
+     ips = SPRKKR.InputParameters.create('scf')
+     ips.SCF.NITER = 1
+     out = calculator.calculate(input_parameters=ips, print_output=print_output)
      self.assertEqual(out.atoms, out.potential.atoms)
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
 
      calculator = SPRKKR(mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
-     out = calculator.calculate(potential = out.potential, task = task)
+     out = calculator.calculate(potential=out.potential,input_parameters=ips)
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))

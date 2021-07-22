@@ -5,7 +5,7 @@
 Module sprkkr_inputs
 ===============
 
-This function contains input templates for various tasks
+This function contains input templates for various input_parameters
 New template include into dict_inp_data.
 It returns list of strings which can be proceeded by
 load_parameters
@@ -150,13 +150,13 @@ def get_sprkkr_input(task):
 
     lines='None'
 
-    if task.upper() == 'ARPES':
+    if input_parameters.upper() == 'ARPES':
         lines=dict_inp_data['ARPES']
-    elif task.upper() == 'SCF':
+    elif input_parameters.upper() == 'SCF':
         lines=dict_inp_data['SCF']
-    elif task.upper() == 'DOS':
+    elif input_parameters.upper() == 'DOS':
         lines=dict_inp_data['DOS']
-    elif task.upper() == 'PHAGEN':
+    elif input_parameters.upper() == 'PHAGEN':
         lines=dict_inp_data['PHAGEN']
     else:
         lines='None'

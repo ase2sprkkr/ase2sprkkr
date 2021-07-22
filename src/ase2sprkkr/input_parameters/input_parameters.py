@@ -14,7 +14,7 @@ def resolve_executable_postfix(postfix):
         return os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
     return postfix
 
-class Task(RootConfContainer):
+class InputParameters(RootConfContainer):
   def __init__(self, definition, inputfile=None, outputfile=False):
       super().__init__(definition)
       self._inputfile = inputfile
@@ -39,7 +39,7 @@ class Task(RootConfContainer):
            return cls.default_mpi_runner
         return [ mpi ] if isinstance(mpi, str) else mpi
 
-  def run_task_process(self, calculator, task_file, output_file, print_output=False, executable_postfix=None, mpi=None):
+  def run_process(self, calculator, task_file, output_file, print_output=False, executable_postfix=None, mpi=None):
       d = self._definition
       executable = d.executable
       print_output = print_output if print_output is not None else calculator.print_output
@@ -91,10 +91,10 @@ class Task(RootConfContainer):
       names = (i for i in pkgutil.iter_modules(definitions.__path__) if i.name != 'sections')
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
-      return { m.task.name.upper(): m.task for m in modules }
+      return { m.input_parameters.name.upper(): m.input_parameters for m in modules }
 
   @classmethod
-  def is_it_a_task_name(cls, name):
+  def is_it_a_input_parameters_name(cls, name):
       name = name.upper()
       return name if name in cls.definitions() else False
 
@@ -111,10 +111,10 @@ class Task(RootConfContainer):
 
   @classmethod
   def create(cls, name):
-      return Task(cls.definitions()[name.upper()])
+      return InputParameters(cls.definitions()[name.upper()])
 
   @classmethod
-  def default_task(cls):
+  def default_parameters(cls):
       return cls.create('SCF')
 
   @classmethod
@@ -129,6 +129,6 @@ class Task(RootConfContainer):
       raise last
 
   def calculate(self, *args, **kwargs):
-      """ Create a calculator and run the task. See SPRKKR.calculate for the arguments """
+      """ Create a calculator and run the input_parameters. See SPRKKR.calculate for the arguments """
       calculator = SPRKKR()
       calculator.calculate(task = task, *args, **kwargs)

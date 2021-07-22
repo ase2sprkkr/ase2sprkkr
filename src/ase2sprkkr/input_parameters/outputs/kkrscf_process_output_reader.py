@@ -6,26 +6,26 @@ from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,
 import pyparsing as pp
 import numpy as np
 from ase.units import Rydberg
-from ..task_result import TaskResult, TaskResultReader
+from ..task_result import InputParametersResult, InputParametersResultReader
 from ...common.misc import cached_property
 from ...potential.potentials import Potential
 import os
 import copy
 from ...sprkkr.calculator import SPRKKR
 
-class ScfResult(TaskResult):
+class ScfResult(InputParametersResult):
 
-  def __init__(self, task, calculator, iterations, error, return_code):
+  def __init__(self, input_parameters, calculator, iterations, error, return_code):
       self.iterations = iterations
-      super().__init__(task, calculator, return_code)
+      super().__init__(input_parameters, calculator, return_code)
 
   @cached_property
   def potential_filename(self):
       """ New (output) potential file name """
-      potfil = self.task.CONTROL.POTFIL()
+      potfil = self.input_parameters.CONTROL.POTFIL()
       if not potfil:
-         raise ValueError("Please set CONTROL.POTFIL of the task to read the potential")
-      fname = self.task.CONTROL.POTFIL() + '_new'
+         raise ValueError("Please set CONTROL.POTFIL of the input_parameters to read the potential")
+      fname = self.input_parameters.CONTROL.POTFIL() + '_new'
       if self.directory:
          fname = os.path.join(self.directory, fname)
       return fname
@@ -87,7 +87,7 @@ class ScfResult(TaskResult):
       else:
         pyplot.show()
 
-class KkrScfProcessOutputReader(TaskResultReader):
+class KkrScfProcessOutputReader(InputParametersResultReader):
 
   atoms_conf_type = Section('atoms', [
     VN('IECURR', integer),

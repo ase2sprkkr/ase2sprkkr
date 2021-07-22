@@ -7,18 +7,18 @@ _package__, __name__ = patch_package(__package__, __name__)
 import unittest
 import pyparsing as pp
 from ...common import grammar_types as gt
-from .. import task_definitions as cd
-from .. import tasks as tasks
+from .. import input_parameters_definitions as cd
+from .. import input_parameters as input_parameters
 from ...common.conf_containers import Section, CustomSection
 from ...common.options import Option, CustomOption
 import io
 import numpy as np
 from ...common.grammar import generate_grammar
 
-class TestTask(TestCase):
+class TestInputParameters(TestCase):
 
   def test_section_delimiter_value(self):
-     grammar = cd.TaskDefinition.grammar_of_delimiter()
+     grammar = cd.InputParametersDefinition.grammar_of_delimiter()
      grammar = 'a' + grammar + 'b'
      for w in ['a b','a\n b','a\n\n b','a\n \n b','a \n\n b', 'a\n\n\n b']:
          self.assertRaises(pp.ParseException, lambda: grammar.parseString(w, True))
@@ -48,10 +48,10 @@ class TestTask(TestCase):
 
 
 
-  def test_task_definition(self):
+  def test_input_parameters_definition(self):
     V = cd.ValueDefinition
 
-    task_def = cd.TaskDefinition.from_dict({
+    input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
         V('NE', gt.SetOf(int, min_length=1)),
@@ -77,15 +77,15 @@ class TestTask(TestCase):
     def ar(x):
       return np.atleast_1d(x)
 
-    grammar = task_def.sections['SITES'].values['NL'].grammar()
+    grammar = input_parameters_def.sections['SITES'].values['NL'].grammar()
     assertParse("NL=3", ('NL', 3))
-    grammar = task_def.sections['ENERGY'].values['NE'].grammar()
+    grammar = input_parameters_def.sections['ENERGY'].values['NE'].grammar()
     assertParse("NE={3}", ('NE', ar(3)))
-    grammar = task_def.sections['ENERGY'].values['Ime'].grammar()
+    grammar = input_parameters_def.sections['ENERGY'].values['Ime'].grammar()
     assertParse("Ime= 0.5", ('Ime', 0.5))
-    grammar = task_def.sections['ENERGY'].values['GRID'].grammar()
+    grammar = input_parameters_def.sections['ENERGY'].values['GRID'].grammar()
     assertParse("GRID={3}", ('GRID', ar(3)))
-    grammar = task_def.sections['ENERGY'].grammar()
+    grammar = input_parameters_def.sections['ENERGY'].grammar()
     assertParse("ENERGY Ime= 0.5", ('ENERGY', {'Ime':0.5}))
     assertParse("ENERGY Ime= 0.5 NE={5}",('ENERGY', {'Ime':0.5, 'NE':ar(5)}) )
     assertParse("""ENERGY Ime= 0.5
@@ -103,7 +103,7 @@ NE={5}""")
     assertNotValid(""" ENERGY GRID={3}""")
     assertParse("""ENERGY GRID={3}""", ('ENERGY', {'GRID':ar(3)}))
 
-    grammar = task_def.grammar()
+    grammar = input_parameters_def.grammar()
     assertParse("""ENERGY GRID={3}""", {'ENERGY': {'GRID':ar(3)}})
     assertParse("""ENERGY GRID={3}
                      NE={300}
@@ -119,7 +119,7 @@ SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300}, 'SITES':{'NL':2}} )
 
     #custom values
     with generate_grammar():
-      grammar = task_def['ENERGY']._values_grammar()
+      grammar = input_parameters_def['ENERGY']._values_grammar()
     assertParse("""GRID={3}
                      NE={300}
                      """, {'GRID':ar(3), 'NE':ar(300)})
@@ -128,7 +128,7 @@ SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300}, 'SITES':{'NL':2}} )
                    NE={300}
                    NXXX=5""", {'GRID':ar(3), 'NE':ar(300), 'NXXX': 5})
 
-    grammar = task_def.grammar()
+    grammar = input_parameters_def.grammar()
     assertParse(""" ENERGY GRID={3}
                      NE={300}
                      NXXX=5
@@ -234,7 +234,7 @@ XSITES NR=3 FLAG
                               'XSITES':{'NR':3, 'FLAG' : True, 'FLOAT': 3.5}
       })
 
-    task=task_def.read_from_file(io.StringIO(""" ENERGY GRID={3}
+    ips=input_parameters_def.read_from_file(io.StringIO(""" ENERGY GRID={3}
                      NE={300,200}
                      NXXX
 
@@ -244,19 +244,19 @@ SITES NL=2
 XSITES NR=3 FLAG
                      FLOAT=3.5
               """))
-    self.assertTrue(isinstance(task, tasks.Task))
-    self.assertTrue(isinstance(task['ENERGY'], Section))
-    self.assertTrue(isinstance(task['ENERGY']['NE'], Option))
-    self.assertTrue(isinstance(task['ENERGY']['NXXX'], CustomOption))
-    self.assertEqual(task['ENERGY'].NE(), np.array((300,200)))
-    self.assertEqual(task['SITES'].NL(), 2)
-    self.assertEqual(task.find('NL').get_path(), 'SITES.NL')
-    task.find('NL').set(3)
-    self.assertEqual(task['SITES'].NL(), 3)
-    self.assertTrue(isinstance(task['XSITES'], CustomSection))
+    self.assertTrue(isinstance(ips, input_parameters.InputParameters))
+    self.assertTrue(isinstance(ips['ENERGY'], Section))
+    self.assertTrue(isinstance(ips['ENERGY']['NE'], Option))
+    self.assertTrue(isinstance(ips['ENERGY']['NXXX'], CustomOption))
+    self.assertEqual(ips['ENERGY'].NE(), np.array((300,200)))
+    self.assertEqual(ips['SITES'].NL(), 2)
+    self.assertEqual(ips.find('NL').get_path(), 'SITES.NL')
+    ips.find('NL').set(3)
+    self.assertEqual(ips['SITES'].NL(), 3)
+    self.assertTrue(isinstance(ips['XSITES'], CustomSection))
 
     output = io.StringIO()
-    task.save_to_file(output)
+    ips.save_to_file(output)
     output.seek(0)
-    task2 = task_def.read_from_file(output)
-    self.assertEqual(str(task.to_dict()), str(task2.to_dict()))
+    ips2 = input_parameters_def.read_from_file(output)
+    self.assertEqual(str(ips.to_dict()), str(ips2.to_dict()))

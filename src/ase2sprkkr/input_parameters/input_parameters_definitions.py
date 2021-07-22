@@ -1,7 +1,7 @@
 """
-This file contains the classes for definitions of Tasks:
+This file contains the classes for definitions of InputParameterss:
 the list of sections and their allowed (or standard) options
-and their value formats. Tasks and potentials have a simlilar
+and their value formats. InputParameterss and potentials have a simlilar
 structure, so they share common functionalities from
 sprkkr.common.configuration_definitions
 """
@@ -18,7 +18,7 @@ from ..common.conf_containers import CustomSection
 from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.misc import lazy_value, cache
-from .tasks import Task
+from .input_parameters import InputParameters
 from .outputs.kkrscf_process_output_reader import KkrScfProcessOutputReader
 
 
@@ -55,12 +55,12 @@ class SectionDefinition(BaseSectionDefinition):
 
   do_not_skip_whitespaces_before_name = True
 
-class TaskDefinition(ConfDefinition):
+class InputParametersDefinition(ConfDefinition):
   """ This class describes the format of a task file. """
 
   """ standard child class """
   child_class = SectionDefinition
-  result_class = Task
+  result_class = InputParameters
 
   delimiter = "\n"
   @staticmethod

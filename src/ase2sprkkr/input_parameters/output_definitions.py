@@ -1,7 +1,7 @@
 """
 This file contains the classes for definitions of parts of output
 files. Although the files are used only for reading, the same
-grammar as for potential and task files is used
+grammar as for potential and input files is used
 """
 
 import functools

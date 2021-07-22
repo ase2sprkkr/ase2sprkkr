@@ -523,7 +523,7 @@ class BaseDefinitionContainer(BaseDefinition):
 
 
 class BaseSectionDefinition(BaseDefinitionContainer):
-   """ Base class for sections in Pot or Task file """
+   """ Base class for sections in Pot or InputParameters file """
 
 
    """ Is the sectio named, or it is its position given by position?

@@ -38,7 +38,7 @@ class SPRKKR(FileIOCalculator):
         self.atoms = None
         self.task = task
         if restart is None:
-            if task.upper() == 'SCF':
+            if input_parameters.upper() == 'SCF':
                 self.restart = False
             else:
                 self.restart = True
@@ -57,12 +57,12 @@ class SPRKKR(FileIOCalculator):
 
         self.input = InputFile(filename=self.inpfile, task=self.task,directory=self.directory)
 
-        if (self.task.upper()=='SCF'):
+        if (self.input_parameters.upper()=='SCF'):
             self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
             self.command = "echo"
-        elif (self.task.upper()=='PHAGEN'):
+        elif (self.input_parameters.upper()=='PHAGEN'):
             self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
-        elif (self.task.upper()=='GEN'):
+        elif (self.input_parameters.upper()=='GEN'):
             self.command = "mpirun.openmpi -np 4 kkrgenMPI  " + self.inpfile + " > " + self.outfile
         else:
             print("TASK {} not implemeted in ASE",format(self.task))
@@ -90,14 +90,14 @@ class SPRKKR(FileIOCalculator):
         self.atoms = atoms
 
     def set_command(self,task):
-        self.task=task.upper()
+        self.task=input_parameters.upper()
         print("TASK:",self.task)
-        if (self.task.upper()=='SCF'):
+        if (self.input_parameters.upper()=='SCF'):
             self.command = "mpirun.openmpi -np 4 kkrscfMPI  " + self.inpfile + " > " + self.outfile
-        elif (self.task.upper()=='PHAGEN'):
+        elif (self.input_parameters.upper()=='PHAGEN'):
             self.restart=True
             self.command = "kkrscf <  " + self.inpfile + " > " + self.outfile
-        elif (self.task.upper()=='PHAGEN'):
+        elif (self.input_parameters.upper()=='PHAGEN'):
             self.restart=True
             self.command = "kkrgen <  " + self.inpfile + " > " + self.outfile
         else:

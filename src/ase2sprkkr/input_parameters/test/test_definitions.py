@@ -5,7 +5,7 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 import os
-from ..tasks import Task
+from ..input_parameters import InputParameters
 
 class TestDefinitions(TestCase):
 
@@ -15,7 +15,7 @@ class TestDefinitions(TestCase):
       def check(t, name):
           self.assertEqual(t.name, name)
           uname = name.upper()
-          self.assertEqual(t.__class__, Task)
+          self.assertEqual(t.__class__, InputParameters)
           self.assertEqual(t['CONTROL']['ADSI'](), uname)
           self.assertEqual(name != 'scf', uname in t['TASK'])
           if name != 'scf':
@@ -27,13 +27,13 @@ class TestDefinitions(TestCase):
           if not i.endswith('.in'):
              continue
           filename = os.path.join(path, i)
-          self.assertTrue(i[:-3].upper() in Task.definitions())
-          td = Task.definitions()[i[:-3].upper()]
+          self.assertTrue(i[:-3].upper() in InputParameters.definitions())
+          td = InputParameters.definitions()[i[:-3].upper()]
           t = td.read_from_file(filename)
 
           name = i[:-3]
           check(t, name)
-          t = Task.from_file(filename)
+          t = InputParameters.from_file(filename)
           check(t, name)
         except Exception as e:
           raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)

@@ -2,7 +2,7 @@ from ..common.grammar_types import mixed
 from .conf_common import ConfCommon
 
 class Option(ConfCommon):
-  """ Class for one option (a configuration value) of SPRKKR - either to be used as a part of Task or Potential configuration. Usage:
+  """ Class for one option (a configuration value) of SPRKKR - either to be used as a part of InputParameters or Potential configuration. Usage:
 
   conf.ENERGY.ImE = 5
   conf.ENERGY.ImE()

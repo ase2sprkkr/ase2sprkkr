@@ -1,6 +1,6 @@
 def _sections():
   from ...common.grammar_types  import Keyword, DefKeyword, SetOf, Flag, energy
-  from ..task_definitions import \
+  from ..input_parameters_definitions import \
       SectionDefinition as Section, \
       ValueDefinition as V
 

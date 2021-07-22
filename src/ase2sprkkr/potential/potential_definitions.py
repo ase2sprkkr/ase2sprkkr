@@ -1,7 +1,7 @@
 """
 This file contains the classes for definitions of Potentials:
 the list of sections and their allowed (or standard) options
-and their value formats. Tasks and potentials have a simlilar
+and their value formats. InputParameterss and potentials have a simlilar
 structure, so they share common functionalities from
 sprkkr.common.configuration_definitions
 """

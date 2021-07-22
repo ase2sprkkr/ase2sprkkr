@@ -1,12 +1,12 @@
 from ..common.misc import cached_property, add_to_signature
 from ..common.process_output_reader import BaseProcessOutputReader
 
-class TaskResult:
+class InputParametersResult:
   """ A base class for a result of a runned task (kkrscf executable) """
-  def __init__(self, task, calculator, return_code):
-      self.task = task
+  def __init__(self, input_parameters, calculator, return_code):
+      self.input_parameters = input_parameters
       self._calculator = calculator
-      self.directory = task.directory
+      self.directory = input_parameters.directory
       self.return_code = return_code
 
   @cached_property
@@ -14,15 +14,15 @@ class TaskResult:
       return self.potential.atoms
 
 
-class TaskResultReader(BaseProcessOutputReader):
+class InputParametersResultReader(BaseProcessOutputReader):
 
-  """ Process reader, that construct (a descendant of) TaskResult as a result.
+  """ Process reader, that construct (a descendant of) InputParametersResult as a result.
       Subclasses should specify result_class class property.
   """
   @add_to_signature(BaseProcessOutputReader.__init__)
-  def __init__(self, task, calculator):
-      self.task = task
+  def __init__(self, input_parameters, calculator):
+      self.input_parameters = input_parameters
       self.calculator = calculator
 
   def result(self, *args):
-      return self.result_class(self.task, self.calculator, *args)
+      return self.result_class(self.input_parameters, self.calculator, *args)

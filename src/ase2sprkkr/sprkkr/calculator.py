@@ -14,7 +14,7 @@ import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
-from ..task.tasks import Task
+from ..input_parameters.input_parameters import InputParameters
 from ..potential.potentials import Potential
 from ..common.misc import add_to_signature
 import shutil
@@ -24,7 +24,7 @@ class SPRKKR(Calculator):
     """
     ASE calculator for SPR-KKR.
 
-    :cvar ase2sprkkr.task.tasks.Task Task: (just for an easier access to the class)
+    :cvar ase2sprkkr.input_parameters.input_parameters.InputParameters InputParameters: (just for an easier access to the class)
     :cvar ase2sprkkr.potential.potentials.Potential Potential: (dto.)
 
     """
@@ -34,7 +34,7 @@ class SPRKKR(Calculator):
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
                  print_output='info',
-                 mpi=True, task=None, potential=True,
+                 mpi=True, input_parameters=None, potential=True,
                  executable_postfix=True,
                  **kwargs):
         """
@@ -48,9 +48,9 @@ class SPRKKR(Calculator):
           Directory, where the files will be created.
 
         input_file: str or file or None or True
-          Template according to the task (input) file name will be created.
+          Template according to which the input file name will be created.
           None means to use a temporary file.
-          The placeholders for task name, date, etc... can be used.
+          The placeholders for the task name, date, etc... can be used.
           True means the default template.
 
         output_file: str or file or None or True (default).
@@ -74,7 +74,7 @@ class SPRKKR(Calculator):
           The (default) potential to be used in calculations.
           If a string is given, the potential will be read from the given filename.
           True means to generate the potential from atoms.
-          False means that the potential will be given by the task.
+          False means that the potential will be given by the input_parameters.
 
         executable_postfix: str or boolean
           String to be added to the runned executable. In some environments, the version
@@ -82,11 +82,13 @@ class SPRKKR(Calculator):
           True: use SPRKKR_EXECUTABLE_SUFFIX environment variable
           False: do not append anything (the same as '')
 
-        task: sprkkr.task.tasks.Task or str or None
-          The (default) task to compute. Can be None, if no task is specified before calculate,
-          SCF task is created.
+        input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
+          The default input parameters, according to which the input file for the calculation i
+          will be created. Default are the default parameters for the SCF task.
           If str is given, it is interpreted as a name of the task (if no dot and no slash
-          are contained in it), or as a filename contained the task
+          are contained in it), for which (see ase2sprkkr.input_parameters.definitions) the default
+          input parameters will be used, or as a filename contained the input file (which will
+          be readed)
         """
         if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
@@ -108,7 +110,7 @@ class SPRKKR(Calculator):
         self.input_file = (self.label or '') + '%a_%t.inp' if input_file is True else input_file
         self.output_file = output_file
         self.potential_file = potential_file
-        self.task = Task.create_task(task)
+        self.input_parameters = InputParameters.create_task(input_parameters)
         self.print_output = print_output
 
         #For %c template in file names
@@ -220,12 +222,12 @@ class SPRKKR(Calculator):
 
         return open(filename, mode)
 
-    def save_input(self, atoms=None, task=None,
-                  potential=None, task_file=None, potential_file=None, output_file=False,
+    def save_input(self, atoms=None, input_parameters=None,
+                  potential=None, input_file=None, potential_file=None, output_file=False,
                   create_subdirs=False,
                   options = {}, return_files=False):
         """
-        Save input (task) and potential files for a calculation.
+        Save input and potential files for a calculation.
 
         Paramters
         ---------
@@ -234,22 +236,23 @@ class SPRKKR(Calculator):
             of 'energy', 'forces', 'stress', 'dipole', 'charges', 'magmom'
             and 'magmoms'.
 
-        task: sprkkr.task.tasks.Task or str or None
+        input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
             If None, task specified in __init__ is used, or the default 'SCF' task
                will be created.
-            If string is given then if it is a task name, the Task object will be created
+            If string is given then if it is a task name, the InputParameters object will be created
                and the task file created using it.
                Otherwise the task is interpreted as task file, which will be left unchanged.
-            The task is written into the location given by self.input_file.
+            The input parameters is written into the input file,
+               whose name is given by input_file argument.
 
         potential: sprkkr.potential.potentials.Potential or str or None or False
             If it is None, the self.potential value is used instead (see the later options)
-            If False, the potential filename is specified in the task.
+            If False, the potential filename is specified in the input_parameters.
             If True or None, create the potential according to the atoms and self.potential_file property.
             If str, then it is the filename of the potential, that is left unchanged on input
 
-        task_file: str or None
-            Filename or template (see FilenameTemplator class) where to save the task file.
+        input_file: str or None
+            Filename or template (see FilenameTemplator class) where to save the input file.
             None means to use the default value from the Calculator.
 
         potential_file: str or None
@@ -267,18 +270,19 @@ class SPRKKR(Calculator):
              If true, create directories if they don't exists.
 
         options: dict
-            Options to set to the task. If task is given by filename, it is readed, altered by the
-            options and then the modified task (in a temporary file) will be used.
+            Options to set to the input_parameters. If input_parameters are given by a filename,
+            they are readed from the file, altered by the options and then the modified input file
+            (in a temporary file) will be used.
 
         return_files: boolean
             Return open files object instead of just string filenames.
 
         Returns
         -------
-        task: Task
+        input_parameters: InputParameters
             Created task object to be run.
 
-        task_filename: str or file
+        input_filename: str or file
             Input/task file. See return_files
 
         potential_filename: str or file
@@ -296,14 +300,14 @@ class SPRKKR(Calculator):
               raise ValueError(must_exist.format(path))
            return path
 
-        def from_task_name(template, replacement, default):
+        def from_input_name(template, replacement, default):
             if template is not True:
                return template
-            if task_file.name:
-               if task_file.name.endswith('.inp'):
-                  return task_file.name[:-4] + replacement
-               if task_file.name.endswith('.in'):
-                  return task_file.name[:-3] + replacement
+            if input_file.name:
+               if input_file.name.endswith('.inp'):
+                  return input_file.name[:-4] + replacement
+               if input_file.name.endswith('.in'):
+                  return input_file.name[:-3] + replacement
             return default
 
         templator = FilenameTemplator(self)
@@ -312,25 +316,25 @@ class SPRKKR(Calculator):
         if potential is None:
            potential = self.potential
 
-        """ Get the task file """
-        save_task = True
-        if task:
-           if isinstance(task, str):
-              if Task.is_it_a_task_name(task):
-                 task = task.create_task(task)
+        """ Get the input file """
+        save_input = True
+        if input_parameters:
+           if isinstance(input_parameters, str):
+              if InputParameters.is_it_a_input_parameters_name(input_parameters):
+                 input_parameters = InputParameters.create_task(input_parameters)
               else:
-                 task_file = makepath(task, "'{path}' is not a task file nor a known name of task.")
-                 task = Task.from_file(task_file)
                  if not options and not potential:
-                   save_task = False
+                   save_input = False
+                   input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
+                 input_parameters = InputParameters.from_file(input_parameters)
         else:
-           task = self.task or Task.default_task()
-        templator.task = task
+           input_parameters = self.input_parameters or InputParameters.default_parameters()
+        templator.input_parameters = input_parameters
 
-        task_file = self._open_file(task_file or self.input_file, templator, False,
+        input_file = self._open_file(input_file or self.input_file, templator, False,
                                     allow_temporary=return_files,
                                     create_subdirs=create_subdirs,
-                                    mode = 'w+' if save_task else 'r'
+                                    mode = 'w+' if save_input else 'r'
                                     )
 
         used_atoms = atoms or self._atoms
@@ -353,7 +357,7 @@ class SPRKKR(Calculator):
            potential_file = None
 
         if potential:
-           pf = from_task_name(potential_file, '.pot', '%a.pot')
+           pf = from_input_name(potential_file, '.pot', '%a.pot')
            pf = self._open_file(pf, templator, True,
                                             allow_temporary=return_files,
                                             create_subdirs=create_subdirs)
@@ -361,49 +365,49 @@ class SPRKKR(Calculator):
            pf.close()
            potential_file = pf.name
 
-        """ update task by the potential """
-        if save_task:
+        """ update input_parameters by the potential """
+        if save_input:
           if options:
-            task.set(options, unknown = 'find')
+            input_parameters.set(options, unknown = 'find')
           if potential_file:
             #use the relative potential file name to avoid too-long-
             #-potential-file-name problem
-            dirr = os.path.dirname( task_file.name ) if task_file.name else self.directory
-            task.CONTROL.POTFIL = os.path.relpath( potential_file, dirr )
+            dirr = os.path.dirname( input_file.name ) if input_file.name else self.directory
+            input_parameters.CONTROL.POTFIL = os.path.relpath( potential_file, dirr )
           else:
-            potential_file = task.CONTROL.POTFIL
-          task.save_to_file(task_file)
-          task_file.seek(0)
+            potential_file = input_parameters.CONTROL.POTFIL
+          input_parameters.save_to_file(input_file)
+          input_file.seek(0)
         #This branch can occur if the potential have been explicitly set to False,
-        #which means not to create the potential (and take it from the task file)
+        #which means not to create the potential (and take it from the input_parameters)
         else:
-            potential_file = task.CONTROL.POTFIL
+            potential_file = input_parameters.CONTROL.POTFIL
 
         if output_file is not False:
           """ Get the output file """
           output_file = output_file or self.output_file
-          output_file = from_task_name(output_file, '.out', '%a_%t.out')
+          output_file = from_input_name(output_file, '.out', '%a_%t.out')
           output_file = self._open_file(output_file, templator, False, mode='wb',
                                             allow_temporary=return_files,
                                             create_subdirs=create_subdirs)
 
         if not return_files:
-          for f in task_file, output_file:
+          for f in input_file, output_file:
               if hasattr(f,'close'):
                  f.close()
-          task_file = task_file.name
+          input_file = input_file.name
           if output_file:
              output_file = output_file.name
 
         if output_file:
-           return task, task_file, potential_file, output_file
+           return input_parameters, input_file, potential_file, output_file
         else:
-           return task, task_file, potential_file
+           return input_parameters, input_file, potential_file
 
 
 
-    def run(self, atoms=None, task=None,
-                  potential=None, task_file=None, potential_file=None, output_file=None,
+    def run(self, atoms=None, input_parameters=None,
+                  potential=None, input_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
                   options={},
                   print_output=None, executable_postfix=None, mpi=None):
@@ -436,17 +440,19 @@ class SPRKKR(Calculator):
         if output_file==False:
            output_file = None
 
-        task, task_file, _, output_file = self.save_input(atoms=atoms, task=task,
+        input_parameters, input_file, _, output_file = self.save_input(
+                            atoms=atoms, input_parameters=input_parameters,
                             potential=potential, output_file=output_file, options=options,
                             return_files=True)
 
-        return task.run_task_process(self, task_file, output_file, print_output if print_output is not None else self.print_output,
+        return input_parameters.run_process(self, input_file, output_file, print_output if print_output is not None else self.print_output,
                                      executable_postfix = executable_postfix,
                                      mpi=mpi if mpi is not None else self.mpi
                                     )
 
     def calculate(self, atoms=None, properties=['energy'], system_changes=all_changes,
-                  task=None, potential=None, task_file=None, potential_file=None, output_file=None,
+                  input_parameters=None, potential=None,
+                  input_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
                   options={},
                   print_output=None, executable_postfix=None, mpi=None):
@@ -490,8 +496,8 @@ class SPRKKR(Calculator):
         """
         super().calculate(atoms, properties, system_changes)
         out = self.run(
-                  atoms, task,
-                  potential, task_file, potential_file, output_file,
+                  atoms, input_parameters,
+                  potential, input_file, potential_file, output_file,
                   create_subdirs,
                   options,
                   print_output, executable_postfix, mpi=mpi
@@ -504,23 +510,23 @@ class SPRKKR(Calculator):
 
     def scf(self, *args, **kwargs):
          """A shortcut for calculating a SCF task"""
-         self.calculate(task='SCF', *args, **kwargs)
+         self.calculate(input_parameters='SCF', *args, **kwargs)
 
     def phagen(self, *args, **kwargs):
          """A shortcut for calculating a PHAGEN task"""
-         self.calculate(task='PHAGEN', *args, **kwargs)
+         self.calculate(input_parameters='PHAGEN', *args, **kwargs)
 
     def kkrgen(self, *args, **kwargs):
          """A shortcut for calculating a KKRGEN task"""
-         self.calculate(task='KKRGEN', *args, **kwargs)
+         self.calculate(input_parameters='KKRGEN', *args, **kwargs)
 
     def kkrspec(self, *args, **kwargs):
          """A shortcut for calculating a KKRSPEC task"""
-         self.calculate(task='KKRSPEC', *args, **kwargs)
+         self.calculate(input_parameters='KKRSPEC', *args, **kwargs)
 
     def kkrch(self, *args, **kwargs):
          """A shortcut for calculating a KKRCH task"""
-         self.calculate(task='KKRCH', *args, **kwargs)
+         self.calculate(input_parameters='KKRCH', *args, **kwargs)
 
     def copy_with_potential(self, potential):
         """ Return copy of self, with the potential variable set.
@@ -540,7 +546,7 @@ class SPRKKR(Calculator):
 
 #is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != 'sphinx-build':
-    SPRKKR.Task = Task
+    SPRKKR.InputParameters = InputParameters
     SPRKKR.Potential = Potential
 
 
@@ -554,7 +560,7 @@ class FilenameTemplator:
     def __init__(self, calculator):
         self.data = {}
         self.calculator = calculator
-        self.task = None
+        self.input_parameters = None
 
     def _get(self, name, default, calculator):
         if not name in self.data:
@@ -563,7 +569,7 @@ class FilenameTemplator:
 
     replacements = {
           "%d" : lambda self, calc: datetime.today().strftime('%Y-%m-%d_%H:%M'),
-          "%t" : lambda self, calc: self.task.task_name if self.task else 'SPRKKR',
+          "%t" : lambda self, calc: self.input_parameters.task_name if self.input_parameters else 'SPRKKR',
           "%a" : lambda self, calc: str(calc.atoms.symbols) if calc.atoms else 'custom',
           "%c" : lambda self, calc: calc._advance_counter()
         }
