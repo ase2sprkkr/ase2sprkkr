@@ -452,14 +452,14 @@ class BaseDefinitionContainer(BaseDefinition):
        else:
            it = grammars()
            #store the first fixed "chain of sections"
-           first = self._first_section_is_fixed() and next(it)
-           #the reset has any order
+           first = self._first_section_is_fixed() and next(it)[1]
+           #the rest has any order
            values = pp.MatchFirst([i for head,i in it])
            if custom_value:
                values |= custom_value
            values = delimitedList(values, delimiter)
            if first:
-              values = first + delimiter + values
+              values = first + pp.Optional(delimiter + values)
 
        values.setParseAction(lambda x: unique_dict(x.asList()))
 
