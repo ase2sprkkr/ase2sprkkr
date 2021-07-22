@@ -14,7 +14,7 @@ Installation of the package
 Requirements
 ------------
 - Python >= 3.8
-- SprKkr (not checked by the installer)
+- SPRKKR (not checked by the installer)
 
 Optional, to obtain and install the package
 - Git (to obtain the sources)

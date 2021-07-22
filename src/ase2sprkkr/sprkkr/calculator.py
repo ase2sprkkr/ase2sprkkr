@@ -83,12 +83,15 @@ class SPRKKR(Calculator):
           False: do not append anything (the same as '')
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
-          The default input parameters, according to which the input file for the calculation i
-          will be created. Default are the default parameters for the SCF task.
+          The default input parameters, according to which the input file for the calculation
+          will be created. None means that the parameters will be specified in the calculate
+          (or save_input) method.
           If str is given, it is interpreted as a name of the task (if no dot and no slash
           are contained in it), for which (see ase2sprkkr.input_parameters.definitions) the default
           input parameters will be used, or as a filename contained the input file (which will
           be readed)
+
+        options: dict
         """
         if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
@@ -110,11 +113,21 @@ class SPRKKR(Calculator):
         self.input_file = (self.label or '') + '%a_%t.inp' if input_file is True else input_file
         self.output_file = output_file
         self.potential_file = potential_file
-        self.input_parameters = InputParameters.create_task(input_parameters)
+        self.input_parameters = input_parameters
+        if options:
+          self.input_parameters.set(options, unknown = 'find')
         self.print_output = print_output
 
         #For %c template in file names
         self._counter = 0
+
+    @property
+    def input_parameters(self):
+        return input_parameters
+
+    @input_parameters.setter
+    def input_parameters(self, value):
+        self.input_parameteres.InputParameters.create_input_parameters(input_parameters)
 
     def set(self, options={}, **kwargs):
         if kwargs:
@@ -243,7 +256,7 @@ class SPRKKR(Calculator):
             and 'magmoms'.
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
-            If None, task specified in __init__ is used, or the default 'SCF' task
+            If None, task specified in __init__ is used, or the default parameters for 'SCF' task
                will be created.
             If string is given then if it is a task name, the InputParameters object will be created
                and the task file created using it.
