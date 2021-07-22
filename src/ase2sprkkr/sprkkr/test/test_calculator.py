@@ -16,6 +16,7 @@ class CalculatorTest(TestCase):
 
  def test_calculator(self):
      print_output = '-v' in sys.argv or '--verbose' in sys.argv
+     #print_output='info'
 
      dirname = os.path.dirname(__file__)
      here = lambda x: os.path.join(dirname, x)
@@ -101,6 +102,6 @@ class CalculatorTest(TestCase):
      self.assertFalse(out.converged)
 
      calculator = SPRKKR(mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
-     out = calculator.calculate(potential=out.potential,input_parameters=ips)
+     out = calculator.calculate(potential=out.potential,input_parameters=ips,print_output=print_output)
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))

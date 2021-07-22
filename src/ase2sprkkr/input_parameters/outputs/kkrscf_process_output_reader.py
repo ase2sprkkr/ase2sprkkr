@@ -12,6 +12,7 @@ from ...potential.potentials import Potential
 import os
 import copy
 from ...sprkkr.calculator import SPRKKR
+from ...common.formats import fortran_format
 
 class ScfResult(InputParametersResult):
 
@@ -169,7 +170,8 @@ class KkrScfProcessOutputReader(InputParametersResultReader):
             out['converged'] = line[5] == 'converged'
             iterations.append(out)
             if self.print_output == 'info':
-               print(f"Iteration {out['iteration']:>5} error {out['error']:>12e} "
+               error = fortran_format(out['error'], ":>12e")
+               print(f"Iteration {out['iteration']:>5} error {error} "
                      f"moment-spin: {out['moment']['spin']:>13.6e} "
                      f"moment-orbital: {out['moment']['orbital']:>13.6e} ")
           if self.print_output == 'info':
