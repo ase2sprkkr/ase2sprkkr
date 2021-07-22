@@ -103,6 +103,6 @@ class InputParametersDefinition(ConfDefinition):
 
       super().__init__(name, sections, **kwargs)
       if not 'TASK' in self:
-         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', DefKeyword(self.name)) ] )
+         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
       elif not 'TASK' in self['TASK']:
-         self['TASK']['TASK'] = ValueDefinition(DefKeyword(self.name))
+         self['TASK']['TASK'] = ValueDefinition(DefKeyword(self.name), name_in_grammar=False)

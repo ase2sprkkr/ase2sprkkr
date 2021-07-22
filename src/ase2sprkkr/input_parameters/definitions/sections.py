@@ -9,7 +9,7 @@ def _sections():
       V('DATASET', str, 'case', required = True, help="Meaning of the parameter"),
       V('ADSI', DefKeyword(x), required = True, help="Type of the computation -- do DFT selfconsistent cycle"),
       V('POTFIL', str, required=True, help="Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator."),
-      V('KRWS', int)
+      V('KRWS', int, required=False)
   ])
 
   sections['TAU'] = Section('TAU',[
@@ -38,7 +38,7 @@ def _sections():
   ])
 
   sections['TASK'] = lambda x: Section('TASK', [
-    V('TASK', DefKeyword(x))
+    V('TASK', DefKeyword(x), name_in_grammar=False)
   ])
 
   return sections
