@@ -1,7 +1,7 @@
-ase2sprkkr.task.definitions.sections module
+ase2sprkkr.input_parameters.definitions.sections module
 ===========================================
 
-.. automodule:: ase2sprkkr.task.definitions.sections
+.. automodule:: ase2sprkkr.input_parameters.definitions.sections
    :members:
    :undoc-members:
    :show-inheritance:

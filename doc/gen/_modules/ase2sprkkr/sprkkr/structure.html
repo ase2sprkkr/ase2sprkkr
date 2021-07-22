@@ -154,7 +154,7 @@
             
   <h1>Source code for ase2sprkkr.sprkkr.structure</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atom</span>
-<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SprKkrAtoms</span>
+<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="kn">from</span> <span class="nn">..potential.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -234,7 +234,7 @@
 <span class="sd">  filename: str</span>
 <span class="sd">    File to read</span>
 
-<span class="sd">  atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms</span>
+<span class="sd">  atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span>
 <span class="sd">    Atoms object, from where the types of atoms will be given</span>
 
 <span class="sd">  n_bulk: int</span>
@@ -296,7 +296,7 @@
                   <span class="n">zmin</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">zmin</span><span class="p">)</span>
 
   <span class="c1"># Create Atoms and Atom ASE-objects from structural data</span>
-  <span class="n">structure</span><span class="o">=</span><span class="n">SprKkrAtoms</span><span class="p">()</span>
+  <span class="n">structure</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="p">()</span>
   <span class="n">cell</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
   <span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">latvec</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
   <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span> <span class="n">zmax</span>

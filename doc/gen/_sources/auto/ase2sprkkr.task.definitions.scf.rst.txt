@@ -1,7 +1,7 @@
-ase2sprkkr.task.definitions.scf module
+ase2sprkkr.input_parameters.definitions.scf module
 ======================================
 
-.. automodule:: ase2sprkkr.task.definitions.scf
+.. automodule:: ase2sprkkr.input_parameters.definitions.scf
    :members:
    :undoc-members:
    :show-inheritance:

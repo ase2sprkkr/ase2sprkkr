@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -155,7 +157,7 @@
 <span class="kn">from</span> <span class="nn">.conf_common</span> <span class="kn">import</span> <span class="n">ConfCommon</span>
 
 <span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="n">ConfCommon</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; Class for one option (a configuration value) of SPRKKR - either to be used as a part of Task or Potential configuration. Usage:</span>
+  <span class="sd">&quot;&quot;&quot; Class for one option (a configuration value) of SPRKKR - either to be used as a part of InputParameters or Potential configuration. Usage:</span>
 
 <span class="sd">  conf.ENERGY.ImE = 5</span>
 <span class="sd">  conf.ENERGY.ImE()</span>
@@ -233,13 +235,13 @@
   <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CustomOption"><a class="viewcode-back" href="../../../ase2sprkkr.common.options.html#ase2sprkkr.common.options.CustomOption">[docs]</a><span class="k">class</span> <span class="nc">CustomOption</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomOption"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.html#ase2sprkkr.common.options.CustomOption">[docs]</a><span class="k">class</span> <span class="nc">CustomOption</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; An user-added option (configuration value). It can be removed from the section. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CustomOption.remove"><a class="viewcode-back" href="../../../ase2sprkkr.common.options.html#ase2sprkkr.common.options.CustomOption.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomOption.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.html#ase2sprkkr.common.options.CustomOption.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CustomOption.factory"><a class="viewcode-back" href="../../../ase2sprkkr.common.options.html#ase2sprkkr.common.options.CustomOption.factory">[docs]</a>  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CustomOption.factory"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.html#ase2sprkkr.common.options.CustomOption.factory">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">factory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value_definition</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">mixed</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Returns factory function for the given value definition &quot;&quot;&quot;</span>
 

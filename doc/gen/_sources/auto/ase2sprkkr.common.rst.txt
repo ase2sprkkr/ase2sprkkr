@@ -10,6 +10,7 @@ Submodules
    ase2sprkkr.common.conf_common
    ase2sprkkr.common.conf_containers
    ase2sprkkr.common.configuration_definitions
+   ase2sprkkr.common.formats
    ase2sprkkr.common.grammar
    ase2sprkkr.common.grammar_types
    ase2sprkkr.common.init_tests

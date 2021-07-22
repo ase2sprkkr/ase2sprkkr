@@ -1,7 +1,7 @@
-ase2sprkkr.task.definitions.arpes module
+ase2sprkkr.input_parameters.definitions.arpes module
 ========================================
 
-.. automodule:: ase2sprkkr.task.definitions.arpes
+.. automodule:: ase2sprkkr.input_parameters.definitions.arpes
    :members:
    :undoc-members:
    :show-inheritance:

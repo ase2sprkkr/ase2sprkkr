@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ase2sprkkr.task.test.test_definitions &mdash; ASE2SPRKKR  documentation</title>
+  <title>ase2sprkkr.input_parameters.test.test_definitions &mdash; ASE2SPRKKR  documentation</title>
   
 
   
@@ -135,7 +135,7 @@
         
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
         
-      <li>ase2sprkkr.task.test.test_definitions</li>
+      <li>ase2sprkkr.input_parameters.test.test_definitions</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -150,7 +150,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for ase2sprkkr.task.test.test_definitions</h1><div class="highlight"><pre>
+  <h1>Source code for ase2sprkkr.input_parameters.test.test_definitions</h1><div class="highlight"><pre>
 <span></span><span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="k">else</span><span class="p">:</span>
@@ -158,17 +158,17 @@
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">..tasks</span> <span class="kn">import</span> <span class="n">Task</span>
+<span class="kn">from</span> <span class="nn">..input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
 
-<div class="viewcode-block" id="TestDefinitions"><a class="viewcode-back" href="../../../../ase2sprkkr.task.test.test_definitions.html#ase2sprkkr.task.test.test_definitions.TestDefinitions">[docs]</a><span class="k">class</span> <span class="nc">TestDefinitions</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestDefinitions"><a class="viewcode-back" href="../../../../ase2sprkkr.input_parameters.test.test_definitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions">[docs]</a><span class="k">class</span> <span class="nc">TestDefinitions</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestDefinitions.test_definitions"><a class="viewcode-back" href="../../../../ase2sprkkr.task.test.test_definitions.html#ase2sprkkr.task.test.test_definitions.TestDefinitions.test_definitions">[docs]</a>  <span class="k">def</span> <span class="nf">test_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestDefinitions.test_definitions"><a class="viewcode-back" href="../../../../ase2sprkkr.input_parameters.test.test_definitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.test_definitions">[docs]</a>  <span class="k">def</span> <span class="nf">test_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../examples&#39;</span><span class="p">)</span>
 
       <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
           <span class="n">uname</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">Task</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">InputParameters</span><span class="p">)</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;CONTROL&#39;</span><span class="p">][</span><span class="s1">&#39;ADSI&#39;</span><span class="p">](),</span> <span class="n">uname</span><span class="p">)</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;scf&#39;</span><span class="p">,</span> <span class="n">uname</span> <span class="ow">in</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;TASK&#39;</span><span class="p">])</span>
           <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;scf&#39;</span><span class="p">:</span>
@@ -180,13 +180,13 @@
           <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.in&#39;</span><span class="p">):</span>
              <span class="k">continue</span>
           <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">Task</span><span class="o">.</span><span class="n">definitions</span><span class="p">())</span>
-          <span class="n">td</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">definitions</span><span class="p">()[</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">definitions</span><span class="p">())</span>
+          <span class="n">td</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">definitions</span><span class="p">()[</span><span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span>
           <span class="n">t</span> <span class="o">=</span> <span class="n">td</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
           <span class="n">name</span> <span class="o">=</span> <span class="n">i</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
           <span class="n">check</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-          <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+          <span class="n">t</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
           <span class="n">check</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Parsing of &quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&quot; failed with the reason: </span><span class="se">\n</span><span class="s1"> </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span></div></div>

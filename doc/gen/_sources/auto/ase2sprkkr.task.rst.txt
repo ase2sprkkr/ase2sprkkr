@@ -7,9 +7,9 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   ase2sprkkr.task.definitions
-   ase2sprkkr.task.outputs
-   ase2sprkkr.task.test
+   ase2sprkkr.input_parameters.definitions
+   ase2sprkkr.input_parameters.outputs
+   ase2sprkkr.input_parameters.test
 
 Submodules
 ----------
@@ -17,10 +17,10 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   ase2sprkkr.task.output_definitions
-   ase2sprkkr.task.task_definitions
-   ase2sprkkr.task.task_result
-   ase2sprkkr.task.tasks
+   ase2sprkkr.input_parameters.output_definitions
+   ase2sprkkr.input_parameters.input_parameters_definitions
+   ase2sprkkr.input_parameters.task_result
+   ase2sprkkr.input_parameters.input_parameters
 
 Module contents
 ---------------

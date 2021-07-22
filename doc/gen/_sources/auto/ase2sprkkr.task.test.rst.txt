@@ -1,4 +1,4 @@
-ase2sprkkr.task.test package
+ase2sprkkr.input_parameters.test package
 ============================
 
 Submodules
@@ -7,15 +7,15 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   ase2sprkkr.task.test.init_tests
-   ase2sprkkr.task.test.test_definitions
-   ase2sprkkr.task.test.test_output
-   ase2sprkkr.task.test.test_tasks
+   ase2sprkkr.input_parameters.test.init_tests
+   ase2sprkkr.input_parameters.test.test_definitions
+   ase2sprkkr.input_parameters.test.test_output
+   ase2sprkkr.input_parameters.test.test_input_parameters
 
 Module contents
 ---------------
 
-.. automodule:: ase2sprkkr.task.test
+.. automodule:: ase2sprkkr.input_parameters.test
    :members:
    :undoc-members:
    :show-inheritance:

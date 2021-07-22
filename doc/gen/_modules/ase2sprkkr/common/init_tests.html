@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -160,7 +162,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
 
-<div class="viewcode-block" id="patch_package"><a class="viewcode-back" href="../../../ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.patch_package">[docs]</a><span class="k">def</span> <span class="nf">patch_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="patch_package"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.patch_package">[docs]</a><span class="k">def</span> <span class="nf">patch_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Set the package name for the test &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">package</span> <span class="ow">and</span> <span class="n">package</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
        <span class="k">return</span> <span class="n">package</span><span class="p">,</span> <span class="n">name</span>
@@ -178,21 +180,21 @@
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
-<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../../ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestCase.assertAsyncEqual"><a class="viewcode-back" href="../../../ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.assertAsyncEqual">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.assertAsyncEqual"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.assertAsyncEqual">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TestCase.assertAsyncRaises"><a class="viewcode-back" href="../../../ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.assertAsyncRaises">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.assertAsyncRaises"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.assertAsyncRaises">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TestCase.runAsync"><a class="viewcode-back" href="../../../ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.runAsync">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TestCase.runAsync"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.runAsync">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">runAsync</span><span class="p">(</span><span class="n">corr</span><span class="p">):</span>
       <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
       <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestCase.setUp"><a class="viewcode-back" href="../../../ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.setUp">[docs]</a>  <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.setUp"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.setUp">[docs]</a>  <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Register numpy array for the equality &quot;&quot;&quot;</span>
 
       <span class="k">def</span> <span class="nf">testfce</span><span class="p">(</span><span class="n">fce</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>

@@ -1,7 +1,7 @@
-ase2sprkkr.task.task\_definitions module
+ase2sprkkr.input_parameters.task\_definitions module
 ========================================
 
-.. automodule:: ase2sprkkr.task.task_definitions
+.. automodule:: ase2sprkkr.input_parameters.input_parameters_definitions
    :members:
    :undoc-members:
    :show-inheritance:

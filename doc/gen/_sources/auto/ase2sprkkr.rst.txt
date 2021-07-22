@@ -8,9 +8,9 @@ Subpackages
    :maxdepth: 4
 
    ase2sprkkr.common
+   ase2sprkkr.input_parameters
    ase2sprkkr.potential
    ase2sprkkr.sprkkr
-   ase2sprkkr.task
 
 Submodules
 ----------

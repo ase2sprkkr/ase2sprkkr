@@ -153,7 +153,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.sprkkr.sprkkr_atoms</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; This file contains SprKkrAtoms - an enhanced version of Atoms to be used</span>
+<span></span><span class="sd">&quot;&quot;&quot; This file contains SPRKKRAtoms - an enhanced version of Atoms to be used</span>
 <span class="sd">with SPRKKR &quot;&quot;&quot;</span>
 
 
@@ -164,26 +164,25 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">..sprkkr.sites</span> <span class="kn">import</span> <span class="n">Site</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">numpy_index</span>
-<span class="kn">from</span> <span class="nn">..potential</span> <span class="kn">import</span> <span class="n">potentials</span>
 
-<div class="viewcode-block" id="SprKkrAtoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms">[docs]</a><span class="k">class</span> <span class="nc">SprKkrAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKRAtoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms">[docs]</a><span class="k">class</span> <span class="nc">SPRKKRAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
    <span class="sd">&quot;&quot;&quot; ASE Atoms object extended by the data necessary for SPR-KKR calculations &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SprKkrAtoms.promote_ase_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.promote_ase_atoms">[docs]</a>   <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SPRKKRAtoms.promote_ase_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms">[docs]</a>   <span class="nd">@staticmethod</span>
    <span class="k">def</span> <span class="nf">promote_ase_atoms</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-       <span class="sd">&quot;&quot;&quot; Convert ASE Atoms object to the one usable by SprKkr.</span>
+       <span class="sd">&quot;&quot;&quot; Convert ASE Atoms object to the one usable by SPRKKR.</span>
 <span class="sd">           For the case of the usability it is a bit ugly hack: The __class__ attribute</span>
 <span class="sd">           is replaced so the extra methods and properties of the objects will</span>
 <span class="sd">           be available.</span>
 <span class="sd">       &quot;&quot;&quot;</span>
-       <span class="k">if</span> <span class="n">obj</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">SprKkrAtoms</span><span class="p">):</span>
+       <span class="k">if</span> <span class="n">obj</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">):</span>
           <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="n">Atoms</span><span class="p">:</span>
-             <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">SprKkrAtoms</span>
+             <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span>
           <span class="k">else</span><span class="p">:</span>
              <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Atoms</span><span class="p">):</span>
-                <span class="k">raise</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not promote class </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1"> of class </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">SprKkrAtoms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">raise</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not promote class </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1"> of class </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">SPRKKRAtoms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-             <span class="k">class</span> <span class="nc">SprKKrAtomsEx</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">SprKkrAtoms</span><span class="p">):</span>
+             <span class="k">class</span> <span class="nc">SprKKrAtomsEx</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">SPRKKRAtoms</span><span class="p">):</span>
                    <span class="k">pass</span>
              <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">SprKKrAtomsEx</span>
 
@@ -194,13 +193,13 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">()</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SprKkrAtoms._init"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms._init">[docs]</a>   <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKRAtoms._init"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init">[docs]</a>   <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; The initialization of the additional (not-in-ASE) properties. To be used</span>
 <span class="sd">       by constructor and by promote_ase_atoms&quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_unique_sites</span> <span class="o">=</span> <span class="kc">None</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="SprKkrAtoms.compute_spacegroup_for_atomic_numbers"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.compute_spacegroup_for_atomic_numbers">[docs]</a>   <span class="k">def</span> <span class="nf">compute_spacegroup_for_atomic_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKRAtoms.compute_spacegroup_for_atomic_numbers"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_spacegroup_for_atomic_numbers">[docs]</a>   <span class="k">def</span> <span class="nf">compute_spacegroup_for_atomic_numbers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Return spacegroup that suits to the atoms&#39; cell structure and to the given</span>
 <span class="sd">           atomic_numbers (not necessary the real ones, they can be just &#39;&#39;labels&#39;&#39;).</span>
 <span class="sd">       &quot;&quot;&quot;</span>
@@ -216,7 +215,7 @@
        <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_no</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">spacegroup</span></div>
 
-<div class="viewcode-block" id="SprKkrAtoms.compute_sites_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms.compute_sites_symmetry">[docs]</a>   <span class="k">def</span> <span class="nf">compute_sites_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacegroup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKRAtoms.compute_sites_symmetry"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry">[docs]</a>   <span class="k">def</span> <span class="nf">compute_sites_symmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacegroup</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">symprec</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; SPRKKR has some properties shared by all by-symmetry-equal sites.</span>
 <span class="sd">           This method initializes _sites property, that hold these properties:</span>
 <span class="sd">           makes identical all atoms on the &quot;symmetry identical positions with</span>
@@ -336,6 +335,9 @@
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">potentials</span><span class="o">.</span><span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span></div>
+
+<span class="c1">#at the last - to avoid circular imports</span>
+<span class="kn">from</span> <span class="nn">..potential</span> <span class="kn">import</span> <span class="n">potentials</span>
 </pre></div>
 
            </div>

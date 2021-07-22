@@ -1,4 +1,4 @@
-ase2sprkkr.task.outputs package
+ase2sprkkr.input_parameters.outputs package
 ===============================
 
 Submodules
@@ -7,12 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   ase2sprkkr.task.outputs.kkrscf_process_output_reader
+   ase2sprkkr.input_parameters.outputs.kkrscf_process_output_reader
 
 Module contents
 ---------------
 
-.. automodule:: ase2sprkkr.task.outputs
+.. automodule:: ase2sprkkr.input_parameters.outputs
    :members:
    :undoc-members:
    :show-inheritance:

@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -156,18 +158,18 @@
 <span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">PotentialSection</span>
 
 <span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Integer</span>
-<span class="kn">from</span> <span class="nn">....sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SprKkrAtoms</span>
+<span class="kn">from</span> <span class="nn">....sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 
-<div class="viewcode-block" id="SitesSection"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.sites.html#ase2sprkkr.potential.definitions.sections.SitesSection">[docs]</a><span class="k">class</span> <span class="nc">SitesSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+<div class="viewcode-block" id="SitesSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.sites.html#ase2sprkkr.potential.definitions.sections.SitesSection">[docs]</a><span class="k">class</span> <span class="nc">SitesSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This section retrieves the atomic positions and</span>
 <span class="sd">      it creates (during reading) the ASE Atoms object &quot;&quot;&quot;</span>
 
-  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="SitesSection._set_from_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.sites.html#ase2sprkkr.potential.definitions.sections.SitesSection._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
       <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_ATOMIC_POSITIONS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
           <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span> <span class="o">/</span> <span class="p">(</span> <span class="n">write_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;BASSCALE&#39;</span><span class="p">]())</span>
-      <span class="p">)</span>
+      <span class="p">)</span></div>
 
-  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="SitesSection._update_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.sites.html#ase2sprkkr.potential.definitions.sections.SitesSection._update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
       <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_ATOMIC_POSITIONS&#39;</span><span class="p">]()</span> <span class="o">*</span> \
             <span class="p">(</span><span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;BASSCALE&#39;</span><span class="p">]())</span>
       <span class="n">new</span> <span class="o">=</span> <span class="kc">True</span>
@@ -178,10 +180,10 @@
       <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">pass</span>
       <span class="k">if</span> <span class="n">new</span><span class="p">:</span>
-         <span class="n">atoms</span> <span class="o">=</span> <span class="n">SprKkrAtoms</span><span class="p">(</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.cell&#39;</span><span class="p">])</span>
-         <span class="k">return</span> <span class="n">atoms</span></div>
+         <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.cell&#39;</span><span class="p">])</span>
+         <span class="k">return</span> <span class="n">atoms</span></div></div>
 
-<div class="viewcode-block" id="SitesSectionDefinition"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.sites.html#ase2sprkkr.potential.definitions.sections.SitesSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">SitesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="SitesSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.sites.html#ase2sprkkr.potential.definitions.sections.SitesSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">SitesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;SITES&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
