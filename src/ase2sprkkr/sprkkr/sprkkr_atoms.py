@@ -1,4 +1,4 @@
-""" This file contains SprKkrAtoms - an enhanced version of Atoms to be used
+""" This file contains SPRKKRAtoms - an enhanced version of Atoms to be used
 with SPRKKR """
 
 
@@ -10,24 +10,24 @@ import numpy as np
 from ..sprkkr.sites import Site
 from ..common.misc import numpy_index
 
-class SprKkrAtoms(Atoms):
+class SPRKKRAtoms(Atoms):
    """ ASE Atoms object extended by the data necessary for SPR-KKR calculations """
 
    @staticmethod
    def promote_ase_atoms(obj):
-       """ Convert ASE Atoms object to the one usable by SprKkr.
+       """ Convert ASE Atoms object to the one usable by SPRKKR.
            For the case of the usability it is a bit ugly hack: The __class__ attribute
            is replaced so the extra methods and properties of the objects will
            be available.
        """
-       if obj and not isinstance(obj, SprKkrAtoms):
+       if obj and not isinstance(obj, SPRKKRAtoms):
           if obj.__class__ is Atoms:
-             obj.__class__ = SprKkrAtoms
+             obj.__class__ = SPRKKRAtoms
           else:
              if not isinstance(obj, Atoms):
-                raise(f'Can not promote class {obj} of class {obj.__class__} to {SprKkrAtoms}')
+                raise(f'Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}')
 
-             class SprKKrAtomsEx(obj.__class__, SprKkrAtoms):
+             class SprKKrAtomsEx(obj.__class__, SPRKKRAtoms):
                    pass
              obj.__class__ = SprKKrAtomsEx
 

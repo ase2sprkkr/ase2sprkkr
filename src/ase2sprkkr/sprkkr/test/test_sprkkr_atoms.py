@@ -5,16 +5,16 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 from ase import Atoms
-from .. sprkkr_atoms import SprKkrAtoms
+from .. sprkkr_atoms import SPRKKRAtoms
 
-class SprKkrAtomsTest(TestCase):
+class SPRKKRAtomsTest(TestCase):
 
  def test_calculator(self):
      a = Atoms('NaCl')
      a.set_positions([[0,0,0],[0,1,0]])
      a.info['occupancy'] = { 1: {'Cl' : 0.4, 'I' : 0.6 } }
      self.assertEquals(str(a.symbols), 'NaCl')
-     SprKkrAtoms.promote_ase_atoms(a)
+     SPRKKRAtoms.promote_ase_atoms(a)
      self.assertEquals(len(a.sites), 2)
      self.assertEquals(len(a.sites[0].occupation), 1)
      self.assertEquals(len(a.sites[1].occupation), 2)

@@ -13,14 +13,14 @@ view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`
 import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
-from .sprkkr_atoms import SprKkrAtoms
+from .sprkkr_atoms import SPRKKRAtoms
 from ..task.tasks import Task
 from ..potential.potentials import Potential
 from ..common.misc import add_to_signature
 import shutil
 import copy
 
-class SprKkr(Calculator):
+class SPRKKR(Calculator):
     """
     ASE calculator for SPR-KKR.
 
@@ -93,7 +93,7 @@ class SprKkr(Calculator):
                potential = Potential.read_from_file(potential, atoms = atoms)
            atoms = potential.atoms
         elif atoms:
-           atoms = SprKkrAtoms.promote_ase_atoms(atoms)
+           atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
         self._potential = None
         self.atoms = atoms
@@ -143,12 +143,12 @@ class SprKkr(Calculator):
            pot._atoms = self._atoms
 
     @property
-    def atoms(self) -> SprKkrAtoms:
+    def atoms(self) -> SPRKKRAtoms:
        """ Atoms object, associate with the calculator.
 
        Return
        ------
-       atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms
+       atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
        """
        if self._atoms is None:
           if not self._potential or isinstance(self._potential, (bool, str)):
@@ -346,7 +346,7 @@ class SprKkr(Calculator):
               if potential is True:
                   potential=Potential.from_atoms(used_atoms)
               elif atoms:
-                  raise ValueError("You can not provide both potential and atoms object to the SprKkr calculate method")
+                  raise ValueError("You can not provide both potential and atoms object to the SPRKKR calculate method")
            elif potential is True:
               potential = potential_file = None
         else:
@@ -540,8 +540,8 @@ class SprKkr(Calculator):
 
 #is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != 'sphinx-build':
-    SprKkr.Task = Task
-    SprKkr.Potential = Potential
+    SPRKKR.Task = Task
+    SPRKKR.Potential = Potential
 
 
 class FilenameTemplator:

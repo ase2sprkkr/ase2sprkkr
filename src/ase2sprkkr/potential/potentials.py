@@ -1,6 +1,6 @@
 from ..common.conf_containers import RootConfContainer
 from .io_data import ReadIoData, WriteIoData
-from ..sprkkr.sprkkr_atoms import SprKkrAtoms
+from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 from ..common.misc import class_property, cache
 
 class Potential(RootConfContainer):
@@ -36,7 +36,7 @@ class Potential(RootConfContainer):
   def update_atoms(self, atoms=None):
       """ Update the ASE object from the values contained in the sections
       of the potential """
-      atoms = SprKkrAtoms.promote_ase_atoms(atoms or self._atoms)
+      atoms = SPRKKRAtoms.promote_ase_atoms(atoms or self._atoms)
       iodata = ReadIoData()
       readed = set()
 
@@ -63,7 +63,7 @@ class Potential(RootConfContainer):
 
   def set_from_atoms(self, atoms = None):
       """ Set the sections of the potential accoring to an ASE atoms object. """
-      atoms = SprKkrAtoms.promote_ase_atoms(atoms or self._atoms)
+      atoms = SPRKKRAtoms.promote_ase_atoms(atoms or self._atoms)
       iodata = WriteIoData(self.atoms)
       for i in self:
           i._set_from_atoms(atoms, iodata)

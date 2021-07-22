@@ -3,7 +3,7 @@ from ...potential_definitions import PotSectionDefinition, \
 from ...potential_sections import PotentialSection
 
 from ....common.grammar_types import DefKeyword, Array, Table, Integer
-from ....sprkkr.sprkkr_atoms import SprKkrAtoms
+from ....sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 class SitesSection(PotentialSection):
   """ This section retrieves the atomic positions and
@@ -25,7 +25,7 @@ class SitesSection(PotentialSection):
       except ValueError:
             pass
       if new:
-         atoms = SprKkrAtoms(positions = positions, cell = read_io_data['lattice.cell'])
+         atoms = SPRKKRAtoms(positions = positions, cell = read_io_data['lattice.cell'])
          return atoms
 
 class SitesSectionDefinition(PotSectionDefinition):

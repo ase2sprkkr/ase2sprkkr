@@ -23,7 +23,7 @@ class Site:
           of { T : 1.0 } is used, where T is determined by ASE atomic number
           corresponding to the site.
 
-      atoms: SprKkrAtoms
+      atoms: SPRKKRAtoms
           The atoms, into which the Site belongs
 
       reference_system: ReferenceSystem

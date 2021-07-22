@@ -11,7 +11,7 @@ from ...common.misc import cached_property
 from ...potential.potentials import Potential
 import os
 import copy
-from ...sprkkr.calculator import SprKkr
+from ...sprkkr.calculator import SPRKKR
 
 class ScfResult(TaskResult):
 
@@ -39,7 +39,7 @@ class ScfResult(TaskResult):
       if self._calculator:
          return self._calculator.copy_with_potential(self.potential_filename)
       else:
-         SprKkr(potential = self.potential_filename)
+         SPRKKR(potential = self.potential_filename)
 
   @property
   def energy(self):

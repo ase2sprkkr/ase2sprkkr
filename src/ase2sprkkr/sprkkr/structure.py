@@ -1,5 +1,5 @@
 from ase import Atom
-from .sprkkr_atoms import SprKkrAtoms
+from .sprkkr_atoms import SPRKKRAtoms
 from ..potential.potentials import Potential
 from ase.units import Bohr
 import copy
@@ -79,7 +79,7 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
   filename: str
     File to read
 
-  atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SprKkrAtoms
+  atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms
     Atoms object, from where the types of atoms will be given
 
   n_bulk: int
@@ -141,7 +141,7 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
                   zmin=min(atom.pos[2],zmin)
 
   # Create Atoms and Atom ASE-objects from structural data
-  structure=SprKkrAtoms()
+  structure=SPRKKRAtoms()
   cell=np.zeros(shape=(3,3), dtype=float)
   cell[0:2,0:2]=latvec[0:2,0:2]
   cell[2,2]= zmax

@@ -4,17 +4,17 @@ there are a generic classes for these sections.
 
 from ..common.conf_containers import Section
 from .io_data import ReadIoData, WriteIoData
-from ..sprkkr.sprkkr_atoms import SprKkrAtoms
+from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 class PotentialSection(Section):
     """ A generic class for a section in a potential """
 
-    def _set_from_atoms(self, atoms:SprKkrAtoms, write_io_data:WriteIoData):
+    def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data:WriteIoData):
         """ This function should be called before potential file writing to set the propper values to the section.
 
         Parameters
         ----------
-        atoms : SprKkrAtoms
+        atoms : SPRKKRAtoms
           Atoms that will be used to create
 
         write_io_data: WriteIoData
@@ -22,13 +22,13 @@ class PotentialSection(Section):
         """
         pass
 
-    def _update_atoms(self, atoms:SprKkrAtoms, read_io_data:ReadIoData):
+    def _update_atoms(self, atoms:SPRKKRAtoms, read_io_data:ReadIoData):
         """
         This function should be called after potential file reading to set the values of Atoms object to the ones from the readed file.
 
         Parameters
         ----------
-        atoms : SprKkrAtoms
+        atoms : SPRKKRAtoms
           Atoms, whose properties should be set to the values from readed file. Can be None in some sections, then the object will be created
         read_io_data: ReadIoData
           Object for storing values from one section to be used in another one. This mechanism is used to be the sections as independent (and independently testable) as they can be.
@@ -36,7 +36,7 @@ class PotentialSection(Section):
 
         Return
         ------
-        atoms: None or SprKkrAtoms
+        atoms: None or SPRKKRAtoms
           If the function creates a new Atoms obejct (either when None has been passed to the atoms args, or when the atoms cannot be adapted to the values readed from the file - e.g. when number of atoms differs) it should return it.
         """
         return None
@@ -72,7 +72,7 @@ class UniqueListSection(PotentialSection):
     """ The class, that should be created from the list of data """
 
 
-    def _set_from_atoms(self, atoms:SprKkrAtoms, write_io_data: WriteIoData):
+    def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data: WriteIoData):
         """
         Set the values of the section from the write_io_data.
 
@@ -82,7 +82,7 @@ class UniqueListSection(PotentialSection):
         ul = getattr(write_io_data, self._value_name)
         self['DATA'].set([ i.to_tuple() for i in ul.iter_unique()])
 
-    def _update_atoms(self, atoms:SprKkrAtoms, read_io_data: ReadIoData):
+    def _update_atoms(self, atoms:SPRKKRAtoms, read_io_data: ReadIoData):
         """
         Update a ReadIoData object a.ccordingly the data in the section:
         set its _value_name to list of self_value_class.from_tuple(<data>)
@@ -113,7 +113,7 @@ class ASEArraySection(PotentialSection):
         """
         return super()._depends_on() + ['SITES']
 
-    def _set_from_atoms(self, atoms: SprKkrAtoms, _):
+    def _set_from_atoms(self, atoms: SPRKKRAtoms, _):
         """
         Just set the values in the section from the Atoms object.
         If the array not exists and the value is mandatory, set it to zero.
@@ -130,7 +130,7 @@ class ASEArraySection(PotentialSection):
              value = data._definition.type.zero_data(len(atoms.positions))
         data.set(value)
 
-    def _update_atoms(self, atoms:SprKkrAtoms, _):
+    def _update_atoms(self, atoms:SPRKKRAtoms, _):
         """
         Set the array accordingly to the readed data
 

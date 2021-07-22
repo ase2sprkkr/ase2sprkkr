@@ -129,6 +129,6 @@ class Task(RootConfContainer):
       raise last
 
   def calculate(self, *args, **kwargs):
-      """ Create a calculator and run the task. See SprKkr.calculate for the arguments """
-      calculator = SprKkr()
+      """ Create a calculator and run the task. See SPRKKR.calculate for the arguments """
+      calculator = SPRKKR()
       calculator.calculate(task = task, *args, **kwargs)

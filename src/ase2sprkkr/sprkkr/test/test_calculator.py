@@ -5,7 +5,7 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 from ase.build import bulk
-from ..calculator import SprKkr
+from ..calculator import SPRKKR
 from ...potential.potentials import Potential
 import os
 import sys
@@ -21,7 +21,7 @@ class CalculatorTest(TestCase):
      here = lambda x: os.path.join(dirname, x)
 
      atoms = bulk('Li')
-     calculator = SprKkr(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
+     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
 
      inp_file=here('output_test_calc.inp')
      pot_file=here('output_test_calc.pot')
@@ -69,7 +69,7 @@ class CalculatorTest(TestCase):
      self.assertTrue(isinstance(out.calculator.potential_object, Potential))
 
      #read again the output from a file - the results should be the same
-     out = SprKkr.Task.create('scf').read_output_from_file(here('output_test_calc.out'))
+     out = SPRKKR.Task.create('scf').read_output_from_file(here('output_test_calc.out'))
      self.assertEqual(2, len(out.iterations))
      out.plot(filename = here('output_test_calc.png'))
 
@@ -78,7 +78,7 @@ class CalculatorTest(TestCase):
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
-     calculator = SprKkr(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
+     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
      out = calculator.calculate(options = {'NITER' : 1, 'NE' : 12 }, print_output=print_output)
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(3, len(out.iterations[-1]['atoms']))
@@ -86,13 +86,13 @@ class CalculatorTest(TestCase):
         self.assertEqual(5, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
 
-     out = SprKkr.Task.from_file(here('output_test_calc.inp')).read_output_from_file(here('output_test_calc.out'))
+     out = SPRKKR.Task.from_file(here('output_test_calc.inp')).read_output_from_file(here('output_test_calc.out'))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 
      atoms = bulk('Li')
-     calculator = SprKkr(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
-     task = SprKkr.Task.create('scf')
+     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
+     task = SPRKKR.Task.create('scf')
      task.SCF.NITER = 1
      out = calculator.calculate(task = task, print_output=print_output)
      self.assertEqual(out.atoms, out.potential.atoms)
@@ -100,7 +100,7 @@ class CalculatorTest(TestCase):
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
 
-     calculator = SprKkr(mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
+     calculator = SPRKKR(mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
      out = calculator.calculate(potential = out.potential, task = task)
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
