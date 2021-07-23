@@ -172,8 +172,8 @@ class KkrScfProcessOutputReader(InputParametersResultReader):
             if self.print_output == 'info':
                error = fortran_format(out['error'], ":>12e")
                print(f"Iteration {out['iteration']:>5} error {error} "
-                     f"moment-spin: {out['moment']['spin']:>13.6e} "
-                     f"moment-orbital: {out['moment']['orbital']:>13.6e} ")
+                     f"spin moment: {out['moment']['spin']:>13.6e} "
+                     f"orbital moment: {out['moment']['orbital']:>13.6e} ")
           if self.print_output == 'info':
             if iterations and iterations[-1]['converged']:
                 print("The computation converged.")
