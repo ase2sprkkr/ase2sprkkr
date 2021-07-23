@@ -34,7 +34,7 @@ class SPRKKR(Calculator):
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
                  print_output='info',
-                 mpi=True,
+                 mpi=False,
                  input_parameters=None, options={}, potential=True,
                  executable_postfix=True,
                  **kwargs):
@@ -67,9 +67,11 @@ class SPRKKR(Calculator):
           (Default value for the calculator)
           If print_output = 'info', only a few info lines per iteration will be printed.
 
-        mpi: list or string or True
-          Runner for mpi to run mpi calculation. True means autodetect.
-          E.g. 'mpirun'
+        mpi: list or string or int or bool.
+          Runner for mpi to run a mpi calculation. True and int means autodetect: use True
+          for a cluster where mpi is able to autodetect the number of the processes, otherwise
+          use integer to specify the number of processes.
+          E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
           The default input parameters, according to which the input file for the calculation
@@ -246,7 +248,7 @@ class SPRKKR(Calculator):
     def save_input(self, atoms=None, input_parameters=None,
                   potential=None, input_file=None, potential_file=None, output_file=False,
                   create_subdirs=False,
-                  options = {}, return_files=False):
+                  options={},return_files=False,mpi=None):
         """
         Save input and potential files for a calculation.
 
@@ -283,12 +285,12 @@ class SPRKKR(Calculator):
             so in this case setting potential_file has no effect.
 
         output_file: str or None or False
-             Filename or template (see FilenameTemplator class) where to save the output
-             None means to use the default value from the Calculator.
-             False means not to create the file.
+            Filename or template (see FilenameTemplator class) where to save the output
+            None means to use the default value from the Calculator.
+            False means not to create the file.
 
         create_subdirs: boolean
-             If true, create directories if they don't exists.
+            If true, create directories if they don't exists.
 
         options: dict
             Options to set to the input_parameters. If input_parameters are given by a filename,
@@ -297,6 +299,11 @@ class SPRKKR(Calculator):
 
         return_files: boolean
             Return open files object instead of just string filenames.
+
+        mpi: bool or None
+            Save input for a mpi calculation. None means to use the mpi value specified in the 
+            constructor. Actually, the only difference is that the temporary input file has 
+            to have filename. 
 
         Returns
         -------
@@ -352,7 +359,7 @@ class SPRKKR(Calculator):
            input_parameters = self.input_parameters or InputParameters.default_parameters()
         templator.input_parameters = input_parameters
 
-        input_file = self._open_file(input_file or self.input_file, templator, False,
+        input_file = self._open_file(input_file or self.input_file, templator, input_parameters.is_mpi(self.mpi if mpi is None else mpi),
                                     allow_temporary=return_files,
                                     create_subdirs=create_subdirs,
                                     mode = 'w+' if save_input else 'r'
@@ -448,8 +455,11 @@ class SPRKKR(Calculator):
             calculator have been created.
 
         mpi: bool or None
-            Run the calculation using mpi? None means use the default value (specified in the
-            calculator's contructor)
+            Runner for mpi to run a mpi calculation. True and int means autodetect: use True
+            for a cluster where mpi is able to autodetect the number of the processes, otherwise
+            use integer to specify the number of processes.
+            None means use the default value (specified in the calculator's contructor).
+            E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         ---------
         For the other parameters, see the save_input() method
@@ -464,11 +474,11 @@ class SPRKKR(Calculator):
         input_parameters, input_file, _, output_file = self.save_input(
                             atoms=atoms, input_parameters=input_parameters,
                             potential=potential, output_file=output_file, options=options,
-                            return_files=True)
+                            return_files=True, mpi=mpi)
 
         return input_parameters.run_process(self, input_file, output_file, print_output if print_output is not None else self.print_output,
                                      executable_postfix = executable_postfix,
-                                     mpi=mpi if mpi is not None else self.mpi
+                                     mpi=self.mpi if mpi is None else mpi
                                     )
 
     def calculate(self, atoms=None, properties=['energy'], system_changes=all_changes,

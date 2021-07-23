@@ -238,6 +238,19 @@ If the potential is not provided, it is created according to the atoms object (w
 		<li>After the computation of the SCF task, the result provide a new potential (in the <tt>result.potential</tt> property), the old one is not updated, nor the calculator potential property.
 </ul>
 
+<h3>MPI calculations</h3>
+You can use MPI in your calculations using the <tt>mpi</tt> parameter (of both the calculator constructor and <tt>calculate</tt> method).
+On clusters, where the number of processes is determined by the batch system, you can just pass True to the argument,
+otherwise supply an integer that denotes the number of wanted processes.
+
+The mpi runner is detected automatically. If the detection failed, the message is printed and non-MPI calculation is runned.
+In this case, or if you want to use a different MPI implementation, you have to pass the correct mpi runner and its arguments 
+to the calculator:
+<pre>
+calculator = SPRKKR(atoms=atoms, mpi = 'path/to/my/mpirunner')
+calculator = SPRKKR(atoms=atoms, mpi = ['path/to/my/mpirunner','-np','4'])
+</pre>
+
 <h3>Bundled tools</h3>
 In <tt>tools</tt> subdirectory of the package, there is a tool visualise_in_struct for visualisation
 of the surfaces computed by the SPR-KKR package. To view a surface, you can run

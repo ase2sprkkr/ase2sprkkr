@@ -6,6 +6,7 @@ import importlib
 from . import definitions
 from ..common.conf_containers import RootConfContainer
 from ..common.misc import lazy_value, OrderedDict
+import shutil
 
 def resolve_executable_postfix(postfix):
     if postfix is False:
@@ -30,14 +31,32 @@ class InputParameters(RootConfContainer):
   def default_mpi_runner(cls):
       """ Return the executable to run mpi obtained by an autodetection """
       if cls._default_mpi_runner is None:
-         cls._default_mpi_runner = [ 'mpirun' ] if shutil.which('mpirun') else []
+         for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich' ]:
+             if shutil.which(r):
+                cls._default_mpi_runner = [ r ]
+                return cls._default_mpi_runner
+         print("No MPI runner found. Disabling MPI!!!")
+         cls._default_mpi_runner=False
       return cls._default_mpi_runner
 
-  @classmethod
-  def mpi_runner(cls, mpi):
-        if mpi is True:
-           return cls.default_mpi_runner
-        return [ mpi ] if isinstance(mpi, str) else mpi
+  def mpi_runner(self, mpi):
+      if mpi is False or not self._definition.mpi:
+          return None
+      if isinstance(mpi, list):
+          return mpi
+      if isinstance(mpi, str):
+          return [ mpi ]
+      runner = self.default_mpi_runner()
+      if not runner:
+         return None
+      if mpi is True:
+         return runner
+      if isinstance(mpi, int):
+         return runner + ['-np', str(mpi)]
+      raise Exception("Unknown mpi argument: " + str(mpi))
+
+  def is_mpi(self, mpi=True):
+      return mpi and self._definition.mpi
 
   def run_process(self, calculator, task_file, output_file, print_output=False, executable_postfix=None, mpi=None):
       d = self._definition
@@ -45,14 +64,16 @@ class InputParameters(RootConfContainer):
       print_output = print_output if print_output is not None else calculator.print_output
       executable_postfix = calculator.executable_postfix if executable_postfix is None else executable_postfix
       executable += resolve_executable_postfix(calculator.executable_postfix)
-      if d.mpi and mpi:
-           executable = self.mpi_runner(mpi) + [ executable + 'MPI' ]
-      else:
-           executable = [ executable ]
       self.directory = calculator._directory
       process = self.result_reader(calculator)
       try:
-        return process.run(executable, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
+        mpi = self.mpi_runner(mpi)
+        if mpi:
+             executable = mpi + [ executable + 'MPI', task_file.name ]
+             process.run(executable, output_file, stdin = None, print_output=print_output, directory=self.directory)
+        else:
+             executable = [ executable ]
+             process.run(executable, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
       except FileNotFoundError as e:
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?\n' + \
                      e.strerror
