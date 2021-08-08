@@ -190,7 +190,9 @@
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.task_name">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">task_name</span></code><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.task_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the task name, as defined in the definition of the parameters
+(see InputParametersDefinition class)</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters._default_mpi_runner">
@@ -200,28 +202,116 @@
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.default_mpi_runner">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">default_mpi_runner</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.default_mpi_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_mpi_runner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the executable to run mpi obtained by an autodetection</p>
+<dd><dl class="simple">
+<dt>Return the executable and its params to run a mpi task.</dt><dd><p>The runner is determined by autodetection.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>mpi_runner</strong> – List of strings with executable and its parameters to run a mpi task.
+E.g. [ ‘mpirun’ ]
+If no suitable runner is found, return False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list or False</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.mpi_runner">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">mpi_runner</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.mpi_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.mpi_runner" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">mpi_runner</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpi</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.mpi_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.mpi_runner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mpi runner according to the given parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mpi_runner</strong> (<em>bool</em><em> or </em><em>str</em><em> or </em><em>list</em><em> or </em><em>int</em>) – <p>If True is given, return the default mpi-runner
+If False is given, no mpi-runner is returned.
+If a string is given, it is interpreted as list of one item
+If a list (of strings) is given, the user specified its own</p>
+<blockquote>
+<div><p>runner, use it as is.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>If an integer is given, it is interpreted as the number of</dt><dd><p>processes: the default mpi-runner is used, and the parameters
+to specify the number of processes.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mpi_runner</strong> – List of strings with executable and parameters, e.g.
+[‘mpirun’, ‘-np’, ‘4’]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.is_mpi">
+<code class="sig-name descname"><span class="pre">is_mpi</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.is_mpi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.is_mpi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will be this task (the task described by this input parameters)
+runned using mpi?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mpi</strong> (<em>list</em><em> or </em><em>str</em><em> or </em><em>bool</em>) – Optional parameter. If False is given, return False regardless the type of the
+task, otherwise it is ignored. See InputParameters.mpi_runner for the explanation of the
+parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>is_mpi</strong> – Will be this task runned using mpi?</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.run_process">
-<code class="sig-name descname"><span class="pre">run_process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.run_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.run_process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">run_process</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.run_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.run_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the process that calculate the task specified by this input paameters</p>
+<dl class="simple">
+<dt>calculator: ase2sprkkr.sprkkr.calculator.SPRKKR</dt><dd><p>Calculator, used for running the task. Various configurations are readed from them.</p>
+</dd>
+<dt>input_file: file</dt><dd><p>File, where the input parameters for the task are stored.</p>
+</dd>
+<dt>output_file: file</dt><dd><p>File, where the output will be writed. It should be opened for writing (in binary mode)</p>
+</dd>
+<dt>print_output: bool or str</dt><dd><p>Print the output to the stdout, too? String value ‘info’ prints only selected infromations
+(depending on the task runned)</p>
+</dd>
+<dt>executable_postfix: str or None</dt><dd><p>Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
+compiled so that the resulting executables has postfixies)</p>
+</dd>
+<dt>mpi: list or str or bool</dt><dd><p>Run the task using mpi? See InputParameters.mpi_runner for the possible values of the parameter.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>out</strong> – The result of ase2sprkkr.common.process_output_reader.ProcessOutputReader.run() method: the
+parsed output of the runned task.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>mixed</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.result_reader">
 <code class="sig-name descname"><span class="pre">result_reader</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.result_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.result_reader" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the result readed: the class that parse the output
+of the runned task</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.read_output_from_file">
 <code class="sig-name descname"><span class="pre">read_output_from_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.read_output_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.read_output_from_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read output of a previously runned task from a file and parse it in a same
+way, as the process would be runned again.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.executable_params">
@@ -235,6 +325,11 @@
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.to_string">
+<code class="sig-name descname"><span class="pre">to_string</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.set_option">
@@ -252,24 +347,57 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.create_task">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">create_task</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.create_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.create_task" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.create_input_parameters">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">create_input_parameters</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.create_input_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.create_input_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create input_parameters object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arg</strong> (<em>str</em><em> or </em><a class="reference internal" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><em>InputParameters</em></a>) – If an InputParameters object is given, it is returned as is.
+If a string is given, it is interpreted either as a filename
+(from which the parameters are read) or the task name, for
+which the default parameters are used</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>input_parameters</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters">InputParameters</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.create">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">create</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.create" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create input parameters for the given task name
+:param name: Name of the task (e.g. ‘SCF’, ‘PHAGEN’)
+:type name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>input_parameters</strong> – Input parameters with the default values for the given task.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters">InputParameters</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.default_parameters">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">default_parameters</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.default_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_parameters" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create default input parameters</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.from_file">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.from_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Read an input file and create a new InputParameters object from the readed stuff</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>file</em>) – Input file (either its filename, or an open file)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate">

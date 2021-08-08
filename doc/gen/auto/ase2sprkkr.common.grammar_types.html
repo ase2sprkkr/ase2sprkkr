@@ -266,11 +266,13 @@ in the configuration</p>
 <dt id="ase2sprkkr.common.grammar_types.BaseType.validate">
 <code class="sig-name descname"><span class="pre">validate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;Unknown&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate either the pyparsing result or a user given value</p>
-<dl class="simple">
-<dt>value<span class="classifier">mixed</span></dt><dd><p>Value to be validated</p>
-</dd>
-<dt>param_name<span class="classifier">str or callable</span></dt><dd><p>Parameter name to be used in possible throwed exception (Optional)
-If it is callable, it should be a function that returns the param_name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>mixed</em>) – Value to be validated</p></li>
+<li><p><strong>param_name</strong> (<em>str</em><em> or </em><em>callable</em>) – Parameter name to be used in possible throwed exception (Optional)
+If it is callable, it should be a function that returns the param_name</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -763,14 +765,15 @@ Dict should has the form { type : format_for_the_type } + { None : default_forma
 <code class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></code><code class="sig-name descname"><span class="pre">type_from_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#type_from_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.type_from_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int =&gt; Integer.</p>
 <p>The given format can be optionally set to the returned grammar element.</p>
-<dl class="simple">
-<dt>type: A python type or BaseType</dt><dd><p>A type to be converted to a grammar element (BaseType class descendant)</p>
-</dd>
-<dt>format: str or dict</dt><dd><p>The format to be applied to the resulting class. If dict is given, see ‘format_for_type’
-for the way how the format is determined</p>
-</dd>
-<dt>format_all: boolean</dt><dd><p>If False (default), the format is not applied, if instance of BaseType is given as
-the type parameter. Otherwise, a copy of the input type with the applied format is returned</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>A python type</em><em> or </em><a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><em>BaseType</em></a>) – A type to be converted to a grammar element (BaseType class descendant)</p></li>
+<li><p><strong>format</strong> (<em>str</em><em> or </em><em>dict</em>) – The format to be applied to the resulting class. If dict is given, see ‘format_for_type’
+for the way how the format is determined</p></li>
+<li><p><strong>format_all</strong> (<em>boolean</em>) – If False (default), the format is not applied, if instance of BaseType is given as
+the type parameter. Otherwise, a copy of the input type with the applied format is returned</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

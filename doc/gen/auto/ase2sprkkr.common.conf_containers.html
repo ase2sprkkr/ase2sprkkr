@@ -205,15 +205,44 @@ either for task or potential</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.common.conf_containers.ConfContainer.set">
-<code class="sig-name descname"><span class="pre">set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'add'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the values of the container</p>
+<dt id="ase2sprkkr.common.conf_containers.ConfContainer.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value, either of self or of a child of a given name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>dict</em>) – Values to be set</p></li>
-<li><p><strong>unkwnown</strong> (<em>'add'</em><em>, </em><em>'find'</em><em> or </em><em>None</em>) – If add, add unkwnown values as Custom values.
-If find, try to find the values in descendant containers.</p></li>
+<li><p><strong>name</strong> (<em>None</em><em> or </em><em>str</em>) – If None, return contained values as a dictionary.
+Otherwise, return the value of the member with the given name.</p></li>
+<li><p><strong>unknown</strong> (<em>str</em><em> or </em><em>None</em>) – If unknown == ‘find’ and there is no member with a given name,
+try to find the first such in descendant conainers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>value</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mixed</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.common.conf_containers.ConfContainer.set">
+<code class="sig-name descname"><span class="pre">set</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'find'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value(s) of parameter(s). Usage:</p>
+<p>&gt; input_parameters.set({‘NITER’: 5, ‘NE’: [10]})
+or
+&gt; input_parameters.set(NITER=5, NE=[10])</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options</strong> (<em>values</em><em> or </em><em>None</em>) – Dictionary of values to be set.</p></li>
+<li><p><strong>unkwnown</strong> (<em>'add'</em><em>, </em><em>'find'</em><em> or </em><em>None</em>) – How to handle unknown (not known by the definition) parameters.
+If ‘find’, try to find the values in descendant containers.
+If ‘add’, add unknown values as custom values.
+If None, throw an exception.
+Keyword only argument.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – The values to be set (an alternative syntax as syntactical sugar)</p></li>
 </ul>
 </dd>
 </dl>
@@ -221,18 +250,30 @@ If find, try to find the values in descendant containers.</p></li>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.ConfContainer.add">
-<code class="sig-name descname"><span class="pre">add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.add" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add custom value to the container</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the added value</p></li>
+<li><p><strong>value</strong> (<em>value</em>) – Value of the added value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.ConfContainer.remove">
-<code class="sig-name descname"><span class="pre">remove</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.remove" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">remove</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a (previously added) custom value from the container</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.ConfContainer.to_dict">
 <code class="sig-name descname"><span class="pre">to_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#ConfContainer.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.ConfContainer.to_dict" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the content of the container as a dictionary.
+Nested containers will be transformed to dictionaries as well.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.ConfContainer._find_value">
@@ -258,18 +299,41 @@ If find, try to find the values in descendant containers.</p></li>
 <p>A section of SPRKKR configuration</p>
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.BaseSection.has_any_value">
-<code class="sig-name descname"><span class="pre">has_any_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#BaseSection.has_any_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.BaseSection.has_any_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname"><span class="pre">has_any_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#BaseSection.has_any_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.BaseSection.has_any_value" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>has_any_value</strong> – True, if no value in the container is set, False otherwise</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.BaseSection.save_to_file">
 <code class="sig-name descname"><span class="pre">save_to_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#BaseSection.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.BaseSection.save_to_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save the content of the container to the file (according to the definition)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>file</em>) – File object (open for writing), where the data should be written</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.BaseSection.seciton_name">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">seciton_name</span></code><a class="headerlink" href="#ase2sprkkr.common.conf_containers.BaseSection.seciton_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Name of the section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the section (according to the definition of the section)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -293,12 +357,27 @@ If find, try to find the values in descendant containers.</p></li>
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.CustomSection.remove">
 <code class="sig-name descname"><span class="pre">remove</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#CustomSection.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.CustomSection.remove" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove the custom section from the parent container</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.common.conf_containers.CustomSection.factory">
 <em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">factory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/conf_containers.html#CustomSection.factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.conf_containers.CustomSection.factory" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a factory for custom values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>definition_type</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="ase2sprkkr.common.configuration_definitions.BaseDefinition"><em>ase2sprkkr.common.configuration_definitions.BaseDefinition</em></a>) – Type (definitions) of the custom values created by
+the resulting function</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>factory</strong> – Factory function of the signature (name: str, container: ase2sprkkr.common.conf_containers.ConfContainer)
+that created a custom value or section of the given definition</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
