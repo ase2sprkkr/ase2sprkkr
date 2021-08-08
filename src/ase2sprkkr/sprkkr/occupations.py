@@ -42,7 +42,7 @@ class Occupation:
           return name
       for i in self:
           if i.symbol == name: return i
-      raise KeyError(f"No {name} in occupation")
+      raise KeyError(f"No {name} in the occupation")
 
   def __getitem__(self, name):
       name = self._find_key(name)

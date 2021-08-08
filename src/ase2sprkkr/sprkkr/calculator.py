@@ -265,11 +265,11 @@ class SPRKKR(Calculator):
             and 'magmoms'.
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
-            If None, task specified in __init__ is used, or the default parameters for 'SCF' task
+            If None, the task specified in __init__ is used, or the default parameters for 'SCF' task
                will be created.
-            If string is given then if it is a task name, the InputParameters object will be created
-               and the task file created using it.
-               Otherwise the task is interpreted as task file, which will be left unchanged.
+            If a string is given then if it is a task name, an InputParameters object will be created
+               (with the default options for a given task) and saved to the input_file.
+               Otherwise the task is interpreted as a task file name from which the input parameters will be readed.
             The input parameters is written into the input file,
                whose name is given by input_file argument.
 
@@ -290,7 +290,7 @@ class SPRKKR(Calculator):
             so in this case setting potential_file has no effect.
 
         output_file: str or None or False
-            Filename or template (see FilenameTemplator class) where to save the output
+            A filename or a filename template (see FilenameTemplator class) where to save the output
             None means to use the default value from the Calculator.
             False means not to create the file.
 
@@ -306,9 +306,9 @@ class SPRKKR(Calculator):
             Return open files object instead of just string filenames.
 
         mpi: bool or None
-            Save input for a mpi calculation. None means to use the mpi value specified in the 
-            constructor. Actually, the only difference is that the temporary input file has 
-            to have filename. 
+            Save input for a mpi calculation. None means to use the mpi value specified in the
+            constructor. Actually, the only difference is that the temporary input file has
+            to have filename.
 
         Returns
         -------
@@ -373,7 +373,7 @@ class SPRKKR(Calculator):
         used_atoms = atoms or self._atoms
         """ Get the potential file """
         # potential_file - the file containing the potential (possibly a template)
-        # potential - potential object (to be updated by atoms) 
+        # potential - potential object (to be updated by atoms)
         potential_file = potential_file or self.potential_file
         if potential:
            if isinstance(potential, str):

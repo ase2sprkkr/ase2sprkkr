@@ -231,14 +231,33 @@ class InputParameters(RootConfContainer):
 
   @classmethod
   def create(cls, name):
+      """ Create input parameters for the given task name
+      Parameters
+      ----------
+      name: str
+        Name of the task (e.g. 'SCF', 'PHAGEN')
+
+      Return
+      ------
+      input_parameters: InputParameters
+        Input parameters with the default values for the given task.
+      """
       return InputParameters(cls.definitions()[name.upper()])
 
   @classmethod
   def default_parameters(cls):
+      """ Create default input parameters """
       return cls.create('SCF')
 
   @classmethod
   def from_file(cls, filename):
+      """ Read an input file and create a new InputParameters object from the readed stuff
+
+      Parameters
+      ----------
+      filename: str or file
+        Input file (either its filename, or an open file)
+      """
       definitions = cls.definitions()
       for d in definitions.values():
           try:

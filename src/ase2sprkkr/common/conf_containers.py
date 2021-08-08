@@ -36,7 +36,11 @@ class ConfContainer(ConfCommon):
       return out
 
   def __getattr__(self, name):
-      out = self._get_member(name)
+      try:
+        out = self._get_member(name)
+      except AttributeError as e:
+        raise AttributeError(f"There is no value with name {name} in {self}.\nMaybe, you want to add a custom value using the add method?") \
+              from e
       return out
 
   def __getitem__(self, name):
@@ -179,7 +183,10 @@ class ConfContainer(ConfCommon):
           self._members[name].set(value)
 
 
-  def remove(self, name):
+  def remove(self, name:str):
+      """
+      Remove a (previously added) custom value from the container
+      """
       cclass = getattr('custom_class', self._definition, False)
       if not cclass:
          raise TypeError("Can not remove items of {}".format(name))
@@ -196,6 +203,10 @@ class ConfContainer(ConfCommon):
       yield from self._members.values()
 
   def to_dict(self, dct=None):
+      """
+      Return the content of the container as a dictionary.
+      Nested containers will be transformed to dictionaries as well.
+      """
       out = OrderedDict()
       for i in self:
           i.to_dict(out)
@@ -234,13 +245,26 @@ class BaseSection(ConfContainer):
         val = self._get_member(name)
         val.set(value)
 
-  def has_any_value(self):
+  def has_any_value(self) -> bool:
+      """
+      Return
+      ------
+        has_any_value: bool
+            True, if no value in the container is set, False otherwise
+      """
       for i in self:
         if i() is not None:
            return True
       return False
 
   def save_to_file(self, file):
+      """ Save the content of the container to the file (according to the definition)
+
+      Parameters
+      ----------
+      file: file
+        File object (open for writing), where the data should be written
+      """
       if not self.has_any_value():
          if not self._definition.is_optional:
             raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
@@ -255,6 +279,15 @@ class BaseSection(ConfContainer):
 
   @property
   def seciton_name(self):
+      """
+      Name of the section.
+
+      Returns
+      -------
+        name: str
+          The name of the section (according to the definition of the section)
+      """
+
       return self._definition.name
 
 
@@ -270,10 +303,26 @@ class CustomSection(BaseSection):
   """ Custom task section. Section created by user with no definition """
 
   def remove(self):
+      """ Remove the custom section from the parent container """
       self._container.remove(self.name)
 
   @classmethod
   def factory(cls, definition_type):
+      """ Create a factory for custom values.
+
+      Parameters
+      ----------
+      definition_type: ase2sprkkr.common.configuration_definitions.BaseDefinition
+        Type (definitions) of the custom values created by
+        the resulting function
+
+      Return
+      ------
+      factory: callable
+        Factory function of the signature (name: str, container: ase2sprkkr.common.conf_containers.ConfContainer)
+        that created a custom value or section of the given definition
+
+      """
       def create(name, container):
           definition = definition_type(name)
           definition.removable = True
