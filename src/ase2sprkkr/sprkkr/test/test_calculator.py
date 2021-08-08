@@ -23,6 +23,16 @@ class CalculatorTest(TestCase):
 
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
+     calculator.input_parameters.set('NE', 11111)
+     self.assertEquals(calculator.input_parameters.get('NE'),11111)
+     self.assertEquals(calculator.get('NE'),11111)
+     self.assertEquals(calculator.input_parameters.ENERGY.NE(),11111)
+     self.assertEquals(calculator.input_parameters.TASK.TASK(), 'SCF')
+     calculator.input_parameters = 'PHAGEN'
+     self.assertEquals(calculator.input_parameters.TASK.TASK(), 'PHAGEN')
+     self.assertNotEquals(calculator.input_parameters.get('NE'), 111111)
+
+     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
 
      inp_file=here('output_test_calc.inp')
      pot_file=here('output_test_calc.pot')

@@ -61,36 +61,114 @@ class ConfContainer(ConfCommon):
   def name(self):
       return self._definition.name
 
-  def set(self, values, unknown='add'):
+  def _set(self, name, value, unknown='find'):
       """
-      Set the values of the container
+      Set the value(s) of the container
 
       Parameters
       ----------
 
-      values: dict
-        Values to be set
+      name: str
+        The name of the parameter to be set.
+
+      value: mixed
+        The value of the parameter to be set.
 
       unkwnown: 'add', 'find' or None
-        If add, add unkwnown values as Custom values.
-        If find, try to find the values in descendant containers.
+        How to handle the case if the parameter is not found.
+        If 'add', add it as custom value.
+        If 'find', try to find the parameter in descendant containers.
+        If None, throw an exception.
+      """
+      if name not in self._members:
+         if unknown == 'find':
+            option = self.find(name)
+            if value:
+               option.set(value)
+               return
+         if not unknown == 'add':
+            raise KeyError("No option with name {} in {}".format(name, str(self)))
+            return
+         self.add(name, value)
+      else:
+         self._members[name].set(value, unknown=unknown)
+
+  def get(self, name=None, unknown='find'):
+      """
+      Get the value, either of self or of a child of a given name.
+
+      Parameters
+      ----------
+      name: None or str
+        If None, return contained values as a dictionary.
+        Otherwise, return the value of the member with the given name.
+
+      unknown: str or None
+        If unknown == 'find' and there is no member with a given name,
+        try to find the first such in descendant conainers.
+
+      Return
+      ------
+      value: mixed
       """
 
-      for i,v in values.items():
-          if not i in self._members:
-             if unknown == 'find':
-                value = self.find(i)
-                if value:
-                   value.set(v)
-                   continue
-             if not unknown == 'add':
-                raise KeyError("No option with name {} in {}".format(i, str(self)))
-                continue
-             self.add(i, v)
-          else:
-             self._members[i].set(v)
+      if name is None:
+         return self.to_dict()
+      if name in self._members:
+         val = self._members[name]
+      elif unknown=='find':
+         val = self.find(name)
+      else:
+         val = None
+      if not val:
+         raise ValueError(f"No {name} member of {self}")
+      return val.get()
 
-  def add(self, name, value=None):
+
+
+  def set(self, name, value=NotImplemented, *, unknown='find'):
+      """
+      Set the value(s) of parameter(s)
+
+      Parameters
+      ----------
+
+      name: dict or str
+        If a string, the name of the parameter to be set
+        If dictionary, all values from the dictionary will be set to the
+            container, in this case, value can not be specified.
+
+      value: mixed
+        A value of the parameter to be set.
+
+      unkwnown: 'add', 'find' or None
+        How to handle unknown parameters.
+        If 'find', try to find the values in descendant containers.
+        If 'add', add unknown values as custom values.
+        If None, throw an exception.
+      """
+      if isinstance(name, dict):
+          if value is not NotImplemented:
+               raise ValueError("Dictionary can not be used as a name of the parameter")
+          for i,v in name.items():
+              self._set(i, v, unknown)
+      else:
+          if value is NotImplemented:
+               raise ValueError("Please, supply a value for te parameter to the ConfContainer.set method")
+          self._set(name, value, unknown)
+
+  def add(self, name:str, value=None):
+      """
+      Add custom value to the container
+
+      Parameters
+      ----------
+      name: str
+        Name of the added value
+
+      value: value
+        Value of the added value
+      """
       if not getattr(self._definition, 'custom_class', False):
          raise TypeError(f'Can not add custom members to a configuration class {self._definition}')
       if name in self._members:
@@ -228,7 +306,7 @@ class RootConfContainer(ConfContainer):
       #   print(e)
       if clear_first:
          self.clear(True)
-      self.set(values)
+      self.set(values, unknown='add')
 
   def find(self, name):
       """ Find a configuration value of a given name in the owned sections """

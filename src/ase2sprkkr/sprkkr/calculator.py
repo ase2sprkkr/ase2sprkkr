@@ -139,6 +139,9 @@ class SPRKKR(Calculator):
         if options:
            self.input_parameters.set(kwargs, unknown='find')
 
+    def get(self, name):
+        self.input_parameters.get(name)
+
     @property
     def potential(self) -> Potential:
        """ The potential associated with the calculator. It will be used in
