@@ -269,8 +269,8 @@ class SPRKKR(Calculator):
         """
         Save input and potential files for a calculation.
 
-        Paramters
-        ---------
+        Parameters
+        ----------
         properties: list of str
             List of what needs to be calculated.  Can be any combination
             of 'energy', 'forces', 'stress', 'dipole', 'charges', 'magmom'

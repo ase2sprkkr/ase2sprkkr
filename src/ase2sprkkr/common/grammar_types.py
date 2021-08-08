@@ -125,7 +125,7 @@ class BaseType:
   def validate(self, value, param_name='<Unknown>', parse_check=False):
     """ Validate either the pyparsing result or a user given value
 
-    Paramters
+    Parameters
     ---------
     value : mixed
       Value to be validated
@@ -429,7 +429,7 @@ def type_from_type(type, format='', format_all=False):
 
       The given format can be optionally set to the returned grammar element.
 
-      Paramteres
+      Parameters
       ----------
       type: A python type or BaseType
         A type to be converted to a grammar element (BaseType class descendant)
