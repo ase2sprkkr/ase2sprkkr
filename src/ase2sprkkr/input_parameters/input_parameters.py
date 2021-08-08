@@ -269,5 +269,8 @@ class InputParameters(RootConfContainer):
 
   def calculate(self, *args, **kwargs):
       """ Create a calculator and run the input_parameters. See SPRKKR.calculate for the arguments """
-      calculator = SPRKKR()
-      calculator.calculate(task = task, *args, **kwargs)
+      calc = calculator.SPRKKR()
+      calc.calculate(input_parameters=self, *args, **kwargs)
+
+#at least, to avoid a circular import
+from ..sprkkr import calculator

@@ -65,38 +65,6 @@ class ConfContainer(ConfCommon):
   def name(self):
       return self._definition.name
 
-  def _set(self, name, value, unknown='find'):
-      """
-      Set the value(s) of the container
-
-      Parameters
-      ----------
-
-      name: str
-        The name of the parameter to be set.
-
-      value: mixed
-        The value of the parameter to be set.
-
-      unkwnown: 'add', 'find' or None
-        How to handle the case if the parameter is not found.
-        If 'add', add it as custom value.
-        If 'find', try to find the parameter in descendant containers.
-        If None, throw an exception.
-      """
-      if name not in self._members:
-         if unknown == 'find':
-            option = self._find_value(name)
-            if option:
-               option.set(value)
-               return
-         if not unknown == 'add':
-            raise KeyError("No option with name {} in {}".format(name, str(self)))
-            return
-         self.add(name, value)
-      else:
-         self._members[name].set(value, unknown=unknown)
-
   def get(self, name=None, unknown='find'):
       """
       Get the value, either of self or of a child of a given name.
@@ -118,6 +86,9 @@ class ConfContainer(ConfCommon):
 
       if name is None:
          return self.to_dict()
+      if '.' in name:
+         section, name = name.split('.')
+         return self._members[section].get(name)
       if name in self._members:
          val = self._members[name]
       elif unknown=='find':
@@ -130,36 +101,54 @@ class ConfContainer(ConfCommon):
 
 
 
-  def set(self, name, value=NotImplemented, *, unknown='find'):
+  def set(self, values={}, *, unknown='find', **kwargs):
       """
-      Set the value(s) of parameter(s)
+      Set the value(s) of parameter(s). Usage:
+
+      > input_parameters.set({'NITER': 5, 'NE': [10]})
+      or
+      > input_parameters.set(NITER=5, NE=[10])
 
       Parameters
       ----------
 
-      name: dict or str
-        If a string, the name of the parameter to be set
-        If dictionary, all values from the dictionary will be set to the
-            container, in this case, value can not be specified.
-
-      value: mixed
-        A value of the parameter to be set.
+      options: values or None
+        Dictionary of values to be set.
 
       unkwnown: 'add', 'find' or None
-        How to handle unknown parameters.
+        How to handle unknown (not known by the definition) parameters.
         If 'find', try to find the values in descendant containers.
         If 'add', add unknown values as custom values.
         If None, throw an exception.
+        Keyword only argument.
+
+      **kwargs: dict
+        The values to be set (an alternative syntax as syntactical sugar)
       """
-      if isinstance(name, dict):
-          if value is not NotImplemented:
-               raise ValueError("Dictionary can not be used as a name of the parameter")
-          for i,v in name.items():
-              self._set(i, v, unknown)
-      else:
-          if value is NotImplemented:
-               raise ValueError("Please, supply a value for te parameter to the ConfContainer.set method")
-          self._set(name, value, unknown)
+
+      def set_value(name, value):
+        if '.' in name:
+          section, name = name.split('.')
+          self._members[section].set({name:value})
+        if name not in self._members:
+           if unknown == 'find':
+              option = self._find_value(name)
+              if option:
+                 option.set(value)
+                 return
+           if not unknown == 'add':
+              raise KeyError("No option with name {} in {}".format(name, str(self)))
+              return
+           self.add(name, value)
+        else:
+           self._members[name].set(value, unknown=unknown)
+
+      if values:
+        for i,v in values.items():
+           set_value(i,v)
+      if kwargs:
+        for i,v in kwargs.items():
+          set_value(i,v)
 
   def add(self, name:str, value=None):
       """

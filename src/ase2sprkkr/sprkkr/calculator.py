@@ -14,7 +14,6 @@ import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
-from ..input_parameters.input_parameters import InputParameters
 from ..potential.potentials import Potential
 from ..common.misc import add_to_signature
 import shutil
@@ -117,7 +116,7 @@ class SPRKKR(Calculator):
         self.input_file = (self.label or '') + '%a_%t.inp' if input_file is True else input_file
         self.output_file = output_file
         self.potential_file = potential_file
-        self._input_parameters = input_parameters
+        self.input_parameters = input_parameters
         if options:
           self.input_parameters.set(options, unknown = 'find')
         self.print_output = print_output
@@ -133,16 +132,9 @@ class SPRKKR(Calculator):
 
     @input_parameters.setter
     def input_parameters(self, value):
-        self._input_parameters=InputParameters.create_input_parameters(value)
-
-    def set(self, options={}, **kwargs):
-        if kwargs:
-           self.input_parameters.set(kwargs, unkwnown='find')
-        if options:
-           self.input_parameters.set(kwargs, unknown='find')
-
-    def get(self, name):
-        return self.input_parameters.get(name)
+        if value is not None:
+            value = InputParameters.create_input_parameters(value)
+        self._input_parameters=value
 
     @property
     def potential(self) -> Potential:
@@ -161,6 +153,26 @@ class SPRKKR(Calculator):
              return None
           self._potential = Potential.from_atoms(self._atoms)
        return self._potential
+
+    def set(self, options={}, *, parameters=None, **kwargs):
+       """
+       ASE method to set the parameters.
+
+       Beware, currently, the method sets only input file parameters, not the potential parameters (see the SPRKKR documentation), and do not call the reset() function at all.
+       """
+       if parameters is not None:
+          self.input_parameters = InputParameters.from_file(parameters)
+       if kwargs or options:
+          self.input_parameters.set(options, **kwargs)
+
+    def get(self, name):
+       """ Get the value of an input parameter.
+           The parameter of the given name will be sought in sections
+           and the value of the first such one will be returned. If there
+           is an ambiguity, the name of the parameter can be given in
+           SECTION.NAME notation.
+       """
+       return self.input_parameters.get(name)
 
     @potential.setter
     def potential(self, pot):
@@ -580,11 +592,6 @@ class SPRKKR(Calculator):
           self.potential = Potential.from_file(self.potential)
         return self.potential
 
-#is there a better way to not document an inner classes?
-if os.path.basename(sys.argv[0]) != 'sphinx-build':
-    SPRKKR.InputParameters = InputParameters
-    SPRKKR.Potential = Potential
-
 
 class FilenameTemplator:
     """ Class that replaces the placeholders in filenames with propper values,
@@ -615,3 +622,11 @@ class FilenameTemplator:
           if i in template:
              template = template.replace(i, self._get(i, v, self.calculator))
         return template
+
+#at least, to avoid a circular import
+from ..input_parameters.input_parameters import InputParameters
+
+#is there a better way to not document an inner classes?
+if os.path.basename(sys.argv[0]) != 'sphinx-build':
+    SPRKKR.InputParameters = InputParameters
+    SPRKKR.Potential = Potential
