@@ -88,7 +88,7 @@ Some of the results of the computation are returned by the calculate method (see
 <pre>
 out = calculator.calculate()
 print(f"Energy is {out.energy}")
-print(f"There were {len(out.iterations}")
+print(f"There were {len(out.iterations}) iterations")
 print(f"The convergence error is {out.iterations[-1]['error']}")
 print(f"The moments are {out.last_iteration['moment']}")
 </pre>
@@ -97,7 +97,7 @@ or by a Potential object, from which you can read the other results in a text fo
 (you are encouraged to contribute to ase2sprkkr to define the format of not-yet-implemented
 sections of potential).
 <pre>
-print(f"Potential has been saved to: {out.potential_filename})
+print(f"Potential has been saved to: {out.potential_filename}")
 potential = out.potential
 print(potential.CHARGE())
 </pre>
@@ -130,33 +130,36 @@ You can see and modify the input parameters of a calculator using its <tt>set</t
 methods:
 <pre>
 calculator.set(NE = 5)
-print(calculator.get('NE')
+print(calculator.get('NE'))
 </pre>
 
-The parameters can be reset (to the task-predefined values, to the values in
-<tt>InputParameters</tt> object or to the values contained in an input file)
-by the <tt>input_parameters</tt> property.
+We can see, that both <tt>set</tt> and <tt>get</tt> methods and <tt>options</tt> parameters do not require
+to specify the section names (see the SPR-KKR manual).
+They get/set the first (known, according to the definition of the
+input parameters) parameter with the given name. However, if it is necessary to avoid a name conflict,
+you can either use
+<tt>SECTION.VALUE</tt> notation
 <pre>
-calculator.input_parameters = 'SCF'
-calculator.input_parameters = './input_file.inp'
+calculator.set({'ENERGY.NE':6})
+print(calculator.get('ENERGY.NE'))
 </pre>
-
-Both <tt>set</tt> and <tt>get</tt> methods and <tt>options</tt> parameters do not use
-the section names (see the SPR-KKR manual). They get/set the first (known, according to the definition of the
-input parameters) parameter with the given name. Thus, if there is a
-name conflict, or you can explore the possible parameters, you can use the <tt>input_parameters</tt> property,
-where the parameters are accesible through sections in the <tt>InputParameters</tt> object.
-During interactive work, you can use tab-completion to see its predefined sections and their members:
+...or use the <tt>input_parameters</tt> property of the calculator.
+Through this property (which contains <tt>InputParameter</tt> object) the sections
+and their parameters are directly acessible.
+During interactive work, you can use tab-completion to see the sections and their parameters.
 <pre>
-calculator = new SPRKKR(input_paramters = 'SCF')
+calculator = SPRKKR(input_paramters = 'SCF')
 calculator.input_parameters.ENERGY.NE = 5
 print(calculator.input_parameters.ENERGY.NE())
 calculator.input_parameters.ENERGY.&lt;tab&gt;
 </pre>
+The sections and their parameters have their names in uppercase (at least partialy, e.g. <tt>ImE</tt>).
 
 <h4>Working with InputParameters object</h4>
+
 You can also directly create the <tt>InputParameters</tt> object and pass
-it into the calculator constructor or to the <tt>calculate</tt> method
+it into the <tt>input_parameters</tt> property,
+calculator constructor or to the <tt>calculate</tt> method
 <pre>
 from ase2sprkkr.input_parameters.input_parameters import InputParameters
 input_parameters = InputParameters.create('SCF')
@@ -168,8 +171,24 @@ You can also add your own custom (not-predefined) parameters and sections, if th
 <pre>
 input_parameters.add('MY_CUSTOM_SECTION')
 input_parameters.MY_CUSTOM_SECTION.add('MY_CUSTOM_VALUE', 17)
+</pre>
+
+If you work with input parameters readed from an already created input file, you can use
+the <tt>calculate</tt> method to avoid the necessity to create the calculator:
+<pre>
+input_parameters = InputParameters.from_file('input.inp')
 input_parameters.calculate()
 </pre>
+
+The input parameters can be set or reset (to the task-predefined values, to the values in
+<tt>InputParameters</tt> object or to the values contained in an input file)
+via the calculator <tt>input_parameters</tt> property.
+<pre>
+calculator.input_parameters = input_parameters
+calculator.input_parameters = 'SCF'
+calculator.input_parameters = './input_file.inp'
+</pre>
+
 
 <h4>Running more subsequent tasks</h4>
 A common usecase is to run more subseuent task with the same atomic structure. To do so,
@@ -244,12 +263,20 @@ On clusters, where the number of processes is determined by the batch system, yo
 otherwise supply an integer that denotes the number of wanted processes.
 
 The mpi runner is detected automatically. If the detection failed, the message is printed and non-MPI calculation is runned.
-In this case, or if you want to use a different MPI implementation, you have to pass the correct mpi runner and its arguments 
+In this case, or if you want to use a different MPI implementation, you have to pass the correct mpi runner and its arguments
 to the calculator:
 <pre>
 calculator = SPRKKR(atoms=atoms, mpi = 'path/to/my/mpirunner')
 calculator = SPRKKR(atoms=atoms, mpi = ['path/to/my/mpirunner','-np','4'])
 </pre>
+In the case you use common mpi runners (<tt>mpirun</tt>, <tt>mpirun.openmpi</tt> or <tt>mpirun.mpich</tt>), you can
+either pass just <tt>True</tt> to the <tt>mpi</tt> parameter - if the runner can detect the number of processes, e.g.
+in a cluster environment - or integer that denotes the number of requested processes.
+<pre>
+calculator = SPRKKR(atoms=atoms, mpi=True)
+calculator = SPRKKR(atoms=atoms, mpi=4)
+</pre>
+
 
 <h3>Bundled tools</h3>
 In <tt>tools</tt> subdirectory of the package, there is a tool visualise_in_struct for visualisation
