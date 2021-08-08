@@ -23,13 +23,24 @@ class InputParameters(RootConfContainer):
 
   @property
   def task_name(self):
+      """ Return the task name, as defined in the definition of the parameters
+      (see InputParametersDefinition class) """
       return self._definition.name
 
   _default_mpi_runner = None
 
   @classmethod
   def default_mpi_runner(cls):
-      """ Return the executable to run mpi obtained by an autodetection """
+      """ Return the executable and its params to run a mpi task.
+          The runner is determined by autodetection.
+
+      Return
+      ------
+      mpi_runner: list or False
+          List of strings with executable and its parameters to run a mpi task.
+          E.g. [ 'mpirun' ]
+          If no suitable runner is found, return False.
+      """
       if cls._default_mpi_runner is None:
          for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich' ]:
              if shutil.which(r):
@@ -40,6 +51,26 @@ class InputParameters(RootConfContainer):
       return cls._default_mpi_runner
 
   def mpi_runner(self, mpi):
+      """ Return a mpi runner according to the given parameter.
+
+      Parameters
+      ----------
+      mpi_runner: bool or str or list or int
+        If True is given, return the default mpi-runner
+        If False is given, no mpi-runner is returned.
+        If a string is given, it is interpreted as list of one item
+        If a list (of strings) is given, the user specified its own
+           runner, use it as is.
+        If an integer is given, it is interpreted as the number of
+           processes: the default mpi-runner is used, and the parameters
+           to specify the number of processes.
+
+      Return
+      ------
+      mpi_runner: list
+        List of strings with executable and parameters, e.g.
+        ['mpirun', '-np', '4']
+      """
       if mpi is False or not self._definition.mpi:
           return None
       if isinstance(mpi, list):
@@ -56,9 +87,54 @@ class InputParameters(RootConfContainer):
       raise Exception("Unknown mpi argument: " + str(mpi))
 
   def is_mpi(self, mpi=True):
+      """ Will be this task (the task described by this input parameters)
+      runned using mpi?
+
+      Parameters
+      ----------
+      mpi: list or str or bool
+        Optional parameter. If False is given, return False regardless the type of the
+        task, otherwise it is ignored. See InputParameters.mpi_runner for the explanation of the
+        parameter.
+
+      Return
+      ------
+      is_mpi: bool
+        Will be this task runned using mpi?
+      """
       return mpi and self._definition.mpi
 
-  def run_process(self, calculator, task_file, output_file, print_output=False, executable_postfix=None, mpi=None):
+  def run_process(self, calculator, input_file, output_file, print_output=False, executable_postfix=None, mpi=None):
+      """
+      Run the process that calculate the task specified by this input paameters
+
+      calculator: ase2sprkkr.sprkkr.calculator.SPRKKR
+        Calculator, used for running the task. Various configurations are readed from them.
+
+      input_file: file
+        File, where the input parameters for the task are stored.
+
+      output_file: file
+        File, where the output will be writed. It should be opened for writing (in binary mode)
+
+      print_output: bool or str
+        Print the output to the stdout, too? String value 'info' prints only selected infromations
+        (depending on the task runned)
+
+      executable_postfix: str or None
+        Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
+        compiled so that the resulting executables has postfixies)
+
+      mpi: list or str or bool
+        Run the task using mpi? See InputParameters.mpi_runner for the possible values of the parameter.
+
+      Return
+      ------
+      out: mixed
+        The result of ase2sprkkr.common.process_output_reader.ProcessOutputReader.run() method: the
+        parsed output of the runned task.
+
+      """
       d = self._definition
       executable = d.executable
       print_output = print_output if print_output is not None else calculator.print_output
@@ -69,20 +145,25 @@ class InputParameters(RootConfContainer):
       try:
         mpi = self.mpi_runner(mpi)
         if mpi:
-             executable = mpi + [ executable + 'MPI', task_file.name ]
-             process.run(executable, output_file, stdin = None, print_output=print_output, directory=self.directory)
+             executable = mpi + [ executable + 'MPI', input_file.name ]
+             return process.run(executable, output_file, stdin = None, print_output=print_output, directory=self.directory)
         else:
              executable = [ executable ]
-             process.run(executable, output_file, stdin = task_file, print_output=print_output, directory=self.directory)
+             return process.run(executable, output_file, stdin = input_file, print_output=print_output, directory=self.directory)
       except FileNotFoundError as e:
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?\n' + \
                      e.strerror
         raise
 
   def result_reader(self, calculator=None):
+      """ Return the result readed: the class that parse the output
+      of the runned task """
       return self._definition.result_reader(self, calculator)
 
   def read_output_from_file(self, filename, directory=None):
+      """ Read output of a previously runned task from a file and parse it in a same
+      way, as the process would be runned again.
+      """
       self.directory = directory or os.path.dirname(filename)
       return self.result_reader().read_from_file(filename)
 
@@ -94,6 +175,9 @@ class InputParameters(RootConfContainer):
       """
 
   def __str__(self):
+      return f"<Configuration container {self._get_path()}>"
+
+  def to_string(self):
       from io import StringIO
       s = StringIO()
       self.save_to_file(s)
