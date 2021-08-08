@@ -86,8 +86,8 @@ class ConfContainer(ConfCommon):
       """
       if name not in self._members:
          if unknown == 'find':
-            option = self.find(name)
-            if value:
+            option = self._find_value(name)
+            if option:
                option.set(value)
                return
          if not unknown == 'add':
@@ -121,7 +121,7 @@ class ConfContainer(ConfCommon):
       if name in self._members:
          val = self._members[name]
       elif unknown=='find':
-         val = self.find(name)
+         val = self._find_value(name)
       else:
          val = None
       if not val:
@@ -180,7 +180,7 @@ class ConfContainer(ConfCommon):
       cc = self._definition.custom_class
       self._add(cc(name, self))
       if value is not None:
-          self._members[name].set(value)
+          self._members[name].set(value, unknown='add')
 
 
   def remove(self, name:str):
