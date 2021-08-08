@@ -120,14 +120,29 @@ class InputParameters(RootConfContainer):
       return name if name in cls.definitions() else False
 
   @classmethod
-  def create_task(cls, arg):
+  def create_input_parameters(cls, arg):
+      """
+      Create input_parameters object
+
+      Parameters
+      ----------
+      arg: str or InputParameters
+        If an InputParameters object is given, it is returned as is.
+        If a string is given, it is interpreted either as a filename
+        (from which the parameters are read) or the task name, for
+        which the default parameters are used
+
+      Return
+      ------
+      input_parameters: InputParameters
+      """
       if isinstance(arg, str):
-         name = cls.is_it_a_task_name(arg)
+         name = cls.is_it_a_input_parameters_name(arg)
          if name:
-            return cls.create(arg), False
-         return cls.from_file(arg), True
+            return cls.create(arg)
+         return cls.from_file(arg)
       if isinstance(arg, io.IOBase):
-         return cls.from_file(arg), False
+         return cls.from_file(arg)
       return arg
 
   @classmethod

@@ -127,11 +127,13 @@ class SPRKKR(Calculator):
 
     @property
     def input_parameters(self):
+        if self._input_parameters is None:
+           self.input_parameters = 'SCF'
         return self._input_parameters
 
     @input_parameters.setter
     def input_parameters(self, value):
-        self._input_parameters.InputParameters.create_input_parameters(input_parameters)
+        self._input_parameters=InputParameters.create_input_parameters(value)
 
     def set(self, options={}, **kwargs):
         if kwargs:
@@ -352,14 +354,14 @@ class SPRKKR(Calculator):
         if input_parameters:
            if isinstance(input_parameters, str):
               if InputParameters.is_it_a_input_parameters_name(input_parameters):
-                 input_parameters = InputParameters.create_task(input_parameters)
+                 input_parameters = InputParameters.create_input_parameters(input_parameters)
               else:
                  if not options and not potential:
                    save_input = False
                    input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
                  input_parameters = InputParameters.from_file(input_parameters)
         else:
-           input_parameters = self.input_parameters or InputParameters.default_parameters()
+           input_parameters = self.input_parameters
         templator.input_parameters = input_parameters
 
         input_file = self._open_file(input_file or self.input_file, templator, input_parameters.is_mpi(self.mpi if mpi is None else mpi),
