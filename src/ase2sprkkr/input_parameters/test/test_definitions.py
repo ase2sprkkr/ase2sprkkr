@@ -50,3 +50,4 @@ class TestDefinitions(TestCase):
           fp.seek(0)
           out = fp.read()
           self.assertTrue(re.sub('\s','', out).endswith('TASKPHAGEN'))
+      td['TASK']['TASK'].default_value = 'PHAGEN'
