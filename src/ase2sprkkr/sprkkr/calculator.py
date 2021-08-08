@@ -142,7 +142,7 @@ class SPRKKR(Calculator):
            self.input_parameters.set(kwargs, unknown='find')
 
     def get(self, name):
-        self.input_parameters.get(name)
+        return self.input_parameters.get(name)
 
     @property
     def potential(self) -> Potential:
