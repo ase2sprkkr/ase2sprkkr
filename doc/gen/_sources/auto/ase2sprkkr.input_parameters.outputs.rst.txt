@@ -7,7 +7,8 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   ase2sprkkr.input_parameters.outputs.kkrscf_process_output_reader
+   ase2sprkkr.input_parameters.outputs.default
+   ase2sprkkr.input_parameters.outputs.scf
 
 Module contents
 ---------------

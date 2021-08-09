@@ -197,13 +197,14 @@ you can either modify the <tt>input_parameters</tt> and <tt>potential_file</tt> 
 <pre>
 calculator = SPRKKR(atoms=atoms, input_parameters='SCF')
 out = calculator.calculate()
-calculator.calculate(input_parameters='PHAGEN', potential_file=out.potential_filename)
+calculator.calculate(input_parameters='PHAGEN', potential=out.potential_filename)
 </pre>
 
-...or use calculator associated with the converged potential, which is available in the <tt>output.calculator</tt> property:
+...or you can use calculator associated with the converged potential, which is available in the <tt>output.calculator</tt> property
+of a SCF task result:
 <pre>
 out = calculator.calculate(input_parameters='SCF')
-out.calculator.calculate(task='PHAGEN')
+out.calculator.calculate(input_parameters='PHAGEN')
 </pre>
 
 
