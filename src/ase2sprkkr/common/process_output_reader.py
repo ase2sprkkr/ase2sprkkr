@@ -62,8 +62,9 @@ class BaseProcessOutputReader:
       return self.result(*out)
 
   def result(self, output, error, wait):
+      """ """
       if wait != 0:
-         raise ValueError("Process ended with return value {wait}")
+         raise ValueError("The process ended with return value {wait}")
       if error is not None:
          return output, error
       return output

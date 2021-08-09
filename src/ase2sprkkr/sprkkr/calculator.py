@@ -550,9 +550,10 @@ class SPRKKR(Calculator):
                   options,
                   print_output, executable_postfix, mpi=mpi
         )
-        self.results.update({
-            'energy' : out.energy,
-        })
+        if hasattr(out, 'energy'):
+            self.results.update({
+              'energy' : out.energy,
+            })
         return out
 
 

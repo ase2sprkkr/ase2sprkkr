@@ -19,7 +19,6 @@ from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.misc import lazy_value, cache
 from .input_parameters import InputParameters
-from .outputs.kkrscf_process_output_reader import KkrScfProcessOutputReader
 
 
 with generate_grammar():
@@ -82,7 +81,7 @@ class InputParametersDefinition(ConfDefinition):
       return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
 
   def __init__(self, name, sections=None,
-               executable='kkrscf', mpi=False, result_reader=KkrScfProcessOutputReader,
+               executable='kkrscf', mpi=False, result_reader=None,
                **kwargs):
       """
       Parameters
@@ -94,8 +93,10 @@ class InputParametersDefinition(ConfDefinition):
       mpi: bool
         Whether to run MPI version of the executable
 
-      process_class: common.process_output_reader.BaseProcessOutputReader
-        Class, that runs the process and read the results
+      result_reader: common.process_output_reader.BaseProcessOutputReader
+        Class, that runs the process and read the results. Default NONE
+        means, that the class is determined from the TASK name
+        (see InputParameters.result_reader)
       """
       self.executable = executable
       self.mpi = mpi

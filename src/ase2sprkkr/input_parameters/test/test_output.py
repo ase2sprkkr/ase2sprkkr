@@ -5,12 +5,12 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 import os
-from ..outputs.kkrscf_process_output_reader import KkrScfProcessOutputReader
+from ..outputs.scf import ScfOutputReader
 
 class TestOutput(TestCase):
 
   def test_output(self):
-      KkrScfProcessOutputReader.atoms_conf_type.parse(
+      ScfOutputReader.atoms_conf_type.parse(
 """  33 E= 0.6083 0.0000          IT=   1  Li_1
          DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
   s    0.4387   0.0296    0.0000   0.0000   0.00000  0.00000    0.00 s      0.00

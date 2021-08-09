@@ -6,7 +6,7 @@ from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,
 import pyparsing as pp
 import numpy as np
 from ase.units import Rydberg
-from ..task_result import InputParametersResult, InputParametersResultReader
+from ..task_result import TaskResult, OutputReader
 from ...common.misc import cached_property
 from ...potential.potentials import Potential
 import os
@@ -14,11 +14,11 @@ import copy
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 
-class ScfResult(InputParametersResult):
+class ScfResult(TaskResult):
 
-  def __init__(self, input_parameters, calculator, iterations, error, return_code):
-      self.iterations = iterations
-      super().__init__(input_parameters, calculator, return_code)
+  @property
+  def iterations(self):
+      return self.result
 
   @cached_property
   def potential_filename(self):
@@ -88,7 +88,7 @@ class ScfResult(InputParametersResult):
       else:
         pyplot.show()
 
-class KkrScfProcessOutputReader(InputParametersResultReader):
+class ScfOutputReader(OutputReader):
 
   atoms_conf_type = Section('atoms', [
     VN('IECURR', integer),

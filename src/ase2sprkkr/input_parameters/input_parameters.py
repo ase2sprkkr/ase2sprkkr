@@ -4,6 +4,8 @@ import tempfile
 import pkgutil
 import importlib
 from . import definitions
+from . import outputs
+from .outputs.default import DefaultOutputReader
 from ..common.conf_containers import RootConfContainer
 from ..common.misc import lazy_value, OrderedDict
 import shutil
@@ -158,7 +160,19 @@ class InputParameters(RootConfContainer):
   def result_reader(self, calculator=None):
       """ Return the result readed: the class that parse the output
       of the runned task """
-      return self._definition.result_reader(self, calculator)
+      cls = self._definition.result_reader
+      if cls is None:
+         task = self.TASK.TASK().lower()
+         try:
+            mod = importlib.import_module(f'.{task}', outputs.__name__)
+            clsname = task.title() + 'OutputReader'
+            cls = getattr(mod, clsname)
+            if not cls:
+               raise Exception(f"Can not determine the class to read the results of task {task}"
+                                "No {clsname} class in the module {oo.__name__}.{task}")
+         except ModuleNotFoundError:
+            cls = DefaultOutputReader
+      return cls(self, calculator)
 
   def read_output_from_file(self, filename, directory=None):
       """ Read output of a previously runned task from a file and parse it in a same

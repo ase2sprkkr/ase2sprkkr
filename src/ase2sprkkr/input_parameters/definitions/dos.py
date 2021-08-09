@@ -15,4 +15,6 @@ input_parameters = InputParameters(
       }),
       TASK('DOS'),
       SITES
-])
+  ],
+  executable='kkrgen'
+)

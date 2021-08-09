@@ -125,3 +125,5 @@ class CalculatorTest(TestCase):
      out = calculator.calculate(potential=out.potential,input_parameters=ips,print_output=print_output)
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
+     calculator.calculate(input_parameters='PHAGEN', potential_file=out.potential_filename)
+     out.calculator.calculate(task='PHAGEN')

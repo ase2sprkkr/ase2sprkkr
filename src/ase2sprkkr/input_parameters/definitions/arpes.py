@@ -43,6 +43,8 @@ input_parameters = InputParameters(
       V('N_LAYER', 120),
       V('SURF_BAR', SetOf(float), [0.25,0.25]),
       V('TRANSP_BAR', flag, False)
-    ])
-  ])
+    ]),
+  ],
+  executable = 'kkrspec'
+)
 
