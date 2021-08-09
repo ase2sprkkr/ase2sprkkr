@@ -82,7 +82,7 @@ class CalculatorTest(TestCase):
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
 
      #calculator options
-     out = calculator.calculate(options = {'NITER' : 2 }, print_output=print_output)
+     out = calculator.calculate(options = {'NITER' : 2 }, print_output=print_output, mpi=4)
      self.assertEqual(2, len(out.iterations))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
