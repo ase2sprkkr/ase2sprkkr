@@ -420,7 +420,7 @@ class SPRKKR(Calculator):
             dirr = os.path.dirname( input_file.name ) if input_file.name else self.directory
             input_parameters.CONTROL.POTFIL = os.path.relpath( potential_file, dirr )
           else:
-            potential_file = input_parameters.CONTROL.POTFIL
+            potential_file = input_parameters.CONTROL.POTFIL()
           input_parameters.save_to_file(input_file)
           input_file.seek(0)
         #This branch can occur if the potential have been explicitly set to False,
