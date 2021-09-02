@@ -8,7 +8,7 @@ input_parameters = InputParameters(
       'phagen', [
         CONTROL('PHAGEN'),
         TAU,
-        ENERGY.copy( defaults = {'NE' : 32}),
+        ENERGY,
         SCF,
       ],
       description = "SCF calculation",

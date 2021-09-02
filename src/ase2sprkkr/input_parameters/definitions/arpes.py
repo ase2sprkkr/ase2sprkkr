@@ -17,7 +17,7 @@ input_parameters = InputParameters(
         V('IMV_FIN_EV', 5.),
       ],
       remove = ['EMIN'],
-      defaults = { 'GRID' : 1 }
+      defaults = { 'GRID' : 1, 'NE' : 300 }
     ),
     SITES.copy(defaults = {'NL' : 4 }),
     TASK('ARPES').copy([

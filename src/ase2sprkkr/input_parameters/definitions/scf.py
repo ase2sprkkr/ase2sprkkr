@@ -10,7 +10,7 @@ input_parameters = InputParameters(
           V('KRWS', 1)
         ]),
         TAU,
-        ENERGY.copy( defaults = {'NE' : 32}),
+        ENERGY,
         SCF,
         SITES
       ],

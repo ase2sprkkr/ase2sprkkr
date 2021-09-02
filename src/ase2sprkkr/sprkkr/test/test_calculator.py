@@ -104,7 +104,7 @@ class CalculatorTest(TestCase):
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(3, len(out.iterations[-1]['atoms']))
      for i in out.iterations[-1]['atoms']:
-        self.assertEqual(5, len(i['orbitals']))
+        self.assertEqual(4, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
 
      out = SPRKKR.InputParameters.from_file(here('output_test_calc.inp')).read_output_from_file(here('output_test_calc.out'))

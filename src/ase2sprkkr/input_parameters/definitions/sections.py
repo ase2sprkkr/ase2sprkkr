@@ -19,7 +19,7 @@ def _sections():
 
   sections['ENERGY'] = Section('ENERGY',[
       V('GRID', [5], required=True),
-      V('NE', [300], required=True),
+      V('NE', [32], required=True),
       V('ImE', energy, 0.0),
       V('EMIN', -0.2),
   ])
