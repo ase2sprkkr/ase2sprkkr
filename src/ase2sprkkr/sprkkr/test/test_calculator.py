@@ -95,7 +95,7 @@ class CalculatorTest(TestCase):
      out.plot(filename = here('output_test_calc.png'))
 
      #use methods of atoms
-     atoms.set_calculator(calculator)
+     atoms.calc = calculator
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
