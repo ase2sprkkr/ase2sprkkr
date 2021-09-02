@@ -1,6 +1,5 @@
 from ..common.conf_containers import RootConfContainer
 from .io_data import ReadIoData, WriteIoData
-from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 from ..common.misc import class_property, cache
 
 class Potential(RootConfContainer):
@@ -84,3 +83,6 @@ class Potential(RootConfContainer):
   def from_atoms(cls, atoms):
       pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd)
+
+#At last - to avoid circular import problem
+from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
