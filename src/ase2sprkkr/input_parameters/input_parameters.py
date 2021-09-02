@@ -193,12 +193,6 @@ class InputParameters(RootConfContainer):
   def __str__(self):
       return f"<Configuration container {self._get_path()}>"
 
-  def to_string(self):
-      from io import StringIO
-      s = StringIO()
-      self.save_to_file(s)
-      return s.getvalue()
-
   def set_option(name, value):
       for i in self._members:
           if name in i:

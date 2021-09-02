@@ -327,7 +327,7 @@ class CustomSection(BaseSection):
 
 class RootConfContainer(ConfContainer):
 
-  def save_to_file(self, file, *, validate):
+  def save_to_file(self, file, *, validate=True):
       """ Save the configuration to a file in a format readable by SPR-KKR """
       if not hasattr(file, 'write'):
          with open(file, "w") as file:
