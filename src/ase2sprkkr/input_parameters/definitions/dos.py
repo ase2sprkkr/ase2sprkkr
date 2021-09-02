@@ -11,7 +11,9 @@ input_parameters = InputParameters(
       ENERGY.copy([
           V('EMAX', 1.0)
       ], defaults= {
-          'GRID' : 5
+          'GRID' : 3,
+          'NE' : 300,
+          'ImE' : 0.01,
       }),
       TASK('DOS'),
       SITES
