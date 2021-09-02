@@ -24,7 +24,7 @@ for arg do
 done
 
 
-if [[ NONOSE == '' ]] &&  echo 'import nose' | $PYTHON >> /dev/null ; then
+if [[ NONOSE == '' ]] &&  echo 'import nose' | $PYTHON >> /dev/null 2> /dev/null ; then
 	MODULE="nose -s"
 else
 	MODULE=unittest
