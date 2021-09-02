@@ -101,15 +101,15 @@ class BaseProcessOutputReader:
       self.print_output = print_output
 
       def out():
-          air = AsyncioFileReader(output)
-          task = loop.create_task(self.read_output(air))
-          return loop.run_until_complete(task)
+          with AsyncioFileReader(output) as air:
+              task = loop.create_task(self.read_output(air))
+              return loop.run_until_complete(task)
 
       def err():
           if not error: return None
-          air = AsyncioFileReader(error)
-          task = loop.create_task(self.read_error(air))
-          return loop.run_until_complete(task)
+          with AsyncioFileReader(error) as air:
+              task = loop.create_task(self.read_error(air))
+              return loop.run_until_complete(task)
 
       return self.result(out(), err(), return_code)
 
@@ -122,6 +122,20 @@ class AsyncioFileReader:
   def __init__(self, filename, buffersize=8192):
       self.file = open(filename, 'rb') if isinstance(filename, str) else filename
       self.buffersize = buffersize
+
+  def close(self):
+      if self.file:
+          self.file.close()
+          self.file=None
+
+  def __del__(self):
+      self.close()
+
+  def __enter__(self):
+      return self
+
+  def __exit__(self, type, value, traceback):
+      self.close()
 
   async def readline(self):
       return self.file.readline()
