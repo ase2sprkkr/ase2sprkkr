@@ -78,7 +78,7 @@ class CalculatorTest(TestCase):
      assert_change(True, False)
 
      #use methods of atoms
-     atoms.set_calculator(calculator)
+     atoms.calc = calculator
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
 
      #calculator options
