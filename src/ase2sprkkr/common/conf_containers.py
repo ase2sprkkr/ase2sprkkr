@@ -203,6 +203,12 @@ class ConfContainer(ConfCommon):
           dct[self.name] = out
       return out
 
+  def to_string(self, *, validate=False):
+      from io import StringIO
+      s = StringIO()
+      self.save_to_file(s, validate=validate)
+      return s.getvalue()
+
   def _find_value(self, name):
       for i in self:
           if i._definition.is_hidden:
@@ -246,7 +252,7 @@ class BaseSection(ConfContainer):
            return True
       return False
 
-  def save_to_file(self, file):
+  def save_to_file(self, file, *, validate=True):
       """ Save the content of the container to the file (according to the definition)
 
       Parameters
@@ -255,14 +261,14 @@ class BaseSection(ConfContainer):
         File object (open for writing), where the data should be written
       """
       if not self.has_any_value():
-         if not self._definition.is_optional:
+         if validate and not self._definition.is_optional:
             raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
          return
       if self._definition.name_in_grammar:
          file.write(self._definition.name)
          file.write('\n')
       for o in self:
-          if o.save_to_file(file):
+          if o.save_to_file(file, validate=validate):
              file.write(self._definition.delimiter)
       file.flush()
 
@@ -321,19 +327,19 @@ class CustomSection(BaseSection):
 
 class RootConfContainer(ConfContainer):
 
-  def save_to_file(self, file):
+  def save_to_file(self, file, *, validate):
       """ Save the configuration to a file in a format readable by SPR-KKR """
       if not hasattr(file, 'write'):
          with open(file, "w") as file:
-           return self.save_to_file(file)
+           return self.save_to_file(file, validate=validate)
 
       it = iter(self)
       i = next(it)
       if i:
-        i.save_to_file(file)
+        i.save_to_file(file, validate=validate)
         for i in it:
           file.write(self._definition.delimiter)
-          i.save_to_file(file)
+          i.save_to_file(file, validate=validate)
       file.flush()
 
   def read_from_file(self, file, clear_first=True):

@@ -71,7 +71,7 @@ class Option(ConfCommon):
       if self._hook:
         self._hook(self)
 
-  def save_to_file(self, file):
+  def save_to_file(self, file, *, validate=True):
       """ Write the name-value pair to the given file, if the value
       is set. """
       if not self._definition.type.has_value:
@@ -79,7 +79,7 @@ class Option(ConfCommon):
       value = self()
       if value is not None:
         return self._definition.write(file, value)
-      elif not self._definition.is_optional:
+      elif validate and not self._definition.is_optional:
         name = self._get_root_container()
         raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
 

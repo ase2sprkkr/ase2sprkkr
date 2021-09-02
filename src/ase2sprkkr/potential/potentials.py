@@ -54,11 +54,11 @@ class Potential(RootConfContainer):
 
       return atoms
 
-  def save_to_file(self, file, atoms=None):
+  def save_to_file(self, file, atoms=None, *, validate=True):
       if atoms is not False:
          self.set_from_atoms(atoms or self._atoms)
       self.make_complete()
-      super().save_to_file(file)
+      super().save_to_file(file, validate=validate)
 
   def set_from_atoms(self, atoms = None):
       """ Set the sections of the potential accoring to an ASE atoms object. """
