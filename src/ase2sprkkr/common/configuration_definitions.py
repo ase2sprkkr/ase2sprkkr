@@ -291,12 +291,13 @@ class BaseValueDefinition(BaseDefinition):
         self.type.write(f, value)
      return True
 
-  _init_args = inspect.getfullargspec(__init__).args[1:]
 
   def copy(self, **kwargs):
+     if not '_init_args' in self.__class__.__dict__:
+        self.__class__._init_args = inspect.getfullargspec(self.__init__).args[1:]
      default = { k: getattr(self, k) for k in self._init_args }
      default.update(kwargs)
-     self.__class__(args)
+     return self.__class__(**default)
 
   def remove(self, name):
      del self.section[name]
@@ -374,7 +375,7 @@ class BaseDefinitionContainer(BaseDefinition):
 
     def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
         """ copy the section with the contained values modified """
-        members = self._members.copy()
+        members = OrderedDict( ( (k,i.copy()) for k,i in self._members.items() ) )
         for i in remove:
             del members[i]
         members.update(self._dict_from_named_values(args, items))
