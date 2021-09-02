@@ -156,6 +156,8 @@ class InputParameters(RootConfContainer):
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?\n' + \
                      e.strerror
         raise
+      finally:
+        input_file.close()
 
   def result_reader(self, calculator=None):
       """ Return the result readed: the class that parse the output
