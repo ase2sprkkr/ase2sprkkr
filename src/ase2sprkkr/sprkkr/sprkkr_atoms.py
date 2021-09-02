@@ -62,7 +62,7 @@ class SPRKKRAtoms(Atoms):
 
    def compute_sites_symmetry(self, spacegroup=None, atomic_numbers=None, consider_old=False, symprec=1e-5):
         """ SPRKKR has some properties shared by all by-symmetry-equal sites.
-           This method initializes _sites property, that hold these properties:
+           This method initializes _sites property, that holds these properties:
            makes identical all atoms on the "symmetry identical positions with
            the same atomic number.
 
