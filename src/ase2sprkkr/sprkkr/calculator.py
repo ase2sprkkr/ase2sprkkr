@@ -18,6 +18,7 @@ from ..potential.potentials import Potential
 from ..common.misc import add_to_signature
 import shutil
 import copy
+import subprocess
 
 class SPRKKR(Calculator):
     """
@@ -576,6 +577,9 @@ class SPRKKR(Calculator):
     def kkrch(self, *args, **kwargs):
          """A shortcut for calculating a KKRCH task"""
          self.calculate(input_parameters='KKRCH', *args, **kwargs)
+
+    def run_xband(self, executable='xband'):
+        subprocess.Popen(executable, stdout=subprocess.DEVNULL)
 
     def copy_with_potential(self, potential):
         """ Return copy of self, with the potential variable set.
