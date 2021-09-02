@@ -81,7 +81,7 @@ class InputParametersDefinition(ConfDefinition):
       return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
 
   def __init__(self, name, sections=None,
-               executable='kkrscf', mpi=False, result_reader=None,
+               executable='kkrscf', mpi=True, result_reader=None,
                **kwargs):
       """
       Parameters
