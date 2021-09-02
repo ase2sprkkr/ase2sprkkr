@@ -1,4 +1,6 @@
 #!/bin/bash
+ANY=
+NONOSE=
 
 if which python3 >> /dev/null ; then
 	 PYTHON=python3
@@ -6,18 +8,29 @@ else
 	 PYTHON=python
 fi
 
-if echo 'import nose' | $PYTHON >> /dev/null ; then
+for i in "$@" ; do
+	if [[ $i != -* ]] ; then
+		ANY=1
+	fi
+	if [[ $i == -N ]] ; then
+		NONOSE=1
+	fi
+done
+
+for arg do
+  shift
+  [ "$arg" = "-N" ] && continue
+  set -- "$@" "$arg"
+done
+
+
+if [[ NONOSE == '' ]] &&  echo 'import nose' | $PYTHON >> /dev/null ; then
 	MODULE="nose -s"
 else
 	MODULE=unittest
 fi
 
 
-for i in "$@" ; do
-	if [[ $i != -* ]] ; then
-		ANY=1
-	fi
-done
 
 ADD=
 if [[ ! "$ANY" ]] ; then
