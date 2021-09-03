@@ -19,5 +19,5 @@ input_parameters = InputParameters(
       SITES
   ],
   executable='kkrgen',
-  mpi=False
+  mpi=True
 )
