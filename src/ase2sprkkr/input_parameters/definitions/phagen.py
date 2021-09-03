@@ -13,5 +13,6 @@ input_parameters = InputParameters(
       ],
       description = "SCF calculation",
       help = "Set at least options ..., ...., .....",
-      executable = 'kkrgen'
+      executable = 'kkrscf',
+      mpi=False
 )

@@ -28,7 +28,7 @@ def _sections():
       V('NITER', 200),
       V('MIX', 0.2),
       V('VXC', DefKeyword('VWN')),
-      V('EFUESS', 0.7),
+      V('EFGUESS', 0.7),
       V('TOL', 0.00001),
       V('ISTBRY', 1)
   ])
