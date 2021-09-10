@@ -23,6 +23,9 @@ class UniqueValuesMapping:
   def len_of_unique(self):
       return len(self.value_to_class_id)
 
+  def __len__(self):
+      return len(self.mapping)
+
   @staticmethod
   def from_values(values, length=None, none_tuples=False):
       """
