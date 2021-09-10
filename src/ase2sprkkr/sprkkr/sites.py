@@ -49,7 +49,7 @@ class Site:
       Creates the occupation, if not exists, according to the ASE atoms object
       """
       if self._occupation is None:
-         ids = self.atoms.sites.idsof(self)
+         ids = np.where(sites == self)[0]
          if not ids:
             raise ValueError('This atomic site is not from the provided Atoms object')
          an = atoms.get_atomic_numbers()

@@ -5,11 +5,12 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 from ase import Atoms
+from ase.build import bulk
 from .. sprkkr_atoms import SPRKKRAtoms
 
 class SPRKKRAtomsTest(TestCase):
 
- def test_calculator(self):
+ def xtest_atoms(self):
      a = Atoms('NaCl')
      a.set_positions([[0,0,0],[0,1,0]])
      a.info['occupancy'] = { 1: {'Cl' : 0.4, 'I' : 0.6 } }
@@ -27,3 +28,32 @@ class SPRKKRAtomsTest(TestCase):
      a.compute_sites_symmetry()
      a.sites[1].occupation = 'Cl'
      self.assertEqual(str(a.symbols), 'NaCl')
+
+
+ def test_occupancy(self):
+     atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+     SPRKKRAtoms.promote_ase_atoms(atoms)
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+     atoms.cancel_symmetry()
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
+
+     atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+     atoms.info["occupancy"] = {
+         0: { 'Li' : 1 },
+         1: { 'Cl' : 1 },
+         2: { 'Li' : 1 },
+         3: { 'Cl' : 1 },
+     }
+     SPRKKRAtoms.promote_ase_atoms(atoms)
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+
+     atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+     atoms.info["occupancy"] = {
+         0: { 'Li' : 1 },
+         1: { 'Cl' : 0.5, 'I' :0.5 },
+         2: { 'Li' : 1 },
+         3: { 'Cl' : 1 },
+     }
+     SPRKKRAtoms.promote_ase_atoms(atoms)
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
+     self.assertEquals({ 'Cl' : 0.5, 'I' :0.5 }, atoms.sites[1].occupation.as_dict)

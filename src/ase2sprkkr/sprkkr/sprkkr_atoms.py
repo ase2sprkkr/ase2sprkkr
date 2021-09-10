@@ -88,6 +88,7 @@ class SPRKKRAtoms(Atoms):
             symprec: float
               A threshold for spatial error for symmetry computing. See spglib.get_spacegroup
         """
+        occupation = self.info.get('occupancy', {})
         if not spacegroup:
           if atomic_numbers:
             mapping = UniqueValuesMapping(atomic_numbers)
@@ -95,53 +96,68 @@ class SPRKKRAtoms(Atoms):
             mapping = UniqueValuesMapping(self.get_atomic_numbers())
             if consider_old and self._unique_sites:
               mapping = mapping.merge(self._unique_sites)
+          if occupation:
+            def gen_occ():
+                for i in range(len(mapping)):
+                    val = occupation.get(i, None)
+                    if val is None:
+                        yield val
+                    else:
+                        yield tuple((k, val[k]) for k in val)
+            mapping = mapping.merge(gen_occ())
+
           spacegroup = self.compute_spacegroup_for_atomic_numbers(mapping.mapping, symprec=symprec)
 
         self.info['spacegroup'] = spacegroup
 
-        occupation = self.info.get('occupancy', {})
-        if spacegroup:
-            tags = spacegroup.tag_sites(self.get_scaled_positions())
-            sites = np.empty(len(tags), dtype=object)
+        if not spacegroup:
+            return self.cancel_symmetry()
 
-            uniq, umap = np.unique(tags, return_inverse = True)
-            used = set()
-            for i in range(len(uniq)):
-                 index = umap == i
-                 if self._unique_sites is not None:
-                    #first non-none of the given index
-                    possible =  (i for i in self._unique_sites[index])
-                    site = next(filter(None, possible), None)
-                    if site in used:
-                       site = site.copy()
-                    else:
-                       used.add(site)
-                 else:
-                    site = None
-                 if not site:
-                    symbol = self.symbols[ numpy_index(umap,i)]
-                    for ai in np.where(index)[0]:
-                        if ai in occupation and occupation[ai]:
-                           symbol = occupation[ai]
-                    site = Site(self, symbol)
-                 sites[index] = site
+        tags = spacegroup.tag_sites(self.get_scaled_positions())
+        mapping = mapping.merge( tags )
+        tags = mapping.mapping
 
-        else:
-            sites = np.empty(len(self), dtype=object)
-            used = set()
-            for i in range(len(self)):
-                if self._unique_sites is not None:
-                    site=self._unique_sites[i]
-                    if site in used:
-                       site = site.copy()
-                    else:
-                       used.add(site)
+        sites = np.empty(len(tags), dtype=object)
+
+        uniq, umap = np.unique(tags, return_inverse = True)
+        used = set()
+        for i in range(len(uniq)):
+             index = umap == i
+             if self._unique_sites is not None:
+                #first non-none of the given index
+                possible =  (i for i in self._unique_sites[index])
+                site = next(filter(None, possible), None)
+                if site in used:
+                   site = site.copy()
                 else:
-                    symbol = occupation[i] if i in occupation and occupation[i] else \
-                             self.symbols[i]
-                    site = Site(self, symbol)
-                sites[i] = site
+                   used.add(site)
+             else:
+                site = None
+             if not site:
+                symbol = self.symbols[ numpy_index(umap,i)]
+                for ai in np.where(index)[0]:
+                    if ai in occupation and occupation[ai]:
+                       symbol = occupation[ai]
+                site = Site(self, symbol)
+             sites[index] = site
+        self.sites = sites
 
+   def cancel_symmetry(self):
+        sites = np.empty(len(self), dtype=object)
+        used = set()
+        occupation = self.info.get('occupancy', {})
+        for i in range(len(self)):
+            if self._unique_sites is not None:
+                site=self._unique_sites[i]
+                if site in used:
+                   site = site.copy()
+                else:
+                   used.add(site)
+            else:
+                symbol = occupation[i] if i in occupation and occupation[i] else \
+                         self.symbols[i]
+                site = Site(self, symbol)
+            sites[i] = site
         self.sites = sites
 
    @property
