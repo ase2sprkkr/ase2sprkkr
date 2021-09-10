@@ -61,6 +61,6 @@ class UniqueValuesMapping:
 
   def merge(self, other):
       """ Merge two sets. Resulting UniqueValues uses integers as keys"""
-      return UniqueValues.from_values(zip(self.mapping, other), length = len(self.mapping), none_tuples=True)
+      return self.from_values(zip(self.mapping, other), length = len(self.mapping), none_tuples=True)
 
   noneMapping = namedtuple('NoneMapping', ['merge'])(lambda x: Create(values, reverse_mapping=False))
