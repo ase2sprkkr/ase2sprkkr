@@ -1,5 +1,7 @@
 import numpy as np
 from .atomic_types import AtomicType
+from ..common.misc import OrderedDict
+
 
 class Occupation:
   """ Occupation of the atomic site, given by
@@ -20,7 +22,7 @@ class Occupation:
          iterator = dct.items() #dict
       else:
          iterator = dct
-      self._occupation = { AtomicType.to_atomic_type(i): j for i,j in iterator }
+      self._occupation = OrderedDict( (AtomicType.to_atomic_type(i), j) for i,j in iterator )
       self._normalize()
       self._update_atoms()
 
