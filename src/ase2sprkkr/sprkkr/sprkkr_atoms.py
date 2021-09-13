@@ -74,18 +74,27 @@ class SPRKKRAtoms(Atoms):
 
    @property
    def symmetry(self):
+       """
+       Whether the sites property is/will be generated using symmetry, i.e.
+       whether the Sites objects in the sites property will be shared among
+       symmetric atomic sites.
+       """
        return self._symmetry
 
    @symmetry.setter
    def symmetry(self, value):
+       """
+       Recomputes the sites with enabled/disabled symmetry if the value of the property
+       has changed.
+       """
        if self._symmetry == value:
           return
        self._symmetry = value
        if self._unique_sites is not None:
           if value:
-             self.compute_sites_symmetry()
+             self._compute_sites_symmetry()
           else:
-             self.cancel_sites_symmetry()
+             self._cancel_sites_symmetry()
 
 
    def compute_spacegroup_for_atomic_numbers(self, atomic_numbers=None, symprec=1e-5):
@@ -110,7 +119,10 @@ class SPRKKRAtoms(Atoms):
            makes identical all atoms on the "symmetry identical positions with
            the same atomic number.
 
-           It is called automatically when the sites property is firstly accessed.
+           The method is called automatically when the sites property is firstly accessed.
+           The effect of the method is the nearly same as setting the symmetry property.
+           However, setting the symmetry property on an `already symmetrized' object has
+           no effect, while this methods always recompute the sites property.
 
            Parameters
            ----------
@@ -130,10 +142,17 @@ class SPRKKRAtoms(Atoms):
               be equivalent in the newly computed symmetry.
 
             symprec: float
-              A threshold for spatial error for symmetry computing. See spglib.get_spacegroup
+              A threshold for spatial error for the symmetry computing. See spglib.get_spacegroup
+
         """
+        self._symmetry = True
+        SPRKKRAtoms._compute_sites_symmetry(**locals())
+
+   def _compute_sites_symmetry(self, spacegroup=None, atomic_numbers=None, consider_old=False, symprec=1e-5):
+        """ See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property."""
+
         occupation = self.info.get('occupancy', {})
-        if not spacegroup and self.symmetry:
+        if not spacegroup and self._symmetry:
           if atomic_numbers:
             mapping = UniqueValuesMapping(atomic_numbers)
           else:
@@ -187,6 +206,19 @@ class SPRKKRAtoms(Atoms):
         self.sites = sites
 
    def cancel_sites_symmetry(self):
+        """ Cancel the use of symmetry in the structure, i.e., makes the Site object
+        uniqe (not shared) for each atomic site.
+
+        Calling this method is nearly equivalent to the setting the symmetry property
+        to False, however, this method always recompute the sites object, while
+        setting symmetry=False recomputes the sites property only if it was previously
+        set to False.
+        """
+        self._symmetry = False
+        self._cancel_sites_symmetry()
+
+   def _cancel_sites_symmetry(self):
+        """ See cancel_sites_symmetry - this metod does just the same, but it does not set the symmetry property."""
         sites = np.empty(len(self), dtype=object)
         used = set()
         occupation = self.info.get('occupancy', {})
@@ -219,7 +251,7 @@ class SPRKKRAtoms(Atoms):
            in these properties please create a new Atoms object with given properties.
        """
        if self._unique_sites is None:
-          self.compute_sites_symmetry()
+          self._compute_sites_symmetry()
        return self._unique_sites
 
    @sites.setter

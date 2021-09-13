@@ -38,6 +38,20 @@ class SPRKKRAtomsTest(TestCase):
      self.assertFalse(atoms.sites[1] == atoms.sites[3])
      atoms.symmetry = True
      self.assertTrue(atoms.sites[1] == atoms.sites[3])
+     atoms.sites[3] = atoms.sites[3].copy()
+     #No effect
+     atoms.symmetry = True
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
+     atoms.compute_sites_symmetry()
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+     atoms.symmetry = False
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
+     atoms.sites[3] = atoms.sites[1]
+     #No effect
+     atoms.symmetry = False
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+     atoms.cancel_sites_symmetry()
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=False)
