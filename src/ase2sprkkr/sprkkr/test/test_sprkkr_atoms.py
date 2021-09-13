@@ -42,9 +42,12 @@ class SPRKKRAtomsTest(TestCase):
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=False)
      self.assertFalse(atoms.sites[1] == atoms.sites[3])
+     #default None for symmetry do not change the already
+     #initialized atoms object
+     SPRKKRAtoms.promote_ase_atoms(atoms)
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
      SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=True)
      self.assertTrue(atoms.sites[1] == atoms.sites[3])
-
 
 
  def test_occupancy(self):
