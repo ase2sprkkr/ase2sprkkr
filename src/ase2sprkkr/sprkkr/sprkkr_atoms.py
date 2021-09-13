@@ -14,11 +14,22 @@ class SPRKKRAtoms(Atoms):
    """ ASE Atoms object extended by the data necessary for SPR-KKR calculations """
 
    @staticmethod
-   def promote_ase_atoms(obj):
+   def promote_ase_atoms(obj, symmetry=None):
        """ Convert ASE Atoms object to the one usable by SPRKKR.
            For the case of the usability it is a bit ugly hack: The __class__ attribute
            is replaced so the extra methods and properties of the objects will
            be available.
+
+           Parameters
+           ----------
+           obj: ase.Atoms
+            The atoms object to be promoted to be used for SPRKKR calculations
+
+           symmetry: boolean or None
+            The sites property of the resulting object will consider the symmetry of the structure.
+            I.e., the by-symmetry-equal atomic sites will share the same sites object.
+            Default None is the same as True, however it does not change the symmetry
+            of the already promoted obj passed into the routine.
        """
        if obj and not isinstance(obj, SPRKKRAtoms):
           if obj.__class__ is Atoms:
@@ -31,18 +42,51 @@ class SPRKKRAtoms(Atoms):
                    pass
              obj.__class__ = SprKKrAtomsEx
 
-          obj._init()
+          obj._init(True if symmetry is None else symmetry)
+       else:
+          if symmetry is not None:
+             obj.symmetry = symmetry
        return obj
 
-   def __init__(self, *args, **kwargs):
-       self._init()
+   def __init__(self, *args, symmetry=True, **kwargs):
+       """
+       Creates SPRKKRAtoms atoms
+
+       Parameters
+       ----------
+       *args: list
+          The positionals arguments of ase.Atoms.__init__
+       symmetry: boolean
+          The symmetry will be computed when the sites property will be initialized.
+          I.e., the by-symmetry-equal atomic sites will share the same sites object.
+       **kwargs: dict
+          The named arguments of ase.Atoms.__init__
+       """
+       self._init(symmetry)
        super().__init__(*args, **kwargs)
 
-   def _init(self):
+   def _init(self, symmetry=True):
        """ The initialization of the additional (not-in-ASE) properties. To be used
        by constructor and by promote_ase_atoms"""
        self._unique_sites = None
        self._potential = None
+       self._symmetry = symmetry
+
+   @property
+   def symmetry(self):
+       return self._symmetry
+
+   @symmetry.setter
+   def symmetry(self, value):
+       if self._symmetry == value:
+          return
+       self._symmetry = value
+       if self._unique_sites is not None:
+          if value:
+             self.compute_sites_symmetry()
+          else:
+             self.cancel_sites_symmetry()
+
 
    def compute_spacegroup_for_atomic_numbers(self, atomic_numbers=None, symprec=1e-5):
        """ Return spacegroup that suits to the atoms' cell structure and to the given
@@ -89,7 +133,7 @@ class SPRKKRAtoms(Atoms):
               A threshold for spatial error for symmetry computing. See spglib.get_spacegroup
         """
         occupation = self.info.get('occupancy', {})
-        if not spacegroup:
+        if not spacegroup and self.symmetry:
           if atomic_numbers:
             mapping = UniqueValuesMapping(atomic_numbers)
           else:
@@ -111,7 +155,7 @@ class SPRKKRAtoms(Atoms):
         self.info['spacegroup'] = spacegroup
 
         if not spacegroup:
-            return self.cancel_symmetry()
+            return self.cancel_sites_symmetry()
 
         tags = spacegroup.tag_sites(self.get_scaled_positions())
         mapping = mapping.merge( tags )
@@ -142,7 +186,7 @@ class SPRKKRAtoms(Atoms):
              sites[index] = site
         self.sites = sites
 
-   def cancel_symmetry(self):
+   def cancel_sites_symmetry(self):
         sites = np.empty(len(self), dtype=object)
         used = set()
         occupation = self.info.get('occupancy', {})

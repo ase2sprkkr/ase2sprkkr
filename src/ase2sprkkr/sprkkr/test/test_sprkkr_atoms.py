@@ -30,11 +30,28 @@ class SPRKKRAtomsTest(TestCase):
      self.assertEqual(str(a.symbols), 'NaCl')
 
 
+ def test_symmetry(self):
+     atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+     SPRKKRAtoms.promote_ase_atoms(atoms)
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+     atoms.symmetry = False
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
+     atoms.symmetry = True
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+
+     atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
+     SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=False)
+     self.assertFalse(atoms.sites[1] == atoms.sites[3])
+     SPRKKRAtoms.promote_ase_atoms(atoms, symmetry=True)
+     self.assertTrue(atoms.sites[1] == atoms.sites[3])
+
+
+
  def test_occupancy(self):
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      SPRKKRAtoms.promote_ase_atoms(atoms)
      self.assertTrue(atoms.sites[1] == atoms.sites[3])
-     atoms.cancel_symmetry()
+     atoms.cancel_sites_symmetry()
      self.assertFalse(atoms.sites[1] == atoms.sites[3])
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
