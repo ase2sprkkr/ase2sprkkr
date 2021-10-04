@@ -9,7 +9,7 @@ import re
 import pyparsing
 
 class CustomPotentialSectionDefinition(BaseValueDefinition):
-  """ There is no grammar in custom potential section -
+  """ There is no grammar in a custom potential section -
   custom sections are readed by Potential class
   """
   prefix = ''
@@ -44,7 +44,11 @@ class SectionString(BaseType):
           return CustomSectionToken()
 
       def grammar_name(self):
-          return '<all up to end of section>'
+          return '<all up to the end of the section>'
+
+      def write(self, f, value):
+          super().write(f, value)
+          f.write('\n')
 
 SectionString.I = SectionString()
 
