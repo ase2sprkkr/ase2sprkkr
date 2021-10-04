@@ -48,18 +48,20 @@ class SPRKKR(Calculator):
         directory: str or None
           Directory, where the files will be created.
 
-        input_file: str or file or None or True
+        input_file: str or file or bool
           Template according to which the input file name will be created.
-          None means to use a temporary file.
-          The placeholders for the task name, date, etc... can be used.
           True means the default template.
+          False means to use a temporary file.
+          The placeholders for the task name, date, etc... can be used.
 
-        output_file: str or file or None or True (default).
-          The template for the output file name (see the input_file parameter).
+        output_file: str or file or bool (default).
+          The template for the output file name.
           True means use the input file name, with replaced .in[p] by .out
           or appended .out suffix
+          False means not to write the output file at all.
+          See the input_file parameter for the meaning of other values.
 
-        potential_file: str or file or None
+        potential_file: str or file or bool
           The template for the potential file name (see the input_file parameter).
 
         print_output: bool or str
@@ -85,11 +87,13 @@ class SPRKKR(Calculator):
         options: dict
           Further parameters for input parameters
 
-        potential: sprkkr.potential.Potential or str or bool
+        potential: sprkkr.potential.Potential or str or bool or None
           The (default) potential to be used in calculations.
           If a string is given, the potential will be read from the given filename.
-          True means to generate the potential from atoms.
+          True means to generate the potential from atoms (the default value).
           False means that the potential will be given by the input_parameters.
+          None means that the potential is required to be supplied, when calculate or save_input
+              methods are called.
 
         executable_postfix: str or boolean
           String to be added to the runned executable. In some environments, the version
@@ -114,7 +118,7 @@ class SPRKKR(Calculator):
         self.atoms = atoms
         self.potential = potential
         self.mpi = mpi
-        self.input_file = (self.label or '') + '%a_%t.inp' if input_file is True else input_file
+        self.input_file = input_file
         self.output_file = output_file
         self.potential_file = potential_file
         self.input_parameters = input_parameters
@@ -218,7 +222,7 @@ class SPRKKR(Calculator):
         Parameters
         ----------
         filename: str or file or None
-          if None, temporary object is used
+          if False, temporary object is used
           if str is given, use it as a template
           if file is given, return it unchanged
 
@@ -240,9 +244,9 @@ class SPRKKR(Calculator):
           If true, create all non-existent directories in the given path
         """
 
-        if filename is None:
+        if filename is False:
            if not allow_temporary:
-              raise ValueException("Creation of temporary files is not allowed in this context")
+              raise ValueError("Creation of temporary files is not allowed in this context")
            f = tempfile.NamedTemporaryFile if named else tempfile.TemporaryFile
            return f(mode = mode)
         if not isinstance(filename, str):
@@ -289,23 +293,24 @@ class SPRKKR(Calculator):
         potential: sprkkr.potential.potentials.Potential or str or None or False
             If it is None, the self.potential value is used instead (see the later options)
             If False, the potential filename is specified in the input_parameters.
-            If True or None, create the potential according to the atoms and self.potential_file property.
+            If True,  create the potential according to the atoms and write to the resulting <potential_file> file.
             If str, then it is the filename of the potential, that is left unchanged on input
+            If None, use the potential value of the calcualtor.
 
-        input_file: str or None
-            Filename or template (see FilenameTemplator class) where to save the input file.
+        input_file: str or bool or None
+            Filename or template (see FilenameTemplator class) where to save the input file,
             None means to use the default value from the Calculator.
+            See the __init__ method for the meaning of other options.
 
-        potential_file: str or None
+        potential_file: str or bool or None
             Filename or template (see FilenameTemplator class) where to save the potential_file
             None means to use the default value from the Calculator.
-            If potential is given as filename, the potential is NOT readed and stored again,
-            so in this case setting potential_file has no effect.
+            See the __init__ method for the meaning of other options.
 
-        output_file: str or None or False
+        output_file: str or bool or None
             A filename or a filename template (see FilenameTemplator class) where to save the output
             None means to use the default value from the Calculator.
-            False means not to create the file.
+            See the __init__ method for the meaning of other options.
 
         create_subdirs: boolean
             If true, create directories if they don't exists.
@@ -369,7 +374,7 @@ class SPRKKR(Calculator):
               if InputParameters.is_it_a_input_parameters_name(input_parameters):
                  input_parameters = InputParameters.create_input_parameters(input_parameters)
               else:
-                 if not options and not potential:
+                 if not options and not potential and not input_file:
                    save_input = False
                    input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
                  input_parameters = InputParameters.from_file(input_parameters)
@@ -377,37 +382,54 @@ class SPRKKR(Calculator):
            input_parameters = self.input_parameters
         templator.input_parameters = input_parameters
 
-        input_file = self._open_file(input_file or self.input_file, templator, input_parameters.is_mpi(self.mpi if mpi is None else mpi),
+        input_file = input_file or self.input_file
+        if input_file is True:
+            input_file = (self.label or '') + '%a_%t.inp'
+
+        input_file = self._open_file(input_file, templator, input_parameters.is_mpi(self.mpi if mpi is None else mpi),
                                     allow_temporary=return_files,
                                     create_subdirs=create_subdirs,
                                     mode = 'w+' if save_input else 'r'
                                     )
 
-        used_atoms = atoms or self._atoms
+
+        if potential and potential is not True and atoms:
+            raise ValueError("You can not provide both a potential and atoms object to the SPRKKR calculate method")
+
         """ Get the potential file """
         # potential_file - the file containing the potential (possibly a template)
         # potential - potential object (to be updated by atoms)
-        potential_file = potential_file or self.potential_file
-        if potential:
-           if isinstance(potential, str):
-              potential_file = makepath(potential, "'{path}' is not a potential file")
+
+        potential = potential if potential is not None else self.potential
+        atoms = atoms or self._atoms
+        if isinstance(potential, str):
+              if potential_file:
+                 potential = Potential.from_file(potential)
+              else:
+                 potential_file = makepath(potential, "'{path}' is not a potential file")
+                 potential = None
+        elif potential is True:
+             if not atoms:
+                 raise ValueError("Potential set to <True> which means to generate the potential from the ASE-atoms object."
+                                  "However, this object has not been supplied")
+             potential=Potential.from_atoms(atoms)
+        elif potential is False:
+              if potential_file is not None:
+                  raise ValueError("When potential is True, the value of POTENTIAL option from the input (parameters) file will be used "
+                                   " as the potential file. Thus, specifing the <potential_file> argument is not allowed.")
               potential = None
-           elif used_atoms:
-              if potential is True:
-                  potential=Potential.from_atoms(used_atoms)
-              elif atoms:
-                  raise ValueError("You can not provide both potential and atoms object to the SPRKKR calculate method")
-           elif potential is True:
-              potential = potential_file = None
-        else:
-           potential_file = None
+        elif potential is None:
+           raise ValueError("The potential can not be <None>. However, consider supplying either <True> as the potential to generate"
+                             " it from the atoms object, or False to use the POTENTIAL option from the input (parameters) file")
 
         if potential:
+           if potential_file is None:
+               potential_file = self.potential_file
            pf = from_input_name(potential_file, '.pot', '%a.pot')
            pf = self._open_file(pf, templator, True,
                                             allow_temporary=return_files,
                                             create_subdirs=create_subdirs)
-           potential.save_to_file(pf, used_atoms)
+           potential.save_to_file(pf, atoms)
            pf.close()
            potential_file = pf.name
 
