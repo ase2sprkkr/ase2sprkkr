@@ -44,11 +44,11 @@ class ScfResult(TaskResult):
 
   @property
   def energy(self):
-      return self.iterations[-1]['ETOT']
+      return self.last_iterations['ETOT']
 
   @property
   def converged(self):
-      return self.iterations[-1]['converged']
+      return self.last_iterations['converged']
 
   def iteration_values(self, name):
       if not name in self.iterations[0]:
@@ -61,6 +61,8 @@ class ScfResult(TaskResult):
             )
   @property
   def last_iteration(self):
+      if not self.iterations:
+          raise AttributeError('No iteration has been performed')
       return self.iterations[-1]
 
   def plot(self, what=['error', 'ETOT'], filename=None, logscale = set(['err']), **kwargs):
@@ -113,7 +115,6 @@ class ScfOutputReader(OutputReader):
   ])
 
   async def read_output(self, stdout):
-
         iterations = []
 
         async def readline():
@@ -138,7 +139,7 @@ class ScfOutputReader(OutputReader):
             out = {}
             line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
             if not line:
-                return iterations
+                break
             line=line.strip()
             if first and self.print_output == 'info':
                print(line)
@@ -174,11 +175,16 @@ class ScfOutputReader(OutputReader):
                print(f"Iteration {out['iteration']:>5} error {error} "
                      f"spin moment: {out['moment']['spin']:>13.6e} "
                      f"orbital moment: {out['moment']['orbital']:>13.6e} ")
+
           if self.print_output == 'info':
-            if iterations and iterations[-1]['converged']:
-                print("The computation converged.")
+            if not iterations:
+                print("ERROR: No iteration has been finished. There is probably an error in the input files, please, examine the SPR-KKR output file.")
+            elif iterations[-1]['converged']:
+                print("OK: The computation converged.")
             else:
-                print("The computation not converged!!!")
+                print("WARNING: The computation does not converged!!!")
+
+          return iterations
 
         except EOFError:
           raise Exception('The output ends unexpectedly')
