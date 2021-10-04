@@ -99,7 +99,7 @@ class SPRKKR(Calculator):
        """
         if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
-               potential = Potential.read_from_file(potential, atoms = atoms)
+               potential = Potential.from_file(potential, atoms = atoms)
            atoms = potential.atoms
         elif atoms:
            atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
