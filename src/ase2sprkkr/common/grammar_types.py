@@ -48,11 +48,14 @@ class BaseType:
   """
   numpy_type = object
 
-  def __init__(self, prefix=None, postfix=None, format='', default_value=None, condition=None):
+  def __init__(self, prefix=None, postfix=None, format='', default_value=None, condition=None, after_convert=None):
       self.prefix = prefix
       self.postfix = postfix
       self.format = format
       self.condition = condition
+      if after_convert is not None:
+         self.convert = lambda v: \
+              after_convert(self, self.__class__.convert(self, v))
 
       """ Some subclasses has default_value defined via read-only property. """
       if default_value is not None:
@@ -104,7 +107,7 @@ class BaseType:
     return str(self.grammar)
 
   def transform_grammar(self, grammar, param_name=False):
-    """ Chance for the resulting class to alter the resulting prefixed grammar """
+    """ The chance for the resulting class to alter the resulting prefixed grammar """
     return grammar
 
   def missing_value(self):
