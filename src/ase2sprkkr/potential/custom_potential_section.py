@@ -36,7 +36,7 @@ class SectionString(BaseType):
       @staticmethod
       @lazy_value
       def grammar_of_delimiter():
-          return pp.Regex(SectionString.delimiter_pattern).setName('*'*80 + '<newline>').suppress()
+          return pp.Regex(SectionString.delimiter_pattern).setName('*'*79 + '<newline>').suppress()
 
       @class_property
       @cache

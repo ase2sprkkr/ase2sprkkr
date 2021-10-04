@@ -669,7 +669,7 @@ class Separator(BaseType):
       return '****...****\n'
 
   def _string(self, val=None):
-      return '*'*80
+      return '*'*79
 
 Separator.I = Separator()
 

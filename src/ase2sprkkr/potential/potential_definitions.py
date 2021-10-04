@@ -98,7 +98,7 @@ class PotentialDefinition(ConfDefinition):
   """ The order of items in potential file is fixed """
   force_order = True
 
-  delimiter="*"*80 + "\n"
+  delimiter="*"*79 + "\n"
 
   @staticmethod
   @lazy_value
