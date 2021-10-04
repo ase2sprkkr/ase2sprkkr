@@ -310,7 +310,9 @@
       <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
                      <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>
-        <span class="k">raise</span></div>
+        <span class="k">raise</span>
+      <span class="k">finally</span><span class="p">:</span>
+        <span class="n">input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="InputParameters.result_reader"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.result_reader">[docs]</a>  <span class="k">def</span> <span class="nf">result_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Return the result readed: the class that parse the output</span>
@@ -345,12 +347,6 @@
 
   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Configuration container </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
-
-<div class="viewcode-block" id="InputParameters.to_string"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.to_string">[docs]</a>  <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
-      <span class="n">s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="InputParameters.set_option"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.set_option">[docs]</a>  <span class="k">def</span> <span class="nf">set_option</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">:</span>

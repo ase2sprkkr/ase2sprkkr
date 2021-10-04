@@ -199,11 +199,11 @@
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;ETOT&#39;</span><span class="p">]</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;ETOT&#39;</span><span class="p">]</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">converged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ScfResult.iteration_values"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.outputs.scf.html#ase2sprkkr.input_parameters.outputs.scf.ScfResult.iteration_values">[docs]</a>  <span class="k">def</span> <span class="nf">iteration_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
@@ -216,6 +216,8 @@
             <span class="p">)</span></div>
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">last_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;No iteration has been finished&#39;</span><span class="p">)</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ScfResult.plot"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.outputs.scf.html#ase2sprkkr.input_parameters.outputs.scf.ScfResult.plot">[docs]</a>  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;ETOT&#39;</span><span class="p">],</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logscale</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;err&#39;</span><span class="p">]),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -268,7 +270,6 @@
   <span class="p">])</span>
 
 <div class="viewcode-block" id="ScfOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.outputs.scf.html#ase2sprkkr.input_parameters.outputs.scf.ScfOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
-
         <span class="n">iterations</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">():</span>
@@ -293,7 +294,7 @@
             <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">line</span> <span class="o">=</span> <span class="k">await</span> <span class="n">readlinecond</span><span class="p">(</span><span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="sa">b</span><span class="s1">&#39;SPRKKR-run for: &#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">iterations</span>
+                <span class="k">break</span>
             <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">first</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
                <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
@@ -329,11 +330,16 @@
                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;iteration&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2"> error </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2"> &quot;</span>
                      <span class="sa">f</span><span class="s2">&quot;spin moment: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">][</span><span class="s1">&#39;spin&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;13.6e</span><span class="si">}</span><span class="s2"> &quot;</span>
                      <span class="sa">f</span><span class="s2">&quot;orbital moment: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;moment&#39;</span><span class="p">][</span><span class="s1">&#39;orbital&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&gt;13.6e</span><span class="si">}</span><span class="s2"> &quot;</span><span class="p">)</span>
+
           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">==</span> <span class="s1">&#39;info&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">iterations</span> <span class="ow">and</span> <span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The computation converged.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">iterations</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: No iteration has been finished. There is probably an error in the input files, please, examine the SPR-KKR output file.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;converged&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK: The computation converged.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The computation not converged!!!&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: The computation does not converged!!!&quot;</span><span class="p">)</span>
+
+          <span class="k">return</span> <span class="n">iterations</span>
 
         <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span></div>

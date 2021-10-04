@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -151,21 +153,21 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.conf_common</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="ConfCommon"><a class="viewcode-back" href="../../../ase2sprkkr.common.conf_common.html#ase2sprkkr.common.conf_common.ConfCommon">[docs]</a><span></span><span class="k">class</span> <span class="nc">ConfCommon</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfCommon"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_common.html#ase2sprkkr.common.conf_common.ConfCommon">[docs]</a><span></span><span class="k">class</span> <span class="nc">ConfCommon</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot; Common base class for configuration &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="n">definition</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="o">=</span> <span class="n">container</span>
 
-  <span class="k">def</span> <span class="nf">_get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_root</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfCommon._get_path"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_common.html#ase2sprkkr.common.conf_common.ConfCommon._get_path">[docs]</a>  <span class="k">def</span> <span class="nf">_get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_root</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="ow">and</span> <span class="p">(</span><span class="n">include_root</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_container</span><span class="p">):</span>
          <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
-      <span class="k">return</span> <span class="n">name</span>
+      <span class="k">return</span> <span class="n">name</span></div>
 
-  <span class="k">def</span> <span class="nf">_get_root_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="k">else</span> <span class="bp">self</span></div>
+<div class="viewcode-block" id="ConfCommon._get_root_container"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_common.html#ase2sprkkr.common.conf_common.ConfCommon._get_root_container">[docs]</a>  <span class="k">def</span> <span class="nf">_get_root_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_container</span> <span class="k">else</span> <span class="bp">self</span></div></div>
 </pre></div>
 
            </div>

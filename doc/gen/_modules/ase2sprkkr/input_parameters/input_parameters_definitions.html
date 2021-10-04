@@ -236,7 +236,7 @@
       <span class="k">return</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">unique_dict</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()))</span></div>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrscf&#39;</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_reader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrscf&#39;</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">result_reader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>

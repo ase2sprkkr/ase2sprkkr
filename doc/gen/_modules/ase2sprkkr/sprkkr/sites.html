@@ -204,7 +204,7 @@
 <span class="sd">      Creates the occupation, if not exists, according to the ASE atoms object</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-         <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">idsof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+         <span class="n">ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sites</span> <span class="o">==</span> <span class="bp">self</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
          <span class="k">if</span> <span class="ow">not</span> <span class="n">ids</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;This atomic site is not from the provided Atoms object&#39;</span><span class="p">)</span>
          <span class="n">an</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>

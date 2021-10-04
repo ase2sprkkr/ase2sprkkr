@@ -203,11 +203,14 @@
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">object</span>
 
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after_convert</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">postfix</span> <span class="o">=</span> <span class="n">postfix</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
+      <span class="k">if</span> <span class="n">after_convert</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">convert</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> \
+              <span class="n">after_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
 
       <span class="sd">&quot;&quot;&quot; Some subclasses has default_value defined via read-only property. &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -259,7 +262,7 @@
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseType.transform_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.html#ase2sprkkr.common.grammar_types.BaseType.transform_grammar">[docs]</a>  <span class="k">def</span> <span class="nf">transform_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Chance for the resulting class to alter the resulting prefixed grammar &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; The chance for the resulting class to alter the resulting prefixed grammar &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">grammar</span></div>
 
 <div class="viewcode-block" id="BaseType.missing_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.html#ase2sprkkr.common.grammar_types.BaseType.missing_value">[docs]</a>  <span class="k">def</span> <span class="nf">missing_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -821,7 +824,7 @@
       <span class="k">return</span> <span class="s1">&#39;****...****</span><span class="se">\n</span><span class="s1">&#39;</span></div>
 
 <div class="viewcode-block" id="Separator._string"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.html#ase2sprkkr.common.grammar_types.Separator._string">[docs]</a>  <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-      <span class="k">return</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">80</span></div></div>
+      <span class="k">return</span> <span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">79</span></div></div>
 
 <span class="n">Separator</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Separator</span><span class="p">()</span>
 

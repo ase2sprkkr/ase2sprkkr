@@ -255,7 +255,6 @@
       <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
 
-
 <div class="viewcode-block" id="ConfContainer.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.ConfContainer.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{},</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Set the value(s) of parameter(s). Usage:</span>
@@ -358,6 +357,12 @@
           <span class="n">dct</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
+<div class="viewcode-block" id="ConfContainer.to_string"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.ConfContainer.to_string">[docs]</a>  <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+      <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="ConfContainer._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.ConfContainer._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
           <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_hidden</span><span class="p">:</span>
@@ -401,7 +406,7 @@
            <span class="k">return</span> <span class="kc">True</span>
       <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="BaseSection.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.BaseSection.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseSection.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.BaseSection.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Save the content of the container to the file (according to the definition)</span>
 
 <span class="sd">      Parameters</span>
@@ -410,14 +415,14 @@
 <span class="sd">        File object (open for writing), where the data should be written</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
-         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
+         <span class="k">if</span> <span class="n">validate</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-optional section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has no value to save&quot;</span><span class="p">)</span>
          <span class="k">return</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">:</span>
          <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
          <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">):</span>
              <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">delimiter</span><span class="p">)</span>
       <span class="n">file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
@@ -476,19 +481,19 @@
 
 <div class="viewcode-block" id="RootConfContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.RootConfContainer">[docs]</a><span class="k">class</span> <span class="nc">RootConfContainer</span><span class="p">(</span><span class="n">ConfContainer</span><span class="p">):</span>
 
-<div class="viewcode-block" id="RootConfContainer.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.RootConfContainer.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfContainer.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.RootConfContainer.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Save the configuration to a file in a format readable by SPR-KKR &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">):</span>
          <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
 
       <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
       <span class="n">i</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
-        <span class="n">i</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
           <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">delimiter</span><span class="p">)</span>
-          <span class="n">i</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+          <span class="n">i</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
       <span class="n">file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RootConfContainer.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.conf_containers.html#ase2sprkkr.common.conf_containers.RootConfContainer.read_from_file">[docs]</a>  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">clear_first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

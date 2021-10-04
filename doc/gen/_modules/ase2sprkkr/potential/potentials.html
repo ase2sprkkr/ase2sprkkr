@@ -155,7 +155,6 @@
   <h1>Source code for ase2sprkkr.potential.potentials</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">..common.conf_containers</span> <span class="kn">import</span> <span class="n">RootConfContainer</span>
 <span class="kn">from</span> <span class="nn">.io_data</span> <span class="kn">import</span> <span class="n">ReadIoData</span><span class="p">,</span> <span class="n">WriteIoData</span>
-<span class="kn">from</span> <span class="nn">..sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">class_property</span><span class="p">,</span> <span class="n">cache</span>
 
 <div class="viewcode-block" id="Potential"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potential.potentials.html#ase2sprkkr.potential.potentials.Potential">[docs]</a><span class="k">class</span> <span class="nc">Potential</span><span class="p">(</span><span class="n">RootConfContainer</span><span class="p">):</span>
@@ -210,11 +209,11 @@
 
       <span class="k">return</span> <span class="n">atoms</span></div>
 
-<div class="viewcode-block" id="Potential.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potential.potentials.html#ase2sprkkr.potential.potentials.Potential.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Potential.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potential.potentials.html#ase2sprkkr.potential.potentials.Potential.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
       <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">set_from_atoms</span><span class="p">(</span><span class="n">atoms</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">make_complete</span><span class="p">()</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Potential.set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potential.potentials.html#ase2sprkkr.potential.potentials.Potential.set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Set the sections of the potential accoring to an ASE atoms object. &quot;&quot;&quot;</span>
@@ -239,6 +238,9 @@
   <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
       <span class="n">pd</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">potential_definition</span>
       <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">definition</span> <span class="o">=</span> <span class="n">pd</span><span class="p">)</span></div></div>
+
+<span class="c1">#At last - to avoid circular import problem</span>
+<span class="kn">from</span> <span class="nn">..sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 </pre></div>
 
            </div>

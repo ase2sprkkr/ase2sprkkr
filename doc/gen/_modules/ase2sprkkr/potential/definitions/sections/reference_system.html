@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -158,15 +160,15 @@
 <span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">from</span> <span class="nn">....sprkkr.reference_systems</span> <span class="kn">import</span> <span class="n">ReferenceSystem</span>
 
-<div class="viewcode-block" id="ReferenceSystemSection"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSection">[docs]</a><span class="k">class</span> <span class="nc">ReferenceSystemSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceSystemSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSection">[docs]</a><span class="k">class</span> <span class="nc">ReferenceSystemSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
   <span class="n">_value_name</span> <span class="o">=</span> <span class="s1">&#39;reference_systems&#39;</span>
   <span class="n">_value_class</span> <span class="o">=</span> <span class="n">ReferenceSystem</span>
 
-  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceSystemSection._set_from_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSection._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span>
-      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;NREF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">io_data</span><span class="o">.</span><span class="n">reference_systems</span><span class="o">.</span><span class="n">len_of_unique</span><span class="p">())</span></div>
+      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;NREF&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">io_data</span><span class="o">.</span><span class="n">reference_systems</span><span class="o">.</span><span class="n">len_of_unique</span><span class="p">())</span></div></div>
 
-<div class="viewcode-block" id="ReferenceSystemSectionDefinition"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">ReferenceSystemSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceSystemSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">ReferenceSystemSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;REFERENCE SYSTEM&#39;</span><span class="p">,</span>
                      <span class="n">alternative_names</span><span class="o">=</span><span class="s1">&#39;REFERENCE SYSTEM FOR TIGHT BINDING MODE&#39;</span><span class="p">,</span>
@@ -179,7 +181,7 @@
       <span class="p">]</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alternative_names</span> <span class="o">=</span> <span class="n">alternative_names</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ReferenceSystemSectionDefinition.validate"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSectionDefinition.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+<div class="viewcode-block" id="ReferenceSystemSectionDefinition.validate"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.reference_system.html#ase2sprkkr.potential.definitions.sections.ReferenceSystemSectionDefinition.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">values</span><span class="p">[</span><span class="s1">&#39;NREF&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">])</span> <span class="ow">or</span> \
              <span class="s1">&#39;Number of reference systems differs from NREF&#39;</span></div>
 

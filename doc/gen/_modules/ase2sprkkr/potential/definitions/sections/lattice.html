@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -179,29 +181,29 @@
 
 <span class="n">cell_symmetries_lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">cell_symmetries</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
 
-<div class="viewcode-block" id="LatticeSection"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.lattice.html#ase2sprkkr.potential.definitions.sections.LatticeSection">[docs]</a><span class="k">class</span> <span class="nc">LatticeSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+<div class="viewcode-block" id="LatticeSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.lattice.html#ase2sprkkr.potential.definitions.sections.LatticeSection">[docs]</a><span class="k">class</span> <span class="nc">LatticeSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
 
   <span class="sd">&quot;&quot;&quot; This section retrieves the lattice geometry and</span>
 <span class="sd">      it creates (during reading) the ASE Cell object &quot;&quot;&quot;</span>
 
-  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="LatticeSection._set_from_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.lattice.html#ase2sprkkr.potential.definitions.sections.LatticeSection._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
       <span class="n">bravais_lattice</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span>
       <span class="n">pearson_symbol</span> <span class="o">=</span> <span class="n">bravais_lattice</span><span class="o">.</span><span class="n">pearson_symbol</span>
       <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;BRAVAIS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cell_symmetries</span><span class="p">[</span><span class="n">pearson_symbol</span><span class="p">])</span>
       <span class="n">alat</span> <span class="o">=</span> <span class="n">bravais_lattice</span><span class="o">.</span><span class="n">a</span>
       <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;ALAT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">alat</span> <span class="o">/</span> <span class="n">Bohr</span><span class="p">)</span>
       <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_PRIMITIVE_CELL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">/</span> <span class="n">alat</span><span class="p">)</span>
-      <span class="n">write_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alat</span>
+      <span class="n">write_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alat</span></div>
 
-  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="LatticeSection._update_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.lattice.html#ase2sprkkr.potential.definitions.sections.LatticeSection._update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
       <span class="n">alat</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;ALAT&#39;</span><span class="p">]()</span> <span class="o">*</span> <span class="n">Bohr</span>
       <span class="n">cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_PRIMITIVE_CELL&#39;</span><span class="p">]()</span> <span class="o">*</span> <span class="n">alat</span><span class="p">)</span>
       <span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.cell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell</span>
       <span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alat</span>
       <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
-         <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span></div>
+         <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span></div></div>
 
-<div class="viewcode-block" id="LatticeSectionDefinition"><a class="viewcode-back" href="../../../../../ase2sprkkr.potential.definitions.sections.lattice.html#ase2sprkkr.potential.definitions.sections.LatticeSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">LatticeSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="LatticeSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potential.definitions.sections.lattice.html#ase2sprkkr.potential.definitions.sections.LatticeSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">LatticeSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;LATTICE&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>

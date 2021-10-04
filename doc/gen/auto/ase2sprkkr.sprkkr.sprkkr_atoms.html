@@ -181,23 +181,42 @@
 with SPRKKR</p>
 <dl class="py class">
 <dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.</span></code><code class="sig-name descname"><span class="pre">SPRKKRAtoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.</span></code><code class="sig-name descname"><span class="pre">SPRKKRAtoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ase.atoms.Atoms</span></code></p>
 <p>ASE Atoms object extended by the data necessary for SPR-KKR calculations</p>
 <dl class="py method">
 <dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">promote_ase_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.promote_ase_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">promote_ase_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.promote_ase_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert ASE Atoms object to the one usable by SPRKKR.
 For the case of the usability it is a bit ugly hack: The __class__ attribute
 is replaced so the extra methods and properties of the objects will
 be available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>ase.Atoms</em>) – The atoms object to be promoted to be used for SPRKKR calculations</p></li>
+<li><p><strong>symmetry</strong> (<em>boolean</em><em> or </em><em>None</em>) – The sites property of the resulting object will consider the symmetry of the structure.
+I.e., the by-symmetry-equal atomic sites will share the same sites object.
+Default None is the same as True, however it does not change the symmetry
+of the already promoted obj passed into the routine.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init">
-<code class="sig-name descname"><span class="pre">_init</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_init</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init" title="Permalink to this definition">¶</a></dt>
 <dd><p>The initialization of the additional (not-in-ASE) properties. To be used
 by constructor and by promote_ase_atoms</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.symmetry">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">symmetry</span></code><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the sites property is/will be generated using symmetry, i.e.
+whether the Sites objects in the sites property will be shared among
+symmetric atomic sites.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -211,10 +230,13 @@ atomic_numbers (not necessary the real ones, they can be just ‘’labels’’
 <dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry">
 <code class="sig-name descname"><span class="pre">compute_sites_symmetry</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.compute_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry" title="Permalink to this definition">¶</a></dt>
 <dd><p>SPRKKR has some properties shared by all by-symmetry-equal sites.
-This method initializes _sites property, that hold these properties:
+This method initializes _sites property, that holds these properties:
 makes identical all atoms on the “symmetry identical positions with
 the same atomic number.</p>
-<p>It is called automatically when the sites property is firstly accessed.</p>
+<p>The method is called automatically when the sites property is firstly accessed.
+The effect of the method is the nearly same as setting the symmetry property.
+However, setting the symmetry property on an <a href="#id1"><span class="problematic" id="id2">`</span></a>already symmetrized’ object has
+no effect, while this methods always recompute the sites property.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -229,13 +251,36 @@ If None, self.symbols are used.</p>
 <dt>consider_old: bool</dt><dd><p>If True, and _unique_sites is not None, the non-symmetry-equivalent sites won’t
 be equivalent in the newly computed symmetry.</p>
 </dd>
-<dt>symprec: float</dt><dd><p>A threshold for spatial error for symmetry computing. See spglib.get_spacegroup</p>
+<dt>symprec: float</dt><dd><p>A threshold for spatial error for the symmetry computing. See spglib.get_spacegroup</p>
 </dd>
 </dl>
 </p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._compute_sites_symmetry">
+<code class="sig-name descname"><span class="pre">_compute_sites_symmetry</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._compute_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._compute_sites_symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry">
+<code class="sig-name descname"><span class="pre">cancel_sites_symmetry</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.cancel_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel the use of symmetry in the structure, i.e., makes the Site object
+uniqe (not shared) for each atomic site.</p>
+<p>Calling this method is nearly equivalent to the setting the symmetry property
+to False, however, this method always recompute the sites object, while
+setting symmetry=False recomputes the sites property only if it was previously
+set to False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._cancel_sites_symmetry">
+<code class="sig-name descname"><span class="pre">_cancel_sites_symmetry</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._cancel_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._cancel_sites_symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>See cancel_sites_symmetry - this metod does just the same, but it does not set the symmetry property.</p>
 </dd></dl>
 
 <dl class="py method">

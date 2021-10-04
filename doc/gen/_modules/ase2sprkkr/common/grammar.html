@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -154,7 +156,7 @@
 <span></span><span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 
-<div class="viewcode-block" id="generate_grammar"><a class="viewcode-back" href="../../../ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.generate_grammar">[docs]</a><span class="nd">@contextmanager</span>
+<div class="viewcode-block" id="generate_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.generate_grammar">[docs]</a><span class="nd">@contextmanager</span>
 <span class="k">def</span> <span class="nf">generate_grammar</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Set the pyparsing newline handling</span>
 <span class="sd">        and then restore to the original state &quot;&quot;&quot;</span>
@@ -169,7 +171,7 @@
       <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pe</span><span class="o">.</span><span class="n">setDefaultWhitespaceChars</span><span class="p">(</span><span class="n">old</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="replace_whitechars"><a class="viewcode-back" href="../../../ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.replace_whitechars">[docs]</a><span class="k">def</span> <span class="nf">replace_whitechars</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+<div class="viewcode-block" id="replace_whitechars"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.replace_whitechars">[docs]</a><span class="k">def</span> <span class="nf">replace_whitechars</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
     <span class="n">expr</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">expr</span><span class="o">.</span><span class="n">setWhitespaceChars</span><span class="p">(</span><span class="s1">&#39; </span><span class="se">\t\r</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">expr</span></div>
@@ -185,11 +187,11 @@
   <span class="n">separator</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">separator_pattern</span>
   <span class="n">optional_quote</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
 
-<div class="viewcode-block" id="delimitedList"><a class="viewcode-back" href="../../../ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.delimitedList">[docs]</a><span class="k">def</span> <span class="nf">delimitedList</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
+<div class="viewcode-block" id="delimitedList"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.delimitedList">[docs]</a><span class="k">def</span> <span class="nf">delimitedList</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Delimited list with already suppressed delimiter (or with a in-results-wanted one) &quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">expr</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">delim</span> <span class="o">+</span> <span class="n">expr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="addConditionEx"><a class="viewcode-back" href="../../../ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.addConditionEx">[docs]</a><span class="k">def</span> <span class="nf">addConditionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="addConditionEx"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.addConditionEx">[docs]</a><span class="k">def</span> <span class="nf">addConditionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
   <span class="k">def</span> <span class="nf">check_condition</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">tocs</span><span class="p">):</span>
       <span class="n">m</span> <span class="o">=</span> <span class="n">message</span>
       <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">tocs</span><span class="p">):</span>
@@ -200,7 +202,7 @@
   <span class="bp">self</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">check_condition</span><span class="p">)</span>
   <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="addParseActionEx"><a class="viewcode-back" href="../../../ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.addParseActionEx">[docs]</a><span class="k">def</span> <span class="nf">addParseActionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="addParseActionEx"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.html#ase2sprkkr.common.grammar.addParseActionEx">[docs]</a><span class="k">def</span> <span class="nf">addParseActionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 
   <span class="k">def</span> <span class="nf">parse_action</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
       <span class="k">try</span><span class="p">:</span>

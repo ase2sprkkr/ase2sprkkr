@@ -84,7 +84,9 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
 </ul>
 
             
@@ -154,7 +156,7 @@
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="UniqueValuesMapping"><a class="viewcode-back" href="../../../ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping">[docs]</a><span class="k">class</span> <span class="nc">UniqueValuesMapping</span><span class="p">:</span>
+<div class="viewcode-block" id="UniqueValuesMapping"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping">[docs]</a><span class="k">class</span> <span class="nc">UniqueValuesMapping</span><span class="p">:</span>
 
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">value_to_class_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
@@ -170,13 +172,16 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="o">=</span> <span class="n">value_to_class_id</span>
 
-<div class="viewcode-block" id="UniqueValuesMapping.iter_unique"><a class="viewcode-back" href="../../../ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.iter_unique">[docs]</a>  <span class="k">def</span> <span class="nf">iter_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueValuesMapping.iter_unique"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.iter_unique">[docs]</a>  <span class="k">def</span> <span class="nf">iter_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="UniqueValuesMapping.len_of_unique"><a class="viewcode-back" href="../../../ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.len_of_unique">[docs]</a>  <span class="k">def</span> <span class="nf">len_of_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueValuesMapping.len_of_unique"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.len_of_unique">[docs]</a>  <span class="k">def</span> <span class="nf">len_of_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniqueValuesMapping.from_values"><a class="viewcode-back" href="../../../ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values">[docs]</a>  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UniqueValuesMapping.from_values"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_values</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      values: iterable</span>
@@ -209,9 +214,9 @@
 
       <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="UniqueValuesMapping.merge"><a class="viewcode-back" href="../../../ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.merge">[docs]</a>  <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueValuesMapping.merge"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.merge">[docs]</a>  <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Merge two sets. Resulting UniqueValues uses integers as keys&quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">UniqueValues</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
   <span class="n">noneMapping</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;NoneMapping&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;merge&#39;</span><span class="p">])(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Create</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">reverse_mapping</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
 </pre></div>

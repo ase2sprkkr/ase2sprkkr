@@ -256,15 +256,15 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
 
       <span class="k">def</span> <span class="nf">out</span><span class="p">():</span>
-          <span class="n">air</span> <span class="o">=</span> <span class="n">AsyncioFileReader</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-          <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">air</span><span class="p">))</span>
-          <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+          <span class="k">with</span> <span class="n">AsyncioFileReader</span><span class="p">(</span><span class="n">output</span><span class="p">)</span> <span class="k">as</span> <span class="n">air</span><span class="p">:</span>
+              <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_output</span><span class="p">(</span><span class="n">air</span><span class="p">))</span>
+              <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
       <span class="k">def</span> <span class="nf">err</span><span class="p">():</span>
           <span class="k">if</span> <span class="ow">not</span> <span class="n">error</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
-          <span class="n">air</span> <span class="o">=</span> <span class="n">AsyncioFileReader</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-          <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">air</span><span class="p">))</span>
-          <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+          <span class="k">with</span> <span class="n">AsyncioFileReader</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="k">as</span> <span class="n">air</span><span class="p">:</span>
+              <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">air</span><span class="p">))</span>
+              <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">out</span><span class="p">(),</span> <span class="n">err</span><span class="p">(),</span> <span class="n">return_code</span><span class="p">)</span></div></div>
 
@@ -277,6 +277,20 @@
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">buffersize</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">buffersize</span> <span class="o">=</span> <span class="n">buffersize</span>
+
+<div class="viewcode-block" id="AsyncioFileReader.close"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.close">[docs]</a>  <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">=</span><span class="kc">None</span></div>
+
+  <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span>
+
+  <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AsyncioFileReader.readline"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readline">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span></div>
