@@ -44,11 +44,11 @@ class ScfResult(TaskResult):
 
   @property
   def energy(self):
-      return self.last_iterations['ETOT']
+      return self.last_iteration['ETOT']
 
   @property
   def converged(self):
-      return self.last_iterations['converged']
+      return self.last_iteration['converged']
 
   def iteration_values(self, name):
       if not name in self.iterations[0]:
@@ -62,7 +62,7 @@ class ScfResult(TaskResult):
   @property
   def last_iteration(self):
       if not self.iterations:
-          raise AttributeError('No iteration has been performed')
+          raise AttributeError('No iteration has been finished')
       return self.iterations[-1]
 
   def plot(self, what=['error', 'ETOT'], filename=None, logscale = set(['err']), **kwargs):
