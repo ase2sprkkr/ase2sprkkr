@@ -100,7 +100,6 @@ class ConfContainer(ConfCommon):
       return val.get()
 
 
-
   def set(self, values={}, *, unknown='find', **kwargs):
       """
       Set the value(s) of parameter(s). Usage:
