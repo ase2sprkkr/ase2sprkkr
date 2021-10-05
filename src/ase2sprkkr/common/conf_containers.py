@@ -56,10 +56,8 @@ class ConfContainer(ConfCommon):
       return name in self._members
 
   def clear(self, do_not_check_required=False):
-      if not do_not_check_required and self._definition.required:
-         raise ValueError(f'Section {self._definition.name} cannot be cleared')
       for i in self._members.values():
-          i.clear(True)
+          i.clear(do_not_check_required)
 
   @property
   def name(self):

@@ -51,6 +51,9 @@ class PotentialSection(Section):
 
         return self._definition.depends_on()
 
+    def reset(self):
+        self.clear()
+
 class UniqueListSection(PotentialSection):
     """ The section, whose data is list of something,
         e.g. of meshes, reference systems etc. The properties

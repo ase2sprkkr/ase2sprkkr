@@ -6,6 +6,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 import os
 from ..potentials import Potential
+from ..potential_sections import PotentialSection
 from ..potential_definitions import PotentialDefinition
 from ase.spacegroup import crystal
 import io
@@ -62,3 +63,10 @@ class TestPotential(TestCase):
     #Stats(pr).sort_stats('cumtime').print_stats(0.05)
 
     self.assertTrue(i >= 2)
+
+  def test_reset(self):
+    pot = Potential.from_file(os.path.join(os.path.dirname(__file__), '../examples/fp_new.pot'))
+    pot.reset()
+    self.assertRaises(AttributeError, lambda: pot.CHARGE)
+    self.assertRaises(AttributeError, lambda: pot.POTENTIAL)
+    self.assertTrue(isinstance(pot.LATTICE, PotentialSection))

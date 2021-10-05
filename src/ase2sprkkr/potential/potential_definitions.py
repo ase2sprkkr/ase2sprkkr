@@ -74,6 +74,10 @@ class PotSectionDefinition(BaseSectionDefinition):
 
   result_class = PotentialSection
 
+  def __init__(self, *args, mandatory=True,  **kwargs):
+      self.mandatory = mandatory
+      super().__init__(*args, **kwargs)
+
 class ASEArraySectionDefinition(PotSectionDefinition):
 
   @add_to_signature(PotSectionDefinition.__init__)

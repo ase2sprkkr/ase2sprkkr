@@ -1,5 +1,5 @@
 from ..common.grammar_types import BaseType
-from ..common.options import Option
+from ..common.options import CustomOption
 from ..common.configuration_definitions import BaseValueDefinition
 from ..common.misc import class_property, cache
 import pyparsing as pp
@@ -12,6 +12,7 @@ class CustomPotentialSectionDefinition(BaseValueDefinition):
   """ There is no grammar in a custom potential section -
   custom sections are readed by Potential class
   """
+  mandatory = False
   prefix = ''
   name_value_delimiter = '\n'
 
@@ -52,7 +53,7 @@ class SectionString(BaseType):
 
 SectionString.I = SectionString()
 
-class CustomPotentialSection(Option):
+class CustomPotentialSection(CustomOption):
       def __init__(self, name, container=None):
           super().__init__(CustomPotentialSectionDefinition(name, SectionString.I), container)
 
@@ -64,3 +65,6 @@ class CustomPotentialSection(Option):
 
       def _update_atoms(self, atoms, io_data):
           pass
+
+      def reset(self):
+          return self.remove()
