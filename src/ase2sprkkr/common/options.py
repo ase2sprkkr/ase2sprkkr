@@ -65,8 +65,8 @@ class Option(ConfCommon):
       """ Clear the value: set it to None """
       if not self._definition.type.has_value:
          return
-      if not do_not_check_required and self._definition.required:
-         raise ValueError(f'Option {self._definition.name} have to had a value')
+      if self._definition.default_value is None and not do_not_check_required and self._definition.required:
+         raise ValueError(f'Option {self._definition.name} must have a value')
       self._value = None
       if self._hook:
         self._hook(self)
