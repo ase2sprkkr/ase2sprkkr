@@ -248,6 +248,12 @@ XSITES NR=3 FLAG
     self.assertTrue(isinstance(ips['ENERGY'], Section))
     self.assertTrue(isinstance(ips['ENERGY']['NE'], Option))
     self.assertTrue(isinstance(ips['ENERGY']['NXXX'], CustomOption))
+    self.assertTrue(isinstance(ips.ENERGY.NXXX, CustomOption))
+    ips.ENERGY.NXXX.set(5)
+    self.assertEquals(ips.ENERGY.NXXX(), 5)
+    ips.ENERGY.NXXX.remove()
+    self.assertFalse(hasattr(ips.ENERGY, 'NXXX'))
+
     self.assertEqual(ips['ENERGY'].NE(), np.array((300,200)))
     self.assertEqual(ips['SITES'].NL(), 2)
     self.assertEqual(ips.find('NL').get_path(), 'SITES.NL')

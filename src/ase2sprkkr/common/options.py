@@ -103,7 +103,7 @@ class CustomOption(Option):
   """ An user-added option (configuration value). It can be removed from the section. """
 
   def remove(self):
-      self.section.remove(self._definition.name)
+      self._container.remove_member(self._definition.name)
 
   @classmethod
   def factory(cls, value_definition, type = mixed):

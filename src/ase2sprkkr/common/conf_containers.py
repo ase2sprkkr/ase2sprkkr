@@ -171,11 +171,11 @@ class ConfContainer(ConfCommon):
           self._members[name].set(value, unknown='add')
 
 
-  def remove(self, name:str):
+  def remove_member(self, name:str):
       """
       Remove a (previously added) custom value from the container
       """
-      cclass = getattr('custom_class', self._definition, False)
+      cclass = getattr(self._definition, 'custom_class', False)
       if not cclass:
          raise TypeError("Can not remove items of {}".format(name))
       if not getattr(self._members[name], 'remove'):
@@ -183,9 +183,9 @@ class ConfContainer(ConfCommon):
       member = self._members[name]
       del self._members[name]
       iname = self._interactive_member_name(name)
-      if iname in self._interactive_member_name and \
-          self._interactive_member_name[iname] == member:
-            del self._interactive_member_name[iname]
+      if iname in self._interactive_members and \
+          self._interactive_members[iname] == member:
+            del self._interactive_members[iname]
 
   def __iter__(self):
       yield from self._members.values()
