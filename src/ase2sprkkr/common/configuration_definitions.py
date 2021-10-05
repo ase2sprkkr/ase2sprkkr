@@ -154,7 +154,7 @@ class BaseValueDefinition(BaseDefinition):
       The value is hidden from the user (no container.name access to the value)
 
     name_format: str or None
-      The way the name is written
+      The way how the name is written
     """
     self.type = type_from_type(type)
     if default_value is None and not isinstance(self.type, BaseType):
