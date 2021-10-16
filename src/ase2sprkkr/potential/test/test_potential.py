@@ -11,6 +11,7 @@ from ..potential_definitions import PotentialDefinition
 from ase.spacegroup import crystal
 import io
 from ...common.grammar import generate_grammar
+from datetime import datetime
 
 class TestPotential(TestCase):
 
@@ -63,6 +64,16 @@ class TestPotential(TestCase):
     #Stats(pr).sort_stats('cumtime').print_stats(0.05)
 
     self.assertTrue(i >= 2)
+
+  def test_sequence(self):
+    p = Potential()
+    self.assertEquals(7, p.HEADER.FORMAT.VERSION)
+    p.HEADER.FORMAT.VERSION=5
+    self.assertEquals(5, p.HEADER.FORMAT.VERSION)
+    p.HEADER.FORMAT[0] = 8
+    self.assertEquals(8, p.HEADER.FORMAT.VERSION)
+    self.assertEquals(datetime, p.HEADER.FORMAT.DATE.__class__)
+    self.assertEquals(datetime, p.HEADER.FORMAT[1].__class__)
 
   def test_reset(self):
     pot = Potential.from_file(os.path.join(os.path.dirname(__file__), '../examples/fp_new.pot'))

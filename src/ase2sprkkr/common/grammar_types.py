@@ -4,7 +4,7 @@ import inspect
 from pyparsing import Word, Suppress
 import itertools
 import numpy as np
-from collections import Hashable
+from collections import Hashable, namedtuple
 from .misc import OrderedDict, cached_property, cache
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
@@ -197,6 +197,12 @@ class BaseType:
 
   def copy(self):
     return copy.copy(self)
+
+  def enrich(self, option):
+    """ Some types can add properties to the options that have
+    the type, e.g. see Sequence.enrich, which adds the ability to
+    access the items of the sequence using [] """
+    pass
 
 class Unsigned(BaseType):
 
@@ -677,8 +683,16 @@ class Sequence(BaseType):
   """ A sequence of values of given types """
 
   def __init__(self, *types, format='', format_all=False, allowed_values=None,
-               default_values=False, **kwargs):
+               default_values=False, names=None, **kwargs):
       super().__init__(**kwargs)
+      if names:
+         self.names = names if isinstance(names, dict) else {name:i for i,name in enumerate(names)}
+         self.value_type = namedtuple("_".join(names), names)
+         self.value_constructor = self.value_type
+      else:
+         self.names = None
+         self.value_type = tuple
+         self.value_constructor = lambda *x: tuple(x)
       if isinstance(format, (str, dict)):
         format = itertools.repeat(format)
       self.types = [ type_from_default_value(i, dfs, format_all=format_all) for i,dfs in zip(types, format) ]
@@ -695,17 +709,26 @@ class Sequence(BaseType):
           return g
 
       grammars = [grm(i) for i in self.types]
-      grammar = pp.And(grammars).setParseAction(lambda x: tuple(x))
+      grammar = pp.And(grammars).setParseAction(lambda x: self.value_constructor(*x))
       if self.allowed_values is not None:
          grammar.addConditionEx(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
       return grammar
 
   def _validate(self, value, parse_check=False):
-      if not isinstance(value, (tuple, list)) or len(value) != len(self.types):
+      if not isinstance(value, (self.value_type)) or len(value) != len(self.types):
           return f'A tuple of {len(self.types)} values is required'
       for i,j in zip(self.types, value):
           out = i.validate(j, parse_check=parse_check)
       return True
+
+  def convert(self, value):
+      if not isinstance(value, self.value_type):
+         return self.value_constructor(*value)
+         try:
+            return self.value_constructor(*value)
+         except TypeError:
+            pass
+      return value
 
   def grammar_name(self):
       return  " ".join( (f'{j.grammar_name()}' for j in self.types) )
@@ -716,6 +739,33 @@ class Sequence(BaseType):
           out.append(' ')
           out.append(i.string(v))
       return ''.join(out)
+
+  def enrich(self, option):
+
+      class cls(option.__class__):
+         def _get_index(sulf, name):
+           if self.names and isinstance(name, str):
+              return self.names[name]
+           return name
+
+         def __getitem__(self, key):
+           key = self._get_index(key)
+           return self()[key]
+
+         def __setitem__(self, key, value):
+           key = self._get_index(key)
+           v = list(self())
+           v[key] = value
+           self.set(v)
+
+      if self.names:
+        for n,i in self.names.items():
+            (lambda i: setattr(cls, n, property(
+                lambda self: self[i],
+                lambda self, v: self.__setitem__(i, v)
+            )))(i)
+
+      option.__class__ = cls
 
 
 class Table(BaseType):

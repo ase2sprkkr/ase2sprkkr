@@ -31,7 +31,7 @@ def fce():
     V('TITLE', line_string, 'Created by ASE-SPR-KKR wrapper'),
     V('SYSTEM', line_string, lambda x: 'System: {}'.format(x._get_root_container().atoms.symbols) ),
     V('PACKAGE', line_string, 'SPR-KKR'),
-    V('FORMAT', Sequence(int, Date(prefix='(', postfix=')')),
+    V('FORMAT', Sequence(int, Date(prefix='(', postfix=')'), names = ['VERSION', 'DATE']),
           default_value = [7, datetime.datetime(2007,5,21)]),
   ], name_in_grammar = False)
 

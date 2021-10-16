@@ -26,6 +26,7 @@ class Option(ConfCommon):
       super().__init__(definition, container)
       self._value = value
       self._hook = None
+      self._definition.type.enrich(self)
 
   def __call__(self):
       if self._value is not None:
