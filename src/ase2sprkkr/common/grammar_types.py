@@ -701,7 +701,7 @@ class Sequence(BaseType):
       return grammar
 
   def _validate(self, value, parse_check=False):
-      if not isinstance(value, tuple) or len(value) != len(self.types):
+      if not isinstance(value, (tuple, list)) or len(value) != len(self.types):
           return f'A tuple of {len(self.types)} values is required'
       for i,j in zip(self.types, value):
           out = i.validate(j, parse_check=parse_check)
