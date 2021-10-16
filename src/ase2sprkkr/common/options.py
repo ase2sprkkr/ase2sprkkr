@@ -100,6 +100,9 @@ class Option(ConfCommon):
   def get_path(self):
       return self._get_path()
 
+  def __repr__(self):
+      return f"<Option {self._get_path()} with value '{self()}' of type {self._definition.type}>"
+
 class CustomOption(Option):
   """ An user-added option (configuration value). It can be removed from the section. """
 
