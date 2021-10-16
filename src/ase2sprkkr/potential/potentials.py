@@ -89,6 +89,8 @@ class Potential(RootConfContainer):
       for i in copy:
           if not i._definition.mandatory:
              i.reset()
+      self.SCF_INFO.SCFSTATUS = 'START'
+
 
 #At last - to avoid circular import problem
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms

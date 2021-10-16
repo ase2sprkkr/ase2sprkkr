@@ -66,7 +66,9 @@ class TestPotential(TestCase):
 
   def test_reset(self):
     pot = Potential.from_file(os.path.join(os.path.dirname(__file__), '../examples/fp_new.pot'))
+    self.assertNotEquals(pot.SCF_INFO.SCFSTATUS(), 'START')
     pot.reset()
     self.assertRaises(AttributeError, lambda: pot.CHARGE)
     self.assertRaises(AttributeError, lambda: pot.POTENTIAL)
     self.assertTrue(isinstance(pot.LATTICE, PotentialSection))
+    self.assertEquals(pot.SCF_INFO.SCFSTATUS(), 'START')
