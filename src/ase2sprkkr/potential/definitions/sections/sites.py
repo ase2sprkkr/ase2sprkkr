@@ -26,7 +26,7 @@ class SitesSection(PotentialSection):
       except ValueError:
             pass
       if new:
-         atoms = SPRKKRAtoms(positions = positions, cell = read_io_data['lattice.cell'])
+         atoms = SPRKKRAtoms(positions = positions, cell = read_io_data['lattice.cell'], potential = self._container)
          return atoms
 
 class SitesSectionDefinition(PotSectionDefinition):

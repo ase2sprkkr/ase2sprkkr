@@ -48,7 +48,7 @@ class SPRKKRAtoms(Atoms):
              obj.symmetry = symmetry
        return obj
 
-   def __init__(self, *args, symmetry=True, **kwargs):
+   def __init__(self, *args, symmetry=True, potential=None, **kwargs):
        """
        Creates SPRKKRAtoms atoms
 
@@ -62,14 +62,14 @@ class SPRKKRAtoms(Atoms):
        **kwargs: dict
           The named arguments of ase.Atoms.__init__
        """
-       self._init(symmetry)
+       self._init(symmetry, potential)
        super().__init__(*args, **kwargs)
 
-   def _init(self, symmetry=True):
+   def _init(self, symmetry=True, potential=None):
        """ The initialization of the additional (not-in-ASE) properties. To be used
        by constructor and by promote_ase_atoms"""
        self._unique_sites = None
-       self._potential = None
+       self._potential = potential
        self._symmetry = symmetry
 
    @property
@@ -272,6 +272,19 @@ class SPRKKRAtoms(Atoms):
        if self._potential is None:
           self._potential = potentials.Potential.from_atoms(self)
        return self._potential
+
+   @potential.setter
+   def potential(self, potential):
+       self._potential = potential
+
+   def reset_sprkkr_potential(self):
+       for i in self.sites:
+           i.reset()
+       if self._potential:
+          self._potential.reset(update_atoms = False)
+          self._potential.set_from_atoms()
+
+
 
 #at the last - to avoid circular imports
 from ..potential import potentials
