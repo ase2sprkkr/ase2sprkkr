@@ -87,7 +87,7 @@ class UniqueListSection(PotentialSection):
 
     def _update_atoms(self, atoms:SPRKKRAtoms, read_io_data: ReadIoData):
         """
-        Update a ReadIoData object a.ccordingly the data in the section:
+        Update a ReadIoData object accordingly the data in the section:
         set its _value_name to list of self_value_class.from_tuple(<data>)
 
         :meta public:
