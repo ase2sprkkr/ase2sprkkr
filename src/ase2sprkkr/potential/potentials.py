@@ -84,13 +84,14 @@ class Potential(RootConfContainer):
       pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd)
 
-  def reset(self):
+  def reset(self, update_atoms=True):
       copy = [i for i in self]
       for i in copy:
           if not i._definition.mandatory:
              i.reset()
       self.SCF_INFO.SCFSTATUS = 'START'
-
+      if update_atoms:
+          self.update_atoms()
 
 #At last - to avoid circular import problem
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms

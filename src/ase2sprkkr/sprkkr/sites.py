@@ -70,6 +70,9 @@ class Site:
 
       return self._occupation
 
+  def reset(self):
+      self.mesh = Mesh.default()
+
   @occupation.setter
   def occupation(self, x):
       self._occupation = Occupation.to_occupation(x)

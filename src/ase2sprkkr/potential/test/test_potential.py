@@ -77,9 +77,20 @@ class TestPotential(TestCase):
 
   def test_reset(self):
     pot = Potential.from_file(os.path.join(os.path.dirname(__file__), '../examples/fp_new.pot'))
+    pot.atoms.sites[0].mesh.r1 = 1.
+    pot.MESH_INFORMATION.DATA()[0][0]=2.
     self.assertNotEquals(pot.SCF_INFO.SCFSTATUS(), 'START')
+    #the reset of the potential is just reseting all non-mandatory
+    #properties. The mandatory are currently not set to defaults!
     pot.reset()
+    self.assertEquals(2., pot.atoms.sites[0].mesh.r1)
+    self.assertEquals(2., pot.MESH_INFORMATION.DATA()[0][0])
     self.assertRaises(AttributeError, lambda: pot.CHARGE)
     self.assertRaises(AttributeError, lambda: pot.POTENTIAL)
     self.assertTrue(isinstance(pot.LATTICE, PotentialSection))
     self.assertEquals(pot.SCF_INFO.SCFSTATUS(), 'START')
+    #a more hard version - it resets all the informations
+    pot.atoms.reset_sprkkr_potential()
+    self.assertEquals(pot.MESH_INFORMATION.DATA()[0][0], pot.atoms.sites[0].mesh.r1)
+    self.assertNotEquals(1., pot.atoms.sites[0].mesh.r1)
+    self.assertNotEquals(2., pot.MESH_INFORMATION.DATA()[0][0])

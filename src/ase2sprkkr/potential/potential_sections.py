@@ -52,7 +52,7 @@ class PotentialSection(Section):
         return self._definition.depends_on()
 
     def reset(self):
-        self.clear()
+        self.clear(True)
 
 class UniqueListSection(PotentialSection):
     """ The section, whose data is list of something,
