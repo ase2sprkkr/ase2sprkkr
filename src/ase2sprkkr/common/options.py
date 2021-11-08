@@ -67,7 +67,7 @@ class Option(ConfCommon):
       if not self._definition.type.has_value:
          return
       if self._definition.default_value is None and not do_not_check_required and self._definition.required:
-         raise ValueError(f'Option {self._definition.name} must have a value')
+         raise ValueError(f'Option {self._get_path()} must have a value')
       self._value = None
       if self._hook:
         self._hook(self)
