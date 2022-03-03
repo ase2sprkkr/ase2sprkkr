@@ -50,7 +50,8 @@ Installation of the package
 To install the package, you have to build the "wheel package" from
 the sources and install it
 
-### Building the wheel (installation) package
+ Building the wheel (installation) package
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you do not have the wheel package built, you can do it
 with the following steps.
@@ -63,7 +64,8 @@ The first line installs the tool to build the package
 (it is possible that you have it already installed).
 The second one builds the package.
 
-### Installing the package
+ Installing the package
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To install the package (either system-wide or in an active
 virtual environment), you can run
