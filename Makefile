@@ -17,6 +17,7 @@ doc-clean:
 
 doc-build:
 	sphinx-build sphinx docs/gen
+	sed -i 's#./gen/#./#' docs/gen/_static/documentation.html
 
 doc-md: README.md
 	md2html README.md -f doc/README.md.html
