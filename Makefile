@@ -5,7 +5,7 @@ clean:
 	rm -rf ./dist
 
 test:
-	src/run_tests
+	src/ase2sprkkr/run_tests
 
 doc: doc-gather doc-build
 
@@ -22,3 +22,17 @@ doc-build:
 doc-md: README.md
 	md2html README.md -f docs/README.md.html
 	sed -r 's/###(.*)/\1\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^/' README.md > sphinx/README.md
+
+build: | build_clean
+	python3 -m build
+
+build_clean:
+	rm -rf dist/*
+
+publish: build_clean build pip
+
+pip: | build
+	twine upload dist/*
+
+conda: | build
+	conda build .
