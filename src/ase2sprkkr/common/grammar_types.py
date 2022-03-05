@@ -4,7 +4,8 @@ import inspect
 from pyparsing import Word, Suppress
 import itertools
 import numpy as np
-from collections import Hashable, namedtuple
+from collections import namedtuple
+from collections.abc import Hashable
 from .misc import OrderedDict, cached_property, cache
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
