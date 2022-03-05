@@ -11,13 +11,10 @@ import os
 import sys
 from pathlib import Path
 
-
 class CalculatorTest(TestCase):
 
  def test_calculator(self):
      print_output = '-v' in sys.argv or '--verbose' in sys.argv
-     #print_output='info'
-
      dirname = os.path.dirname(__file__)
      here = lambda x: os.path.join(dirname, x)
 
@@ -77,6 +74,17 @@ class CalculatorTest(TestCase):
      calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
+ def test_run(self):
+     ignore = os.environ.get('DO_NOT_RUN_SPRKKR', '') != ''
+     if ignore:
+        return
+
+     print_output = '-v' in sys.argv or '--verbose' in sys.argv
+     dirname = os.path.dirname(__file__)
+     here = lambda x: os.path.join(dirname, x)
+
+     atoms = bulk('Li')
+     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
      #use methods of atoms
      atoms.calc = calculator
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
