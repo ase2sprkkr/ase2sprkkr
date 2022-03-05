@@ -90,4 +90,4 @@ class SPRKKRAtomsTest(TestCase):
      }
      SPRKKRAtoms.promote_ase_atoms(atoms)
      self.assertFalse(atoms.sites[1] == atoms.sites[3])
-     self.assertEquals({ 'Cl' : 0.5, 'I' :0.5 }, atoms.sites[1].occupation.as_dict)
+     self.assertEqual({ 'Cl' : 0.5, 'I' :0.5 }, atoms.sites[1].occupation.as_dict)

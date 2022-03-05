@@ -250,7 +250,7 @@ XSITES NR=3 FLAG
     self.assertTrue(isinstance(ips['ENERGY']['NXXX'], CustomOption))
     self.assertTrue(isinstance(ips.ENERGY.NXXX, CustomOption))
     ips.ENERGY.NXXX.set(5)
-    self.assertEquals(ips.ENERGY.NXXX(), 5)
+    self.assertEqual(ips.ENERGY.NXXX(), 5)
     ips.ENERGY.NXXX.remove()
     self.assertFalse(hasattr(ips.ENERGY, 'NXXX'))
 
