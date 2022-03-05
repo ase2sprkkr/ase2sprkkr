@@ -20,5 +20,5 @@ doc-build:
 	sed -i 's#./gen/#./#' docs/gen/_static/documentation.html
 
 doc-md: README.md
-	md2html README.md -f doc/README.md.html
+	md2html README.md -f docs/README.md.html
 	sed -r 's/###(.*)/\1\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^/' README.md > sphinx/README.md
