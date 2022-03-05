@@ -11,7 +11,6 @@ class BaseProcessOutputReader:
   and read_output
   """
   async def run_subprocess(self):
-      loop = asyncio.get_event_loop()
 
       if self.directory:
          dr = os.getcwd()
@@ -72,17 +71,17 @@ class BaseProcessOutputReader:
   def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
       self.cmd = cmd
       self.kwargs = kwargs
-      self.outfile = outfile
-      self.print_output = print_output
-      self.directory = directory
+      try:
+        self.outfile = outfile
+        self.print_output = print_output
+        self.directory = directory
 
-      loop = asyncio.get_event_loop()
-
-      import logging
-      logging.getLogger("asyncio").setLevel(logging.WARNING)
-      out = loop.run_until_complete( self.run_subprocess() )
-      if self.outfile:
-         self.outfile.close()
+        import logging
+        logging.getLogger("asyncio").setLevel(logging.WARNING)
+        out = asyncio.run( self.run_subprocess() )
+      finally:
+        if self.outfile:
+           self.outfile.close()
       return out
 
   async def read_error(self, stderr):
