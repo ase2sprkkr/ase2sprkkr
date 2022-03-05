@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import numpy as np
 from collections import OrderedDict
 from ase.visualize import view
