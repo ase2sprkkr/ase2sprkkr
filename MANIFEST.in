@@ -1,0 +1,3 @@
+recursive-include src/ *.in
+include src/ase2sprkkr/run_tests
+include src/ase2sprkkr/potential/examples/*.pot
