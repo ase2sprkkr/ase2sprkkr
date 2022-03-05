@@ -26,6 +26,12 @@ Optional, to obtain and install the package
 Obtaining the package
 ---------------------
 
+The simplest way to install the package is using pip
+```Bash
+pip install ase2sprkkr
+```
+
+You can also use git to obtain the package:
 ```Bash
 git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
