@@ -39,9 +39,7 @@ class TestCase(unittest.TestCase):
 
   @staticmethod
   def runAsync(corr):
-      loop = asyncio.get_event_loop()
-      task = loop.create_task(corr)
-      return loop.run_until_complete(task)
+      return asyncio.run(corr)
 
   def setUp(self):
       """ Register numpy array for the equality """
