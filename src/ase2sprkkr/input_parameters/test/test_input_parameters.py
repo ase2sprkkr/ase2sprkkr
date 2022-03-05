@@ -2,7 +2,7 @@ if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
-_package__, __name__ = patch_package(__package__, __name__)
+__package__, __name__ = patch_package(__package__, __name__)
 
 import unittest
 import pyparsing as pp
