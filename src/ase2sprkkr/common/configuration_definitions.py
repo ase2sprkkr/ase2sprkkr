@@ -507,10 +507,10 @@ class BaseDefinitionContainer(BaseDefinition):
        return not self._members.first_item().name_in_grammar
 
     def parse_file(self, file, return_value_only=True):
-        return self.parse_return(self.grammar().parseFile(file, True), return_value_only)
+        return self.parse_return(self.grammar().parseFile(file, parse_all=True), return_value_only)
 
     def parse(self, str, whole_string=True, return_value_only=True):
-        return self.parse_return(self.grammar().parseString(str, whole_string), return_value_only)
+        return self.parse_return(self.grammar().parseString(str, parse_all=whole_string), return_value_only)
 
     def parse_return(self, val, return_value_only=True):
         val = val[0]
