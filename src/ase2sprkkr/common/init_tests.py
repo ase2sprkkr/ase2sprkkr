@@ -23,7 +23,11 @@ def patch_package(package, name):
     return package, package + '.' + name.rsplit('.', 1)[-1]
 
 __package__, __name__ = patch_package(__package__,__name__)
-from .misc import OrderedDict
+
+try:
+  from ..common.misc import OrderedDict
+except ModuleNotFoundError:
+  from ...common.misc import OrderedDict
 
 class TestCase(unittest.TestCase):
 
