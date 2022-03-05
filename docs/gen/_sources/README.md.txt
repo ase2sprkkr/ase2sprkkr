@@ -5,8 +5,10 @@ This package is the Python interface for SPR-KKR package for electronic structur
 build upon Atomic Simulation Environment (ASE) framework.
 
 See
- - https://software.pan-data.eu/software/111/spr-kkr for documentation of the SPR-KRR and
- - https://wiki.fysik.dtu.dk/ase/ for documentation of the ASE
+ - https://software.pan-data.eu/software/111/spr-kkr - for the documentation of the SPR-KKR and
+ - https://wiki.fysik.dtu.dk/ase/ - for the documentation of the ASE
+ - https://ase2sprkkr.github.io/ase2sprkkr/ - the online version of the documentation
+ - https://github.com/ase2sprkkr/ase2sprkkr/ - GitHub repository of the package
 
 Installation of the package
 ===========================
