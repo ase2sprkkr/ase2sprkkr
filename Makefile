@@ -35,6 +35,9 @@ publish: build_clean build pip
 pip: | build
 	twine upload dist/*
 
+anaconda: conda
+	~/anaconda3/bin/anaconda login && ~/anaconda3/bin/anaconda upload "`ls ~/anaconda3/conda-bld/noarch/ase2sprkkr-* | tail -n 1`"
+
 conda: | build
 	rm -rf ~/anaconda3/conda-bld/src_cache/ase2sprkkr-*
 	PWD="`pwd`" conda build .
