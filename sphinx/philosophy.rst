@@ -1,9 +1,8 @@
 ASE2SPR-KKR's philosophy for the developers
-==========================================
+============================================
 
 The base philosophy of the package
 ----------------------------------
-
 The whole package is built around configuration objects.
 A configuration object is an object, that can both read and write configuration files.
 Each configuration object has the capabilities to both parse the configuration file 
@@ -31,7 +30,7 @@ There are the following subpackages in the ase2sprkkr package:
 There are the common shared modules: the options, containers, their definitions and grammar types and miscellaneous stuff.
 
 :mod:`input_parameters <ase2sprkkr.input_parameters>`
-""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
 There are the specializations of the configuration objects and definitions for the input files.
 In the (:mod: `ase2sprkkr.input_parameters.definitions`) subpackage are the definitions of the
 possible tasks, that can be run by SPR-KKR.
@@ -73,7 +72,7 @@ To allow ASE Atoms object (of the ASE Atoms class) to hold the SPR-KKR specific
 properties, it has to change its (OOP) ancestor to the class
 (:class:`ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms`).
 This is done by :method:`sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms`
- method, which is either called automatically when any Atoms object is passed to
+method, which is either called automatically when any Atoms object is passed to
 ase2sprkkr routines, or can be called manually if it is needed.
 
 :mod:`tools<sprkkr.tools>`
