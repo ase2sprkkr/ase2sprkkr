@@ -1,7 +1,10 @@
 """
 This file contains the classes for definitions of parts of output
-files. Although the files are used only for reading, the same
-grammar as for potential and input files is used
+files, from that the result data are obtained.
+
+Although the files are used only for reading, the same
+grammar definition approach as for potential and input parameters
+files is used
 """
 
 import functools
@@ -13,6 +16,7 @@ from ..common.configuration_definitions import \
 from ..common.misc import lazy_value
 
 class OutputValueDefinition(BaseValueDefinition):
+  """ Value in an output file, of a form 'NAME   VALUE' """
 
   @staticmethod
   @lazy_value
@@ -20,12 +24,13 @@ class OutputValueDefinition(BaseValueDefinition):
     return pp.WordStart()
 
   prefix = ''
-  name_value_delimiter = '='
 
   def __init__(self, *args, required=True, **kwargs):
       super().__init__(*args, required=required, **kwargs)
 
 class OutputValueEqualDefinition(OutputValueDefinition):
+  """ Value in an output file, of a form 'NAME=VALUE' (spaces possible) """
+  name_value_delimiter = '='
 
   @staticmethod
   @lazy_value
@@ -33,6 +38,9 @@ class OutputValueEqualDefinition(OutputValueDefinition):
     return pp.Suppress("=").setName('=')
 
 class OutputNonameValueDefinition(OutputValueDefinition):
+  """ Value in an output file, that has no name, there is just the value
+  (identified by its position after some other known stuff)
+  """
 
   name_in_grammar = False
 

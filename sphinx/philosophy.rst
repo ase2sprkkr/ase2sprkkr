@@ -63,6 +63,9 @@ In version 1.0 of the package, only the output reader of SCF task
 is implemented, results of the other tasks are read by the dummy :class:`default reader<ase2sprkkr.output.readers.default.DefaultOutputReader>`, which does not parse anything
 from the output.
 
+Note, that some parts of the output can and are parsed using the generated
+grammar, as it is described above, see e.g. :method:`ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output`.
+
 :mod:`sprkkr<ase2sprkkr.sprkkr>`
 """""""""""""""""""""""""""""""""""
 ASE calculator for SPR-KKR, and data structures for holding the properties,

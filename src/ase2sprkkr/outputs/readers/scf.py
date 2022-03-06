@@ -15,9 +15,11 @@ from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 
 class ScfResult(TaskResult):
+  """ Objects of this class holds the results of computed SCF class """
 
   @property
   def iterations(self):
+      """ Array of the results of iterations """
       return self.result
 
   @cached_property
@@ -33,10 +35,13 @@ class ScfResult(TaskResult):
 
   @cached_property
   def potential(self):
+      """ The new (output) potential - that contains the converged charge density etc. """
       return Potential.from_file(self.potential_filename)
 
   @cached_property
   def calculator(self):
+      """ The calculator that has the new (output) potential assigned - i.e. that
+      can be used for further calculations with the (hopefully) converged wavefunctions etc. """
       if self._calculator:
          return self._calculator.copy_with_potential(self.potential_filename)
       else:
@@ -44,13 +49,31 @@ class ScfResult(TaskResult):
 
   @property
   def energy(self):
+      """ Total energy of the last iteration """
       return self.last_iteration['ETOT']
 
   @property
   def converged(self):
+      """ The calculation coverged or not? """
       return self.last_iteration['converged']
 
   def iteration_values(self, name):
+      """ Return the array of values of given name from the 
+      iterations (i.e. "the column of the table of the values") 
+
+      E.g. result.iteration_values('ETOT') return list of 
+      floats - the total energies computed in each iteration.
+
+      Parameters
+      ----------
+      name: str
+        Name of the parameter
+
+      Return
+      ------
+      values: list
+        The values.
+      """
       if not name in self.iterations[0]:
          raise KeyError(f"No such iteration value: {name}")
 
@@ -61,11 +84,29 @@ class ScfResult(TaskResult):
             )
   @property
   def last_iteration(self):
+      """ Return the data of the last iteration """
       if not self.iterations:
           raise AttributeError('No iteration has been finished')
       return self.iterations[-1]
 
   def plot(self, what=['error', 'ETOT'], filename=None, logscale = set(['err']), **kwargs):
+      """ Plot the development of the given value(s) during iterations.
+
+      Parameters
+      ----------
+      what: list[str]
+        Names to be plotted
+
+      filename: str or None
+        If filename is given, the plot is rendered to the file, it is show on the screen
+        otherwise.
+
+      logscale: collections.abc.Set[str]
+        Which values should be rendered in logscale
+
+      **kwargs: dict
+        All other arguments are passed to the matplotlib Axes.plot function
+      """
       import matplotlib.pyplot as pyplot
 
       fig, axs = pyplot.subplots(len(what), sharex=True)
@@ -91,6 +132,9 @@ class ScfResult(TaskResult):
         pyplot.show()
 
 class ScfOutputReader(OutputReader):
+  """
+  This class reads and parses the output of the SCF task of the SPR-KKR.
+  """
 
   atoms_conf_type = Section('atoms', [
     VN('IECURR', integer),
