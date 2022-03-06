@@ -1,6 +1,11 @@
 ase2sprkkr.sprkkr package
 =========================
 
+.. automodule:: ase2sprkkr.sprkkr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -15,11 +20,3 @@ Submodules
    ase2sprkkr.sprkkr.sites
    ase2sprkkr.sprkkr.sprkkr_atoms
    ase2sprkkr.sprkkr.structure
-
-Module contents
----------------
-
-.. automodule:: ase2sprkkr.sprkkr
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,6 +1,11 @@
 ase2sprkkr package
 ==================
 
+.. automodule:: ase2sprkkr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -9,7 +14,8 @@ Subpackages
 
    ase2sprkkr.common
    ase2sprkkr.input_parameters
-   ase2sprkkr.potential
+   ase2sprkkr.outputs
+   ase2sprkkr.potentials
    ase2sprkkr.sprkkr
 
 Submodules
@@ -19,11 +25,3 @@ Submodules
    :maxdepth: 4
 
    ase2sprkkr.version
-
-Module contents
----------------
-
-.. automodule:: ase2sprkkr
-   :members:
-   :undoc-members:
-   :show-inheritance:

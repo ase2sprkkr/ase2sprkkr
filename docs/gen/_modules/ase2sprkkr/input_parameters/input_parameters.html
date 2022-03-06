@@ -84,9 +84,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">How to obtain and install the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of classes</a></li>
 </ul>
 
             
@@ -159,9 +160,9 @@
 <span class="kn">import</span> <span class="nn">pkgutil</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">definitions</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">outputs</span>
-<span class="kn">from</span> <span class="nn">.outputs.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
-<span class="kn">from</span> <span class="nn">..common.conf_containers</span> <span class="kn">import</span> <span class="n">RootConfContainer</span>
+<span class="kn">from</span> <span class="nn">..outputs</span> <span class="kn">import</span> <span class="n">readers</span>
+<span class="kn">from</span> <span class="nn">..outputs.readers.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
+<span class="kn">from</span> <span class="nn">..common.configuration_containers</span> <span class="kn">import</span> <span class="n">RootConfigurationContainer</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">lazy_value</span><span class="p">,</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 
@@ -172,7 +173,7 @@
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SPRKKR_EXECUTABLE_SUFFIX&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">postfix</span></div>
 
-<div class="viewcode-block" id="InputParameters"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters">[docs]</a><span class="k">class</span> <span class="nc">InputParameters</span><span class="p">(</span><span class="n">RootConfContainer</span><span class="p">):</span>
+<div class="viewcode-block" id="InputParameters"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters">[docs]</a><span class="k">class</span> <span class="nc">InputParameters</span><span class="p">(</span><span class="n">RootConfigurationContainer</span><span class="p">):</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">inputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_inputfile</span> <span class="o">=</span> <span class="n">inputfile</span>
@@ -321,7 +322,7 @@
       <span class="k">if</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
          <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
          <span class="k">try</span><span class="p">:</span>
-            <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">readers</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="n">clsname</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;OutputReader&#39;</span>
             <span class="bp">cls</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">clsname</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="p">:</span>

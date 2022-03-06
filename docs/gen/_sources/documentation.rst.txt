@@ -11,4 +11,4 @@ ASE2SPRKKR - a short introduction
 *********************************
 
 .. raw:: html
-   :file: _static/documentation.html
+   :file: _static/index.html

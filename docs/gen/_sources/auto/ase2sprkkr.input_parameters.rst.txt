@@ -1,6 +1,11 @@
 ase2sprkkr.input\_parameters package
 ====================================
 
+.. automodule:: ase2sprkkr.input_parameters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -8,8 +13,6 @@ Subpackages
    :maxdepth: 4
 
    ase2sprkkr.input_parameters.definitions
-   ase2sprkkr.input_parameters.outputs
-   ase2sprkkr.input_parameters.test
 
 Submodules
 ----------
@@ -19,13 +22,3 @@ Submodules
 
    ase2sprkkr.input_parameters.input_parameters
    ase2sprkkr.input_parameters.input_parameters_definitions
-   ase2sprkkr.input_parameters.output_definitions
-   ase2sprkkr.input_parameters.task_result
-
-Module contents
----------------
-
-.. automodule:: ase2sprkkr.input_parameters
-   :members:
-   :undoc-members:
-   :show-inheritance:

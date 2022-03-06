@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ASE2SPR-KKR’s philosophy for the developers &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ase2sprkkr package" href="auto/ase2sprkkr.html" />
+    <link rel="prev" title="ASE2SPRKKR - a short introduction" href="documentation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">A short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">How to obtain and install the package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Philosophy of the package for developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-base-philosophy-of-the-package">The base philosophy of the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#structure-of-the-package">Structure of the package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common"><code class="xref py py-mod docutils literal notranslate"><span class="pre">common</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">input_parameters</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#potentials"><code class="xref py py-mod docutils literal notranslate"><span class="pre">potentials</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#outputs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">outputs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-the-configuration-files">Reading the configuration files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-the-configuration-files">Writing the configuration files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-program">Running the program</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">The documentation of classes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>ASE2SPR-KKR’s philosophy for the developers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/philosophy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ase2spr-kkr-s-philosophy-for-the-developers">
+<h1>ASE2SPR-KKR’s philosophy for the developers<a class="headerlink" href="#ase2spr-kkr-s-philosophy-for-the-developers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-base-philosophy-of-the-package">
+<h2>The base philosophy of the package<a class="headerlink" href="#the-base-philosophy-of-the-package" title="Permalink to this headline">¶</a></h2>
+<p>The whole package is built around configuration objects.
+A configuration object is an object, that can both read and write configuration files.
+Each configuration object has the capabilities to both parse the configuration file
+(e.g. input file for SPR-KKR task or a potential file) and to write the file.</p>
+<p>The configuration object has a tree structure: it is divided by section, while each section
+can contain values. (However, some (mostly custom: i.e. e.g. sections of a potential file, that
+are not currently parsed and their value is given as is) sections are just containers for a single value.</p>
+<p>The leaves of the configuration object are options
+(<code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.options.Option</span></code>)
+- single value containers. They are described by
+configuration definitions
+(see <a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseValueDefinition</span></code></a>),
+which hold the required type of the value (see <a class="reference internal" href="auto/ase2sprkkr.common.grammar_types.html#module-ase2sprkkr.common.grammar_types" title="ase2sprkkr.common.grammar_types"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types</span></code></a>) and its few other properties, such as the default value or parameters that determine the format of the value in the parsed/writed configuration file.</p>
+<p>The non-leaves nodes of a configuration trees are containers (<a class="reference internal" href="auto/ase2sprkkr.common.configuration_containers.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer</span></code></a>). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (<code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseConfigurationDefinition</span></code>), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each “definition tree” can be instantiated many containers for various contents of a configuration file).</p>
+</div>
+<div class="section" id="structure-of-the-package">
+<h2>Structure of the package<a class="headerlink" href="#structure-of-the-package" title="Permalink to this headline">¶</a></h2>
+<p>There are the following subpackages in the ase2sprkkr package:</p>
+<div class="section" id="common">
+<h3><a class="reference internal" href="auto/ase2sprkkr.common.html#module-ase2sprkkr.common" title="ase2sprkkr.common"><code class="xref py py-mod docutils literal notranslate"><span class="pre">common</span></code></a><a class="headerlink" href="#common" title="Permalink to this headline">¶</a></h3>
+<p>There are the common shared modules: the options, containers, their definitions and grammar types and miscellaneous stuff.</p>
+</div>
+<div class="section" id="input-parameters">
+<h3><a class="reference internal" href="auto/ase2sprkkr.input_parameters.html#module-ase2sprkkr.input_parameters" title="ase2sprkkr.input_parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">input_parameters</span></code></a><a class="headerlink" href="#input-parameters" title="Permalink to this headline">¶</a></h3>
+<p>There are the specializations of the configuration objects and definitions for the input files.
+In the (:mod: <cite>ase2sprkkr.input_parameters.definitions</cite>) subpackage are the definitions of the
+possible tasks, that can be run by SPR-KKR.</p>
+</div>
+<div class="section" id="potentials">
+<h3><a class="reference internal" href="auto/ase2sprkkr.potentials.html#module-ase2sprkkr.potentials" title="ase2sprkkr.potentials"><code class="xref py py-mod docutils literal notranslate"><span class="pre">potentials</span></code></a><a class="headerlink" href="#potentials" title="Permalink to this headline">¶</a></h3>
+<p>There are specializations for the potential file definition.
+There is currently just one definition of a potential
+in (:mod: <cite>ase2sprkkr.potentials.definitions.potential</cite>)
+(there is just
+one format of the potential file, there is no support for creating
+different versions of potential in the 1.0 version of the package).
+The definitions of the potential sections are in
+(:mod: <cite>ase2sprkkr.potentials.definitions.sections</cite>).</p>
+</div>
+<div class="section" id="outputs">
+<h3><a class="reference internal" href="auto/ase2sprkkr.outputs.html#module-ase2sprkkr.outputs" title="ase2sprkkr.outputs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">outputs</span></code></a><a class="headerlink" href="#outputs" title="Permalink to this headline">¶</a></h3>
+<p>Each input file also prescribe the type of the reader: object, that
+read and possibly parse the output of the SPR-KKR. These readers
+(located ad &lt;<a class="reference internal" href="auto/ase2sprkkr.outputs.readers.html#module-ase2sprkkr.outputs.readers" title="ase2sprkkr.outputs.readers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers</span></code></a>&gt;) are
+just simply objects, that reads the output line by line, searching
+for a regex pattern and parsing selected lines of the file (skipping
+the rest) to obtain some values (e.g. convergence results from iterations).
+The parsed values are then returned as the result of the calculations.</p>
+<p>In order to be capable of parsing both standard output and error
+output stream of SPR-KKR, asyncio is employed for the readers.</p>
+<p>In version 1.0 of the package, only the output reader of SCF task
+is implemented, results of the other tasks are read by the dummy <code class="xref py py-class docutils literal notranslate"><span class="pre">default</span> <span class="pre">reader</span></code>, which does not parse anything
+from the output.</p>
+</div>
+<div class="section" id="sprkkr">
+<h3><a class="reference internal" href="auto/ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr" title="ase2sprkkr.sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a><a class="headerlink" href="#sprkkr" title="Permalink to this headline">¶</a></h3>
+<p>ASE calculator for SPR-KKR, and data structures for holding the properties,
+that are special for SPR-KKR.</p>
+<p>To allow ASE Atoms object (of the ASE Atoms class) to hold the SPR-KKR specific
+properties, it has to change its (OOP) ancestor to the class
+(<a class="reference internal" href="auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></code></a>).
+This is done by <a href="#id1"><span class="problematic" id="id2">:method:`sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms`</span></a>
+method, which is either called automatically when any Atoms object is passed to
+ase2sprkkr routines, or can be called manually if it is needed.</p>
+</div>
+<div class="section" id="tools">
+<h3><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code><a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h3>
+<p>Scripts for postprocessing of the SPRKRR results.</p>
+</div>
+</div>
+<div class="section" id="reading-the-configuration-files">
+<h2>Reading the configuration files<a class="headerlink" href="#reading-the-configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>Configuration definition utilizes <cite>pyparsing &lt;https://pyparsing-docs.readthedocs.io/en/latest/&gt;</cite>
+for creating the grammar, that parses the configuration file.</p>
+<p>Thus, the reading of a file has two phases. First, the definition parses the content of the file and created the tree of the python values (dictionaries,
+numpy arrays, etc.). In the second step, the tree is transformed, according to the definitions, to the configuration object.
+If a potential file is parsed, then the third phase occurs: the ASE Atoms object is set up accordingly to the values in the configuration object.</p>
+<p>The grammar is defined accordingly to the constants and/or class methods of the configuration definitions descendants, that customizes the shared base objects, see e.g.
+<code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.input_prameters_definition</span></code> or
+<a class="reference internal" href="auto/ase2sprkkr.potentials.potential_definitions.html#module-ase2sprkkr.potentials.potential_definitions" title="ase2sprkkr.potentials.potential_definitions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.potential_definitions</span></code></a></p>
+</div>
+<div class="section" id="writing-the-configuration-files">
+<h2>Writing the configuration files<a class="headerlink" href="#writing-the-configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>The writing to the file is performed by save_to_file <a href="#id3"><span class="problematic" id="id4">:method:`ase2sprkkr.common.configuration_container.ConfigurationContainer.save_to_file`</span></a>, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods <a href="#id5"><span class="problematic" id="id6">:method:`ase2sprkkr.common.configuration_definition.BaseValueDefinition.write`</span></a> and <a href="#id7"><span class="problematic" id="id8">:method:`ase2sprkkr.common.grammar_types.BaseType.write`</span></a>.</p>
+<p>Again, the exact way how to write the file - i.e. how to separate name-value pairs, how to separate values each from others etc. is given in the configuration_definition descendants.</p>
+</div>
+<div class="section" id="running-the-program">
+<h2>Running the program<a class="headerlink" href="#running-the-program" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>When SPR-KKR calculation is to be invoked, the calculator</dt><dd><ul class="simple">
+<li><p>creates or updates the potential from the Atoms object (however, it is possible to run calculation just
+according to the given potential, without an Atoms object)</p></li>
+<li><p>if the task is given by name, creates the InputParameters object</p></li>
+<li><p>saves the potential file and the input file</p></li>
+<li><p>runs the executable (given by the definition object of the InputParameters)</p></li>
+<li><p>creates the OutputReader (again, the type is given by the definition object of the InputParameters)</p></li>
+<li><p>let the OutputReader read and parse the results from the output of the run executable</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="auto/ase2sprkkr.html" class="btn btn-neutral float-right" title="ase2sprkkr package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="documentation.html" class="btn btn-neutral float-left" title="ASE2SPRKKR - a short introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+ase2sprkkr.potentials.definitions package
+=========================================
+
+.. automodule:: ase2sprkkr.potentials.definitions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.potentials.definitions.sections
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.potentials.definitions.potential

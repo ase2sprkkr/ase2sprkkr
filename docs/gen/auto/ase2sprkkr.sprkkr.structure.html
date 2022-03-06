@@ -86,22 +86,22 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../readme.html">Instalation of the pacakage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../documentation.html">ASE2SPRKKR - a short introduction</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ASE2SPRKKR -- class documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">A short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">How to obtain and install the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package for developers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">The documentation of classes</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.html">ase2sprkkr.common package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.html">ase2sprkkr.input_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potential.html">ase2sprkkr.potential package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.html">ase2sprkkr.outputs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.html">ase2sprkkr.potentials package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html#module-ase2sprkkr">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -177,39 +177,9 @@
             
   <div class="section" id="module-ase2sprkkr.sprkkr.structure">
 <span id="ase2sprkkr-sprkkr-structure-module"></span><h1>ase2sprkkr.sprkkr.structure module<a class="headerlink" href="#module-ase2sprkkr.sprkkr.structure" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="ase2sprkkr.sprkkr.structure.AtomData">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.structure.</span></code><code class="sig-name descname"><span class="pre">AtomData</span></code><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#AtomData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.AtomData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A helper object for reading in_structure.inp file</p>
-<dl class="py method">
-<dt id="ase2sprkkr.sprkkr.structure.AtomData.from_text">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">from_text</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#AtomData.from_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.AtomData.from_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the Atom data object from the two text lines
-:from a in_structure.inp file</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ase2sprkkr.sprkkr.structure.AtomData.get_symbol">
-<code class="sig-name descname"><span class="pre">get_symbol</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#AtomData.get_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.AtomData.get_symbol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="ase2sprkkr.sprkkr.structure.LayerData">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.structure.</span></code><code class="sig-name descname"><span class="pre">LayerData</span></code><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#LayerData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.LayerData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="ase2sprkkr.sprkkr.structure.floatjm">
-<code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.structure.</span></code><code class="sig-name descname"><span class="pre">floatjm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#floatjm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.floatjm" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py function">
 <dt id="ase2sprkkr.sprkkr.structure.structure_file_to_atoms">
-<code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.structure.</span></code><code class="sig-name descname"><span class="pre">structure_file_to_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.potential.potentials.html#ase2sprkkr.potential.potentials.Potential" title="ase2sprkkr.potential.potentials.Potential"><span class="pre">ase2sprkkr.potential.potentials.Potential</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bulk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vacuum_height</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#structure_file_to_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.structure_file_to_atoms" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.structure.</span></code><code class="sig-name descname"><span class="pre">structure_file_to_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><span class="pre">ase2sprkkr.potentials.potentials.Potential</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bulk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vacuum_height</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/structure.html#structure_file_to_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.structure.structure_file_to_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read in_structure.inp file (that contains informations about the structure of a surface)
 and create the ASE atoms object according to the readed data.</p>
 <dl class="field-list simple">

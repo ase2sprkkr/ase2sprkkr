@@ -84,9 +84,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">How to obtain and install the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of classes</a></li>
 </ul>
 
             
@@ -154,9 +155,9 @@
             
   <h1>Source code for ase2sprkkr.common.options</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">mixed</span>
-<span class="kn">from</span> <span class="nn">.conf_common</span> <span class="kn">import</span> <span class="n">ConfCommon</span>
+<span class="kn">from</span> <span class="nn">.base_configuration</span> <span class="kn">import</span> <span class="n">BaseConfiguration</span>
 
-<span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="n">ConfCommon</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Option</span><span class="p">(</span><span class="n">BaseConfiguration</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Class for one option (a configuration value) of SPRKKR - either to be used as a part of InputParameters or Potential configuration. Usage:</span>
 
 <span class="sd">  conf.ENERGY.ImE = 5</span>
@@ -199,7 +200,7 @@
 
 <span class="sd">      unknown: str or None</span>
 <span class="sd">        A dummy argument to make the method compatibile with</span>
-<span class="sd">        ase2sprkkr.sprkkr.common.conf_containers.ConfContainer.set()</span>
+<span class="sd">        ase2sprkkr.sprkkr.common.configuration_containers.ConfigurationContainer.set()</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>

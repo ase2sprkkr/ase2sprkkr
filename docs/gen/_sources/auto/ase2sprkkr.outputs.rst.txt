@@ -1,0 +1,24 @@
+ase2sprkkr.outputs package
+==========================
+
+.. automodule:: ase2sprkkr.outputs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.outputs.readers
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   ase2sprkkr.outputs.output_definitions
+   ase2sprkkr.outputs.task_result

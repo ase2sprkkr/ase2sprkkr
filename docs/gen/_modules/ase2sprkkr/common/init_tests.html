@@ -84,9 +84,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Instalation of the pacakage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">ASE2SPRKKR - a short introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ASE2SPRKKR -- class documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">A short introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../documentation.html">How to obtain and install the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package for developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of classes</a></li>
 </ul>
 
             
@@ -178,7 +179,11 @@
     <span class="k">return</span> <span class="n">package</span><span class="p">,</span> <span class="n">package</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+<span class="k">try</span><span class="p">:</span>
+  <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+  <span class="kn">from</span> <span class="nn">...common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
 
@@ -190,9 +195,7 @@
 
 <div class="viewcode-block" id="TestCase.runAsync"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.runAsync">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">runAsync</span><span class="p">(</span><span class="n">corr</span><span class="p">):</span>
-      <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
-      <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span></div>
+      <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestCase.setUp"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.setUp">[docs]</a>  <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Register numpy array for the equality &quot;&quot;&quot;</span>

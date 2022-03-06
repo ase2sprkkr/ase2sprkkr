@@ -9,6 +9,7 @@ See
  - https://wiki.fysik.dtu.dk/ase/ - for the documentation of the ASE
  - https://ase2sprkkr.github.io/ase2sprkkr/ - the online version of the documentation
  - https://github.com/ase2sprkkr/ase2sprkkr/ - GitHub repository of the package
+ - https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/ - SPR-KKR manual
 
 Installation of the package
 ===========================
@@ -26,6 +27,12 @@ Optional, to obtain and install the package
 Obtaining the package
 ---------------------
 
+The simplest way to install the package is using pip
+```Bash
+pip install ase2sprkkr
+```
+
+You can also use git to obtain the package:
 ```Bash
 git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
@@ -114,3 +121,8 @@ Run
 open docs/index.html
 ```
 to open further documentation in the browser.
+
+How to contribute or report bug
+-------------------------------
+Please feel free to make a pullrequest or post an issue at:
+https://github.com/ase2sprkkr/ase2sprkkr
