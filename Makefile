@@ -7,17 +7,18 @@ clean:
 test:
 	src/ase2sprkkr/run_tests
 
-doc: doc-gather doc-build
+doc: doc-gather doc-md doc-build
 
-doc-gather: doc-clean doc-md
-	sphinx-apidoc -fe -o sphinx/auto src/ase2sprkkr
+doc-gather: doc-clean
+	sphinx-apidoc -feM -o sphinx/auto src/ase2sprkkr */test/
 
 doc-clean:
 	rm -rf sphinx/auto/*
+	rm -rf docs/gen/*
 
 doc-build:
 	sphinx-build sphinx docs/gen
-	sed -i 's#./gen/#./#' docs/gen/_static/documentation.html
+	sed -i 's#./gen/#./#' docs/gen/_static/index.html
 
 doc-md: README.md
 	md2html README.md -f docs/README.md.html
