@@ -119,3 +119,8 @@ Run
 open docs/index.html
 ```
 to open further documentation in the browser.
+
+How to contribute or report bug
+-------------------------------
+Please feel free to make a pullrequest or post an issue at:
+https://github.com/ase2sprkkr/ase2sprkkr
