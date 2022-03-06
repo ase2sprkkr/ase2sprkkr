@@ -5,11 +5,11 @@ from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
 import pyparsing as pp
-from .conf_common import ConfCommon
+from .base_configuration import BaseConfiguration
 import itertools
 import re
 
-class ConfContainer(ConfCommon):
+class ConfigurationContainer(BaseConfiguration):
   """ Custom task section. Section created by user with no definition """
 
   def __init__(self, definition, container=None):
@@ -230,7 +230,7 @@ class ConfContainer(ConfCommon):
       raise NotImplemented()
 
 
-class BaseSection(ConfContainer):
+class BaseSection(ConfigurationContainer):
   """ A section of SPRKKR configuration  """
 
   def __setattr__(self, name, value):
@@ -314,7 +314,7 @@ class CustomSection(BaseSection):
       Return
       ------
       factory: callable
-        Factory function of the signature (name: str, container: ase2sprkkr.common.conf_containers.ConfContainer)
+        Factory function of the signature (name: str, container: ase2sprkkr.common.configuration_containers.ConfigurationContainer)
         that created a custom value or section of the given definition
 
       """
@@ -325,7 +325,7 @@ class CustomSection(BaseSection):
       return create
 
 
-class RootConfContainer(ConfContainer):
+class RootConfigurationContainer(ConfigurationContainer):
 
   def save_to_file(self, file, *, validate=True):
       """ Save the configuration to a file in a format readable by SPR-KKR """

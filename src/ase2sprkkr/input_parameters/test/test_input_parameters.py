@@ -9,7 +9,7 @@ import pyparsing as pp
 from ...common import grammar_types as gt
 from .. import input_parameters_definitions as cd
 from .. import input_parameters as input_parameters
-from ...common.conf_containers import Section, CustomSection
+from ...common.configuration_containers import Section, CustomSection
 from ...common.options import Option, CustomOption
 import io
 import numpy as np

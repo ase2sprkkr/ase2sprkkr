@@ -1,4 +1,4 @@
-class ConfCommon:
+class BaseConfiguration:
   """ Common base class for configuration """
 
   def __init__(self, definition, container=None):

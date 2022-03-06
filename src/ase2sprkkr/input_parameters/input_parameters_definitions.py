@@ -14,7 +14,7 @@ from ..common.configuration_definitions import \
     ConfDefinition, \
     unique_dict
 from ..common.options import CustomOption
-from ..common.conf_containers import CustomSection
+from ..common.configuration_containers import CustomSection
 from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.misc import lazy_value, cache

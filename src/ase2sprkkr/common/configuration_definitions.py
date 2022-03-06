@@ -2,7 +2,7 @@ from ..common.grammar_types  import type_from_type, type_from_value, BaseType
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 import pyparsing as pp
 from ..common.misc import OrderedDict
-from .conf_containers import Section
+from .configuration_containers import Section
 from .options import Option
 import numpy as np
 import inspect

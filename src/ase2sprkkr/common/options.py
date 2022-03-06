@@ -1,7 +1,7 @@
 from ..common.grammar_types import mixed
-from .conf_common import ConfCommon
+from .base_configuration import BaseConfiguration
 
-class Option(ConfCommon):
+class Option(BaseConfiguration):
   """ Class for one option (a configuration value) of SPRKKR - either to be used as a part of InputParameters or Potential configuration. Usage:
 
   conf.ENERGY.ImE = 5
@@ -44,7 +44,7 @@ class Option(ConfCommon):
 
       unknown: str or None
         A dummy argument to make the method compatibile with
-        ase2sprkkr.sprkkr.common.conf_containers.ConfContainer.set()
+        ase2sprkkr.sprkkr.common.configuration_containers.ConfigurationContainer.set()
       """
       if value is None:
           return self.clear()

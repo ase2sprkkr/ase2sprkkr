@@ -6,7 +6,7 @@ import importlib
 from . import definitions
 from ..outputs import readers
 from ..outputs.readers.default import DefaultOutputReader
-from ..common.conf_containers import RootConfContainer
+from ..common.configuration_containers import RootConfigurationContainer
 from ..common.misc import lazy_value, OrderedDict
 import shutil
 
@@ -17,7 +17,7 @@ def resolve_executable_postfix(postfix):
         return os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
     return postfix
 
-class InputParameters(RootConfContainer):
+class InputParameters(RootConfigurationContainer):
   def __init__(self, definition, inputfile=None, outputfile=False):
       super().__init__(definition)
       self._inputfile = inputfile

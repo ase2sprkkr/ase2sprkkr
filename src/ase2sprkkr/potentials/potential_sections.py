@@ -2,7 +2,7 @@
 there are a generic classes for these sections.
 """
 
-from ..common.conf_containers import Section
+from ..common.configuration_containers import Section
 from .io_data import ReadIoData, WriteIoData
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 

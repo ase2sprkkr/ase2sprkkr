@@ -1,8 +1,8 @@
-from ..common.conf_containers import RootConfContainer
+from ..common.configuration_containers import RootConfigurationContainer
 from .io_data import ReadIoData, WriteIoData
 from ..common.misc import class_property, cache
 
-class Potential(RootConfContainer):
+class Potential(RootConfigurationContainer):
 
   def __init__(self, atoms=None, definition=None):
       if definition is None:
