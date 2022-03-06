@@ -1,12 +1,16 @@
 {% set data = load_setup_py_data(from_recipe_dir=True) %}
 {% set version = data.get('version') %}
+{% set rversion = version %}
+{% set rrrrrversion = '0.1.0' %}
 {% set name = data.get('name') %}
+
 package:
   name: {{ name }}
-  version: {{ version }}
+  version: {{ rversion }}
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  #url: file://{{ environ.get('PWD') }}/dist/{{ name }}-{{ version }}.tar.gz
 
 build:
   noarch: python
