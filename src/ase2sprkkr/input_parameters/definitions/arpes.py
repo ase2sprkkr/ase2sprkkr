@@ -47,4 +47,4 @@ input_parameters = InputParameters(
   ],
   executable = 'kkrspec'
 )
-
+""" ARPES task input parameters definition"""

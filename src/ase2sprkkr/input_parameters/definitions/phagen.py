@@ -16,3 +16,4 @@ input_parameters = InputParameters(
       executable = 'kkrscf',
       mpi=False
 )
+""" PHAGEN task input parameters definition"""

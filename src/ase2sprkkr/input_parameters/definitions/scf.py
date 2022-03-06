@@ -19,3 +19,4 @@ input_parameters = InputParameters(
       executable = 'kkrscf',
       mpi = True
 )
+""" SCF task input parameters definition"""

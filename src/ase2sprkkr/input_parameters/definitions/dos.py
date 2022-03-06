@@ -21,3 +21,4 @@ input_parameters = InputParameters(
   executable='kkrgen',
   mpi=True
 )
+""" DOS task input parameters definition"""

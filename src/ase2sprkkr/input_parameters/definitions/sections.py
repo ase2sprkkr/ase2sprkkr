@@ -1,30 +1,46 @@
-def _sections():
-  from ...common.grammar_types  import Keyword, DefKeyword, SetOf, Flag, energy
-  from ..input_parameters_definitions import \
+from ...common.grammar_types  import DefKeyword, SetOf, Flag, energy
+from ..input_parameters_definitions import \
       SectionDefinition as Section, \
       ValueDefinition as V
 
-  sections = {}
-  sections['CONTROL'] = lambda x: Section('CONTROL',[
+""" Definitions of sections to be used in definitions of input parameters
+(input files for SPR-KKR tasks) """
+
+def CONTROL(ADSI):
+  """ Create the definition of the CONTROL section of the task input file.
+
+  Parameters
+  ----------
+  ADSI: string
+    the default value for the ADSI parameter of the resulting section
+
+
+  Return
+  ------
+  CONTROL: SectionDefinition
+  """
+  return Section('CONTROL',[
       V('DATASET', str, 'case', required = True, help="Meaning of the parameter"),
-      V('ADSI', DefKeyword(x), required = True, help="Type of the computation -- do DFT selfconsistent cycle"),
+      V('ADSI', DefKeyword(ADSI), required = True, help="Type of the computation -- do DFT selfconsistent cycle"),
       V('POTFIL', str, required=True, help="Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator."),
       V('KRWS', int, required=False)
   ])
 
-  sections['TAU'] = Section('TAU',[
+TAU = Section('TAU',[
       V('BZINT', DefKeyword('POINTS', 'ANOTHER_OPTION'), required=True),
       V('NKTAB', 250)
   ])
+"""The definition of the TAU section of the task input file """
 
-  sections['ENERGY'] = Section('ENERGY',[
+ENERGY = Section('ENERGY',[
       V('GRID', [5], required=True),
       V('NE', [32], required=True),
       V('ImE', energy, 0.0),
       V('EMIN', -0.2),
   ])
+"""The definition of the ENERGY section of the task input file """
 
-  sections['SCF'] = Section('SCF', [
+SCF = Section('SCF', [
       V('NITER', 200),
       V('MIX', 0.2),
       V('VXC', DefKeyword('VWN')),
@@ -32,16 +48,29 @@ def _sections():
       V('TOL', 0.00001),
       V('ISTBRY', 1)
   ])
+"""The definition of the SCF section of the task input file """
 
-  sections['SITES'] = Section('SITES', [
+SITES = Section('SITES', [
       V('NL', [3])
   ])
+"""The definition of the SITES section of the task input file """
 
-  sections['TASK'] = lambda x: Section('TASK', [
-    V('TASK', DefKeyword(x), name_in_grammar=False)
+def TASK(TASK):
+  """ Create the definition of the CONTROL section of the task input file.
+
+  Parameters
+  ----------
+  TASK: string
+    the default value for the TASK parameter of the resulting section
+
+  Return
+  ------
+  TASK: SectionDefinition
+  """
+  return Section('TASK', [
+    V('TASK', DefKeyword(TASK), name_in_grammar=False)
   ])
 
-  return sections
-
-locals().update(_sections())
-del _sections
+__all__ = [
+    'CONTROL', 'TAU', 'ENERGY', 'SCF', 'SITES', 'TASK'
+]
