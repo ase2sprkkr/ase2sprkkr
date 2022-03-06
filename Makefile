@@ -36,4 +36,5 @@ pip: | build
 	twine upload dist/*
 
 conda: | build
-	conda build .
+	rm ~/anaconda3/conda-bld/src_cache/ase2sprkkr-*
+	PWD="`pwd`" conda build .
