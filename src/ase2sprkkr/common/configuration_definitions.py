@@ -313,7 +313,7 @@ def add_excluded_names_condition(element, names):
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
 
-class BaseDefinitionContainer(BaseDefinition):
+class BaseContainerDefinition(BaseDefinition):
 
     """ Force order of its members """
     force_order = False
@@ -531,7 +531,7 @@ class BaseDefinitionContainer(BaseDefinition):
 
 
 
-class BaseSectionDefinition(BaseDefinitionContainer):
+class BaseSectionDefinition(BaseContainerDefinition):
    """ Base class for sections in Pot or InputParameters file """
 
 
@@ -561,7 +561,7 @@ class BaseSectionDefinition(BaseDefinitionContainer):
         return out
 
 
-class ConfDefinition(BaseDefinitionContainer):
+class ConfDefinition(BaseContainerDefinition):
 
    name_in_grammar = False
    """ No data are given just by a section name - no Flag equivalent for sections """
