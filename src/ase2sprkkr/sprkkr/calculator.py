@@ -14,7 +14,7 @@ import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
-from ..potential.potentials import Potential
+from ..potentials.potentials import Potential
 from ..common.misc import add_to_signature
 import shutil
 import copy

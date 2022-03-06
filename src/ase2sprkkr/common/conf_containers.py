@@ -226,6 +226,9 @@ class ConfContainer(ConfCommon):
           if not iname in self._interactive_members:
               self._interactive_members[iname] = member
 
+  def save_to_file(self, file, *, validate=True):
+      raise NotImplemented()
+
 
 class BaseSection(ConfContainer):
   """ A section of SPRKKR configuration  """

@@ -6,7 +6,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 from ase.build import bulk
 from ..calculator import SPRKKR
-from ...potential.potentials import Potential
+from ...potentials.potentials import Potential
 import os
 import sys
 from pathlib import Path

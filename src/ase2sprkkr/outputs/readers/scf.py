@@ -8,7 +8,7 @@ import numpy as np
 from ase.units import Rydberg
 from ..task_result import TaskResult, OutputReader
 from ...common.misc import cached_property
-from ...potential.potentials import Potential
+from ...potentials.potentials import Potential
 import os
 import copy
 from ...sprkkr.calculator import SPRKKR

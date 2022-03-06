@@ -96,7 +96,7 @@ class BaseProcessOutputReader:
 
   def read_from_file(self, output, error=None, return_code=0, print_output=False):
 
-      loop = asyncio.get_event_loop()
+      loop = asyncio.new_event_loop()
       self.print_output = print_output
 
       def out():

@@ -287,4 +287,4 @@ class SPRKKRAtoms(Atoms):
 
 
 #at the last - to avoid circular imports
-from ..potential import potentials
+from ..potentials import potentials

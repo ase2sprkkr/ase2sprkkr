@@ -4,8 +4,8 @@ import tempfile
 import pkgutil
 import importlib
 from . import definitions
-from . import outputs
-from .outputs.default import DefaultOutputReader
+from ..outputs import readers
+from ..outputs.readers.default import DefaultOutputReader
 from ..common.conf_containers import RootConfContainer
 from ..common.misc import lazy_value, OrderedDict
 import shutil
@@ -166,7 +166,7 @@ class InputParameters(RootConfContainer):
       if cls is None:
          task = self.TASK.TASK().lower()
          try:
-            mod = importlib.import_module(f'.{task}', outputs.__name__)
+            mod = importlib.import_module(f'.{task}', readers.__name__)
             clsname = task.title() + 'OutputReader'
             cls = getattr(mod, clsname)
             if not cls:

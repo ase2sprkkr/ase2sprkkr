@@ -5,7 +5,7 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 import os
-from ..outputs.scf import ScfOutputReader
+from ..readers.scf import ScfOutputReader
 
 class TestOutput(TestCase):
 
