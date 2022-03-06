@@ -1,8 +1,12 @@
+""" The classes for storing one configuration value. """
+
 from ..common.grammar_types import mixed
 from .base_configuration import BaseConfiguration
 
 class Option(BaseConfiguration):
-  """ Class for one option (a configuration value) of SPRKKR - either to be used as a part of InputParameters or Potential configuration. Usage:
+  """ Class for one option (a configuration value) of SPRKKR - either to
+  be used as a part of InputParameters or Potential configuration.
+  Usage:
 
   conf.ENERGY.ImE = 5
   conf.ENERGY.ImE()
@@ -107,6 +111,7 @@ class CustomOption(Option):
   """ An user-added option (configuration value). It can be removed from the section. """
 
   def remove(self):
+      """ Remove me from my "parent" section """
       self._container.remove_member(self._definition.name)
 
   @classmethod
