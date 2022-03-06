@@ -129,7 +129,7 @@ SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300}, 'SITES':{'NL':2}} )
                    NXXX=5""", {'GRID':ar(3), 'NE':ar(300), 'NXXX': 5})
 
     grammar = input_parameters_def.grammar()
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX=5
 
@@ -139,7 +139,7 @@ SITES NL=2""", {'ENERGY': {'GRID':ar(3), 'NE':ar(300), 'NXXX': 5},
     )
 
 
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
@@ -150,7 +150,7 @@ SITES NL=2
     )
 
     #SITES do not start on the begin of the line, so it is not the start of the section
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
@@ -161,7 +161,7 @@ SITES NL=2
     )
 
 
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
@@ -173,7 +173,7 @@ SITES NL=2
 
 
 
-    assertNotValid(""" ENERGY GRID={3}
+    assertNotValid("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
@@ -184,7 +184,7 @@ SITES NL=3
               """)
 
     #custom section
-    assertParse(""" ENERGY GRID={3}
+    assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
 
@@ -224,7 +224,7 @@ XSITES NR=3 NF=1
 
 
 SITES NL=2
- 
+
 XSITES NR=3 FLAG
                      FLOAT=3.5
               """,
@@ -234,7 +234,7 @@ XSITES NR=3 FLAG
                               'XSITES':{'NR':3, 'FLAG' : True, 'FLOAT': 3.5}
       })
 
-    ips=input_parameters_def.read_from_file(io.StringIO(""" ENERGY GRID={3}
+    ips=input_parameters_def.read_from_file(io.StringIO("""ENERGY GRID={3}
                      NE={300,200}
                      NXXX
 
