@@ -18,18 +18,22 @@ Requirements
 ------------
 - Python >= 3.7
 - SPRKKR (not checked by the installer)
+- Python packages: ase, mendeleev, spglib, pyparsing
 
-Optional, to obtain and install the package
+Optionals, to obtain and install the package and its python package requirements
 - Git (to obtain the sources)
-- Pip (to install the package)
-
+- Pip or Conda (to install the package)
 
 Obtaining the package
 ---------------------
 
-The simplest way to install the package is using pip
+The simplest way to install the package is using either pip
 ```Bash
 pip install ase2sprkkr
+```
+or conda
+```Bash
+conda install -c ase2sprkkr ase2sprkkr
 ```
 
 You can also use git to obtain the package:
