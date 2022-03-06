@@ -175,4 +175,4 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
 
   return structure
 
-__all__ = [ structure_file_to_atoms ]
+__all__ = [ 'structure_file_to_atoms' ]
