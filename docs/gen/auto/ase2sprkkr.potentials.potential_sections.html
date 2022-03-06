@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">A short introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../documentation.html">How to obtain and install the package</a></li>
@@ -181,13 +184,13 @@
 <p>A potential file for SPRKKR is divided to sections. In this module,
 there are a generic classes for these sections.</p>
 <dl class="py class">
-<dt id="ase2sprkkr.potentials.potential_sections.PotentialSection">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></code><code class="sig-name descname"><span class="pre">PotentialSection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.PotentialSection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></span><span class="sig-name descname"><span class="pre">PotentialSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.configuration_containers.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.Section</span></code></a></p>
 <p>A generic class for a section in a potential</p>
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.PotentialSection._set_from_atoms">
-<code class="sig-name descname"><span class="pre">_set_from_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_io_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.WriteIoData" title="ase2sprkkr.potentials.io_data.WriteIoData"><span class="pre">ase2sprkkr.potentials.io_data.WriteIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection._set_from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection._set_from_atoms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.PotentialSection._set_from_atoms">
+<span class="sig-name descname"><span class="pre">_set_from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_io_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.WriteIoData" title="ase2sprkkr.potentials.io_data.WriteIoData"><span class="pre">ase2sprkkr.potentials.io_data.WriteIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection._set_from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection._set_from_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function should be called before potential file writing to set the propper values to the section.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -200,8 +203,8 @@ there are a generic classes for these sections.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.PotentialSection._update_atoms">
-<code class="sig-name descname"><span class="pre">_update_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_io_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.ReadIoData" title="ase2sprkkr.potentials.io_data.ReadIoData"><span class="pre">ase2sprkkr.potentials.io_data.ReadIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection._update_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection._update_atoms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.PotentialSection._update_atoms">
+<span class="sig-name descname"><span class="pre">_update_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_io_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.ReadIoData" title="ase2sprkkr.potentials.io_data.ReadIoData"><span class="pre">ase2sprkkr.potentials.io_data.ReadIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection._update_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection._update_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function should be called after potential file reading to set the values of Atoms object to the ones from the readed file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -220,29 +223,29 @@ there are a generic classes for these sections.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.PotentialSection._depends_on">
-<code class="sig-name descname"><span class="pre">_depends_on</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection._depends_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection._depends_on" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.PotentialSection._depends_on">
+<span class="sig-name descname"><span class="pre">_depends_on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection._depends_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection._depends_on" title="Permalink to this definition">¶</a></dt>
 <dd><p>The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>prerequisites</strong></p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[ str, str, .. ]</p>
+<dd class="field-even"><p>[ str, str, … ]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.PotentialSection.reset">
-<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection.reset" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.PotentialSection.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="ase2sprkkr.potentials.potential_sections.UniqueListSection">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></code><code class="sig-name descname"><span class="pre">UniqueListSection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#UniqueListSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.UniqueListSection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></span><span class="sig-name descname"><span class="pre">UniqueListSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#UniqueListSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" title="ase2sprkkr.potentials.potential_sections.PotentialSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.potential_sections.PotentialSection</span></code></a></p>
 <p>The section, whose data is list of something,
 e.g. of meshes, reference systems etc. The properties
@@ -253,34 +256,34 @@ by the other sections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._value_name" title="ase2sprkkr.potentials.potential_sections.UniqueListSection._value_name"><strong>_value_name</strong></a> (<em>str</em>) – The name of the property of write_io_data to store the list of data</p></li>
-<li><p><a class="reference internal" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._value_class" title="ase2sprkkr.potentials.potential_sections.UniqueListSection._value_class"><strong>_value_class</strong></a> (<em>type</em>) – The class, that should be created from the list of data</p></li>
+<li><p><strong>_value_name</strong> (<em>str</em>) – The name of the property of write_io_data to store the list of data</p></li>
+<li><p><strong>_value_class</strong> (<em>type</em>) – The class, that should be created from the list of data</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="ase2sprkkr.potentials.potential_sections.UniqueListSection._value_name">
-<code class="sig-name descname"><span class="pre">_value_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._value_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.UniqueListSection._value_name">
+<span class="sig-name descname"><span class="pre">_value_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._value_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the property of write_io_data to store the list of data</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="ase2sprkkr.potentials.potential_sections.UniqueListSection._value_class">
-<code class="sig-name descname"><span class="pre">_value_class</span></code><em class="property"><span class="pre">:</span> <span class="pre">type</span></em><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._value_class" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.UniqueListSection._value_class">
+<span class="sig-name descname"><span class="pre">_value_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._value_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>The class, that should be created from the list of data</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.UniqueListSection._set_from_atoms">
-<code class="sig-name descname"><span class="pre">_set_from_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_io_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.WriteIoData" title="ase2sprkkr.potentials.io_data.WriteIoData"><span class="pre">ase2sprkkr.potentials.io_data.WriteIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#UniqueListSection._set_from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._set_from_atoms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.UniqueListSection._set_from_atoms">
+<span class="sig-name descname"><span class="pre">_set_from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_io_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.WriteIoData" title="ase2sprkkr.potentials.io_data.WriteIoData"><span class="pre">ase2sprkkr.potentials.io_data.WriteIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#UniqueListSection._set_from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._set_from_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the values of the section from the write_io_data.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.UniqueListSection._update_atoms">
-<code class="sig-name descname"><span class="pre">_update_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_io_data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.ReadIoData" title="ase2sprkkr.potentials.io_data.ReadIoData"><span class="pre">ase2sprkkr.potentials.io_data.ReadIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#UniqueListSection._update_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._update_atoms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.UniqueListSection._update_atoms">
+<span class="sig-name descname"><span class="pre">_update_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_io_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.ReadIoData" title="ase2sprkkr.potentials.io_data.ReadIoData"><span class="pre">ase2sprkkr.potentials.io_data.ReadIoData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#UniqueListSection._update_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.UniqueListSection._update_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a ReadIoData object accordingly the data in the section:
 set its _value_name to list of self_value_class.from_tuple(&lt;data&gt;)</p>
 <dl class="field-list simple">
@@ -290,21 +293,21 @@ set its _value_name to list of self_value_class.from_tuple(&lt;data&gt;)</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="ase2sprkkr.potentials.potential_sections.ASEArraySection">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></code><code class="sig-name descname"><span class="pre">ASEArraySection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.ASEArraySection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></span><span class="sig-name descname"><span class="pre">ASEArraySection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" title="ase2sprkkr.potentials.potential_sections.PotentialSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.potential_sections.PotentialSection</span></code></a></p>
 <p>A section, that get and set the given ASE array (see ASE documentation of the
 Atoms class), e.g. magnetization direction.
 The name of the array is given by the section definition in the property array_name</p>
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.ASEArraySection.has_any_value">
-<code class="sig-name descname"><span class="pre">has_any_value</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection.has_any_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection.has_any_value" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.ASEArraySection.has_any_value">
+<span class="sig-name descname"><span class="pre">has_any_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection.has_any_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection.has_any_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Are there data in the section?</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.ASEArraySection._depends_on">
-<code class="sig-name descname"><span class="pre">_depends_on</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection._depends_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection._depends_on" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.ASEArraySection._depends_on">
+<span class="sig-name descname"><span class="pre">_depends_on</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection._depends_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection._depends_on" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>These sections can be processed after that the Atoms object</dt><dd><p>is created.</p>
 </dd>
@@ -314,8 +317,8 @@ The name of the array is given by the section definition in the property array_n
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.ASEArraySection._set_from_atoms">
-<code class="sig-name descname"><span class="pre">_set_from_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection._set_from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection._set_from_atoms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.ASEArraySection._set_from_atoms">
+<span class="sig-name descname"><span class="pre">_set_from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection._set_from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection._set_from_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Just set the values in the section from the Atoms object.
 If the array not exists and the value is mandatory, set it to zero.</p>
 <dl class="field-list simple">
@@ -323,8 +326,8 @@ If the array not exists and the value is mandatory, set it to zero.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.potentials.potential_sections.ASEArraySection._update_atoms">
-<code class="sig-name descname"><span class="pre">_update_atoms</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection._update_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection._update_atoms" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_sections.ASEArraySection._update_atoms">
+<span class="sig-name descname"><span class="pre">_update_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#ASEArraySection._update_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.ASEArraySection._update_atoms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the array accordingly to the readed data</p>
 <dl class="field-list simple">
 </dl>

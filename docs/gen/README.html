@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -82,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">A short introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">How to obtain and install the package</a></li>
@@ -175,17 +178,22 @@ build upon Atomic Simulation Environment (ASE) framework.</p>
 <ul class="simple">
 <li><p>Python &gt;= 3.7</p></li>
 <li><p>SPRKKR (not checked by the installer)</p></li>
+<li><p>Python packages: ase, mendeleev, spglib, pyparsing</p></li>
 </ul>
-<p>Optional, to obtain and install the package</p>
+<p>Optionals, to obtain and install the package and its python package requirements</p>
 <ul class="simple">
 <li><p>Git (to obtain the sources)</p></li>
-<li><p>Pip (to install the package)</p></li>
+<li><p>Pip or Conda (to install the package)</p></li>
 </ul>
 </div>
 <div class="section" id="obtaining-the-package">
 <h2>Obtaining the package<a class="headerlink" href="#obtaining-the-package" title="Permalink to this headline">¶</a></h2>
-<p>The simplest way to install the package is using pip</p>
+<p>The simplest way to install the package is using either pip</p>
 <div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>pip install ase2sprkkr
+</pre></div>
+</div>
+<p>or conda</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>conda install -c ase2sprkkr ase2sprkkr
 </pre></div>
 </div>
 <p>You can also use git to obtain the package:</p>

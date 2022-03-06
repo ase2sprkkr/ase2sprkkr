@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">A short introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../documentation.html">How to obtain and install the package</a></li>
@@ -178,34 +181,34 @@
   <div class="section" id="module-ase2sprkkr.common.regex_trie">
 <span id="ase2sprkkr-common-regex-trie-module"></span><h1>ase2sprkkr.common.regex_trie module<a class="headerlink" href="#module-ase2sprkkr.common.regex_trie" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="ase2sprkkr.common.regex_trie.Trie">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.regex_trie.</span></code><code class="sig-name descname"><span class="pre">Trie</span></code><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.regex_trie.Trie">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.regex_trie.</span></span><span class="sig-name descname"><span class="pre">Trie</span></span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Regex::Trie in Python. Creates a Trie out of a list of words. The trie can be exported to a Regex pattern.
 The corresponding Regex should match much faster than a simple Regex union.</p>
 <dl class="py method">
-<dt id="ase2sprkkr.common.regex_trie.Trie.add">
-<code class="sig-name descname"><span class="pre">add</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.add" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.regex_trie.Trie.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.add" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.common.regex_trie.Trie.dump">
-<code class="sig-name descname"><span class="pre">dump</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.dump" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.regex_trie.Trie.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.dump" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.common.regex_trie.Trie.quote">
-<code class="sig-name descname"><span class="pre">quote</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.quote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.quote" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.regex_trie.Trie.quote">
+<span class="sig-name descname"><span class="pre">quote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.quote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.quote" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.common.regex_trie.Trie._pattern">
-<code class="sig-name descname"><span class="pre">_pattern</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie._pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie._pattern" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.regex_trie.Trie._pattern">
+<span class="sig-name descname"><span class="pre">_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie._pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie._pattern" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="ase2sprkkr.common.regex_trie.Trie.pattern">
-<code class="sig-name descname"><span class="pre">pattern</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.pattern" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.regex_trie.Trie.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/regex_trie.html#Trie.pattern"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.regex_trie.Trie.pattern" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
