@@ -93,14 +93,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-the-package">Installation of the package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#obtaining-the-package">Obtaining the package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-the-package">Using the package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Installation of the package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#one-step-install">One step install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#further-documentation">Further documentation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#run">Run</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-the-packages-from-repositories">Install the packages from repositories</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#install-the-packages-from-git-and-or-source-codes">Install the packages from GIT (and/or source codes)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#obtaining-the-package-using-git">Obtaining the package using GIT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-package-without-installing-the-pip-conda-packages">Using the package (without installing the pip/conda packages)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-of-the-package-from-the-sources">Installation of the package from the sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#one-step-install-from-sources">One step install from sources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#further-documentation">Further documentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#how-to-contribute-or-report-bug">How to contribute or report bug</a></li>
 </ul>
 </li>
@@ -206,9 +209,10 @@ build upon Atomic Simulation Environment (ASE) framework.</p>
 - Git (to obtain the sources)
 - Pip or Conda (to install the package)</p>
 </div>
-<div class="section" id="obtaining-the-package">
-<h3>Obtaining the package<a class="headerlink" href="#obtaining-the-package" title="Permalink to this headline">¶</a></h3>
-<p>The simplest way to install the package is using either pip
+<div class="section" id="install-the-packages-from-repositories">
+<h3>Install the packages from repositories<a class="headerlink" href="#install-the-packages-from-repositories" title="Permalink to this headline">¶</a></h3>
+<p>The simplest way to install the package is using package
+managers: either pip
 <code class="docutils literal notranslate"><span class="pre">`Bash</span>
 <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ase2sprkkr</span>
 <span class="pre">`</span></code>
@@ -216,8 +220,16 @@ or conda
 <code class="docutils literal notranslate"><span class="pre">`Bash</span>
 <span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">ase2sprkkr</span> <span class="pre">ase2sprkkr</span>
 <span class="pre">`</span></code></p>
-<p>You can also use git to obtain the package:
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
+</div>
+</div>
+<div class="section" id="install-the-packages-from-git-and-or-source-codes">
+<h2>Install the packages from GIT (and/or source codes)<a class="headerlink" href="#install-the-packages-from-git-and-or-source-codes" title="Permalink to this headline">¶</a></h2>
+<p>If you do not want to use public package managers as pip or conda,
+or you want to contribute to development, you can use GIT to obtain
+the package.</p>
+<div class="section" id="obtaining-the-package-using-git">
+<h3>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">`Bash</span>
 <span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/ase2sprkkr/ase2sprkkr.git</span>
 <span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/release</span>
 <span class="pre">`</span></code></p>
@@ -228,15 +240,20 @@ code, run
 <code class="docutils literal notranslate"><span class="pre">`Bash</span>
 <span class="pre">git</span> <span class="pre">fetch</span>
 <span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/release</span>
-<span class="pre">`</span></code></p>
+<span class="pre">`</span></code>
+Alternativelly, you can checkout master branch
+<code class="docutils literal notranslate"><span class="pre">`Bash</span>
+<span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/master</span>
+<span class="pre">`</span></code>
+to obtain the bleeding edge version.</p>
 </div>
-<div class="section" id="using-the-package">
-<h3>Using the package<a class="headerlink" href="#using-the-package" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="using-the-package-without-installing-the-pip-conda-packages">
+<h3>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Permalink to this headline">¶</a></h3>
 <p>You can either just add the src directory to your PYTHONPATH, or you
 can build and install the package, as it is described below.</p>
 </div>
-<div class="section" id="id1">
-<h3>Installation of the package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="installation-of-the-package-from-the-sources">
+<h3>Installation of the package from the sources<a class="headerlink" href="#installation-of-the-package-from-the-sources" title="Permalink to this headline">¶</a></h3>
 <p>To install the package, you have to build the “wheel package” from
 the sources and install it</p>
 <blockquote>
@@ -273,8 +290,8 @@ or
 <span class="pre">`</span></code>
 in OpenSUSE</p>
 </div>
-<div class="section" id="one-step-install">
-<h3>One step install<a class="headerlink" href="#one-step-install" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="one-step-install-from-sources">
+<h3>One step install from sources<a class="headerlink" href="#one-step-install-from-sources" title="Permalink to this headline">¶</a></h3>
 <p>To do all the stuff (after cloning the GIT repository) in one step,
 you can run
 <code class="docutils literal notranslate"><span class="pre">`Bash</span>
@@ -291,15 +308,12 @@ you can run
 <span class="pre">`</span></code>
 Sphinx and python package md2html are needed for it.</p>
 </div>
+</div>
 <div class="section" id="further-documentation">
-<h3>Further documentation<a class="headerlink" href="#further-documentation" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="run">
-<h4>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h4>
+<h2>Further documentation<a class="headerlink" href="#further-documentation" title="Permalink to this headline">¶</a></h2>
 <p>open docs/index.html
-<a href="#id2"><span class="problematic" id="id3">``</span></a>`
+<a href="#id1"><span class="problematic" id="id2">``</span></a>`
 to open further documentation in the browser.</p>
-</div>
-</div>
 <div class="section" id="how-to-contribute-or-report-bug">
 <h3>How to contribute or report bug<a class="headerlink" href="#how-to-contribute-or-report-bug" title="Permalink to this headline">¶</a></h3>
 <p>Please feel free to make a pullrequest or post an issue at:

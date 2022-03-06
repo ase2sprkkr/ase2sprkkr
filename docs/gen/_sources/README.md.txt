@@ -24,10 +24,11 @@ Optionals, to obtain and install the package and its python package requirements
 - Git (to obtain the sources)
 - Pip or Conda (to install the package)
 
-Obtaining the package
----------------------
+Install the packages from repositories
+-------------------------------------------------------------
 
-The simplest way to install the package is using either pip
+The simplest way to install the package is using package
+managers: either pip
 ```Bash
 pip install ase2sprkkr
 ```
@@ -36,7 +37,14 @@ or conda
 conda install -c ase2sprkkr ase2sprkkr
 ```
 
-You can also use git to obtain the package:
+Install the packages from GIT (and/or source codes)
+==========================================================
+If you do not want to use public package managers as pip or conda,
+or you want to contribute to development, you can use GIT to obtain
+the package.
+
+Obtaining the package using GIT
+--------------------------------
 ```Bash
 git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
@@ -51,15 +59,22 @@ code, run
 git fetch
 git checkout origin/release
 ```
+Alternativelly, you can checkout master branch
+```Bash
+git checkout origin/master
+```
+to obtain the bleeding edge version.
 
-Using the package
------------------
+
+Using the package (without installing the pip/conda packages)
+---------------------------------------------------------------
+
 You can either just add the src directory to your PYTHONPATH, or you
 can build and install the package, as it is described below.
 
 
-Installation of the package
----------------------------
+Installation of the package from the sources
+----------------------------------------------
 To install the package, you have to build the "wheel package" from
 the sources and install it
 
@@ -97,8 +112,8 @@ zypper install pip
 ```
 in OpenSUSE
 
-One step install
--------------------
+One step install from sources
+-----------------------------
 
 To do all the stuff (after cloning the GIT repository) in one step,
 you can run
@@ -119,7 +134,7 @@ make docs
 Sphinx and python package md2html are needed for it.
 
 Further documentation
----------------------
+=============================
 Run
 ```
 open docs/index.html

@@ -186,9 +186,10 @@ build upon Atomic Simulation Environment (ASE) framework.</p>
 <li><p>Pip or Conda (to install the package)</p></li>
 </ul>
 </div>
-<div class="section" id="obtaining-the-package">
-<h2>Obtaining the package<a class="headerlink" href="#obtaining-the-package" title="Permalink to this headline">¶</a></h2>
-<p>The simplest way to install the package is using either pip</p>
+<div class="section" id="install-the-packages-from-repositories">
+<h2>Install the packages from repositories<a class="headerlink" href="#install-the-packages-from-repositories" title="Permalink to this headline">¶</a></h2>
+<p>The simplest way to install the package is using package
+managers: either pip</p>
 <div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>pip install ase2sprkkr
 </pre></div>
 </div>
@@ -196,7 +197,15 @@ build upon Atomic Simulation Environment (ASE) framework.</p>
 <div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>conda install -c ase2sprkkr ase2sprkkr
 </pre></div>
 </div>
-<p>You can also use git to obtain the package:</p>
+</div>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="install-the-packages-from-git-and-or-source-codes">
+<h1>Install the packages from GIT (and/or source codes)<a class="headerlink" href="#install-the-packages-from-git-and-or-source-codes" title="Permalink to this headline">¶</a></h1>
+<p>If you do not want to use public package managers as pip or conda,
+or you want to contribute to development, you can use GIT to obtain
+the package.</p>
+<div class="section" id="obtaining-the-package-using-git">
+<h2>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
 </pre></div>
@@ -209,14 +218,19 @@ code, run</p>
 git checkout origin/release
 </pre></div>
 </div>
+<p>Alternativelly, you can checkout master branch</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>git checkout origin/master
+</pre></div>
 </div>
-<div class="section" id="using-the-package">
-<h2>Using the package<a class="headerlink" href="#using-the-package" title="Permalink to this headline">¶</a></h2>
+<p>to obtain the bleeding edge version.</p>
+</div>
+<div class="section" id="using-the-package-without-installing-the-pip-conda-packages">
+<h2>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Permalink to this headline">¶</a></h2>
 <p>You can either just add the src directory to your PYTHONPATH, or you
 can build and install the package, as it is described below.</p>
 </div>
-<div class="section" id="id1">
-<h2>Installation of the package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation-of-the-package-from-the-sources">
+<h2>Installation of the package from the sources<a class="headerlink" href="#installation-of-the-package-from-the-sources" title="Permalink to this headline">¶</a></h2>
 <p>To install the package, you have to build the “wheel package” from
 the sources and install it</p>
 <p>Building the wheel (installation) package
@@ -249,8 +263,8 @@ package manager, e.g. in Debian/Ubuntu</p>
 </div>
 <p>in OpenSUSE</p>
 </div>
-<div class="section" id="one-step-install">
-<h2>One step install<a class="headerlink" href="#one-step-install" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="one-step-install-from-sources">
+<h2>One step install from sources<a class="headerlink" href="#one-step-install-from-sources" title="Permalink to this headline">¶</a></h2>
 <p>To do all the stuff (after cloning the GIT repository) in one step,
 you can run</p>
 <div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>make
@@ -267,14 +281,14 @@ you can run</p>
 </div>
 <p>Sphinx and python package md2html are needed for it.</p>
 </div>
-<div class="section" id="further-documentation">
-<h2>Further documentation<a class="headerlink" href="#further-documentation" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="tex2jax_ignore mathjax_ignore section" id="further-documentation">
+<h1>Further documentation<a class="headerlink" href="#further-documentation" title="Permalink to this headline">¶</a></h1>
 <p>Run</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">open</span> <span class="n">docs</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 <p>to open further documentation in the browser.</p>
-</div>
 <div class="section" id="how-to-contribute-or-report-bug">
 <h2>How to contribute or report bug<a class="headerlink" href="#how-to-contribute-or-report-bug" title="Permalink to this headline">¶</a></h2>
 <p>Please feel free to make a pullrequest or post an issue at:

@@ -21,14 +21,19 @@ build upon Atomic Simulation Environment (ASE) framework.</p>
 <li>Git (to obtain the sources)</li>
 <li>Pip or Conda (to install the package)</li>
 </ul>
-<h2>Obtaining the package</h2>
-<p>The simplest way to install the package is using either pip</p>
+<h2>Install the packages from repositories</h2>
+<p>The simplest way to install the package is using package
+managers: either pip</p>
 <pre><code class="language-Bash">pip install ase2sprkkr
 </code></pre>
 <p>or conda</p>
 <pre><code class="language-Bash">conda install -c ase2sprkkr ase2sprkkr
 </code></pre>
-<p>You can also use git to obtain the package:</p>
+<h1>Install the packages from GIT (and/or source codes)</h1>
+<p>If you do not want to use public package managers as pip or conda,
+or you want to contribute to development, you can use GIT to obtain
+the package.</p>
+<h2>Obtaining the package using GIT</h2>
 <pre><code class="language-Bash">git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
 </code></pre>
@@ -39,10 +44,14 @@ code, run</p>
 <pre><code class="language-Bash">git fetch
 git checkout origin/release
 </code></pre>
-<h2>Using the package</h2>
+<p>Alternativelly, you can checkout master branch</p>
+<pre><code class="language-Bash">git checkout origin/master
+</code></pre>
+<p>to obtain the bleeding edge version.</p>
+<h2>Using the package (without installing the pip/conda packages)</h2>
 <p>You can either just add the src directory to your PYTHONPATH, or you
 can build and install the package, as it is described below.</p>
-<h2>Installation of the package</h2>
+<h2>Installation of the package from the sources</h2>
 <p>To install the package, you have to build the &quot;wheel package&quot; from
 the sources and install it</p>
 <h3>Building the wheel (installation) package</h3>
@@ -68,7 +77,7 @@ package manager, e.g. in Debian/Ubuntu</p>
 <pre><code class="language-Bash">zypper install pip
 </code></pre>
 <p>in OpenSUSE</p>
-<h2>One step install</h2>
+<h2>One step install from sources</h2>
 <p>To do all the stuff (after cloning the GIT repository) in one step,
 you can run</p>
 <pre><code class="language-Bash">make
@@ -81,7 +90,7 @@ you can run</p>
 <pre><code class="language-Bash">make docs
 </code></pre>
 <p>Sphinx and python package md2html are needed for it.</p>
-<h2>Further documentation</h2>
+<h1>Further documentation</h1>
 <p>Run</p>
 <pre><code>open docs/index.html
 </code></pre>
