@@ -1,15 +1,15 @@
 Introduction
 ============
 
-This package is the Python interface for SPR-KKR package for electronic structure computation,
+This package is the Python interface for the SPR-KKR package for electronic structure computation,
 build upon Atomic Simulation Environment (ASE) framework.
 
 See
- - https://software.pan-data.eu/software/111/spr-kkr - for the documentation of the SPR-KKR and
- - https://wiki.fysik.dtu.dk/ase/ - for the documentation of the ASE
- - https://ase2sprkkr.github.io/ase2sprkkr/ - the online version of the documentation
- - https://github.com/ase2sprkkr/ase2sprkkr/ - GitHub repository of the package
- - https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/ - SPR-KKR manual
+- https://software.pan-data.eu/software/111/spr-kkr - for the documentation of the SPR-KKR and
+- https://wiki.fysik.dtu.dk/ase/ - for the documentation of the ASE
+- https://ase2sprkkr.github.io/ase2sprkkr/ - the online version of the documentation
+- https://github.com/ase2sprkkr/ase2sprkkr/ - GitHub repository of the package
+- https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/ - SPR-KKR manual
 
 Installation of the package
 ===========================
@@ -59,7 +59,7 @@ code, run
 git fetch
 git checkout origin/release
 ```
-Alternativelly, you can checkout master branch
+Alternatively, you can checkout master branch
 ```Bash
 git checkout origin/master
 ```
@@ -110,8 +110,8 @@ zypper install pip
 ```
 in OpenSUSE
 
-One step install from sources
------------------------------
+One step install from the sources
+------------------------------------
 
 To do all the stuff (after cloning the GIT repository) in one step,
 you can run
@@ -139,7 +139,7 @@ open docs/index.html
 ```
 to open further documentation in the browser.
 
-How to contribute or report bug
--------------------------------
-Please feel free to make a pullrequest or post an issue at:
+How to contribute or report a bug
+------------------------------------
+Please feel free to make a pull-request or post an issue at:
 https://github.com/ase2sprkkr/ase2sprkkr
