@@ -28,12 +28,28 @@
 </ul>
 
 <h2>Installation</h2>
-Just run <pre>install.sh</pre> For more verbose documentation, please see <a href='README.md.html'>READ ME</a>
+To install the package using either pip:
+<pre>
+pip install ase2sprkkr
+</pre>
+or conda package manager:
+<pre>
+conda install -c ase2sprkkr ase2sprkkr
+</pre>
+<br>
 
+If you want to use source codes from GitHub repository
+<pre>
+git clone https://github.com/ase2sprkkr/ase2sprkkr.git
+</pre>
+you can install the package using
+<pre>install.sh</pre>
 You are encouraged to run the test after installation, using
 <pre>
 make test
 </pre>
+
+For more verbose documentation about installing the package, please see <a href='README.md.html'>READ ME</a>
 
 <h3>Contributing and error reporting</h3>
 Please feel free to make a pullrequest or post an issue at our
@@ -298,14 +314,21 @@ calculator = SPRKKR(atoms=atoms, mpi=4)
 In <tt>tools</tt> subdirectory of the package, there is a tool visualise_in_struct for visualisation
 of the surfaces computed by the SPR-KKR package. To view a surface, you can run
 <pre>
-python visualise_in_struct.py -i in_structure.inp -p potential.pot
+a2s_visualise_in_struct.py -i in_structure.inp -p potential.pot
 </pre>
 where <tt>potential.pot</tt> is a potential file and <tt>in_structure.inp</tt> is a file containing the
 structure of the surface. Run
 <pre>
-python visualise_in_struct.py --help
+a2s_visualise_in_struct.py --help
 </pre>
-for further options of this tool.
+for the further options of this tool.
+
+<br>
+<br>
+Note: if you have not installed the package using pip or conda, you must run the script using its actual location, e.g.
+<pre>
+./tools/a2s_visualise_in_struct.py --help
+</pre>
 
 <h2>Further documentation</h2>
 ...is <a href='./gen/index.html'>available</a>. It contains mostly (but not only)
