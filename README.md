@@ -4,31 +4,18 @@ Introduction
 This package is the Python interface for the SPR-KKR package for electronic structure computation,
 build upon Atomic Simulation Environment (ASE) framework.
 
-See
-- https://software.pan-data.eu/software/111/spr-kkr - for the documentation of the SPR-KKR and
-- https://wiki.fysik.dtu.dk/ase/ - for the documentation of the ASE
+**Usefull links:**
+- https://software.pan-data.eu/software/111/spr-kkr - the documentation of the SPR-KKR
+- https://wiki.fysik.dtu.dk/ase/ - the documentation of the ASE
 - https://ase2sprkkr.github.io/ase2sprkkr/ - the online version of the documentation
 - https://github.com/ase2sprkkr/ase2sprkkr/ - GitHub repository of the package
-- https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/ - SPR-KKR manual
+- https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/ - the SPR-KKR manual
 
-Installation of the package
-===========================
+Installation of the package using package managers
+==================================================
 
-Requirements
-------------
-- Python >= 3.7
-- SPRKKR (not checked by the installer)
-- Python packages: ase, mendeleev, spglib, pyparsing
-
-Optionals, to obtain and install the package and its python package requirements
-- Git (to obtain the sources)
-- Pip or Conda (to install the package)
-
-Install the packages from repositories
--------------------------------------------------------------
-
-The simplest way to install the package is using package
-managers: either pip
+The simplest way how to install and use the package is
+to install them using package managers: either pip
 ```Bash
 pip install ase2sprkkr
 ```
@@ -37,11 +24,37 @@ or conda
 conda install -c ase2sprkkr ase2sprkkr
 ```
 
+### Further notes
+In some systems, the pip utility for python3 is called
+pip3. If it is not installed, you can install it using the linux
+distribution package manager, e.g. in Debian/Ubuntu
+```Bash
+apt install pip3
+```
+or
+```Bash
+zypper install pip
+```
+in OpenSUSE
+
+For the conda installation instructions, see the Anaconda documentation
+https://docs.anaconda.com/anaconda/install/linux/
+however, for the users unexperienced with conda,
+the (simpler) pip way is recommended.
+
+
 Install the packages from GIT (and/or source codes)
 ==========================================================
 If you do not want to use public package managers as pip or conda,
 or you want to contribute to development, you can use GIT to obtain
-the package.
+the package sources.
+
+Requirements
+------------
+- Python >= 3.7
+- SPR-KKR (not checked by the installer)
+- Python packages: ase, mendeleev, spglib, pyparsing
+- Git (to obtain the sources)
 
 Obtaining the package using GIT
 --------------------------------
@@ -98,17 +111,6 @@ virtual environment), you can run
 ```Bash
 pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
 ```
-Note, that in some systems, the pip utility for python3 is called
-pip3. If it is not installed, you can install it using the system
-package manager, e.g. in Debian/Ubuntu
-```Bash
-apt install pip3
-```
-or
-```Bash
-zypper install pip
-```
-in OpenSUSE
 
 One step install from the sources
 ------------------------------------
@@ -129,7 +131,8 @@ To regenerate the source code documentation, you can run
 ```Bash
 make docs
 ```
-Sphinx and python package md2html are needed for it.
+Sphinx and md2html python packages (installable e.g. using pip) are needed for
+the build of the documentation.
 
 Further documentation
 =============================
@@ -137,7 +140,9 @@ Run
 ```
 open docs/index.html
 ```
-to open further documentation in the browser.
+to open further documentation in the browser. The online version is available at
+https://ase2sprkkr.github.io/ase2sprkkr/
+
 
 How to contribute or report a bug
 ------------------------------------
