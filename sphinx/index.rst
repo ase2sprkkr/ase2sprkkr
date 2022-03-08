@@ -5,10 +5,10 @@ Welcome to ASE2SPRKKR's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   A short introduction <readme.rst>
-   How to obtain and install the package <documentation.rst>
-   Philosophy of the package for developers <philosophy.rst>
-   The documentation of classes <auto/ase2sprkkr.rst>
+   Introduction of the package <documentation.rst>
+   More about the installation <readme.rst>
+   Philosophy of the package (for developers) <philosophy.rst>
+   The documentation of modules and classes <auto/ase2sprkkr.rst>
 
 .. autosummary::
    :toctree: _autosummary

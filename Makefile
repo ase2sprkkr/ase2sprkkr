@@ -18,11 +18,11 @@ doc-clean:
 
 doc-build:
 	sphinx-build sphinx docs/gen
-	sed -i 's#./gen/#./#' docs/gen/_static/index.html
 
 doc-md: README.md
 	md2html README.md -f docs/README.md.html
-	sed -r 's/###(.*)/\1\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^/' README.md > sphinx/README.md
+	sed 's/<link .*<\/link>//' docs/README.md.html > sphinx/_gen/README.md.html
+	sed 's#./gen/#./#' docs/index.html > sphinx/_gen/documentation.html
 
 build: | build_clean
 	python3 -m build

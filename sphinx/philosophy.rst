@@ -79,7 +79,7 @@ method, which is either called automatically when any Atoms object is passed to
 ase2sprkkr routines, or can be called manually if it is needed.
 
 :mod:`tools<ase2sprkkr.tools>`
-""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""
 Scripts for postprocessing of the SPRKRR results.
 
 
