@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Instalation of the pacakage &mdash; ASE2SPRKKR  documentation</title>
+  <title>Instalation of the pacakage (README.md) &mdash; ASE2SPRKKR  documentation</title>
   
 
   
@@ -41,8 +41,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ASE2SPRKKR - a short introduction" href="documentation.html" />
-    <link rel="prev" title="Welcome to ASE2SPRKKR’s documentation!" href="index.html" /> 
+    <link rel="next" title="ASE2SPR-KKR’s philosophy for the developers" href="philosophy.html" />
+    <link rel="prev" title="ASE2SPRKKR - a short introduction" href="documentation.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,29 +89,10 @@
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">A short introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation-of-the-package">Installation of the package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#install-the-packages-from-repositories">Install the packages from repositories</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#install-the-packages-from-git-and-or-source-codes">Install the packages from GIT (and/or source codes)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#obtaining-the-package-using-git">Obtaining the package using GIT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-the-package-without-installing-the-pip-conda-packages">Using the package (without installing the pip/conda packages)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#installation-of-the-package-from-the-sources">Installation of the package from the sources</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#one-step-install-from-the-sources">One step install from the sources</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#further-documentation">Further documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#how-to-contribute-or-report-a-bug">How to contribute or report a bug</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">How to obtain and install the package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package for developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">The documentation of classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Introduction of the package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">More about the installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
 </ul>
 
             
@@ -160,7 +141,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Instalation of the pacakage</li>
+      <li>Instalation of the pacakage (README.md)</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -179,144 +160,113 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="instalation-of-the-pacakage">
-<h1>Instalation of the pacakage<a class="headerlink" href="#instalation-of-the-pacakage" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="instalation-of-the-pacakage-readme-md">
+<h1>Instalation of the pacakage (README.md)<a class="headerlink" href="#instalation-of-the-pacakage-readme-md" title="Permalink to this headline">¶</a></h1>
+<!DOCTYPE html><html><head><meta charset="utf-8"><body><h1>Introduction</h1>
 <p>This package is the Python interface for the SPR-KKR package for electronic structure computation,
 build upon Atomic Simulation Environment (ASE) framework.</p>
-<p>See
-- <a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">https://software.pan-data.eu/software/111/spr-kkr</a> - for the documentation of the SPR-KKR and
-- <a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">https://wiki.fysik.dtu.dk/ase/</a> - for the documentation of the ASE
-- <a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a> - the online version of the documentation
-- <a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr/">https://github.com/ase2sprkkr/ase2sprkkr/</a> - GitHub repository of the package
-- <a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/</a> - SPR-KKR manual</p>
-</div>
-<div class="section" id="installation-of-the-package">
-<h2>Installation of the package<a class="headerlink" href="#installation-of-the-package" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="requirements">
-<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
-<li><p>Python &gt;= 3.7</p></li>
-<li><p>SPRKKR (not checked by the installer)</p></li>
-<li><p>Python packages: ase, mendeleev, spglib, pyparsing</p></li>
+<p><strong>Usefull links:</strong></p>
+<ul>
+<li><a href="https://software.pan-data.eu/software/111/spr-kkr">https://software.pan-data.eu/software/111/spr-kkr</a> - the documentation of the SPR-KKR</li>
+<li><a href="https://wiki.fysik.dtu.dk/ase/">https://wiki.fysik.dtu.dk/ase/</a> - the documentation of the ASE</li>
+<li><a href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a> - the online version of the documentation</li>
+<li><a href="https://github.com/ase2sprkkr/ase2sprkkr/">https://github.com/ase2sprkkr/ase2sprkkr/</a> - GitHub repository of the package</li>
+<li><a href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/</a> - the SPR-KKR manual</li>
 </ul>
-<p>Optionals, to obtain and install the package and its python package requirements
-- Git (to obtain the sources)
-- Pip or Conda (to install the package)</p>
-</div>
-<div class="section" id="install-the-packages-from-repositories">
-<h3>Install the packages from repositories<a class="headerlink" href="#install-the-packages-from-repositories" title="Permalink to this headline">¶</a></h3>
-<p>The simplest way to install the package is using package
-managers: either pip
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">ase2sprkkr</span>
-<span class="pre">`</span></code>
-or conda
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">ase2sprkkr</span> <span class="pre">ase2sprkkr</span>
-<span class="pre">`</span></code></p>
-</div>
-</div>
-<div class="section" id="install-the-packages-from-git-and-or-source-codes">
-<h2>Install the packages from GIT (and/or source codes)<a class="headerlink" href="#install-the-packages-from-git-and-or-source-codes" title="Permalink to this headline">¶</a></h2>
+<h1>Installation of the package using package managers</h1>
+<p>The simplest way how to install and use the package is
+to install them using package managers: either pip</p>
+<pre><code class="language-Bash">pip install ase2sprkkr
+</code></pre>
+<p>or conda</p>
+<pre><code class="language-Bash">conda install -c ase2sprkkr ase2sprkkr
+</code></pre>
+<h3>Further notes</h3>
+<p>In some systems, the pip utility for python3 is called
+pip3. If it is not installed, you can install it using the linux
+distribution package manager, e.g. in Debian/Ubuntu</p>
+<pre><code class="language-Bash">apt install pip3
+</code></pre>
+<p>or</p>
+<pre><code class="language-Bash">zypper install pip
+</code></pre>
+<p>in OpenSUSE</p>
+<p>For the conda installation instructions, see the Anaconda documentation
+<a href="https://docs.anaconda.com/anaconda/install/linux/">https://docs.anaconda.com/anaconda/install/linux/</a>
+however, for the users unexperienced with conda,
+the (simpler) pip way is recommended.</p>
+<h1>Install the packages from GIT (and/or source codes)</h1>
 <p>If you do not want to use public package managers as pip or conda,
 or you want to contribute to development, you can use GIT to obtain
-the package.</p>
-<div class="section" id="obtaining-the-package-using-git">
-<h3>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/ase2sprkkr/ase2sprkkr.git</span>
-<span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/release</span>
-<span class="pre">`</span></code></p>
+the package sources.</p>
+<h2>Requirements</h2>
+<ul>
+<li>Python &gt;= 3.7</li>
+<li>SPR-KKR (not checked by the installer)</li>
+<li>Python packages: ase, mendeleev, spglib, pyparsing</li>
+<li>Git (to obtain the sources)</li>
+</ul>
+<h2>Obtaining the package using GIT</h2>
+<pre><code class="language-Bash">git clone https://github.com/ase2sprkkr/ase2sprkkr.git
+git checkout origin/release
+</code></pre>
 <p>The first line fetches the code of the package. The second one
 checks out the recommended production version of the code.</p>
 <p>If you want to obtain the current version of the (earlier-downloaded)
-code, run
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">git</span> <span class="pre">fetch</span>
-<span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/release</span>
-<span class="pre">`</span></code>
-Alternatively, you can checkout master branch
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">origin/master</span>
-<span class="pre">`</span></code>
-to obtain the bleeding edge version.</p>
-</div>
-<div class="section" id="using-the-package-without-installing-the-pip-conda-packages">
-<h3>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Permalink to this headline">¶</a></h3>
+code, run</p>
+<pre><code class="language-Bash">git fetch
+git checkout origin/release
+</code></pre>
+<p>Alternatively, you can checkout master branch</p>
+<pre><code class="language-Bash">git checkout origin/master
+</code></pre>
+<p>to obtain the bleeding edge version.</p>
+<h2>Using the package (without installing the pip/conda packages)</h2>
 <p>You can either just add the src directory to your PYTHONPATH, or you
 can build and install the package, as it is described below.</p>
-</div>
-<div class="section" id="installation-of-the-package-from-the-sources">
-<h3>Installation of the package from the sources<a class="headerlink" href="#installation-of-the-package-from-the-sources" title="Permalink to this headline">¶</a></h3>
-<p>To install the package, you have to build the “wheel package” from
+<h2>Installation of the package from the sources</h2>
+<p>To install the package, you have to build the &quot;wheel package&quot; from
 the sources and install it</p>
-<blockquote>
-<div><p>Building the wheel (installation) package</p>
-</div></blockquote>
-<hr class="docutils" />
+<h3>Building the wheel (installation) package</h3>
 <p>If you do not have the wheel package built, you can do it
 with the following steps.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--upgrade</span> <span class="pre">build</span>
-<span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">build</span>
-<span class="pre">`</span></code>
-The first line installs the tool to build the package
+<pre><code class="language-Bash">python3 -m pip install --upgrade build
+python3 -m build
+</code></pre>
+<p>The first line installs the tool to build the package
 (it is possible that you have it already installed).
 The second one builds the package.</p>
-<blockquote>
-<div><p>Installing the package</p>
-</div></blockquote>
-<hr class="docutils" />
+<h3>Installing the package</h3>
 <p>To install the package (either system-wide or in an active
-virtual environment), you can run
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">`ls</span> <span class="pre">./dist/ase2sprkkr-*.whl</span> <span class="pre">|</span> <span class="pre">sort</span> <span class="pre">|</span> <span class="pre">tail</span> <span class="pre">-n</span> <span class="pre">1`</span>
-<span class="pre">`</span></code>
-Note, that in some systems, the pip utility for python3 is called
-pip3. If it is not installed, you can install it using the system
-package manager, e.g. in Debian/Ubuntu
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">apt</span> <span class="pre">install</span> <span class="pre">pip3</span>
-<span class="pre">`</span></code>
-or
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">zypper</span> <span class="pre">install</span> <span class="pre">pip</span>
-<span class="pre">`</span></code>
-in OpenSUSE</p>
-</div>
-<div class="section" id="one-step-install-from-the-sources">
-<h3>One step install from the sources<a class="headerlink" href="#one-step-install-from-the-sources" title="Permalink to this headline">¶</a></h3>
+virtual environment), you can run</p>
+<pre><code class="language-Bash">pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+</code></pre>
+<h2>One step install from the sources</h2>
 <p>To do all the stuff (after cloning the GIT repository) in one step,
-you can run
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">make</span>
-<span class="pre">`</span></code></p>
+you can run</p>
+<pre><code class="language-Bash">make
+</code></pre>
 <p>To clean up the source directory after installing the package,
-you can run
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">make</span> <span class="pre">clean</span>
-<span class="pre">`</span></code></p>
-<p>To regenerate the source code documentation, you can run
-<code class="docutils literal notranslate"><span class="pre">`Bash</span>
-<span class="pre">make</span> <span class="pre">docs</span>
-<span class="pre">`</span></code>
-Sphinx and python package md2html are needed for it.</p>
-</div>
-</div>
-<div class="section" id="further-documentation">
-<h2>Further documentation<a class="headerlink" href="#further-documentation" title="Permalink to this headline">¶</a></h2>
-<p>open docs/index.html
-<a href="#id1"><span class="problematic" id="id2">``</span></a>`
-to open further documentation in the browser.</p>
-<div class="section" id="how-to-contribute-or-report-a-bug">
-<h3>How to contribute or report a bug<a class="headerlink" href="#how-to-contribute-or-report-a-bug" title="Permalink to this headline">¶</a></h3>
+you can run</p>
+<pre><code class="language-Bash">make clean
+</code></pre>
+<h1>Documentation of the package</h1>
+<p>The documentation is published online at
+<a href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a></p>
+<p>If you are using Git cloned sources, you can run</p>
+<pre><code>open docs/index.html
+</code></pre>
+<p>to see the (offline version of the) documentation.
+The documentation contains parts, that are generated from the docstrings in the
+source code. You can regenerate these by</p>
+<pre><code class="language-Bash">make docs
+</code></pre>
+<p>Sphinx and md2html python packages (installable e.g. using pip) are needed for
+the build.</p>
+<h1>How to contribute or to report a bug</h1>
 <p>Please feel free to make a pull-request or post an issue at:
-<a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">https://github.com/ase2sprkkr/ase2sprkkr</a></p>
-</div>
-</div>
-</div>
+<a href="https://github.com/ase2sprkkr/ase2sprkkr">https://github.com/ase2sprkkr/ase2sprkkr</a></p>
+</body></head></html></div>
 
 
            </div>
@@ -324,8 +274,8 @@ to open further documentation in the browser.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="documentation.html" class="btn btn-neutral float-right" title="ASE2SPRKKR - a short introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to ASE2SPRKKR’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="philosophy.html" class="btn btn-neutral float-right" title="ASE2SPR-KKR’s philosophy for the developers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="documentation.html" class="btn btn-neutral float-left" title="ASE2SPRKKR - a short introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

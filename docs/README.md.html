@@ -1,38 +1,47 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" type="text/css" href="https://andremaha.github.io/md2html/css/foghorn.css"></link><body><h1>Introduction</h1>
 <p>This package is the Python interface for the SPR-KKR package for electronic structure computation,
 build upon Atomic Simulation Environment (ASE) framework.</p>
-<p>See</p>
+<p><strong>Usefull links:</strong></p>
 <ul>
-<li>https://software.pan-data.eu/software/111/spr-kkr - for the documentation of the SPR-KKR and</li>
-<li>https://wiki.fysik.dtu.dk/ase/ - for the documentation of the ASE</li>
-<li>https://ase2sprkkr.github.io/ase2sprkkr/ - the online version of the documentation</li>
-<li>https://github.com/ase2sprkkr/ase2sprkkr/ - GitHub repository of the package</li>
-<li>https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/ - SPR-KKR manual</li>
+<li><a href="https://software.pan-data.eu/software/111/spr-kkr">https://software.pan-data.eu/software/111/spr-kkr</a> - the documentation of the SPR-KKR</li>
+<li><a href="https://wiki.fysik.dtu.dk/ase/">https://wiki.fysik.dtu.dk/ase/</a> - the documentation of the ASE</li>
+<li><a href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a> - the online version of the documentation</li>
+<li><a href="https://github.com/ase2sprkkr/ase2sprkkr/">https://github.com/ase2sprkkr/ase2sprkkr/</a> - GitHub repository of the package</li>
+<li><a href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/</a> - the SPR-KKR manual</li>
 </ul>
-<h1>Installation of the package</h1>
-<h2>Requirements</h2>
-<ul>
-<li>Python &gt;= 3.7</li>
-<li>SPRKKR (not checked by the installer)</li>
-<li>Python packages: ase, mendeleev, spglib, pyparsing</li>
-</ul>
-<p>Optionals, to obtain and install the package and its python package requirements</p>
-<ul>
-<li>Git (to obtain the sources)</li>
-<li>Pip or Conda (to install the package)</li>
-</ul>
-<h2>Install the packages from repositories</h2>
-<p>The simplest way to install the package is using package
-managers: either pip</p>
+<h1>Installation of the package using package managers</h1>
+<p>The simplest way how to install and use the package is
+to install them using package managers: either pip</p>
 <pre><code class="language-Bash">pip install ase2sprkkr
 </code></pre>
 <p>or conda</p>
 <pre><code class="language-Bash">conda install -c ase2sprkkr ase2sprkkr
 </code></pre>
+<h3>Further notes</h3>
+<p>In some systems, the pip utility for python3 is called
+pip3. If it is not installed, you can install it using the linux
+distribution package manager, e.g. in Debian/Ubuntu</p>
+<pre><code class="language-Bash">apt install pip3
+</code></pre>
+<p>or</p>
+<pre><code class="language-Bash">zypper install pip
+</code></pre>
+<p>in OpenSUSE</p>
+<p>For the conda installation instructions, see the Anaconda documentation
+<a href="https://docs.anaconda.com/anaconda/install/linux/">https://docs.anaconda.com/anaconda/install/linux/</a>
+however, for the users unexperienced with conda,
+the (simpler) pip way is recommended.</p>
 <h1>Install the packages from GIT (and/or source codes)</h1>
 <p>If you do not want to use public package managers as pip or conda,
 or you want to contribute to development, you can use GIT to obtain
-the package.</p>
+the package sources.</p>
+<h2>Requirements</h2>
+<ul>
+<li>Python &gt;= 3.7</li>
+<li>SPR-KKR (not checked by the installer)</li>
+<li>Python packages: ase, mendeleev, spglib, pyparsing</li>
+<li>Git (to obtain the sources)</li>
+</ul>
 <h2>Obtaining the package using GIT</h2>
 <pre><code class="language-Bash">git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
@@ -68,15 +77,6 @@ The second one builds the package.</p>
 virtual environment), you can run</p>
 <pre><code class="language-Bash">pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
 </code></pre>
-<p>Note, that in some systems, the pip utility for python3 is called
-pip3. If it is not installed, you can install it using the system
-package manager, e.g. in Debian/Ubuntu</p>
-<pre><code class="language-Bash">apt install pip3
-</code></pre>
-<p>or</p>
-<pre><code class="language-Bash">zypper install pip
-</code></pre>
-<p>in OpenSUSE</p>
 <h2>One step install from the sources</h2>
 <p>To do all the stuff (after cloning the GIT repository) in one step,
 you can run</p>
@@ -86,16 +86,20 @@ you can run</p>
 you can run</p>
 <pre><code class="language-Bash">make clean
 </code></pre>
-<p>To regenerate the source code documentation, you can run</p>
-<pre><code class="language-Bash">make docs
-</code></pre>
-<p>Sphinx and python package md2html are needed for it.</p>
-<h1>Further documentation</h1>
-<p>Run</p>
+<h1>Documentation of the package</h1>
+<p>The documentation is published online at
+<a href="https://ase2sprkkr.github.io/ase2sprkkr/">https://ase2sprkkr.github.io/ase2sprkkr/</a></p>
+<p>If you are using Git cloned sources, you can run</p>
 <pre><code>open docs/index.html
 </code></pre>
-<p>to open further documentation in the browser.</p>
-<h2>How to contribute or report a bug</h2>
+<p>to see the (offline version of the) documentation.
+The documentation contains parts, that are generated from the docstrings in the
+source code. You can regenerate these by</p>
+<pre><code class="language-Bash">make docs
+</code></pre>
+<p>Sphinx and md2html python packages (installable e.g. using pip) are needed for
+the build.</p>
+<h1>How to contribute or to report a bug</h1>
 <p>Please feel free to make a pull-request or post an issue at:
-https://github.com/ase2sprkkr/ase2sprkkr</p>
+<a href="https://github.com/ase2sprkkr/ase2sprkkr">https://github.com/ase2sprkkr/ase2sprkkr</a></p>
 </body></head></html>
