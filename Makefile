@@ -7,22 +7,21 @@ clean:
 test:
 	src/ase2sprkkr/run_tests
 
-doc: doc-gather doc-md doc-build
+doc: doc-gather doc-build doc-readme
 
 doc-gather: doc-clean
 	sphinx-apidoc -feM -o sphinx/auto src/ase2sprkkr */test/
 
 doc-clean:
 	rm -rf sphinx/auto/*
-	rm -rf docs/gen/*
+	rm -rf docs/*
 
 doc-build:
-	sphinx-build sphinx docs/gen
+	sphinx-build sphinx docs/
+	cp -r sphinx/_root/* docs/
 
-doc-md: README.md
-	md2html README.md -f docs/README.md.html
-	sed 's/<link .*<\/link>//' docs/README.md.html > sphinx/_gen/README.md.html
-	sed 's#./gen/#./#' docs/index.html > sphinx/_gen/documentation.html
+doc-readme:
+	cd sphinx; pandoc README.rst -o ../README.md
 
 build: | build_clean
 	python3 -m build
