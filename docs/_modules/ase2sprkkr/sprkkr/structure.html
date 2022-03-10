@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ase2sprkkr.sprkkr.structure &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Introduction of the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ase2sprkkr.sprkkr.structure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ase2sprkkr.sprkkr.structure</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atom</span>
+<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">from</span> <span class="nn">..potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains function structure_file_to_atoms, which is used for</span>
+<span class="sd">visualisation of a surface structure, using .pot and in_structure.inp</span>
+<span class="sd">files.</span>
+
+<span class="sd">TODO: This implementaion can handle only one-purpose reading of the structure</span>
+<span class="sd">file.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">### Helper objects and functions</span>
+
+<span class="k">class</span> <span class="nc">AtomData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A helper object for reading in_structure.inp file &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_id</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="o">=</span><span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_text</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create the Atom data object from the two text lines</span>
+<span class="sd">        :from a in_structure.inp file &quot;&quot;&quot;</span>
+        <span class="n">atom</span> <span class="o">=</span> <span class="n">AtomData</span><span class="p">()</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">type_id</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[:]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">floatjm</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">atom</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&lt;SiteData(id=</span><span class="si">{:d}</span><span class="s2">, pos=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,type=</span><span class="si">{:d}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">type_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">get_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">):</span>
+        <span class="n">IT</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">OCCUPATION</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">type_id</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">TYPES</span><span class="o">.</span><span class="n">DATA</span><span class="p">()[</span><span class="n">IT</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;ZT&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">chemical_symbols</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+<span class="k">class</span> <span class="nc">LayerData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="o">=</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nat</span><span class="o">=</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layvec</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&lt;LayerData(id=</span><span class="si">{:d}</span><span class="s2">, number of atoms in layer=</span><span class="si">{:d}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nat</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">+=</span> <span class="s2">&quot;   Atom in Layer id=</span><span class="si">{:d}</span><span class="s2">, pos=</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">,type=</span><span class="si">{:d}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">atom</span><span class="o">.</span><span class="n">type_id</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">+=</span><span class="s2">&quot;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+<span class="k">def</span> <span class="nf">floatjm</span><span class="p">(</span><span class="n">inp</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Wrong float </span><span class="si">{}</span><span class="s2">, set to 0.0!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
+                <span class="n">result</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1">###############################################################################################</span>
+
+
+<div class="viewcode-block" id="structure_file_to_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.html#ase2sprkkr.sprkkr.structure.structure_file_to_atoms">[docs]</a><span class="k">def</span> <span class="nf">structure_file_to_atoms</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span><span class="n">Potential</span><span class="p">,</span> <span class="n">n_bulk</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">vacuum_height</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Read in_structure.inp file (that contains informations about the structure of a surface) </span>
+<span class="sd">  and create the ASE atoms object according to the readed data.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  filename: str</span>
+<span class="sd">    File to read</span>
+
+<span class="sd">  atoms: ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span>
+<span class="sd">    Atoms object, from where the types of atoms will be given</span>
+
+<span class="sd">  n_bulk: int</span>
+<span class="sd">    Number of repetition of bulk atoms </span>
+<span class="sd">    </span>
+<span class="sd">  vacuum_height: float</span>
+<span class="sd">    Height of the vacuum above the surface.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+  <span class="n">alat</span><span class="o">=</span><span class="n">floatjm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">Bohr</span>
+  <span class="n">nlayer</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+
+  <span class="n">latvec</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+      <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+      <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+          <span class="n">latvec</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">floatjm</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+          <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+  <span class="n">line</span><span class="o">=</span><span class="mi">5</span>
+
+  <span class="n">layers</span><span class="o">=</span><span class="p">{}</span>
+  <span class="k">for</span> <span class="n">ilayer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlayer</span><span class="p">):</span>
+      <span class="n">layer</span><span class="o">=</span><span class="n">LayerData</span><span class="p">()</span>
+      <span class="n">layer</span><span class="o">.</span><span class="n">nat</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">])</span>
+      <span class="n">layer</span><span class="o">.</span><span class="n">id</span><span class="o">=</span><span class="n">ilayer</span><span class="o">+</span><span class="mi">1</span>
+      <span class="k">for</span> <span class="n">iat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">nat</span><span class="p">):</span>
+          <span class="n">line</span><span class="o">+=</span><span class="mi">3</span>
+          <span class="n">atom</span><span class="o">=</span><span class="n">AtomData</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="n">line</span><span class="p">])</span>
+          <span class="n">layer</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+      <span class="n">layers</span><span class="p">[</span><span class="n">ilayer</span><span class="p">]</span><span class="o">=</span><span class="n">layer</span>
+
+  <span class="n">nvec</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+  <span class="n">bulk_rep_unit</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+  <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="o">+</span><span class="mi">2</span>
+  <span class="k">for</span> <span class="n">ivec</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nvec</span><span class="p">):</span>
+      <span class="n">line</span><span class="o">+=</span><span class="mi">1</span>
+      <span class="n">layers</span><span class="p">[</span><span class="n">ivec</span><span class="p">]</span><span class="o">.</span><span class="n">layvec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">floatjm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+      <span class="n">layers</span><span class="p">[</span><span class="n">ivec</span><span class="p">]</span><span class="o">.</span><span class="n">layvec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">floatjm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+      <span class="n">layers</span><span class="p">[</span><span class="n">ivec</span><span class="p">]</span><span class="o">.</span><span class="n">layvec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">floatjm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+      <span class="n">line</span><span class="o">+=</span><span class="mi">1</span>
+
+  <span class="c1">#</span>
+  <span class="c1"># expand list of layers in order to visualise bulk region</span>
+  <span class="n">new_nlayer</span><span class="o">=</span><span class="n">nlayer</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bulk</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bulk_rep_unit</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">nlayer</span><span class="p">):</span>
+          <span class="n">layers</span><span class="p">[</span><span class="n">new_nlayer</span><span class="p">]</span><span class="o">=</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+          <span class="n">new_nlayer</span><span class="o">+=</span><span class="mi">1</span>
+  <span class="c1"># move origins of all atoms back wrt. to first layer</span>
+  <span class="n">zmax</span><span class="o">=-</span><span class="mf">99999.</span>
+  <span class="n">zmin</span><span class="o">=</span> <span class="mf">10000.</span>
+  <span class="k">for</span> <span class="n">ilay</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">new_nlayer</span><span class="p">):</span>
+          <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">[</span><span class="n">ilay</span><span class="p">]</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+                  <span class="k">for</span> <span class="n">jlay</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">ilay</span><span class="p">):</span>
+                          <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="o">=</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="o">+</span><span class="n">layers</span><span class="p">[</span><span class="n">jlay</span><span class="p">]</span><span class="o">.</span><span class="n">layvec</span>
+                  <span class="n">zmax</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">zmax</span><span class="p">)</span>
+                  <span class="n">zmin</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">zmin</span><span class="p">)</span>
+
+  <span class="c1"># Create Atoms and Atom ASE-objects from structural data</span>
+  <span class="n">structure</span><span class="o">=</span><span class="n">SPRKKRAtoms</span><span class="p">()</span>
+  <span class="n">cell</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+  <span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">latvec</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span> <span class="n">zmax</span>
+  <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="o">*</span><span class="n">alat</span>
+  <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span> <span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">vacuum_height</span> <span class="c1">#add XX AA of vacuum region</span>
+  <span class="n">structure</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+  <span class="n">structure</span><span class="o">.</span><span class="n">set_pbc</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">])</span>
+  <span class="c1">#Add atom into the Atoms</span>
+  <span class="n">num_atoms</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="n">num_atoms</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+  <span class="n">allpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">num_atoms</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">layers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+      <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+          <span class="n">allpos</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">pos</span>
+          <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+          <span class="n">atm</span><span class="o">=</span><span class="n">Atom</span><span class="p">()</span>
+          <span class="n">atm</span><span class="o">.</span><span class="n">symbol</span><span class="o">=</span><span class="n">atom</span><span class="o">.</span><span class="n">get_symbol</span><span class="p">(</span><span class="n">potential</span><span class="p">)</span>
+          <span class="n">structure</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atm</span><span class="p">)</span>
+  <span class="c1">#</span>
+  <span class="c1"># z-components needs to be transformed to the cryst. coordinates</span>
+  <span class="c1"># all others are already in cryst. cooridnates</span>
+  <span class="c1"># zmin is minum z-position and is used to shift the origin in order to avoid</span>
+  <span class="c1"># that this minimum atom will end up in the next unit cell</span>
+  <span class="c1">#</span>
+  <span class="n">allpos</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">allpos</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">zmax</span><span class="o">-</span><span class="n">zmin</span><span class="p">)</span><span class="o">*</span><span class="n">alat</span><span class="o">/</span><span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">structure</span><span class="o">.</span><span class="n">set_scaled_positions</span><span class="p">(</span><span class="n">allpos</span><span class="p">)</span>
+  <span class="n">structure</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">get_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+  <span class="k">return</span> <span class="n">structure</span></div>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;structure_file_to_atoms&#39;</span> <span class="p">]</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

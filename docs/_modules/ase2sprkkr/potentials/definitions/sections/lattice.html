@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ase2sprkkr.potentials.definitions.sections.lattice &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../usage.html">Introduction of the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ase2sprkkr.potentials.definitions.sections.lattice</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ase2sprkkr.potentials.definitions.sections.lattice</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">...potential_definitions</span> <span class="kn">import</span> <span class="n">PotSectionDefinition</span><span class="p">,</span> \
+                                   <span class="n">PotValueDefinition</span>
+<span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">PotentialSection</span>
+
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
+<span class="kn">from</span> <span class="nn">ase.lattice</span> <span class="kn">import</span> <span class="n">bravais_classes</span>
+<span class="kn">from</span> <span class="nn">ase.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
+<span class="kn">from</span>  <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Integer</span>
+
+<span class="n">cell_symmetries</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;aP&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span>  <span class="s1">&#39;triclinic&#39;</span><span class="p">,</span>   <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;-1&#39;</span><span class="p">,</span>     <span class="s1">&#39;C_i&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;mP&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span>  <span class="s1">&#39;monoclinic&#39;</span><span class="p">,</span>  <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;2/m&#39;</span><span class="p">,</span>    <span class="s1">&#39;C_2h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;mS&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span>  <span class="s1">&#39;monoclinic&#39;</span><span class="p">,</span>  <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;2/m&#39;</span><span class="p">,</span>    <span class="s1">&#39;C_2h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;oP&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span>  <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;oS&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span>  <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;body-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;oI&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span>  <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;body-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;oF&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span>  <span class="s1">&#39;orthorombic&#39;</span><span class="p">,</span> <span class="s1">&#39;face-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;mmm&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_2h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;tP&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span>  <span class="s1">&#39;tetragonal&#39;</span><span class="p">,</span>  <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;4/mmm&#39;</span><span class="p">,</span>  <span class="s1">&#39;D_4h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;tI&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span>  <span class="s1">&#39;tetragonal&#39;</span><span class="p">,</span>  <span class="s1">&#39;body-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;4/mmm&#39;</span><span class="p">,</span>  <span class="s1">&#39;D_4h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;hR&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;trigonal&#39;</span><span class="p">,</span>    <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;-3m&#39;</span><span class="p">,</span>    <span class="s1">&#39;D_3d&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;hP&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;hexagonal&#39;</span><span class="p">,</span>   <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;6/mmm&#39;</span><span class="p">,</span>  <span class="s1">&#39;D_6h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;cP&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;cubic&#39;</span><span class="p">,</span>       <span class="s1">&#39;primitive&#39;</span><span class="p">,</span>      <span class="s1">&#39;m3m&#39;</span><span class="p">,</span>    <span class="s1">&#39;O_h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;cF&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="s1">&#39;cubic&#39;</span><span class="p">,</span>       <span class="s1">&#39;face-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;m3m&#39;</span><span class="p">,</span>    <span class="s1">&#39;O_h&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;cI&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;cubic&#39;</span><span class="p">,</span>       <span class="s1">&#39;body-centered&#39;</span><span class="p">,</span>  <span class="s1">&#39;m3m&#39;</span><span class="p">,</span>    <span class="s1">&#39;O_h&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">cell_symmetries_lookup</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">cell_symmetries</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+
+<div class="viewcode-block" id="LatticeSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.lattice.html#ase2sprkkr.potentials.definitions.sections.LatticeSection">[docs]</a><span class="k">class</span> <span class="nc">LatticeSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+
+  <span class="sd">&quot;&quot;&quot; This section retrieves the lattice geometry and</span>
+<span class="sd">      it creates (during reading) the ASE Cell object &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LatticeSection._set_from_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.lattice.html#ase2sprkkr.potentials.definitions.sections.LatticeSection._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">):</span>
+      <span class="n">bravais_lattice</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">()</span>
+      <span class="n">pearson_symbol</span> <span class="o">=</span> <span class="n">bravais_lattice</span><span class="o">.</span><span class="n">pearson_symbol</span>
+      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;BRAVAIS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cell_symmetries</span><span class="p">[</span><span class="n">pearson_symbol</span><span class="p">])</span>
+      <span class="n">alat</span> <span class="o">=</span> <span class="n">bravais_lattice</span><span class="o">.</span><span class="n">a</span>
+      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;ALAT&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">alat</span> <span class="o">/</span> <span class="n">Bohr</span><span class="p">)</span>
+      <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_PRIMITIVE_CELL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">/</span> <span class="n">alat</span><span class="p">)</span>
+      <span class="n">write_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alat</span></div>
+
+<div class="viewcode-block" id="LatticeSection._update_atoms"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.lattice.html#ase2sprkkr.potentials.definitions.sections.LatticeSection._update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">):</span>
+      <span class="n">alat</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;ALAT&#39;</span><span class="p">]()</span> <span class="o">*</span> <span class="n">Bohr</span>
+      <span class="n">cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SCALED_PRIMITIVE_CELL&#39;</span><span class="p">]()</span> <span class="o">*</span> <span class="n">alat</span><span class="p">)</span>
+      <span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.cell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell</span>
+      <span class="n">read_io_data</span><span class="p">[</span><span class="s1">&#39;lattice.alat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alat</span>
+      <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
+         <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span></div></div>
+
+<div class="viewcode-block" id="LatticeSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.lattice.html#ase2sprkkr.potentials.definitions.sections.LatticeSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">LatticeSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LatticeSectionDefinition.__init__"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.lattice.html#ase2sprkkr.potentials.definitions.sections.LatticeSectionDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;LATTICE&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
+      <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
+          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SYSDIM&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s1">&#39;3D&#39;</span><span class="p">)),</span>
+          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SYSTYPE&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s1">&#39;BULK&#39;</span><span class="p">)),</span>
+          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BRAVAIS&#39;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">allowed_values</span> <span class="o">=</span> <span class="n">cell_symmetries</span><span class="o">.</span><span class="n">values</span><span class="p">())),</span>
+          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ALAT&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+          <span class="c1">#Keywords and thus the numbering has just (or at least) 10 char long</span>
+          <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SCALED_PRIMITIVE_CELL&#39;</span><span class="p">,</span> <span class="n">Table</span><span class="p">([</span><span class="nb">float</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">numbering</span><span class="o">=</span><span class="n">Integer</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;A(&#39;</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&lt;10&#39;</span><span class="p">),</span><span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">)),</span>
+      <span class="p">]</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+  <span class="n">result_class</span> <span class="o">=</span> <span class="n">LatticeSection</span></div>
+
+<span class="n">section</span> <span class="o">=</span> <span class="n">LatticeSectionDefinition</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
