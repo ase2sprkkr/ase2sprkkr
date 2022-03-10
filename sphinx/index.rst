@@ -5,7 +5,7 @@ Welcome to ASE2SPRKKR's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   Introduction of the package <usage.rst>
+   How to use the package <usage.rst>
    More about the package installation <how-to-install.rst>
    Philosophy of the package (for developers) <philosophy.rst>
    The documentation of modules and classes <auto/ase2sprkkr.rst>

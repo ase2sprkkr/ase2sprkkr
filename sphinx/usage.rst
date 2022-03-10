@@ -36,6 +36,19 @@ You are encouraged to run the test after installation, using
 
    make test
 
+
+The package requires, that the SPR-KKR is installed (and thus
+their executables are located somewhere in the path). If you
+use a build of SPR-KKR with an executables suffix, please set
+the environment variable ``SPRKKR_EXECUTABLE_SUFFIX`` accordingly,
+e.g. if you use bash as your shell and the name of the "main"
+SPR-KKR executable is ``kkrscf8.6``,
+place into your ``.bash.rc`` the following line:
+
+::
+
+    export SPRKKR_EXECUTABLE_SUFFIX=8.6
+
 For more verbose documentation about the installation the package, please see
 the topic :ref:`Installation of the ASE2SPRKKR package`
 
