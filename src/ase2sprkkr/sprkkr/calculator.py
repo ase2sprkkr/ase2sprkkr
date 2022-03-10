@@ -25,8 +25,8 @@ class SPRKKR(Calculator):
     ASE calculator for SPR-KKR.
 
     :cvar ase2sprkkr.input_parameters.input_parameters.InputParameters InputParameters: (just for an easier access to the class)
-    :cvar ase2sprkkr.potential.potentials.Potential Potential: (dto.)
-
+    :cvar ase2sprkkr.potentials.potentials.Potential Potential: (dto.)
+    :ivar Union[str|typing.TextIO] potential_file: the path and name of the potential file to be used (if not specified otherwise in the called method)
     """
     implemented_properties = ['energy']
 
