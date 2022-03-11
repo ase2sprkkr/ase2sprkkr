@@ -136,7 +136,7 @@ Documentation of the package
 ============================
 
 The documentation is published online at
-https://ase2sprkkr.github.io/ase2sprkkr/
+`https://ase2sprkkr.github.io/ase2sprkkr/ <https://ase2sprkkr.github.io/ase2sprkkr/>`__
 
 If you are using Git cloned sources, you can run
 
@@ -159,4 +159,4 @@ How to contribute or to report a bug
 ====================================
 
 Please feel free to make a pull-request or post an issue at:
-https://github.com/ase2sprkkr/ase2sprkkr
+`https://github.com/ase2sprkkr/ase2sprkkr <https://github.com/ase2sprkkr/ase2sprkkr>`__
