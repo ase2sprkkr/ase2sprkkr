@@ -152,8 +152,15 @@ code. You can regenerate these by
 
    make docs
 
-Sphinx python packages (installable e.g. using pip) and pandoc
+Sphinx and sphinx-toolbox python packages (installable e.g. using pip) and pandoc
 (for generating README.md) are needed for the build.
+
+However, the official build of Sphinx miss some attributes when it is used
+to build the documentation. So, till the pullrequest that corrects the Sphinx
+behavior will be merged into Sphinx, please use the following fork for
+building the documentation.
+`https://github.com/lokik/sphinx.git <https://github.com/lokik/sphinx.git>`__
+
 
 How to contribute or to report a bug
 ====================================
