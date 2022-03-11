@@ -70,4 +70,7 @@ html_static_path = ['_static']
 autodoc_typehints = 'description'
 github_url =  'https://github.com/ase2sprkkr/ase2sprkkr/'
 
+html_css_files = [
+    'mods.css',
+]
 
