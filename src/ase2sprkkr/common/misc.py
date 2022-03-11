@@ -47,13 +47,16 @@ def add_to_signature(func, add=set()):
   The modified function has to have its arguments defined as
   in the following example:
 
-  def parent(.....):
-      ....
 
-  @add_to_signature(parent)
-  def child(*args, new_param, **kwargs):
-      print(f'New param is {new_param})
-      parent(*args, **kwargs)
+  .. code-block::
+
+      def parent(.....):
+          ....
+
+      @add_to_signature(parent)
+      def child(*args, new_param, **kwargs):
+          print(f'New param is {new_param})
+          parent(*args, **kwargs)
   """
 
   signature = inspect.signature(func)
@@ -99,12 +102,15 @@ class class_property:
 
     Example
     -------
-    Cls:
-       @class_property
-       def cls_property():
-           return some_possibly_cached_value
 
-    x = Cls.cls_property
+    .. code-block::
+
+       class Cls:
+          @class_property
+          def cls_property():
+              return some_possibly_cached_value
+
+          x = Cls.cls_property
     """
     def __init__(self, method=None):
         self.fget = method

@@ -5,6 +5,7 @@ from ..input_parameters_definitions import \
     ValueDefinition as V, \
     SectionDefinition as Section
 
+#: ARPES task input parameters definition
 input_parameters = InputParameters(
     'arpes', [
     CONTROL('ARPES'),

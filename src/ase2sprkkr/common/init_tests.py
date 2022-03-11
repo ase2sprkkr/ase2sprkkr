@@ -8,7 +8,19 @@ import sys
 import asyncio
 
 def patch_package(package, name):
-    """ Set the package name for the test """
+    """ Set the package name for the tests, to make the relative imports working.
+
+    Usage:
+
+    ..code::
+
+      if __package__:
+        from .init_tests import TestCase, patch_package
+      else:
+         from init_tests import TestCase, patch_package
+      __package__, __name__ = patch_package(__package__, __name__)
+
+    """
     if package and package.count('.') >= 3:
        return package, name
     frame=inspect.stack()[1]
@@ -30,6 +42,8 @@ except ModuleNotFoundError:
   from ...common.misc import OrderedDict
 
 class TestCase(unittest.TestCase):
+  """ A testcase class with some usefull assertions and a better numpy
+  arrays comparison """
 
   def assertAsyncEqual(self, a,b):
       return self.assertEqual(a, self.runAsync(b))

@@ -24,19 +24,29 @@ def replace_whitechars(expr):
 
 with generate_grammar():
   optional_line_end = pp.Suppress(pp.LineEnd() | pp.WordStart() ).setName(' ')
+  """ Grammar for an optinal newline """
   line_end = pp.Suppress(pp.LineEnd()).setName('\n')
+  """ Grammar for a required newline """
   end_of_file = (pp.Regex('[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
-  pp.Suppress(pp.ZeroOrMore(pp.LineEnd()) + pp.StringEnd()).setName('')
+  """ Grammar for an end of file (ending whitespaces are allowed) """
+
   separator_pattern = r'\*'*10+'\**'
+  """ Pattern for separating sections in an input file """
   separator = pp.Regex(separator_pattern).setName("**********[***....]").suppress()
+  """ Grammar for separating sections in an input file """
   separator.pattern = separator_pattern
+
   optional_quote = pp.Optional("'").suppress()
+  """ Grammar for an optional quote """
 
 def delimitedList(expr, delim):
   """ Delimited list with already suppressed delimiter (or with a in-results-wanted one) """
   return expr + pp.ZeroOrMore(delim + expr)
 
 def addConditionEx(self, condition, message):
+  """ Add check condition to the pyparsing ParseElement,
+  that, if it failed, raise a parse exception with a given message. """
+
   def check_condition(s, loc, tocs):
       m = message
       if condition(tocs):
@@ -48,6 +58,10 @@ def addConditionEx(self, condition, message):
   return self
 
 def addParseActionEx(self, pa, message = None):
+  """
+  Add parse action to a given pyparsing ParseElemenet,
+  that, if it raise an exception, fail with a given message
+  """
 
   def parse_action(s, loc, x):
       try:
@@ -60,5 +74,6 @@ def addParseActionEx(self, pa, message = None):
         raise pp.ParseException(s, loc, msg).with_traceback(e.__traceback__) from e
 
   self.addParseAction(parse_action)
+
 pp.ParserElement.addConditionEx = addConditionEx
 pp.ParserElement.addParseActionEx = addParseActionEx

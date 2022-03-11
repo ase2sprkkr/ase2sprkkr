@@ -53,25 +53,30 @@ class InputParameters(RootConfigurationContainer):
       return cls._default_mpi_runner
 
   def mpi_runner(self, mpi):
-      """ Return a mpi runner according to the given parameter.
+      """ Return a shell command to execute a mpi task.
 
       Parameters
       ----------
-      mpi_runner: bool or str or list or int
-        If True is given, return the default mpi-runner
-        If False is given, no mpi-runner is returned.
-        If a string is given, it is interpreted as list of one item
-        If a list (of strings) is given, the user specified its own
-           runner, use it as is.
-        If an integer is given, it is interpreted as the number of
-           processes: the default mpi-runner is used, and the parameters
-           to specify the number of processes.
+      mpi_runner: Union[bool|str|list|int]
+
+
+        - If True is given, return the default mpi-runner
+        - If False is given, no mpi-runner is returned.
+        - If a string is given, it is interpreted as a list of one item
+        - If a list (of strings) is given, the user specified its own runner, use it as is
+          as the parameters for subprocess.run.
+        - If an integer is given, it is interpreted as the number of
+          processes: the default mpi-runner is used, and the parameters
+          to specify the number of processes.
 
       Return
       ------
       mpi_runner: list
-        List of strings with executable and parameters, e.g.
-        ['mpirun', '-np', '4']
+        List of strings with the executable and its parameters, e.g.
+
+        ::
+
+            ['mpirun', '-np', '4']
       """
       if mpi is False or not self._definition.mpi:
           return None

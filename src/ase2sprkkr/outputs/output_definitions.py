@@ -30,6 +30,7 @@ class OutputValueDefinition(BaseValueDefinition):
 
 class OutputValueEqualDefinition(OutputValueDefinition):
   """ Value in an output file, of a form 'NAME=VALUE' (spaces possible) """
+
   name_value_delimiter = '='
 
   @staticmethod
@@ -53,16 +54,21 @@ class OutputSectionDefinition(BaseSectionDefinition):
   """ This class describes the format of one
   value of a standard potential section """
 
-  """ The order of items in output file is fixed """
   force_order = True
+  """ The order of items in output file is fixed """
+
   name_in_grammar = False
+  """ Parsed parts of the output have no names, they are identified by its positions """
 
-  """ standard child class """
   child_class = OutputValueDefinition
-  custom_class = None
+  """ standard child class """
 
-  """ options are delimited by newline in ouptut. """
+  custom_class = None
+  """ There is no custom class in the output, only known parts of the file are parsed """
+
   delimiter = '\n'
+  """ options are delimited by newline in ouptut. """
+
   @staticmethod
   @lazy_value
   def grammar_of_delimiter():

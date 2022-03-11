@@ -206,6 +206,7 @@ class BaseType:
     pass
 
 class Unsigned(BaseType):
+  """ Unsigned integer (zero is possible) """
 
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
@@ -221,6 +222,7 @@ class Unsigned(BaseType):
 Unsigned.I = Unsigned()
 
 class Integer(BaseType):
+  """ Signed integer """
 
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
 
@@ -569,14 +571,11 @@ class SetOf(Array):
   def __str__(self):
     return "SetOf({})".format(str(self.type))
 
-
-
-""" Map python native types to configuration value types """
-
 type_from_set_map = OrderedDict([
     (float, SetOf(float)),
     (int  , SetOf(int)),
 ])
+""" Map python native types to configuration value types """
 
 def type_from_value(value):
   """ Gues the option type from a python value. E.g. 2 => Integer """
@@ -664,7 +663,7 @@ PotMixed.I = PotMixed()
 
 
 class Separator(BaseType):
-  """ Special class for **** separator inside a section """
+  """ Special class for ``****`` separator inside a section """
 
   _grammar = separator_grammar.copy().setParseAction(lambda x: [None])
   has_value = False
@@ -770,10 +769,15 @@ class Sequence(BaseType):
 
 
 class Table(BaseType):
-  """ Table, optionaly with named columns, e.g.
+  """ 
+  Table, optionaly with named columns, e.g.
+    
+    ::text
+
       IQ     IREFQ       IMQ       NOQ  ITOQ  CONC
        1         1         1         1     1 1.000
        2         2         2         1     2 1.000
+
   """
 
   name_in_grammar = False

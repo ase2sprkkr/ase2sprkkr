@@ -1,3 +1,7 @@
+""" These module contains just a base class for both configuration values (Options)
+and configuration containers ("Sections")
+"""
+
 class BaseConfiguration:
   """ Common base class for configuration """
 

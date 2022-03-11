@@ -61,7 +61,30 @@ class BaseProcessOutputReader:
       return self.result(*out)
 
   def result(self, output, error, wait):
-      """ """
+      """ This function is for postprocessing the results.
+
+      It is intended to be predefined in the descendants
+
+      Parameters
+      ----------
+
+      output: mixed
+        Result of the self.read_output
+
+      error: mixed
+        Result of the self.read_error
+
+      wait: int
+        The process return value
+
+      Return
+      ------
+
+      out: mixed
+        Currently, the tuple (output, error) is returned, however,
+        subclasses can return anything they want.
+      """
+
       if wait != 0:
          raise ValueError("The process ended with return value {wait}")
       if error is not None:
@@ -114,8 +137,9 @@ class BaseProcessOutputReader:
 
 
 class AsyncioFileReader:
-  """ `Async' file reader that mimics asyncio StreamReader
-      It is in fact not async, but offers the same interface.
+  """ File reader that mimics asyncio StreamReader.
+      In fact, it is synchronous, but it offers the
+      same interface as the asyncio StreamReader.
   """
 
   def __init__(self, filename, buffersize=8192):

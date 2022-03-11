@@ -80,7 +80,7 @@ class SPRKKR(Calculator):
           will be created. None means that the parameters will be specified in the calculate
           (or save_input) method.
           If str is given, it is interpreted as a name of the task (if no dot and no slash
-          are contained in it), for which (see ase2sprkkr.input_parameters.definitions) the default
+          are contained in it), for which (see :py:mod:`ase2sprkkr.input_parameters.definitions`) the default
           input parameters will be used, or as a filename contained the input file (which will
           be readed)
 
@@ -93,7 +93,7 @@ class SPRKKR(Calculator):
           True means to generate the potential from atoms (the default value).
           False means that the potential will be given by the input_parameters.
           None means that the potential is required to be supplied, when calculate or save_input
-              methods are called.
+          methods are called.
 
         executable_postfix: str or boolean
           String to be added to the runned executable. In some environments, the version

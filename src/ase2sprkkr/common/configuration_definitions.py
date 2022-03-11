@@ -1,3 +1,15 @@
+"""
+Configuration definitions are classes, that desribes
+the syntax of a configuration file, or its parts
+(sections or configuration options)
+
+They are able both to parse a file, which results in an
+instance of (an instance of :py:class:`ase2sprkkr.common.BaseConfiguration`,
+e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
+:py:class:`Section<ase2sprkkr.common.configuration_containers.Section>`
+), or write such object to a file.
+"""
+
 from ..common.grammar_types  import type_from_type, type_from_value, BaseType
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 import pyparsing as pp
@@ -9,11 +21,14 @@ import inspect
 from .misc import cache
 import itertools
 
+#:This serves just for dealing with various pyparsing versions
 _parse_all_name = 'parse_all' if \
   'parse_all' in inspect.getfullargspec(pp.Or.parseString).args \
   else 'parseAll'
 
 def unique_dict(values):
+    """ Create a dictionary from the arguments. However, raise an exception,
+    if there is any duplicit key """
     out = dict(values)
     if len(values) != len(out):
        seen = set()
@@ -23,11 +38,11 @@ def unique_dict(values):
 
 class BaseDefinition:
 
-   """ Redefine in descendants """
    result_class = None
+   """ Parsing of the data results in an instance of this class. To be redefined in descendants. """
 
-   """ By default, all values,sections.... are named (in the configuration file)"""
    name_in_grammar = True
+   """ By default, all values,sections.... are named (in the configuration file)"""
 
    def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
                 name_in_grammar=None, description=None, help=None, write_alternative_name=False, grammar_of_delimiter=None):
@@ -124,6 +139,8 @@ class BaseValueDefinition(BaseDefinition):
                is_hidden=False, name_in_grammar=None, name_format=None,
                is_optional=None):
     """
+    Creates the object
+
     Parameters
     ----------
     name: str
@@ -308,18 +325,21 @@ class BaseValueDefinition(BaseDefinition):
      return self
 
 def add_excluded_names_condition(element, names):
+    """ Add the condition to the element, that
+    its value is not any of given names """
     if not names:
        return
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
 
 class BaseContainerDefinition(BaseDefinition):
+    """ Base class for a definition of the format of a container """
 
-    """ Force order of its members """
     force_order = False
+    """ Force order of its members """
 
-    """ The (print) format, how the name is written """
     value_name_format = None
+    """ The (print) format, how the name is written """
 
     @staticmethod
     def _dict_from_named_values(args, items=None):
@@ -378,7 +398,7 @@ class BaseContainerDefinition(BaseDefinition):
     _init_args = inspect.getfullargspec(__init__).args[3:]
 
     def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
-        """ copy the section with the contained values modified """
+        """ Copy the section with the contained values modified by the arguments."""
         members = OrderedDict( ( (k,i.copy()) for k,i in self._members.items() ) )
         for i in remove:
             del members[i]
@@ -409,7 +429,7 @@ class BaseContainerDefinition(BaseDefinition):
        delimiter = delimiter or self.grammar_of_delimiter()
 
        def grammars():
-         """ Iterate over grammar, join all with no name_in_grammar with the previous """
+         """ This function iterates over the items of the container, joining all the without name_in_grammar with the previous ones. """
          it = iter(self._members.values())
          head = next(it)
          curr = head._grammar()
@@ -487,19 +507,23 @@ class BaseContainerDefinition(BaseDefinition):
 
        return out
 
-    """ A function for validation of just the parsed result (not the user input) """
     validate = None
-
+    """ A function for validation of just the parsed result (not the user input) """
 
     @classmethod
     @cache
     def delimited_custom_value_grammar(cls):
+        """ Return the grammar for the custom child with delimiter.
+        The delimiter can delimite it either from the previous child or from the section name."""
+
         return cls.child_class.grammar_of_delimiter() + cls.custom_value_grammar()
 
     custom_name_characters = pp.alphanums + '_-'
+    """ Which characters can appears in an unknown child (value/section) name """
 
     @classmethod
     def custom_member_grammar(cls, value_names = []):
+       """ Grammar for the custom - unknown - child """
        name = pp.Word(cls.custom_name_characters).setParseAction(lambda x: x[0].strip())
        add_excluded_names_condition(name, value_names)
        out = (name + cls.delimited_custom_value_grammar()).setParseAction(lambda x: tuple(x))
@@ -508,46 +532,59 @@ class BaseContainerDefinition(BaseDefinition):
 
 
     def _first_section_is_fixed(self):
+       """ Has/ve the first child(s) in an unordered sequence fixed position? """
        return not self._members.first_item().name_in_grammar
 
     def parse_file(self, file, return_value_only=True):
-      return self.parse_return(self.grammar().parseFile(file, **{ _parse_all_name: True } ), return_value_only)
+       """ Parse the file, return the parsed data as dictionary """
+       return self.parse_return(self.grammar().parseFile(file, **{ _parse_all_name: True } ), return_value_only)
 
     def parse(self, str, whole_string=True, return_value_only=True):
-      return self.parse_return(self.grammar().parseString(str, **{ _parse_all_name: whole_string} ), return_value_only)
+       """ Parse the string, return the parsed data as dictionary """
+       return self.parse_return(self.grammar().parseString(str, **{ _parse_all_name: whole_string} ), return_value_only)
 
-    def parse_return(self, val, return_value_only=True):
+    def parse_return(self, val, return_value_only:bool=True):
+        """ Clean up the parsed values (unpack then from unnecessary containers)
+
+        Parameters
+        ----------
+        return_value_only
+          Return only value, not name - value tuple
+
+        """
         val = val[0]
         if return_value_only:
            val = val[1]
         return val
 
     async def parse_from_stream(self, stream, up_to, start=None, whole_string=True, return_value_only=True):
-      result = await stream.readuntil(up_to)
-      result = result[:-len(up_to)].decode('utf8')
-      if start:
-         result = start + result
-      return self.parse(result, whole_string)
+        """
+        Parse string readed from asyncio stream.
+        The stream is readed up to the given delimiter
+        """
+
+        result = await stream.readuntil(up_to)
+        result = result[:-len(up_to)].decode('utf8')
+        if start:
+           result = start + result
+        return self.parse(result, whole_string)
 
 
 
 class BaseSectionDefinition(BaseContainerDefinition):
-   """ Base class for sections in Pot or InputParameters file """
+   """ Base class for definition of the sections in Pot or InputParameters files.
 
-
-   """ Is the sectio named, or it is its position given by position?
-       In the second case, a custom value is not allowed between
-       the section and its predecessor
+       It just redefine a few properties/methods to values/behavior typical for the sections
    """
+
    result_class = Section
 
    @property
    def values(self):
        return self._members
 
-
-   """ Type for a not-specified value (e.g. flag) """
    custom_value_name = 'CUSTOM_VALUE'
+   """ Just the name that appears in the grammar, when it is printed."""
 
    @classmethod
    @cache
@@ -562,13 +599,24 @@ class BaseSectionDefinition(BaseContainerDefinition):
 
 
 class ConfDefinition(BaseContainerDefinition):
+   """ From this class, the definition of the format of a whole configuration file should be derived.
+
+   """
 
    name_in_grammar = False
-   """ No data are given just by a section name - no Flag equivalent for sections """
-   optional_value = None
+   """ The configuration files has commonly no "name" of its content, they
+   just contains their content.
+
+   However, in some cases the name_in_grammar could be used for some kind of
+   prefix in the file, however, it is better to use a fixed value for this purpose.
+   """
 
    @classmethod
    def from_dict(cls, name, defs=None):
+       """
+       Create instance of the definition from a dictionary, creating
+       the sections (and values) definitions recursively.
+       """
        def gen(i):
            section = defs[i]
            if not isinstance(defs, BaseSectionDefinition):
@@ -592,14 +640,16 @@ class ConfDefinition(BaseContainerDefinition):
        return self._members
 
    custom_value_name = 'CUSTOM_SECTION'
+   """ Just the name that appears in the grammar, when it is printed."""
 
    def read_from_file(self, file, **kwargs):
+       """ Read a configuration file and return the parsed Configuration object """
        out = self.result_class(definition = self, **kwargs)
        out.read_from_file(file)
        return out
 
    def _tuple_with_my_name(self, expr, delimiter=None):
-       """ Do not create tuple (name, value) for the root class """
+       """ Do not create tuple (name, value) for the root class. """
        return expr
 
    def parse_return(self, val, return_value_only=True):
@@ -610,7 +660,12 @@ class ConfDefinition(BaseContainerDefinition):
         return val
 
    def _grammar(self):
-       """Ignore comments"""
+       """Returns the grammar to parse the configuration file.
+
+       This method just tweaks the grammar (generated by the common container implementation) to ignore comments,
+       so the comments would be ignored just once.
+       """
+
        out=super()._grammar()
        out.ignore("#" + pp.restOfLine + pp.LineEnd())
        return out

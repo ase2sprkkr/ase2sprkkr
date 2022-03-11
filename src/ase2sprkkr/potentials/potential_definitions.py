@@ -48,17 +48,20 @@ class PotSectionDefinition(BaseSectionDefinition):
   """ This class describes the format of one
   value of a standard potential section """
 
-  """ The order of items in potential file is fixed """
   force_order = True
+  """ The order of items in potential file is fixed """
+
   value_name_format = '<12'
 
-  """ standard child class """
   child_class = PotValueDefinition
-  """ Adding a custom values is allowed """
-  custom_class = staticmethod(CustomOption.factory(PotValueDefinition, pot_mixed))
+  """ standard child class """
 
-  """ options are delimited by newline in ouptut. """
+  custom_class = staticmethod(CustomOption.factory(PotValueDefinition, pot_mixed))
+  """ Adding a custom values is allowed """
+
   delimiter = '\n'
+  """ options are delimited by newline in ouptut. """
+
   @staticmethod
   def grammar_of_delimiter():
     return line_end
@@ -94,15 +97,18 @@ class ASEArraySectionDefinition(PotSectionDefinition):
 class PotentialDefinition(ConfDefinition):
   """ This class describes the format of a potential file """
 
-  """ standard child class """
   child_class = PotSectionDefinition
+  """ Definition of the standard child class: """
+
   result_class = Potential
+  """ The parsing of a potential file results in an instance of Potential. """
 
 
-  """ The order of items in potential file is fixed """
   force_order = True
+  """ The order of items in potential file is fixed """
 
   delimiter="*"*79 + "\n"
+  """ Sections delimiter """
 
   @staticmethod
   @lazy_value
@@ -110,6 +116,7 @@ class PotentialDefinition(ConfDefinition):
       return SectionString.grammar_of_delimiter()
 
   custom_class = CustomPotentialSection
+  """ Unknown classes will be of this type """
 
   @classmethod
   @cache

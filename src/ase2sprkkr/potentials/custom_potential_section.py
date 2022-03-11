@@ -17,6 +17,12 @@ class CustomPotentialSectionDefinition(BaseValueDefinition):
   name_value_delimiter = '\n'
 
 class CustomSectionToken(pp.Token):
+   """ The grammar for a custom section - i.e. for unknown section, whose
+   content is let as is.
+
+   The grammar just reads all up to the section separator.
+   """
+
    pattern = re.compile('\n' + separator.pattern + '[ \r\t]*\n',  re.DOTALL)
    name = 'CustomSection'
 
@@ -31,6 +37,12 @@ class CustomSectionToken(pp.Token):
        return loc, pp.ParseResults(out.strip())
 
 class SectionString(BaseType):
+      """
+      The grammar_type of a custom section - i.e. string, that
+      ends with a section separator.
+
+      This grammar_type as used as a value type for the custom section.
+      """
 
       delimiter_pattern = '(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n' +separator.pattern + '(?:[ \t\r]*(?:\n[ \t\r]*))*\n'
 
@@ -54,6 +66,13 @@ class SectionString(BaseType):
 SectionString.I = SectionString()
 
 class CustomPotentialSection(CustomOption):
+      """
+      Unknown sections of the potential file are mapped to a "section"
+      of this type.
+
+      In fact, it is not a Section - a container - but just an Option,
+      that holds a string value: a content of the section.
+      """
       def __init__(self, name, container=None):
           super().__init__(CustomPotentialSectionDefinition(name, SectionString.I), container)
 
