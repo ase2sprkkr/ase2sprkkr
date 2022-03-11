@@ -5,7 +5,7 @@ ASE2SPRKKR software package
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+   :caption: Contents
 
    How to use the package <usage.rst>
    More about the package installation <how-to-install.rst>
