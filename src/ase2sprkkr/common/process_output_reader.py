@@ -86,10 +86,11 @@ class BaseProcessOutputReader:
       """
 
       if wait != 0:
-         raise ValueError("The process ended with return value {wait}")
-      if error is not None:
-         return output, error
-      return output
+         e = ValueError("The process ended with return value {wait}")
+         e.output = output
+         e.error = error
+         raise e
+      return output, error
 
   def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
       self.cmd = cmd
