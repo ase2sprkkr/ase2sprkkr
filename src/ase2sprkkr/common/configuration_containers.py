@@ -1,5 +1,10 @@
 """ In this file the common containers of configuration values are,
-either for task or potential """
+either for task or potential.
+
+Configuration containers are classes, that holds configuration values
+and other containers, and are able to write them to a configuration file,
+and that are results of parsing of a configuration file.
+"""
 
 from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
@@ -45,9 +50,6 @@ class ConfigurationContainer(BaseConfiguration):
 
   def __getitem__(self, name):
     return self._members[name]
-
-  def __iter__(self):
-      yield from self._members.values()
 
   def __dir__(self):
       return itertools.chain(self._interactive_members.keys(), super().__dir__())
