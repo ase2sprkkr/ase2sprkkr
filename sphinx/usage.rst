@@ -50,7 +50,7 @@ place into your ``.bash.rc`` the following line:
     export SPRKKR_EXECUTABLE_SUFFIX=8.6
 
 For more verbose documentation about the installation the package, please see
-the topic :ref:`Installation of the ASE2SPRKKR package`
+the topic :ref:`More about the package installation<Installation>`
 
 
 Usage
@@ -436,19 +436,19 @@ which leads to the modification of the potential in the file according to the op
 
 Note, that:
 
--  If the potential is set to an SPRKKR calculator (either by the
-   :meth:`potential<ase2sprkkr.sprkkr.calculator.SPRKKR.potential>`,
-   property setter or in the
-   :meth:`constructor<ase2sprkkr.sprkkr.calculator.SPRKKR.__init__>`,
-   ), the atoms
-   object is created from the potential (and stored in the
-   :meth:`atoms<ase2sprkkr.sprkkr.calculator.SPRKKR.atoms>`,
-   property). However, this object does not reflect
-   the changes made to the potential thereafter.
--  After the computation of the SCF task, the result provide a new
-   potential (in the
-:meth:`result.potential<ase2sprkkr.outputs.readers.scf.ScfResult.potential>`
-   property), the old one is not updated, nor the calculator potential property.
+  -  If the potential is set to an SPRKKR calculator (either by the
+       :meth:`potential<ase2sprkkr.sprkkr.calculator.SPRKKR.potential>`,
+       property setter or in the
+       :meth:`constructor<ase2sprkkr.sprkkr.calculator.SPRKKR.__init__>`,
+       ), the atoms
+       object is created from the potential (and stored in the
+       :meth:`atoms<ase2sprkkr.sprkkr.calculator.SPRKKR.atoms>`,
+       property). However, this object does not reflect
+       the changes made to the potential thereafter.
+  -  After the computation of the SCF task, the result provide a new
+       potential (in the
+       :meth:`result.potential<ase2sprkkr.outputs.readers.scf.ScfResult.potential>`
+       property), the old one is not updated, nor the calculator potential property.
 
 MPI calculations
 ~~~~~~~~~~~~~~~~
