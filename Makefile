@@ -19,7 +19,7 @@ doc-clean:
 
 doc-build:
 	sphinx-build -j auto sphinx docs/
-	cp -r sphinx/_root/* docs/
+	cp -r sphinx/_root/* sphinx/_root/.??* docs/
 
 doc-readme:
 	cd sphinx; pandoc README.rst -o ../README.md
