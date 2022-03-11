@@ -1,24 +1,42 @@
-ase2sprkkr.input\_parameters package
-====================================
+input\_parameters
+=================
+
+Full name: **ase2sprkkr.input\_parameters**
 
 .. automodule:: ase2sprkkr.input_parameters
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Subpackages
------------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.input_parameters.definitions
+   
+   
+   
 
-Submodules
-----------
 
-.. toctree::
-   :maxdepth: 4
+   
+   
+   
 
-   ase2sprkkr.input_parameters.input_parameters
-   ase2sprkkr.input_parameters.input_parameters_definitions
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.input_parameters.definitions
+     ase2sprkkr.input_parameters.input_parameters
+     ase2sprkkr.input_parameters.input_parameters_definitions
+     ase2sprkkr.input_parameters.test
+  
+  

@@ -1,0 +1,51 @@
+WriteIoData
+===========
+
+Full name: **ase2sprkkr.potentials.io\_data.WriteIoData**
+
+.. currentmodule:: ase2sprkkr.potentials.io_data
+
+.. autoclass:: WriteIoData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~WriteIoData.__init__
+        ~WriteIoData.clear
+        ~WriteIoData.copy
+        ~WriteIoData.fromkeys
+        ~WriteIoData.get
+        ~WriteIoData.items
+        ~WriteIoData.keys
+        ~WriteIoData.pop
+        ~WriteIoData.popitem
+        ~WriteIoData.setdefault
+        ~WriteIoData.update
+        ~WriteIoData.values
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~WriteIoData.meshes
+        ~WriteIoData.reference_systems
+        ~WriteIoData.sites
+        ~WriteIoData.types
+
+   
+   

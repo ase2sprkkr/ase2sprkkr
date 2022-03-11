@@ -1,0 +1,54 @@
+RealWithUnits
+=============
+
+Full name: **ase2sprkkr.common.grammar\_types.RealWithUnits**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: RealWithUnits
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~RealWithUnits.__init__
+        ~RealWithUnits.convert
+        ~RealWithUnits.copy
+        ~RealWithUnits.enrich
+        ~RealWithUnits.grammar
+        ~RealWithUnits.grammar_name
+        ~RealWithUnits.missing_value
+        ~RealWithUnits.parse
+        ~RealWithUnits.parse_from_stream
+        ~RealWithUnits.print
+        ~RealWithUnits.read
+        ~RealWithUnits.string
+        ~RealWithUnits.transform_grammar
+        ~RealWithUnits.validate
+        ~RealWithUnits.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~RealWithUnits.default_value
+        ~RealWithUnits.grammar_cache
+        ~RealWithUnits.has_value
+        ~RealWithUnits.name_in_grammar
+
+   
+   

@@ -1,0 +1,61 @@
+GlobalSystemParameterDefinition
+===============================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_parameter.GlobalSystemParameterDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.global_system_parameter
+
+.. autoclass:: GlobalSystemParameterDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~GlobalSystemParameterDefinition.__init__
+        ~GlobalSystemParameterDefinition.all_member_names
+        ~GlobalSystemParameterDefinition.copy
+        ~GlobalSystemParameterDefinition.create_object
+        ~GlobalSystemParameterDefinition.custom_class
+        ~GlobalSystemParameterDefinition.custom_member_grammar
+        ~GlobalSystemParameterDefinition.delimited_custom_value_grammar
+        ~GlobalSystemParameterDefinition.depends_on
+        ~GlobalSystemParameterDefinition.grammar
+        ~GlobalSystemParameterDefinition.grammar_of_delimiter
+        ~GlobalSystemParameterDefinition.members
+        ~GlobalSystemParameterDefinition.names
+        ~GlobalSystemParameterDefinition.parse
+        ~GlobalSystemParameterDefinition.parse_file
+        ~GlobalSystemParameterDefinition.parse_from_stream
+        ~GlobalSystemParameterDefinition.parse_return
+        ~GlobalSystemParameterDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~GlobalSystemParameterDefinition.custom_name_characters
+        ~GlobalSystemParameterDefinition.custom_value_name
+        ~GlobalSystemParameterDefinition.delimiter
+        ~GlobalSystemParameterDefinition.do_not_skip_whitespaces_before_name
+        ~GlobalSystemParameterDefinition.force_order
+        ~GlobalSystemParameterDefinition.name_in_grammar
+        ~GlobalSystemParameterDefinition.validate
+        ~GlobalSystemParameterDefinition.value_name_format
+        ~GlobalSystemParameterDefinition.values
+
+   
+   

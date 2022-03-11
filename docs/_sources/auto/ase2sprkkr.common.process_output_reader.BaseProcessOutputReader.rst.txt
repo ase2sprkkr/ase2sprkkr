@@ -1,0 +1,35 @@
+BaseProcessOutputReader
+=======================
+
+Full name: **ase2sprkkr.common.process\_output\_reader.BaseProcessOutputReader**
+
+.. currentmodule:: ase2sprkkr.common.process_output_reader
+
+.. autoclass:: BaseProcessOutputReader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseProcessOutputReader.__init__
+        ~BaseProcessOutputReader.read_error
+        ~BaseProcessOutputReader.read_from_file
+        ~BaseProcessOutputReader.read_output
+        ~BaseProcessOutputReader.result
+        ~BaseProcessOutputReader.run
+        ~BaseProcessOutputReader.run_subprocess
+
+   
+   
+
+   
+   
+   

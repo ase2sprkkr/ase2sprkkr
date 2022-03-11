@@ -1,0 +1,108 @@
+TestStructure
+=============
+
+Full name: **ase2sprkkr.potentials.test.test\_structure.TestStructure**
+
+.. currentmodule:: ase2sprkkr.potentials.test.test_structure
+
+.. autoclass:: TestStructure
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestStructure.__init__
+        ~TestStructure.addClassCleanup
+        ~TestStructure.addCleanup
+        ~TestStructure.addTypeEqualityFunc
+        ~TestStructure.assertAlmostEqual
+        ~TestStructure.assertAlmostEquals
+        ~TestStructure.assertAsyncEqual
+        ~TestStructure.assertAsyncRaises
+        ~TestStructure.assertCountEqual
+        ~TestStructure.assertDictContainsSubset
+        ~TestStructure.assertDictEqual
+        ~TestStructure.assertEqual
+        ~TestStructure.assertEquals
+        ~TestStructure.assertFalse
+        ~TestStructure.assertGreater
+        ~TestStructure.assertGreaterEqual
+        ~TestStructure.assertIn
+        ~TestStructure.assertIs
+        ~TestStructure.assertIsInstance
+        ~TestStructure.assertIsNone
+        ~TestStructure.assertIsNot
+        ~TestStructure.assertIsNotNone
+        ~TestStructure.assertLess
+        ~TestStructure.assertLessEqual
+        ~TestStructure.assertListEqual
+        ~TestStructure.assertLogs
+        ~TestStructure.assertMultiLineEqual
+        ~TestStructure.assertNotAlmostEqual
+        ~TestStructure.assertNotAlmostEquals
+        ~TestStructure.assertNotEqual
+        ~TestStructure.assertNotEquals
+        ~TestStructure.assertNotIn
+        ~TestStructure.assertNotIsInstance
+        ~TestStructure.assertNotRegex
+        ~TestStructure.assertNotRegexpMatches
+        ~TestStructure.assertRaises
+        ~TestStructure.assertRaisesRegex
+        ~TestStructure.assertRaisesRegexp
+        ~TestStructure.assertRegex
+        ~TestStructure.assertRegexpMatches
+        ~TestStructure.assertSequenceEqual
+        ~TestStructure.assertSetEqual
+        ~TestStructure.assertTrue
+        ~TestStructure.assertTupleEqual
+        ~TestStructure.assertWarns
+        ~TestStructure.assertWarnsRegex
+        ~TestStructure.assert_
+        ~TestStructure.countTestCases
+        ~TestStructure.debug
+        ~TestStructure.defaultTestResult
+        ~TestStructure.doClassCleanups
+        ~TestStructure.doCleanups
+        ~TestStructure.fail
+        ~TestStructure.failIf
+        ~TestStructure.failIfAlmostEqual
+        ~TestStructure.failIfEqual
+        ~TestStructure.failUnless
+        ~TestStructure.failUnlessAlmostEqual
+        ~TestStructure.failUnlessEqual
+        ~TestStructure.failUnlessRaises
+        ~TestStructure.id
+        ~TestStructure.run
+        ~TestStructure.runAsync
+        ~TestStructure.setUp
+        ~TestStructure.setUpClass
+        ~TestStructure.shortDescription
+        ~TestStructure.skipTest
+        ~TestStructure.subTest
+        ~TestStructure.tearDown
+        ~TestStructure.tearDownClass
+        ~TestStructure.test_lattice
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestStructure.longMessage
+        ~TestStructure.maxDiff
+
+   
+   

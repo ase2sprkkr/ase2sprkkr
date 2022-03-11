@@ -1,16 +1,40 @@
-ase2sprkkr.outputs.readers package
-==================================
+readers
+=======
+
+Full name: **ase2sprkkr.outputs.readers**
 
 .. automodule:: ase2sprkkr.outputs.readers
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Submodules
-----------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.outputs.readers.default
-   ase2sprkkr.outputs.readers.scf
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.outputs.readers.default
+     ase2sprkkr.outputs.readers.scf
+  
+  

@@ -1,19 +1,43 @@
-ase2sprkkr.input\_parameters.definitions package
-================================================
+definitions
+===========
+
+Full name: **ase2sprkkr.input\_parameters.definitions**
 
 .. automodule:: ase2sprkkr.input_parameters.definitions
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Submodules
-----------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.input_parameters.definitions.arpes
-   ase2sprkkr.input_parameters.definitions.dos
-   ase2sprkkr.input_parameters.definitions.phagen
-   ase2sprkkr.input_parameters.definitions.scf
-   ase2sprkkr.input_parameters.definitions.sections
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.input_parameters.definitions.arpes
+     ase2sprkkr.input_parameters.definitions.dos
+     ase2sprkkr.input_parameters.definitions.phagen
+     ase2sprkkr.input_parameters.definitions.scf
+     ase2sprkkr.input_parameters.definitions.sections
+  
+  

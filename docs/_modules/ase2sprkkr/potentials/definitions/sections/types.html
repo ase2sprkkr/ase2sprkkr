@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -164,13 +177,13 @@
 <span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Integer</span>
 <span class="kn">from</span> <span class="nn">....sprkkr.atomic_types</span> <span class="kn">import</span> <span class="n">AtomicType</span>
 
-<div class="viewcode-block" id="TypesSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.html#ase2sprkkr.potentials.definitions.sections.TypesSection">[docs]</a><span class="k">class</span> <span class="nc">TypesSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
+<div class="viewcode-block" id="TypesSection"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSection.html#ase2sprkkr.potentials.definitions.sections.types.TypesSection">[docs]</a><span class="k">class</span> <span class="nc">TypesSection</span><span class="p">(</span><span class="n">UniqueListSection</span><span class="p">):</span>
   <span class="n">_value_name</span> <span class="o">=</span> <span class="s1">&#39;types&#39;</span>
   <span class="n">_value_class</span> <span class="o">=</span> <span class="n">AtomicType</span></div>
 
-<div class="viewcode-block" id="TypesSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.html#ase2sprkkr.potentials.definitions.sections.TypesSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">TypesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="TypesSectionDefinition"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">TypesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TypesSectionDefinition.__init__"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.html#ase2sprkkr.potentials.definitions.sections.TypesSectionDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;TYPES&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="TypesSectionDefinition.__init__"><a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;TYPES&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
       <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
           <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DATA&#39;</span><span class="p">,</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;TXT&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;ZT&#39;</span> <span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NCORT&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NVALT&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;NSEMCORSHLT&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">},</span>

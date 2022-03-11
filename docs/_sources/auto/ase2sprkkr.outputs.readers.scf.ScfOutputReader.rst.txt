@@ -1,0 +1,43 @@
+ScfOutputReader
+===============
+
+Full name: **ase2sprkkr.outputs.readers.scf.ScfOutputReader**
+
+.. currentmodule:: ase2sprkkr.outputs.readers.scf
+
+.. autoclass:: ScfOutputReader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfOutputReader.__init__
+        ~ScfOutputReader.read_error
+        ~ScfOutputReader.read_from_file
+        ~ScfOutputReader.read_output
+        ~ScfOutputReader.result
+        ~ScfOutputReader.run
+        ~ScfOutputReader.run_subprocess
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfOutputReader.atoms_conf_type
+
+   
+   

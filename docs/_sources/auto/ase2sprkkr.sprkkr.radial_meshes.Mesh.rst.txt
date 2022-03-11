@@ -1,0 +1,30 @@
+Mesh
+====
+
+Full name: **ase2sprkkr.sprkkr.radial\_meshes.Mesh**
+
+.. currentmodule:: ase2sprkkr.sprkkr.radial_meshes
+
+.. autoclass:: Mesh
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Mesh.__init__
+        ~Mesh.default
+
+   
+   
+
+   
+   
+   

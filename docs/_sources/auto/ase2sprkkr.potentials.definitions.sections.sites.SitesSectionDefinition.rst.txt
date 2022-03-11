@@ -1,0 +1,61 @@
+SitesSectionDefinition
+======================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.sites
+
+.. autoclass:: SitesSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSectionDefinition.__init__
+        ~SitesSectionDefinition.all_member_names
+        ~SitesSectionDefinition.copy
+        ~SitesSectionDefinition.create_object
+        ~SitesSectionDefinition.custom_class
+        ~SitesSectionDefinition.custom_member_grammar
+        ~SitesSectionDefinition.delimited_custom_value_grammar
+        ~SitesSectionDefinition.depends_on
+        ~SitesSectionDefinition.grammar
+        ~SitesSectionDefinition.grammar_of_delimiter
+        ~SitesSectionDefinition.members
+        ~SitesSectionDefinition.names
+        ~SitesSectionDefinition.parse
+        ~SitesSectionDefinition.parse_file
+        ~SitesSectionDefinition.parse_from_stream
+        ~SitesSectionDefinition.parse_return
+        ~SitesSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSectionDefinition.custom_name_characters
+        ~SitesSectionDefinition.custom_value_name
+        ~SitesSectionDefinition.delimiter
+        ~SitesSectionDefinition.do_not_skip_whitespaces_before_name
+        ~SitesSectionDefinition.force_order
+        ~SitesSectionDefinition.name_in_grammar
+        ~SitesSectionDefinition.validate
+        ~SitesSectionDefinition.value_name_format
+        ~SitesSectionDefinition.values
+
+   
+   

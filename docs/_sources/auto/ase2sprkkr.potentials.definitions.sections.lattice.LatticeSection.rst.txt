@@ -1,0 +1,50 @@
+LatticeSection
+==============
+
+Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.lattice
+
+.. autoclass:: LatticeSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSection.__init__
+        ~LatticeSection.add
+        ~LatticeSection.clear
+        ~LatticeSection.get
+        ~LatticeSection.has_any_value
+        ~LatticeSection.members
+        ~LatticeSection.remove_member
+        ~LatticeSection.reset
+        ~LatticeSection.save_to_file
+        ~LatticeSection.set
+        ~LatticeSection.to_dict
+        ~LatticeSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSection.definition
+        ~LatticeSection.name
+        ~LatticeSection.seciton_name
+
+   
+   

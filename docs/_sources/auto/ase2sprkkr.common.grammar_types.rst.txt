@@ -1,7 +1,81 @@
-ase2sprkkr.common.grammar\_types module
-=======================================
+grammar\_types
+==============
+
+Full name: **ase2sprkkr.common.grammar\_types**
 
 .. automodule:: ase2sprkkr.common.grammar_types
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      type_from_set_map
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      DefKeyword
+      format_for_type
+      normalize_type
+      type_from_default_value
+      type_from_type
+      type_from_value
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Array
+      BaseMixed
+      BaseRealWithUnits
+      BaseString
+      BaseType
+      Bool
+      Date
+      Energy
+      Flag
+      Integer
+      Keyword
+      LineString
+      Mixed
+      PotMixed
+      QString
+      Real
+      RealWithUnits
+      Separator
+      Sequence
+      SetOf
+      String
+      Table
+      Unsigned
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

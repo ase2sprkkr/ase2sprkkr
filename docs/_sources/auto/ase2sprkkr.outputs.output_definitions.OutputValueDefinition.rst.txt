@@ -1,0 +1,49 @@
+OutputValueDefinition
+=====================
+
+Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueDefinition**
+
+.. currentmodule:: ase2sprkkr.outputs.output_definitions
+
+.. autoclass:: OutputValueDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputValueDefinition.__init__
+        ~OutputValueDefinition.copy
+        ~OutputValueDefinition.create_object
+        ~OutputValueDefinition.get_value
+        ~OutputValueDefinition.grammar
+        ~OutputValueDefinition.grammar_of_delimiter
+        ~OutputValueDefinition.remove
+        ~OutputValueDefinition.validate
+        ~OutputValueDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputValueDefinition.do_not_skip_whitespaces_before_name
+        ~OutputValueDefinition.formated_name
+        ~OutputValueDefinition.name_in_grammar
+        ~OutputValueDefinition.prefix
+        ~OutputValueDefinition.value_name_format
+
+   
+   

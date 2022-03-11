@@ -1,0 +1,82 @@
+SPRKKR
+======
+
+Full name: **ase2sprkkr.sprkkr.calculator.SPRKKR**
+
+.. currentmodule:: ase2sprkkr.sprkkr.calculator
+
+.. autoclass:: SPRKKR
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SPRKKR.__init__
+        ~SPRKKR.band_structure
+        ~SPRKKR.calculate
+        ~SPRKKR.calculate_numerical_forces
+        ~SPRKKR.calculate_numerical_stress
+        ~SPRKKR.calculate_properties
+        ~SPRKKR.calculation_required
+        ~SPRKKR.check_state
+        ~SPRKKR.copy_with_potential
+        ~SPRKKR.export_properties
+        ~SPRKKR.get
+        ~SPRKKR.get_atoms
+        ~SPRKKR.get_charges
+        ~SPRKKR.get_default_parameters
+        ~SPRKKR.get_dipole_moment
+        ~SPRKKR.get_forces
+        ~SPRKKR.get_magnetic_moment
+        ~SPRKKR.get_magnetic_moments
+        ~SPRKKR.get_potential_energies
+        ~SPRKKR.get_potential_energy
+        ~SPRKKR.get_property
+        ~SPRKKR.get_stress
+        ~SPRKKR.get_stresses
+        ~SPRKKR.kkrch
+        ~SPRKKR.kkrgen
+        ~SPRKKR.kkrspec
+        ~SPRKKR.phagen
+        ~SPRKKR.read
+        ~SPRKKR.read_atoms
+        ~SPRKKR.reset
+        ~SPRKKR.run
+        ~SPRKKR.run_xband
+        ~SPRKKR.save_input
+        ~SPRKKR.scf
+        ~SPRKKR.set
+        ~SPRKKR.set_label
+        ~SPRKKR.todict
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SPRKKR.atoms
+        ~SPRKKR.default_parameters
+        ~SPRKKR.directory
+        ~SPRKKR.discard_results_on_any_change
+        ~SPRKKR.ignored_changes
+        ~SPRKKR.implemented_properties
+        ~SPRKKR.input_parameters
+        ~SPRKKR.label
+        ~SPRKKR.potential
+        ~SPRKKR.potential_object
+
+   
+   

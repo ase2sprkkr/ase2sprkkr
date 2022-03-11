@@ -1,0 +1,48 @@
+BaseSection
+===========
+
+Full name: **ase2sprkkr.common.configuration\_containers.BaseSection**
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: BaseSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseSection.__init__
+        ~BaseSection.add
+        ~BaseSection.clear
+        ~BaseSection.get
+        ~BaseSection.has_any_value
+        ~BaseSection.members
+        ~BaseSection.remove_member
+        ~BaseSection.save_to_file
+        ~BaseSection.set
+        ~BaseSection.to_dict
+        ~BaseSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseSection.name
+        ~BaseSection.seciton_name
+
+   
+   

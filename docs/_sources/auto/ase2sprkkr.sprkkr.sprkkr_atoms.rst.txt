@@ -1,7 +1,38 @@
-ase2sprkkr.sprkkr.sprkkr\_atoms module
-======================================
+sprkkr\_atoms
+=============
+
+Full name: **ase2sprkkr.sprkkr.sprkkr\_atoms**
 
 .. automodule:: ase2sprkkr.sprkkr.sprkkr_atoms
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SPRKKRAtoms
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,24 +1,42 @@
-ase2sprkkr.outputs package
-==========================
+outputs
+=======
+
+Full name: **ase2sprkkr.outputs**
 
 .. automodule:: ase2sprkkr.outputs
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Subpackages
------------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.outputs.readers
+   
+   
+   
 
-Submodules
-----------
 
-.. toctree::
-   :maxdepth: 4
+   
+   
+   
 
-   ase2sprkkr.outputs.output_definitions
-   ase2sprkkr.outputs.task_result
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.outputs.output_definitions
+     ase2sprkkr.outputs.readers
+     ase2sprkkr.outputs.task_result
+     ase2sprkkr.outputs.test
+  
+  

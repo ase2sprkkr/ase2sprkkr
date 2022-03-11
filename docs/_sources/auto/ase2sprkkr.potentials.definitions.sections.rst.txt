@@ -1,21 +1,45 @@
-ase2sprkkr.potentials.definitions.sections package
-==================================================
+sections
+========
+
+Full name: **ase2sprkkr.potentials.definitions.sections**
 
 .. automodule:: ase2sprkkr.potentials.definitions.sections
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Submodules
-----------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.potentials.definitions.sections.global_system_parameter
-   ase2sprkkr.potentials.definitions.sections.lattice
-   ase2sprkkr.potentials.definitions.sections.mesh_information
-   ase2sprkkr.potentials.definitions.sections.occupation
-   ase2sprkkr.potentials.definitions.sections.reference_system
-   ase2sprkkr.potentials.definitions.sections.sites
-   ase2sprkkr.potentials.definitions.sections.types
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.potentials.definitions.sections.global_system_parameter
+     ase2sprkkr.potentials.definitions.sections.lattice
+     ase2sprkkr.potentials.definitions.sections.mesh_information
+     ase2sprkkr.potentials.definitions.sections.occupation
+     ase2sprkkr.potentials.definitions.sections.reference_system
+     ase2sprkkr.potentials.definitions.sections.sites
+     ase2sprkkr.potentials.definitions.sections.types
+  
+  

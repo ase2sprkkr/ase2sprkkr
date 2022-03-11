@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -161,7 +174,7 @@
 <span class="kn">from</span> <span class="nn">.reference_systems</span> <span class="kn">import</span> <span class="n">ReferenceSystem</span>
 <span class="kn">from</span> <span class="nn">.occupations</span> <span class="kn">import</span> <span class="n">Occupation</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<div class="viewcode-block" id="Site"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.html#ase2sprkkr.sprkkr.sites.Site">[docs]</a><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
+<div class="viewcode-block" id="Site"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site">[docs]</a><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Definition of an atomic site.</span>
 <span class="sd">  (By symmetry) equivalent sites should share the same definition.</span>
@@ -170,7 +183,7 @@
 <span class="sd">  the same property.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Site.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.html#ase2sprkkr.sprkkr.sites.Site.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameter</span>
 <span class="sd">      ---------</span>
@@ -197,7 +210,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="bp">self</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span></div>
 
-<div class="viewcode-block" id="Site.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.html#ase2sprkkr.sprkkr.sites.Site.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">site</span> <span class="o">=</span> <span class="n">Site</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_system</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
       <span class="n">site</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="n">site</span>
       <span class="k">return</span> <span class="n">site</span></div>
@@ -229,7 +242,7 @@
 
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span>
 
-<div class="viewcode-block" id="Site.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.html#ase2sprkkr.sprkkr.sites.Site.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.reset">[docs]</a>  <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">default</span><span class="p">()</span></div>
 
   <span class="nd">@occupation</span><span class="o">.</span><span class="n">setter</span>
@@ -241,7 +254,7 @@
   <span class="k">def</span> <span class="nf">primary_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_symbol</span>
 
-<div class="viewcode-block" id="Site.update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.html#ase2sprkkr.sprkkr.sites.Site.update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span> <span class="o">==</span> <span class="bp">self</span>
       <span class="n">an</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
       <span class="n">an</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span> <span class="o">==</span> <span class="bp">self</span> <span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">primary_atomic_number</span>

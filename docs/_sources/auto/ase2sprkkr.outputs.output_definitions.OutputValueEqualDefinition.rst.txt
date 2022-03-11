@@ -1,0 +1,50 @@
+OutputValueEqualDefinition
+==========================
+
+Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueEqualDefinition**
+
+.. currentmodule:: ase2sprkkr.outputs.output_definitions
+
+.. autoclass:: OutputValueEqualDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputValueEqualDefinition.__init__
+        ~OutputValueEqualDefinition.copy
+        ~OutputValueEqualDefinition.create_object
+        ~OutputValueEqualDefinition.get_value
+        ~OutputValueEqualDefinition.grammar
+        ~OutputValueEqualDefinition.grammar_of_delimiter
+        ~OutputValueEqualDefinition.remove
+        ~OutputValueEqualDefinition.validate
+        ~OutputValueEqualDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputValueEqualDefinition.do_not_skip_whitespaces_before_name
+        ~OutputValueEqualDefinition.formated_name
+        ~OutputValueEqualDefinition.name_in_grammar
+        ~OutputValueEqualDefinition.name_value_delimiter
+        ~OutputValueEqualDefinition.prefix
+        ~OutputValueEqualDefinition.value_name_format
+
+   
+   

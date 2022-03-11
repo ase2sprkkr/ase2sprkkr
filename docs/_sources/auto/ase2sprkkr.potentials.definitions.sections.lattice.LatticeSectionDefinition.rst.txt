@@ -1,0 +1,61 @@
+LatticeSectionDefinition
+========================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.lattice
+
+.. autoclass:: LatticeSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSectionDefinition.__init__
+        ~LatticeSectionDefinition.all_member_names
+        ~LatticeSectionDefinition.copy
+        ~LatticeSectionDefinition.create_object
+        ~LatticeSectionDefinition.custom_class
+        ~LatticeSectionDefinition.custom_member_grammar
+        ~LatticeSectionDefinition.delimited_custom_value_grammar
+        ~LatticeSectionDefinition.depends_on
+        ~LatticeSectionDefinition.grammar
+        ~LatticeSectionDefinition.grammar_of_delimiter
+        ~LatticeSectionDefinition.members
+        ~LatticeSectionDefinition.names
+        ~LatticeSectionDefinition.parse
+        ~LatticeSectionDefinition.parse_file
+        ~LatticeSectionDefinition.parse_from_stream
+        ~LatticeSectionDefinition.parse_return
+        ~LatticeSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSectionDefinition.custom_name_characters
+        ~LatticeSectionDefinition.custom_value_name
+        ~LatticeSectionDefinition.delimiter
+        ~LatticeSectionDefinition.do_not_skip_whitespaces_before_name
+        ~LatticeSectionDefinition.force_order
+        ~LatticeSectionDefinition.name_in_grammar
+        ~LatticeSectionDefinition.validate
+        ~LatticeSectionDefinition.value_name_format
+        ~LatticeSectionDefinition.values
+
+   
+   

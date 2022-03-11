@@ -1,0 +1,49 @@
+Section
+=======
+
+Full name: **ase2sprkkr.common.configuration\_containers.Section**
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: Section
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Section.__init__
+        ~Section.add
+        ~Section.clear
+        ~Section.get
+        ~Section.has_any_value
+        ~Section.members
+        ~Section.remove_member
+        ~Section.save_to_file
+        ~Section.set
+        ~Section.to_dict
+        ~Section.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Section.definition
+        ~Section.name
+        ~Section.seciton_name
+
+   
+   

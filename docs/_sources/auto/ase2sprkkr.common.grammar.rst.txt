@@ -1,7 +1,55 @@
-ase2sprkkr.common.grammar module
-================================
+grammar
+=======
+
+Full name: **ase2sprkkr.common.grammar**
 
 .. automodule:: ase2sprkkr.common.grammar
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      optional_line_end
+      line_end
+      end_of_file
+      separator_pattern
+      separator
+      optional_quote
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      addConditionEx
+      addParseActionEx
+      delimitedList
+      generate_grammar
+      replace_whitechars
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

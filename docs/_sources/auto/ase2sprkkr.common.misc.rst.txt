@@ -1,7 +1,51 @@
-ase2sprkkr.common.misc module
-=============================
+misc
+====
+
+Full name: **ase2sprkkr.common.misc**
 
 .. automodule:: ase2sprkkr.common.misc
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      add_to_signature
+      copy_list
+      lazy_value
+      njit
+      numpy_index
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OrderedDict
+      class_property
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

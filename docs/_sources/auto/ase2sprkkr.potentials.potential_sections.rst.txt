@@ -1,7 +1,40 @@
-ase2sprkkr.potentials.potential\_sections module
-================================================
+potential\_sections
+===================
+
+Full name: **ase2sprkkr.potentials.potential\_sections**
 
 .. automodule:: ase2sprkkr.potentials.potential_sections
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ASEArraySection
+      PotentialSection
+      UniqueListSection
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,43 @@
+OrderedDict
+===========
+
+Full name: **ase2sprkkr.common.misc.OrderedDict**
+
+.. currentmodule:: ase2sprkkr.common.misc
+
+.. autoclass:: OrderedDict
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OrderedDict.__init__
+        ~OrderedDict.clear
+        ~OrderedDict.copy
+        ~OrderedDict.first_item
+        ~OrderedDict.fromkeys
+        ~OrderedDict.get
+        ~OrderedDict.index
+        ~OrderedDict.items
+        ~OrderedDict.keys
+        ~OrderedDict.move_to_end
+        ~OrderedDict.pop
+        ~OrderedDict.popitem
+        ~OrderedDict.setdefault
+        ~OrderedDict.update
+        ~OrderedDict.values
+
+   
+   
+
+   
+   
+   

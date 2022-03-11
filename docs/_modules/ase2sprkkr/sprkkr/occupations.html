@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -162,19 +175,19 @@
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
 
-<div class="viewcode-block" id="Occupation"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation">[docs]</a><span class="k">class</span> <span class="nc">Occupation</span><span class="p">:</span>
+<div class="viewcode-block" id="Occupation"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation">[docs]</a><span class="k">class</span> <span class="nc">Occupation</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot; Occupation of the atomic site, given by</span>
 <span class="sd">      AtomicSite : value</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Occupation.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="n">site</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Occupation.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">Occupation</span><span class="p">({</span> <span class="n">a</span><span class="o">.</span><span class="n">copy</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">})</span></div>
 
-<div class="viewcode-block" id="Occupation.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">AtomicType</span><span class="p">)):</span>
          <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="n">dct</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
       <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">):</span>
@@ -191,14 +204,14 @@
   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Occupation </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="Occupation._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation._update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">_site</span><span class="o">.</span><span class="n">update_atoms</span><span class="p">()</span></div>
 
   <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Occupation._find_key"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation._find_key">[docs]</a>  <span class="k">def</span> <span class="nf">_find_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation._find_key"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._find_key">[docs]</a>  <span class="k">def</span> <span class="nf">_find_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">AtomicType</span><span class="p">):</span>
           <span class="k">return</span> <span class="n">name</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
@@ -249,7 +262,7 @@
   <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Occupation.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.add">[docs]</a>  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.add">[docs]</a>  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Add atom to the site &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
          <span class="n">value</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span>
@@ -262,7 +275,7 @@
       <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_normalize</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Occupation._normalize"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation._normalize">[docs]</a>  <span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">except_from</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation._normalize"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._normalize">[docs]</a>  <span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">except_from</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Normalizes occupation so the sum will be equal to value</span>
 
@@ -301,20 +314,20 @@
   <span class="k">def</span> <span class="nf">total_occupation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
-<div class="viewcode-block" id="Occupation.to_occupation"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Occupation.to_occupation"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">to_occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">Occupation</span><span class="p">):</span>
          <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">occupation</span></div>
 
-<div class="viewcode-block" id="Occupation.check"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.check">[docs]</a>  <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.check"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.check">[docs]</a>  <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span><span class="mf">1.0</span><span class="p">):</span>
          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Total occupation of the site should be equal to one&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Occupation.to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.to_tuple">[docs]</a>  <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.to_tuple">[docs]</a>  <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="Occupation.atomic_types"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.atomic_types">[docs]</a>  <span class="k">def</span> <span class="nf">atomic_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.atomic_types"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.atomic_types">[docs]</a>  <span class="k">def</span> <span class="nf">atomic_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div></div>
 </pre></div>
 

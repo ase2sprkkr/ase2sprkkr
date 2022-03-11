@@ -1,0 +1,56 @@
+SectionString
+=============
+
+Full name: **ase2sprkkr.potentials.custom\_potential\_section.SectionString**
+
+.. currentmodule:: ase2sprkkr.potentials.custom_potential_section
+
+.. autoclass:: SectionString
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionString.__init__
+        ~SectionString.convert
+        ~SectionString.copy
+        ~SectionString.enrich
+        ~SectionString.grammar
+        ~SectionString.grammar_name
+        ~SectionString.grammar_of_delimiter
+        ~SectionString.missing_value
+        ~SectionString.parse
+        ~SectionString.parse_from_stream
+        ~SectionString.print
+        ~SectionString.read
+        ~SectionString.string
+        ~SectionString.transform_grammar
+        ~SectionString.validate
+        ~SectionString.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionString.I
+        ~SectionString.default_value
+        ~SectionString.delimiter_pattern
+        ~SectionString.has_value
+        ~SectionString.name_in_grammar
+
+   
+   

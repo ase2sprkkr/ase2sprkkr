@@ -1,0 +1,43 @@
+Option
+======
+
+Full name: **ase2sprkkr.common.options.Option**
+
+.. currentmodule:: ase2sprkkr.common.options
+
+.. autoclass:: Option
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Option.__init__
+        ~Option.clear
+        ~Option.get
+        ~Option.get_path
+        ~Option.save_to_file
+        ~Option.set
+        ~Option.to_dict
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Option.name
+
+   
+   

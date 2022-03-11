@@ -1,0 +1,61 @@
+OccupationSectionDefinition
+===========================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.occupation
+
+.. autoclass:: OccupationSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OccupationSectionDefinition.__init__
+        ~OccupationSectionDefinition.all_member_names
+        ~OccupationSectionDefinition.copy
+        ~OccupationSectionDefinition.create_object
+        ~OccupationSectionDefinition.custom_class
+        ~OccupationSectionDefinition.custom_member_grammar
+        ~OccupationSectionDefinition.delimited_custom_value_grammar
+        ~OccupationSectionDefinition.depends_on
+        ~OccupationSectionDefinition.grammar
+        ~OccupationSectionDefinition.grammar_of_delimiter
+        ~OccupationSectionDefinition.members
+        ~OccupationSectionDefinition.names
+        ~OccupationSectionDefinition.parse
+        ~OccupationSectionDefinition.parse_file
+        ~OccupationSectionDefinition.parse_from_stream
+        ~OccupationSectionDefinition.parse_return
+        ~OccupationSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OccupationSectionDefinition.custom_name_characters
+        ~OccupationSectionDefinition.custom_value_name
+        ~OccupationSectionDefinition.delimiter
+        ~OccupationSectionDefinition.do_not_skip_whitespaces_before_name
+        ~OccupationSectionDefinition.force_order
+        ~OccupationSectionDefinition.name_in_grammar
+        ~OccupationSectionDefinition.validate
+        ~OccupationSectionDefinition.value_name_format
+        ~OccupationSectionDefinition.values
+
+   
+   

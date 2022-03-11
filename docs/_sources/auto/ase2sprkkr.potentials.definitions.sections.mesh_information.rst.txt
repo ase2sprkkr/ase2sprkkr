@@ -1,7 +1,40 @@
-ase2sprkkr.potentials.definitions.sections.mesh\_information module
-===================================================================
+mesh\_information
+=================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.mesh\_information**
 
 .. automodule:: ase2sprkkr.potentials.definitions.sections.mesh_information
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      MeshInformationSection
+      MeshInformationSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,7 +1,38 @@
-ase2sprkkr.sprkkr.reference\_systems module
-===========================================
+reference\_systems
+==================
+
+Full name: **ase2sprkkr.sprkkr.reference\_systems**
 
 .. automodule:: ase2sprkkr.sprkkr.reference_systems
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ReferenceSystem
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

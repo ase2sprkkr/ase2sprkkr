@@ -1,0 +1,32 @@
+ExponentialMesh
+===============
+
+Full name: **ase2sprkkr.sprkkr.radial\_meshes.ExponentialMesh**
+
+.. currentmodule:: ase2sprkkr.sprkkr.radial_meshes
+
+.. autoclass:: ExponentialMesh
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ExponentialMesh.__init__
+        ~ExponentialMesh.copy
+        ~ExponentialMesh.default
+        ~ExponentialMesh.to_tuple
+
+   
+   
+
+   
+   
+   

@@ -1,0 +1,33 @@
+Trie
+====
+
+Full name: **ase2sprkkr.common.regex\_trie.Trie**
+
+.. currentmodule:: ase2sprkkr.common.regex_trie
+
+.. autoclass:: Trie
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Trie.__init__
+        ~Trie.add
+        ~Trie.dump
+        ~Trie.pattern
+        ~Trie.quote
+
+   
+   
+
+   
+   
+   

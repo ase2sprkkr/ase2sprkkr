@@ -1,0 +1,64 @@
+InputParameters
+===============
+
+Full name: **ase2sprkkr.input\_parameters.input\_parameters.InputParameters**
+
+.. currentmodule:: ase2sprkkr.input_parameters.input_parameters
+
+.. autoclass:: InputParameters
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~InputParameters.__init__
+        ~InputParameters.add
+        ~InputParameters.calculate
+        ~InputParameters.clear
+        ~InputParameters.create
+        ~InputParameters.create_input_parameters
+        ~InputParameters.default_mpi_runner
+        ~InputParameters.default_parameters
+        ~InputParameters.definitions
+        ~InputParameters.executable_params
+        ~InputParameters.find
+        ~InputParameters.from_file
+        ~InputParameters.get
+        ~InputParameters.is_it_a_input_parameters_name
+        ~InputParameters.is_mpi
+        ~InputParameters.members
+        ~InputParameters.mpi_runner
+        ~InputParameters.read_from_file
+        ~InputParameters.read_output_from_file
+        ~InputParameters.remove_member
+        ~InputParameters.result_reader
+        ~InputParameters.run_process
+        ~InputParameters.save_to_file
+        ~InputParameters.set
+        ~InputParameters.set_option
+        ~InputParameters.to_dict
+        ~InputParameters.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~InputParameters.name
+        ~InputParameters.task_name
+
+   
+   

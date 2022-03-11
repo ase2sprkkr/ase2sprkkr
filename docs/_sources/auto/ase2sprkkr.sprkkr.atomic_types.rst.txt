@@ -1,7 +1,38 @@
-ase2sprkkr.sprkkr.atomic\_types module
-======================================
+atomic\_types
+=============
+
+Full name: **ase2sprkkr.sprkkr.atomic\_types**
 
 .. automodule:: ase2sprkkr.sprkkr.atomic_types
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomicType
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

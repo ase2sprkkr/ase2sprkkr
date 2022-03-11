@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -159,12 +172,12 @@
   <h1>Source code for ase2sprkkr.outputs.readers.default</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">OutputReader</span>
 
-<div class="viewcode-block" id="DefaultResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.html#ase2sprkkr.outputs.readers.default.DefaultResult">[docs]</a><span class="k">class</span> <span class="nc">DefaultResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
+<div class="viewcode-block" id="DefaultResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult">[docs]</a><span class="k">class</span> <span class="nc">DefaultResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
       <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="DefaultOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader">[docs]</a><span class="k">class</span> <span class="nc">DefaultOutputReader</span><span class="p">(</span><span class="n">OutputReader</span><span class="p">):</span>
+<div class="viewcode-block" id="DefaultOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader">[docs]</a><span class="k">class</span> <span class="nc">DefaultOutputReader</span><span class="p">(</span><span class="n">OutputReader</span><span class="p">):</span>
 
-<div class="viewcode-block" id="DefaultOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
+<div class="viewcode-block" id="DefaultOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
 
       <span class="c1">#just read the whole output</span>
       <span class="k">while</span> <span class="k">await</span> <span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">():</span>

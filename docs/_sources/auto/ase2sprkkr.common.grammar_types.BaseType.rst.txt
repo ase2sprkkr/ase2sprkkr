@@ -1,0 +1,53 @@
+BaseType
+========
+
+Full name: **ase2sprkkr.common.grammar\_types.BaseType**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: BaseType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseType.__init__
+        ~BaseType.convert
+        ~BaseType.copy
+        ~BaseType.enrich
+        ~BaseType.grammar
+        ~BaseType.grammar_name
+        ~BaseType.missing_value
+        ~BaseType.parse
+        ~BaseType.parse_from_stream
+        ~BaseType.print
+        ~BaseType.read
+        ~BaseType.string
+        ~BaseType.transform_grammar
+        ~BaseType.validate
+        ~BaseType.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseType.default_value
+        ~BaseType.has_value
+        ~BaseType.name_in_grammar
+
+   
+   

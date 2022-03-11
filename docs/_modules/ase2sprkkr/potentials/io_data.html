@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -161,7 +174,7 @@
 <span class="kn">from</span> <span class="nn">..common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
 
 
-<div class="viewcode-block" id="unique_mapping"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.unique_mapping">[docs]</a><span class="k">def</span> <span class="nf">unique_mapping</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
+<div class="viewcode-block" id="unique_mapping"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.unique_mapping.html#ase2sprkkr.potentials.io_data.unique_mapping">[docs]</a><span class="k">def</span> <span class="nf">unique_mapping</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create function (with a cached result), that returns UniqueValuesMapping from a given iterator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -170,19 +183,19 @@
         <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">cached_property</span><span class="p">(</span><span class="n">get_unique_mapping</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseIoData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.BaseIoData">[docs]</a><span class="k">class</span> <span class="nc">BaseIoData</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseIoData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.BaseIoData.html#ase2sprkkr.potentials.io_data.BaseIoData">[docs]</a><span class="k">class</span> <span class="nc">BaseIoData</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Base class for object used during reading/writing.</span>
 <span class="sd">        For a potential future use. &quot;&quot;&quot;</span>
     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="WriteIoData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.WriteIoData">[docs]</a><span class="k">class</span> <span class="nc">WriteIoData</span><span class="p">(</span><span class="n">BaseIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="WriteIoData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.WriteIoData.html#ase2sprkkr.potentials.io_data.WriteIoData">[docs]</a><span class="k">class</span> <span class="nc">WriteIoData</span><span class="p">(</span><span class="n">BaseIoData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; During writing of potential file, some lists are needed in more sections,</span>
 <span class="sd">        typically one section contains the list itself, while another(s) reference(s)</span>
 <span class="sd">        the items of the list.</span>
 <span class="sd">        So the lists are created on demand and cached for next use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="WriteIoData.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.WriteIoData.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="WriteIoData.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.WriteIoData.html#ase2sprkkr.potentials.io_data.WriteIoData.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span></div>
 
     <span class="nd">@unique_mapping</span>
@@ -203,7 +216,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mesh</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">sites</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="ReadIoData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.html#ase2sprkkr.potentials.io_data.ReadIoData">[docs]</a><span class="k">class</span> <span class="nc">ReadIoData</span><span class="p">(</span><span class="n">BaseIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="ReadIoData"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.ReadIoData.html#ase2sprkkr.potentials.io_data.ReadIoData">[docs]</a><span class="k">class</span> <span class="nc">ReadIoData</span><span class="p">(</span><span class="n">BaseIoData</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Object to store data during reading of a potential file.</span>
 <span class="sd">        Nothing special is here yet, it is just a dict &quot;&quot;&quot;</span></div>
 </pre></div>

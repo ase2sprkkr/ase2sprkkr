@@ -1,0 +1,50 @@
+Separator
+=========
+
+Full name: **ase2sprkkr.potentials.potential\_definitions.Separator**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_definitions
+
+.. autoclass:: Separator
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.__init__
+        ~Separator.copy
+        ~Separator.create_object
+        ~Separator.get_value
+        ~Separator.grammar
+        ~Separator.grammar_of_delimiter
+        ~Separator.remove
+        ~Separator.validate
+        ~Separator.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.do_not_skip_whitespaces_before_name
+        ~Separator.formated_name
+        ~Separator.name_in_grammar
+        ~Separator.name_value_delimiter
+        ~Separator.prefix
+        ~Separator.value_name_format
+
+   
+   

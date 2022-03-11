@@ -1,7 +1,39 @@
-ase2sprkkr.sprkkr.calculator module
-===================================
+calculator
+==========
+
+Full name: **ase2sprkkr.sprkkr.calculator**
 
 .. automodule:: ase2sprkkr.sprkkr.calculator
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FilenameTemplator
+      SPRKKR
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

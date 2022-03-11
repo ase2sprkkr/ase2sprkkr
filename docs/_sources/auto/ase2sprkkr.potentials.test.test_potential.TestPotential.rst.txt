@@ -1,0 +1,112 @@
+TestPotential
+=============
+
+Full name: **ase2sprkkr.potentials.test.test\_potential.TestPotential**
+
+.. currentmodule:: ase2sprkkr.potentials.test.test_potential
+
+.. autoclass:: TestPotential
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestPotential.__init__
+        ~TestPotential.addClassCleanup
+        ~TestPotential.addCleanup
+        ~TestPotential.addTypeEqualityFunc
+        ~TestPotential.assertAlmostEqual
+        ~TestPotential.assertAlmostEquals
+        ~TestPotential.assertAsyncEqual
+        ~TestPotential.assertAsyncRaises
+        ~TestPotential.assertCountEqual
+        ~TestPotential.assertDictContainsSubset
+        ~TestPotential.assertDictEqual
+        ~TestPotential.assertEqual
+        ~TestPotential.assertEquals
+        ~TestPotential.assertFalse
+        ~TestPotential.assertGreater
+        ~TestPotential.assertGreaterEqual
+        ~TestPotential.assertIn
+        ~TestPotential.assertIs
+        ~TestPotential.assertIsInstance
+        ~TestPotential.assertIsNone
+        ~TestPotential.assertIsNot
+        ~TestPotential.assertIsNotNone
+        ~TestPotential.assertLess
+        ~TestPotential.assertLessEqual
+        ~TestPotential.assertListEqual
+        ~TestPotential.assertLogs
+        ~TestPotential.assertMultiLineEqual
+        ~TestPotential.assertNotAlmostEqual
+        ~TestPotential.assertNotAlmostEquals
+        ~TestPotential.assertNotEqual
+        ~TestPotential.assertNotEquals
+        ~TestPotential.assertNotIn
+        ~TestPotential.assertNotIsInstance
+        ~TestPotential.assertNotRegex
+        ~TestPotential.assertNotRegexpMatches
+        ~TestPotential.assertRaises
+        ~TestPotential.assertRaisesRegex
+        ~TestPotential.assertRaisesRegexp
+        ~TestPotential.assertRegex
+        ~TestPotential.assertRegexpMatches
+        ~TestPotential.assertSequenceEqual
+        ~TestPotential.assertSetEqual
+        ~TestPotential.assertTrue
+        ~TestPotential.assertTupleEqual
+        ~TestPotential.assertWarns
+        ~TestPotential.assertWarnsRegex
+        ~TestPotential.assert_
+        ~TestPotential.countTestCases
+        ~TestPotential.debug
+        ~TestPotential.defaultTestResult
+        ~TestPotential.doClassCleanups
+        ~TestPotential.doCleanups
+        ~TestPotential.fail
+        ~TestPotential.failIf
+        ~TestPotential.failIfAlmostEqual
+        ~TestPotential.failIfEqual
+        ~TestPotential.failUnless
+        ~TestPotential.failUnlessAlmostEqual
+        ~TestPotential.failUnlessEqual
+        ~TestPotential.failUnlessRaises
+        ~TestPotential.id
+        ~TestPotential.run
+        ~TestPotential.runAsync
+        ~TestPotential.setUp
+        ~TestPotential.setUpClass
+        ~TestPotential.shortDescription
+        ~TestPotential.skipTest
+        ~TestPotential.subTest
+        ~TestPotential.tearDown
+        ~TestPotential.tearDownClass
+        ~TestPotential.test_examples
+        ~TestPotential.test_grammar
+        ~TestPotential.test_potential
+        ~TestPotential.test_reset
+        ~TestPotential.test_sequence
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestPotential.longMessage
+        ~TestPotential.maxDiff
+
+   
+   

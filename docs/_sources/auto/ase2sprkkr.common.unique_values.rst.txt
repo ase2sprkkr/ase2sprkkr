@@ -1,7 +1,38 @@
-ase2sprkkr.common.unique\_values module
-=======================================
+unique\_values
+==============
+
+Full name: **ase2sprkkr.common.unique\_values**
 
 .. automodule:: ase2sprkkr.common.unique_values
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      UniqueValuesMapping
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

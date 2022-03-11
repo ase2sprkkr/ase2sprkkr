@@ -1,23 +1,40 @@
-ase2sprkkr.potentials.definitions package
-=========================================
+definitions
+===========
+
+Full name: **ase2sprkkr.potentials.definitions**
 
 .. automodule:: ase2sprkkr.potentials.definitions
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Subpackages
------------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.potentials.definitions.sections
+   
+   
+   
 
-Submodules
-----------
 
-.. toctree::
-   :maxdepth: 4
+   
+   
+   
 
-   ase2sprkkr.potentials.definitions.potential
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.potentials.definitions.potential
+     ase2sprkkr.potentials.definitions.sections
+  
+  

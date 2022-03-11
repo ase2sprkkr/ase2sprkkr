@@ -1,7 +1,38 @@
-ase2sprkkr.potentials.potentials module
-=======================================
+potentials
+==========
+
+Full name: **ase2sprkkr.potentials.potentials**
 
 .. automodule:: ase2sprkkr.potentials.potentials
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Potential
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

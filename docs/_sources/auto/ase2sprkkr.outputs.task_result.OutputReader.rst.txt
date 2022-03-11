@@ -1,0 +1,35 @@
+OutputReader
+============
+
+Full name: **ase2sprkkr.outputs.task\_result.OutputReader**
+
+.. currentmodule:: ase2sprkkr.outputs.task_result
+
+.. autoclass:: OutputReader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputReader.__init__
+        ~OutputReader.read_error
+        ~OutputReader.read_from_file
+        ~OutputReader.read_output
+        ~OutputReader.result
+        ~OutputReader.run
+        ~OutputReader.run_subprocess
+
+   
+   
+
+   
+   
+   

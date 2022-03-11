@@ -1,0 +1,50 @@
+ASEArraySection
+===============
+
+Full name: **ase2sprkkr.potentials.potential\_sections.ASEArraySection**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_sections
+
+.. autoclass:: ASEArraySection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySection.__init__
+        ~ASEArraySection.add
+        ~ASEArraySection.clear
+        ~ASEArraySection.get
+        ~ASEArraySection.has_any_value
+        ~ASEArraySection.members
+        ~ASEArraySection.remove_member
+        ~ASEArraySection.reset
+        ~ASEArraySection.save_to_file
+        ~ASEArraySection.set
+        ~ASEArraySection.to_dict
+        ~ASEArraySection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySection.definition
+        ~ASEArraySection.name
+        ~ASEArraySection.seciton_name
+
+   
+   

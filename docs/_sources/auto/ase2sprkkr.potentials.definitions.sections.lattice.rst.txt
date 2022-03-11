@@ -1,7 +1,40 @@
-ase2sprkkr.potentials.definitions.sections.lattice module
-=========================================================
+lattice
+=======
+
+Full name: **ase2sprkkr.potentials.definitions.sections.lattice**
 
 .. automodule:: ase2sprkkr.potentials.definitions.sections.lattice
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      LatticeSection
+      LatticeSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -169,10 +182,10 @@
 <span class="k">try</span><span class="p">:</span>
   <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-<div class="viewcode-block" id="njit"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.njit">[docs]</a>  <span class="k">def</span> <span class="nf">njit</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
+<div class="viewcode-block" id="njit"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.njit.html#ase2sprkkr.common.misc.njit">[docs]</a>  <span class="k">def</span> <span class="nf">njit</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">fce</span></div>
 
-<div class="viewcode-block" id="lazy_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.lazy_value">[docs]</a><span class="k">def</span> <span class="nf">lazy_value</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
+<div class="viewcode-block" id="lazy_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.lazy_value.html#ase2sprkkr.common.misc.lazy_value">[docs]</a><span class="k">def</span> <span class="nf">lazy_value</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; The decorator for only once computed value. Same a functools.cache,</span>
 <span class="sd">        but there is no need to take care of arguments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -199,20 +212,23 @@
 <span class="k">else</span><span class="p">:</span>
    <span class="n">cache</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="add_to_signature"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.add_to_signature">[docs]</a><span class="k">def</span> <span class="nf">add_to_signature</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="nb">set</span><span class="p">()):</span>
+<div class="viewcode-block" id="add_to_signature"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.add_to_signature.html#ase2sprkkr.common.misc.add_to_signature">[docs]</a><span class="k">def</span> <span class="nf">add_to_signature</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">add</span><span class="o">=</span><span class="nb">set</span><span class="p">()):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Add the arguments in the &lt;func&gt; function to the list of arguments</span>
 <span class="sd">  of the resulting function (as keyword_only arguments)</span>
 <span class="sd">  The modified function has to have its arguments defined as</span>
 <span class="sd">  in the following example:</span>
 
-<span class="sd">  def parent(.....):</span>
-<span class="sd">      ....</span>
 
-<span class="sd">  @add_to_signature(parent)</span>
-<span class="sd">  def child(*args, new_param, **kwargs):</span>
-<span class="sd">      print(f&#39;New param is {new_param})</span>
-<span class="sd">      parent(*args, **kwargs)</span>
+<span class="sd">  .. code-block::</span>
+
+<span class="sd">      def parent(.....):</span>
+<span class="sd">          ....</span>
+
+<span class="sd">      @add_to_signature(parent)</span>
+<span class="sd">      def child(*args, new_param, **kwargs):</span>
+<span class="sd">          print(f&#39;New param is {new_param})</span>
+<span class="sd">          parent(*args, **kwargs)</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
@@ -237,7 +253,7 @@
 
   <span class="k">return</span> <span class="n">modify</span></div>
 
-<div class="viewcode-block" id="copy_list"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.copy_list">[docs]</a><span class="k">def</span> <span class="nf">copy_list</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
+<div class="viewcode-block" id="copy_list"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.copy_list.html#ase2sprkkr.common.misc.copy_list">[docs]</a><span class="k">def</span> <span class="nf">copy_list</span><span class="p">(</span><span class="n">src</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Copy list of objects. Each object is copied just once (so</span>
 <span class="sd">    the number of unique objects in the list is retained &quot;&quot;&quot;</span>
 
@@ -251,37 +267,40 @@
     <span class="k">return</span> <span class="p">[</span> <span class="n">cpy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">src</span> <span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="class_property"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.class_property">[docs]</a><span class="k">class</span> <span class="nc">class_property</span><span class="p">:</span>
+<div class="viewcode-block" id="class_property"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.class_property.html#ase2sprkkr.common.misc.class_property">[docs]</a><span class="k">class</span> <span class="nc">class_property</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
 <span class="sd">    that can be accessed directly from the class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    Cls:</span>
-<span class="sd">       @class_property</span>
-<span class="sd">       def cls_property():</span>
-<span class="sd">           return some_possibly_cached_value</span>
 
-<span class="sd">    x = Cls.cls_property</span>
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">       class Cls:</span>
+<span class="sd">          @class_property</span>
+<span class="sd">          def cls_property():</span>
+<span class="sd">              return some_possibly_cached_value</span>
+
+<span class="sd">          x = Cls.cls_property</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="class_property.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.class_property.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="class_property.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.class_property.html#ase2sprkkr.common.misc.class_property.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span></div>
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="OrderedDict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.OrderedDict">[docs]</a><span class="k">class</span> <span class="nc">OrderedDict</span><span class="p">(</span><span class="n">_OrderedDict</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedDict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.OrderedDict.html#ase2sprkkr.common.misc.OrderedDict">[docs]</a><span class="k">class</span> <span class="nc">OrderedDict</span><span class="p">(</span><span class="n">_OrderedDict</span><span class="p">):</span>
 
-<div class="viewcode-block" id="OrderedDict.index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.OrderedDict.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedDict.index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.OrderedDict.html#ase2sprkkr.common.misc.OrderedDict.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span> <span class="k">return</span> <span class="n">i</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No suych key </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">);</span></div>
 
-<div class="viewcode-block" id="OrderedDict.first_item"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.OrderedDict.first_item">[docs]</a>    <span class="k">def</span> <span class="nf">first_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="OrderedDict.first_item"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.OrderedDict.html#ase2sprkkr.common.misc.OrderedDict.first_item">[docs]</a>    <span class="k">def</span> <span class="nf">first_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">))]</span></div></div>
 
-<div class="viewcode-block" id="numpy_index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.html#ase2sprkkr.common.misc.numpy_index">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="numpy_index"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.numpy_index.html#ase2sprkkr.common.misc.numpy_index">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">numpy_index</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns index of the first occurence of the item in the array</span>
 <span class="sd">    If numba is installed, the function is accelerated.</span>

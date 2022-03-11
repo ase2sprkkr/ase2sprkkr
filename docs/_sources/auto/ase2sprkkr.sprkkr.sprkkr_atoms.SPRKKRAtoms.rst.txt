@@ -1,0 +1,136 @@
+SPRKKRAtoms
+===========
+
+Full name: **ase2sprkkr.sprkkr.sprkkr\_atoms.SPRKKRAtoms**
+
+.. currentmodule:: ase2sprkkr.sprkkr.sprkkr_atoms
+
+.. autoclass:: SPRKKRAtoms
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SPRKKRAtoms.__init__
+        ~SPRKKRAtoms.append
+        ~SPRKKRAtoms.cancel_sites_symmetry
+        ~SPRKKRAtoms.center
+        ~SPRKKRAtoms.compute_sites_symmetry
+        ~SPRKKRAtoms.compute_spacegroup_for_atomic_numbers
+        ~SPRKKRAtoms.copy
+        ~SPRKKRAtoms.edit
+        ~SPRKKRAtoms.euler_rotate
+        ~SPRKKRAtoms.extend
+        ~SPRKKRAtoms.fromdict
+        ~SPRKKRAtoms.get_all_distances
+        ~SPRKKRAtoms.get_angle
+        ~SPRKKRAtoms.get_angles
+        ~SPRKKRAtoms.get_angular_momentum
+        ~SPRKKRAtoms.get_array
+        ~SPRKKRAtoms.get_atomic_numbers
+        ~SPRKKRAtoms.get_calculator
+        ~SPRKKRAtoms.get_cell
+        ~SPRKKRAtoms.get_cell_lengths_and_angles
+        ~SPRKKRAtoms.get_celldisp
+        ~SPRKKRAtoms.get_center_of_mass
+        ~SPRKKRAtoms.get_charges
+        ~SPRKKRAtoms.get_chemical_formula
+        ~SPRKKRAtoms.get_chemical_symbols
+        ~SPRKKRAtoms.get_dihedral
+        ~SPRKKRAtoms.get_dihedrals
+        ~SPRKKRAtoms.get_dipole_moment
+        ~SPRKKRAtoms.get_distance
+        ~SPRKKRAtoms.get_distances
+        ~SPRKKRAtoms.get_forces
+        ~SPRKKRAtoms.get_global_number_of_atoms
+        ~SPRKKRAtoms.get_initial_charges
+        ~SPRKKRAtoms.get_initial_magnetic_moments
+        ~SPRKKRAtoms.get_kinetic_energy
+        ~SPRKKRAtoms.get_magnetic_moment
+        ~SPRKKRAtoms.get_magnetic_moments
+        ~SPRKKRAtoms.get_masses
+        ~SPRKKRAtoms.get_momenta
+        ~SPRKKRAtoms.get_moments_of_inertia
+        ~SPRKKRAtoms.get_number_of_atoms
+        ~SPRKKRAtoms.get_pbc
+        ~SPRKKRAtoms.get_positions
+        ~SPRKKRAtoms.get_potential_energies
+        ~SPRKKRAtoms.get_potential_energy
+        ~SPRKKRAtoms.get_properties
+        ~SPRKKRAtoms.get_reciprocal_cell
+        ~SPRKKRAtoms.get_scaled_positions
+        ~SPRKKRAtoms.get_stress
+        ~SPRKKRAtoms.get_stresses
+        ~SPRKKRAtoms.get_tags
+        ~SPRKKRAtoms.get_temperature
+        ~SPRKKRAtoms.get_total_energy
+        ~SPRKKRAtoms.get_velocities
+        ~SPRKKRAtoms.get_volume
+        ~SPRKKRAtoms.has
+        ~SPRKKRAtoms.iterimages
+        ~SPRKKRAtoms.new_array
+        ~SPRKKRAtoms.pop
+        ~SPRKKRAtoms.promote_ase_atoms
+        ~SPRKKRAtoms.rattle
+        ~SPRKKRAtoms.repeat
+        ~SPRKKRAtoms.reset_sprkkr_potential
+        ~SPRKKRAtoms.rotate
+        ~SPRKKRAtoms.rotate_dihedral
+        ~SPRKKRAtoms.set_angle
+        ~SPRKKRAtoms.set_array
+        ~SPRKKRAtoms.set_atomic_numbers
+        ~SPRKKRAtoms.set_calculator
+        ~SPRKKRAtoms.set_cell
+        ~SPRKKRAtoms.set_celldisp
+        ~SPRKKRAtoms.set_center_of_mass
+        ~SPRKKRAtoms.set_chemical_symbols
+        ~SPRKKRAtoms.set_constraint
+        ~SPRKKRAtoms.set_dihedral
+        ~SPRKKRAtoms.set_distance
+        ~SPRKKRAtoms.set_initial_charges
+        ~SPRKKRAtoms.set_initial_magnetic_moments
+        ~SPRKKRAtoms.set_masses
+        ~SPRKKRAtoms.set_momenta
+        ~SPRKKRAtoms.set_pbc
+        ~SPRKKRAtoms.set_positions
+        ~SPRKKRAtoms.set_scaled_positions
+        ~SPRKKRAtoms.set_tags
+        ~SPRKKRAtoms.set_velocities
+        ~SPRKKRAtoms.todict
+        ~SPRKKRAtoms.translate
+        ~SPRKKRAtoms.wrap
+        ~SPRKKRAtoms.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SPRKKRAtoms.ase_objtype
+        ~SPRKKRAtoms.calc
+        ~SPRKKRAtoms.cell
+        ~SPRKKRAtoms.constraints
+        ~SPRKKRAtoms.number_of_lattice_vectors
+        ~SPRKKRAtoms.numbers
+        ~SPRKKRAtoms.pbc
+        ~SPRKKRAtoms.positions
+        ~SPRKKRAtoms.potential
+        ~SPRKKRAtoms.sites
+        ~SPRKKRAtoms.symbols
+        ~SPRKKRAtoms.symmetry
+
+   
+   

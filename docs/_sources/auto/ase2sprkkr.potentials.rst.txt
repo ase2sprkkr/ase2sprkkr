@@ -1,27 +1,45 @@
-ase2sprkkr.potentials package
-=============================
+potentials
+==========
+
+Full name: **ase2sprkkr.potentials**
 
 .. automodule:: ase2sprkkr.potentials
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Subpackages
------------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.potentials.definitions
+   
+   
+   
 
-Submodules
-----------
 
-.. toctree::
-   :maxdepth: 4
+   
+   
+   
 
-   ase2sprkkr.potentials.custom_potential_section
-   ase2sprkkr.potentials.io_data
-   ase2sprkkr.potentials.potential_definitions
-   ase2sprkkr.potentials.potential_sections
-   ase2sprkkr.potentials.potentials
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.potentials.custom_potential_section
+     ase2sprkkr.potentials.definitions
+     ase2sprkkr.potentials.io_data
+     ase2sprkkr.potentials.potential_definitions
+     ase2sprkkr.potentials.potential_sections
+     ase2sprkkr.potentials.potentials
+     ase2sprkkr.potentials.test
+  
+  

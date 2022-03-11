@@ -1,7 +1,38 @@
-ase2sprkkr.common.base\_configuration module
-============================================
+base\_configuration
+===================
+
+Full name: **ase2sprkkr.common.base\_configuration**
 
 .. automodule:: ase2sprkkr.common.base_configuration
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseConfiguration
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

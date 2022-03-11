@@ -1,0 +1,48 @@
+RootConfigurationContainer
+==========================
+
+Full name: **ase2sprkkr.common.configuration\_containers.RootConfigurationContainer**
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: RootConfigurationContainer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~RootConfigurationContainer.__init__
+        ~RootConfigurationContainer.add
+        ~RootConfigurationContainer.clear
+        ~RootConfigurationContainer.find
+        ~RootConfigurationContainer.get
+        ~RootConfigurationContainer.members
+        ~RootConfigurationContainer.read_from_file
+        ~RootConfigurationContainer.remove_member
+        ~RootConfigurationContainer.save_to_file
+        ~RootConfigurationContainer.set
+        ~RootConfigurationContainer.to_dict
+        ~RootConfigurationContainer.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~RootConfigurationContainer.name
+
+   
+   

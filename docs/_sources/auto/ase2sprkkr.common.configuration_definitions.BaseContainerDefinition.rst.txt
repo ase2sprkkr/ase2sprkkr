@@ -1,0 +1,56 @@
+BaseContainerDefinition
+=======================
+
+Full name: **ase2sprkkr.common.configuration\_definitions.BaseContainerDefinition**
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: BaseContainerDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseContainerDefinition.__init__
+        ~BaseContainerDefinition.all_member_names
+        ~BaseContainerDefinition.copy
+        ~BaseContainerDefinition.create_object
+        ~BaseContainerDefinition.custom_member_grammar
+        ~BaseContainerDefinition.delimited_custom_value_grammar
+        ~BaseContainerDefinition.grammar
+        ~BaseContainerDefinition.members
+        ~BaseContainerDefinition.names
+        ~BaseContainerDefinition.parse
+        ~BaseContainerDefinition.parse_file
+        ~BaseContainerDefinition.parse_from_stream
+        ~BaseContainerDefinition.parse_return
+        ~BaseContainerDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseContainerDefinition.custom_name_characters
+        ~BaseContainerDefinition.do_not_skip_whitespaces_before_name
+        ~BaseContainerDefinition.force_order
+        ~BaseContainerDefinition.name_in_grammar
+        ~BaseContainerDefinition.result_class
+        ~BaseContainerDefinition.validate
+        ~BaseContainerDefinition.value_name_format
+
+   
+   

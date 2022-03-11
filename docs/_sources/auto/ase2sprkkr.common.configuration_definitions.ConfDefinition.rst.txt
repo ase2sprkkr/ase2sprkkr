@@ -1,0 +1,60 @@
+ConfDefinition
+==============
+
+Full name: **ase2sprkkr.common.configuration\_definitions.ConfDefinition**
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: ConfDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ConfDefinition.__init__
+        ~ConfDefinition.all_member_names
+        ~ConfDefinition.copy
+        ~ConfDefinition.create_object
+        ~ConfDefinition.custom_member_grammar
+        ~ConfDefinition.delimited_custom_value_grammar
+        ~ConfDefinition.from_dict
+        ~ConfDefinition.grammar
+        ~ConfDefinition.members
+        ~ConfDefinition.names
+        ~ConfDefinition.parse
+        ~ConfDefinition.parse_file
+        ~ConfDefinition.parse_from_stream
+        ~ConfDefinition.parse_return
+        ~ConfDefinition.read_from_file
+        ~ConfDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ConfDefinition.custom_name_characters
+        ~ConfDefinition.custom_value_name
+        ~ConfDefinition.do_not_skip_whitespaces_before_name
+        ~ConfDefinition.force_order
+        ~ConfDefinition.name_in_grammar
+        ~ConfDefinition.result_class
+        ~ConfDefinition.sections
+        ~ConfDefinition.validate
+        ~ConfDefinition.value_name_format
+
+   
+   

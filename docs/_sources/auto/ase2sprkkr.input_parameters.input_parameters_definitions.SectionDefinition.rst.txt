@@ -1,0 +1,60 @@
+SectionDefinition
+=================
+
+Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.SectionDefinition**
+
+.. currentmodule:: ase2sprkkr.input_parameters.input_parameters_definitions
+
+.. autoclass:: SectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionDefinition.__init__
+        ~SectionDefinition.all_member_names
+        ~SectionDefinition.copy
+        ~SectionDefinition.create_object
+        ~SectionDefinition.custom_class
+        ~SectionDefinition.custom_member_grammar
+        ~SectionDefinition.delimited_custom_value_grammar
+        ~SectionDefinition.grammar
+        ~SectionDefinition.grammar_of_delimiter
+        ~SectionDefinition.members
+        ~SectionDefinition.names
+        ~SectionDefinition.parse
+        ~SectionDefinition.parse_file
+        ~SectionDefinition.parse_from_stream
+        ~SectionDefinition.parse_return
+        ~SectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionDefinition.custom_name_characters
+        ~SectionDefinition.custom_value_name
+        ~SectionDefinition.delimiter
+        ~SectionDefinition.do_not_skip_whitespaces_before_name
+        ~SectionDefinition.force_order
+        ~SectionDefinition.name_in_grammar
+        ~SectionDefinition.validate
+        ~SectionDefinition.value_name_format
+        ~SectionDefinition.values
+
+   
+   

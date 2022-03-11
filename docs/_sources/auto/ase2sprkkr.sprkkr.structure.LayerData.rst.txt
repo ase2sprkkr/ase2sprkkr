@@ -1,0 +1,29 @@
+LayerData
+=========
+
+Full name: **ase2sprkkr.sprkkr.structure.LayerData**
+
+.. currentmodule:: ase2sprkkr.sprkkr.structure
+
+.. autoclass:: LayerData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LayerData.__init__
+
+   
+   
+
+   
+   
+   

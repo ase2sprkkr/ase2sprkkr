@@ -1,0 +1,54 @@
+Bool
+====
+
+Full name: **ase2sprkkr.common.grammar\_types.Bool**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Bool
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Bool.__init__
+        ~Bool.convert
+        ~Bool.copy
+        ~Bool.enrich
+        ~Bool.grammar
+        ~Bool.grammar_name
+        ~Bool.missing_value
+        ~Bool.parse
+        ~Bool.parse_from_stream
+        ~Bool.print
+        ~Bool.read
+        ~Bool.string
+        ~Bool.transform_grammar
+        ~Bool.validate
+        ~Bool.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Bool.I
+        ~Bool.default_value
+        ~Bool.has_value
+        ~Bool.name_in_grammar
+
+   
+   

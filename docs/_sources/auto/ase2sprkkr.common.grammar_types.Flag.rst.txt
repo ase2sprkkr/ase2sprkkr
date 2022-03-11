@@ -1,0 +1,55 @@
+Flag
+====
+
+Full name: **ase2sprkkr.common.grammar\_types.Flag**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Flag
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Flag.__init__
+        ~Flag.convert
+        ~Flag.copy
+        ~Flag.enrich
+        ~Flag.grammar
+        ~Flag.grammar_name
+        ~Flag.missing_value
+        ~Flag.parse
+        ~Flag.parse_from_stream
+        ~Flag.print
+        ~Flag.read
+        ~Flag.str
+        ~Flag.string
+        ~Flag.transform_grammar
+        ~Flag.validate
+        ~Flag.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Flag.I
+        ~Flag.default_value
+        ~Flag.has_value
+        ~Flag.name_in_grammar
+
+   
+   

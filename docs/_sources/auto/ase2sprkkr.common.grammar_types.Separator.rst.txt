@@ -1,0 +1,54 @@
+Separator
+=========
+
+Full name: **ase2sprkkr.common.grammar\_types.Separator**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Separator
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.__init__
+        ~Separator.convert
+        ~Separator.copy
+        ~Separator.enrich
+        ~Separator.grammar
+        ~Separator.grammar_name
+        ~Separator.missing_value
+        ~Separator.parse
+        ~Separator.parse_from_stream
+        ~Separator.print
+        ~Separator.read
+        ~Separator.string
+        ~Separator.transform_grammar
+        ~Separator.validate
+        ~Separator.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.I
+        ~Separator.default_value
+        ~Separator.has_value
+        ~Separator.name_in_grammar
+
+   
+   

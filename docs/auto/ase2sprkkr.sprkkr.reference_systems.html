@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ase2sprkkr.sprkkr.reference_systems module &mdash; ASE2SPRKKR  documentation</title>
+  <title>reference_systems &mdash; ASE2SPRKKR  documentation</title>
   
 
   
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
   
@@ -41,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ase2sprkkr.sprkkr.sites module" href="ase2sprkkr.sprkkr.sites.html" />
-    <link rel="prev" title="ase2sprkkr.sprkkr.radial_meshes module" href="ase2sprkkr.sprkkr.radial_meshes.html" /> 
+    <link rel="next" title="ReferenceSystem" href="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.html" />
+    <link rel="prev" title="Mesh" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,23 +89,44 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">The documentation of modules and classes</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.html">ase2sprkkr.common package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.html">ase2sprkkr.input_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.html">ase2sprkkr.outputs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.html">ase2sprkkr.potentials package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html#submodules">Submodules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">reference_systems</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.html">ReferenceSystem</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
 </ul>
@@ -155,11 +177,11 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.html">ase2sprkkr package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.sprkkr.html">sprkkr</a> &raquo;</li>
         
-      <li>ase2sprkkr.sprkkr.reference_systems module</li>
+      <li>reference_systems</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -178,35 +200,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-ase2sprkkr.sprkkr.reference_systems">
-<span id="ase2sprkkr-sprkkr-reference-systems-module"></span><h1>ase2sprkkr.sprkkr.reference_systems module<a class="headerlink" href="#module-ase2sprkkr.sprkkr.reference_systems" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.reference_systems.</span></span><span class="sig-name descname"><span class="pre">ReferenceSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmtref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/reference_systems.html#ReferenceSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.reference_systems.ReferenceSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>#TODO - doc</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmtref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/reference_systems.html#ReferenceSystem.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.to_tuple">
-<span class="sig-name descname"><span class="pre">to_tuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/reference_systems.html#ReferenceSystem.to_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.to_tuple" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.default">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/reference_systems.html#ReferenceSystem.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.default" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/reference_systems.html#ReferenceSystem.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.copy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="reference-systems">
+<h1>reference_systems<a class="headerlink" href="#reference-systems" title="Permalink to this headline">¶</a></h1>
+<p>Full name: <strong>ase2sprkkr.sprkkr.reference_systems</strong></p>
+<span class="target" id="module-ase2sprkkr.sprkkr.reference_systems"></span><p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.html#ase2sprkkr.sprkkr.reference_systems.ReferenceSystem" title="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceSystem</span></code></a>(vref, rmtref)</p></td>
+<td><p>#TODO - doc</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -215,8 +223,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.sprkkr.sites.html" class="btn btn-neutral float-right" title="ase2sprkkr.sprkkr.sites module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="ase2sprkkr.sprkkr.radial_meshes.html" class="btn btn-neutral float-left" title="ase2sprkkr.sprkkr.radial_meshes module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.sprkkr.reference_systems.ReferenceSystem.html" class="btn btn-neutral float-right" title="ReferenceSystem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html" class="btn btn-neutral float-left" title="Mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

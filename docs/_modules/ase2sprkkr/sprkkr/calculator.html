@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -179,7 +192,7 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 
-<div class="viewcode-block" id="SPRKKR"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR">[docs]</a><span class="k">class</span> <span class="nc">SPRKKR</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR">[docs]</a><span class="k">class</span> <span class="nc">SPRKKR</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ASE calculator for SPR-KKR.</span>
 
@@ -189,7 +202,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">implemented_properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="SPRKKR.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="SPRKKR.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
                  <span class="n">input_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                  <span class="n">print_output</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span>
@@ -239,7 +252,7 @@
 <span class="sd">          will be created. None means that the parameters will be specified in the calculate</span>
 <span class="sd">          (or save_input) method.</span>
 <span class="sd">          If str is given, it is interpreted as a name of the task (if no dot and no slash</span>
-<span class="sd">          are contained in it), for which (see ase2sprkkr.input_parameters.definitions) the default</span>
+<span class="sd">          are contained in it), for which (see :py:mod:`ase2sprkkr.input_parameters.definitions`) the default</span>
 <span class="sd">          input parameters will be used, or as a filename contained the input file (which will</span>
 <span class="sd">          be readed)</span>
 
@@ -252,7 +265,7 @@
 <span class="sd">          True means to generate the potential from atoms (the default value).</span>
 <span class="sd">          False means that the potential will be given by the input_parameters.</span>
 <span class="sd">          None means that the potential is required to be supplied, when calculate or save_input</span>
-<span class="sd">              methods are called.</span>
+<span class="sd">          methods are called.</span>
 
 <span class="sd">        executable_postfix: str or boolean</span>
 <span class="sd">          String to be added to the runned executable. In some environments, the version</span>
@@ -318,7 +331,7 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span><span class="p">)</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span>
 
-<div class="viewcode-block" id="SPRKKR.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="o">*</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="o">*</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       ASE method to set the parameters.</span>
 
@@ -329,7 +342,7 @@
        <span class="k">if</span> <span class="n">kwargs</span> <span class="ow">or</span> <span class="n">options</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Get the value of an input parameter.</span>
 <span class="sd">           The parameter of the given name will be sought in sections</span>
 <span class="sd">           and the value of the first such one will be returned. If there</span>
@@ -368,12 +381,12 @@
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">at</span>
 
-<div class="viewcode-block" id="SPRKKR._advance_counter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter">[docs]</a>    <span class="k">def</span> <span class="nf">_advance_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR._advance_counter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter">[docs]</a>    <span class="k">def</span> <span class="nf">_advance_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Advance counter for generating filenames with %c counter placeholder &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="o">+=</span><span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">counter</span></div>
 
-<div class="viewcode-block" id="SPRKKR._open_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR._open_file">[docs]</a>    <span class="k">def</span> <span class="nf">_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">templator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">named</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="SPRKKR._open_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR._open_file">[docs]</a>    <span class="k">def</span> <span class="nf">_open_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">templator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">named</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+&#39;</span><span class="p">,</span>
                          <span class="n">allow_temporary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a file given a &#39;template&#39; filename file name</span>
@@ -426,7 +439,7 @@
 
         <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.save_input"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input">[docs]</a>    <span class="k">def</span> <span class="nf">save_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="SPRKKR.save_input"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input">[docs]</a>    <span class="k">def</span> <span class="nf">save_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span><span class="n">return_files</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">mpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -633,7 +646,7 @@
 
 
 
-<div class="viewcode-block" id="SPRKKR.run"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="SPRKKR.run"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">options</span><span class="o">=</span><span class="p">{},</span>
@@ -680,7 +693,7 @@
                                      <span class="n">mpi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="k">if</span> <span class="n">mpi</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mpi</span>
                                     <span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.calculate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">,</span>
+<div class="viewcode-block" id="SPRKKR.calculate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">,</span>
                   <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">input_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">create_subdirs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -739,30 +752,30 @@
         <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="SPRKKR.scf"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.scf">[docs]</a>    <span class="k">def</span> <span class="nf">scf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.scf"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.scf">[docs]</a>    <span class="k">def</span> <span class="nf">scf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;A shortcut for calculating a SCF task&quot;&quot;&quot;</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;SCF&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.phagen"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.phagen">[docs]</a>    <span class="k">def</span> <span class="nf">phagen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.phagen"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.phagen">[docs]</a>    <span class="k">def</span> <span class="nf">phagen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;A shortcut for calculating a PHAGEN task&quot;&quot;&quot;</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.kkrgen"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen">[docs]</a>    <span class="k">def</span> <span class="nf">kkrgen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.kkrgen"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen">[docs]</a>    <span class="k">def</span> <span class="nf">kkrgen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;A shortcut for calculating a KKRGEN task&quot;&quot;&quot;</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;KKRGEN&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.kkrspec"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec">[docs]</a>    <span class="k">def</span> <span class="nf">kkrspec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.kkrspec"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec">[docs]</a>    <span class="k">def</span> <span class="nf">kkrspec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;A shortcut for calculating a KKRSPEC task&quot;&quot;&quot;</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;KKRSPEC&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.kkrch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch">[docs]</a>    <span class="k">def</span> <span class="nf">kkrch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.kkrch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch">[docs]</a>    <span class="k">def</span> <span class="nf">kkrch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="sd">&quot;&quot;&quot;A shortcut for calculating a KKRCH task&quot;&quot;&quot;</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;KKRCH&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.run_xband"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband">[docs]</a>    <span class="k">def</span> <span class="nf">run_xband</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;xband&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.run_xband"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband">[docs]</a>    <span class="k">def</span> <span class="nf">run_xband</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;xband&#39;</span><span class="p">):</span>
         <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SPRKKR.copy_with_potential"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential">[docs]</a>    <span class="k">def</span> <span class="nf">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">):</span>
+<div class="viewcode-block" id="SPRKKR.copy_with_potential"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential">[docs]</a>    <span class="k">def</span> <span class="nf">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return copy of self, with the potential variable set.</span>
 <span class="sd">            Use the method to create a new calculator with the given &quot;result potential&quot;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -779,19 +792,19 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential</span></div>
 
 
-<div class="viewcode-block" id="FilenameTemplator"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator">[docs]</a><span class="k">class</span> <span class="nc">FilenameTemplator</span><span class="p">:</span>
+<div class="viewcode-block" id="FilenameTemplator"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator">[docs]</a><span class="k">class</span> <span class="nc">FilenameTemplator</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Class that replaces the placeholders in filenames with propper values,</span>
 <span class="sd">        see the replacements property of the class.</span>
 <span class="sd">        The used values are remembered so all the processed filenames use</span>
 <span class="sd">        the same value (e.g. counter, datetime etc...)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="FilenameTemplator.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
+<div class="viewcode-block" id="FilenameTemplator.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span> <span class="o">=</span> <span class="n">calculator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="FilenameTemplator._get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator._get">[docs]</a>    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
+<div class="viewcode-block" id="FilenameTemplator._get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator._get">[docs]</a>    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>

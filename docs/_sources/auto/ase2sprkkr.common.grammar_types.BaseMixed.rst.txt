@@ -1,0 +1,54 @@
+BaseMixed
+=========
+
+Full name: **ase2sprkkr.common.grammar\_types.BaseMixed**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: BaseMixed
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseMixed.__init__
+        ~BaseMixed.convert
+        ~BaseMixed.copy
+        ~BaseMixed.enrich
+        ~BaseMixed.get_type
+        ~BaseMixed.grammar
+        ~BaseMixed.grammar_name
+        ~BaseMixed.missing_value
+        ~BaseMixed.parse
+        ~BaseMixed.parse_from_stream
+        ~BaseMixed.print
+        ~BaseMixed.read
+        ~BaseMixed.string
+        ~BaseMixed.transform_grammar
+        ~BaseMixed.validate
+        ~BaseMixed.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseMixed.default_value
+        ~BaseMixed.has_value
+        ~BaseMixed.name_in_grammar
+
+   
+   

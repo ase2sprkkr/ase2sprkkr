@@ -1,0 +1,41 @@
+AtomicType
+==========
+
+Full name: **ase2sprkkr.sprkkr.atomic\_types.AtomicType**
+
+.. currentmodule:: ase2sprkkr.sprkkr.atomic_types
+
+.. autoclass:: AtomicType
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~AtomicType.__init__
+        ~AtomicType.copy
+        ~AtomicType.to_atomic_type
+        ~AtomicType.to_tuple
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~AtomicType.atomic_number
+        ~AtomicType.mendeleev
+
+   
+   

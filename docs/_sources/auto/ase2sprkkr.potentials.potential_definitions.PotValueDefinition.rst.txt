@@ -1,0 +1,50 @@
+PotValueDefinition
+==================
+
+Full name: **ase2sprkkr.potentials.potential\_definitions.PotValueDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_definitions
+
+.. autoclass:: PotValueDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotValueDefinition.__init__
+        ~PotValueDefinition.copy
+        ~PotValueDefinition.create_object
+        ~PotValueDefinition.get_value
+        ~PotValueDefinition.grammar
+        ~PotValueDefinition.grammar_of_delimiter
+        ~PotValueDefinition.remove
+        ~PotValueDefinition.validate
+        ~PotValueDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotValueDefinition.do_not_skip_whitespaces_before_name
+        ~PotValueDefinition.formated_name
+        ~PotValueDefinition.name_in_grammar
+        ~PotValueDefinition.name_value_delimiter
+        ~PotValueDefinition.prefix
+        ~PotValueDefinition.value_name_format
+
+   
+   

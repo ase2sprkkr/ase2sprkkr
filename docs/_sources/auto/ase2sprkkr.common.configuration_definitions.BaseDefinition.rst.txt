@@ -1,0 +1,41 @@
+BaseDefinition
+==============
+
+Full name: **ase2sprkkr.common.configuration\_definitions.BaseDefinition**
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: BaseDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseDefinition.__init__
+        ~BaseDefinition.create_object
+        ~BaseDefinition.grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseDefinition.do_not_skip_whitespaces_before_name
+        ~BaseDefinition.name_in_grammar
+        ~BaseDefinition.result_class
+
+   
+   

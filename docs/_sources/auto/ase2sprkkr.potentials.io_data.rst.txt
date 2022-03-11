@@ -1,7 +1,48 @@
-ase2sprkkr.potentials.io\_data module
-=====================================
+io\_data
+========
+
+Full name: **ase2sprkkr.potentials.io\_data**
 
 .. automodule:: ase2sprkkr.potentials.io_data
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      unique_mapping
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseIoData
+      ReadIoData
+      WriteIoData
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

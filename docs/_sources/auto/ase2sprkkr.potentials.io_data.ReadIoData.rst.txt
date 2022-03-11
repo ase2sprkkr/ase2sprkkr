@@ -1,0 +1,40 @@
+ReadIoData
+==========
+
+Full name: **ase2sprkkr.potentials.io\_data.ReadIoData**
+
+.. currentmodule:: ase2sprkkr.potentials.io_data
+
+.. autoclass:: ReadIoData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReadIoData.__init__
+        ~ReadIoData.clear
+        ~ReadIoData.copy
+        ~ReadIoData.fromkeys
+        ~ReadIoData.get
+        ~ReadIoData.items
+        ~ReadIoData.keys
+        ~ReadIoData.pop
+        ~ReadIoData.popitem
+        ~ReadIoData.setdefault
+        ~ReadIoData.update
+        ~ReadIoData.values
+
+   
+   
+
+   
+   
+   

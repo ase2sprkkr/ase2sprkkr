@@ -1,0 +1,37 @@
+DefaultResult
+=============
+
+Full name: **ase2sprkkr.outputs.readers.default.DefaultResult**
+
+.. currentmodule:: ase2sprkkr.outputs.readers.default
+
+.. autoclass:: DefaultResult
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~DefaultResult.__init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~DefaultResult.atoms
+
+   
+   

@@ -1,7 +1,40 @@
-ase2sprkkr.potentials.definitions.sections.types module
-=======================================================
+types
+=====
+
+Full name: **ase2sprkkr.potentials.definitions.sections.types**
 
 .. automodule:: ase2sprkkr.potentials.definitions.sections.types
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TypesSection
+      TypesSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,50 @@
+SitesSection
+============
+
+Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSection**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.sites
+
+.. autoclass:: SitesSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSection.__init__
+        ~SitesSection.add
+        ~SitesSection.clear
+        ~SitesSection.get
+        ~SitesSection.has_any_value
+        ~SitesSection.members
+        ~SitesSection.remove_member
+        ~SitesSection.reset
+        ~SitesSection.save_to_file
+        ~SitesSection.set
+        ~SitesSection.to_dict
+        ~SitesSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSection.definition
+        ~SitesSection.name
+        ~SitesSection.seciton_name
+
+   
+   

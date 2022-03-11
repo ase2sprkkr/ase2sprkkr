@@ -1,22 +1,47 @@
-ase2sprkkr.sprkkr package
-=========================
+sprkkr
+======
+
+Full name: **ase2sprkkr.sprkkr**
 
 .. automodule:: ase2sprkkr.sprkkr
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Submodules
-----------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.sprkkr.atomic_types
-   ase2sprkkr.sprkkr.calculator
-   ase2sprkkr.sprkkr.occupations
-   ase2sprkkr.sprkkr.radial_meshes
-   ase2sprkkr.sprkkr.reference_systems
-   ase2sprkkr.sprkkr.sites
-   ase2sprkkr.sprkkr.sprkkr_atoms
-   ase2sprkkr.sprkkr.structure
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.sprkkr.atomic_types
+     ase2sprkkr.sprkkr.calculator
+     ase2sprkkr.sprkkr.occupations
+     ase2sprkkr.sprkkr.radial_meshes
+     ase2sprkkr.sprkkr.reference_systems
+     ase2sprkkr.sprkkr.sites
+     ase2sprkkr.sprkkr.sprkkr_atoms
+     ase2sprkkr.sprkkr.structure
+     ase2sprkkr.sprkkr.test
+  
+  

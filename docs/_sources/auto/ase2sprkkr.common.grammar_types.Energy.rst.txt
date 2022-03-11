@@ -1,0 +1,56 @@
+Energy
+======
+
+Full name: **ase2sprkkr.common.grammar\_types.Energy**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Energy
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Energy.__init__
+        ~Energy.convert
+        ~Energy.copy
+        ~Energy.enrich
+        ~Energy.grammar
+        ~Energy.grammar_name
+        ~Energy.missing_value
+        ~Energy.parse
+        ~Energy.parse_from_stream
+        ~Energy.print
+        ~Energy.read
+        ~Energy.string
+        ~Energy.transform_grammar
+        ~Energy.validate
+        ~Energy.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Energy.I
+        ~Energy.default_value
+        ~Energy.grammar_cache
+        ~Energy.has_value
+        ~Energy.name_in_grammar
+        ~Energy.units
+
+   
+   

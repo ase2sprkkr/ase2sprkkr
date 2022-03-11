@@ -1,0 +1,33 @@
+AsyncioFileReader
+=================
+
+Full name: **ase2sprkkr.common.process\_output\_reader.AsyncioFileReader**
+
+.. currentmodule:: ase2sprkkr.common.process_output_reader
+
+.. autoclass:: AsyncioFileReader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~AsyncioFileReader.__init__
+        ~AsyncioFileReader.close
+        ~AsyncioFileReader.readline
+        ~AsyncioFileReader.readuntil
+        ~AsyncioFileReader.separator_shifts
+
+   
+   
+
+   
+   
+   

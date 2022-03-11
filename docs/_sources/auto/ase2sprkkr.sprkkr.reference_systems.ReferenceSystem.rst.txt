@@ -1,0 +1,32 @@
+ReferenceSystem
+===============
+
+Full name: **ase2sprkkr.sprkkr.reference\_systems.ReferenceSystem**
+
+.. currentmodule:: ase2sprkkr.sprkkr.reference_systems
+
+.. autoclass:: ReferenceSystem
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystem.__init__
+        ~ReferenceSystem.copy
+        ~ReferenceSystem.default
+        ~ReferenceSystem.to_tuple
+
+   
+   
+
+   
+   
+   

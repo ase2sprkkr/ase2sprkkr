@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/mods.css" type="text/css" />
 
   
   
@@ -41,8 +42,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ase2sprkkr package" href="auto/ase2sprkkr.html" />
-    <link rel="prev" title="Installation of the ASE2SPRKKR package" href="how-to-install.html" /> 
+    <link rel="next" title="ase2sprkkr" href="auto/ase2sprkkr.html" />
+    <link rel="prev" title="More about installing of the ASE2SPRKKR package" href="how-to-install.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -107,7 +108,19 @@
 <li class="toctree-l2"><a class="reference internal" href="#running-the-program">Running the program</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -187,12 +200,12 @@ Each configuration object has the capabilities to both parse the configuration f
 can contain values. (However, some (mostly custom: i.e. e.g. sections of a potential file, that
 are not currently parsed and their value is given as is) sections are just containers for a single value.</p>
 <p>The leaves of the configuration object are options
-(<a class="reference internal" href="auto/ase2sprkkr.common.options.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.options.Option</span></code></a>)
+(<a class="reference internal" href="auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.options.Option</span></code></a>)
 - single value containers. They are described by
 configuration definitions
-(see <a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseValueDefinition</span></code></a>),
+(see <a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseValueDefinition</span></code></a>),
 which hold the required type of the value (see <a class="reference internal" href="auto/ase2sprkkr.common.grammar_types.html#module-ase2sprkkr.common.grammar_types" title="ase2sprkkr.common.grammar_types"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types</span></code></a>) and its few other properties, such as the default value or parameters that determine the format of the value in the parsed/writed configuration file.</p>
-<p>The non-leaves nodes of a configuration trees are containers (<a class="reference internal" href="auto/ase2sprkkr.common.configuration_containers.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer</span></code></a>). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (<a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseContainerDefinition</span></code></a>), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each “definition tree” can be instantiated many containers for various contents of a configuration file).</p>
+<p>The non-leaves nodes of a configuration trees are containers (<a class="reference internal" href="auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer</span></code></a>). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (<a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseContainerDefinition</span></code></a>), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each “definition tree” can be instantiated many containers for various contents of a configuration file).</p>
 </div>
 <div class="section" id="structure-of-the-package">
 <h2>Structure of the package<a class="headerlink" href="#structure-of-the-package" title="Permalink to this headline">¶</a></h2>
@@ -230,10 +243,10 @@ The parsed values are then returned as the result of the calculations.</p>
 <p>In order to be capable of parsing both standard output and error
 output stream of SPR-KKR, asyncio is employed for the readers.</p>
 <p>In version 1.0 of the package, only the output reader of SCF task
-is implemented, results of the other tasks are read by the dummy <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.default.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" title="ase2sprkkr.outputs.readers.default.DefaultOutputReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">default</span> <span class="pre">reader</span></code></a>, which does not parse anything
+is implemented, results of the other tasks are read by the dummy <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" title="ase2sprkkr.outputs.readers.default.DefaultOutputReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">default</span> <span class="pre">reader</span></code></a>, which does not parse anything
 from the output.</p>
 <p>Note, that some parts of the output can and are parsed using the generated
-grammar, as it is described above, see e.g. <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output" title="ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output()</span></code></a>.</p>
+grammar, as it is described above, see e.g. <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output" title="ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output()</span></code></a>.</p>
 </div>
 <div class="section" id="sprkkr">
 <h3><a class="reference internal" href="auto/ase2sprkkr.sprkkr.html#module-ase2sprkkr.sprkkr" title="ase2sprkkr.sprkkr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sprkkr</span></code></a><a class="headerlink" href="#sprkkr" title="Permalink to this headline">¶</a></h3>
@@ -241,13 +254,13 @@ grammar, as it is described above, see e.g. <a class="reference internal" href="
 that are special for SPR-KKR.</p>
 <p>To allow ASE Atoms object (of the ASE Atoms class) to hold the SPR-KKR specific
 properties, it has to change its (OOP) ancestor to the class
-(<a class="reference internal" href="auto/ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></code></a>).
+(<a class="reference internal" href="auto/ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></code></a>).
 This is done by <code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms()</span></code>
 method, which is either called automatically when any Atoms object is passed to
 ase2sprkkr routines, or can be called manually if it is needed.</p>
 </div>
 <div class="section" id="tools">
-<h3><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code><a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h3>
+<h3><a class="reference internal" href="auto/ase2sprkkr.tools.html#module-ase2sprkkr.tools" title="ase2sprkkr.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code></a><a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h3>
 <p>Scripts for postprocessing of the SPRKRR results.</p>
 </div>
 </div>
@@ -264,7 +277,7 @@ If a potential file is parsed, then the third phase occurs: the ASE Atoms object
 </div>
 <div class="section" id="writing-the-configuration-files">
 <h2>Writing the configuration files<a class="headerlink" href="#writing-the-configuration-files" title="Permalink to this headline">¶</a></h2>
-<p>The writing to the file is performed by save_to_file <a class="reference internal" href="auto/ase2sprkkr.common.configuration_containers.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file()</span></code></a>, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods <a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write()</span></code></a> and <a class="reference internal" href="auto/ase2sprkkr.common.grammar_types.html#ase2sprkkr.common.grammar_types.BaseType.write" title="ase2sprkkr.common.grammar_types.BaseType.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType.write()</span></code></a>.</p>
+<p>The writing to the file is performed by save_to_file <a class="reference internal" href="auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file()</span></code></a>, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods <a class="reference internal" href="auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write()</span></code></a> and <a class="reference internal" href="auto/ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.write" title="ase2sprkkr.common.grammar_types.BaseType.write"><code class="xref py py-func docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType.write()</span></code></a>.</p>
 <p>Again, the exact way how to write the file - i.e. how to separate name-value pairs, how to separate values each from others etc. is given in the configuration_definition descendants.</p>
 </div>
 <div class="section" id="running-the-program">
@@ -290,8 +303,8 @@ according to the given potential, without an Atoms object)</p></li>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="auto/ase2sprkkr.html" class="btn btn-neutral float-right" title="ase2sprkkr package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="how-to-install.html" class="btn btn-neutral float-left" title="Installation of the ASE2SPRKKR package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="auto/ase2sprkkr.html" class="btn btn-neutral float-right" title="ase2sprkkr" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="how-to-install.html" class="btn btn-neutral float-left" title="More about installing of the ASE2SPRKKR package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

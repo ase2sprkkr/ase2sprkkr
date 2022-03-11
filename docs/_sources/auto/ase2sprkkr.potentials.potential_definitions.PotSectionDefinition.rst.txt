@@ -1,0 +1,61 @@
+PotSectionDefinition
+====================
+
+Full name: **ase2sprkkr.potentials.potential\_definitions.PotSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_definitions
+
+.. autoclass:: PotSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotSectionDefinition.__init__
+        ~PotSectionDefinition.all_member_names
+        ~PotSectionDefinition.copy
+        ~PotSectionDefinition.create_object
+        ~PotSectionDefinition.custom_class
+        ~PotSectionDefinition.custom_member_grammar
+        ~PotSectionDefinition.delimited_custom_value_grammar
+        ~PotSectionDefinition.depends_on
+        ~PotSectionDefinition.grammar
+        ~PotSectionDefinition.grammar_of_delimiter
+        ~PotSectionDefinition.members
+        ~PotSectionDefinition.names
+        ~PotSectionDefinition.parse
+        ~PotSectionDefinition.parse_file
+        ~PotSectionDefinition.parse_from_stream
+        ~PotSectionDefinition.parse_return
+        ~PotSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotSectionDefinition.custom_name_characters
+        ~PotSectionDefinition.custom_value_name
+        ~PotSectionDefinition.delimiter
+        ~PotSectionDefinition.do_not_skip_whitespaces_before_name
+        ~PotSectionDefinition.force_order
+        ~PotSectionDefinition.name_in_grammar
+        ~PotSectionDefinition.validate
+        ~PotSectionDefinition.value_name_format
+        ~PotSectionDefinition.values
+
+   
+   

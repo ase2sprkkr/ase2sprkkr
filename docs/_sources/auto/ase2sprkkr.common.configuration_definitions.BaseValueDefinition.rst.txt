@@ -1,0 +1,47 @@
+BaseValueDefinition
+===================
+
+Full name: **ase2sprkkr.common.configuration\_definitions.BaseValueDefinition**
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: BaseValueDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseValueDefinition.__init__
+        ~BaseValueDefinition.copy
+        ~BaseValueDefinition.create_object
+        ~BaseValueDefinition.get_value
+        ~BaseValueDefinition.grammar
+        ~BaseValueDefinition.remove
+        ~BaseValueDefinition.validate
+        ~BaseValueDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseValueDefinition.do_not_skip_whitespaces_before_name
+        ~BaseValueDefinition.formated_name
+        ~BaseValueDefinition.name_in_grammar
+        ~BaseValueDefinition.value_name_format
+
+   
+   

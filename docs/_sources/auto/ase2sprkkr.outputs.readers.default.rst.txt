@@ -1,7 +1,39 @@
-ase2sprkkr.outputs.readers.default module
-=========================================
+default
+=======
+
+Full name: **ase2sprkkr.outputs.readers.default**
 
 .. automodule:: ase2sprkkr.outputs.readers.default
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      DefaultOutputReader
+      DefaultResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

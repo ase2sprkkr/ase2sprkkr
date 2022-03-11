@@ -1,7 +1,42 @@
-ase2sprkkr.potentials.potential\_definitions module
-===================================================
+potential\_definitions
+======================
+
+Full name: **ase2sprkkr.potentials.potential\_definitions**
 
 .. automodule:: ase2sprkkr.potentials.potential_definitions
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ASEArraySectionDefinition
+      PotSectionDefinition
+      PotValueDefinition
+      PotentialDefinition
+      Separator
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

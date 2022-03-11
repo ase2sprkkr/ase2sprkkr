@@ -1,0 +1,60 @@
+OutputSectionDefinition
+=======================
+
+Full name: **ase2sprkkr.outputs.output\_definitions.OutputSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.outputs.output_definitions
+
+.. autoclass:: OutputSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputSectionDefinition.__init__
+        ~OutputSectionDefinition.all_member_names
+        ~OutputSectionDefinition.copy
+        ~OutputSectionDefinition.create_object
+        ~OutputSectionDefinition.custom_member_grammar
+        ~OutputSectionDefinition.delimited_custom_value_grammar
+        ~OutputSectionDefinition.grammar
+        ~OutputSectionDefinition.grammar_of_delimiter
+        ~OutputSectionDefinition.members
+        ~OutputSectionDefinition.names
+        ~OutputSectionDefinition.parse
+        ~OutputSectionDefinition.parse_file
+        ~OutputSectionDefinition.parse_from_stream
+        ~OutputSectionDefinition.parse_return
+        ~OutputSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputSectionDefinition.custom_class
+        ~OutputSectionDefinition.custom_name_characters
+        ~OutputSectionDefinition.custom_value_name
+        ~OutputSectionDefinition.delimiter
+        ~OutputSectionDefinition.do_not_skip_whitespaces_before_name
+        ~OutputSectionDefinition.force_order
+        ~OutputSectionDefinition.name_in_grammar
+        ~OutputSectionDefinition.validate
+        ~OutputSectionDefinition.value_name_format
+        ~OutputSectionDefinition.values
+
+   
+   

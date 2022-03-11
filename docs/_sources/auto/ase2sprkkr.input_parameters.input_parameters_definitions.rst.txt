@@ -1,7 +1,40 @@
-ase2sprkkr.input\_parameters.input\_parameters\_definitions module
-==================================================================
+input\_parameters\_definitions
+==============================
+
+Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions**
 
 .. automodule:: ase2sprkkr.input_parameters.input_parameters_definitions
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InputParametersDefinition
+      SectionDefinition
+      ValueDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

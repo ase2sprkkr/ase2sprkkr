@@ -1,0 +1,50 @@
+MeshInformationSection
+======================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.mesh\_information.MeshInformationSection**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.mesh_information
+
+.. autoclass:: MeshInformationSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~MeshInformationSection.__init__
+        ~MeshInformationSection.add
+        ~MeshInformationSection.clear
+        ~MeshInformationSection.get
+        ~MeshInformationSection.has_any_value
+        ~MeshInformationSection.members
+        ~MeshInformationSection.remove_member
+        ~MeshInformationSection.reset
+        ~MeshInformationSection.save_to_file
+        ~MeshInformationSection.set
+        ~MeshInformationSection.to_dict
+        ~MeshInformationSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~MeshInformationSection.definition
+        ~MeshInformationSection.name
+        ~MeshInformationSection.seciton_name
+
+   
+   

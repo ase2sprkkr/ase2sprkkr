@@ -1,0 +1,107 @@
+TestCase
+========
+
+Full name: **ase2sprkkr.common.test.init\_tests.TestCase**
+
+.. currentmodule:: ase2sprkkr.common.test.init_tests
+
+.. autoclass:: TestCase
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestCase.__init__
+        ~TestCase.addClassCleanup
+        ~TestCase.addCleanup
+        ~TestCase.addTypeEqualityFunc
+        ~TestCase.assertAlmostEqual
+        ~TestCase.assertAlmostEquals
+        ~TestCase.assertAsyncEqual
+        ~TestCase.assertAsyncRaises
+        ~TestCase.assertCountEqual
+        ~TestCase.assertDictContainsSubset
+        ~TestCase.assertDictEqual
+        ~TestCase.assertEqual
+        ~TestCase.assertEquals
+        ~TestCase.assertFalse
+        ~TestCase.assertGreater
+        ~TestCase.assertGreaterEqual
+        ~TestCase.assertIn
+        ~TestCase.assertIs
+        ~TestCase.assertIsInstance
+        ~TestCase.assertIsNone
+        ~TestCase.assertIsNot
+        ~TestCase.assertIsNotNone
+        ~TestCase.assertLess
+        ~TestCase.assertLessEqual
+        ~TestCase.assertListEqual
+        ~TestCase.assertLogs
+        ~TestCase.assertMultiLineEqual
+        ~TestCase.assertNotAlmostEqual
+        ~TestCase.assertNotAlmostEquals
+        ~TestCase.assertNotEqual
+        ~TestCase.assertNotEquals
+        ~TestCase.assertNotIn
+        ~TestCase.assertNotIsInstance
+        ~TestCase.assertNotRegex
+        ~TestCase.assertNotRegexpMatches
+        ~TestCase.assertRaises
+        ~TestCase.assertRaisesRegex
+        ~TestCase.assertRaisesRegexp
+        ~TestCase.assertRegex
+        ~TestCase.assertRegexpMatches
+        ~TestCase.assertSequenceEqual
+        ~TestCase.assertSetEqual
+        ~TestCase.assertTrue
+        ~TestCase.assertTupleEqual
+        ~TestCase.assertWarns
+        ~TestCase.assertWarnsRegex
+        ~TestCase.assert_
+        ~TestCase.countTestCases
+        ~TestCase.debug
+        ~TestCase.defaultTestResult
+        ~TestCase.doClassCleanups
+        ~TestCase.doCleanups
+        ~TestCase.fail
+        ~TestCase.failIf
+        ~TestCase.failIfAlmostEqual
+        ~TestCase.failIfEqual
+        ~TestCase.failUnless
+        ~TestCase.failUnlessAlmostEqual
+        ~TestCase.failUnlessEqual
+        ~TestCase.failUnlessRaises
+        ~TestCase.id
+        ~TestCase.run
+        ~TestCase.runAsync
+        ~TestCase.setUp
+        ~TestCase.setUpClass
+        ~TestCase.shortDescription
+        ~TestCase.skipTest
+        ~TestCase.subTest
+        ~TestCase.tearDown
+        ~TestCase.tearDownClass
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestCase.longMessage
+        ~TestCase.maxDiff
+
+   
+   

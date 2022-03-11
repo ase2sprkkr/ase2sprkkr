@@ -1,0 +1,31 @@
+AtomData
+========
+
+Full name: **ase2sprkkr.sprkkr.structure.AtomData**
+
+.. currentmodule:: ase2sprkkr.sprkkr.structure
+
+.. autoclass:: AtomData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~AtomData.__init__
+        ~AtomData.from_text
+        ~AtomData.get_symbol
+
+   
+   
+
+   
+   
+   

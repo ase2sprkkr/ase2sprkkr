@@ -1,0 +1,62 @@
+PotentialDefinition
+===================
+
+Full name: **ase2sprkkr.potentials.potential\_definitions.PotentialDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_definitions
+
+.. autoclass:: PotentialDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialDefinition.__init__
+        ~PotentialDefinition.all_member_names
+        ~PotentialDefinition.copy
+        ~PotentialDefinition.create_object
+        ~PotentialDefinition.custom_member_grammar
+        ~PotentialDefinition.custom_value_grammar
+        ~PotentialDefinition.delimited_custom_value_grammar
+        ~PotentialDefinition.from_dict
+        ~PotentialDefinition.grammar
+        ~PotentialDefinition.grammar_of_delimiter
+        ~PotentialDefinition.members
+        ~PotentialDefinition.names
+        ~PotentialDefinition.parse
+        ~PotentialDefinition.parse_file
+        ~PotentialDefinition.parse_from_stream
+        ~PotentialDefinition.parse_return
+        ~PotentialDefinition.read_from_file
+        ~PotentialDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialDefinition.custom_name_characters
+        ~PotentialDefinition.custom_value_name
+        ~PotentialDefinition.delimiter
+        ~PotentialDefinition.do_not_skip_whitespaces_before_name
+        ~PotentialDefinition.force_order
+        ~PotentialDefinition.name_in_grammar
+        ~PotentialDefinition.sections
+        ~PotentialDefinition.validate
+        ~PotentialDefinition.value_name_format
+
+   
+   

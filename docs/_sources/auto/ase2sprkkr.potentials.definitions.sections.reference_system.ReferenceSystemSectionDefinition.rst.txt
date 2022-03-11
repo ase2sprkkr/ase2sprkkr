@@ -1,0 +1,61 @@
+ReferenceSystemSectionDefinition
+================================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.ReferenceSystemSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.reference_system
+
+.. autoclass:: ReferenceSystemSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystemSectionDefinition.__init__
+        ~ReferenceSystemSectionDefinition.all_member_names
+        ~ReferenceSystemSectionDefinition.copy
+        ~ReferenceSystemSectionDefinition.create_object
+        ~ReferenceSystemSectionDefinition.custom_class
+        ~ReferenceSystemSectionDefinition.custom_member_grammar
+        ~ReferenceSystemSectionDefinition.delimited_custom_value_grammar
+        ~ReferenceSystemSectionDefinition.depends_on
+        ~ReferenceSystemSectionDefinition.grammar
+        ~ReferenceSystemSectionDefinition.grammar_of_delimiter
+        ~ReferenceSystemSectionDefinition.members
+        ~ReferenceSystemSectionDefinition.names
+        ~ReferenceSystemSectionDefinition.parse
+        ~ReferenceSystemSectionDefinition.parse_file
+        ~ReferenceSystemSectionDefinition.parse_from_stream
+        ~ReferenceSystemSectionDefinition.parse_return
+        ~ReferenceSystemSectionDefinition.remove
+        ~ReferenceSystemSectionDefinition.validate
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystemSectionDefinition.custom_name_characters
+        ~ReferenceSystemSectionDefinition.custom_value_name
+        ~ReferenceSystemSectionDefinition.delimiter
+        ~ReferenceSystemSectionDefinition.do_not_skip_whitespaces_before_name
+        ~ReferenceSystemSectionDefinition.force_order
+        ~ReferenceSystemSectionDefinition.name_in_grammar
+        ~ReferenceSystemSectionDefinition.value_name_format
+        ~ReferenceSystemSectionDefinition.values
+
+   
+   

@@ -1,0 +1,49 @@
+OutputNonameValueDefinition
+===========================
+
+Full name: **ase2sprkkr.outputs.output\_definitions.OutputNonameValueDefinition**
+
+.. currentmodule:: ase2sprkkr.outputs.output_definitions
+
+.. autoclass:: OutputNonameValueDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputNonameValueDefinition.__init__
+        ~OutputNonameValueDefinition.copy
+        ~OutputNonameValueDefinition.create_object
+        ~OutputNonameValueDefinition.get_value
+        ~OutputNonameValueDefinition.grammar
+        ~OutputNonameValueDefinition.grammar_of_delimiter
+        ~OutputNonameValueDefinition.remove
+        ~OutputNonameValueDefinition.validate
+        ~OutputNonameValueDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputNonameValueDefinition.do_not_skip_whitespaces_before_name
+        ~OutputNonameValueDefinition.formated_name
+        ~OutputNonameValueDefinition.name_in_grammar
+        ~OutputNonameValueDefinition.prefix
+        ~OutputNonameValueDefinition.value_name_format
+
+   
+   

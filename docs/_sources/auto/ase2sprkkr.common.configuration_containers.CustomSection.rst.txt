@@ -1,0 +1,50 @@
+CustomSection
+=============
+
+Full name: **ase2sprkkr.common.configuration\_containers.CustomSection**
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: CustomSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSection.__init__
+        ~CustomSection.add
+        ~CustomSection.clear
+        ~CustomSection.factory
+        ~CustomSection.get
+        ~CustomSection.has_any_value
+        ~CustomSection.members
+        ~CustomSection.remove
+        ~CustomSection.remove_member
+        ~CustomSection.save_to_file
+        ~CustomSection.set
+        ~CustomSection.to_dict
+        ~CustomSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSection.name
+        ~CustomSection.seciton_name
+
+   
+   

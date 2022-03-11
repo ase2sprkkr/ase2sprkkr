@@ -1,0 +1,40 @@
+BaseIoData
+==========
+
+Full name: **ase2sprkkr.potentials.io\_data.BaseIoData**
+
+.. currentmodule:: ase2sprkkr.potentials.io_data
+
+.. autoclass:: BaseIoData
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseIoData.__init__
+        ~BaseIoData.clear
+        ~BaseIoData.copy
+        ~BaseIoData.fromkeys
+        ~BaseIoData.get
+        ~BaseIoData.items
+        ~BaseIoData.keys
+        ~BaseIoData.pop
+        ~BaseIoData.popitem
+        ~BaseIoData.setdefault
+        ~BaseIoData.update
+        ~BaseIoData.values
+
+   
+   
+
+   
+   
+   

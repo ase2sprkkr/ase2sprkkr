@@ -1,0 +1,48 @@
+Occupation
+==========
+
+Full name: **ase2sprkkr.sprkkr.occupations.Occupation**
+
+.. currentmodule:: ase2sprkkr.sprkkr.occupations
+
+.. autoclass:: Occupation
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Occupation.__init__
+        ~Occupation.add
+        ~Occupation.atomic_types
+        ~Occupation.check
+        ~Occupation.copy
+        ~Occupation.set
+        ~Occupation.to_occupation
+        ~Occupation.to_tuple
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Occupation.as_dict
+        ~Occupation.primary_atomic_number
+        ~Occupation.primary_atomic_type
+        ~Occupation.primary_symbol
+        ~Occupation.total_occupation
+
+   
+   

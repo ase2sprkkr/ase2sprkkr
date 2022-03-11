@@ -1,0 +1,80 @@
+CustomSectionToken
+==================
+
+Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomSectionToken**
+
+.. currentmodule:: ase2sprkkr.potentials.custom_potential_section
+
+.. autoclass:: CustomSectionToken
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSectionToken.__init__
+        ~CustomSectionToken.addCondition
+        ~CustomSectionToken.addConditionEx
+        ~CustomSectionToken.addParseAction
+        ~CustomSectionToken.addParseActionEx
+        ~CustomSectionToken.canParseNext
+        ~CustomSectionToken.checkRecursion
+        ~CustomSectionToken.copy
+        ~CustomSectionToken.enablePackrat
+        ~CustomSectionToken.ignore
+        ~CustomSectionToken.inlineLiteralsUsing
+        ~CustomSectionToken.leaveWhitespace
+        ~CustomSectionToken.matches
+        ~CustomSectionToken.parseFile
+        ~CustomSectionToken.parseImpl
+        ~CustomSectionToken.parseString
+        ~CustomSectionToken.parseWithTabs
+        ~CustomSectionToken.postParse
+        ~CustomSectionToken.preParse
+        ~CustomSectionToken.resetCache
+        ~CustomSectionToken.runTests
+        ~CustomSectionToken.scanString
+        ~CustomSectionToken.searchString
+        ~CustomSectionToken.setBreak
+        ~CustomSectionToken.setDebug
+        ~CustomSectionToken.setDebugActions
+        ~CustomSectionToken.setDefaultWhitespaceChars
+        ~CustomSectionToken.setFailAction
+        ~CustomSectionToken.setName
+        ~CustomSectionToken.setParseAction
+        ~CustomSectionToken.setResultsName
+        ~CustomSectionToken.setWhitespaceChars
+        ~CustomSectionToken.split
+        ~CustomSectionToken.streamline
+        ~CustomSectionToken.suppress
+        ~CustomSectionToken.transformString
+        ~CustomSectionToken.tryParse
+        ~CustomSectionToken.validate
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSectionToken.DEFAULT_WHITE_CHARS
+        ~CustomSectionToken.name
+        ~CustomSectionToken.packrat_cache
+        ~CustomSectionToken.packrat_cache_lock
+        ~CustomSectionToken.packrat_cache_stats
+        ~CustomSectionToken.pattern
+        ~CustomSectionToken.verbose_stacktrace
+
+   
+   

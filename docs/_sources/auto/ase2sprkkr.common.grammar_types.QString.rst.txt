@@ -1,0 +1,54 @@
+QString
+=======
+
+Full name: **ase2sprkkr.common.grammar\_types.QString**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: QString
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~QString.__init__
+        ~QString.convert
+        ~QString.copy
+        ~QString.enrich
+        ~QString.grammar
+        ~QString.grammar_name
+        ~QString.missing_value
+        ~QString.parse
+        ~QString.parse_from_stream
+        ~QString.print
+        ~QString.read
+        ~QString.string
+        ~QString.transform_grammar
+        ~QString.validate
+        ~QString.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~QString.I
+        ~QString.default_value
+        ~QString.has_value
+        ~QString.name_in_grammar
+
+   
+   

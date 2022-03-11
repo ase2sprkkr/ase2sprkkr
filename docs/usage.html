@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/mods.css" type="text/css" />
 
   
   
@@ -41,8 +42,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation of the ASE2SPRKKR package" href="how-to-install.html" />
-    <link rel="prev" title="Welcome to ASE2SPRKKR’s documentation!" href="index.html" /> 
+    <link rel="next" title="More about installing of the ASE2SPRKKR package" href="how-to-install.html" />
+    <link rel="prev" title="ASE2SPRKKR software package" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -113,7 +114,19 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -219,7 +232,7 @@ place into your <code class="docutils literal notranslate"><span class="pre">.ba
 </pre></div>
 </div>
 <p>For more verbose documentation about the installation the package, please see
-the topic <span class="xref std std-ref">Installation of the ASE2SPRKKR package</span></p>
+the topic <a class="reference internal" href="how-to-install.html#installation"><span class="std std-ref">More about the package installation</span></a></p>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
@@ -271,7 +284,7 @@ the sites object — this is computed automatically according to the
 symmetry of the structure (see the SPRKKRAtoms.compute_sites_symmetry
 method). Sites object in the sites array holds all the SPRKKR specific
 properties of the sites. You can change the occupation of a given site
-by calling the <a class="reference internal" href="auto/ase2sprkkr.sprkkr.occupations.html#ase2sprkkr.sprkkr.occupations.Occupation.set" title="ase2sprkkr.sprkkr.occupations.Occupation.set"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Site.occupation.set</span></code></a> method:</p>
+by calling the <a class="reference internal" href="auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.set" title="ase2sprkkr.sprkkr.occupations.Occupation.set"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Site.occupation.set</span></code></a> method:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;Cl&#39;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span> <span class="p">:</span> <span class="mf">0.5</span> <span class="p">})</span>
 </pre></div>
 </div>
@@ -296,7 +309,7 @@ meth:<cite>SPRKKRAtoms.promote_ase_atoms&lt;ase2sprkkr.sprkkr.sprkkr_atoms.SPRKK
 <h3>Reading the results<a class="headerlink" href="#reading-the-results" title="Permalink to this headline">¶</a></h3>
 <p>Some of the results of the computation are returned by the calculate
 method (see e.g.
-<a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.html#ase2sprkkr.outputs.readers.scf.ScfResult" title="ase2sprkkr.outputs.readers.scf.ScfResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers.scf.ScfResult</span></code></a>.</p>
+<a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" title="ase2sprkkr.outputs.readers.scf.ScfResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.outputs.readers.scf.ScfResult</span></code></a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Energy is </span><span class="si">{</span><span class="n">out</span><span class="o">.</span><span class="n">energy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There were </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">})</span> <span class="n">iterations</span><span class="s2">&quot;)</span>
@@ -335,7 +348,7 @@ calculator via <code class="docutils literal notranslate"><span class="pre">inpu
 predefined task (SCF, PHAGEN, ARPES, DOS), which uses a predefined set
 of parameters for the task, the filename (containing either dot or
 slash) from where the parameters will be loaded or the
-<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object (see the later example).</p>
+<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object (see the later example).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span>
                     <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NE&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
 <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;./input.inp&#39;</span><span class="p">,</span>
@@ -366,7 +379,7 @@ notation</p>
 </pre></div>
 </div>
 <p>…or use the <code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code> property of the calculator. Through
-this property (which contains <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object) the sections
+this property (which contains <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object) the sections
 and their parameters are directly acessible. During interactive work,
 you can use tab-completion to see the sections and their parameters.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">input_paramters</span> <span class="o">=</span> <span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
@@ -379,13 +392,13 @@ you can use tab-completion to see the sections and their parameters.</p>
 least partialy, e.g. <code class="docutils literal notranslate"><span class="pre">ImE</span></code>).</p>
 <div class="section" id="working-with-inputparameters-object">
 <h4>Working with InputParameters object<a class="headerlink" href="#working-with-inputparameters-object" title="Permalink to this headline">¶</a></h4>
-<p>You can also directly create the <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object and pass it
+<p>You can also directly create the <a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a> object and pass it
 into the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
 property,
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculator</span> <span class="pre">constructor</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculator</span> <span class="pre">constructor</span></code></a>
 or to the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
 method</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase2sprkkr.input_parameters.input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
 <span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
@@ -402,7 +415,7 @@ sections, if there is a need.</p>
 </div>
 <p>If you work with input parameters readed from an already created input
 file, you can use the
-<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate" title="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate" title="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 method to avoid the necessity to
 create the calculator (manually):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;input.inp&#39;</span><span class="p">)</span>
@@ -411,7 +424,7 @@ create the calculator (manually):</p>
 </div>
 <p>The input parameters can be set or reset (to the task-predefined values,
 to the values provided in a <code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code> object or to the values contained
-in an input file) via the calculator <a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a> property.</p>
+in an input file) via the calculator <a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a> property.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;SCF&#39;</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
 <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;./input_file.inp&#39;</span>
@@ -422,11 +435,11 @@ in an input file) via the calculator <a class="reference internal" href="auto/as
 <h4>Running more subsequent tasks<a class="headerlink" href="#running-more-subsequent-tasks" title="Permalink to this headline">¶</a></h4>
 <p>A common usecase is to run more subseuent task with the same atomic
 structure. To do so, you can either modify the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a>
 and
 <code class="xref py py-class docutils literal notranslate"><span class="pre">potential_file</span></code>
 properties of a calculator (the
-<a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.html#ase2sprkkr.outputs.readers.scf.ScfResult.potential_filename" title="ase2sprkkr.outputs.readers.scf.ScfResult.potential_filename"><code class="xref py py-meth docutils literal notranslate"><span class="pre">out.potential_filename</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.potential_filename" title="ase2sprkkr.outputs.readers.scf.ScfResult.potential_filename"><code class="xref py py-meth docutils literal notranslate"><span class="pre">out.potential_filename</span></code></a>
 property contains the name of the `converged potential’)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
@@ -434,7 +447,7 @@ property contains the name of the `converged potential’)</p>
 </pre></div>
 </div>
 <p>…or you can use calculator associated with the converged potential,
-which is available in the <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.html#ase2sprkkr.outputs.readers.scf.ScfResult.calculator" title="ase2sprkkr.outputs.readers.scf.ScfResult.calculator"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output.calculator</span></code></a> property of a SCF task
+which is available in the <a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.calculator" title="ase2sprkkr.outputs.readers.scf.ScfResult.calculator"><code class="xref py py-meth docutils literal notranslate"><span class="pre">output.calculator</span></code></a> property of a SCF task
 result:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
 <span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">)</span>
@@ -446,7 +459,7 @@ result:</p>
 <p>If you want to repeat a calculation, you can read (and modify) the input
 parameters from an existing input file. In this case, it may be useful
 to use the method
-<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate" title="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate" title="ase2sprkkr.input_parameters.input_parameters.InputParameters.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 of InputParameters object to avoid the
 necessity to create the calculator.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;an_input_file.inp&#39;</span><span class="p">)</span>
@@ -454,12 +467,12 @@ necessity to create the calculator.</p>
 </pre></div>
 </div>
 <p>or you can of course just set the calculator
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-meth docutils literal notranslate"><span class="pre">input_parameters</span></code></a>
 property to the filename, or pass the filename as <code class="docutils literal notranslate"><span class="pre">input_parameters</span></code>
 argument to its
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">constructor</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">constructor</span></code></a>
 or
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 method.</p>
 </div>
 </div>
@@ -473,7 +486,7 @@ calculation:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="s1">&#39;my_potential_file&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>or to create the <a class="reference internal" href="auto/ase2sprkkr.potentials.potentials.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a> object manually from ASE atoms object and to
+<p>or to create the <a class="reference internal" href="auto/ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a> object manually from ASE atoms object and to
 alter/check its properties before the computation</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ase2sprkkr.potential.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
 <span class="n">potential</span> <span class="o">=</span> <span class="n">Potential</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
@@ -486,12 +499,12 @@ alter/check its properties before the computation</p>
 <h3>Generating the input files<a class="headerlink" href="#generating-the-input-files" title="Permalink to this headline">¶</a></h3>
 <p>If you just want to generate the input files (the input and potential ones)
 and not to run the calculation, you can use method
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_input</span></code></a>.
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_input</span></code></a>.
 It acceps, same as the method
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 the arguments to specify the filenames of the task and potential (and,
 for the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>
 method, output) file.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_file</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="o">....</span><span class="p">)</span>
 </pre></div>
@@ -532,7 +545,7 @@ following logic behind the scenes:</p>
 object (which in this case has to be supplied). If the potential is
 given by a filename, it is used “as is”, while if it is given by an
 object (of a
-<a class="reference internal" href="auto/ase2sprkkr.potentials.potentials.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a>
 class), this object is updated according to
 the atoms object (if the latter is supplied). The special value False
 for the potential means to use the potential file specified by the task:
@@ -540,47 +553,53 @@ in this case, the InputParameters object or task file (with specified
 potential) has to be supplied (as the argument).</p>
 <p>The input parameters can be given either by a filename (containing the
 “input file”), by object (of class
-<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
 ), or by string
 (which creates the
-<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
+<a class="reference internal" href="auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a>
 object containing the predefined
 values). If the parameters are given by object, the input file is
 created. If it is given by filename, the file is readed and modified
 only if it is required: that is either if the potential argument of
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_input</span></code></a>,
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run" title="ase2sprkkr.sprkkr.calculator.SPRKKR.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run</span></code></a> or,
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_input</span></code></a>,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.run" title="ase2sprkkr.sprkkr.calculator.SPRKKR.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run</span></code></a> or,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>,
 methods is not False - which indicates that the content of the file should
 be replaced by the new potential - or if the non-empty options argument is specified -
 which leads to the modification of the potential in the file according to the options.</p>
 <p>Note, that:</p>
-<ul class="simple">
-<li><p>If the potential is set to an SPRKKR calculator (either by the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.potential" title="ase2sprkkr.sprkkr.calculator.SPRKKR.potential"><code class="xref py py-meth docutils literal notranslate"><span class="pre">potential</span></code></a>,
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>If the potential is set to an SPRKKR calculator (either by the</dt><dd><p><a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.potential" title="ase2sprkkr.sprkkr.calculator.SPRKKR.potential"><code class="xref py py-meth docutils literal notranslate"><span class="pre">potential</span></code></a>,
 property setter or in the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">constructor</span></code></a>,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">constructor</span></code></a>,
 ), the atoms
 object is created from the potential (and stored in the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.atoms" title="ase2sprkkr.sprkkr.calculator.SPRKKR.atoms"><code class="xref py py-meth docutils literal notranslate"><span class="pre">atoms</span></code></a>,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.atoms" title="ase2sprkkr.sprkkr.calculator.SPRKKR.atoms"><code class="xref py py-meth docutils literal notranslate"><span class="pre">atoms</span></code></a>,
 property). However, this object does not reflect
-the changes made to the potential thereafter.</p></li>
-<li><p>After the computation of the SCF task, the result provide a new
-potential (in the</p></li>
-</ul>
-<dl class="simple">
-<dt><a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.html#ase2sprkkr.outputs.readers.scf.ScfResult.potential" title="ase2sprkkr.outputs.readers.scf.ScfResult.potential"><code class="xref py py-meth docutils literal notranslate"><span class="pre">result.potential</span></code></a></dt><dd><p>property), the old one is not updated, nor the calculator potential property.</p>
+the changes made to the potential thereafter.</p>
 </dd>
 </dl>
+</li>
+<li><dl class="simple">
+<dt>After the computation of the SCF task, the result provide a new</dt><dd><p>potential (in the
+<a class="reference internal" href="auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.potential" title="ase2sprkkr.outputs.readers.scf.ScfResult.potential"><code class="xref py py-meth docutils literal notranslate"><span class="pre">result.potential</span></code></a>
+property), the old one is not updated, nor the calculator potential property.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
 </div>
 <div class="section" id="mpi-calculations">
 <h3>MPI calculations<a class="headerlink" href="#mpi-calculations" title="Permalink to this headline">¶</a></h3>
 <p>You can use MPI in your calculations using the
 <code class="docutils literal notranslate"><span class="pre">mpi</span></code> parameter (of
 both the
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculator</span> <span class="pre">constructor</span></code></a>,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculator</span> <span class="pre">constructor</span></code></a>,
 and
-<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>,
+<a class="reference internal" href="auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">calculate</span></code></a>,
 method). On clusters,
 where the number of processes is determined by the batch system, you can
 just pass True to the argument, otherwise supply an integer that denotes
@@ -606,7 +625,7 @@ processes.</p>
 <div class="section" id="bundled-tools">
 <h3>Bundled tools<a class="headerlink" href="#bundled-tools" title="Permalink to this headline">¶</a></h3>
 <p>In
-<code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code>
+<a class="reference internal" href="auto/ase2sprkkr.tools.html#module-ase2sprkkr.tools" title="ase2sprkkr.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">tools</span></code></a>
 subdirectory of the package, there is a tool
 visualise_in_struct for visualisation of the surfaces computed by the
 SPR-KKR package. To view a surface, you can run</p>
@@ -643,8 +662,8 @@ highly appreciated.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="how-to-install.html" class="btn btn-neutral float-right" title="Installation of the ASE2SPRKKR package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to ASE2SPRKKR’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="how-to-install.html" class="btn btn-neutral float-right" title="More about installing of the ASE2SPRKKR package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="ASE2SPRKKR software package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

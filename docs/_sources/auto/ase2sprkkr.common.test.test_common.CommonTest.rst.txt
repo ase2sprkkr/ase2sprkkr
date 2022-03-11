@@ -1,0 +1,109 @@
+CommonTest
+==========
+
+Full name: **ase2sprkkr.common.test.test\_common.CommonTest**
+
+.. currentmodule:: ase2sprkkr.common.test.test_common
+
+.. autoclass:: CommonTest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CommonTest.__init__
+        ~CommonTest.addClassCleanup
+        ~CommonTest.addCleanup
+        ~CommonTest.addTypeEqualityFunc
+        ~CommonTest.assertAlmostEqual
+        ~CommonTest.assertAlmostEquals
+        ~CommonTest.assertAsyncEqual
+        ~CommonTest.assertAsyncRaises
+        ~CommonTest.assertCountEqual
+        ~CommonTest.assertDictContainsSubset
+        ~CommonTest.assertDictEqual
+        ~CommonTest.assertEqual
+        ~CommonTest.assertEquals
+        ~CommonTest.assertFalse
+        ~CommonTest.assertGreater
+        ~CommonTest.assertGreaterEqual
+        ~CommonTest.assertIn
+        ~CommonTest.assertIs
+        ~CommonTest.assertIsInstance
+        ~CommonTest.assertIsNone
+        ~CommonTest.assertIsNot
+        ~CommonTest.assertIsNotNone
+        ~CommonTest.assertLess
+        ~CommonTest.assertLessEqual
+        ~CommonTest.assertListEqual
+        ~CommonTest.assertLogs
+        ~CommonTest.assertMultiLineEqual
+        ~CommonTest.assertNotAlmostEqual
+        ~CommonTest.assertNotAlmostEquals
+        ~CommonTest.assertNotEqual
+        ~CommonTest.assertNotEquals
+        ~CommonTest.assertNotIn
+        ~CommonTest.assertNotIsInstance
+        ~CommonTest.assertNotRegex
+        ~CommonTest.assertNotRegexpMatches
+        ~CommonTest.assertRaises
+        ~CommonTest.assertRaisesRegex
+        ~CommonTest.assertRaisesRegexp
+        ~CommonTest.assertRegex
+        ~CommonTest.assertRegexpMatches
+        ~CommonTest.assertSequenceEqual
+        ~CommonTest.assertSetEqual
+        ~CommonTest.assertTrue
+        ~CommonTest.assertTupleEqual
+        ~CommonTest.assertWarns
+        ~CommonTest.assertWarnsRegex
+        ~CommonTest.assert_
+        ~CommonTest.countTestCases
+        ~CommonTest.debug
+        ~CommonTest.defaultTestResult
+        ~CommonTest.doClassCleanups
+        ~CommonTest.doCleanups
+        ~CommonTest.fail
+        ~CommonTest.failIf
+        ~CommonTest.failIfAlmostEqual
+        ~CommonTest.failIfEqual
+        ~CommonTest.failUnless
+        ~CommonTest.failUnlessAlmostEqual
+        ~CommonTest.failUnlessEqual
+        ~CommonTest.failUnlessRaises
+        ~CommonTest.id
+        ~CommonTest.run
+        ~CommonTest.runAsync
+        ~CommonTest.setUp
+        ~CommonTest.setUpClass
+        ~CommonTest.shortDescription
+        ~CommonTest.skipTest
+        ~CommonTest.subTest
+        ~CommonTest.tearDown
+        ~CommonTest.tearDownClass
+        ~CommonTest.test_asyncio_file_reader
+        ~CommonTest.test_common
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CommonTest.longMessage
+        ~CommonTest.maxDiff
+
+   
+   

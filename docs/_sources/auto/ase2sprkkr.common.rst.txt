@@ -1,26 +1,51 @@
-ase2sprkkr.common package
-=========================
+common
+======
+
+Full name: **ase2sprkkr.common**
 
 .. automodule:: ase2sprkkr.common
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Submodules
-----------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.common.base_configuration
-   ase2sprkkr.common.configuration_containers
-   ase2sprkkr.common.configuration_definitions
-   ase2sprkkr.common.formats
-   ase2sprkkr.common.grammar
-   ase2sprkkr.common.grammar_types
-   ase2sprkkr.common.init_tests
-   ase2sprkkr.common.misc
-   ase2sprkkr.common.options
-   ase2sprkkr.common.process_output_reader
-   ase2sprkkr.common.regex_trie
-   ase2sprkkr.common.unique_values
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.common.base_configuration
+     ase2sprkkr.common.configuration_containers
+     ase2sprkkr.common.configuration_definitions
+     ase2sprkkr.common.formats
+     ase2sprkkr.common.grammar
+     ase2sprkkr.common.grammar_types
+     ase2sprkkr.common.init_tests
+     ase2sprkkr.common.misc
+     ase2sprkkr.common.options
+     ase2sprkkr.common.process_output_reader
+     ase2sprkkr.common.regex_trie
+     ase2sprkkr.common.test
+     ase2sprkkr.common.unique_values
+  
+  

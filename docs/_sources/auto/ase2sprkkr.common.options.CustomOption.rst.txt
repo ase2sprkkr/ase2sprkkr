@@ -1,0 +1,45 @@
+CustomOption
+============
+
+Full name: **ase2sprkkr.common.options.CustomOption**
+
+.. currentmodule:: ase2sprkkr.common.options
+
+.. autoclass:: CustomOption
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomOption.__init__
+        ~CustomOption.clear
+        ~CustomOption.factory
+        ~CustomOption.get
+        ~CustomOption.get_path
+        ~CustomOption.remove
+        ~CustomOption.save_to_file
+        ~CustomOption.set
+        ~CustomOption.to_dict
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomOption.name
+
+   
+   

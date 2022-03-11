@@ -1,0 +1,29 @@
+class\_property
+===============
+
+Full name: **ase2sprkkr.common.misc.class\_property**
+
+.. currentmodule:: ase2sprkkr.common.misc
+
+.. autoclass:: class_property
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~class_property.__init__
+
+   
+   
+
+   
+   
+   

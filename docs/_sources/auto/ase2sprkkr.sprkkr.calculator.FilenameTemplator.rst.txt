@@ -1,0 +1,37 @@
+FilenameTemplator
+=================
+
+Full name: **ase2sprkkr.sprkkr.calculator.FilenameTemplator**
+
+.. currentmodule:: ase2sprkkr.sprkkr.calculator
+
+.. autoclass:: FilenameTemplator
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~FilenameTemplator.__init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~FilenameTemplator.replacements
+
+   
+   

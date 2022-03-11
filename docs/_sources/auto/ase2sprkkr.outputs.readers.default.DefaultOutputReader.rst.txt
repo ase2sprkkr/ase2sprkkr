@@ -1,0 +1,35 @@
+DefaultOutputReader
+===================
+
+Full name: **ase2sprkkr.outputs.readers.default.DefaultOutputReader**
+
+.. currentmodule:: ase2sprkkr.outputs.readers.default
+
+.. autoclass:: DefaultOutputReader
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~DefaultOutputReader.__init__
+        ~DefaultOutputReader.read_error
+        ~DefaultOutputReader.read_from_file
+        ~DefaultOutputReader.read_output
+        ~DefaultOutputReader.result
+        ~DefaultOutputReader.run
+        ~DefaultOutputReader.run_subprocess
+
+   
+   
+
+   
+   
+   

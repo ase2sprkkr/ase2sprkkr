@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ase2sprkkr.common.grammar module &mdash; ASE2SPRKKR  documentation</title>
+  <title>grammar &mdash; ASE2SPRKKR  documentation</title>
   
 
   
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
   
@@ -41,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ase2sprkkr.common.grammar_types module" href="ase2sprkkr.common.grammar_types.html" />
-    <link rel="prev" title="ase2sprkkr.common.formats module" href="ase2sprkkr.common.formats.html" /> 
+    <link rel="next" title="optional_line_end" href="ase2sprkkr.common.grammar.optional_line_end.html" />
+    <link rel="prev" title="fortran_format" href="ase2sprkkr.common.formats.fortran_format.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,23 +89,58 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">The documentation of modules and classes</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.html">ase2sprkkr.common package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.common.html#submodules">Submodules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">grammar</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_line_end.html">optional_line_end</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.line_end.html">line_end</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.end_of_file.html">end_of_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_pattern.html">separator_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator.html">separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_quote.html">optional_quote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addConditionEx.html">addConditionEx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addParseActionEx.html">addParseActionEx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.delimitedList.html">delimitedList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.generate_grammar.html">generate_grammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.replace_whitechars.html">replace_whitechars</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.html">ase2sprkkr.input_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.html">ase2sprkkr.outputs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.html">ase2sprkkr.potentials package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.regex_trie.html">regex_trie</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
 </ul>
@@ -155,11 +191,11 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.html">ase2sprkkr package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.common.html">ase2sprkkr.common package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.common.html">common</a> &raquo;</li>
         
-      <li>ase2sprkkr.common.grammar module</li>
+      <li>grammar</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -178,36 +214,60 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-ase2sprkkr.common.grammar">
-<span id="ase2sprkkr-common-grammar-module"></span><h1>ase2sprkkr.common.grammar module<a class="headerlink" href="#module-ase2sprkkr.common.grammar" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.generate_grammar">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar.</span></span><span class="sig-name descname"><span class="pre">generate_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#generate_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.generate_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the pyparsing newline handling
-and then restore to the original state</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.replace_whitechars">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar.</span></span><span class="sig-name descname"><span class="pre">replace_whitechars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#replace_whitechars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.replace_whitechars" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.delimitedList">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar.</span></span><span class="sig-name descname"><span class="pre">delimitedList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#delimitedList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.delimitedList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delimited list with already suppressed delimiter (or with a in-results-wanted one)</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.addConditionEx">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar.</span></span><span class="sig-name descname"><span class="pre">addConditionEx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#addConditionEx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.addConditionEx" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.addParseActionEx">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar.</span></span><span class="sig-name descname"><span class="pre">addParseActionEx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#addParseActionEx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.addParseActionEx" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+  <div class="section" id="grammar">
+<h1>grammar<a class="headerlink" href="#grammar" title="Permalink to this headline">¶</a></h1>
+<p>Full name: <strong>ase2sprkkr.common.grammar</strong></p>
+<span class="target" id="module-ase2sprkkr.common.grammar"></span><p class="rubric">Module Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.optional_line_end.html#ase2sprkkr.common.grammar.optional_line_end" title="ase2sprkkr.common.grammar.optional_line_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optional_line_end</span></code></a></p></td>
+<td><p>Grammar for an optinal newline</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.line_end.html#ase2sprkkr.common.grammar.line_end" title="ase2sprkkr.common.grammar.line_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line_end</span></code></a></p></td>
+<td><p>Grammar for a required newline</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.end_of_file.html#ase2sprkkr.common.grammar.end_of_file" title="ase2sprkkr.common.grammar.end_of_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">end_of_file</span></code></a></p></td>
+<td><p>Grammar for an end of file (ending whitespaces are allowed)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.separator_pattern.html#ase2sprkkr.common.grammar.separator_pattern" title="ase2sprkkr.common.grammar.separator_pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separator_pattern</span></code></a></p></td>
+<td><p>Pattern for separating sections in an input file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.separator.html#ase2sprkkr.common.grammar.separator" title="ase2sprkkr.common.grammar.separator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separator</span></code></a></p></td>
+<td><p>Grammar for separating sections in an input file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.optional_quote.html#ase2sprkkr.common.grammar.optional_quote" title="ase2sprkkr.common.grammar.optional_quote"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optional_quote</span></code></a></p></td>
+<td><p>Grammar for an optional quote</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Functions</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.addConditionEx.html#ase2sprkkr.common.grammar.addConditionEx" title="ase2sprkkr.common.grammar.addConditionEx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addConditionEx</span></code></a>(self, condition, message)</p></td>
+<td><p>Add check condition to the pyparsing ParseElement, that, if it failed, raise a parse exception with a given message.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.addParseActionEx.html#ase2sprkkr.common.grammar.addParseActionEx" title="ase2sprkkr.common.grammar.addParseActionEx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseActionEx</span></code></a>(self, pa[, message])</p></td>
+<td><p>Add parse action to a given pyparsing ParseElemenet, that, if it raise an exception, fail with a given message</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.delimitedList.html#ase2sprkkr.common.grammar.delimitedList" title="ase2sprkkr.common.grammar.delimitedList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delimitedList</span></code></a>(expr, delim)</p></td>
+<td><p>Delimited list with already suppressed delimiter (or with a in-results-wanted one)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.generate_grammar.html#ase2sprkkr.common.grammar.generate_grammar" title="ase2sprkkr.common.grammar.generate_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_grammar</span></code></a>()</p></td>
+<td><p>Set the pyparsing newline handling and then restore to the original state</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar.replace_whitechars.html#ase2sprkkr.common.grammar.replace_whitechars" title="ase2sprkkr.common.grammar.replace_whitechars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_whitechars</span></code></a>(expr)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -216,8 +276,8 @@ and then restore to the original state</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.common.grammar_types.html" class="btn btn-neutral float-right" title="ase2sprkkr.common.grammar_types module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="ase2sprkkr.common.formats.html" class="btn btn-neutral float-left" title="ase2sprkkr.common.formats module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.grammar.optional_line_end.html" class="btn btn-neutral float-right" title="optional_line_end" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.formats.fortran_format.html" class="btn btn-neutral float-left" title="fortran_format" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

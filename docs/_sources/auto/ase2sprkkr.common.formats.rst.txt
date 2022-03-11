@@ -1,7 +1,38 @@
-ase2sprkkr.common.formats module
-================================
+formats
+=======
+
+Full name: **ase2sprkkr.common.formats**
 
 .. automodule:: ase2sprkkr.common.formats
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      fortran_format
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

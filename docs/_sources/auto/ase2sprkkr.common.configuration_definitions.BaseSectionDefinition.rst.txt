@@ -1,0 +1,57 @@
+BaseSectionDefinition
+=====================
+
+Full name: **ase2sprkkr.common.configuration\_definitions.BaseSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: BaseSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseSectionDefinition.__init__
+        ~BaseSectionDefinition.all_member_names
+        ~BaseSectionDefinition.copy
+        ~BaseSectionDefinition.create_object
+        ~BaseSectionDefinition.custom_member_grammar
+        ~BaseSectionDefinition.delimited_custom_value_grammar
+        ~BaseSectionDefinition.grammar
+        ~BaseSectionDefinition.members
+        ~BaseSectionDefinition.names
+        ~BaseSectionDefinition.parse
+        ~BaseSectionDefinition.parse_file
+        ~BaseSectionDefinition.parse_from_stream
+        ~BaseSectionDefinition.parse_return
+        ~BaseSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseSectionDefinition.custom_name_characters
+        ~BaseSectionDefinition.custom_value_name
+        ~BaseSectionDefinition.do_not_skip_whitespaces_before_name
+        ~BaseSectionDefinition.force_order
+        ~BaseSectionDefinition.name_in_grammar
+        ~BaseSectionDefinition.validate
+        ~BaseSectionDefinition.value_name_format
+        ~BaseSectionDefinition.values
+
+   
+   

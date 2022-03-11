@@ -1,7 +1,42 @@
-ase2sprkkr.common.configuration\_containers module
-==================================================
+configuration\_containers
+=========================
+
+Full name: **ase2sprkkr.common.configuration\_containers**
 
 .. automodule:: ase2sprkkr.common.configuration_containers
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseSection
+      ConfigurationContainer
+      CustomSection
+      RootConfigurationContainer
+      Section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

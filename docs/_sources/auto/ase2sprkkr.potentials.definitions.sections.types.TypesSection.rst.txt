@@ -1,0 +1,50 @@
+TypesSection
+============
+
+Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSection**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.types
+
+.. autoclass:: TypesSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TypesSection.__init__
+        ~TypesSection.add
+        ~TypesSection.clear
+        ~TypesSection.get
+        ~TypesSection.has_any_value
+        ~TypesSection.members
+        ~TypesSection.remove_member
+        ~TypesSection.reset
+        ~TypesSection.save_to_file
+        ~TypesSection.set
+        ~TypesSection.to_dict
+        ~TypesSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TypesSection.definition
+        ~TypesSection.name
+        ~TypesSection.seciton_name
+
+   
+   

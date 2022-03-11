@@ -1,7 +1,39 @@
-ase2sprkkr.common.options module
-================================
+options
+=======
+
+Full name: **ase2sprkkr.common.options**
 
 .. automodule:: ase2sprkkr.common.options
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      CustomOption
+      Option
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,54 @@
+Unsigned
+========
+
+Full name: **ase2sprkkr.common.grammar\_types.Unsigned**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Unsigned
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Unsigned.__init__
+        ~Unsigned.convert
+        ~Unsigned.copy
+        ~Unsigned.enrich
+        ~Unsigned.grammar
+        ~Unsigned.grammar_name
+        ~Unsigned.missing_value
+        ~Unsigned.parse
+        ~Unsigned.parse_from_stream
+        ~Unsigned.print
+        ~Unsigned.read
+        ~Unsigned.string
+        ~Unsigned.transform_grammar
+        ~Unsigned.validate
+        ~Unsigned.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Unsigned.I
+        ~Unsigned.default_value
+        ~Unsigned.has_value
+        ~Unsigned.name_in_grammar
+
+   
+   

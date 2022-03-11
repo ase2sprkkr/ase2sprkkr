@@ -1,7 +1,38 @@
-ase2sprkkr.common.regex\_trie module
-====================================
+regex\_trie
+===========
+
+Full name: **ase2sprkkr.common.regex\_trie**
 
 .. automodule:: ase2sprkkr.common.regex_trie
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Trie
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

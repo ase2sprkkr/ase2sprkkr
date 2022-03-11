@@ -1,7 +1,38 @@
-ase2sprkkr.sprkkr.sites module
-==============================
+sites
+=====
+
+Full name: **ase2sprkkr.sprkkr.sites**
 
 .. automodule:: ase2sprkkr.sprkkr.sites
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Site
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

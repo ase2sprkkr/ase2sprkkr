@@ -1,0 +1,110 @@
+TestInputParameters
+===================
+
+Full name: **ase2sprkkr.input\_parameters.test.test\_input\_parameters.TestInputParameters**
+
+.. currentmodule:: ase2sprkkr.input_parameters.test.test_input_parameters
+
+.. autoclass:: TestInputParameters
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestInputParameters.__init__
+        ~TestInputParameters.addClassCleanup
+        ~TestInputParameters.addCleanup
+        ~TestInputParameters.addTypeEqualityFunc
+        ~TestInputParameters.assertAlmostEqual
+        ~TestInputParameters.assertAlmostEquals
+        ~TestInputParameters.assertAsyncEqual
+        ~TestInputParameters.assertAsyncRaises
+        ~TestInputParameters.assertCountEqual
+        ~TestInputParameters.assertDictContainsSubset
+        ~TestInputParameters.assertDictEqual
+        ~TestInputParameters.assertEqual
+        ~TestInputParameters.assertEquals
+        ~TestInputParameters.assertFalse
+        ~TestInputParameters.assertGreater
+        ~TestInputParameters.assertGreaterEqual
+        ~TestInputParameters.assertIn
+        ~TestInputParameters.assertIs
+        ~TestInputParameters.assertIsInstance
+        ~TestInputParameters.assertIsNone
+        ~TestInputParameters.assertIsNot
+        ~TestInputParameters.assertIsNotNone
+        ~TestInputParameters.assertLess
+        ~TestInputParameters.assertLessEqual
+        ~TestInputParameters.assertListEqual
+        ~TestInputParameters.assertLogs
+        ~TestInputParameters.assertMultiLineEqual
+        ~TestInputParameters.assertNotAlmostEqual
+        ~TestInputParameters.assertNotAlmostEquals
+        ~TestInputParameters.assertNotEqual
+        ~TestInputParameters.assertNotEquals
+        ~TestInputParameters.assertNotIn
+        ~TestInputParameters.assertNotIsInstance
+        ~TestInputParameters.assertNotRegex
+        ~TestInputParameters.assertNotRegexpMatches
+        ~TestInputParameters.assertRaises
+        ~TestInputParameters.assertRaisesRegex
+        ~TestInputParameters.assertRaisesRegexp
+        ~TestInputParameters.assertRegex
+        ~TestInputParameters.assertRegexpMatches
+        ~TestInputParameters.assertSequenceEqual
+        ~TestInputParameters.assertSetEqual
+        ~TestInputParameters.assertTrue
+        ~TestInputParameters.assertTupleEqual
+        ~TestInputParameters.assertWarns
+        ~TestInputParameters.assertWarnsRegex
+        ~TestInputParameters.assert_
+        ~TestInputParameters.countTestCases
+        ~TestInputParameters.debug
+        ~TestInputParameters.defaultTestResult
+        ~TestInputParameters.doClassCleanups
+        ~TestInputParameters.doCleanups
+        ~TestInputParameters.fail
+        ~TestInputParameters.failIf
+        ~TestInputParameters.failIfAlmostEqual
+        ~TestInputParameters.failIfEqual
+        ~TestInputParameters.failUnless
+        ~TestInputParameters.failUnlessAlmostEqual
+        ~TestInputParameters.failUnlessEqual
+        ~TestInputParameters.failUnlessRaises
+        ~TestInputParameters.id
+        ~TestInputParameters.run
+        ~TestInputParameters.runAsync
+        ~TestInputParameters.setUp
+        ~TestInputParameters.setUpClass
+        ~TestInputParameters.shortDescription
+        ~TestInputParameters.skipTest
+        ~TestInputParameters.subTest
+        ~TestInputParameters.tearDown
+        ~TestInputParameters.tearDownClass
+        ~TestInputParameters.test_custom_value
+        ~TestInputParameters.test_input_parameters_definition
+        ~TestInputParameters.test_section_delimiter_value
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TestInputParameters.longMessage
+        ~TestInputParameters.maxDiff
+
+   
+   

@@ -1,0 +1,46 @@
+ScfResult
+=========
+
+Full name: **ase2sprkkr.outputs.readers.scf.ScfResult**
+
+.. currentmodule:: ase2sprkkr.outputs.readers.scf
+
+.. autoclass:: ScfResult
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfResult.__init__
+        ~ScfResult.iteration_values
+        ~ScfResult.plot
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfResult.atoms
+        ~ScfResult.calculator
+        ~ScfResult.converged
+        ~ScfResult.energy
+        ~ScfResult.iterations
+        ~ScfResult.last_iteration
+        ~ScfResult.potential
+        ~ScfResult.potential_filename
+
+   
+   

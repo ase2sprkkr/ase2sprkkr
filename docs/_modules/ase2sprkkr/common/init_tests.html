@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -166,8 +179,20 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
 
-<div class="viewcode-block" id="patch_package"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.patch_package">[docs]</a><span class="k">def</span> <span class="nf">patch_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Set the package name for the test &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="patch_package"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.patch_package.html#ase2sprkkr.common.test.init_tests.patch_package">[docs]</a><span class="k">def</span> <span class="nf">patch_package</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Set the package name for the tests, to make the relative imports working.</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">    ..code::</span>
+
+<span class="sd">      if __package__:</span>
+<span class="sd">        from .init_tests import TestCase, patch_package</span>
+<span class="sd">      else:</span>
+<span class="sd">         from init_tests import TestCase, patch_package</span>
+<span class="sd">      __package__, __name__ = patch_package(__package__, __name__)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">package</span> <span class="ow">and</span> <span class="n">package</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
        <span class="k">return</span> <span class="n">package</span><span class="p">,</span> <span class="n">name</span>
     <span class="n">frame</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
@@ -188,19 +213,21 @@
 <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
   <span class="kn">from</span> <span class="nn">...common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
-<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.test.init_tests.TestCase.html#ase2sprkkr.common.test.init_tests.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A testcase class with some usefull assertions and a better numpy</span>
+<span class="sd">  arrays comparison &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TestCase.assertAsyncEqual"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.assertAsyncEqual">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.assertAsyncEqual"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.test.init_tests.TestCase.html#ase2sprkkr.common.test.init_tests.TestCase.assertAsyncEqual">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TestCase.assertAsyncRaises"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.assertAsyncRaises">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.assertAsyncRaises"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.test.init_tests.TestCase.html#ase2sprkkr.common.test.init_tests.TestCase.assertAsyncRaises">[docs]</a>  <span class="k">def</span> <span class="nf">assertAsyncRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="TestCase.runAsync"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.runAsync">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TestCase.runAsync"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.test.init_tests.TestCase.html#ase2sprkkr.common.test.init_tests.TestCase.runAsync">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">runAsync</span><span class="p">(</span><span class="n">corr</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">corr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestCase.setUp"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.init_tests.html#ase2sprkkr.common.init_tests.TestCase.setUp">[docs]</a>  <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCase.setUp"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.test.init_tests.TestCase.html#ase2sprkkr.common.test.init_tests.TestCase.setUp">[docs]</a>  <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Register numpy array for the equality &quot;&quot;&quot;</span>
 
       <span class="k">def</span> <span class="nf">testfce</span><span class="p">(</span><span class="n">fce</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>

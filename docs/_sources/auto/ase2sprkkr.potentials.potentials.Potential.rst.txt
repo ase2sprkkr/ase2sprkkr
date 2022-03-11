@@ -1,0 +1,56 @@
+Potential
+=========
+
+Full name: **ase2sprkkr.potentials.potentials.Potential**
+
+.. currentmodule:: ase2sprkkr.potentials.potentials
+
+.. autoclass:: Potential
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Potential.__init__
+        ~Potential.add
+        ~Potential.clear
+        ~Potential.find
+        ~Potential.from_atoms
+        ~Potential.from_file
+        ~Potential.get
+        ~Potential.make_complete
+        ~Potential.members
+        ~Potential.read_from_file
+        ~Potential.remove_member
+        ~Potential.reset
+        ~Potential.save_to_file
+        ~Potential.set
+        ~Potential.set_from_atoms
+        ~Potential.to_dict
+        ~Potential.to_string
+        ~Potential.update_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Potential.atoms
+        ~Potential.name
+        ~Potential.potential_definition
+
+   
+   

@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -157,7 +170,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.formats</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="fortran_format"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.html#ase2sprkkr.common.formats.fortran_format">[docs]</a><span></span><span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{:.12e}</span><span class="s1">&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="fortran_format"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.fortran_format.html#ase2sprkkr.common.formats.fortran_format">[docs]</a><span></span><span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{:.12e}</span><span class="s1">&#39;</span><span class="p">):</span>
     <span class="n">la</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="o">+</span><span class="nb">format</span><span class="o">+</span><span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
     <span class="n">leading</span> <span class="o">=</span> <span class="n">la</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">la</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>

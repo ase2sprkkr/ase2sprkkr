@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -160,27 +173,27 @@
 <span></span><span class="kn">import</span> <span class="nn">re</span>
 <span class="c1">#https://stackoverflow.com/questions/42742810/speed-up-millions-of-regex-replacements-in-python-3/42747503</span>
 
-<div class="viewcode-block" id="Trie"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie">[docs]</a><span class="k">class</span> <span class="nc">Trie</span><span class="p">():</span>
+<div class="viewcode-block" id="Trie"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie">[docs]</a><span class="k">class</span> <span class="nc">Trie</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Regex::Trie in Python. Creates a Trie out of a list of words. The trie can be exported to a Regex pattern.</span>
 <span class="sd">    The corresponding Regex should match much faster than a simple Regex union.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Trie.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Trie.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="Trie.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+<div class="viewcode-block" id="Trie.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
         <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
             <span class="n">ref</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">ref</span> <span class="ow">and</span> <span class="n">ref</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="ow">or</span> <span class="p">{}</span>
             <span class="n">ref</span> <span class="o">=</span> <span class="n">ref</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
         <span class="n">ref</span><span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="Trie.dump"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Trie.dump"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
 
-<div class="viewcode-block" id="Trie.quote"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie.quote">[docs]</a>    <span class="k">def</span> <span class="nf">quote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+<div class="viewcode-block" id="Trie.quote"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie.quote">[docs]</a>    <span class="k">def</span> <span class="nf">quote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">char</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Trie._pattern"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie._pattern">[docs]</a>    <span class="k">def</span> <span class="nf">_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pData</span><span class="p">):</span>
+<div class="viewcode-block" id="Trie._pattern"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie._pattern">[docs]</a>    <span class="k">def</span> <span class="nf">_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pData</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">pData</span>
         <span class="k">if</span> <span class="s2">&quot;&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -217,7 +230,7 @@
                 <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;(?:</span><span class="si">%s</span><span class="s2">)?&quot;</span> <span class="o">%</span> <span class="n">result</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="Trie.pattern"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.html#ase2sprkkr.common.regex_trie.Trie.pattern">[docs]</a>    <span class="k">def</span> <span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Trie.pattern"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.regex_trie.Trie.html#ase2sprkkr.common.regex_trie.Trie.pattern">[docs]</a>    <span class="k">def</span> <span class="nf">pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">())</span></div></div>
 </pre></div>
 

@@ -1,7 +1,51 @@
-ase2sprkkr.common.configuration\_definitions module
-===================================================
+configuration\_definitions
+==========================
+
+Full name: **ase2sprkkr.common.configuration\_definitions**
 
 .. automodule:: ase2sprkkr.common.configuration_definitions
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      add_excluded_names_condition
+      unique_dict
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseContainerDefinition
+      BaseDefinition
+      BaseSectionDefinition
+      BaseValueDefinition
+      ConfDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>CustomSectionToken &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SectionString" href="ase2sprkkr.potentials.custom_potential_section.SectionString.html" />
+    <link rel="prev" title="CustomPotentialSectionDefinition" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html">CustomPotentialSection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html">CustomPotentialSectionDefinition</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CustomSectionToken</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.SectionString.html">SectionString</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html">io_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.test.html">test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.potentials.html">potentials</a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a> &raquo;</li>
+        
+      <li>CustomSectionToken</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/auto/ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="customsectiontoken">
+<h1>CustomSectionToken<a class="headerlink" href="#customsectiontoken" title="Permalink to this headline">¶</a></h1>
+<p>Full name: <strong>ase2sprkkr.potentials.custom_potential_section.CustomSectionToken</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.custom_potential_section.</span></span><span class="sig-name descname"><span class="pre">CustomSectionToken</span></span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#CustomSectionToken"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyparsing.Token</span></code></p>
+<p>The grammar for a custom section - i.e. for unknown section, whose
+content is let as is.</p>
+<p>The grammar just reads all up to the section separator.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addCondition</span></code>(*fns, **kwargs)</p></td>
+<td><p>Add a boolean predicate function to expression's list of parse actions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addConditionEx</span></code>(condition, message)</p></td>
+<td><p>Add check condition to the pyparsing ParseElement, that, if it failed, raise a parse exception with a given message.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseAction</span></code>(*fns, **kwargs)</p></td>
+<td><p>Add one or more parse actions to expression's list of parse actions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseActionEx</span></code>(pa[, message])</p></td>
+<td><p>Add parse action to a given pyparsing ParseElemenet, that, if it raise an exception, fail with a given message</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">canParseNext</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkRecursion</span></code>(parseElementList)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<td><p>Make a copy of this <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enablePackrat</span></code>([cache_size_limit])</p></td>
+<td><p>Enables &quot;packrat&quot; parsing, which adds memoizing to the parsing logic.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore</span></code>(other)</p></td>
+<td><p>Define expression to be ignored (e.g., comments) while doing pattern matching; may be called repeatedly, to define multiple comment or other ignorable patterns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inlineLiteralsUsing</span></code>(cls)</p></td>
+<td><p>Set class to be used for inclusion of string literals into a parser.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaveWhitespace</span></code>()</p></td>
+<td><p>Disables the skipping of whitespace before matching the characters in the <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>'s defined pattern.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matches</span></code>(testString[, parseAll])</p></td>
+<td><p>Method for quick testing of a parser against a test string.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseFile</span></code>(file_or_filename[, parseAll])</p></td>
+<td><p>Execute the parse expression on the given file or filename.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseImpl</span></code></a>(instr, loc[, doActions])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseString</span></code>(instring[, parseAll])</p></td>
+<td><p>Execute the parse expression with the given string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseWithTabs</span></code>()</p></td>
+<td><p>Overrides default behavior to expand <a href="#id1"><span class="problematic" id="id2">``</span></a>&lt;TAB&gt;``s to spaces before parsing the input string.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">postParse</span></code>(instring, loc, tokenlist)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preParse</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetCache</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">runTests</span></code>(tests[, parseAll, comment, ...])</p></td>
+<td><p>Execute the parse expression on a series of test strings, showing each test, the parsed results or where the parse failed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scanString</span></code>(instring[, maxMatches, overlap])</p></td>
+<td><p>Scan the input string for expression matches.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">searchString</span></code>(instring[, maxMatches])</p></td>
+<td><p>Another extension to <code class="xref py py-class docutils literal notranslate"><span class="pre">scanString</span></code>, simplifying the access to the tokens found to match the given parse expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setBreak</span></code>([breakFlag])</p></td>
+<td><p>Method to invoke the Python pdb debugger when this element is about to be parsed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDebug</span></code>([flag])</p></td>
+<td><p>Enable display of debugging messages while doing pattern matching.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDebugActions</span></code>(startAction, successAction, ...)</p></td>
+<td><p>Enable display of debugging messages while doing pattern matching.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDefaultWhitespaceChars</span></code>(chars)</p></td>
+<td><p>Overrides the default whitespace chars</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setFailAction</span></code>(fn)</p></td>
+<td><p>Define action to perform if parsing fails at this expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code>(name)</p></td>
+<td><p>Define name for this expression, makes debugging and exception messages clearer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParseAction</span></code>(*fns, **kwargs)</p></td>
+<td><p>Define one or more actions to perform when successfully matching parse element definition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResultsName</span></code>(name[, listAllMatches])</p></td>
+<td><p>Define name for referencing matching tokens as a nested attribute of the returned parse results.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setWhitespaceChars</span></code>(chars)</p></td>
+<td><p>Overrides the default whitespace chars</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">split</span></code>(instring[, maxsplit, includeSeparators])</p></td>
+<td><p>Generator method to split a string using the given expression as a separator.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">streamline</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">suppress</span></code>()</p></td>
+<td><p>Suppresses the output of this <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>; useful to keep punctuation from cluttering up returned output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transformString</span></code>(instring)</p></td>
+<td><p>Extension to <code class="xref py py-class docutils literal notranslate"><span class="pre">scanString</span></code>, to modify matching text with modified tokens that may be returned from a parse action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tryParse</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>([validateTrace])</p></td>
+<td><p>Check defined expressions for valid structure, check for infinite recursive definitions.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_WHITE_CHARS</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_lock</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_stats</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pattern</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">verbose_stacktrace</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('\n\\*\\*\\*\\*\\*\\*\\*\\*\\*\\*\\**[</span> <span class="pre">\r\t]*\n',</span> <span class="pre">re.DOTALL)</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CustomSection'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl">
+<span class="sig-name descname"><span class="pre">parseImpl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doActions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#CustomSectionToken.parseImpl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ase2sprkkr.potentials.custom_potential_section.SectionString.html" class="btn btn-neutral float-right" title="SectionString" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html" class="btn btn-neutral float-left" title="CustomPotentialSectionDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

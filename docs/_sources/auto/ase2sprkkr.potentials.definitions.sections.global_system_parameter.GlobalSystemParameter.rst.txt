@@ -1,0 +1,50 @@
+GlobalSystemParameter
+=====================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_parameter.GlobalSystemParameter**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.global_system_parameter
+
+.. autoclass:: GlobalSystemParameter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~GlobalSystemParameter.__init__
+        ~GlobalSystemParameter.add
+        ~GlobalSystemParameter.clear
+        ~GlobalSystemParameter.get
+        ~GlobalSystemParameter.has_any_value
+        ~GlobalSystemParameter.members
+        ~GlobalSystemParameter.remove_member
+        ~GlobalSystemParameter.reset
+        ~GlobalSystemParameter.save_to_file
+        ~GlobalSystemParameter.set
+        ~GlobalSystemParameter.to_dict
+        ~GlobalSystemParameter.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~GlobalSystemParameter.definition
+        ~GlobalSystemParameter.name
+        ~GlobalSystemParameter.seciton_name
+
+   
+   

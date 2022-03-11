@@ -1,7 +1,39 @@
-ase2sprkkr.outputs.readers.scf module
-=====================================
+scf
+===
+
+Full name: **ase2sprkkr.outputs.readers.scf**
 
 .. automodule:: ase2sprkkr.outputs.readers.scf
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ScfOutputReader
+      ScfResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

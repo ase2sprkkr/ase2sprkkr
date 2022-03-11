@@ -1,27 +1,45 @@
-ase2sprkkr package
-==================
+﻿ase2sprkkr
+==========
+
+Full name: **ase2sprkkr**
 
 .. automodule:: ase2sprkkr
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
-Subpackages
------------
+   
+   
+   
 
-.. toctree::
-   :maxdepth: 4
 
-   ase2sprkkr.common
-   ase2sprkkr.input_parameters
-   ase2sprkkr.outputs
-   ase2sprkkr.potentials
-   ase2sprkkr.sprkkr
+   
+   
+   
 
-Submodules
-----------
 
-.. toctree::
-   :maxdepth: 4
+   
+   
+   
 
-   ase2sprkkr.version
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.common
+     ase2sprkkr.input_parameters
+     ase2sprkkr.outputs
+     ase2sprkkr.potentials
+     ase2sprkkr.sprkkr
+     ase2sprkkr.tools
+     ase2sprkkr.version
+  
+  

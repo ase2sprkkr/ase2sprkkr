@@ -1,0 +1,50 @@
+CustomPotentialSectionDefinition
+================================
+
+Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.custom_potential_section
+
+.. autoclass:: CustomPotentialSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomPotentialSectionDefinition.__init__
+        ~CustomPotentialSectionDefinition.copy
+        ~CustomPotentialSectionDefinition.create_object
+        ~CustomPotentialSectionDefinition.get_value
+        ~CustomPotentialSectionDefinition.grammar
+        ~CustomPotentialSectionDefinition.remove
+        ~CustomPotentialSectionDefinition.validate
+        ~CustomPotentialSectionDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomPotentialSectionDefinition.do_not_skip_whitespaces_before_name
+        ~CustomPotentialSectionDefinition.formated_name
+        ~CustomPotentialSectionDefinition.mandatory
+        ~CustomPotentialSectionDefinition.name_in_grammar
+        ~CustomPotentialSectionDefinition.name_value_delimiter
+        ~CustomPotentialSectionDefinition.prefix
+        ~CustomPotentialSectionDefinition.value_name_format
+
+   
+   

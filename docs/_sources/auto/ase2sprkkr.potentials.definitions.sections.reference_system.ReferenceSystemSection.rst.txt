@@ -1,0 +1,50 @@
+ReferenceSystemSection
+======================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.ReferenceSystemSection**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.reference_system
+
+.. autoclass:: ReferenceSystemSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystemSection.__init__
+        ~ReferenceSystemSection.add
+        ~ReferenceSystemSection.clear
+        ~ReferenceSystemSection.get
+        ~ReferenceSystemSection.has_any_value
+        ~ReferenceSystemSection.members
+        ~ReferenceSystemSection.remove_member
+        ~ReferenceSystemSection.reset
+        ~ReferenceSystemSection.save_to_file
+        ~ReferenceSystemSection.set
+        ~ReferenceSystemSection.to_dict
+        ~ReferenceSystemSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystemSection.definition
+        ~ReferenceSystemSection.name
+        ~ReferenceSystemSection.seciton_name
+
+   
+   

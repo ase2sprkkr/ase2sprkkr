@@ -1,0 +1,50 @@
+ValueDefinition
+===============
+
+Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.ValueDefinition**
+
+.. currentmodule:: ase2sprkkr.input_parameters.input_parameters_definitions
+
+.. autoclass:: ValueDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ValueDefinition.__init__
+        ~ValueDefinition.copy
+        ~ValueDefinition.create_object
+        ~ValueDefinition.get_value
+        ~ValueDefinition.grammar
+        ~ValueDefinition.grammar_of_delimiter
+        ~ValueDefinition.remove
+        ~ValueDefinition.validate
+        ~ValueDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ValueDefinition.do_not_skip_whitespaces_before_name
+        ~ValueDefinition.formated_name
+        ~ValueDefinition.name_in_grammar
+        ~ValueDefinition.name_value_delimiter
+        ~ValueDefinition.prefix
+        ~ValueDefinition.value_name_format
+
+   
+   

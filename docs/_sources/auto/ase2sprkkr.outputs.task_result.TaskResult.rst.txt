@@ -1,0 +1,37 @@
+TaskResult
+==========
+
+Full name: **ase2sprkkr.outputs.task\_result.TaskResult**
+
+.. currentmodule:: ase2sprkkr.outputs.task_result
+
+.. autoclass:: TaskResult
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TaskResult.__init__
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TaskResult.atoms
+
+   
+   

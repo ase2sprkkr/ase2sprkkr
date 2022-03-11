@@ -1,7 +1,48 @@
-ase2sprkkr.sprkkr.structure module
-==================================
+structure
+=========
+
+Full name: **ase2sprkkr.sprkkr.structure**
 
 .. automodule:: ase2sprkkr.sprkkr.structure
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      floatjm
+      structure_file_to_atoms
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomData
+      LayerData
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,50 @@
+UniqueListSection
+=================
+
+Full name: **ase2sprkkr.potentials.potential\_sections.UniqueListSection**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_sections
+
+.. autoclass:: UniqueListSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~UniqueListSection.__init__
+        ~UniqueListSection.add
+        ~UniqueListSection.clear
+        ~UniqueListSection.get
+        ~UniqueListSection.has_any_value
+        ~UniqueListSection.members
+        ~UniqueListSection.remove_member
+        ~UniqueListSection.reset
+        ~UniqueListSection.save_to_file
+        ~UniqueListSection.set
+        ~UniqueListSection.to_dict
+        ~UniqueListSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~UniqueListSection.definition
+        ~UniqueListSection.name
+        ~UniqueListSection.seciton_name
+
+   
+   

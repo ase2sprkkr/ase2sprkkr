@@ -1,0 +1,39 @@
+tools
+=====
+
+Full name: **ase2sprkkr.tools**
+
+.. automodule:: ase2sprkkr.tools
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.tools.a2s_visualise_in_struct
+  
+  

@@ -1,0 +1,54 @@
+Integer
+=======
+
+Full name: **ase2sprkkr.common.grammar\_types.Integer**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Integer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Integer.__init__
+        ~Integer.convert
+        ~Integer.copy
+        ~Integer.enrich
+        ~Integer.grammar
+        ~Integer.grammar_name
+        ~Integer.missing_value
+        ~Integer.parse
+        ~Integer.parse_from_stream
+        ~Integer.print
+        ~Integer.read
+        ~Integer.string
+        ~Integer.transform_grammar
+        ~Integer.validate
+        ~Integer.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Integer.I
+        ~Integer.default_value
+        ~Integer.has_value
+        ~Integer.name_in_grammar
+
+   
+   

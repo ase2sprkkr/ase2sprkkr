@@ -1,0 +1,57 @@
+Mixed
+=====
+
+Full name: **ase2sprkkr.common.grammar\_types.Mixed**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Mixed
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Mixed.__init__
+        ~Mixed.convert
+        ~Mixed.copy
+        ~Mixed.enrich
+        ~Mixed.get_type
+        ~Mixed.grammar
+        ~Mixed.grammar_name
+        ~Mixed.missing_value
+        ~Mixed.parse
+        ~Mixed.parse_from_stream
+        ~Mixed.print
+        ~Mixed.read
+        ~Mixed.string
+        ~Mixed.transform_grammar
+        ~Mixed.validate
+        ~Mixed.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Mixed.I
+        ~Mixed.default_value
+        ~Mixed.has_value
+        ~Mixed.name_in_grammar
+        ~Mixed.string_type
+        ~Mixed.types
+
+   
+   

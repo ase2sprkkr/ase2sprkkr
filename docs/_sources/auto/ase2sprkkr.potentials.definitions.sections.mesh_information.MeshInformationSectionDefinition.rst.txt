@@ -1,0 +1,61 @@
+MeshInformationSectionDefinition
+================================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.mesh\_information.MeshInformationSectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.mesh_information
+
+.. autoclass:: MeshInformationSectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~MeshInformationSectionDefinition.__init__
+        ~MeshInformationSectionDefinition.all_member_names
+        ~MeshInformationSectionDefinition.copy
+        ~MeshInformationSectionDefinition.create_object
+        ~MeshInformationSectionDefinition.custom_class
+        ~MeshInformationSectionDefinition.custom_member_grammar
+        ~MeshInformationSectionDefinition.delimited_custom_value_grammar
+        ~MeshInformationSectionDefinition.depends_on
+        ~MeshInformationSectionDefinition.grammar
+        ~MeshInformationSectionDefinition.grammar_of_delimiter
+        ~MeshInformationSectionDefinition.members
+        ~MeshInformationSectionDefinition.names
+        ~MeshInformationSectionDefinition.parse
+        ~MeshInformationSectionDefinition.parse_file
+        ~MeshInformationSectionDefinition.parse_from_stream
+        ~MeshInformationSectionDefinition.parse_return
+        ~MeshInformationSectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~MeshInformationSectionDefinition.custom_name_characters
+        ~MeshInformationSectionDefinition.custom_value_name
+        ~MeshInformationSectionDefinition.delimiter
+        ~MeshInformationSectionDefinition.do_not_skip_whitespaces_before_name
+        ~MeshInformationSectionDefinition.force_order
+        ~MeshInformationSectionDefinition.name_in_grammar
+        ~MeshInformationSectionDefinition.validate
+        ~MeshInformationSectionDefinition.value_name_format
+        ~MeshInformationSectionDefinition.values
+
+   
+   

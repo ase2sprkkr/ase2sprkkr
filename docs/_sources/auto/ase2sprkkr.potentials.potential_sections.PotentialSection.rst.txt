@@ -1,0 +1,50 @@
+PotentialSection
+================
+
+Full name: **ase2sprkkr.potentials.potential\_sections.PotentialSection**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_sections
+
+.. autoclass:: PotentialSection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialSection.__init__
+        ~PotentialSection.add
+        ~PotentialSection.clear
+        ~PotentialSection.get
+        ~PotentialSection.has_any_value
+        ~PotentialSection.members
+        ~PotentialSection.remove_member
+        ~PotentialSection.reset
+        ~PotentialSection.save_to_file
+        ~PotentialSection.set
+        ~PotentialSection.to_dict
+        ~PotentialSection.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialSection.definition
+        ~PotentialSection.name
+        ~PotentialSection.seciton_name
+
+   
+   

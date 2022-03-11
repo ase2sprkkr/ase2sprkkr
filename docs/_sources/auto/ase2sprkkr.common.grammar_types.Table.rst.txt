@@ -1,0 +1,56 @@
+Table
+=====
+
+Full name: **ase2sprkkr.common.grammar\_types.Table**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Table
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Table.__init__
+        ~Table.convert
+        ~Table.copy
+        ~Table.enrich
+        ~Table.grammar
+        ~Table.grammar_name
+        ~Table.missing_value
+        ~Table.number_of_collumns
+        ~Table.parse
+        ~Table.parse_from_stream
+        ~Table.print
+        ~Table.read
+        ~Table.string
+        ~Table.transform_grammar
+        ~Table.validate
+        ~Table.write
+        ~Table.zero_data
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Table.default_value
+        ~Table.has_value
+        ~Table.name_in_grammar
+        ~Table.numpy_type
+
+   
+   

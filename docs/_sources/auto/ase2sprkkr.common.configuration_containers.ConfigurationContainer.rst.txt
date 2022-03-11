@@ -1,0 +1,46 @@
+ConfigurationContainer
+======================
+
+Full name: **ase2sprkkr.common.configuration\_containers.ConfigurationContainer**
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: ConfigurationContainer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ConfigurationContainer.__init__
+        ~ConfigurationContainer.add
+        ~ConfigurationContainer.clear
+        ~ConfigurationContainer.get
+        ~ConfigurationContainer.members
+        ~ConfigurationContainer.remove_member
+        ~ConfigurationContainer.save_to_file
+        ~ConfigurationContainer.set
+        ~ConfigurationContainer.to_dict
+        ~ConfigurationContainer.to_string
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ConfigurationContainer.name
+
+   
+   

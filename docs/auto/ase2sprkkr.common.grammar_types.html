@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ase2sprkkr.common.grammar_types module &mdash; ASE2SPRKKR  documentation</title>
+  <title>grammar_types &mdash; ASE2SPRKKR  documentation</title>
   
 
   
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
   
@@ -41,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ase2sprkkr.common.init_tests module" href="ase2sprkkr.common.init_tests.html" />
-    <link rel="prev" title="ase2sprkkr.common.grammar module" href="ase2sprkkr.common.grammar.html" /> 
+    <link rel="next" title="type_from_set_map" href="ase2sprkkr.common.grammar_types.type_from_set_map.html" />
+    <link rel="prev" title="replace_whitechars" href="ase2sprkkr.common.grammar.replace_whitechars.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,23 +89,77 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">The documentation of modules and classes</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.html">ase2sprkkr.common package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.common.html#submodules">Submodules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">grammar_types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html">type_from_set_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html">DefKeyword</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html">format_for_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html">normalize_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_default_value.html">type_from_default_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type.html">type_from_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_value.html">type_from_value</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Array.html">Array</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseMixed.html">BaseMixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseRealWithUnits.html">BaseRealWithUnits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseString.html">BaseString</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html">BaseType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Bool.html">Bool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Date.html">Date</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Energy.html">Energy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Flag.html">Flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Integer.html">Integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Keyword.html">Keyword</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.LineString.html">LineString</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Mixed.html">Mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.PotMixed.html">PotMixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.QString.html">QString</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Real.html">Real</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.RealWithUnits.html">RealWithUnits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Separator.html">Separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Sequence.html">Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.SetOf.html">SetOf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.String.html">String</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Table.html">Table</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.Unsigned.html">Unsigned</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.html">ase2sprkkr.input_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.html">ase2sprkkr.outputs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.html">ase2sprkkr.potentials package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.regex_trie.html">regex_trie</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
 </ul>
@@ -155,11 +210,11 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.html">ase2sprkkr package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.common.html">ase2sprkkr.common package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.common.html">common</a> &raquo;</li>
         
-      <li>ase2sprkkr.common.grammar_types module</li>
+      <li>grammar_types</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -178,969 +233,126 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-ase2sprkkr.common.grammar_types">
-<span id="ase2sprkkr-common-grammar-types-module"></span><h1>ase2sprkkr.common.grammar_types module<a class="headerlink" href="#module-ase2sprkkr.common.grammar_types" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">BaseType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Base class for definition of configuration option types</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.has_value">
-<span class="sig-name descname"><span class="pre">has_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.has_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for BaseValueDefinition.name_in_grammar.
-Some types (e.g. Tables) commonly have no name (are identified
-by its position in the potential file.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.name_in_grammar">
-<span class="sig-name descname"><span class="pre">name_in_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.name_in_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for the given type. It can be overriden in the constructor.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.numpy_type">
-<span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.default_value">
-<span class="sig-name descname"><span class="pre">default_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Deafault type for creating numpy arrays (e.g. by Table) is object - to be redefined
-in the descendatns</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.grammar">
-<span class="sig-name descname"><span class="pre">grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a pyparsing grammar for the type</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.parse">
-<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.parse" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.parse_from_stream">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.parse_from_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.parse_from_stream" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.transform_grammar">
-<span class="sig-name descname"><span class="pre">transform_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grammar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.transform_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.transform_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>The chance for the resulting class to alter the resulting prefixed grammar</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.missing_value">
-<span class="sig-name descname"><span class="pre">missing_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.missing_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.missing_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is the configuraion value a flag? I.e. can be =&lt;value&gt; ommited
-in the configuration</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>can_be_ommited</strong> (<em>bool</em>) – Is an ommision of the value possible, e.g. the option is given as Flag (only by name of the option)</p></li>
-<li><p><em>default_value</em> – The value used if the value is ommitted</p></li>
-<li><p><em>do_not_output_value</em> – The value, with which the variable should not be outputed at all (e.g. False for a flag)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;Unknown&gt;'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validate either the pyparsing result or a user given value</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<em>mixed</em>) – Value to be validated</p></li>
-<li><p><strong>param_name</strong> (<em>str</em><em> or </em><em>callable</em>) – Parameter name to be used in possible throwed exception (Optional)
-If it is callable, it should be a function that returns the param_name</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType._valueError">
-<span class="sig-name descname"><span class="pre">_valueError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType._valueError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType._valueError" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'&lt;Unknown&gt;'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform pyparsing token to a validated value</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.convert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a value from user to a “cannonical form”</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.string">
-<span class="sig-name descname"><span class="pre">string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.write" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.print">
-<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.print" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.copy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.enrich">
-<span class="sig-name descname"><span class="pre">enrich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.enrich"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.enrich" title="Permalink to this definition">¶</a></dt>
-<dd><p>Some types can add properties to the options that have
-the type, e.g. see Sequence.enrich, which adds the ability to
-access the items of the sequence using []</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Unsigned">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Unsigned</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Unsigned"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Unsigned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Unsigned._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">integer</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Unsigned._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Unsigned._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Unsigned._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Unsigned._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Unsigned.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Unsigned.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Unsigned.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Unsigned.numpy_type">
-<span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Unsigned.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Unsigned.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Unsigned</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Unsigned.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Integer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Integer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Integer._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">signed</span> <span class="pre">integer</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Integer._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Integer._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Integer._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Integer._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Integer.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Integer.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Integer.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Integer.numpy_type">
-<span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Integer.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Integer.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Integer</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Integer.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{&quot;T&quot;</span> <span class="pre">|</span> <span class="pre">&quot;F&quot;}</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Bool._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Bool.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Bool._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool.numpy_type">
-<span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Bool.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Bool</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Bool.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Real">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Real"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Real" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Real._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">fnumber</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Real._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Real._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Real._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Real._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Real.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Real.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Real.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Real.numpy_type">
-<span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Real.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Real.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Real</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Real.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Date">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Date._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Re:('(?P&lt;d&gt;\\d{2}).(?P&lt;m&gt;\\d{2}).(?P&lt;y&gt;\\d{4})')</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Date._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Date._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Date._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Date._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Date.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Date.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Date.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Date._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Date._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Date._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Date.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Date</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Date.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">BaseRealWithUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseRealWithUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits.grammar_cache">
-<span class="sig-name descname"><span class="pre">grammar_cache</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits.grammar_cache" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits._grammar_units">
-<span class="sig-name descname"><span class="pre">_grammar_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseRealWithUnits._grammar_units"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits._grammar_units" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseRealWithUnits._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseRealWithUnits._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseRealWithUnits.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseRealWithUnits.numpy_type">
-<span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.RealWithUnits">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">RealWithUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#RealWithUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.RealWithUnits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits" title="ase2sprkkr.common.grammar_types.BaseRealWithUnits"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseRealWithUnits</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.RealWithUnits.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#RealWithUnits.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.RealWithUnits.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Energy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Energy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseRealWithUnits" title="ase2sprkkr.common.grammar_types.BaseRealWithUnits"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseRealWithUnits</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Energy.units">
-<span class="sig-name descname"><span class="pre">units</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Ry':</span> <span class="pre">1.0,</span> <span class="pre">'eV':</span> <span class="pre">0.07349864494991327,</span> <span class="pre">None:</span> <span class="pre">1.0}</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Energy.units" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Energy.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Energy</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Energy.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseString">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">BaseString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseString._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseString._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseString._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.String">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">String</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#String"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.String" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseString" title="ase2sprkkr.common.grammar_types.BaseString"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseString</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.String._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">W:(0123...)</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.String._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.String.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#String.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.String.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.String.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.String</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.String.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.QString">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">QString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#QString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.QString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseString" title="ase2sprkkr.common.grammar_types.BaseString"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseString</span></code></a></p>
-<p>Quoted string</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.QString._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">W:(0123...)</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.QString._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.QString.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#QString.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.QString.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.QString.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.String</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.QString.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.LineString">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">LineString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#LineString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.LineString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseString" title="ase2sprkkr.common.grammar_types.BaseString"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseString</span></code></a></p>
-<p>String up to the end of line</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.LineString._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">SkipTo:({LineEnd</span> <span class="pre">|</span> <span class="pre">StringEnd})</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.LineString._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.LineString.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#LineString.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.LineString.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.LineString.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.LineString</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.LineString.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Keyword">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Keyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Keyword" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Keyword.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Keyword.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Keyword.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Keyword._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Keyword._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Keyword._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Keyword.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Keyword.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Keyword.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Keyword.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Keyword.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Keyword.convert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a value from user to a “cannonical form”</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.DefKeyword">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">DefKeyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">others</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#DefKeyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.DefKeyword" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Flag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Flag.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag.str">
-<span class="sig-name descname"><span class="pre">str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Flag.str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag.str" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag.missing_value">
-<span class="sig-name descname"><span class="pre">missing_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Flag.missing_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag.missing_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is the configuraion value a flag? I.e. can be =&lt;value&gt; ommited
-in the configuration</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>can_be_ommited</strong> (<em>bool</em>) – Is an ommision of the value possible, e.g. the option is given as Flag (only by name of the option)</p></li>
-<li><p><em>default_value</em> – The value used if the value is ommitted</p></li>
-<li><p><em>do_not_output_value</em> – The value, with which the variable should not be outputed at all (e.g. False for a flag)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Flag._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Empty</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Flag.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Flag</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Flag.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.normalize_type">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">normalize_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#normalize_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.normalize_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.format_for_type">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">format_for_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#format_for_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.format_for_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the format appropriate to the given type</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>format</strong> (<em>str</em><em> or </em><em>dict</em>) – If it is str, just return it.
-Dict should has the form { type : format_for_the_type } + { None : default_format }</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.type_from_type">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">type_from_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#type_from_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.type_from_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int =&gt; Integer.</p>
-<p>The given format can be optionally set to the returned grammar element.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>type</strong> (<em>A python type</em><em> or </em><a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><em>BaseType</em></a>) – A type to be converted to a grammar element (BaseType class descendant)</p></li>
-<li><p><strong>format</strong> (<em>str</em><em> or </em><em>dict</em>) – The format to be applied to the resulting class. If dict is given, see ‘format_for_type’
-for the way how the format is determined</p></li>
-<li><p><strong>format_all</strong> (<em>boolean</em>) – If False (default), the format is not applied, if instance of BaseType is given as
-the type parameter. Otherwise, a copy of the input type with the applied format is returned</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array.delimiter">
-<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Suppress:(&lt;SP&gt;&lt;TAB&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array.delimiter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array.delimiter_str">
-<span class="sig-name descname"><span class="pre">delimiter_str</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array.delimiter_str" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Array.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Array.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Array._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Array._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Array.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Array.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Array.convert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a value from user to a “cannonical form”</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.SetOf">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">SetOf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#SetOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.SetOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.Array" title="ase2sprkkr.common.grammar_types.Array"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.Array</span></code></a></p>
-<p>Set of values of the same type. E.g. {1,2,3}</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.SetOf.delimiter">
-<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[,;</span> <span class="pre">]</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.SetOf.delimiter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.SetOf.delimiter_str">
-<span class="sig-name descname"><span class="pre">delimiter_str</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">','</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.SetOf.delimiter_str" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.SetOf.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#SetOf.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.SetOf.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.SetOf.transform_grammar">
-<span class="sig-name descname"><span class="pre">transform_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grammar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#SetOf.transform_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.SetOf.transform_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>The chance for the resulting class to alter the resulting prefixed grammar</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.type_from_value">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">type_from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#type_from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.type_from_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gues the option type from a python value. E.g. 2 =&gt; Integer</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.type_from_default_value">
-<span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">type_from_default_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#type_from_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.type_from_default_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseMixed">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">BaseMixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseMixed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseMixed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseMixed._grammar">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseMixed._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseMixed._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseMixed.get_type">
-<span class="sig-name descname"><span class="pre">get_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseMixed.get_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseMixed.get_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseMixed._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseMixed._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseMixed._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseMixed.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseMixed.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseMixed.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Mixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Mixed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseMixed" title="ase2sprkkr.common.grammar_types.BaseMixed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseMixed</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed.string_type">
-<span class="sig-name descname"><span class="pre">string_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.String</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed.string_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed.types">
-<span class="sig-name descname"><span class="pre">types</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;ase2sprkkr.common.grammar_types.Energy</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.Real</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.Integer</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.SetOf</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.SetOf</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.String</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.Flag</span> <span class="pre">object&gt;]</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed.types" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed.missing_value">
-<span class="sig-name descname"><span class="pre">missing_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Mixed.missing_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed.missing_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is the configuraion value a flag? I.e. can be =&lt;value&gt; ommited
-in the configuration</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>can_be_ommited</strong> (<em>bool</em>) – Is an ommision of the value possible, e.g. the option is given as Flag (only by name of the option)</p></li>
-<li><p><em>default_value</em> – The value used if the value is ommitted</p></li>
-<li><p><em>do_not_output_value</em> – The value, with which the variable should not be outputed at all (e.g. False for a flag)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Mixed</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.PotMixed">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">PotMixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#PotMixed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.PotMixed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseMixed" title="ase2sprkkr.common.grammar_types.BaseMixed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseMixed</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.PotMixed.string_type">
-<span class="sig-name descname"><span class="pre">string_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.LineString</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.PotMixed.string_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.PotMixed.types">
-<span class="sig-name descname"><span class="pre">types</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;ase2sprkkr.common.grammar_types.Energy</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.Real</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.Integer</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.Bool</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.SetOf</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.SetOf</span> <span class="pre">object&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.LineString</span> <span class="pre">object&gt;]</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.PotMixed.types" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.PotMixed._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#PotMixed._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.PotMixed._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.PotMixed.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.PotMixed</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.PotMixed.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Separator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Separator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<p>Special class for <a href="#id1"><span class="problematic" id="id2">**</span></a>** separator inside a section</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Suppress:(**********[***....])</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator.has_value">
-<span class="sig-name descname"><span class="pre">has_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator.has_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for BaseValueDefinition.name_in_grammar.
-Some types (e.g. Tables) commonly have no name (are identified
-by its position in the potential file.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Separator._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator._grammar_name">
-<span class="sig-name descname"><span class="pre">_grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Separator._grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator._grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Separator._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Separator.I">
-<span class="sig-name descname"><span class="pre">I</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.common.grammar_types.Separator</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Separator.I" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<p>A sequence of values of given types</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence.convert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a value from user to a “cannonical form”</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Sequence.enrich">
-<span class="sig-name descname"><span class="pre">enrich</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Sequence.enrich"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Sequence.enrich" title="Permalink to this definition">¶</a></dt>
-<dd><p>Some types can add properties to the options that have
-the type, e.g. see Sequence.enrich, which adds the ability to
-access the items of the sequence using []</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;21.17'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<p>Table, optionaly with named columns, e.g.
-IQ     IREFQ       IMQ       NOQ  ITOQ  CONC</p>
-<blockquote>
-<div><p>1         1         1         1     1 1.000
-2         2         2         1     2 1.000</p>
-</div></blockquote>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.name_in_grammar">
-<span class="sig-name descname"><span class="pre">name_in_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.name_in_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for the given type. It can be overriden in the constructor.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;21.17'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table._grammar">
-<span class="sig-name descname"><span class="pre">_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table._grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table._string">
-<span class="sig-name descname"><span class="pre">_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table._string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table._string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table._validate">
-<span class="sig-name descname"><span class="pre">_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parse_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table._validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table._validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return error message if the value is not valid</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.convert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a value from user to a “cannonical form”</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.numpy_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">numpy_type</span></span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.numpy_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>The base class of the class hierarchy.</p>
-<p>When called, it accepts no arguments and returns a new featureless
-instance that has no instance attributes and cannot be given any.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.number_of_collumns">
-<span class="sig-name descname"><span class="pre">number_of_collumns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table.number_of_collumns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.number_of_collumns" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.zero_data">
-<span class="sig-name descname"><span class="pre">zero_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table.zero_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.zero_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return array of zeros with the given number of rows and
-with the dtype of the table</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.grammar_name">
-<span class="sig-name descname"><span class="pre">grammar_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table.grammar_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.grammar_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable expression of the grammar. By default,
-this is what is set by grammar.setName, however, sometimes
-is desirable to set even shorter string</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="grammar-types">
+<h1>grammar_types<a class="headerlink" href="#grammar-types" title="Permalink to this headline">¶</a></h1>
+<p>Full name: <strong>ase2sprkkr.common.grammar_types</strong></p>
+<span class="target" id="module-ase2sprkkr.common.grammar_types"></span><p class="rubric">Module Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html#ase2sprkkr.common.grammar_types.type_from_set_map" title="ase2sprkkr.common.grammar_types.type_from_set_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_set_map</span></code></a></p></td>
+<td><p>Map python native types to configuration value types</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Functions</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html#ase2sprkkr.common.grammar_types.DefKeyword" title="ase2sprkkr.common.grammar_types.DefKeyword"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefKeyword</span></code></a>(default, *others, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html#ase2sprkkr.common.grammar_types.format_for_type" title="ase2sprkkr.common.grammar_types.format_for_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_for_type</span></code></a>(format, type)</p></td>
+<td><p>Returns the format appropriate to the given type</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html#ase2sprkkr.common.grammar_types.normalize_type" title="ase2sprkkr.common.grammar_types.normalize_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_type</span></code></a>(type)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_default_value.html#ase2sprkkr.common.grammar_types.type_from_default_value" title="ase2sprkkr.common.grammar_types.type_from_default_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_default_value</span></code></a>(value[, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type.html#ase2sprkkr.common.grammar_types.type_from_type" title="ase2sprkkr.common.grammar_types.type_from_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_type</span></code></a>(type[, format, format_all])</p></td>
+<td><p>Guess and return the grammar element (BaseType class descendatnt) from a python type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_value.html#ase2sprkkr.common.grammar_types.type_from_value" title="ase2sprkkr.common.grammar_types.type_from_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_value</span></code></a>(value)</p></td>
+<td><p>Gues the option type from a python value.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Array.html#ase2sprkkr.common.grammar_types.Array" title="ase2sprkkr.common.grammar_types.Array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Array</span></code></a>(type[, default_value, length, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed" title="ase2sprkkr.common.grammar_types.BaseMixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseMixed</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.BaseRealWithUnits" title="ase2sprkkr.common.grammar_types.BaseRealWithUnits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseRealWithUnits</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseString.html#ase2sprkkr.common.grammar_types.BaseString" title="ase2sprkkr.common.grammar_types.BaseString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseString</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseType</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p>Base class for definition of configuration option types</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Bool.html#ase2sprkkr.common.grammar_types.Bool" title="ase2sprkkr.common.grammar_types.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Date.html#ase2sprkkr.common.grammar_types.Date" title="ase2sprkkr.common.grammar_types.Date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Date</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Energy.html#ase2sprkkr.common.grammar_types.Energy" title="ase2sprkkr.common.grammar_types.Energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Energy</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Flag.html#ase2sprkkr.common.grammar_types.Flag" title="ase2sprkkr.common.grammar_types.Flag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Flag</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Integer.html#ase2sprkkr.common.grammar_types.Integer" title="ase2sprkkr.common.grammar_types.Integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Integer</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p>Signed integer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Keyword.html#ase2sprkkr.common.grammar_types.Keyword" title="ase2sprkkr.common.grammar_types.Keyword"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Keyword</span></code></a>(*keywords, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.LineString.html#ase2sprkkr.common.grammar_types.LineString" title="ase2sprkkr.common.grammar_types.LineString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineString</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p>String up to the end of line</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Mixed.html#ase2sprkkr.common.grammar_types.Mixed" title="ase2sprkkr.common.grammar_types.Mixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mixed</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.PotMixed.html#ase2sprkkr.common.grammar_types.PotMixed" title="ase2sprkkr.common.grammar_types.PotMixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PotMixed</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.QString.html#ase2sprkkr.common.grammar_types.QString" title="ase2sprkkr.common.grammar_types.QString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QString</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p>Quoted string</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Real.html#ase2sprkkr.common.grammar_types.Real" title="ase2sprkkr.common.grammar_types.Real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Real</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.RealWithUnits.html#ase2sprkkr.common.grammar_types.RealWithUnits" title="ase2sprkkr.common.grammar_types.RealWithUnits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealWithUnits</span></code></a>(*args, units, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Separator.html#ase2sprkkr.common.grammar_types.Separator" title="ase2sprkkr.common.grammar_types.Separator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Separator</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p>Special class for <code class="docutils literal notranslate"><span class="pre">****</span></code> separator inside a section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Sequence.html#ase2sprkkr.common.grammar_types.Sequence" title="ase2sprkkr.common.grammar_types.Sequence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequence</span></code></a>(*types[, format, format_all, ...])</p></td>
+<td><p>A sequence of values of given types</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.SetOf.html#ase2sprkkr.common.grammar_types.SetOf" title="ase2sprkkr.common.grammar_types.SetOf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SetOf</span></code></a>(type, **kwargs)</p></td>
+<td><p>Set of values of the same type.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.String.html#ase2sprkkr.common.grammar_types.String" title="ase2sprkkr.common.grammar_types.String"><code class="xref py py-obj docutils literal notranslate"><span class="pre">String</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Table.html#ase2sprkkr.common.grammar_types.Table" title="ase2sprkkr.common.grammar_types.Table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Table</span></code></a>([columns, header, free_header, ...])</p></td>
+<td><p>Table, optionaly with named columns, e.g.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Unsigned.html#ase2sprkkr.common.grammar_types.Unsigned" title="ase2sprkkr.common.grammar_types.Unsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Unsigned</span></code></a>([prefix, postfix, format, ...])</p></td>
+<td><p>Unsigned integer (zero is possible)</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -1149,8 +361,8 @@ is desirable to set even shorter string</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.common.init_tests.html" class="btn btn-neutral float-right" title="ase2sprkkr.common.init_tests module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="ase2sprkkr.common.grammar.html" class="btn btn-neutral float-left" title="ase2sprkkr.common.grammar module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.grammar_types.type_from_set_map.html" class="btn btn-neutral float-right" title="type_from_set_map" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.grammar.replace_whitechars.html" class="btn btn-neutral float-left" title="replace_whitechars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

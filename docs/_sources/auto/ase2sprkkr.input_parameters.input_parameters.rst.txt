@@ -1,7 +1,46 @@
-ase2sprkkr.input\_parameters.input\_parameters module
-=====================================================
+input\_parameters
+=================
+
+Full name: **ase2sprkkr.input\_parameters.input\_parameters**
 
 .. automodule:: ase2sprkkr.input_parameters.input_parameters
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      resolve_executable_postfix
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      InputParameters
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

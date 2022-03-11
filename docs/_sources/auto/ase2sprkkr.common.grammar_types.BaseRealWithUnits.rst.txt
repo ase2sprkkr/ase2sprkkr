@@ -1,0 +1,54 @@
+BaseRealWithUnits
+=================
+
+Full name: **ase2sprkkr.common.grammar\_types.BaseRealWithUnits**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: BaseRealWithUnits
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseRealWithUnits.__init__
+        ~BaseRealWithUnits.convert
+        ~BaseRealWithUnits.copy
+        ~BaseRealWithUnits.enrich
+        ~BaseRealWithUnits.grammar
+        ~BaseRealWithUnits.grammar_name
+        ~BaseRealWithUnits.missing_value
+        ~BaseRealWithUnits.parse
+        ~BaseRealWithUnits.parse_from_stream
+        ~BaseRealWithUnits.print
+        ~BaseRealWithUnits.read
+        ~BaseRealWithUnits.string
+        ~BaseRealWithUnits.transform_grammar
+        ~BaseRealWithUnits.validate
+        ~BaseRealWithUnits.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseRealWithUnits.default_value
+        ~BaseRealWithUnits.grammar_cache
+        ~BaseRealWithUnits.has_value
+        ~BaseRealWithUnits.name_in_grammar
+
+   
+   

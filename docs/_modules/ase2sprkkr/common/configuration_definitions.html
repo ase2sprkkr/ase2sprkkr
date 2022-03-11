@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
   
@@ -90,7 +91,19 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">The documentation of modules and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
 </ul>
 
             
@@ -157,7 +170,19 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.configuration_definitions</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..common.grammar_types</span>  <span class="kn">import</span> <span class="n">type_from_type</span><span class="p">,</span> <span class="n">type_from_value</span><span class="p">,</span> <span class="n">BaseType</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Configuration definitions are classes, that desribes</span>
+<span class="sd">the syntax of a configuration file, or its parts</span>
+<span class="sd">(sections or configuration options)</span>
+
+<span class="sd">They are able both to parse a file, which results in an</span>
+<span class="sd">instance of (an instance of :py:class:`ase2sprkkr.common.BaseConfiguration`,</span>
+<span class="sd">e.g. an :py:class:`Option&lt;ase2sprkkr.common.options.Option&gt;` or</span>
+<span class="sd">:py:class:`Section&lt;ase2sprkkr.common.configuration_containers.Section&gt;`</span>
+<span class="sd">), or write such object to a file.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">..common.grammar_types</span>  <span class="kn">import</span> <span class="n">type_from_type</span><span class="p">,</span> <span class="n">type_from_value</span><span class="p">,</span> <span class="n">BaseType</span>
 <span class="kn">from</span> <span class="nn">..common.grammar</span>  <span class="kn">import</span> <span class="n">delimitedList</span><span class="p">,</span> <span class="n">end_of_file</span><span class="p">,</span> <span class="n">generate_grammar</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -168,11 +193,14 @@
 <span class="kn">from</span> <span class="nn">.misc</span> <span class="kn">import</span> <span class="n">cache</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 
+<span class="c1">#:This serves just for dealing with various pyparsing versions</span>
 <span class="n">_parse_all_name</span> <span class="o">=</span> <span class="s1">&#39;parse_all&#39;</span> <span class="k">if</span> \
   <span class="s1">&#39;parse_all&#39;</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="o">.</span><span class="n">parseString</span><span class="p">)</span><span class="o">.</span><span class="n">args</span> \
   <span class="k">else</span> <span class="s1">&#39;parseAll&#39;</span>
 
-<div class="viewcode-block" id="unique_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.unique_dict">[docs]</a><span class="k">def</span> <span class="nf">unique_dict</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+<div class="viewcode-block" id="unique_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.unique_dict.html#ase2sprkkr.common.configuration_definitions.unique_dict">[docs]</a><span class="k">def</span> <span class="nf">unique_dict</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Create a dictionary from the arguments. However, raise an exception,</span>
+<span class="sd">    if there is any duplicit key &quot;&quot;&quot;</span>
     <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
        <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -180,15 +208,15 @@
        <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are non-unique keys: </span><span class="si">{</span><span class="n">duplicates</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="BaseDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseDefinition</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseDefinition</span><span class="p">:</span>
 
-   <span class="sd">&quot;&quot;&quot; Redefine in descendants &quot;&quot;&quot;</span>
    <span class="n">result_class</span> <span class="o">=</span> <span class="kc">None</span>
+   <span class="sd">&quot;&quot;&quot; Parsing of the data results in an instance of this class. To be redefined in descendants. &quot;&quot;&quot;</span>
 
-   <span class="sd">&quot;&quot;&quot; By default, all values,sections.... are named (in the configuration file)&quot;&quot;&quot;</span>
    <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">True</span>
+   <span class="sd">&quot;&quot;&quot; By default, all values,sections.... are named (in the configuration file)&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="BaseDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_alternative_name</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grammar_of_delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Parameters</span>
@@ -235,16 +263,16 @@
              <span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">grammar_of_delimiter</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="n">grammar_of_delimiter</span></div>
 
-<div class="viewcode-block" id="BaseDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.create_object">[docs]</a>   <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.create_object">[docs]</a>   <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Creates Section/Option/.... object (whose properties I define) &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseDefinition.grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.grammar">[docs]</a>   <span class="k">def</span> <span class="nf">grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.grammar">[docs]</a>   <span class="k">def</span> <span class="nf">grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Generate grammar with the correct settings of pyparsing &quot;&quot;&quot;</span>
        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BaseDefinition._tuple_with_my_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseDefinition._tuple_with_my_name">[docs]</a>   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_value</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition._tuple_with_my_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition._tuple_with_my_name">[docs]</a>   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_value</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Create the grammar returning tuple (self.name, &lt;result of the expr&gt;) &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -272,17 +300,19 @@
 
    <span class="n">do_not_skip_whitespaces_before_name</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="BaseValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseValueDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseValueDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">Option</span>
 
   <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="BaseValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="BaseValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">fixed_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">is_optional</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates the object</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name: str</span>
@@ -363,7 +393,7 @@
        <span class="k">return</span> <span class="s2">&quot;{:</span><span class="si">{}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_format</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">name</span>
 
-<div class="viewcode-block" id="BaseValueDefinition.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The value is required for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, cannot set it to None&quot;</span><span class="p">)</span>
@@ -390,7 +420,7 @@
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseValueDefinition._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition._grammar">[docs]</a>  <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition._grammar">[docs]</a>  <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -422,7 +452,7 @@
     <span class="n">out</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="n">nbody</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="BaseValueDefinition.get_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.get_value">[docs]</a>  <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition.get_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.get_value">[docs]</a>  <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed_value</span>
      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -431,7 +461,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
      <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="BaseValueDefinition.write"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write">[docs]</a>  <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition.write"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write">[docs]</a>  <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
@@ -455,32 +485,35 @@
      <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="BaseValueDefinition.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
      <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;_init_args&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_init_args</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
      <span class="n">default</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_args</span> <span class="p">}</span>
      <span class="n">default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">**</span><span class="n">default</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseValueDefinition.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseValueDefinition.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
      <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
      <span class="k">return</span> <span class="bp">self</span></div></div>
 
-<div class="viewcode-block" id="add_excluded_names_condition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.add_excluded_names_condition">[docs]</a><span class="k">def</span> <span class="nf">add_excluded_names_condition</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
+<div class="viewcode-block" id="add_excluded_names_condition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.add_excluded_names_condition.html#ase2sprkkr.common.configuration_definitions.add_excluded_names_condition">[docs]</a><span class="k">def</span> <span class="nf">add_excluded_names_condition</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Add the condition to the element, that</span>
+<span class="sd">    its value is not any of given names &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
        <span class="k">return</span>
     <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span><span class="p">))</span>
     <span class="n">element</span><span class="o">.</span><span class="n">addCondition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseContainerDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseContainerDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for a definition of the format of a container &quot;&quot;&quot;</span>
 
-    <span class="sd">&quot;&quot;&quot; Force order of its members &quot;&quot;&quot;</span>
     <span class="n">force_order</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="sd">&quot;&quot;&quot; Force order of its members &quot;&quot;&quot;</span>
 
-    <span class="sd">&quot;&quot;&quot; The (print) format, how the name is written &quot;&quot;&quot;</span>
     <span class="n">value_name_format</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot; The (print) format, how the name is written &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseContainerDefinition._dict_from_named_values"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._dict_from_named_values">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="BaseContainerDefinition._dict_from_named_values"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._dict_from_named_values">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_dict_from_named_values</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;auxiliary method that creates dictionary from the arguments&quot;&quot;&quot;</span>
         <span class="n">items</span> <span class="o">=</span> <span class="n">items</span> <span class="ow">or</span> <span class="n">OrderedDict</span><span class="p">()</span>
@@ -488,7 +521,7 @@
            <span class="n">items</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="n">items</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="n">alternative_names</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="n">alternative_names</span><span class="o">=</span><span class="p">[],</span> <span class="n">help</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_order</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span>
            <span class="n">alternative_names</span> <span class="o">=</span> <span class="n">alternative_names</span><span class="p">,</span>
@@ -515,10 +548,10 @@
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
-<div class="viewcode-block" id="BaseContainerDefinition.members"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.members">[docs]</a>    <span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.members"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.members">[docs]</a>    <span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.names"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.names"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
@@ -530,14 +563,14 @@
     <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
 
-<div class="viewcode-block" id="BaseContainerDefinition.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="n">_init_args</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="fm">__init__</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
 
-<div class="viewcode-block" id="BaseContainerDefinition.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span> <span class="n">remove</span><span class="o">=</span><span class="p">[],</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; copy the section with the contained values modified &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BaseContainerDefinition.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span> <span class="n">remove</span><span class="o">=</span><span class="p">[],</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Copy the section with the contained values modified by the arguments.&quot;&quot;&quot;</span>
         <span class="n">members</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">i</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">remove</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">members</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -549,10 +582,10 @@
         <span class="n">default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="n">members</span><span class="p">,</span> <span class="o">**</span><span class="n">default</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.create_object">[docs]</a>    <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.create_object">[docs]</a>    <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.all_member_names"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.all_member_names">[docs]</a>    <span class="k">def</span> <span class="nf">all_member_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.all_member_names"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.all_member_names">[docs]</a>    <span class="k">def</span> <span class="nf">all_member_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">(</span>
           <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">),</span>
           <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">((</span>
@@ -560,7 +593,7 @@
           <span class="p">))</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition._values_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._values_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_values_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition._values_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._values_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_values_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_class</span><span class="p">:</span>
           <span class="n">custom_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_member_grammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_member_names</span><span class="p">())</span>
        <span class="k">else</span><span class="p">:</span>
@@ -568,7 +601,7 @@
        <span class="n">delimiter</span> <span class="o">=</span> <span class="n">delimiter</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span>
 
        <span class="k">def</span> <span class="nf">grammars</span><span class="p">():</span>
-         <span class="sd">&quot;&quot;&quot; Iterate over grammar, join all with no name_in_grammar with the previous &quot;&quot;&quot;</span>
+         <span class="sd">&quot;&quot;&quot; This function iterates over the items of the container, joining all the without name_in_grammar with the previous ones. &quot;&quot;&quot;</span>
          <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
          <span class="n">head</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
          <span class="n">curr</span> <span class="o">=</span> <span class="n">head</span><span class="o">.</span><span class="n">_grammar</span><span class="p">()</span>
@@ -638,7 +671,7 @@
 
        <span class="k">return</span> <span class="n">values</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="n">delimiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span>
        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values_grammar</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span>
        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_with_my_name</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span>
@@ -646,19 +679,23 @@
 
        <span class="k">return</span> <span class="n">out</span></div>
 
-    <span class="sd">&quot;&quot;&quot; A function for validation of just the parsed result (not the user input) &quot;&quot;&quot;</span>
     <span class="n">validate</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="sd">&quot;&quot;&quot; A function for validation of just the parsed result (not the user input) &quot;&quot;&quot;</span>
 
-
-<div class="viewcode-block" id="BaseContainerDefinition.delimited_custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.delimited_custom_value_grammar">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseContainerDefinition.delimited_custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.delimited_custom_value_grammar">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="nd">@cache</span>
     <span class="k">def</span> <span class="nf">delimited_custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the grammar for the custom child with delimiter.</span>
+<span class="sd">        The delimiter can delimite it either from the previous child or from the section name.&quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">custom_value_grammar</span><span class="p">()</span></div>
 
     <span class="n">custom_name_characters</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s1">&#39;_-&#39;</span>
+    <span class="sd">&quot;&quot;&quot; Which characters can appears in an unknown child (value/section) name &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseContainerDefinition.custom_member_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_member_grammar">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseContainerDefinition.custom_member_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_member_grammar">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">custom_member_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value_names</span> <span class="o">=</span> <span class="p">[]):</span>
+       <span class="sd">&quot;&quot;&quot; Grammar for the custom - unknown - child &quot;&quot;&quot;</span>
        <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">custom_name_characters</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
        <span class="n">add_excluded_names_condition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value_names</span><span class="p">)</span>
        <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">delimited_custom_value_grammar</span><span class="p">())</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -666,49 +703,62 @@
        <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="BaseContainerDefinition._first_section_is_fixed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._first_section_is_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">_first_section_is_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition._first_section_is_fixed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._first_section_is_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">_first_section_is_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; Has/ve the first child(s) in an unordered sequence fixed position? &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">first_item</span><span class="p">()</span><span class="o">.</span><span class="n">name_in_grammar</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.parse_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_file">[docs]</a>    <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span> <span class="n">_parse_all_name</span><span class="p">:</span> <span class="kc">True</span> <span class="p">}</span> <span class="p">),</span> <span class="n">return_value_only</span><span class="p">)</span></div>
+<div class="viewcode-block" id="BaseContainerDefinition.parse_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_file">[docs]</a>    <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; Parse the file, return the parsed data as dictionary &quot;&quot;&quot;</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span> <span class="n">_parse_all_name</span><span class="p">:</span> <span class="kc">True</span> <span class="p">}</span> <span class="p">),</span> <span class="n">return_value_only</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.parse"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">whole_string</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span> <span class="n">_parse_all_name</span><span class="p">:</span> <span class="n">whole_string</span><span class="p">}</span> <span class="p">),</span> <span class="n">return_value_only</span><span class="p">)</span></div>
+<div class="viewcode-block" id="BaseContainerDefinition.parse"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">whole_string</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; Parse the string, return the parsed data as dictionary &quot;&quot;&quot;</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span> <span class="n">_parse_all_name</span><span class="p">:</span> <span class="n">whole_string</span><span class="p">}</span> <span class="p">),</span> <span class="n">return_value_only</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.parse_return"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_return">[docs]</a>    <span class="k">def</span> <span class="nf">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseContainerDefinition.parse_return"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_return">[docs]</a>    <span class="k">def</span> <span class="nf">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">return_value_only</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clean up the parsed values (unpack then from unnecessary containers)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_value_only</span>
+<span class="sd">          Return only value, not name - value tuple</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">return_value_only</span><span class="p">:</span>
            <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">val</span></div>
 
-<div class="viewcode-block" id="BaseContainerDefinition.parse_from_stream"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_from_stream">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">parse_from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">up_to</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">whole_string</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-      <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">readuntil</span><span class="p">(</span><span class="n">up_to</span><span class="p">)</span>
-      <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">up_to</span><span class="p">)]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
-         <span class="n">result</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">result</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">whole_string</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="BaseContainerDefinition.parse_from_stream"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_from_stream">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">parse_from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">up_to</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">whole_string</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse string readed from asyncio stream.</span>
+<span class="sd">        The stream is readed up to the given delimiter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">readuntil</span><span class="p">(</span><span class="n">up_to</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">up_to</span><span class="p">)]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+           <span class="n">result</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">whole_string</span><span class="p">)</span></div></div>
 
 
 
-<div class="viewcode-block" id="BaseSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseSectionDefinition</span><span class="p">(</span><span class="n">BaseContainerDefinition</span><span class="p">):</span>
-   <span class="sd">&quot;&quot;&quot; Base class for sections in Pot or InputParameters file &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BaseSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseSectionDefinition</span><span class="p">(</span><span class="n">BaseContainerDefinition</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot; Base class for definition of the sections in Pot or InputParameters files.</span>
 
-
-   <span class="sd">&quot;&quot;&quot; Is the sectio named, or it is its position given by position?</span>
-<span class="sd">       In the second case, a custom value is not allowed between</span>
-<span class="sd">       the section and its predecessor</span>
+<span class="sd">       It just redefine a few properties/methods to values/behavior typical for the sections</span>
 <span class="sd">   &quot;&quot;&quot;</span>
+
    <span class="n">result_class</span> <span class="o">=</span> <span class="n">Section</span>
 
    <span class="nd">@property</span>
    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
 
-
-   <span class="sd">&quot;&quot;&quot; Type for a not-specified value (e.g. flag) &quot;&quot;&quot;</span>
    <span class="n">custom_value_name</span> <span class="o">=</span> <span class="s1">&#39;CUSTOM_VALUE&#39;</span>
+   <span class="sd">&quot;&quot;&quot; Just the name that appears in the grammar, when it is printed.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseSectionDefinition.delimited_custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.delimited_custom_value_grammar">[docs]</a>   <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BaseSectionDefinition.delimited_custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.delimited_custom_value_grammar">[docs]</a>   <span class="nd">@classmethod</span>
    <span class="nd">@cache</span>
    <span class="k">def</span> <span class="nf">delimited_custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">gt</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">custom_class</span><span class="o">.</span><span class="n">grammar_type</span>
@@ -720,14 +770,25 @@
         <span class="k">return</span> <span class="n">out</span></div></div>
 
 
-<div class="viewcode-block" id="ConfDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition">[docs]</a><span class="k">class</span> <span class="nc">ConfDefinition</span><span class="p">(</span><span class="n">BaseContainerDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition">[docs]</a><span class="k">class</span> <span class="nc">ConfDefinition</span><span class="p">(</span><span class="n">BaseContainerDefinition</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot; From this class, the definition of the format of a whole configuration file should be derived.</span>
+
+<span class="sd">   &quot;&quot;&quot;</span>
 
    <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
-   <span class="sd">&quot;&quot;&quot; No data are given just by a section name - no Flag equivalent for sections &quot;&quot;&quot;</span>
-   <span class="n">optional_value</span> <span class="o">=</span> <span class="kc">None</span>
+   <span class="sd">&quot;&quot;&quot; The configuration files has commonly no &quot;name&quot; of its content, they</span>
+<span class="sd">   just contains their content.</span>
 
-<div class="viewcode-block" id="ConfDefinition.from_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.from_dict">[docs]</a>   <span class="nd">@classmethod</span>
+<span class="sd">   However, in some cases the name_in_grammar could be used for some kind of</span>
+<span class="sd">   prefix in the file, however, it is better to use a fixed value for this purpose.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfDefinition.from_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.from_dict">[docs]</a>   <span class="nd">@classmethod</span>
    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">defs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Create instance of the definition from a dictionary, creating</span>
+<span class="sd">       the sections (and values) definitions recursively.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
            <span class="n">section</span> <span class="o">=</span> <span class="n">defs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">defs</span><span class="p">,</span> <span class="n">BaseSectionDefinition</span><span class="p">):</span>
@@ -740,7 +801,7 @@
 
        <span class="k">return</span> <span class="bp">cls</span><span class="p">((</span> <span class="n">gen</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ConfDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
        <span class="k">if</span> <span class="ow">not</span> <span class="n">members</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
           <span class="n">members</span> <span class="o">=</span> <span class="n">name</span>
           <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
@@ -751,25 +812,32 @@
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
 
    <span class="n">custom_value_name</span> <span class="o">=</span> <span class="s1">&#39;CUSTOM_SECTION&#39;</span>
+   <span class="sd">&quot;&quot;&quot; Just the name that appears in the grammar, when it is printed.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ConfDefinition.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.read_from_file">[docs]</a>   <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfDefinition.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.read_from_file">[docs]</a>   <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; Read a configuration file and return the parsed Configuration object &quot;&quot;&quot;</span>
        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
        <span class="n">out</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="ConfDefinition._tuple_with_my_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition._tuple_with_my_name">[docs]</a>   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-       <span class="sd">&quot;&quot;&quot; Do not create tuple (name, value) for the root class &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ConfDefinition._tuple_with_my_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition._tuple_with_my_name">[docs]</a>   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot; Do not create tuple (name, value) for the root class. &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="n">expr</span></div>
 
-<div class="viewcode-block" id="ConfDefinition.parse_return"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.parse_return">[docs]</a>   <span class="k">def</span> <span class="nf">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfDefinition.parse_return"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition.parse_return">[docs]</a>   <span class="k">def</span> <span class="nf">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; There is no name in the parsed results (see how</span>
 <span class="sd">            ConfDefinition._tuple_with_my_name is redefined)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">val</span></div>
 
-<div class="viewcode-block" id="ConfDefinition._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.html#ase2sprkkr.common.configuration_definitions.ConfDefinition._grammar">[docs]</a>   <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-       <span class="sd">&quot;&quot;&quot;Ignore comments&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ConfDefinition._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition._grammar">[docs]</a>   <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;Returns the grammar to parse the configuration file.</span>
+
+<span class="sd">       This method just tweaks the grammar (generated by the common container implementation) to ignore comments,</span>
+<span class="sd">       so the comments would be ignored just once.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+
        <span class="n">out</span><span class="o">=</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_grammar</span><span class="p">()</span>
        <span class="n">out</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">restOfLine</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">())</span>
        <span class="k">return</span> <span class="n">out</span></div></div>

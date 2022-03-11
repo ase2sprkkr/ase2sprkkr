@@ -1,7 +1,40 @@
-ase2sprkkr.potentials.definitions.sections.occupation module
-============================================================
+occupation
+==========
+
+Full name: **ase2sprkkr.potentials.definitions.sections.occupation**
 
 .. automodule:: ase2sprkkr.potentials.definitions.sections.occupation
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OccupationSection
+      OccupationSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,61 @@
+ASEArraySectionDefinition
+=========================
+
+Full name: **ase2sprkkr.potentials.potential\_definitions.ASEArraySectionDefinition**
+
+.. currentmodule:: ase2sprkkr.potentials.potential_definitions
+
+.. autoclass:: ASEArraySectionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySectionDefinition.__init__
+        ~ASEArraySectionDefinition.all_member_names
+        ~ASEArraySectionDefinition.copy
+        ~ASEArraySectionDefinition.create_object
+        ~ASEArraySectionDefinition.custom_class
+        ~ASEArraySectionDefinition.custom_member_grammar
+        ~ASEArraySectionDefinition.delimited_custom_value_grammar
+        ~ASEArraySectionDefinition.depends_on
+        ~ASEArraySectionDefinition.grammar
+        ~ASEArraySectionDefinition.grammar_of_delimiter
+        ~ASEArraySectionDefinition.members
+        ~ASEArraySectionDefinition.names
+        ~ASEArraySectionDefinition.parse
+        ~ASEArraySectionDefinition.parse_file
+        ~ASEArraySectionDefinition.parse_from_stream
+        ~ASEArraySectionDefinition.parse_return
+        ~ASEArraySectionDefinition.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySectionDefinition.custom_name_characters
+        ~ASEArraySectionDefinition.custom_value_name
+        ~ASEArraySectionDefinition.delimiter
+        ~ASEArraySectionDefinition.do_not_skip_whitespaces_before_name
+        ~ASEArraySectionDefinition.force_order
+        ~ASEArraySectionDefinition.name_in_grammar
+        ~ASEArraySectionDefinition.validate
+        ~ASEArraySectionDefinition.value_name_format
+        ~ASEArraySectionDefinition.values
+
+   
+   

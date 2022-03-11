@@ -1,7 +1,38 @@
-ase2sprkkr.sprkkr.occupations module
-====================================
+occupations
+===========
+
+Full name: **ase2sprkkr.sprkkr.occupations**
 
 .. automodule:: ase2sprkkr.sprkkr.occupations
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Occupation
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

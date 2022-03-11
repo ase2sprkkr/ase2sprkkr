@@ -1,0 +1,61 @@
+section
+=======
+
+Full name: **ase2sprkkr.potentials.definitions.sections.occupation.section**
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.occupation
+
+.. autoclass:: section
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~section.__init__
+        ~section.all_member_names
+        ~section.copy
+        ~section.create_object
+        ~section.custom_class
+        ~section.custom_member_grammar
+        ~section.delimited_custom_value_grammar
+        ~section.depends_on
+        ~section.grammar
+        ~section.grammar_of_delimiter
+        ~section.members
+        ~section.names
+        ~section.parse
+        ~section.parse_file
+        ~section.parse_from_stream
+        ~section.parse_return
+        ~section.remove
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~section.custom_name_characters
+        ~section.custom_value_name
+        ~section.delimiter
+        ~section.do_not_skip_whitespaces_before_name
+        ~section.force_order
+        ~section.name_in_grammar
+        ~section.validate
+        ~section.value_name_format
+        ~section.values
+
+   
+   

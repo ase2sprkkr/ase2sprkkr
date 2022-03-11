@@ -1,0 +1,53 @@
+Keyword
+=======
+
+Full name: **ase2sprkkr.common.grammar\_types.Keyword**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Keyword
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Keyword.__init__
+        ~Keyword.convert
+        ~Keyword.copy
+        ~Keyword.enrich
+        ~Keyword.grammar
+        ~Keyword.grammar_name
+        ~Keyword.missing_value
+        ~Keyword.parse
+        ~Keyword.parse_from_stream
+        ~Keyword.print
+        ~Keyword.read
+        ~Keyword.string
+        ~Keyword.transform_grammar
+        ~Keyword.validate
+        ~Keyword.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Keyword.default_value
+        ~Keyword.has_value
+        ~Keyword.name_in_grammar
+
+   
+   

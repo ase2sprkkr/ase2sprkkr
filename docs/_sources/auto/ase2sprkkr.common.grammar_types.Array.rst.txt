@@ -1,0 +1,55 @@
+Array
+=====
+
+Full name: **ase2sprkkr.common.grammar\_types.Array**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Array
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Array.__init__
+        ~Array.convert
+        ~Array.copy
+        ~Array.enrich
+        ~Array.grammar
+        ~Array.grammar_name
+        ~Array.missing_value
+        ~Array.parse
+        ~Array.parse_from_stream
+        ~Array.print
+        ~Array.read
+        ~Array.string
+        ~Array.transform_grammar
+        ~Array.validate
+        ~Array.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Array.default_value
+        ~Array.delimiter
+        ~Array.delimiter_str
+        ~Array.has_value
+        ~Array.name_in_grammar
+
+   
+   

@@ -1,0 +1,55 @@
+SetOf
+=====
+
+Full name: **ase2sprkkr.common.grammar\_types.SetOf**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: SetOf
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SetOf.__init__
+        ~SetOf.convert
+        ~SetOf.copy
+        ~SetOf.enrich
+        ~SetOf.grammar
+        ~SetOf.grammar_name
+        ~SetOf.missing_value
+        ~SetOf.parse
+        ~SetOf.parse_from_stream
+        ~SetOf.print
+        ~SetOf.read
+        ~SetOf.string
+        ~SetOf.transform_grammar
+        ~SetOf.validate
+        ~SetOf.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SetOf.default_value
+        ~SetOf.delimiter
+        ~SetOf.delimiter_str
+        ~SetOf.has_value
+        ~SetOf.name_in_grammar
+
+   
+   

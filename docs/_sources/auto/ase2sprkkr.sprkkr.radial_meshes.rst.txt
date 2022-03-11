@@ -1,7 +1,39 @@
-ase2sprkkr.sprkkr.radial\_meshes module
-=======================================
+radial\_meshes
+==============
+
+Full name: **ase2sprkkr.sprkkr.radial\_meshes**
 
 .. automodule:: ase2sprkkr.sprkkr.radial_meshes
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ExponentialMesh
+      Mesh
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

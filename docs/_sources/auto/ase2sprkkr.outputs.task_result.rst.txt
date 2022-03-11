@@ -1,7 +1,39 @@
-ase2sprkkr.outputs.task\_result module
-======================================
+task\_result
+============
+
+Full name: **ase2sprkkr.outputs.task\_result**
 
 .. automodule:: ase2sprkkr.outputs.task_result
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      OutputReader
+      TaskResult
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

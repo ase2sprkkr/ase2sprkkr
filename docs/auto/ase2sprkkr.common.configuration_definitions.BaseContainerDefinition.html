@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>BaseContainerDefinition &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BaseDefinition" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html" />
+    <link rel="prev" title="unique_dict" href="ase2sprkkr.common.configuration_definitions.unique_dict.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.add_excluded_names_condition.html">add_excluded_names_condition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.unique_dict.html">unique_dict</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">BaseContainerDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html">BaseDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html">BaseSectionDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html">BaseValueDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ConfDefinition.html">ConfDefinition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.regex_trie.html">regex_trie</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.common.html">common</a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a> &raquo;</li>
+        
+      <li>BaseContainerDefinition</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/auto/ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basecontainerdefinition">
+<h1>BaseContainerDefinition<a class="headerlink" href="#basecontainerdefinition" title="Permalink to this headline">¶</a></h1>
+<p>Full name: <strong>ase2sprkkr.common.configuration_definitions.BaseContainerDefinition</strong></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_definitions.</span></span><span class="sig-name descname"><span class="pre">BaseContainerDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_hidden_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="ase2sprkkr.common.configuration_definitions.BaseDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseDefinition</span></code></a></p>
+<p>Base class for a definition of the format of a container</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_hidden_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the value/section</p></li>
+<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value</p></li>
+<li><p><strong>is_hidden</strong> (<em>boolean</em>) – Hidden values are not offered to a user, usually they are
+set by another object (and so a direct setting of their values
+has no sense)</p></li>
+<li><p><strong>name_in_grammar</strong> (<em>boolean</em><em> or </em><em>None</em>) – If False, there the name of the variable is not printed in the
+configuration file. The variable is recognized by its position.
+If None, the default class value is used</p></li>
+<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Short help message</p></li>
+<li><p><strong>help</strong> (<em>str</em>) – (Long) help message for the value/section</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.__init__" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name[, members, alternative_names, ...])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param name</dt>
+<dd class="field-odd"><p>Name of the value/section</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.all_member_names" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.all_member_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_member_names</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.copy" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>([args, items, remove, defaults])</p></td>
+<td><p>Copy the section with the contained values modified by the arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.create_object" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.create_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_object</span></code></a>([container])</p></td>
+<td><p>Creates Section/Option/.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_member_grammar" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_member_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_member_grammar</span></code></a>([value_names])</p></td>
+<td><p>Grammar for the custom - unknown - child</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.delimited_custom_value_grammar" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.delimited_custom_value_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delimited_custom_value_grammar</span></code></a>()</p></td>
+<td><p>Return the grammar for the custom child with delimiter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code>()</p></td>
+<td><p>Generate grammar with the correct settings of pyparsing</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.members" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.members"><code class="xref py py-obj docutils literal notranslate"><span class="pre">members</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.names" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">names</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse</span></code></a>(str[, whole_string, return_value_only])</p></td>
+<td><p>Parse the string, return the parsed data as dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_file" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_file</span></code></a>(file[, return_value_only])</p></td>
+<td><p>Parse the file, return the parsed data as dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_from_stream" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_from_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_from_stream</span></code></a>(stream, up_to[, start, ...])</p></td>
+<td><p>Parse string readed from asyncio stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_return" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_return"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_return</span></code></a>(val[, return_value_only])</p></td>
+<td><p>Clean up the parsed values (unpack then from unnecessary containers)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.remove" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(name)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_name_characters" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_name_characters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_name_characters</span></code></a></p></td>
+<td><p>Which characters can appears in an unknown child (value/section) name</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_not_skip_whitespaces_before_name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.force_order" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.force_order"><code class="xref py py-obj docutils literal notranslate"><span class="pre">force_order</span></code></a></p></td>
+<td><p>Force order of its members</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></p></td>
+<td><p>By default, all values,sections.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">result_class</span></code></p></td>
+<td><p>Parsing of the data results in an instance of this class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.validate" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code></a></p></td>
+<td><p>A function for validation of just the parsed result (not the user input)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.value_name_format" title="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.value_name_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_name_format</span></code></a></p></td>
+<td><p>The (print) format, how the name is written</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.value_name_format">
+<span class="sig-name descname"><span class="pre">value_name_format</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.value_name_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>The (print) format, how the name is written</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._dict_from_named_values">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_dict_from_named_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition._dict_from_named_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._dict_from_named_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>auxiliary method that creates dictionary from the arguments</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.force_order">
+<span class="sig-name descname"><span class="pre">force_order</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.force_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force order of its members</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.members">
+<span class="sig-name descname"><span class="pre">members</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.members" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.names">
+<span class="sig-name descname"><span class="pre">names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.remove" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._init_args">
+<span class="sig-name descname"><span class="pre">_init_args</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['alternative_names',</span> <span class="pre">'help',</span> <span class="pre">'description',</span> <span class="pre">'is_hidden',</span> <span class="pre">'has_hidden_members',</span> <span class="pre">'is_optional',</span> <span class="pre">'name_in_grammar',</span> <span class="pre">'force_order']</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._init_args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the section with the contained values modified by the arguments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.create_object">
+<span class="sig-name descname"><span class="pre">create_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.create_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.create_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates Section/Option/…. object (whose properties I define)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.all_member_names">
+<span class="sig-name descname"><span class="pre">all_member_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.all_member_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.all_member_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._values_grammar">
+<span class="sig-name descname"><span class="pre">_values_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition._values_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._values_grammar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._grammar">
+<span class="sig-name descname"><span class="pre">_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition._grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._grammar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function for validation of just the parsed result (not the user input)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.delimited_custom_value_grammar">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delimited_custom_value_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.delimited_custom_value_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.delimited_custom_value_grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the grammar for the custom child with delimiter.
+The delimiter can delimite it either from the previous child or from the section name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_name_characters">
+<span class="sig-name descname"><span class="pre">custom_name_characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_name_characters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Which characters can appears in an unknown child (value/section) name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_member_grammar">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_member_grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.custom_member_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.custom_member_grammar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grammar for the custom - unknown - child</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._first_section_is_fixed">
+<span class="sig-name descname"><span class="pre">_first_section_is_fixed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition._first_section_is_fixed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition._first_section_is_fixed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Has/ve the first child(s) in an unordered sequence fixed position?</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_file">
+<span class="sig-name descname"><span class="pre">parse_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.parse_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the file, return the parsed data as dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the string, return the parsed data as dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_return">
+<span class="sig-name descname"><span class="pre">parse_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.parse_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_return" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean up the parsed values (unpack then from unnecessary containers)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>return_value_only</strong> (<em>bool</em>) – Return only value, not name - value tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_from_stream">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up_to</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whole_string</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_value_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseContainerDefinition.parse_from_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.parse_from_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse string readed from asyncio stream.
+The stream is readed up to the given delimiter</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html" class="btn btn-neutral float-right" title="BaseDefinition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.configuration_definitions.unique_dict.html" class="btn btn-neutral float-left" title="unique_dict" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

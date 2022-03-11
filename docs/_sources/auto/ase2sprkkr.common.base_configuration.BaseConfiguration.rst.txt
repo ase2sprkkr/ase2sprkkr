@@ -1,0 +1,29 @@
+BaseConfiguration
+=================
+
+Full name: **ase2sprkkr.common.base\_configuration.BaseConfiguration**
+
+.. currentmodule:: ase2sprkkr.common.base_configuration
+
+.. autoclass:: BaseConfiguration
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseConfiguration.__init__
+
+   
+   
+
+   
+   
+   

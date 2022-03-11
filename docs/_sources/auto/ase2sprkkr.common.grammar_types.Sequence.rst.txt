@@ -1,0 +1,53 @@
+Sequence
+========
+
+Full name: **ase2sprkkr.common.grammar\_types.Sequence**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: Sequence
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Sequence.__init__
+        ~Sequence.convert
+        ~Sequence.copy
+        ~Sequence.enrich
+        ~Sequence.grammar
+        ~Sequence.grammar_name
+        ~Sequence.missing_value
+        ~Sequence.parse
+        ~Sequence.parse_from_stream
+        ~Sequence.print
+        ~Sequence.read
+        ~Sequence.string
+        ~Sequence.transform_grammar
+        ~Sequence.validate
+        ~Sequence.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Sequence.default_value
+        ~Sequence.has_value
+        ~Sequence.name_in_grammar
+
+   
+   

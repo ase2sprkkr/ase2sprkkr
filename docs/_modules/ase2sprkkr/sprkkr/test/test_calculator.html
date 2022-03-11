@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ase2sprkkr.sprkkr.test.test_calculator &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ase2sprkkr.sprkkr.test.test_calculator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ase2sprkkr.sprkkr.test.test_calculator</h1><div class="highlight"><pre>
+<span></span><span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
+   <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
+<span class="k">else</span><span class="p">:</span>
+   <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
+<span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">from</span> <span class="nn">..calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+<span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<div class="viewcode-block" id="CalculatorTest"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest">[docs]</a><span class="k">class</span> <span class="nc">CalculatorTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CalculatorTest.test_calculator"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest.test_calculator">[docs]</a> <span class="k">def</span> <span class="nf">test_calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="n">print_output</span> <span class="o">=</span> <span class="s1">&#39;-v&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span> <span class="s1">&#39;--verbose&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+     <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+     <span class="n">here</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+     <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
+     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">21111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span><span class="mi">21111</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">31111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span><span class="mi">31111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ENERGY.NE&#39;</span><span class="p">),</span><span class="mi">31111</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;ENERGY.NE&#39;</span><span class="p">:</span><span class="mi">41111</span><span class="p">})</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span><span class="mi">41111</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;ENERGY.NE&#39;</span><span class="p">:</span><span class="mi">51111</span><span class="p">})</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span><span class="mi">51111</span><span class="p">)</span>
+
+     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NE</span><span class="o">=</span><span class="mi">11111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span><span class="mi">11111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span><span class="mi">11111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span><span class="mi">11111</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">(),</span> <span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;PHAGEN&#39;</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">(),</span> <span class="s1">&#39;PHAGEN&#39;</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">),</span> <span class="mi">111111</span><span class="p">)</span>
+
+     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">)</span>
+
+     <span class="n">inp_file</span><span class="o">=</span><span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">)</span>
+     <span class="n">pot_file</span><span class="o">=</span><span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">)</span>
+     <span class="n">Path</span><span class="p">(</span><span class="n">inp_file</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+     <span class="n">Path</span><span class="p">(</span><span class="n">pot_file</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+     <span class="k">def</span> <span class="nf">assert_change</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">((</span><span class="s1">&#39;inp&#39;</span><span class="p">,</span><span class="s1">&#39;pot&#39;</span><span class="p">),</span> <span class="n">args</span><span class="p">):</span>
+          <span class="n">fname</span> <span class="o">=</span> <span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+          <span class="n">ntime</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+          <span class="n">changed</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ntime</span> <span class="o">-</span>  <span class="n">time</span><span class="p">[</span><span class="n">ext</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">2.0</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">changed</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+            <span class="n">ntime</span> <span class="o">-=</span> <span class="mi">10</span>
+            <span class="n">time</span><span class="p">[</span><span class="n">ext</span><span class="p">]</span> <span class="o">=</span> <span class="n">ntime</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">utime</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="p">(</span> <span class="n">ntime</span><span class="p">,</span> <span class="n">ntime</span> <span class="p">))</span>
+
+     <span class="n">time</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;inp&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;pot&#39;</span> <span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">()</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">,</span> <span class="n">potential</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">potential</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">,</span> <span class="n">potential</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">potential</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+     <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">,</span> <span class="n">potential</span> <span class="o">=</span> <span class="n">pot_file</span><span class="p">)</span>
+     <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CalculatorTest.test_run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest.test_run">[docs]</a> <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="n">ignore</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DO_NOT_RUN_SPRKKR&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span>
+     <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
+        <span class="k">return</span>
+
+     <span class="n">print_output</span> <span class="o">=</span> <span class="s1">&#39;-v&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span> <span class="s1">&#39;--verbose&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+     <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+     <span class="n">here</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+     <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
+     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">)</span>
+     <span class="c1">#use methods of atoms</span>
+     <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calculator</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">(),</span> <span class="nb">float</span><span class="p">))</span>
+
+     <span class="c1">#calculator options</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">2</span> <span class="p">},</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> <span class="n">Potential</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">potential_object</span><span class="p">,</span> <span class="n">Potential</span><span class="p">))</span>
+
+     <span class="c1">#read again the output from a file - the results should be the same</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;scf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_output_from_file</span><span class="p">(</span><span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+     <span class="n">out</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">filename</span> <span class="o">=</span> <span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.png&#39;</span><span class="p">))</span>
+
+     <span class="c1">#use methods of atoms</span>
+     <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calculator</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">(),</span> <span class="nb">float</span><span class="p">))</span>
+
+     <span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;LiCl&#39;</span><span class="p">,</span> <span class="s1">&#39;rocksalt&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">)</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;NITER&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span> <span class="p">:</span> <span class="mi">12</span> <span class="p">},</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;atoms&#39;</span><span class="p">]))</span>
+     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;atoms&#39;</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;orbitals&#39;</span><span class="p">]))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+
+     <span class="n">out</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">read_output_from_file</span><span class="p">(</span><span class="n">here</span><span class="p">(</span><span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+
+     <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
+     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">)</span>
+     <span class="n">ips</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="o">.</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;scf&#39;</span><span class="p">)</span>
+     <span class="n">ips</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">NITER</span> <span class="o">=</span> <span class="mi">1</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">converged</span><span class="p">)</span>
+
+     <span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span> <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span> <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">)</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span><span class="n">input_parameters</span><span class="o">=</span><span class="n">ips</span><span class="p">,</span><span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
+
+     <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+     <span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

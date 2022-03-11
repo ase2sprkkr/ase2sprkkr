@@ -1,7 +1,40 @@
-ase2sprkkr.potentials.definitions.sections.sites module
-=======================================================
+sites
+=====
+
+Full name: **ase2sprkkr.potentials.definitions.sections.sites**
 
 .. automodule:: ase2sprkkr.potentials.definitions.sections.sites
-   :members:
-   :undoc-members:
-   :show-inheritance:
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SitesSection
+      SitesSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

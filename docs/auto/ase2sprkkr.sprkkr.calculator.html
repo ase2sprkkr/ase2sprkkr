@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ase2sprkkr.sprkkr.calculator module &mdash; ASE2SPRKKR  documentation</title>
+  <title>calculator &mdash; ASE2SPRKKR  documentation</title>
   
 
   
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
   
@@ -41,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ase2sprkkr.sprkkr.occupations module" href="ase2sprkkr.sprkkr.occupations.html" />
-    <link rel="prev" title="ase2sprkkr.sprkkr.atomic_types module" href="ase2sprkkr.sprkkr.atomic_types.html" /> 
+    <link rel="next" title="FilenameTemplator" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html" />
+    <link rel="prev" title="AtomicType" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,23 +89,44 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">The documentation of modules and classes</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.html">ase2sprkkr.common package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.html">ase2sprkkr.input_parameters package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.html">ase2sprkkr.outputs package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.html">ase2sprkkr.potentials package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html#submodules">Submodules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">calculator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-calculator">Module calculator</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 </ul>
 </li>
 </ul>
@@ -155,11 +177,11 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.html">ase2sprkkr package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
         
-          <li><a href="ase2sprkkr.sprkkr.html">ase2sprkkr.sprkkr package</a> &raquo;</li>
+          <li><a href="ase2sprkkr.sprkkr.html">sprkkr</a> &raquo;</li>
         
-      <li>ase2sprkkr.sprkkr.calculator module</li>
+      <li>calculator</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -178,367 +200,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-ase2sprkkr.sprkkr.calculator">
-<span id="ase2sprkkr-sprkkr-calculator-module"></span><h1>ase2sprkkr.sprkkr.calculator module<a class="headerlink" href="#module-ase2sprkkr.sprkkr.calculator" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-calculator">
+  <div class="section" id="calculator">
+<h1>calculator<a class="headerlink" href="#calculator" title="Permalink to this headline">¶</a></h1>
+<p>Full name: <strong>ase2sprkkr.sprkkr.calculator</strong></p>
+<span class="target" id="module-ase2sprkkr.sprkkr.calculator"></span><div class="section" id="module-calculator">
 <h2>Module calculator<a class="headerlink" href="#module-calculator" title="Permalink to this headline">¶</a></h2>
 <p>This module contains different classes used to define a new calculator for
 specific spectroscopies understood by MsSpec.</p>
 <p>For more informations about SPR-KKR, follow this
 <cite>link &lt;http://olymp.cup.uni-muenchen.de/index.php?option=com_content&amp;
 view=article&amp;id=8%3Asprkkr&amp;catid=4%3Asoftware&amp;Itemid=7&amp;lang=en&gt;</cite></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.calculator.</span></span><span class="sig-name descname"><span class="pre">SPRKKR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ase.calculators.calculator.Calculator</span></code></p>
-<p>ASE calculator for SPR-KKR.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>InputParameters</strong> (<a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><em>ase2sprkkr.input_parameters.input_parameters.InputParameters</em></a>) – (just for an easier access to the class)</p></li>
-<li><p><strong>Potential</strong> (<a class="reference internal" href="ase2sprkkr.potentials.potentials.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><em>ase2sprkkr.potentials.potentials.Potential</em></a>) – (dto.)</p></li>
-<li><p><strong>potential_file</strong> (<em>Union</em><em>[</em><em>str</em><em>|</em><em>TextIO</em><em>]</em>) – the path and name of the potential file to be used (if not specified otherwise in the called method)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.implemented_properties">
-<span class="sig-name descname"><span class="pre">implemented_properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['energy']</span></em><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.implemented_properties" title="Permalink to this definition">¶</a></dt>
-<dd><p>Properties calculator can handle (energy, forces, …)</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>label</strong> (<em>str</em><em> or </em><em>None</em>) – Path and begin of the file names used for default templates
-for input, output and potential files.</p></li>
-<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>None</em>) – Directory, where the files will be created.</p></li>
-<li><p><strong>input_file</strong> (<em>str</em><em> or </em><em>file</em><em> or </em><em>bool</em>) – Template according to which the input file name will be created.
-True means the default template.
-False means to use a temporary file.
-The placeholders for the task name, date, etc… can be used.</p></li>
-<li><p><strong>output_file</strong> (<em>str</em><em> or </em><em>file</em><em> or </em><em>bool</em><em> (</em><em>default</em><em>)</em><em>.</em>) – The template for the output file name.
-True means use the input file name, with replaced .in[p] by .out
-or appended .out suffix
-False means not to write the output file at all.
-See the input_file parameter for the meaning of other values.</p></li>
-<li><p><strong>potential_file</strong> (<em>str</em><em> or </em><em>file</em><em> or </em><em>bool</em>) – The template for the potential file name (see the input_file parameter).</p></li>
-<li><p><strong>print_output</strong> (<em>bool</em><em> or </em><em>str</em>) – Write the output of runned executables to stdout (in addition to the output file)?
-(Default value for the calculator)
-If print_output = ‘info’, only a few info lines per iteration will be printed.</p></li>
-<li><p><strong>mpi</strong> (<em>list</em><em> or </em><em>string</em><em> or </em><em>int</em><em> or </em><em>bool.</em>) – Runner for mpi to run a mpi calculation. True and int means autodetect: use True
-for a cluster where mpi is able to autodetect the number of the processes, otherwise
-use integer to specify the number of processes.
-E.g. mpi = [ ‘mpirun’, ‘-np’, ‘4’ ], mpi = 4</p></li>
-<li><p><strong>input_parameters</strong> (<em>sprkkr.input_parameters.input_parameters.InputParameters</em><em> or </em><em>str</em><em> or </em><em>None</em>) – The default input parameters, according to which the input file for the calculation
-will be created. None means that the parameters will be specified in the calculate
-(or save_input) method.
-If str is given, it is interpreted as a name of the task (if no dot and no slash
-are contained in it), for which (see ase2sprkkr.input_parameters.definitions) the default
-input parameters will be used, or as a filename contained the input file (which will
-be readed)</p></li>
-<li><p><strong>options</strong> (<em>dict</em>) – Further parameters for input parameters</p></li>
-<li><p><strong>potential</strong> (<em>sprkkr.potential.Potential</em><em> or </em><em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – <p>The (default) potential to be used in calculations.
-If a string is given, the potential will be read from the given filename.
-True means to generate the potential from atoms (the default value).
-False means that the potential will be given by the input_parameters.
-None means that the potential is required to be supplied, when calculate or save_input</p>
-<blockquote>
-<div><p>methods are called.</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>executable_postfix</strong> (<em>str</em><em> or </em><em>boolean</em>) – String to be added to the runned executable. In some environments, the version
-and the hostname is added to the name of sprkkr executables.
-True: use SPRKKR_EXECUTABLE_SUFFIX environment variable
-False: do not append anything (the same as ‘’)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_parameters</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>ASE method to set the parameters.</p>
-<p>Beware, currently, the method sets only input file parameters, not the potential parameters (see the SPRKKR documentation), and do not call the reset() function at all.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of an input parameter.
-The parameter of the given name will be sought in sections
-and the value of the first such one will be returned. If there
-is an ambiguity, the name of the parameter can be given in
-SECTION.NAME notation.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.potential">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ase2sprkkr.potentials.potentials.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><span class="pre">ase2sprkkr.potentials.potentials.Potential</span></a></em><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.potential" title="Permalink to this definition">¶</a></dt>
-<dd><p>The potential associated with the calculator. It will be used in
-calculate and save_input methods, if it is not explicitly overriden by
-the potential argument.
-By default, the potential is created from atoms object (if it is set).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>potential</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>ase2sprkkr.potential.potentials.Potential</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.atoms">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">atoms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</span></a></em><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.atoms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Atoms object, associate with the calculator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>atoms</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms">ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter">
-<span class="sig-name descname"><span class="pre">_advance_counter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR._advance_counter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Advance counter for generating filenames with %c counter placeholder</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR._open_file">
-<span class="sig-name descname"><span class="pre">_open_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w+'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_temporary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR._open_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR._open_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Open a file given a ‘template’ filename file name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>file</em><em> or </em><em>None</em>) – if False, temporary object is used
-if str is given, use it as a template
-if file is given, return it unchanged</p></li>
-<li><p><strong>templator</strong> (<em>callable</em>) – If it is given, the filemae is processed using this function,
-see FilenameTemplator</p></li>
-<li><p><strong>named</strong> (<em>bool</em>) – Whether to use named temporary file.</p></li>
-<li><p><strong>mode</strong> (<em>str</em>) – Mode to open the file</p></li>
-<li><p><strong>allow_temporary</strong> (<em>bool</em>) – If False, throw an exception if the resulting filename should be temporary,
-i.e. if None as filename is given</p></li>
-<li><p><strong>create_subdirs</strong> (<em>bool</em>) – If true, create all non-existent directories in the given path</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input">
-<span class="sig-name descname"><span class="pre">save_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.save_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save input and potential files for a calculation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>properties</strong> (<em>list of str</em>) – List of what needs to be calculated.  Can be any combination
-of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’
-and ‘magmoms’.</p></li>
-<li><p><strong>input_parameters</strong> (<em>sprkkr.input_parameters.input_parameters.InputParameters</em><em> or </em><em>str</em><em> or </em><em>None</em>) – <dl class="simple">
-<dt>If None, the task specified in __init__ is used, or the default parameters for ‘SCF’ task</dt><dd><p>will be created.</p>
-</dd>
-<dt>If a string is given then if it is a task name, an InputParameters object will be created</dt><dd><p>(with the default options for a given task) and saved to the input_file.
-Otherwise the task is interpreted as a task file name from which the input parameters will be readed.</p>
-</dd>
-<dt>The input parameters is written into the input file,</dt><dd><p>whose name is given by input_file argument.</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>potential</strong> (<em>sprkkr.potential.potentials.Potential</em><em> or </em><em>str</em><em> or </em><em>None</em><em> or </em><em>False</em>) – If it is None, the self.potential value is used instead (see the later options)
-If False, the potential filename is specified in the input_parameters.
-If True,  create the potential according to the atoms and write to the resulting &lt;potential_file&gt; file.
-If str, then it is the filename of the potential, that is left unchanged on input
-If None, use the potential value of the calcualtor.</p></li>
-<li><p><strong>input_file</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – Filename or template (see FilenameTemplator class) where to save the input file,
-None means to use the default value from the Calculator.
-See the __init__ method for the meaning of other options.</p></li>
-<li><p><strong>potential_file</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – Filename or template (see FilenameTemplator class) where to save the potential_file
-None means to use the default value from the Calculator.
-See the __init__ method for the meaning of other options.</p></li>
-<li><p><strong>output_file</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – A filename or a filename template (see FilenameTemplator class) where to save the output
-None means to use the default value from the Calculator.
-See the __init__ method for the meaning of other options.</p></li>
-<li><p><strong>create_subdirs</strong> (<em>boolean</em>) – If true, create directories if they don’t exists.</p></li>
-<li><p><strong>options</strong> (<em>dict</em>) – Options to set to the input_parameters. If input_parameters are given by a filename,
-they are readed from the file, altered by the options and then the modified input file
-(in a temporary file) will be used.</p></li>
-<li><p><strong>return_files</strong> (<em>boolean</em>) – Return open files object instead of just string filenames.</p></li>
-<li><p><strong>mpi</strong> (<em>bool</em><em> or </em><em>None</em>) – Save input for a mpi calculation. None means to use the mpi value specified in the
-constructor. Actually, the only difference is that the temporary input file has
-to have filename.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>input_parameters</strong> (<em>InputParameters</em>) – Created task object to be run.</p></li>
-<li><p><strong>input_filename</strong> (<em>str or file</em>) – Input/task file. See return_files</p></li>
-<li><p><strong>potential_filename</strong> (<em>str or file</em>) – Potential file. See return_files</p></li>
-<li><p><strong>output_filename</strong> (<em>str or file</em>) – Output file. See return_files</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Do the calculation, return various results.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>print_output</strong> (<em>bool</em><em> or </em><em>str</em><em> or </em><em>None</em>) – Print output to stdout, too.
-If print_output==’info’ only a few lines per iteration will be printed.
-None means to use a default value (specified in constructor)</p></li>
-<li><p><strong>executable_postfix</strong> (<em>str</em><em> or </em><em>bool</em><em> or </em><em>None</em>) – If not None, it overrides the executable_postifx, that have been specified when the
-calculator have been created.</p></li>
-<li><p><strong>mpi</strong> (<em>bool</em><em> or </em><em>None</em>) – Runner for mpi to run a mpi calculation. True and int means autodetect: use True
-for a cluster where mpi is able to autodetect the number of the processes, otherwise
-use integer to specify the number of processes.
-None means use the default value (specified in the calculator’s contructor).
-E.g. mpi = [ ‘mpirun’, ‘-np’, ‘4’ ], mpi = 4</p></li>
-<li><p><strong>---------</strong> – </p></li>
-<li><p><strong>parameters</strong> (<em>For the other</em>) – </p></li>
-<li><p><strong>method</strong> (<em>see the save_input</em><em>(</em><em>)</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate">
-<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['energy']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_changes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['positions',</span> <span class="pre">'numbers',</span> <span class="pre">'cell',</span> <span class="pre">'pbc',</span> <span class="pre">'initial_charges',</span> <span class="pre">'initial_magmoms']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_subdirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable_postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="Permalink to this definition">¶</a></dt>
-<dd><p>ASE-interface method for the calculation.  This method runs the appropriate task(s)
-for the requested properties (currently always the SCF one) and updates the
-calculator object with the results.</p>
-<p>See
-<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/development/calculators.html#ase.calculators.calculator.Calculator.calculate">https://wiki.fysik.dtu.dk/ase/development/calculators.html#ase.calculators.calculator.Calculator.calculate</a>
-for the documentation of ASE interface.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>properties</strong> (<em>list</em><em> or </em><em>str</em>) – List of what needs to be calculated. Can be any combination of ‘energy’, ‘forces’, ‘stress’, ‘dipole’, ‘charges’, ‘magmom’ and ‘magmoms’.</p></li>
-<li><p><strong>system_changes</strong> (<em>list of str</em>) – <p>List of what has changed since last calculation.  Can be
-any combination of these six: ‘positions’, ‘numbers’, ‘cell’,
-‘pbc’, ‘initial_charges’ and ‘initial_magmoms’.</p>
-<p>This calculator ignore properties and system_changes.</p>
-</p></li>
-<li><p><strong>---------</strong> – </p></li>
-<li><p><strong>parameters</strong> (<em>For the other</em>) – </p></li>
-<li><p><strong>methods</strong> (<em>see the run</em><em>(</em><em>) </em><em>and save_input</em><em>(</em><em>)</em>) – </p></li>
-<li><p><strong>---------</strong> – </p></li>
-<li><p><strong>documentation</strong> (<em>From ASE</em>) – </p></li>
-<li><p><strong>example::</strong> (<em>inserted into results dictionary like shown in this dummy</em>) – <dl class="simple">
-<dt>self.results = {‘energy’: 0.0,</dt><dd><p>’forces’: np.zeros((len(atoms), 3)),
-‘stress’: np.zeros(6),
-‘dipole’: np.zeros(3),
-‘charges’: np.zeros(len(atoms)),
-‘magmom’: 0.0,
-‘magmoms’: np.zeros(len(atoms))}</p>
-</dd>
-</dl>
-</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.scf">
-<span class="sig-name descname"><span class="pre">scf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.scf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.scf" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut for calculating a SCF task</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.phagen">
-<span class="sig-name descname"><span class="pre">phagen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.phagen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.phagen" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut for calculating a PHAGEN task</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen">
-<span class="sig-name descname"><span class="pre">kkrgen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.kkrgen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut for calculating a KKRGEN task</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec">
-<span class="sig-name descname"><span class="pre">kkrspec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.kkrspec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut for calculating a KKRSPEC task</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch">
-<span class="sig-name descname"><span class="pre">kkrch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.kkrch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch" title="Permalink to this definition">¶</a></dt>
-<dd><p>A shortcut for calculating a KKRCH task</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband">
-<span class="sig-name descname"><span class="pre">run_xband</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xband'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.run_xband"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential">
-<span class="sig-name descname"><span class="pre">copy_with_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#SPRKKR.copy_with_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return copy of self, with the potential variable set.
-Use the method to create a new calculator with the given “result potential”</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR.potential_object">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">potential_object</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.potential_object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert self.potential to a Potential object</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.SPRKKR._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.SPRKKR._abc_impl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.FilenameTemplator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.calculator.</span></span><span class="sig-name descname"><span class="pre">FilenameTemplator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#FilenameTemplator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.FilenameTemplator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class that replaces the placeholders in filenames with propper values,
-see the replacements property of the class.
-The used values are remembered so all the processed filenames use
-the same value (e.g. counter, datetime etc…)</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.FilenameTemplator.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#FilenameTemplator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.FilenameTemplator.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.FilenameTemplator._get">
-<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/calculator.html#FilenameTemplator._get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.FilenameTemplator._get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.calculator.FilenameTemplator.replacements">
-<span class="sig-name descname"><span class="pre">replacements</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'%a':</span> <span class="pre">&lt;function</span> <span class="pre">FilenameTemplator.&lt;lambda&gt;&gt;,</span> <span class="pre">'%c':</span> <span class="pre">&lt;function</span> <span class="pre">FilenameTemplator.&lt;lambda&gt;&gt;,</span> <span class="pre">'%d':</span> <span class="pre">&lt;function</span> <span class="pre">FilenameTemplator.&lt;lambda&gt;&gt;,</span> <span class="pre">'%t':</span> <span class="pre">&lt;function</span> <span class="pre">FilenameTemplator.&lt;lambda&gt;&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.sprkkr.calculator.FilenameTemplator.replacements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+<p class="rubric">Classes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator" title="ase2sprkkr.sprkkr.calculator.FilenameTemplator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FilenameTemplator</span></code></a>(calculator)</p></td>
+<td><p>Class that replaces the placeholders in filenames with propper values, see the replacements property of the class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" title="ase2sprkkr.sprkkr.calculator.SPRKKR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SPRKKR</span></code></a>([restart, label, atoms, directory, ...])</p></td>
+<td><p>ASE calculator for SPR-KKR.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -548,8 +234,8 @@ the same value (e.g. counter, datetime etc…)</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.sprkkr.occupations.html" class="btn btn-neutral float-right" title="ase2sprkkr.sprkkr.occupations module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="ase2sprkkr.sprkkr.atomic_types.html" class="btn btn-neutral float-left" title="ase2sprkkr.sprkkr.atomic_types module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html" class="btn btn-neutral float-right" title="FilenameTemplator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html" class="btn btn-neutral float-left" title="AtomicType" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

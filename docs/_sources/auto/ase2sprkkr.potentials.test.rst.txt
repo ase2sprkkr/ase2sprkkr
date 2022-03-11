@@ -1,0 +1,42 @@
+test
+====
+
+Full name: **ase2sprkkr.potentials.test**
+
+.. automodule:: ase2sprkkr.potentials.test
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.potentials.test.init_tests
+     ase2sprkkr.potentials.test.test_custom_section
+     ase2sprkkr.potentials.test.test_potential
+     ase2sprkkr.potentials.test.test_structure
+  
+  

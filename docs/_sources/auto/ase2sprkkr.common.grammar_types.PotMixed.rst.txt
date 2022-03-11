@@ -1,0 +1,57 @@
+PotMixed
+========
+
+Full name: **ase2sprkkr.common.grammar\_types.PotMixed**
+
+.. currentmodule:: ase2sprkkr.common.grammar_types
+
+.. autoclass:: PotMixed
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotMixed.__init__
+        ~PotMixed.convert
+        ~PotMixed.copy
+        ~PotMixed.enrich
+        ~PotMixed.get_type
+        ~PotMixed.grammar
+        ~PotMixed.grammar_name
+        ~PotMixed.missing_value
+        ~PotMixed.parse
+        ~PotMixed.parse_from_stream
+        ~PotMixed.print
+        ~PotMixed.read
+        ~PotMixed.string
+        ~PotMixed.transform_grammar
+        ~PotMixed.validate
+        ~PotMixed.write
+
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotMixed.I
+        ~PotMixed.default_value
+        ~PotMixed.has_value
+        ~PotMixed.name_in_grammar
+        ~PotMixed.string_type
+        ~PotMixed.types
+
+   
+   
