@@ -136,7 +136,7 @@ Documentation of the package
 ============================
 
 The documentation is published online at
-https://ase2sprkkr.github.io/ase2sprkkr/
+`https://ase2sprkkr.github.io/ase2sprkkr/ <https://ase2sprkkr.github.io/ase2sprkkr/>`__
 
 If you are using Git cloned sources, you can run
 
@@ -152,11 +152,18 @@ code. You can regenerate these by
 
    make docs
 
-Sphinx python packages (installable e.g. using pip) and pandoc
+Sphinx and sphinx-toolbox python packages (installable e.g. using pip) and pandoc
 (for generating README.md) are needed for the build.
+
+However, the official build of Sphinx miss some attributes when it is used
+to build the documentation. So, till the pullrequest that corrects the Sphinx
+behavior will be merged into Sphinx, please use the following fork for
+building the documentation.
+`https://github.com/lokik/sphinx.git <https://github.com/lokik/sphinx.git>`__
+
 
 How to contribute or to report a bug
 ====================================
 
 Please feel free to make a pull-request or post an issue at:
-https://github.com/ase2sprkkr/ase2sprkkr
+`https://github.com/ase2sprkkr/ase2sprkkr <https://github.com/ase2sprkkr/ase2sprkkr>`__
