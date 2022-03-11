@@ -15,6 +15,7 @@ doc-gather: doc-clean
 doc-clean:
 	rm -rf sphinx/auto/*
 	rm -rf docs/*
+	rm -rf docs/.??*
 
 doc-build:
 	sphinx-build sphinx docs/
