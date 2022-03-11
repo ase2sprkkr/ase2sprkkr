@@ -18,7 +18,7 @@ doc-clean:
 	rm -rf docs/.??*
 
 doc-build:
-	sphinx-build sphinx docs/
+	sphinx-build -j auto sphinx docs/
 	cp -r sphinx/_root/* docs/
 
 doc-readme:
