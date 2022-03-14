@@ -27,6 +27,7 @@ author = 'Matyáš Novák & Jano Minár'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom# ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
     'sphinx_toolbox.sidebar_links',
     'sphinx.ext.viewcode',
     'sphinx.ext.coverage',
@@ -53,8 +54,6 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['*/old/*', '*/test/*']
-
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -74,3 +73,18 @@ html_css_files = [
     'mods.css',
 ]
 
+def skip_member(app, what, name, obj, skip, options):
+    if skip:
+       return True
+    if what=='module' or what=='package':
+       if name == 'test':
+          return True
+       if name.endswith('.test'):
+          return True
+    return False
+
+def setup(app):
+    app.connect('autodoc-skip-member', skip_member)
+
+
+exclude_patterns = ['*/test/*', '*/test']
