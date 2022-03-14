@@ -1,3 +1,5 @@
+""" Routines and classes used in tests """
+
 import sys
 import os
 from pathlib import Path

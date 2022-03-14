@@ -1,8 +1,12 @@
+""" The site class define the properties of an atom. """
+
 from .radial_meshes import Mesh
 from .reference_systems import ReferenceSystem
 from .occupations import Occupation
 import numpy as np
+
 class Site:
+
   """
   Definition of an atomic site.
   (By symmetry) equivalent sites should share the same definition.
@@ -13,8 +17,8 @@ class Site:
 
   def __init__(self, atoms, occupation, reference_system=None, mesh=None):
       """
-      Parameter
-      ---------
+      Parameters
+      ----------
       occupation: dict
           { AtomicType: fraction }
           The type of the atom

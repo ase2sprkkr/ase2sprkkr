@@ -1,6 +1,10 @@
+""" Definitions of radial meshes used by SPR-KKR. """
 import copy
 
 class Mesh:
+  """
+  A base class for SPR-KKR radial meshes.
+  """
   @staticmethod
   def default():
       """ SPR-KKR computes the mesh itself, if zeros are given """
@@ -8,7 +12,7 @@ class Mesh:
 
 class ExponentialMesh(Mesh):
   """
-  Radial mesh definition for an atomic site
+  Radial mesh definition for an atomic site.
   """
 
   def __init__(self, r1, dx, jrmt, rmt, jrws, rws):

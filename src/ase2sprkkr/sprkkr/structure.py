@@ -1,11 +1,6 @@
-from ase import Atom
-from .sprkkr_atoms import SPRKKRAtoms
-from ..potentials.potentials import Potential
-from ase.units import Bohr
-import copy
-from ase.data import chemical_symbols
-import numpy as np
 """
+Helper classes for a2s_visualise_in_struct utility.
+
 This file contains function structure_file_to_atoms, which is used for
 visualisation of a surface structure, using .pot and in_structure.inp
 files.
@@ -13,6 +8,15 @@ files.
 TODO: This implementaion can handle only one-purpose reading of the structure
 file.
 """
+
+
+from ase import Atom
+from .sprkkr_atoms import SPRKKRAtoms
+from ..potentials.potentials import Potential
+from ase.units import Bohr
+import copy
+from ase.data import chemical_symbols
+import numpy as np
 
 ### Helper objects and functions
 
@@ -83,8 +87,8 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
     Atoms object, from where the types of atoms will be given
 
   n_bulk: int
-    Number of repetition of bulk atoms 
-    
+    Number of repetition of bulk atoms
+
   vacuum_height: float
     Height of the vacuum above the surface.
   """

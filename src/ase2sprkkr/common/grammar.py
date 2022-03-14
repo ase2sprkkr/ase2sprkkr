@@ -1,3 +1,7 @@
+"""
+Various pyparsing grammar elements and a few useful routines.
+"""
+
 from contextlib import contextmanager
 import pyparsing as pp
 

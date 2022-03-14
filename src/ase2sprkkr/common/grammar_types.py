@@ -1,3 +1,10 @@
+"""
+Classes, that represents various value types that can appear in the configuration and problem definitionfiles.
+
+Each grammar type can both parse string containing a value of a given type, and to create the string containing a given value.
+"""
+
+
 import pyparsing as pp
 import io
 import inspect

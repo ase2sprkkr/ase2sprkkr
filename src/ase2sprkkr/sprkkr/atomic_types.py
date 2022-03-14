@@ -1,7 +1,14 @@
+""" Atomic could be placed at the atomic site. """
+
 from ..common.misc import cached_property
 import copy
 
 class AtomicType:
+    """ Atomic type represent a type of atom, that could be placed at the atomic site.
+
+    It can be either a real chemical element, or vacuum pseudoelement.
+    It also determine the number of electrons and valence electrons.
+    """
 
     _mendeleev_module = None
 

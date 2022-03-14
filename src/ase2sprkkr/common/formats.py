@@ -1,5 +1,36 @@
-def fortran_format(n, format='{:.12e}'):
-    la = ('{'+format+'}').format(float(n))
+""" Formating routines """
+
+def fortran_format(value, format=':.12e'):
+    """
+    Format the value with a leading zero.
+
+    Format the given float number using the given fortran scientific notation format string,
+    but with a leading zero
+
+     >>> fortran_format(0.1)
+     0.1000000000000e-00
+
+     >>> fortran_format(1, ":> 14.6E")
+       0.1000000E+01
+
+    Parameters
+    ----------
+    value: mixed
+      A value to be printed. The value have to be convertable to a float
+
+    format: str
+      Fortran format string with a type 'e' or 'E'. Optional
+
+    Return
+    ------
+    output: str
+      A string containing the number in scientific notation with a leading zero.
+
+
+
+    """
+    la = ('{'+format+'}').format(float(value))
+    print(f"*{la}*")
     a = la.lstrip()
     leading = la[:len(la)-len(a)]
     la = a

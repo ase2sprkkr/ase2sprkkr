@@ -1,3 +1,4 @@
+""" PHAGEN task input parameters definition"""
 from ...common.grammar_types  import *
 from .sections import *
 from ..input_parameters_definitions import \

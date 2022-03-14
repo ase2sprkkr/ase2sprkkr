@@ -1,11 +1,17 @@
+""" More atomic types can be on one site. """
+
+
 import numpy as np
 from .atomic_types import AtomicType
 from ..common.misc import OrderedDict
 
 
 class Occupation:
-  """ Occupation of the atomic site, given by
-      AtomicSite : value
+  """ Occupation of the atomic site, given by AtomicType : value
+
+   The value determine the probability, that a given atomic type will
+   be found on a given place (which can be used e.g. for computing
+   alloys).
   """
 
   def __init__(self, dct, site=None):

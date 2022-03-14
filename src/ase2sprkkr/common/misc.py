@@ -1,3 +1,5 @@
+""" Various classes and routines used thorough the package """
+
 import functools
 import inspect
 import heapq
@@ -11,6 +13,7 @@ try:
   from numba import njit
 except ImportError:
   def njit(fce):
+      """ Mock the numba JIT compiler, if it is not available """
       return fce
 
 def lazy_value(fce):

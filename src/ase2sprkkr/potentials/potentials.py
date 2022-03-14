@@ -1,8 +1,14 @@
+""" Potential is object that holds data form SPR-KKR potential file """
+
 from ..common.configuration_containers import RootConfigurationContainer
 from .io_data import ReadIoData, WriteIoData
 from ..common.misc import class_property, cache
 
 class Potential(RootConfigurationContainer):
+  """ It holds data form SPR-KKR potential file
+
+  It, in addition to being a containers for their sections, can read/write
+  its properties from/to an ASE atoms object."""
 
   def __init__(self, atoms=None, definition=None):
       if definition is None:

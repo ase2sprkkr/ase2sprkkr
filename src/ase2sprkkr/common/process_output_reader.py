@@ -1,3 +1,8 @@
+""" Readers for processes outputs.
+
+They employ asyncio to makes possible read stdio and stderr concurently.
+"""
+
 import asyncio
 import functools
 import subprocess
@@ -6,9 +11,11 @@ import numpy as np
 
 class BaseProcessOutputReader:
   """
-  Class, that run a process, optionally saves all the output of the process to the file
+  Class, that run a process, optionally saves all the output of the process to a file,
   and pass the stdout and stderr of the process to its two asyn routines, read_error
-  and read_output
+  and read_output.
+
+  The descendant can redefine the routines to parse the output (or its parts).
   """
   async def run_subprocess(self):
 

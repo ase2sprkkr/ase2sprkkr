@@ -1,3 +1,5 @@
+""" Here, the format of the potential_file is defined """
+
 from .sections import *
 
 def fce():
@@ -83,4 +85,6 @@ def fce():
   return PotentialDefinition(sections)
 
 potential_definition = fce()
+""" Potential file format definition """
+
 del fce

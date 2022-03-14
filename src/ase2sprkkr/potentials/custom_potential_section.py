@@ -1,3 +1,9 @@
+""" Custom potential sections are the parts of Potential, that whose content is not parsed.
+
+I.e. these sections can has any content (they are readed up to the section separator).
+"""
+
+
 from ..common.grammar_types import BaseType
 from ..common.options import CustomOption
 from ..common.configuration_definitions import BaseValueDefinition

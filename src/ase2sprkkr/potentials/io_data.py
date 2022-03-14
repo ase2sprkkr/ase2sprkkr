@@ -1,3 +1,6 @@
+""" IoData classes serves are intermediate object used as storage during
+reading or writing a potential file."""
+
 from ..common.misc import cached_property
 from ..common.unique_values import UniqueValuesMapping
 
@@ -20,7 +23,7 @@ class WriteIoData(BaseIoData):
     """ During writing of potential file, some lists are needed in more sections,
         typically one section contains the list itself, while another(s) reference(s)
         the items of the list.
-        So the lists are created on demand and cached for next use.
+        So the lists are created on demand and cached for its further use.
     """
 
     def __init__(self, atoms):

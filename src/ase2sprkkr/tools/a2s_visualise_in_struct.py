@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+This is a sctipt to visualise in_struct.inp files. Run it to see the doc.
+"""
 import numpy as np
 from collections import OrderedDict
 from ase.visualize import view

@@ -1,3 +1,10 @@
+""" Containers for configuration parameters of SPR-KKR task.
+
+These configuration parameters are supplied to SPR-KKR executables as input files.
+The containers are also the objects, that take care about executing the SPR-KKR
+executables.
+"""
+
 import os
 import io
 import tempfile
@@ -9,8 +16,18 @@ from ..outputs.readers.default import DefaultOutputReader
 from ..common.configuration_containers import RootConfigurationContainer
 from ..common.misc import lazy_value, OrderedDict
 import shutil
+from typing import Union
 
-def resolve_executable_postfix(postfix):
+def resolve_executable_postfix(postfix:Union[str,bool]):
+    """" Return the postfix, that is appended after the name of SPR-KKR executable.
+
+    Parameters
+    ----------
+    postfix
+      - If str is given, it is left as is.
+      - If True, return the content of SPRKKR_EXECUTABLE_SUFFIX environment variable
+      - If False, return ''
+    """
     if postfix is False:
         return ''
     if postfix is True:
@@ -18,6 +35,14 @@ def resolve_executable_postfix(postfix):
     return postfix
 
 class InputParameters(RootConfigurationContainer):
+  """ It holds the configuration values for a SPR-KKR task and run the task
+
+  This class is a ConfigurationContainer, thus, it holds the configuration values
+  for the task. Moreover, according to its definition, it can run the task -
+  execute the executable with proper parameters - and instantiate the result class,
+  which then parse the output of the task.
+  """
+
   def __init__(self, definition, inputfile=None, outputfile=False):
       super().__init__(definition)
       self._inputfile = inputfile
