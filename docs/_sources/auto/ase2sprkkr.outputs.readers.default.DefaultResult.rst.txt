@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.outputs.readers.default.DefaultResult**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~DefaultResult.__delattr__
+        ~DefaultResult.__dir__
+        ~DefaultResult.__eq__
+        ~DefaultResult.__format__
+        ~DefaultResult.__ge__
+        ~DefaultResult.__getattribute__
+        ~DefaultResult.__gt__
+        ~DefaultResult.__hash__
         ~DefaultResult.__init__
+        ~DefaultResult.__init_subclass__
+        ~DefaultResult.__le__
+        ~DefaultResult.__lt__
+        ~DefaultResult.__ne__
+        ~DefaultResult.__new__
+        ~DefaultResult.__reduce__
+        ~DefaultResult.__reduce_ex__
+        ~DefaultResult.__repr__
+        ~DefaultResult.__setattr__
+        ~DefaultResult.__sizeof__
+        ~DefaultResult.__str__
+        ~DefaultResult.__subclasshook__
 
    
    
@@ -31,6 +51,10 @@ Full name: **ase2sprkkr.outputs.readers.default.DefaultResult**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~DefaultResult.__dict__
+        ~DefaultResult.__doc__
+        ~DefaultResult.__module__
+        ~DefaultResult.__weakref__
         ~DefaultResult.atoms
 
    

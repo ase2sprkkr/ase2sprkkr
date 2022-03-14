@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.common.configuration\_definitions.ConfDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ConfDefinition.__contains__
+        ~ConfDefinition.__delattr__
+        ~ConfDefinition.__dir__
+        ~ConfDefinition.__eq__
+        ~ConfDefinition.__format__
+        ~ConfDefinition.__ge__
+        ~ConfDefinition.__getattribute__
+        ~ConfDefinition.__getitem__
+        ~ConfDefinition.__gt__
+        ~ConfDefinition.__hash__
         ~ConfDefinition.__init__
+        ~ConfDefinition.__init_subclass__
+        ~ConfDefinition.__iter__
+        ~ConfDefinition.__le__
+        ~ConfDefinition.__lt__
+        ~ConfDefinition.__ne__
+        ~ConfDefinition.__new__
+        ~ConfDefinition.__reduce__
+        ~ConfDefinition.__reduce_ex__
+        ~ConfDefinition.__repr__
+        ~ConfDefinition.__setattr__
+        ~ConfDefinition.__setitem__
+        ~ConfDefinition.__sizeof__
+        ~ConfDefinition.__str__
+        ~ConfDefinition.__subclasshook__
+        ~ConfDefinition._dict_from_named_values
+        ~ConfDefinition._first_section_is_fixed
+        ~ConfDefinition._grammar
+        ~ConfDefinition._tuple_with_my_name
+        ~ConfDefinition._values_grammar
         ~ConfDefinition.all_member_names
         ~ConfDefinition.copy
         ~ConfDefinition.create_object
@@ -46,6 +75,11 @@ Full name: **ase2sprkkr.common.configuration\_definitions.ConfDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ConfDefinition.__dict__
+        ~ConfDefinition.__doc__
+        ~ConfDefinition.__module__
+        ~ConfDefinition.__weakref__
+        ~ConfDefinition._init_args
         ~ConfDefinition.custom_name_characters
         ~ConfDefinition.custom_value_name
         ~ConfDefinition.do_not_skip_whitespaces_before_name

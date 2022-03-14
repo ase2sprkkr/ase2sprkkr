@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -193,9 +193,9 @@
 <span class="kn">from</span> <span class="nn">.potential_sections</span> <span class="kn">import</span> <span class="n">PotentialSection</span><span class="p">,</span> <span class="n">ASEArraySection</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">lazy_value</span><span class="p">,</span> <span class="n">cache</span>
 
-<div class="viewcode-block" id="PotValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potential_definitions.PotValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">PotValueDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="PotValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potentials.PotValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">PotValueDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
 
-<div class="viewcode-block" id="PotValueDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PotValueDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potentials.PotValueDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span></div>
@@ -203,20 +203,20 @@
   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
   <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span>
 
-<div class="viewcode-block" id="PotValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potential_definitions.PotValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="PotValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potentials.PotValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Separator"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.Separator.html#ase2sprkkr.potentials.potential_definitions.Separator">[docs]</a><span class="k">class</span> <span class="nc">Separator</span><span class="p">(</span><span class="n">PotValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="Separator"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.Separator.html#ase2sprkkr.potentials.potentials.Separator">[docs]</a><span class="k">class</span> <span class="nc">Separator</span><span class="p">(</span><span class="n">PotValueDefinition</span><span class="p">):</span>
 
   <span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
-<div class="viewcode-block" id="Separator.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.Separator.html#ase2sprkkr.potentials.potential_definitions.Separator.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Separator.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.Separator.html#ase2sprkkr.potentials.potentials.Separator.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
          <span class="n">Separator</span><span class="o">.</span><span class="n">_counter</span> <span class="o">+=</span> <span class="mi">1</span>
          <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;_Separator_</span><span class="si">{</span><span class="n">Separator</span><span class="o">.</span><span class="n">_counter</span><span class="si">}</span><span class="s1">&#39;</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">separator</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="PotSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">PotSectionDefinition</span><span class="p">(</span><span class="n">BaseSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="PotSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potentials.PotSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">PotSectionDefinition</span><span class="p">(</span><span class="n">BaseSectionDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This class describes the format of one</span>
 <span class="sd">  value of a standard potential section &quot;&quot;&quot;</span>
 
@@ -234,11 +234,11 @@
   <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
   <span class="sd">&quot;&quot;&quot; options are delimited by newline in ouptut. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PotSectionDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PotSectionDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potentials.PotSectionDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">line_end</span></div>
 
-<div class="viewcode-block" id="PotSectionDefinition.depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.depends_on">[docs]</a>  <span class="k">def</span> <span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PotSectionDefinition.depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potentials.PotSectionDefinition.depends_on">[docs]</a>  <span class="k">def</span> <span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.</span>
 
 <span class="sd">      Return</span>
@@ -249,24 +249,24 @@
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">PotentialSection</span>
 
-<div class="viewcode-block" id="PotSectionDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="PotSectionDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potentials.PotSectionDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">mandatory</span> <span class="o">=</span> <span class="n">mandatory</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="ASEArraySectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">ASEArraySectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potentials.ASEArraySectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">ASEArraySectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
 
-<div class="viewcode-block" id="ASEArraySectionDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.__init__">[docs]</a>  <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+<div class="viewcode-block" id="ASEArraySectionDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potentials.ASEArraySectionDefinition.__init__">[docs]</a>  <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">array_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">array_name</span> <span class="o">=</span> <span class="n">array_name</span></div>
 
-<div class="viewcode-block" id="ASEArraySectionDefinition.depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.depends_on">[docs]</a>  <span class="k">def</span> <span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySectionDefinition.depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potentials.ASEArraySectionDefinition.depends_on">[docs]</a>  <span class="k">def</span> <span class="nf">depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Array size is required &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="p">[</span> <span class="s1">&#39;SITES&#39;</span> <span class="p">]</span></div>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">ASEArraySection</span></div>
 
-<div class="viewcode-block" id="PotentialDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.potential_definitions.PotentialDefinition">[docs]</a><span class="k">class</span> <span class="nc">PotentialDefinition</span><span class="p">(</span><span class="n">ConfDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.potentials.PotentialDefinition">[docs]</a><span class="k">class</span> <span class="nc">PotentialDefinition</span><span class="p">(</span><span class="n">ConfDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This class describes the format of a potential file &quot;&quot;&quot;</span>
 
   <span class="n">child_class</span> <span class="o">=</span> <span class="n">PotSectionDefinition</span>
@@ -282,7 +282,7 @@
   <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="o">*</span><span class="mi">79</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
   <span class="sd">&quot;&quot;&quot; Sections delimiter &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PotentialDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="PotentialDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.potentials.PotentialDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
       <span class="k">return</span> <span class="n">SectionString</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span></div>
@@ -290,7 +290,7 @@
   <span class="n">custom_class</span> <span class="o">=</span> <span class="n">CustomPotentialSection</span>
   <span class="sd">&quot;&quot;&quot; Unknown classes will be of this type &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PotentialDefinition.custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar">[docs]</a>  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PotentialDefinition.custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.html#ase2sprkkr.potentials.potentials.PotentialDefinition.custom_value_grammar">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="nd">@cache</span>
   <span class="k">def</span> <span class="nf">custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">SectionString</span><span class="o">.</span><span class="n">_grammar</span></div>

@@ -19,7 +19,29 @@ Full name: **ase2sprkkr.sprkkr.calculator.FilenameTemplator**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~FilenameTemplator.__call__
+        ~FilenameTemplator.__delattr__
+        ~FilenameTemplator.__dir__
+        ~FilenameTemplator.__eq__
+        ~FilenameTemplator.__format__
+        ~FilenameTemplator.__ge__
+        ~FilenameTemplator.__getattribute__
+        ~FilenameTemplator.__gt__
+        ~FilenameTemplator.__hash__
         ~FilenameTemplator.__init__
+        ~FilenameTemplator.__init_subclass__
+        ~FilenameTemplator.__le__
+        ~FilenameTemplator.__lt__
+        ~FilenameTemplator.__ne__
+        ~FilenameTemplator.__new__
+        ~FilenameTemplator.__reduce__
+        ~FilenameTemplator.__reduce_ex__
+        ~FilenameTemplator.__repr__
+        ~FilenameTemplator.__setattr__
+        ~FilenameTemplator.__sizeof__
+        ~FilenameTemplator.__str__
+        ~FilenameTemplator.__subclasshook__
+        ~FilenameTemplator._get
 
    
    
@@ -31,6 +53,10 @@ Full name: **ase2sprkkr.sprkkr.calculator.FilenameTemplator**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~FilenameTemplator.__dict__
+        ~FilenameTemplator.__doc__
+        ~FilenameTemplator.__module__
+        ~FilenameTemplator.__weakref__
         ~FilenameTemplator.replacements
 
    

@@ -19,7 +19,32 @@ Full name: **ase2sprkkr.common.grammar\_types.RealWithUnits**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~RealWithUnits.__delattr__
+        ~RealWithUnits.__dir__
+        ~RealWithUnits.__eq__
+        ~RealWithUnits.__format__
+        ~RealWithUnits.__ge__
+        ~RealWithUnits.__getattribute__
+        ~RealWithUnits.__gt__
+        ~RealWithUnits.__hash__
         ~RealWithUnits.__init__
+        ~RealWithUnits.__init_subclass__
+        ~RealWithUnits.__le__
+        ~RealWithUnits.__lt__
+        ~RealWithUnits.__ne__
+        ~RealWithUnits.__new__
+        ~RealWithUnits.__reduce__
+        ~RealWithUnits.__reduce_ex__
+        ~RealWithUnits.__repr__
+        ~RealWithUnits.__setattr__
+        ~RealWithUnits.__sizeof__
+        ~RealWithUnits.__str__
+        ~RealWithUnits.__subclasshook__
+        ~RealWithUnits._grammar
+        ~RealWithUnits._grammar_units
+        ~RealWithUnits._string
+        ~RealWithUnits._validate
+        ~RealWithUnits._valueError
         ~RealWithUnits.convert
         ~RealWithUnits.copy
         ~RealWithUnits.enrich
@@ -45,6 +70,10 @@ Full name: **ase2sprkkr.common.grammar\_types.RealWithUnits**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~RealWithUnits.__dict__
+        ~RealWithUnits.__doc__
+        ~RealWithUnits.__module__
+        ~RealWithUnits.__weakref__
         ~RealWithUnits.default_value
         ~RealWithUnits.grammar_cache
         ~RealWithUnits.has_value

@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefini
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TypesSectionDefinition.__contains__
+        ~TypesSectionDefinition.__delattr__
+        ~TypesSectionDefinition.__dir__
+        ~TypesSectionDefinition.__eq__
+        ~TypesSectionDefinition.__format__
+        ~TypesSectionDefinition.__ge__
+        ~TypesSectionDefinition.__getattribute__
+        ~TypesSectionDefinition.__getitem__
+        ~TypesSectionDefinition.__gt__
+        ~TypesSectionDefinition.__hash__
         ~TypesSectionDefinition.__init__
+        ~TypesSectionDefinition.__init_subclass__
+        ~TypesSectionDefinition.__iter__
+        ~TypesSectionDefinition.__le__
+        ~TypesSectionDefinition.__lt__
+        ~TypesSectionDefinition.__ne__
+        ~TypesSectionDefinition.__new__
+        ~TypesSectionDefinition.__reduce__
+        ~TypesSectionDefinition.__reduce_ex__
+        ~TypesSectionDefinition.__repr__
+        ~TypesSectionDefinition.__setattr__
+        ~TypesSectionDefinition.__setitem__
+        ~TypesSectionDefinition.__sizeof__
+        ~TypesSectionDefinition.__str__
+        ~TypesSectionDefinition.__subclasshook__
+        ~TypesSectionDefinition._dict_from_named_values
+        ~TypesSectionDefinition._first_section_is_fixed
+        ~TypesSectionDefinition._grammar
+        ~TypesSectionDefinition._tuple_with_my_name
+        ~TypesSectionDefinition._values_grammar
         ~TypesSectionDefinition.all_member_names
         ~TypesSectionDefinition.copy
         ~TypesSectionDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSectionDefini
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TypesSectionDefinition.__dict__
+        ~TypesSectionDefinition.__doc__
+        ~TypesSectionDefinition.__module__
+        ~TypesSectionDefinition.__weakref__
+        ~TypesSectionDefinition._init_args
         ~TypesSectionDefinition.custom_name_characters
         ~TypesSectionDefinition.custom_value_name
         ~TypesSectionDefinition.delimiter

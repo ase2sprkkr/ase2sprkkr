@@ -19,7 +19,29 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomPotentialSectionDefinition.__delattr__
+        ~CustomPotentialSectionDefinition.__dir__
+        ~CustomPotentialSectionDefinition.__eq__
+        ~CustomPotentialSectionDefinition.__format__
+        ~CustomPotentialSectionDefinition.__ge__
+        ~CustomPotentialSectionDefinition.__getattribute__
+        ~CustomPotentialSectionDefinition.__gt__
+        ~CustomPotentialSectionDefinition.__hash__
         ~CustomPotentialSectionDefinition.__init__
+        ~CustomPotentialSectionDefinition.__init_subclass__
+        ~CustomPotentialSectionDefinition.__le__
+        ~CustomPotentialSectionDefinition.__lt__
+        ~CustomPotentialSectionDefinition.__ne__
+        ~CustomPotentialSectionDefinition.__new__
+        ~CustomPotentialSectionDefinition.__reduce__
+        ~CustomPotentialSectionDefinition.__reduce_ex__
+        ~CustomPotentialSectionDefinition.__repr__
+        ~CustomPotentialSectionDefinition.__setattr__
+        ~CustomPotentialSectionDefinition.__sizeof__
+        ~CustomPotentialSectionDefinition.__str__
+        ~CustomPotentialSectionDefinition.__subclasshook__
+        ~CustomPotentialSectionDefinition._grammar
+        ~CustomPotentialSectionDefinition._tuple_with_my_name
         ~CustomPotentialSectionDefinition.copy
         ~CustomPotentialSectionDefinition.create_object
         ~CustomPotentialSectionDefinition.get_value
@@ -38,6 +60,10 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomPotentialSectionDefinition.__dict__
+        ~CustomPotentialSectionDefinition.__doc__
+        ~CustomPotentialSectionDefinition.__module__
+        ~CustomPotentialSectionDefinition.__weakref__
         ~CustomPotentialSectionDefinition.do_not_skip_whitespaces_before_name
         ~CustomPotentialSectionDefinition.formated_name
         ~CustomPotentialSectionDefinition.mandatory

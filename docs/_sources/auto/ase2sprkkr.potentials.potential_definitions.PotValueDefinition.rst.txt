@@ -19,7 +19,29 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotValueDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotValueDefinition.__delattr__
+        ~PotValueDefinition.__dir__
+        ~PotValueDefinition.__eq__
+        ~PotValueDefinition.__format__
+        ~PotValueDefinition.__ge__
+        ~PotValueDefinition.__getattribute__
+        ~PotValueDefinition.__gt__
+        ~PotValueDefinition.__hash__
         ~PotValueDefinition.__init__
+        ~PotValueDefinition.__init_subclass__
+        ~PotValueDefinition.__le__
+        ~PotValueDefinition.__lt__
+        ~PotValueDefinition.__ne__
+        ~PotValueDefinition.__new__
+        ~PotValueDefinition.__reduce__
+        ~PotValueDefinition.__reduce_ex__
+        ~PotValueDefinition.__repr__
+        ~PotValueDefinition.__setattr__
+        ~PotValueDefinition.__sizeof__
+        ~PotValueDefinition.__str__
+        ~PotValueDefinition.__subclasshook__
+        ~PotValueDefinition._grammar
+        ~PotValueDefinition._tuple_with_my_name
         ~PotValueDefinition.copy
         ~PotValueDefinition.create_object
         ~PotValueDefinition.get_value
@@ -39,6 +61,10 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotValueDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotValueDefinition.__dict__
+        ~PotValueDefinition.__doc__
+        ~PotValueDefinition.__module__
+        ~PotValueDefinition.__weakref__
         ~PotValueDefinition.do_not_skip_whitespaces_before_name
         ~PotValueDefinition.formated_name
         ~PotValueDefinition.name_in_grammar

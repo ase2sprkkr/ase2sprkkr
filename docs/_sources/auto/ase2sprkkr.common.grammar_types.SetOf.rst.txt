@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.SetOf**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SetOf.__delattr__
+        ~SetOf.__dir__
+        ~SetOf.__eq__
+        ~SetOf.__format__
+        ~SetOf.__ge__
+        ~SetOf.__getattribute__
+        ~SetOf.__gt__
+        ~SetOf.__hash__
         ~SetOf.__init__
+        ~SetOf.__init_subclass__
+        ~SetOf.__le__
+        ~SetOf.__lt__
+        ~SetOf.__ne__
+        ~SetOf.__new__
+        ~SetOf.__reduce__
+        ~SetOf.__reduce_ex__
+        ~SetOf.__repr__
+        ~SetOf.__setattr__
+        ~SetOf.__sizeof__
+        ~SetOf.__str__
+        ~SetOf.__subclasshook__
+        ~SetOf._string
+        ~SetOf._validate
+        ~SetOf._valueError
         ~SetOf.convert
         ~SetOf.copy
         ~SetOf.enrich
@@ -45,6 +68,11 @@ Full name: **ase2sprkkr.common.grammar\_types.SetOf**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SetOf.__dict__
+        ~SetOf.__doc__
+        ~SetOf.__module__
+        ~SetOf.__slotnames__
+        ~SetOf.__weakref__
         ~SetOf.default_value
         ~SetOf.delimiter
         ~SetOf.delimiter_str

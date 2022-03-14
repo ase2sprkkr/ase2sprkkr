@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.ASEArraySectionDefinit
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ASEArraySectionDefinition.__contains__
+        ~ASEArraySectionDefinition.__delattr__
+        ~ASEArraySectionDefinition.__dir__
+        ~ASEArraySectionDefinition.__eq__
+        ~ASEArraySectionDefinition.__format__
+        ~ASEArraySectionDefinition.__ge__
+        ~ASEArraySectionDefinition.__getattribute__
+        ~ASEArraySectionDefinition.__getitem__
+        ~ASEArraySectionDefinition.__gt__
+        ~ASEArraySectionDefinition.__hash__
         ~ASEArraySectionDefinition.__init__
+        ~ASEArraySectionDefinition.__init_subclass__
+        ~ASEArraySectionDefinition.__iter__
+        ~ASEArraySectionDefinition.__le__
+        ~ASEArraySectionDefinition.__lt__
+        ~ASEArraySectionDefinition.__ne__
+        ~ASEArraySectionDefinition.__new__
+        ~ASEArraySectionDefinition.__reduce__
+        ~ASEArraySectionDefinition.__reduce_ex__
+        ~ASEArraySectionDefinition.__repr__
+        ~ASEArraySectionDefinition.__setattr__
+        ~ASEArraySectionDefinition.__setitem__
+        ~ASEArraySectionDefinition.__sizeof__
+        ~ASEArraySectionDefinition.__str__
+        ~ASEArraySectionDefinition.__subclasshook__
+        ~ASEArraySectionDefinition._dict_from_named_values
+        ~ASEArraySectionDefinition._first_section_is_fixed
+        ~ASEArraySectionDefinition._grammar
+        ~ASEArraySectionDefinition._tuple_with_my_name
+        ~ASEArraySectionDefinition._values_grammar
         ~ASEArraySectionDefinition.all_member_names
         ~ASEArraySectionDefinition.copy
         ~ASEArraySectionDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.ASEArraySectionDefinit
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ASEArraySectionDefinition.__dict__
+        ~ASEArraySectionDefinition.__doc__
+        ~ASEArraySectionDefinition.__module__
+        ~ASEArraySectionDefinition.__weakref__
+        ~ASEArraySectionDefinition._init_args
         ~ASEArraySectionDefinition.custom_name_characters
         ~ASEArraySectionDefinition.custom_value_name
         ~ASEArraySectionDefinition.delimiter

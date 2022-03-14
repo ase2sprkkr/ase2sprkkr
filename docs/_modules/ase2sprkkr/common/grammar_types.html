@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,7 +170,14 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.grammar_types</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classes, that represents various value types that can appear in the configuration and problem definitionfiles.</span>
+
+<span class="sd">Each grammar type can both parse string containing a value of a given type, and to create the string containing a given value.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span> <span class="n">Word</span><span class="p">,</span> <span class="n">Suppress</span>

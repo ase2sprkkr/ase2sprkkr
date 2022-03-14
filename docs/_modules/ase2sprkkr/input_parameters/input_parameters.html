@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,7 +170,14 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.input_parameters.input_parameters</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="sd">&quot;&quot;&quot; Containers for configuration parameters of SPR-KKR task.</span>
+
+<span class="sd">These configuration parameters are supplied to SPR-KKR executables as input files.</span>
+<span class="sd">The containers are also the objects, that take care about executing the SPR-KKR</span>
+<span class="sd">executables.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">pkgutil</span>
@@ -181,8 +188,18 @@
 <span class="kn">from</span> <span class="nn">..common.configuration_containers</span> <span class="kn">import</span> <span class="n">RootConfigurationContainer</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">lazy_value</span><span class="p">,</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
-<div class="viewcode-block" id="resolve_executable_postfix"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html#ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix">[docs]</a><span class="k">def</span> <span class="nf">resolve_executable_postfix</span><span class="p">(</span><span class="n">postfix</span><span class="p">):</span>
+<div class="viewcode-block" id="resolve_executable_postfix"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html#ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix">[docs]</a><span class="k">def</span> <span class="nf">resolve_executable_postfix</span><span class="p">(</span><span class="n">postfix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;&quot; Return the postfix, that is appended after the name of SPR-KKR executable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    postfix</span>
+<span class="sd">      - If str is given, it is left as is.</span>
+<span class="sd">      - If True, return the content of SPRKKR_EXECUTABLE_SUFFIX environment variable</span>
+<span class="sd">      - If False, return &#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;&#39;</span>
     <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -190,6 +207,14 @@
     <span class="k">return</span> <span class="n">postfix</span></div>
 
 <div class="viewcode-block" id="InputParameters"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters">[docs]</a><span class="k">class</span> <span class="nc">InputParameters</span><span class="p">(</span><span class="n">RootConfigurationContainer</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; It holds the configuration values for a SPR-KKR task and run the task</span>
+
+<span class="sd">  This class is a ConfigurationContainer, thus, it holds the configuration values</span>
+<span class="sd">  for the task. Moreover, according to its definition, it can run the task -</span>
+<span class="sd">  execute the executable with proper parameters - and instantiate the result class,</span>
+<span class="sd">  which then parse the output of the task.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="InputParameters.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">inputfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outputfile</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_inputfile</span> <span class="o">=</span> <span class="n">inputfile</span>

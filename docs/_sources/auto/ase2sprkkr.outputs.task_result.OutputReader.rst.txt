@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.outputs.task\_result.OutputReader**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OutputReader.__delattr__
+        ~OutputReader.__dir__
+        ~OutputReader.__eq__
+        ~OutputReader.__format__
+        ~OutputReader.__ge__
+        ~OutputReader.__getattribute__
+        ~OutputReader.__gt__
+        ~OutputReader.__hash__
         ~OutputReader.__init__
+        ~OutputReader.__init_subclass__
+        ~OutputReader.__le__
+        ~OutputReader.__lt__
+        ~OutputReader.__ne__
+        ~OutputReader.__new__
+        ~OutputReader.__reduce__
+        ~OutputReader.__reduce_ex__
+        ~OutputReader.__repr__
+        ~OutputReader.__setattr__
+        ~OutputReader.__sizeof__
+        ~OutputReader.__str__
+        ~OutputReader.__subclasshook__
         ~OutputReader.read_error
         ~OutputReader.read_from_file
         ~OutputReader.read_output
@@ -31,5 +51,16 @@ Full name: **ase2sprkkr.outputs.task\_result.OutputReader**
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputReader.__dict__
+        ~OutputReader.__doc__
+        ~OutputReader.__module__
+        ~OutputReader.__weakref__
+
    
    

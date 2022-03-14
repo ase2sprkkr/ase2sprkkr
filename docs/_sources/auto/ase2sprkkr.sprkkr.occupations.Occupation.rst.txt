@@ -19,7 +19,35 @@ Full name: **ase2sprkkr.sprkkr.occupations.Occupation**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Occupation.__delattr__
+        ~Occupation.__delitem__
+        ~Occupation.__dir__
+        ~Occupation.__eq__
+        ~Occupation.__format__
+        ~Occupation.__ge__
+        ~Occupation.__getattribute__
+        ~Occupation.__getitem__
+        ~Occupation.__gt__
+        ~Occupation.__hash__
         ~Occupation.__init__
+        ~Occupation.__init_subclass__
+        ~Occupation.__iter__
+        ~Occupation.__le__
+        ~Occupation.__len__
+        ~Occupation.__lt__
+        ~Occupation.__ne__
+        ~Occupation.__new__
+        ~Occupation.__reduce__
+        ~Occupation.__reduce_ex__
+        ~Occupation.__repr__
+        ~Occupation.__setattr__
+        ~Occupation.__setitem__
+        ~Occupation.__sizeof__
+        ~Occupation.__str__
+        ~Occupation.__subclasshook__
+        ~Occupation._find_key
+        ~Occupation._normalize
+        ~Occupation._update_atoms
         ~Occupation.add
         ~Occupation.atomic_types
         ~Occupation.check
@@ -38,6 +66,10 @@ Full name: **ase2sprkkr.sprkkr.occupations.Occupation**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Occupation.__dict__
+        ~Occupation.__doc__
+        ~Occupation.__module__
+        ~Occupation.__weakref__
         ~Occupation.as_dict
         ~Occupation.primary_atomic_number
         ~Occupation.primary_atomic_type

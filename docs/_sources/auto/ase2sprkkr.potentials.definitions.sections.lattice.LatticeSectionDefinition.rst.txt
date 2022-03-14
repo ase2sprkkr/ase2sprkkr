@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDe
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~LatticeSectionDefinition.__contains__
+        ~LatticeSectionDefinition.__delattr__
+        ~LatticeSectionDefinition.__dir__
+        ~LatticeSectionDefinition.__eq__
+        ~LatticeSectionDefinition.__format__
+        ~LatticeSectionDefinition.__ge__
+        ~LatticeSectionDefinition.__getattribute__
+        ~LatticeSectionDefinition.__getitem__
+        ~LatticeSectionDefinition.__gt__
+        ~LatticeSectionDefinition.__hash__
         ~LatticeSectionDefinition.__init__
+        ~LatticeSectionDefinition.__init_subclass__
+        ~LatticeSectionDefinition.__iter__
+        ~LatticeSectionDefinition.__le__
+        ~LatticeSectionDefinition.__lt__
+        ~LatticeSectionDefinition.__ne__
+        ~LatticeSectionDefinition.__new__
+        ~LatticeSectionDefinition.__reduce__
+        ~LatticeSectionDefinition.__reduce_ex__
+        ~LatticeSectionDefinition.__repr__
+        ~LatticeSectionDefinition.__setattr__
+        ~LatticeSectionDefinition.__setitem__
+        ~LatticeSectionDefinition.__sizeof__
+        ~LatticeSectionDefinition.__str__
+        ~LatticeSectionDefinition.__subclasshook__
+        ~LatticeSectionDefinition._dict_from_named_values
+        ~LatticeSectionDefinition._first_section_is_fixed
+        ~LatticeSectionDefinition._grammar
+        ~LatticeSectionDefinition._tuple_with_my_name
+        ~LatticeSectionDefinition._values_grammar
         ~LatticeSectionDefinition.all_member_names
         ~LatticeSectionDefinition.copy
         ~LatticeSectionDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDe
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~LatticeSectionDefinition.__dict__
+        ~LatticeSectionDefinition.__doc__
+        ~LatticeSectionDefinition.__module__
+        ~LatticeSectionDefinition.__weakref__
+        ~LatticeSectionDefinition._init_args
         ~LatticeSectionDefinition.custom_name_characters
         ~LatticeSectionDefinition.custom_value_name
         ~LatticeSectionDefinition.delimiter

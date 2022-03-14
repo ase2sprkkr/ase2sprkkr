@@ -19,7 +19,31 @@ Full name: **ase2sprkkr.common.options.CustomOption**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomOption.__call__
+        ~CustomOption.__delattr__
+        ~CustomOption.__dir__
+        ~CustomOption.__eq__
+        ~CustomOption.__format__
+        ~CustomOption.__ge__
+        ~CustomOption.__getattribute__
+        ~CustomOption.__gt__
+        ~CustomOption.__hash__
         ~CustomOption.__init__
+        ~CustomOption.__init_subclass__
+        ~CustomOption.__le__
+        ~CustomOption.__lt__
+        ~CustomOption.__ne__
+        ~CustomOption.__new__
+        ~CustomOption.__reduce__
+        ~CustomOption.__reduce_ex__
+        ~CustomOption.__repr__
+        ~CustomOption.__setattr__
+        ~CustomOption.__sizeof__
+        ~CustomOption.__str__
+        ~CustomOption.__subclasshook__
+        ~CustomOption._find_value
+        ~CustomOption._get_path
+        ~CustomOption._get_root_container
         ~CustomOption.clear
         ~CustomOption.factory
         ~CustomOption.get
@@ -39,6 +63,10 @@ Full name: **ase2sprkkr.common.options.CustomOption**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomOption.__dict__
+        ~CustomOption.__doc__
+        ~CustomOption.__module__
+        ~CustomOption.__weakref__
         ~CustomOption.name
 
    

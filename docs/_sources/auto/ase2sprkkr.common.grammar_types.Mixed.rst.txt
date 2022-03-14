@@ -19,7 +19,31 @@ Full name: **ase2sprkkr.common.grammar\_types.Mixed**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Mixed.__delattr__
+        ~Mixed.__dir__
+        ~Mixed.__eq__
+        ~Mixed.__format__
+        ~Mixed.__ge__
+        ~Mixed.__getattribute__
+        ~Mixed.__gt__
+        ~Mixed.__hash__
         ~Mixed.__init__
+        ~Mixed.__init_subclass__
+        ~Mixed.__le__
+        ~Mixed.__lt__
+        ~Mixed.__ne__
+        ~Mixed.__new__
+        ~Mixed.__reduce__
+        ~Mixed.__reduce_ex__
+        ~Mixed.__repr__
+        ~Mixed.__setattr__
+        ~Mixed.__sizeof__
+        ~Mixed.__str__
+        ~Mixed.__subclasshook__
+        ~Mixed._grammar
+        ~Mixed._string
+        ~Mixed._validate
+        ~Mixed._valueError
         ~Mixed.convert
         ~Mixed.copy
         ~Mixed.enrich
@@ -47,6 +71,10 @@ Full name: **ase2sprkkr.common.grammar\_types.Mixed**
       :template: custom-base-template.rst
      
         ~Mixed.I
+        ~Mixed.__dict__
+        ~Mixed.__doc__
+        ~Mixed.__module__
+        ~Mixed.__weakref__
         ~Mixed.default_value
         ~Mixed.has_value
         ~Mixed.name_in_grammar

@@ -19,7 +19,37 @@ Full name: **ase2sprkkr.potentials.io\_data.BaseIoData**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseIoData.__class_getitem__
+        ~BaseIoData.__contains__
+        ~BaseIoData.__delattr__
+        ~BaseIoData.__delitem__
+        ~BaseIoData.__dir__
+        ~BaseIoData.__eq__
+        ~BaseIoData.__format__
+        ~BaseIoData.__ge__
+        ~BaseIoData.__getattribute__
+        ~BaseIoData.__getitem__
+        ~BaseIoData.__gt__
         ~BaseIoData.__init__
+        ~BaseIoData.__init_subclass__
+        ~BaseIoData.__ior__
+        ~BaseIoData.__iter__
+        ~BaseIoData.__le__
+        ~BaseIoData.__len__
+        ~BaseIoData.__lt__
+        ~BaseIoData.__ne__
+        ~BaseIoData.__new__
+        ~BaseIoData.__or__
+        ~BaseIoData.__reduce__
+        ~BaseIoData.__reduce_ex__
+        ~BaseIoData.__repr__
+        ~BaseIoData.__reversed__
+        ~BaseIoData.__ror__
+        ~BaseIoData.__setattr__
+        ~BaseIoData.__setitem__
+        ~BaseIoData.__sizeof__
+        ~BaseIoData.__str__
+        ~BaseIoData.__subclasshook__
         ~BaseIoData.clear
         ~BaseIoData.copy
         ~BaseIoData.fromkeys
@@ -36,5 +66,17 @@ Full name: **ase2sprkkr.potentials.io\_data.BaseIoData**
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseIoData.__dict__
+        ~BaseIoData.__doc__
+        ~BaseIoData.__hash__
+        ~BaseIoData.__module__
+        ~BaseIoData.__weakref__
+
    
    

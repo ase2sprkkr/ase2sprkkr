@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.sprkkr.reference\_systems.ReferenceSystem**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ReferenceSystem.__delattr__
+        ~ReferenceSystem.__dir__
+        ~ReferenceSystem.__eq__
+        ~ReferenceSystem.__format__
+        ~ReferenceSystem.__ge__
+        ~ReferenceSystem.__getattribute__
+        ~ReferenceSystem.__gt__
+        ~ReferenceSystem.__hash__
         ~ReferenceSystem.__init__
+        ~ReferenceSystem.__init_subclass__
+        ~ReferenceSystem.__le__
+        ~ReferenceSystem.__lt__
+        ~ReferenceSystem.__ne__
+        ~ReferenceSystem.__new__
+        ~ReferenceSystem.__reduce__
+        ~ReferenceSystem.__reduce_ex__
+        ~ReferenceSystem.__repr__
+        ~ReferenceSystem.__setattr__
+        ~ReferenceSystem.__sizeof__
+        ~ReferenceSystem.__str__
+        ~ReferenceSystem.__subclasshook__
         ~ReferenceSystem.copy
         ~ReferenceSystem.default
         ~ReferenceSystem.to_tuple
@@ -28,5 +48,16 @@ Full name: **ase2sprkkr.sprkkr.reference\_systems.ReferenceSystem**
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystem.__dict__
+        ~ReferenceSystem.__doc__
+        ~ReferenceSystem.__module__
+        ~ReferenceSystem.__weakref__
+
    
    

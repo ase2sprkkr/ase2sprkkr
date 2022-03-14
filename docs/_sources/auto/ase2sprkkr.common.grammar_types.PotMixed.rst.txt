@@ -19,7 +19,31 @@ Full name: **ase2sprkkr.common.grammar\_types.PotMixed**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotMixed.__delattr__
+        ~PotMixed.__dir__
+        ~PotMixed.__eq__
+        ~PotMixed.__format__
+        ~PotMixed.__ge__
+        ~PotMixed.__getattribute__
+        ~PotMixed.__gt__
+        ~PotMixed.__hash__
         ~PotMixed.__init__
+        ~PotMixed.__init_subclass__
+        ~PotMixed.__le__
+        ~PotMixed.__lt__
+        ~PotMixed.__ne__
+        ~PotMixed.__new__
+        ~PotMixed.__reduce__
+        ~PotMixed.__reduce_ex__
+        ~PotMixed.__repr__
+        ~PotMixed.__setattr__
+        ~PotMixed.__sizeof__
+        ~PotMixed.__str__
+        ~PotMixed.__subclasshook__
+        ~PotMixed._grammar
+        ~PotMixed._string
+        ~PotMixed._validate
+        ~PotMixed._valueError
         ~PotMixed.convert
         ~PotMixed.copy
         ~PotMixed.enrich
@@ -47,6 +71,10 @@ Full name: **ase2sprkkr.common.grammar\_types.PotMixed**
       :template: custom-base-template.rst
      
         ~PotMixed.I
+        ~PotMixed.__dict__
+        ~PotMixed.__doc__
+        ~PotMixed.__module__
+        ~PotMixed.__weakref__
         ~PotMixed.default_value
         ~PotMixed.has_value
         ~PotMixed.name_in_grammar

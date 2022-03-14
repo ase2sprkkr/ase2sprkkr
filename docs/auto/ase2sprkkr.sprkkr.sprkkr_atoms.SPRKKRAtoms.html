@@ -88,7 +88,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
@@ -122,7 +122,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
@@ -233,271 +232,382 @@ I.e., the by-symmetry-equal atomic sites will share the same sites object.</p></
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__add__</span></code>(other)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
+<td><p>Implement delattr(self, name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delitem__</span></code>(i)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
+<td><p>Default dir() implementation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(other)</p></td>
+<td><p>Check for identity of two atoms objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
+<td><p>Default object formatter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
+<td><p>Return self&gt;=value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
+<td><p>Return getattr(self, name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code>(i)</p></td>
+<td><p>Return a subset of the atoms.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
+<td><p>Return self&gt;value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iadd__</span></code>(other)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__imul__</span></code>(m)</p></td>
+<td><p>In-place repeat of atoms.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.__init__" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(*args[, symmetry, potential])</p></td>
 <td><p>Creates SPRKKRAtoms atoms</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code>(atom)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
+<td><p>This method is called when a class is subclassed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iter__</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
+<td><p>Return self&lt;=value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__len__</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
+<td><p>Return self&lt;value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code>(rep)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(other)</p></td>
+<td><p>Check if two atoms objects are not equal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
+<td><p>Helper for pickle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
+<td><p>Helper for pickle.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
+<td><p>Return repr(self).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
+<td><p>Implement setattr(self, name, value).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
+<td><p>Size of object in memory, in bytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
+<td><p>Return str(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
+<td><p>Abstract classes can override this to customize issubclass().</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._cancel_sites_symmetry" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._cancel_sites_symmetry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_cancel_sites_symmetry</span></code></a>()</p></td>
+<td><p>See cancel_sites_symmetry - this metod does just the same, but it does not set the symmetry property.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_centering_as_array</span></code>(center)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._compute_sites_symmetry" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._compute_sites_symmetry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_compute_sites_symmetry</span></code></a>([spacegroup, ...])</p></td>
+<td><p>See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_del_constraints</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_atomic_numbers</span></code>()</p></td>
+<td><p>Return reference to atomic numbers for in-place manipulations.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_constraints</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_positions</span></code>()</p></td>
+<td><p>Return reference to positions-array for in-place manipulations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_init</span></code></a>([symmetry, potential])</p></td>
+<td><p>The initialization of the additional (not-in-ASE) properties.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_masked_rotate</span></code>(center, axis, diff, mask)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_positions</span></code>(pos)</p></td>
+<td><p>Set positions directly, bypassing constraints.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code>(atom)</p></td>
 <td><p>Append atom to end.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cancel_sites_symmetry</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cancel_sites_symmetry</span></code></a>()</p></td>
 <td><p>Cancel the use of symmetry in the structure, i.e., makes the Site object uniqe (not shared) for each atomic site.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">center</span></code>([vacuum, axis, about])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">center</span></code>([vacuum, axis, about])</p></td>
 <td><p>Center atoms in unit cell.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_sites_symmetry</span></code></a>([spacegroup, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_sites_symmetry</span></code></a>([spacegroup, ...])</p></td>
 <td><p>SPRKKR has some properties shared by all by-symmetry-equal sites.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_spacegroup_for_atomic_numbers" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_spacegroup_for_atomic_numbers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spacegroup_for_atomic_numbers</span></code></a>([...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_spacegroup_for_atomic_numbers" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_spacegroup_for_atomic_numbers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spacegroup_for_atomic_numbers</span></code></a>([...])</p></td>
 <td><p>Return spacegroup that suits to the atoms' cell structure and to the given atomic_numbers (not necessary the real ones, they can be just ''labels'').</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
 <td><p>Return a copy.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">edit</span></code>()</p></td>
 <td><p>Modify atoms interactively through ASE's GUI viewer.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">euler_rotate</span></code>([phi, theta, psi, center])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">euler_rotate</span></code>([phi, theta, psi, center])</p></td>
 <td><p>Rotate atoms via Euler angles (in degrees).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code>(other)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code>(other)</p></td>
 <td><p>Extend atoms object by appending atoms from <em>other</em>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fromdict</span></code>(dct)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fromdict</span></code>(dct)</p></td>
 <td><p>Rebuild atoms object from dictionary representation (todict).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_distances</span></code>([mic, vector])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_distances</span></code>([mic, vector])</p></td>
 <td><p>Return distances of all of the atoms with all of the atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_angle</span></code>(a1, a2, a3[, mic])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_angle</span></code>(a1, a2, a3[, mic])</p></td>
 <td><p>Get angle formed by three atoms.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_angles</span></code>(indices[, mic])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_angles</span></code>(indices[, mic])</p></td>
 <td><p>Get angle formed by three atoms for multiple groupings.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_angular_momentum</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_angular_momentum</span></code>()</p></td>
 <td><p>Get total angular momentum with respect to the center of mass.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_array</span></code>(name[, copy])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_array</span></code>(name[, copy])</p></td>
 <td><p>Get an array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_atomic_numbers</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_atomic_numbers</span></code>()</p></td>
 <td><p>Get integer array of atomic numbers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_calculator</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_calculator</span></code>()</p></td>
 <td><p>Get currently attached calculator object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cell</span></code>([complete])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cell</span></code>([complete])</p></td>
 <td><p>Get the three unit cell vectors as a <cite>class</cite>:ase.cell.Cell` object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cell_lengths_and_angles</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cell_lengths_and_angles</span></code>()</p></td>
 <td><p>Get unit cell parameters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_celldisp</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_celldisp</span></code>()</p></td>
 <td><p>Get the unit cell displacement vectors.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_center_of_mass</span></code>([scaled])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_center_of_mass</span></code>([scaled])</p></td>
 <td><p>Get the center of mass.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_charges</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_charges</span></code>()</p></td>
 <td><p>Get calculated charges.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chemical_formula</span></code>([mode, empirical])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chemical_formula</span></code>([mode, empirical])</p></td>
 <td><p>Get the chemical formula as a string based on the chemical symbols.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chemical_symbols</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_chemical_symbols</span></code>()</p></td>
 <td><p>Get list of chemical symbol strings.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dihedral</span></code>(a0, a1, a2, a3[, mic])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dihedral</span></code>(a0, a1, a2, a3[, mic])</p></td>
 <td><p>Calculate dihedral angle.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dihedrals</span></code>(indices[, mic])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dihedrals</span></code>(indices[, mic])</p></td>
 <td><p>Calculate dihedral angles.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dipole_moment</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dipole_moment</span></code>()</p></td>
 <td><p>Calculate the electric dipole moment for the atoms object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance</span></code>(a0, a1[, mic, vector])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distance</span></code>(a0, a1[, mic, vector])</p></td>
 <td><p>Return distance between two atoms.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distances</span></code>(a, indices[, mic, vector])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_distances</span></code>(a, indices[, mic, vector])</p></td>
 <td><p>Return distances of atom No.i with a list of atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_forces</span></code>([apply_constraint, md])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_forces</span></code>([apply_constraint, md])</p></td>
 <td><p>Calculate atomic forces.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_global_number_of_atoms</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_global_number_of_atoms</span></code>()</p></td>
 <td><p>Returns the global number of atoms in a distributed-atoms parallel simulation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_charges</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_charges</span></code>()</p></td>
 <td><p>Get array of initial charges.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_magnetic_moments</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_initial_magnetic_moments</span></code>()</p></td>
 <td><p>Get array of initial magnetic moments.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_kinetic_energy</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_kinetic_energy</span></code>()</p></td>
 <td><p>Get the kinetic energy.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moment</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moment</span></code>()</p></td>
 <td><p>Get calculated total magnetic moment.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moments</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moments</span></code>()</p></td>
 <td><p>Get calculated local magnetic moments.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masses</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masses</span></code>()</p></td>
 <td><p>Get array of masses in atomic mass units.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_momenta</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_momenta</span></code>()</p></td>
 <td><p>Get array of momenta.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_moments_of_inertia</span></code>([vectors])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_moments_of_inertia</span></code>([vectors])</p></td>
 <td><p>Get the moments of inertia along the principal axes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_number_of_atoms</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_number_of_atoms</span></code>()</p></td>
 <td><p>Deprecated, please do not use.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pbc</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pbc</span></code>()</p></td>
 <td><p>Get periodic boundary condition flags.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_positions</span></code>([wrap])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_positions</span></code>([wrap])</p></td>
 <td><p>Get array of positions.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energies</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energies</span></code>()</p></td>
 <td><p>Calculate the potential energies of all the atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energy</span></code>([force_consistent, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energy</span></code>([force_consistent, ...])</p></td>
 <td><p>Calculate potential energy.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_properties</span></code>(properties)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_properties</span></code>(properties)</p></td>
 <td><p>This method is experimental; currently for internal use.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_reciprocal_cell</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_reciprocal_cell</span></code>()</p></td>
 <td><p>Get the three reciprocal lattice vectors as a 3x3 ndarray.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_scaled_positions</span></code>([wrap])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_scaled_positions</span></code>([wrap])</p></td>
 <td><p>Get positions relative to unit cell.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stress</span></code>([voigt, apply_constraint, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stress</span></code>([voigt, apply_constraint, ...])</p></td>
 <td><p>Calculate stress tensor.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stresses</span></code>([include_ideal_gas, voigt])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stresses</span></code>([include_ideal_gas, voigt])</p></td>
 <td><p>Calculate the stress-tensor of all the atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tags</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tags</span></code>()</p></td>
 <td><p>Get integer array of tags.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_temperature</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_temperature</span></code>()</p></td>
 <td><p>Get the temperature in Kelvin.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_total_energy</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_total_energy</span></code>()</p></td>
 <td><p>Get the total energy - potential plus kinetic energy.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_velocities</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_velocities</span></code>()</p></td>
 <td><p>Get array of velocities.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_volume</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_volume</span></code>()</p></td>
 <td><p>Get volume of unit cell.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has</span></code>(name)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has</span></code>(name)</p></td>
 <td><p>Check for existence of array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterimages</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterimages</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_array</span></code>(name, a[, dtype, shape])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">new_array</span></code>(name, a[, dtype, shape])</p></td>
 <td><p>Add new array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>([i])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code>([i])</p></td>
 <td><p>Remove and return atom at index <em>i</em> (default last).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">promote_ase_atoms</span></code></a>(obj[, symmetry])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">promote_ase_atoms</span></code></a>(obj[, symmetry])</p></td>
 <td><p>Convert ASE Atoms object to the one usable by SPRKKR.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rattle</span></code>([stdev, seed, rng])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rattle</span></code>([stdev, seed, rng])</p></td>
 <td><p>Randomly displace atoms.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat</span></code>(rep)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat</span></code>(rep)</p></td>
 <td><p>Create new repeated atoms object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.reset_sprkkr_potential" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.reset_sprkkr_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_sprkkr_potential</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.reset_sprkkr_potential" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.reset_sprkkr_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_sprkkr_potential</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code>(a, v[, center, rotate_cell])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code>(a, v[, center, rotate_cell])</p></td>
 <td><p>Rotate atoms based on a vector and an angle, or two vectors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_dihedral</span></code>(a1, a2, a3, a4[, angle, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate_dihedral</span></code>(a1, a2, a3, a4[, angle, ...])</p></td>
 <td><p>Rotate dihedral angle.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_angle</span></code>(a1[, a2, a3, angle, mask, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_angle</span></code>(a1[, a2, a3, angle, mask, ...])</p></td>
 <td><p>Set angle (in degrees) formed by three atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_array</span></code>(name, a[, dtype, shape])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_array</span></code>(name, a[, dtype, shape])</p></td>
 <td><p>Update array.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_atomic_numbers</span></code>(numbers)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_atomic_numbers</span></code>(numbers)</p></td>
 <td><p>Set atomic numbers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_calculator</span></code>([calc])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_calculator</span></code>([calc])</p></td>
 <td><p>Attach calculator object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_cell</span></code>(cell[, scale_atoms, apply_constraint])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_cell</span></code>(cell[, scale_atoms, apply_constraint])</p></td>
 <td><p>Set unit cell vectors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_celldisp</span></code>(celldisp)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_celldisp</span></code>(celldisp)</p></td>
 <td><p>Set the unit cell displacement vectors.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_center_of_mass</span></code>(com[, scaled])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_center_of_mass</span></code>(com[, scaled])</p></td>
 <td><p>Set the center of mass.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_chemical_symbols</span></code>(symbols)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_chemical_symbols</span></code>(symbols)</p></td>
 <td><p>Set chemical symbols.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_constraint</span></code>([constraint])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_constraint</span></code>([constraint])</p></td>
 <td><p>Apply one or more constrains.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_dihedral</span></code>(a1, a2, a3, a4, angle[, mask, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_dihedral</span></code>(a1, a2, a3, a4, angle[, mask, ...])</p></td>
 <td><p>Set the dihedral angle (degrees) between vectors a1-&gt;a2 and a3-&gt;a4 by changing the atom indexed by a4.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_distance</span></code>(a0, a1, distance[, fix, mic, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_distance</span></code>(a0, a1, distance[, fix, mic, ...])</p></td>
 <td><p>Set the distance between two atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_initial_charges</span></code>([charges])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_initial_charges</span></code>([charges])</p></td>
 <td><p>Set the initial charges.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_initial_magnetic_moments</span></code>([magmoms])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_initial_magnetic_moments</span></code>([magmoms])</p></td>
 <td><p>Set the initial magnetic moments.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_masses</span></code>([masses])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_masses</span></code>([masses])</p></td>
 <td><p>Set atomic masses in atomic mass units.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_momenta</span></code>(momenta[, apply_constraint])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_momenta</span></code>(momenta[, apply_constraint])</p></td>
 <td><p>Set momenta.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_pbc</span></code>(pbc)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_pbc</span></code>(pbc)</p></td>
 <td><p>Set periodic boundary condition flags.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_positions</span></code>(newpositions[, apply_constraint])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_positions</span></code>(newpositions[, apply_constraint])</p></td>
 <td><p>Set positions, honoring any constraints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_scaled_positions</span></code>(scaled)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_scaled_positions</span></code>(scaled)</p></td>
 <td><p>Set positions relative to unit cell.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_tags</span></code>(tags)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_tags</span></code>(tags)</p></td>
 <td><p>Set tags for all atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_velocities</span></code>(velocities)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_velocities</span></code>(velocities)</p></td>
 <td><p>Set the momenta by specifying the velocities.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">todict</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">todict</span></code>()</p></td>
 <td><p>For basic JSON (non-database) support.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate</span></code>(displacement)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate</span></code>(displacement)</p></td>
 <td><p>Translate atomic positions.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code>(**wrap_kw)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap</span></code>(**wrap_kw)</p></td>
 <td><p>Wrap positions to unit cell.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(filename[, format])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(filename[, format])</p></td>
 <td><p>Write atoms object to a file.</p></td>
 </tr>
 </tbody>
@@ -509,6 +619,24 @@ I.e., the by-symmetry-equal atomic sites will share the same sites object.</p></
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
+<td><p>list of weak references to the object (if defined)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_ase_handles_dynamic_stress</span></code></p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase_objtype</span></code></p></td>
 <td><p></p></td>
 </tr>

@@ -19,7 +19,29 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueEqualDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OutputValueEqualDefinition.__delattr__
+        ~OutputValueEqualDefinition.__dir__
+        ~OutputValueEqualDefinition.__eq__
+        ~OutputValueEqualDefinition.__format__
+        ~OutputValueEqualDefinition.__ge__
+        ~OutputValueEqualDefinition.__getattribute__
+        ~OutputValueEqualDefinition.__gt__
+        ~OutputValueEqualDefinition.__hash__
         ~OutputValueEqualDefinition.__init__
+        ~OutputValueEqualDefinition.__init_subclass__
+        ~OutputValueEqualDefinition.__le__
+        ~OutputValueEqualDefinition.__lt__
+        ~OutputValueEqualDefinition.__ne__
+        ~OutputValueEqualDefinition.__new__
+        ~OutputValueEqualDefinition.__reduce__
+        ~OutputValueEqualDefinition.__reduce_ex__
+        ~OutputValueEqualDefinition.__repr__
+        ~OutputValueEqualDefinition.__setattr__
+        ~OutputValueEqualDefinition.__sizeof__
+        ~OutputValueEqualDefinition.__str__
+        ~OutputValueEqualDefinition.__subclasshook__
+        ~OutputValueEqualDefinition._grammar
+        ~OutputValueEqualDefinition._tuple_with_my_name
         ~OutputValueEqualDefinition.copy
         ~OutputValueEqualDefinition.create_object
         ~OutputValueEqualDefinition.get_value
@@ -39,6 +61,10 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueEqualDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OutputValueEqualDefinition.__dict__
+        ~OutputValueEqualDefinition.__doc__
+        ~OutputValueEqualDefinition.__module__
+        ~OutputValueEqualDefinition.__weakref__
         ~OutputValueEqualDefinition.do_not_skip_whitespaces_before_name
         ~OutputValueEqualDefinition.formated_name
         ~OutputValueEqualDefinition.name_in_grammar

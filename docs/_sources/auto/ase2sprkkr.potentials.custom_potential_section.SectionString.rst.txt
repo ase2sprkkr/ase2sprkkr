@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.SectionString**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SectionString.__delattr__
+        ~SectionString.__dir__
+        ~SectionString.__eq__
+        ~SectionString.__format__
+        ~SectionString.__ge__
+        ~SectionString.__getattribute__
+        ~SectionString.__gt__
+        ~SectionString.__hash__
         ~SectionString.__init__
+        ~SectionString.__init_subclass__
+        ~SectionString.__le__
+        ~SectionString.__lt__
+        ~SectionString.__ne__
+        ~SectionString.__new__
+        ~SectionString.__reduce__
+        ~SectionString.__reduce_ex__
+        ~SectionString.__repr__
+        ~SectionString.__setattr__
+        ~SectionString.__sizeof__
+        ~SectionString.__str__
+        ~SectionString.__subclasshook__
+        ~SectionString._string
+        ~SectionString._validate
+        ~SectionString._valueError
         ~SectionString.convert
         ~SectionString.copy
         ~SectionString.enrich
@@ -47,6 +70,11 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.SectionString**
       :template: custom-base-template.rst
      
         ~SectionString.I
+        ~SectionString.__dict__
+        ~SectionString.__doc__
+        ~SectionString.__module__
+        ~SectionString.__weakref__
+        ~SectionString._grammar
         ~SectionString.default_value
         ~SectionString.delimiter_pattern
         ~SectionString.has_value

@@ -19,11 +19,44 @@ Full name: **ase2sprkkr.common.base\_configuration.BaseConfiguration**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseConfiguration.__delattr__
+        ~BaseConfiguration.__dir__
+        ~BaseConfiguration.__eq__
+        ~BaseConfiguration.__format__
+        ~BaseConfiguration.__ge__
+        ~BaseConfiguration.__getattribute__
+        ~BaseConfiguration.__gt__
+        ~BaseConfiguration.__hash__
         ~BaseConfiguration.__init__
+        ~BaseConfiguration.__init_subclass__
+        ~BaseConfiguration.__le__
+        ~BaseConfiguration.__lt__
+        ~BaseConfiguration.__ne__
+        ~BaseConfiguration.__new__
+        ~BaseConfiguration.__reduce__
+        ~BaseConfiguration.__reduce_ex__
+        ~BaseConfiguration.__repr__
+        ~BaseConfiguration.__setattr__
+        ~BaseConfiguration.__sizeof__
+        ~BaseConfiguration.__str__
+        ~BaseConfiguration.__subclasshook__
+        ~BaseConfiguration._get_path
+        ~BaseConfiguration._get_root_container
 
    
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseConfiguration.__dict__
+        ~BaseConfiguration.__doc__
+        ~BaseConfiguration.__module__
+        ~BaseConfiguration.__weakref__
+
    
    

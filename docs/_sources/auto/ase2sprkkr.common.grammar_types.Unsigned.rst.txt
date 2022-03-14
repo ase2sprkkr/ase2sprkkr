@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.Unsigned**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Unsigned.__delattr__
+        ~Unsigned.__dir__
+        ~Unsigned.__eq__
+        ~Unsigned.__format__
+        ~Unsigned.__ge__
+        ~Unsigned.__getattribute__
+        ~Unsigned.__gt__
+        ~Unsigned.__hash__
         ~Unsigned.__init__
+        ~Unsigned.__init_subclass__
+        ~Unsigned.__le__
+        ~Unsigned.__lt__
+        ~Unsigned.__ne__
+        ~Unsigned.__new__
+        ~Unsigned.__reduce__
+        ~Unsigned.__reduce_ex__
+        ~Unsigned.__repr__
+        ~Unsigned.__setattr__
+        ~Unsigned.__sizeof__
+        ~Unsigned.__str__
+        ~Unsigned.__subclasshook__
+        ~Unsigned._string
+        ~Unsigned._validate
+        ~Unsigned._valueError
         ~Unsigned.convert
         ~Unsigned.copy
         ~Unsigned.enrich
@@ -46,6 +69,12 @@ Full name: **ase2sprkkr.common.grammar\_types.Unsigned**
       :template: custom-base-template.rst
      
         ~Unsigned.I
+        ~Unsigned.__dict__
+        ~Unsigned.__doc__
+        ~Unsigned.__module__
+        ~Unsigned.__slotnames__
+        ~Unsigned.__weakref__
+        ~Unsigned._grammar
         ~Unsigned.default_value
         ~Unsigned.has_value
         ~Unsigned.name_in_grammar

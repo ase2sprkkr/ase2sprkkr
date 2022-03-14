@@ -19,7 +19,37 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters.InputParameters**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~InputParameters.__contains__
+        ~InputParameters.__delattr__
+        ~InputParameters.__dir__
+        ~InputParameters.__eq__
+        ~InputParameters.__format__
+        ~InputParameters.__ge__
+        ~InputParameters.__getattr__
+        ~InputParameters.__getattribute__
+        ~InputParameters.__getitem__
+        ~InputParameters.__gt__
+        ~InputParameters.__hash__
         ~InputParameters.__init__
+        ~InputParameters.__init_subclass__
+        ~InputParameters.__iter__
+        ~InputParameters.__le__
+        ~InputParameters.__lt__
+        ~InputParameters.__ne__
+        ~InputParameters.__new__
+        ~InputParameters.__reduce__
+        ~InputParameters.__reduce_ex__
+        ~InputParameters.__repr__
+        ~InputParameters.__setattr__
+        ~InputParameters.__sizeof__
+        ~InputParameters.__str__
+        ~InputParameters.__subclasshook__
+        ~InputParameters._add
+        ~InputParameters._find_value
+        ~InputParameters._get_member
+        ~InputParameters._get_path
+        ~InputParameters._get_root_container
+        ~InputParameters._interactive_member_name
         ~InputParameters.add
         ~InputParameters.calculate
         ~InputParameters.clear
@@ -57,6 +87,11 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters.InputParameters**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~InputParameters.__dict__
+        ~InputParameters.__doc__
+        ~InputParameters.__module__
+        ~InputParameters.__weakref__
+        ~InputParameters._default_mpi_runner
         ~InputParameters.name
         ~InputParameters.task_name
 

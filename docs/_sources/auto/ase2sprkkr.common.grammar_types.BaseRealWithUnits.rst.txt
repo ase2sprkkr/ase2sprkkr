@@ -19,7 +19,32 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseRealWithUnits**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseRealWithUnits.__delattr__
+        ~BaseRealWithUnits.__dir__
+        ~BaseRealWithUnits.__eq__
+        ~BaseRealWithUnits.__format__
+        ~BaseRealWithUnits.__ge__
+        ~BaseRealWithUnits.__getattribute__
+        ~BaseRealWithUnits.__gt__
+        ~BaseRealWithUnits.__hash__
         ~BaseRealWithUnits.__init__
+        ~BaseRealWithUnits.__init_subclass__
+        ~BaseRealWithUnits.__le__
+        ~BaseRealWithUnits.__lt__
+        ~BaseRealWithUnits.__ne__
+        ~BaseRealWithUnits.__new__
+        ~BaseRealWithUnits.__reduce__
+        ~BaseRealWithUnits.__reduce_ex__
+        ~BaseRealWithUnits.__repr__
+        ~BaseRealWithUnits.__setattr__
+        ~BaseRealWithUnits.__sizeof__
+        ~BaseRealWithUnits.__str__
+        ~BaseRealWithUnits.__subclasshook__
+        ~BaseRealWithUnits._grammar
+        ~BaseRealWithUnits._grammar_units
+        ~BaseRealWithUnits._string
+        ~BaseRealWithUnits._validate
+        ~BaseRealWithUnits._valueError
         ~BaseRealWithUnits.convert
         ~BaseRealWithUnits.copy
         ~BaseRealWithUnits.enrich
@@ -45,6 +70,10 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseRealWithUnits**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseRealWithUnits.__dict__
+        ~BaseRealWithUnits.__doc__
+        ~BaseRealWithUnits.__module__
+        ~BaseRealWithUnits.__weakref__
         ~BaseRealWithUnits.default_value
         ~BaseRealWithUnits.grammar_cache
         ~BaseRealWithUnits.has_value

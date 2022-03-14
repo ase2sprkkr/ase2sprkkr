@@ -19,7 +19,37 @@ Full name: **ase2sprkkr.common.configuration\_containers.CustomSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomSection.__contains__
+        ~CustomSection.__delattr__
+        ~CustomSection.__dir__
+        ~CustomSection.__eq__
+        ~CustomSection.__format__
+        ~CustomSection.__ge__
+        ~CustomSection.__getattr__
+        ~CustomSection.__getattribute__
+        ~CustomSection.__getitem__
+        ~CustomSection.__gt__
+        ~CustomSection.__hash__
         ~CustomSection.__init__
+        ~CustomSection.__init_subclass__
+        ~CustomSection.__iter__
+        ~CustomSection.__le__
+        ~CustomSection.__lt__
+        ~CustomSection.__ne__
+        ~CustomSection.__new__
+        ~CustomSection.__reduce__
+        ~CustomSection.__reduce_ex__
+        ~CustomSection.__repr__
+        ~CustomSection.__setattr__
+        ~CustomSection.__sizeof__
+        ~CustomSection.__str__
+        ~CustomSection.__subclasshook__
+        ~CustomSection._add
+        ~CustomSection._find_value
+        ~CustomSection._get_member
+        ~CustomSection._get_path
+        ~CustomSection._get_root_container
+        ~CustomSection._interactive_member_name
         ~CustomSection.add
         ~CustomSection.clear
         ~CustomSection.factory
@@ -43,6 +73,10 @@ Full name: **ase2sprkkr.common.configuration\_containers.CustomSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomSection.__dict__
+        ~CustomSection.__doc__
+        ~CustomSection.__module__
+        ~CustomSection.__weakref__
         ~CustomSection.name
         ~CustomSection.seciton_name
 

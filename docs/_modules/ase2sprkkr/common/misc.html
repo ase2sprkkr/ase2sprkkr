@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,7 +170,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.misc</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">functools</span>
+<span></span><span class="sd">&quot;&quot;&quot; Various classes and routines used thorough the package &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">heapq</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -183,6 +185,7 @@
   <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
 <div class="viewcode-block" id="njit"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.njit.html#ase2sprkkr.common.misc.njit">[docs]</a>  <span class="k">def</span> <span class="nf">njit</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Mock the numba JIT compiler, if it is not available &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">fce</span></div>
 
 <div class="viewcode-block" id="lazy_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.lazy_value.html#ase2sprkkr.common.misc.lazy_value">[docs]</a><span class="k">def</span> <span class="nf">lazy_value</span><span class="p">(</span><span class="n">fce</span><span class="p">):</span>

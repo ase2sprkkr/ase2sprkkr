@@ -12,6 +12,14 @@ Full name: **ase2sprkkr.potentials.definitions.sections**
 
    
    
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _sections
+   
    
 
 

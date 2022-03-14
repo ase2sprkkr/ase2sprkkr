@@ -19,7 +19,34 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomPotentialSection.__call__
+        ~CustomPotentialSection.__delattr__
+        ~CustomPotentialSection.__dir__
+        ~CustomPotentialSection.__eq__
+        ~CustomPotentialSection.__format__
+        ~CustomPotentialSection.__ge__
+        ~CustomPotentialSection.__getattribute__
+        ~CustomPotentialSection.__gt__
+        ~CustomPotentialSection.__hash__
         ~CustomPotentialSection.__init__
+        ~CustomPotentialSection.__init_subclass__
+        ~CustomPotentialSection.__le__
+        ~CustomPotentialSection.__lt__
+        ~CustomPotentialSection.__ne__
+        ~CustomPotentialSection.__new__
+        ~CustomPotentialSection.__reduce__
+        ~CustomPotentialSection.__reduce_ex__
+        ~CustomPotentialSection.__repr__
+        ~CustomPotentialSection.__setattr__
+        ~CustomPotentialSection.__sizeof__
+        ~CustomPotentialSection.__str__
+        ~CustomPotentialSection.__subclasshook__
+        ~CustomPotentialSection._depends_on
+        ~CustomPotentialSection._find_value
+        ~CustomPotentialSection._get_path
+        ~CustomPotentialSection._get_root_container
+        ~CustomPotentialSection._set_from_atoms
+        ~CustomPotentialSection._update_atoms
         ~CustomPotentialSection.clear
         ~CustomPotentialSection.factory
         ~CustomPotentialSection.get
@@ -40,6 +67,10 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~CustomPotentialSection.__dict__
+        ~CustomPotentialSection.__doc__
+        ~CustomPotentialSection.__module__
+        ~CustomPotentialSection.__weakref__
         ~CustomPotentialSection.name
 
    

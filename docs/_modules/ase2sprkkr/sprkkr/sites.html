@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,11 +170,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.sprkkr.sites</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.radial_meshes</span> <span class="kn">import</span> <span class="n">Mesh</span>
+<span></span><span class="sd">&quot;&quot;&quot; The site class define the properties of an atom. &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.radial_meshes</span> <span class="kn">import</span> <span class="n">Mesh</span>
 <span class="kn">from</span> <span class="nn">.reference_systems</span> <span class="kn">import</span> <span class="n">ReferenceSystem</span>
 <span class="kn">from</span> <span class="nn">.occupations</span> <span class="kn">import</span> <span class="n">Occupation</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <div class="viewcode-block" id="Site"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site">[docs]</a><span class="k">class</span> <span class="nc">Site</span><span class="p">:</span>
+
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Definition of an atomic site.</span>
 <span class="sd">  (By symmetry) equivalent sites should share the same definition.</span>
@@ -185,8 +189,8 @@
 
 <div class="viewcode-block" id="Site.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">reference_system</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Parameter</span>
-<span class="sd">      ---------</span>
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
 <span class="sd">      occupation: dict</span>
 <span class="sd">          { AtomicType: fraction }</span>
 <span class="sd">          The type of the atom</span>

@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,14 +170,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.sprkkr.structure</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atom</span>
-<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
-<span class="kn">from</span> <span class="nn">..potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
-<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Helper classes for a2s_visualise_in_struct utility.</span>
+
 <span class="sd">This file contains function structure_file_to_atoms, which is used for</span>
 <span class="sd">visualisation of a surface structure, using .pot and in_structure.inp</span>
 <span class="sd">files.</span>
@@ -185,6 +180,15 @@
 <span class="sd">TODO: This implementaion can handle only one-purpose reading of the structure</span>
 <span class="sd">file.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atom</span>
+<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">from</span> <span class="nn">..potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">ase.data</span> <span class="kn">import</span> <span class="n">chemical_symbols</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1">### Helper objects and functions</span>
 
@@ -255,8 +259,8 @@
 <span class="sd">    Atoms object, from where the types of atoms will be given</span>
 
 <span class="sd">  n_bulk: int</span>
-<span class="sd">    Number of repetition of bulk atoms </span>
-<span class="sd">    </span>
+<span class="sd">    Number of repetition of bulk atoms</span>
+
 <span class="sd">  vacuum_height: float</span>
 <span class="sd">    Height of the vacuum above the surface.</span>
 <span class="sd">  &quot;&quot;&quot;</span>

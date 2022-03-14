@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -196,10 +196,10 @@
 <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
   <span class="n">section_line_ends</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">()</span><span class="o">.</span><span class="n">setWhitespaceChars</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">White</span><span class="p">(</span><span class="s1">&#39; </span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">))</span>
 
-<div class="viewcode-block" id="ValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html#ase2sprkkr.input_parameters.definitions.sections.ValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">ValueDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="ValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.ValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">ValueDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This class describes the format of one value of</span>
 <span class="sd">  a task configuration &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ValueDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html#ase2sprkkr.input_parameters.definitions.sections.ValueDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ValueDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.ValueDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span></div>
@@ -207,7 +207,7 @@
   <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span>
   <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s1">&#39;=&#39;</span></div>
 
-<div class="viewcode-block" id="SectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html#ase2sprkkr.input_parameters.definitions.sections.SectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">SectionDefinition</span><span class="p">(</span><span class="n">BaseSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="SectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.SectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">SectionDefinition</span><span class="p">(</span><span class="n">BaseSectionDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This class describes the format of one</span>
 <span class="sd">  value of a task section &quot;&quot;&quot;</span>
 
@@ -218,7 +218,7 @@
 
   <span class="sd">&quot;&quot;&quot; options are delimited by newline in ouptut. &quot;&quot;&quot;</span>
   <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-<div class="viewcode-block" id="SectionDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html#ase2sprkkr.input_parameters.definitions.sections.SectionDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SectionDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.SectionDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
       <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">section_line_ends</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">())</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
@@ -226,7 +226,7 @@
 
   <span class="n">do_not_skip_whitespaces_before_name</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="InputParametersDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition">[docs]</a><span class="k">class</span> <span class="nc">InputParametersDefinition</span><span class="p">(</span><span class="n">ConfDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="InputParametersDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition">[docs]</a><span class="k">class</span> <span class="nc">InputParametersDefinition</span><span class="p">(</span><span class="n">ConfDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This class describes the format of a task file. &quot;&quot;&quot;</span>
 
   <span class="sd">&quot;&quot;&quot; standard child class &quot;&quot;&quot;</span>
@@ -234,7 +234,7 @@
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">InputParameters</span>
 
   <span class="n">delimiter</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-<div class="viewcode-block" id="InputParametersDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="InputParametersDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
       <span class="k">def</span> <span class="nf">ws</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -245,14 +245,14 @@
 
   <span class="n">custom_class</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">CustomSection</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">SectionDefinition</span><span class="p">))</span>
 
-<div class="viewcode-block" id="InputParametersDefinition.custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.custom_value_grammar">[docs]</a>  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="InputParametersDefinition.custom_value_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition.custom_value_grammar">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="nd">@cache</span>
   <span class="k">def</span> <span class="nf">custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
       <span class="n">value</span>  <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">custom_member_grammar</span><span class="p">()</span>
       <span class="n">delim</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span>
       <span class="k">return</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">delim</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">unique_dict</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()))</span></div>
 
-<div class="viewcode-block" id="InputParametersDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.sections.InputParametersDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="InputParametersDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">sections</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrscf&#39;</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">result_reader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>

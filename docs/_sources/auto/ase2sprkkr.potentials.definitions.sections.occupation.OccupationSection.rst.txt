@@ -19,7 +19,40 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OccupationSection.__contains__
+        ~OccupationSection.__delattr__
+        ~OccupationSection.__dir__
+        ~OccupationSection.__eq__
+        ~OccupationSection.__format__
+        ~OccupationSection.__ge__
+        ~OccupationSection.__getattr__
+        ~OccupationSection.__getattribute__
+        ~OccupationSection.__getitem__
+        ~OccupationSection.__gt__
+        ~OccupationSection.__hash__
         ~OccupationSection.__init__
+        ~OccupationSection.__init_subclass__
+        ~OccupationSection.__iter__
+        ~OccupationSection.__le__
+        ~OccupationSection.__lt__
+        ~OccupationSection.__ne__
+        ~OccupationSection.__new__
+        ~OccupationSection.__reduce__
+        ~OccupationSection.__reduce_ex__
+        ~OccupationSection.__repr__
+        ~OccupationSection.__setattr__
+        ~OccupationSection.__sizeof__
+        ~OccupationSection.__str__
+        ~OccupationSection.__subclasshook__
+        ~OccupationSection._add
+        ~OccupationSection._depends_on
+        ~OccupationSection._find_value
+        ~OccupationSection._get_member
+        ~OccupationSection._get_path
+        ~OccupationSection._get_root_container
+        ~OccupationSection._interactive_member_name
+        ~OccupationSection._set_from_atoms
+        ~OccupationSection._update_atoms
         ~OccupationSection.add
         ~OccupationSection.clear
         ~OccupationSection.get
@@ -42,6 +75,10 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OccupationSection.__dict__
+        ~OccupationSection.__doc__
+        ~OccupationSection.__module__
+        ~OccupationSection.__weakref__
         ~OccupationSection.definition
         ~OccupationSection.name
         ~OccupationSection.seciton_name

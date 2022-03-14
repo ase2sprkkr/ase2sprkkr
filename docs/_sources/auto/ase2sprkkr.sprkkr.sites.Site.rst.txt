@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.sprkkr.sites.Site**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Site.__delattr__
+        ~Site.__dir__
+        ~Site.__eq__
+        ~Site.__format__
+        ~Site.__ge__
+        ~Site.__getattribute__
+        ~Site.__gt__
+        ~Site.__hash__
         ~Site.__init__
+        ~Site.__init_subclass__
+        ~Site.__le__
+        ~Site.__lt__
+        ~Site.__ne__
+        ~Site.__new__
+        ~Site.__reduce__
+        ~Site.__reduce_ex__
+        ~Site.__repr__
+        ~Site.__setattr__
+        ~Site.__sizeof__
+        ~Site.__str__
+        ~Site.__subclasshook__
         ~Site.copy
         ~Site.reset
         ~Site.update_atoms
@@ -34,6 +54,10 @@ Full name: **ase2sprkkr.sprkkr.sites.Site**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Site.__dict__
+        ~Site.__doc__
+        ~Site.__module__
+        ~Site.__weakref__
         ~Site.occupation
         ~Site.primary_symbol
 

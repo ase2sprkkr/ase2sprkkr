@@ -19,7 +19,28 @@ Full name: **ase2sprkkr.common.unique\_values.UniqueValuesMapping**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~UniqueValuesMapping.__delattr__
+        ~UniqueValuesMapping.__dir__
+        ~UniqueValuesMapping.__eq__
+        ~UniqueValuesMapping.__format__
+        ~UniqueValuesMapping.__ge__
+        ~UniqueValuesMapping.__getattribute__
+        ~UniqueValuesMapping.__gt__
+        ~UniqueValuesMapping.__hash__
         ~UniqueValuesMapping.__init__
+        ~UniqueValuesMapping.__init_subclass__
+        ~UniqueValuesMapping.__le__
+        ~UniqueValuesMapping.__len__
+        ~UniqueValuesMapping.__lt__
+        ~UniqueValuesMapping.__ne__
+        ~UniqueValuesMapping.__new__
+        ~UniqueValuesMapping.__reduce__
+        ~UniqueValuesMapping.__reduce_ex__
+        ~UniqueValuesMapping.__repr__
+        ~UniqueValuesMapping.__setattr__
+        ~UniqueValuesMapping.__sizeof__
+        ~UniqueValuesMapping.__str__
+        ~UniqueValuesMapping.__subclasshook__
         ~UniqueValuesMapping.from_values
         ~UniqueValuesMapping.iter_unique
         ~UniqueValuesMapping.len_of_unique
@@ -35,7 +56,10 @@ Full name: **ase2sprkkr.common.unique\_values.UniqueValuesMapping**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~UniqueValuesMapping.noneMapping
+        ~UniqueValuesMapping.__dict__
+        ~UniqueValuesMapping.__doc__
+        ~UniqueValuesMapping.__module__
+        ~UniqueValuesMapping.__weakref__
 
    
    

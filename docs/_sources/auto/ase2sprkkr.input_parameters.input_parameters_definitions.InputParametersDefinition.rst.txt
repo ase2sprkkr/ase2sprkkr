@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.InputPa
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~InputParametersDefinition.__contains__
+        ~InputParametersDefinition.__delattr__
+        ~InputParametersDefinition.__dir__
+        ~InputParametersDefinition.__eq__
+        ~InputParametersDefinition.__format__
+        ~InputParametersDefinition.__ge__
+        ~InputParametersDefinition.__getattribute__
+        ~InputParametersDefinition.__getitem__
+        ~InputParametersDefinition.__gt__
+        ~InputParametersDefinition.__hash__
         ~InputParametersDefinition.__init__
+        ~InputParametersDefinition.__init_subclass__
+        ~InputParametersDefinition.__iter__
+        ~InputParametersDefinition.__le__
+        ~InputParametersDefinition.__lt__
+        ~InputParametersDefinition.__ne__
+        ~InputParametersDefinition.__new__
+        ~InputParametersDefinition.__reduce__
+        ~InputParametersDefinition.__reduce_ex__
+        ~InputParametersDefinition.__repr__
+        ~InputParametersDefinition.__setattr__
+        ~InputParametersDefinition.__setitem__
+        ~InputParametersDefinition.__sizeof__
+        ~InputParametersDefinition.__str__
+        ~InputParametersDefinition.__subclasshook__
+        ~InputParametersDefinition._dict_from_named_values
+        ~InputParametersDefinition._first_section_is_fixed
+        ~InputParametersDefinition._grammar
+        ~InputParametersDefinition._tuple_with_my_name
+        ~InputParametersDefinition._values_grammar
         ~InputParametersDefinition.all_member_names
         ~InputParametersDefinition.copy
         ~InputParametersDefinition.create_object
@@ -49,6 +78,11 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.InputPa
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~InputParametersDefinition.__dict__
+        ~InputParametersDefinition.__doc__
+        ~InputParametersDefinition.__module__
+        ~InputParametersDefinition.__weakref__
+        ~InputParametersDefinition._init_args
         ~InputParametersDefinition.custom_name_characters
         ~InputParametersDefinition.custom_value_name
         ~InputParametersDefinition.delimiter

@@ -19,7 +19,40 @@ Full name: **ase2sprkkr.potentials.potential\_sections.PotentialSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotentialSection.__contains__
+        ~PotentialSection.__delattr__
+        ~PotentialSection.__dir__
+        ~PotentialSection.__eq__
+        ~PotentialSection.__format__
+        ~PotentialSection.__ge__
+        ~PotentialSection.__getattr__
+        ~PotentialSection.__getattribute__
+        ~PotentialSection.__getitem__
+        ~PotentialSection.__gt__
+        ~PotentialSection.__hash__
         ~PotentialSection.__init__
+        ~PotentialSection.__init_subclass__
+        ~PotentialSection.__iter__
+        ~PotentialSection.__le__
+        ~PotentialSection.__lt__
+        ~PotentialSection.__ne__
+        ~PotentialSection.__new__
+        ~PotentialSection.__reduce__
+        ~PotentialSection.__reduce_ex__
+        ~PotentialSection.__repr__
+        ~PotentialSection.__setattr__
+        ~PotentialSection.__sizeof__
+        ~PotentialSection.__str__
+        ~PotentialSection.__subclasshook__
+        ~PotentialSection._add
+        ~PotentialSection._depends_on
+        ~PotentialSection._find_value
+        ~PotentialSection._get_member
+        ~PotentialSection._get_path
+        ~PotentialSection._get_root_container
+        ~PotentialSection._interactive_member_name
+        ~PotentialSection._set_from_atoms
+        ~PotentialSection._update_atoms
         ~PotentialSection.add
         ~PotentialSection.clear
         ~PotentialSection.get
@@ -42,6 +75,10 @@ Full name: **ase2sprkkr.potentials.potential\_sections.PotentialSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotentialSection.__dict__
+        ~PotentialSection.__doc__
+        ~PotentialSection.__module__
+        ~PotentialSection.__weakref__
         ~PotentialSection.definition
         ~PotentialSection.name
         ~PotentialSection.seciton_name

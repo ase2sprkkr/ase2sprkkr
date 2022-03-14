@@ -88,7 +88,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
@@ -122,7 +122,6 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
@@ -275,6 +274,30 @@ False: do not append anything (the same as ‘’)</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
+<td><p>Implement delattr(self, name).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
+<td><p>Default dir() implementation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
+<td><p>Return self==value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
+<td><p>Default object formatter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
+<td><p>Return self&gt;=value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
+<td><p>Return getattr(self, name).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
+<td><p>Return self&gt;value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
+<td><p>Return hash(self).</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__" title="ase2sprkkr.sprkkr.calculator.SPRKKR.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([restart, label, atoms, directory, ...])</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param label</dt>
@@ -283,112 +306,157 @@ False: do not append anything (the same as ‘’)</p></li>
 </dl>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">band_structure</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
+<td><p>This method is called when a class is subclassed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
+<td><p>Return self&lt;=value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
+<td><p>Return self&lt;value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
+<td><p>Return self!=value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
+<td><p>Helper for pickle.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
+<td><p>Helper for pickle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
+<td><p>Return repr(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
+<td><p>Implement setattr(self, name, value).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
+<td><p>Size of object in memory, in bytes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
+<td><p>Return str(self).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
+<td><p>Abstract classes can override this to customize issubclass().</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter" title="ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_advance_counter</span></code></a>()</p></td>
+<td><p>Advance counter for generating filenames with %c counter placeholder</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_deprecated_get_spin_polarized</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR._open_file" title="ase2sprkkr.sprkkr.calculator.SPRKKR._open_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_open_file</span></code></a>(filename[, templator, named, ...])</p></td>
+<td><p>Open a file given a 'template' filename file name</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">band_structure</span></code>()</p></td>
 <td><p>Create band-structure object for plotting.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate</span></code></a>([atoms, properties, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.calculate" title="ase2sprkkr.sprkkr.calculator.SPRKKR.calculate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate</span></code></a>([atoms, properties, ...])</p></td>
 <td><p>ASE-interface method for the calculation.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_numerical_forces</span></code>(atoms[, d])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_numerical_forces</span></code>(atoms[, d])</p></td>
 <td><p>Calculate numerical forces using finite difference.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_numerical_stress</span></code>(atoms[, d, voigt])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_numerical_stress</span></code>(atoms[, d, voigt])</p></td>
 <td><p>Calculate numerical stress using finite difference.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_properties</span></code>(atoms, properties)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_properties</span></code>(atoms, properties)</p></td>
 <td><p>This method is experimental; currently for internal use.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculation_required</span></code>(atoms, properties)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculation_required</span></code>(atoms, properties)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_state</span></code>(atoms[, tol])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_state</span></code>(atoms[, tol])</p></td>
 <td><p>Check for any system changes since last calculation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential" title="ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_with_potential</span></code></a>(potential)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential" title="ase2sprkkr.sprkkr.calculator.SPRKKR.copy_with_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_with_potential</span></code></a>(potential)</p></td>
 <td><p>Return copy of self, with the potential variable set.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_properties</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_properties</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.get" title="ase2sprkkr.sprkkr.calculator.SPRKKR.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.get" title="ase2sprkkr.sprkkr.calculator.SPRKKR.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(name)</p></td>
 <td><p>Get the value of an input parameter.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_atoms</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_atoms</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_charges</span></code>([atoms])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_charges</span></code>([atoms])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_parameters</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_parameters</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dipole_moment</span></code>([atoms])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dipole_moment</span></code>([atoms])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_forces</span></code>([atoms])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_forces</span></code>([atoms])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moment</span></code>([atoms])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moment</span></code>([atoms])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moments</span></code>([atoms])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_magnetic_moments</span></code>([atoms])</p></td>
 <td><p>Calculate magnetic moments projected onto atoms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energies</span></code>([atoms])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energies</span></code>([atoms])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energy</span></code>([atoms, force_consistent])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_potential_energy</span></code>([atoms, force_consistent])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_property</span></code>(name[, atoms, allow_calculation])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_property</span></code>(name[, atoms, allow_calculation])</p></td>
 <td><p>Get the named property.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stress</span></code>([atoms])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stress</span></code>([atoms])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stresses</span></code>([atoms])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_stresses</span></code>([atoms])</p></td>
 <td><p>the calculator should return intensive stresses, i.e., such that stresses.sum(axis=0) == stress</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch" title="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kkrch</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch" title="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kkrch</span></code></a>(*args, **kwargs)</p></td>
 <td><p>A shortcut for calculating a KKRCH task</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen" title="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kkrgen</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen" title="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrgen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kkrgen</span></code></a>(*args, **kwargs)</p></td>
 <td><p>A shortcut for calculating a KKRGEN task</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec" title="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kkrspec</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec" title="ase2sprkkr.sprkkr.calculator.SPRKKR.kkrspec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kkrspec</span></code></a>(*args, **kwargs)</p></td>
 <td><p>A shortcut for calculating a KKRSPEC task</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.phagen" title="ase2sprkkr.sprkkr.calculator.SPRKKR.phagen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phagen</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.phagen" title="ase2sprkkr.sprkkr.calculator.SPRKKR.phagen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phagen</span></code></a>(*args, **kwargs)</p></td>
 <td><p>A shortcut for calculating a PHAGEN task</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code>(label)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read</span></code>(label)</p></td>
 <td><p>Read atoms, parameters and calculated properties from output file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_atoms</span></code>(restart, **kwargs)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_atoms</span></code>(restart, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code>()</p></td>
 <td><p>Clear all information from old calculation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.run" title="ase2sprkkr.sprkkr.calculator.SPRKKR.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>([atoms, input_parameters, potential, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.run" title="ase2sprkkr.sprkkr.calculator.SPRKKR.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code></a>([atoms, input_parameters, potential, ...])</p></td>
 <td><p>Do the calculation, return various results.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband" title="ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_xband</span></code></a>([executable])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband" title="ase2sprkkr.sprkkr.calculator.SPRKKR.run_xband"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_xband</span></code></a>([executable])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_input</span></code></a>([atoms, input_parameters, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.save_input" title="ase2sprkkr.sprkkr.calculator.SPRKKR.save_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_input</span></code></a>([atoms, input_parameters, ...])</p></td>
 <td><p>Save input and potential files for a calculation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.scf" title="ase2sprkkr.sprkkr.calculator.SPRKKR.scf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scf</span></code></a>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.scf" title="ase2sprkkr.sprkkr.calculator.SPRKKR.scf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scf</span></code></a>(*args, **kwargs)</p></td>
 <td><p>A shortcut for calculating a SCF task</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.set" title="ase2sprkkr.sprkkr.calculator.SPRKKR.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>([options, parameters])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.set" title="ase2sprkkr.sprkkr.calculator.SPRKKR.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>([options, parameters])</p></td>
 <td><p>ASE method to set the parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_label</span></code>(label)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_label</span></code>(label)</p></td>
 <td><p>Set label and convert label to directory and prefix.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">todict</span></code>([skip_default])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">todict</span></code>([skip_default])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -400,34 +468,61 @@ False: do not append anything (the same as ‘’)</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.atoms" title="ase2sprkkr.sprkkr.calculator.SPRKKR.atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atoms</span></code></a></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__abstractmethods__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__annotations__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__slots__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
+<td><p>list of weak references to the object (if defined)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR._abc_impl" title="ase2sprkkr.sprkkr.calculator.SPRKKR._abc_impl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_abc_impl</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_deprecated</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.atoms" title="ase2sprkkr.sprkkr.calculator.SPRKKR.atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atoms</span></code></a></p></td>
 <td><p>Atoms object, associate with the calculator.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_parameters</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_parameters</span></code></p></td>
 <td><p>Default parameters</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">directory</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">directory</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">discard_results_on_any_change</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">discard_results_on_any_change</span></code></p></td>
 <td><p>Whether we purge the results following any change in the set() method.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignored_changes</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignored_changes</span></code></p></td>
 <td><p>Properties of Atoms which we ignore for the purposes of cache</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.implemented_properties" title="ase2sprkkr.sprkkr.calculator.SPRKKR.implemented_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">implemented_properties</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.implemented_properties" title="ase2sprkkr.sprkkr.calculator.SPRKKR.implemented_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">implemented_properties</span></code></a></p></td>
 <td><p>Properties calculator can handle (energy, forces, ...)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters" title="ase2sprkkr.sprkkr.calculator.SPRKKR.input_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_parameters</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.potential" title="ase2sprkkr.sprkkr.calculator.SPRKKR.potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potential</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.potential" title="ase2sprkkr.sprkkr.calculator.SPRKKR.potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potential</span></code></a></p></td>
 <td><p>The potential associated with the calculator.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.potential_object" title="ase2sprkkr.sprkkr.calculator.SPRKKR.potential_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potential_object</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.sprkkr.calculator.SPRKKR.potential_object" title="ase2sprkkr.sprkkr.calculator.SPRKKR.potential_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potential_object</span></code></a></p></td>
 <td><p>Convert self.potential to a Potential object</p></td>
 </tr>
 </tbody>

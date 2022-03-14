@@ -19,7 +19,29 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OutputValueDefinition.__delattr__
+        ~OutputValueDefinition.__dir__
+        ~OutputValueDefinition.__eq__
+        ~OutputValueDefinition.__format__
+        ~OutputValueDefinition.__ge__
+        ~OutputValueDefinition.__getattribute__
+        ~OutputValueDefinition.__gt__
+        ~OutputValueDefinition.__hash__
         ~OutputValueDefinition.__init__
+        ~OutputValueDefinition.__init_subclass__
+        ~OutputValueDefinition.__le__
+        ~OutputValueDefinition.__lt__
+        ~OutputValueDefinition.__ne__
+        ~OutputValueDefinition.__new__
+        ~OutputValueDefinition.__reduce__
+        ~OutputValueDefinition.__reduce_ex__
+        ~OutputValueDefinition.__repr__
+        ~OutputValueDefinition.__setattr__
+        ~OutputValueDefinition.__sizeof__
+        ~OutputValueDefinition.__str__
+        ~OutputValueDefinition.__subclasshook__
+        ~OutputValueDefinition._grammar
+        ~OutputValueDefinition._tuple_with_my_name
         ~OutputValueDefinition.copy
         ~OutputValueDefinition.create_object
         ~OutputValueDefinition.get_value
@@ -39,6 +61,10 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OutputValueDefinition.__dict__
+        ~OutputValueDefinition.__doc__
+        ~OutputValueDefinition.__module__
+        ~OutputValueDefinition.__weakref__
         ~OutputValueDefinition.do_not_skip_whitespaces_before_name
         ~OutputValueDefinition.formated_name
         ~OutputValueDefinition.name_in_grammar

@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.outputs.task\_result.TaskResult**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TaskResult.__delattr__
+        ~TaskResult.__dir__
+        ~TaskResult.__eq__
+        ~TaskResult.__format__
+        ~TaskResult.__ge__
+        ~TaskResult.__getattribute__
+        ~TaskResult.__gt__
+        ~TaskResult.__hash__
         ~TaskResult.__init__
+        ~TaskResult.__init_subclass__
+        ~TaskResult.__le__
+        ~TaskResult.__lt__
+        ~TaskResult.__ne__
+        ~TaskResult.__new__
+        ~TaskResult.__reduce__
+        ~TaskResult.__reduce_ex__
+        ~TaskResult.__repr__
+        ~TaskResult.__setattr__
+        ~TaskResult.__sizeof__
+        ~TaskResult.__str__
+        ~TaskResult.__subclasshook__
 
    
    
@@ -31,6 +51,10 @@ Full name: **ase2sprkkr.outputs.task\_result.TaskResult**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TaskResult.__dict__
+        ~TaskResult.__doc__
+        ~TaskResult.__module__
+        ~TaskResult.__weakref__
         ~TaskResult.atoms
 
    

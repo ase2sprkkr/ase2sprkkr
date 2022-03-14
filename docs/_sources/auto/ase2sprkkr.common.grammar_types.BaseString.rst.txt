@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseString**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseString.__delattr__
+        ~BaseString.__dir__
+        ~BaseString.__eq__
+        ~BaseString.__format__
+        ~BaseString.__ge__
+        ~BaseString.__getattribute__
+        ~BaseString.__gt__
+        ~BaseString.__hash__
         ~BaseString.__init__
+        ~BaseString.__init_subclass__
+        ~BaseString.__le__
+        ~BaseString.__lt__
+        ~BaseString.__ne__
+        ~BaseString.__new__
+        ~BaseString.__reduce__
+        ~BaseString.__reduce_ex__
+        ~BaseString.__repr__
+        ~BaseString.__setattr__
+        ~BaseString.__sizeof__
+        ~BaseString.__str__
+        ~BaseString.__subclasshook__
+        ~BaseString._string
+        ~BaseString._validate
+        ~BaseString._valueError
         ~BaseString.convert
         ~BaseString.copy
         ~BaseString.enrich
@@ -45,6 +68,10 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseString**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseString.__dict__
+        ~BaseString.__doc__
+        ~BaseString.__module__
+        ~BaseString.__weakref__
         ~BaseString.default_value
         ~BaseString.has_value
         ~BaseString.name_in_grammar

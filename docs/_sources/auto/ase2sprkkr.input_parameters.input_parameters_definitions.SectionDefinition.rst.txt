@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.Section
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SectionDefinition.__contains__
+        ~SectionDefinition.__delattr__
+        ~SectionDefinition.__dir__
+        ~SectionDefinition.__eq__
+        ~SectionDefinition.__format__
+        ~SectionDefinition.__ge__
+        ~SectionDefinition.__getattribute__
+        ~SectionDefinition.__getitem__
+        ~SectionDefinition.__gt__
+        ~SectionDefinition.__hash__
         ~SectionDefinition.__init__
+        ~SectionDefinition.__init_subclass__
+        ~SectionDefinition.__iter__
+        ~SectionDefinition.__le__
+        ~SectionDefinition.__lt__
+        ~SectionDefinition.__ne__
+        ~SectionDefinition.__new__
+        ~SectionDefinition.__reduce__
+        ~SectionDefinition.__reduce_ex__
+        ~SectionDefinition.__repr__
+        ~SectionDefinition.__setattr__
+        ~SectionDefinition.__setitem__
+        ~SectionDefinition.__sizeof__
+        ~SectionDefinition.__str__
+        ~SectionDefinition.__subclasshook__
+        ~SectionDefinition._dict_from_named_values
+        ~SectionDefinition._first_section_is_fixed
+        ~SectionDefinition._grammar
+        ~SectionDefinition._tuple_with_my_name
+        ~SectionDefinition._values_grammar
         ~SectionDefinition.all_member_names
         ~SectionDefinition.copy
         ~SectionDefinition.create_object
@@ -46,6 +75,11 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.Section
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SectionDefinition.__dict__
+        ~SectionDefinition.__doc__
+        ~SectionDefinition.__module__
+        ~SectionDefinition.__weakref__
+        ~SectionDefinition._init_args
         ~SectionDefinition.custom_name_characters
         ~SectionDefinition.custom_value_name
         ~SectionDefinition.delimiter

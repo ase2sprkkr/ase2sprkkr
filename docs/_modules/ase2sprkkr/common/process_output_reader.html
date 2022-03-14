@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,7 +170,12 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.process_output_reader</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="sd">&quot;&quot;&quot; Readers for processes outputs.</span>
+
+<span class="sd">They employ asyncio to makes possible read stdio and stderr concurently.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -178,9 +183,11 @@
 
 <div class="viewcode-block" id="BaseProcessOutputReader"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader">[docs]</a><span class="k">class</span> <span class="nc">BaseProcessOutputReader</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Class, that run a process, optionally saves all the output of the process to the file</span>
+<span class="sd">  Class, that run a process, optionally saves all the output of the process to a file,</span>
 <span class="sd">  and pass the stdout and stderr of the process to its two asyn routines, read_error</span>
-<span class="sd">  and read_output</span>
+<span class="sd">  and read_output.</span>
+
+<span class="sd">  The descendant can redefine the routines to parse the output (or its parts).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="BaseProcessOutputReader.run_subprocess"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.run_subprocess">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">run_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 

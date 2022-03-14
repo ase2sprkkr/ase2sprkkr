@@ -19,7 +19,40 @@ Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TypesSection.__contains__
+        ~TypesSection.__delattr__
+        ~TypesSection.__dir__
+        ~TypesSection.__eq__
+        ~TypesSection.__format__
+        ~TypesSection.__ge__
+        ~TypesSection.__getattr__
+        ~TypesSection.__getattribute__
+        ~TypesSection.__getitem__
+        ~TypesSection.__gt__
+        ~TypesSection.__hash__
         ~TypesSection.__init__
+        ~TypesSection.__init_subclass__
+        ~TypesSection.__iter__
+        ~TypesSection.__le__
+        ~TypesSection.__lt__
+        ~TypesSection.__ne__
+        ~TypesSection.__new__
+        ~TypesSection.__reduce__
+        ~TypesSection.__reduce_ex__
+        ~TypesSection.__repr__
+        ~TypesSection.__setattr__
+        ~TypesSection.__sizeof__
+        ~TypesSection.__str__
+        ~TypesSection.__subclasshook__
+        ~TypesSection._add
+        ~TypesSection._depends_on
+        ~TypesSection._find_value
+        ~TypesSection._get_member
+        ~TypesSection._get_path
+        ~TypesSection._get_root_container
+        ~TypesSection._interactive_member_name
+        ~TypesSection._set_from_atoms
+        ~TypesSection._update_atoms
         ~TypesSection.add
         ~TypesSection.clear
         ~TypesSection.get
@@ -42,6 +75,12 @@ Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TypesSection.__annotations__
+        ~TypesSection.__dict__
+        ~TypesSection.__doc__
+        ~TypesSection.__module__
+        ~TypesSection.__weakref__
+        ~TypesSection._value_name
         ~TypesSection.definition
         ~TypesSection.name
         ~TypesSection.seciton_name

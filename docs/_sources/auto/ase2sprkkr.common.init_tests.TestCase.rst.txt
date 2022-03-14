@@ -19,7 +19,41 @@ Full name: **ase2sprkkr.common.init\_tests.TestCase**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TestCase.__call__
+        ~TestCase.__delattr__
+        ~TestCase.__dir__
+        ~TestCase.__eq__
+        ~TestCase.__format__
+        ~TestCase.__ge__
+        ~TestCase.__getattribute__
+        ~TestCase.__gt__
+        ~TestCase.__hash__
         ~TestCase.__init__
+        ~TestCase.__init_subclass__
+        ~TestCase.__le__
+        ~TestCase.__lt__
+        ~TestCase.__ne__
+        ~TestCase.__new__
+        ~TestCase.__reduce__
+        ~TestCase.__reduce_ex__
+        ~TestCase.__repr__
+        ~TestCase.__setattr__
+        ~TestCase.__sizeof__
+        ~TestCase.__str__
+        ~TestCase.__subclasshook__
+        ~TestCase._addExpectedFailure
+        ~TestCase._addSkip
+        ~TestCase._addUnexpectedSuccess
+        ~TestCase._baseAssertEqual
+        ~TestCase._callCleanup
+        ~TestCase._callSetUp
+        ~TestCase._callTearDown
+        ~TestCase._callTestMethod
+        ~TestCase._deprecate
+        ~TestCase._feedErrorsToResult
+        ~TestCase._formatMessage
+        ~TestCase._getAssertEqualityFunc
+        ~TestCase._truncateMessage
         ~TestCase.addClassCleanup
         ~TestCase.addCleanup
         ~TestCase.addTypeEqualityFunc
@@ -100,6 +134,13 @@ Full name: **ase2sprkkr.common.init\_tests.TestCase**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~TestCase.__dict__
+        ~TestCase.__doc__
+        ~TestCase.__module__
+        ~TestCase.__weakref__
+        ~TestCase._classSetupFailed
+        ~TestCase._class_cleanups
+        ~TestCase._diffThreshold
         ~TestCase.longMessage
         ~TestCase.maxDiff
 

@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.outputs.readers.scf.ScfOutputReader**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ScfOutputReader.__delattr__
+        ~ScfOutputReader.__dir__
+        ~ScfOutputReader.__eq__
+        ~ScfOutputReader.__format__
+        ~ScfOutputReader.__ge__
+        ~ScfOutputReader.__getattribute__
+        ~ScfOutputReader.__gt__
+        ~ScfOutputReader.__hash__
         ~ScfOutputReader.__init__
+        ~ScfOutputReader.__init_subclass__
+        ~ScfOutputReader.__le__
+        ~ScfOutputReader.__lt__
+        ~ScfOutputReader.__ne__
+        ~ScfOutputReader.__new__
+        ~ScfOutputReader.__reduce__
+        ~ScfOutputReader.__reduce_ex__
+        ~ScfOutputReader.__repr__
+        ~ScfOutputReader.__setattr__
+        ~ScfOutputReader.__sizeof__
+        ~ScfOutputReader.__str__
+        ~ScfOutputReader.__subclasshook__
         ~ScfOutputReader.read_error
         ~ScfOutputReader.read_from_file
         ~ScfOutputReader.read_output
@@ -37,6 +57,10 @@ Full name: **ase2sprkkr.outputs.readers.scf.ScfOutputReader**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ScfOutputReader.__dict__
+        ~ScfOutputReader.__doc__
+        ~ScfOutputReader.__module__
+        ~ScfOutputReader.__weakref__
         ~ScfOutputReader.atoms_conf_type
 
    

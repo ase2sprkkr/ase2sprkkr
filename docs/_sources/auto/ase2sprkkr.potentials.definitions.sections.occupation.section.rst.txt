@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.section**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~section.__contains__
+        ~section.__delattr__
+        ~section.__dir__
+        ~section.__eq__
+        ~section.__format__
+        ~section.__ge__
+        ~section.__getattribute__
+        ~section.__getitem__
+        ~section.__gt__
+        ~section.__hash__
         ~section.__init__
+        ~section.__init_subclass__
+        ~section.__iter__
+        ~section.__le__
+        ~section.__lt__
+        ~section.__ne__
+        ~section.__new__
+        ~section.__reduce__
+        ~section.__reduce_ex__
+        ~section.__repr__
+        ~section.__setattr__
+        ~section.__setitem__
+        ~section.__sizeof__
+        ~section.__str__
+        ~section.__subclasshook__
+        ~section._dict_from_named_values
+        ~section._first_section_is_fixed
+        ~section._grammar
+        ~section._tuple_with_my_name
+        ~section._values_grammar
         ~section.all_member_names
         ~section.copy
         ~section.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.section**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~section.__dict__
+        ~section.__doc__
+        ~section.__module__
+        ~section.__weakref__
+        ~section._init_args
         ~section.custom_name_characters
         ~section.custom_value_name
         ~section.delimiter

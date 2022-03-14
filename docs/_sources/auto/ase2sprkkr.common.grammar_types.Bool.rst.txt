@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.Bool**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Bool.__delattr__
+        ~Bool.__dir__
+        ~Bool.__eq__
+        ~Bool.__format__
+        ~Bool.__ge__
+        ~Bool.__getattribute__
+        ~Bool.__gt__
+        ~Bool.__hash__
         ~Bool.__init__
+        ~Bool.__init_subclass__
+        ~Bool.__le__
+        ~Bool.__lt__
+        ~Bool.__ne__
+        ~Bool.__new__
+        ~Bool.__reduce__
+        ~Bool.__reduce_ex__
+        ~Bool.__repr__
+        ~Bool.__setattr__
+        ~Bool.__sizeof__
+        ~Bool.__str__
+        ~Bool.__subclasshook__
+        ~Bool._string
+        ~Bool._validate
+        ~Bool._valueError
         ~Bool.convert
         ~Bool.copy
         ~Bool.enrich
@@ -46,6 +69,11 @@ Full name: **ase2sprkkr.common.grammar\_types.Bool**
       :template: custom-base-template.rst
      
         ~Bool.I
+        ~Bool.__dict__
+        ~Bool.__doc__
+        ~Bool.__module__
+        ~Bool.__weakref__
+        ~Bool._grammar
         ~Bool.default_value
         ~Bool.has_value
         ~Bool.name_in_grammar

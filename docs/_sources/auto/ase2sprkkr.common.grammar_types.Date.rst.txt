@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.Date**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Date.__delattr__
+        ~Date.__dir__
+        ~Date.__eq__
+        ~Date.__format__
+        ~Date.__ge__
+        ~Date.__getattribute__
+        ~Date.__gt__
+        ~Date.__hash__
         ~Date.__init__
+        ~Date.__init_subclass__
+        ~Date.__le__
+        ~Date.__lt__
+        ~Date.__ne__
+        ~Date.__new__
+        ~Date.__reduce__
+        ~Date.__reduce_ex__
+        ~Date.__repr__
+        ~Date.__setattr__
+        ~Date.__sizeof__
+        ~Date.__str__
+        ~Date.__subclasshook__
+        ~Date._string
+        ~Date._validate
+        ~Date._valueError
         ~Date.convert
         ~Date.copy
         ~Date.enrich
@@ -46,6 +69,11 @@ Full name: **ase2sprkkr.common.grammar\_types.Date**
       :template: custom-base-template.rst
      
         ~Date.I
+        ~Date.__dict__
+        ~Date.__doc__
+        ~Date.__module__
+        ~Date.__weakref__
+        ~Date._grammar
         ~Date.default_value
         ~Date.has_value
         ~Date.name_in_grammar

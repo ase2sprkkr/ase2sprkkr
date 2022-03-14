@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,7 +170,10 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.potentials.io_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span></span><span class="sd">&quot;&quot;&quot; IoData classes serves are intermediate object used as storage during</span>
+<span class="sd">reading or writing a potential file.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">from</span> <span class="nn">..common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
 
 
@@ -192,7 +195,7 @@
     <span class="sd">&quot;&quot;&quot; During writing of potential file, some lists are needed in more sections,</span>
 <span class="sd">        typically one section contains the list itself, while another(s) reference(s)</span>
 <span class="sd">        the items of the list.</span>
-<span class="sd">        So the lists are created on demand and cached for next use.</span>
+<span class="sd">        So the lists are created on demand and cached for its further use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="WriteIoData.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.io_data.WriteIoData.html#ase2sprkkr.potentials.io_data.WriteIoData.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>

@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.Integer**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Integer.__delattr__
+        ~Integer.__dir__
+        ~Integer.__eq__
+        ~Integer.__format__
+        ~Integer.__ge__
+        ~Integer.__getattribute__
+        ~Integer.__gt__
+        ~Integer.__hash__
         ~Integer.__init__
+        ~Integer.__init_subclass__
+        ~Integer.__le__
+        ~Integer.__lt__
+        ~Integer.__ne__
+        ~Integer.__new__
+        ~Integer.__reduce__
+        ~Integer.__reduce_ex__
+        ~Integer.__repr__
+        ~Integer.__setattr__
+        ~Integer.__sizeof__
+        ~Integer.__str__
+        ~Integer.__subclasshook__
+        ~Integer._string
+        ~Integer._validate
+        ~Integer._valueError
         ~Integer.convert
         ~Integer.copy
         ~Integer.enrich
@@ -46,6 +69,12 @@ Full name: **ase2sprkkr.common.grammar\_types.Integer**
       :template: custom-base-template.rst
      
         ~Integer.I
+        ~Integer.__dict__
+        ~Integer.__doc__
+        ~Integer.__module__
+        ~Integer.__slotnames__
+        ~Integer.__weakref__
+        ~Integer._grammar
         ~Integer.default_value
         ~Integer.has_value
         ~Integer.name_in_grammar

@@ -19,7 +19,44 @@ Full name: **ase2sprkkr.sprkkr.sprkkr\_atoms.SPRKKRAtoms**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SPRKKRAtoms.__add__
+        ~SPRKKRAtoms.__delattr__
+        ~SPRKKRAtoms.__delitem__
+        ~SPRKKRAtoms.__dir__
+        ~SPRKKRAtoms.__eq__
+        ~SPRKKRAtoms.__format__
+        ~SPRKKRAtoms.__ge__
+        ~SPRKKRAtoms.__getattribute__
+        ~SPRKKRAtoms.__getitem__
+        ~SPRKKRAtoms.__gt__
+        ~SPRKKRAtoms.__iadd__
+        ~SPRKKRAtoms.__imul__
         ~SPRKKRAtoms.__init__
+        ~SPRKKRAtoms.__init_subclass__
+        ~SPRKKRAtoms.__iter__
+        ~SPRKKRAtoms.__le__
+        ~SPRKKRAtoms.__len__
+        ~SPRKKRAtoms.__lt__
+        ~SPRKKRAtoms.__mul__
+        ~SPRKKRAtoms.__ne__
+        ~SPRKKRAtoms.__new__
+        ~SPRKKRAtoms.__reduce__
+        ~SPRKKRAtoms.__reduce_ex__
+        ~SPRKKRAtoms.__repr__
+        ~SPRKKRAtoms.__setattr__
+        ~SPRKKRAtoms.__sizeof__
+        ~SPRKKRAtoms.__str__
+        ~SPRKKRAtoms.__subclasshook__
+        ~SPRKKRAtoms._cancel_sites_symmetry
+        ~SPRKKRAtoms._centering_as_array
+        ~SPRKKRAtoms._compute_sites_symmetry
+        ~SPRKKRAtoms._del_constraints
+        ~SPRKKRAtoms._get_atomic_numbers
+        ~SPRKKRAtoms._get_constraints
+        ~SPRKKRAtoms._get_positions
+        ~SPRKKRAtoms._init
+        ~SPRKKRAtoms._masked_rotate
+        ~SPRKKRAtoms._set_positions
         ~SPRKKRAtoms.append
         ~SPRKKRAtoms.cancel_sites_symmetry
         ~SPRKKRAtoms.center
@@ -119,6 +156,12 @@ Full name: **ase2sprkkr.sprkkr.sprkkr\_atoms.SPRKKRAtoms**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SPRKKRAtoms.__dict__
+        ~SPRKKRAtoms.__doc__
+        ~SPRKKRAtoms.__hash__
+        ~SPRKKRAtoms.__module__
+        ~SPRKKRAtoms.__weakref__
+        ~SPRKKRAtoms._ase_handles_dynamic_stress
         ~SPRKKRAtoms.ase_objtype
         ~SPRKKRAtoms.calc
         ~SPRKKRAtoms.cell

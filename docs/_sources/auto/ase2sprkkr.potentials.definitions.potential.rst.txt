@@ -7,6 +7,14 @@ Full name: **ase2sprkkr.potentials.definitions.potential**
 
    
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      potential_definition
+   
    
 
 

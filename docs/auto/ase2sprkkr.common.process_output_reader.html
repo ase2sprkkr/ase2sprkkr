@@ -88,7 +88,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
@@ -121,8 +121,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html">BaseProcessOutputReader</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.regex_trie.html">regex_trie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 </ul>
 </li>
@@ -208,7 +206,9 @@
   <div class="section" id="process-output-reader">
 <h1>process_output_reader<a class="headerlink" href="#process-output-reader" title="Permalink to this headline">¶</a></h1>
 <p>Full name: <strong>ase2sprkkr.common.process_output_reader</strong></p>
-<span class="target" id="module-ase2sprkkr.common.process_output_reader"></span><p class="rubric">Classes</p>
+<span class="target" id="module-ase2sprkkr.common.process_output_reader"></span><p>Readers for processes outputs.</p>
+<p>They employ asyncio to makes possible read stdio and stderr concurently.</p>
+<p class="rubric">Classes</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -219,7 +219,7 @@
 <td><p>File reader that mimics asyncio StreamReader.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader" title="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseProcessOutputReader</span></code></a>()</p></td>
-<td><p>Class, that run a process, optionally saves all the output of the process to the file and pass the stdout and stderr of the process to its two asyn routines, read_error and read_output</p></td>
+<td><p>Class, that run a process, optionally saves all the output of the process to a file, and pass the stdout and stderr of the process to its two asyn routines, read_error and read_output.</p></td>
 </tr>
 </tbody>
 </table>

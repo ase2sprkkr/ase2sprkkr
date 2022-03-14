@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.sprkkr.calculator.SPRKKR**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SPRKKR.__delattr__
+        ~SPRKKR.__dir__
+        ~SPRKKR.__eq__
+        ~SPRKKR.__format__
+        ~SPRKKR.__ge__
+        ~SPRKKR.__getattribute__
+        ~SPRKKR.__gt__
+        ~SPRKKR.__hash__
         ~SPRKKR.__init__
+        ~SPRKKR.__init_subclass__
+        ~SPRKKR.__le__
+        ~SPRKKR.__lt__
+        ~SPRKKR.__ne__
+        ~SPRKKR.__new__
+        ~SPRKKR.__reduce__
+        ~SPRKKR.__reduce_ex__
+        ~SPRKKR.__repr__
+        ~SPRKKR.__setattr__
+        ~SPRKKR.__sizeof__
+        ~SPRKKR.__str__
+        ~SPRKKR.__subclasshook__
+        ~SPRKKR._advance_counter
+        ~SPRKKR._deprecated_get_spin_polarized
+        ~SPRKKR._open_file
         ~SPRKKR.band_structure
         ~SPRKKR.calculate
         ~SPRKKR.calculate_numerical_forces
@@ -67,6 +90,15 @@ Full name: **ase2sprkkr.sprkkr.calculator.SPRKKR**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SPRKKR.__abstractmethods__
+        ~SPRKKR.__annotations__
+        ~SPRKKR.__dict__
+        ~SPRKKR.__doc__
+        ~SPRKKR.__module__
+        ~SPRKKR.__slots__
+        ~SPRKKR.__weakref__
+        ~SPRKKR._abc_impl
+        ~SPRKKR._deprecated
         ~SPRKKR.atoms
         ~SPRKKR.default_parameters
         ~SPRKKR.directory

@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseContainerDefinitio
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseContainerDefinition.__contains__
+        ~BaseContainerDefinition.__delattr__
+        ~BaseContainerDefinition.__dir__
+        ~BaseContainerDefinition.__eq__
+        ~BaseContainerDefinition.__format__
+        ~BaseContainerDefinition.__ge__
+        ~BaseContainerDefinition.__getattribute__
+        ~BaseContainerDefinition.__getitem__
+        ~BaseContainerDefinition.__gt__
+        ~BaseContainerDefinition.__hash__
         ~BaseContainerDefinition.__init__
+        ~BaseContainerDefinition.__init_subclass__
+        ~BaseContainerDefinition.__iter__
+        ~BaseContainerDefinition.__le__
+        ~BaseContainerDefinition.__lt__
+        ~BaseContainerDefinition.__ne__
+        ~BaseContainerDefinition.__new__
+        ~BaseContainerDefinition.__reduce__
+        ~BaseContainerDefinition.__reduce_ex__
+        ~BaseContainerDefinition.__repr__
+        ~BaseContainerDefinition.__setattr__
+        ~BaseContainerDefinition.__setitem__
+        ~BaseContainerDefinition.__sizeof__
+        ~BaseContainerDefinition.__str__
+        ~BaseContainerDefinition.__subclasshook__
+        ~BaseContainerDefinition._dict_from_named_values
+        ~BaseContainerDefinition._first_section_is_fixed
+        ~BaseContainerDefinition._grammar
+        ~BaseContainerDefinition._tuple_with_my_name
+        ~BaseContainerDefinition._values_grammar
         ~BaseContainerDefinition.all_member_names
         ~BaseContainerDefinition.copy
         ~BaseContainerDefinition.create_object
@@ -44,6 +73,11 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseContainerDefinitio
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseContainerDefinition.__dict__
+        ~BaseContainerDefinition.__doc__
+        ~BaseContainerDefinition.__module__
+        ~BaseContainerDefinition.__weakref__
+        ~BaseContainerDefinition._init_args
         ~BaseContainerDefinition.custom_name_characters
         ~BaseContainerDefinition.do_not_skip_whitespaces_before_name
         ~BaseContainerDefinition.force_order

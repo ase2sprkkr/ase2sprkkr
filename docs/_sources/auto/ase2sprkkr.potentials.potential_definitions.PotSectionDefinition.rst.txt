@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotSectionDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotSectionDefinition.__contains__
+        ~PotSectionDefinition.__delattr__
+        ~PotSectionDefinition.__dir__
+        ~PotSectionDefinition.__eq__
+        ~PotSectionDefinition.__format__
+        ~PotSectionDefinition.__ge__
+        ~PotSectionDefinition.__getattribute__
+        ~PotSectionDefinition.__getitem__
+        ~PotSectionDefinition.__gt__
+        ~PotSectionDefinition.__hash__
         ~PotSectionDefinition.__init__
+        ~PotSectionDefinition.__init_subclass__
+        ~PotSectionDefinition.__iter__
+        ~PotSectionDefinition.__le__
+        ~PotSectionDefinition.__lt__
+        ~PotSectionDefinition.__ne__
+        ~PotSectionDefinition.__new__
+        ~PotSectionDefinition.__reduce__
+        ~PotSectionDefinition.__reduce_ex__
+        ~PotSectionDefinition.__repr__
+        ~PotSectionDefinition.__setattr__
+        ~PotSectionDefinition.__setitem__
+        ~PotSectionDefinition.__sizeof__
+        ~PotSectionDefinition.__str__
+        ~PotSectionDefinition.__subclasshook__
+        ~PotSectionDefinition._dict_from_named_values
+        ~PotSectionDefinition._first_section_is_fixed
+        ~PotSectionDefinition._grammar
+        ~PotSectionDefinition._tuple_with_my_name
+        ~PotSectionDefinition._values_grammar
         ~PotSectionDefinition.all_member_names
         ~PotSectionDefinition.copy
         ~PotSectionDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotSectionDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotSectionDefinition.__dict__
+        ~PotSectionDefinition.__doc__
+        ~PotSectionDefinition.__module__
+        ~PotSectionDefinition.__weakref__
+        ~PotSectionDefinition._init_args
         ~PotSectionDefinition.custom_name_characters
         ~PotSectionDefinition.custom_value_name
         ~PotSectionDefinition.delimiter

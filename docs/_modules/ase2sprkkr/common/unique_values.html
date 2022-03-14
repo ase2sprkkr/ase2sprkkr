@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,16 +170,32 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.unique_values</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span></span><span class="sd">&quot;&quot;&quot; UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <div class="viewcode-block" id="UniqueValuesMapping"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping">[docs]</a><span class="k">class</span> <span class="nc">UniqueValuesMapping</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot; A class, that can map a collection of (possible non-unique) values to a set</span>
+<span class="sd">      of unique identifiers.</span>
+
+<span class="sd">      The instances of the class can be merged to distinct the values, that are</span>
+<span class="sd">      the same according to one criterion, but distinct on the other.</span>
+
+<span class="sd">      ..doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).mapping</span>
+<span class="sd">        np.array([1, 2, 1])</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).value_to_class_id</span>
+<span class="sd">        { 1: 1, 4: 2 }</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).merge([1,1,2]).mapping</span>
+<span class="sd">        np.array([1, 2, 5])</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="UniqueValuesMapping.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">value_to_class_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
-<span class="sd">      mapping: np.ndarray</span>
+<span class="sd">      mapping: Union[np.ndarray, list]</span>
 <span class="sd">        Array of equivalence class members</span>
 <span class="sd">        members[id] = &lt;eq class id&gt;</span>
 
@@ -209,7 +225,7 @@
 
 <span class="sd">      none_tuples: bool</span>
 <span class="sd">        If True, the items of the values are 2-items tuples. Then, None in the second one</span>
-<span class="sd">        means &quot;any class&quot;. The will be assigned to the first available class of</span>
+<span class="sd">        means &quot;any class&quot;. Suchi one will be assigned to the first available class of</span>
 <span class="sd">        the first tuple&#39;s value.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
 
@@ -233,9 +249,7 @@
 
 <div class="viewcode-block" id="UniqueValuesMapping.merge"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.merge">[docs]</a>  <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Merge two sets. Resulting UniqueValues uses integers as keys&quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-
-  <span class="n">noneMapping</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;NoneMapping&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;merge&#39;</span><span class="p">])(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Create</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">reverse_mapping</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

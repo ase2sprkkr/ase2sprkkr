@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.Refere
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ReferenceSystemSectionDefinition.__contains__
+        ~ReferenceSystemSectionDefinition.__delattr__
+        ~ReferenceSystemSectionDefinition.__dir__
+        ~ReferenceSystemSectionDefinition.__eq__
+        ~ReferenceSystemSectionDefinition.__format__
+        ~ReferenceSystemSectionDefinition.__ge__
+        ~ReferenceSystemSectionDefinition.__getattribute__
+        ~ReferenceSystemSectionDefinition.__getitem__
+        ~ReferenceSystemSectionDefinition.__gt__
+        ~ReferenceSystemSectionDefinition.__hash__
         ~ReferenceSystemSectionDefinition.__init__
+        ~ReferenceSystemSectionDefinition.__init_subclass__
+        ~ReferenceSystemSectionDefinition.__iter__
+        ~ReferenceSystemSectionDefinition.__le__
+        ~ReferenceSystemSectionDefinition.__lt__
+        ~ReferenceSystemSectionDefinition.__ne__
+        ~ReferenceSystemSectionDefinition.__new__
+        ~ReferenceSystemSectionDefinition.__reduce__
+        ~ReferenceSystemSectionDefinition.__reduce_ex__
+        ~ReferenceSystemSectionDefinition.__repr__
+        ~ReferenceSystemSectionDefinition.__setattr__
+        ~ReferenceSystemSectionDefinition.__setitem__
+        ~ReferenceSystemSectionDefinition.__sizeof__
+        ~ReferenceSystemSectionDefinition.__str__
+        ~ReferenceSystemSectionDefinition.__subclasshook__
+        ~ReferenceSystemSectionDefinition._dict_from_named_values
+        ~ReferenceSystemSectionDefinition._first_section_is_fixed
+        ~ReferenceSystemSectionDefinition._grammar
+        ~ReferenceSystemSectionDefinition._tuple_with_my_name
+        ~ReferenceSystemSectionDefinition._values_grammar
         ~ReferenceSystemSectionDefinition.all_member_names
         ~ReferenceSystemSectionDefinition.copy
         ~ReferenceSystemSectionDefinition.create_object
@@ -48,6 +77,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.Refere
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ReferenceSystemSectionDefinition.__dict__
+        ~ReferenceSystemSectionDefinition.__doc__
+        ~ReferenceSystemSectionDefinition.__module__
+        ~ReferenceSystemSectionDefinition.__weakref__
+        ~ReferenceSystemSectionDefinition._init_args
         ~ReferenceSystemSectionDefinition.custom_name_characters
         ~ReferenceSystemSectionDefinition.custom_value_name
         ~ReferenceSystemSectionDefinition.delimiter

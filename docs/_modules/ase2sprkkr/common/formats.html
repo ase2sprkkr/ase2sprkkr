@@ -86,7 +86,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
@@ -170,8 +170,39 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ase2sprkkr.common.formats</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="fortran_format"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.fortran_format.html#ase2sprkkr.common.formats.fortran_format">[docs]</a><span></span><span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{:.12e}</span><span class="s1">&#39;</span><span class="p">):</span>
-    <span class="n">la</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="o">+</span><span class="nb">format</span><span class="o">+</span><span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span></span><span class="sd">&quot;&quot;&quot; Formating routines &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="fortran_format"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.fortran_format.html#ase2sprkkr.common.formats.fortran_format">[docs]</a><span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;:.12e&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Format the value with a leading zero.</span>
+
+<span class="sd">    Format the given float number using the given fortran scientific notation format string,</span>
+<span class="sd">    but with a leading zero</span>
+
+<span class="sd">     &gt;&gt;&gt; fortran_format(0.1)</span>
+<span class="sd">     0.1000000000000e-00</span>
+
+<span class="sd">     &gt;&gt;&gt; fortran_format(1, &quot;:&gt; 14.6E&quot;)</span>
+<span class="sd">       0.1000000E+01</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value: mixed</span>
+<span class="sd">      A value to be printed. The value have to be convertable to a float</span>
+
+<span class="sd">    format: str</span>
+<span class="sd">      Fortran format string with a type &#39;e&#39; or &#39;E&#39;. Optional</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    output: str</span>
+<span class="sd">      A string containing the number in scientific notation with a leading zero.</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">la</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="o">+</span><span class="nb">format</span><span class="o">+</span><span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">la</span><span class="si">}</span><span class="s2">*&quot;</span><span class="p">)</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span>
     <span class="n">leading</span> <span class="o">=</span> <span class="n">la</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">la</span><span class="p">)</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span>
     <span class="n">la</span> <span class="o">=</span> <span class="n">a</span>

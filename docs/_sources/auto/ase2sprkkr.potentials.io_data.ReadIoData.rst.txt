@@ -19,7 +19,37 @@ Full name: **ase2sprkkr.potentials.io\_data.ReadIoData**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ReadIoData.__class_getitem__
+        ~ReadIoData.__contains__
+        ~ReadIoData.__delattr__
+        ~ReadIoData.__delitem__
+        ~ReadIoData.__dir__
+        ~ReadIoData.__eq__
+        ~ReadIoData.__format__
+        ~ReadIoData.__ge__
+        ~ReadIoData.__getattribute__
+        ~ReadIoData.__getitem__
+        ~ReadIoData.__gt__
         ~ReadIoData.__init__
+        ~ReadIoData.__init_subclass__
+        ~ReadIoData.__ior__
+        ~ReadIoData.__iter__
+        ~ReadIoData.__le__
+        ~ReadIoData.__len__
+        ~ReadIoData.__lt__
+        ~ReadIoData.__ne__
+        ~ReadIoData.__new__
+        ~ReadIoData.__or__
+        ~ReadIoData.__reduce__
+        ~ReadIoData.__reduce_ex__
+        ~ReadIoData.__repr__
+        ~ReadIoData.__reversed__
+        ~ReadIoData.__ror__
+        ~ReadIoData.__setattr__
+        ~ReadIoData.__setitem__
+        ~ReadIoData.__sizeof__
+        ~ReadIoData.__str__
+        ~ReadIoData.__subclasshook__
         ~ReadIoData.clear
         ~ReadIoData.copy
         ~ReadIoData.fromkeys
@@ -36,5 +66,17 @@ Full name: **ase2sprkkr.potentials.io\_data.ReadIoData**
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReadIoData.__dict__
+        ~ReadIoData.__doc__
+        ~ReadIoData.__hash__
+        ~ReadIoData.__module__
+        ~ReadIoData.__weakref__
+
    
    

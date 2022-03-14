@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotentialDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotentialDefinition.__contains__
+        ~PotentialDefinition.__delattr__
+        ~PotentialDefinition.__dir__
+        ~PotentialDefinition.__eq__
+        ~PotentialDefinition.__format__
+        ~PotentialDefinition.__ge__
+        ~PotentialDefinition.__getattribute__
+        ~PotentialDefinition.__getitem__
+        ~PotentialDefinition.__gt__
+        ~PotentialDefinition.__hash__
         ~PotentialDefinition.__init__
+        ~PotentialDefinition.__init_subclass__
+        ~PotentialDefinition.__iter__
+        ~PotentialDefinition.__le__
+        ~PotentialDefinition.__lt__
+        ~PotentialDefinition.__ne__
+        ~PotentialDefinition.__new__
+        ~PotentialDefinition.__reduce__
+        ~PotentialDefinition.__reduce_ex__
+        ~PotentialDefinition.__repr__
+        ~PotentialDefinition.__setattr__
+        ~PotentialDefinition.__setitem__
+        ~PotentialDefinition.__sizeof__
+        ~PotentialDefinition.__str__
+        ~PotentialDefinition.__subclasshook__
+        ~PotentialDefinition._dict_from_named_values
+        ~PotentialDefinition._first_section_is_fixed
+        ~PotentialDefinition._grammar
+        ~PotentialDefinition._tuple_with_my_name
+        ~PotentialDefinition._values_grammar
         ~PotentialDefinition.all_member_names
         ~PotentialDefinition.copy
         ~PotentialDefinition.create_object
@@ -48,6 +77,11 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotentialDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~PotentialDefinition.__dict__
+        ~PotentialDefinition.__doc__
+        ~PotentialDefinition.__module__
+        ~PotentialDefinition.__weakref__
+        ~PotentialDefinition._init_args
         ~PotentialDefinition.custom_name_characters
         ~PotentialDefinition.custom_value_name
         ~PotentialDefinition.delimiter

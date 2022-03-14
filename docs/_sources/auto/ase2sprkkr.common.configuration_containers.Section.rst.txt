@@ -19,7 +19,37 @@ Full name: **ase2sprkkr.common.configuration\_containers.Section**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Section.__contains__
+        ~Section.__delattr__
+        ~Section.__dir__
+        ~Section.__eq__
+        ~Section.__format__
+        ~Section.__ge__
+        ~Section.__getattr__
+        ~Section.__getattribute__
+        ~Section.__getitem__
+        ~Section.__gt__
+        ~Section.__hash__
         ~Section.__init__
+        ~Section.__init_subclass__
+        ~Section.__iter__
+        ~Section.__le__
+        ~Section.__lt__
+        ~Section.__ne__
+        ~Section.__new__
+        ~Section.__reduce__
+        ~Section.__reduce_ex__
+        ~Section.__repr__
+        ~Section.__setattr__
+        ~Section.__sizeof__
+        ~Section.__str__
+        ~Section.__subclasshook__
+        ~Section._add
+        ~Section._find_value
+        ~Section._get_member
+        ~Section._get_path
+        ~Section._get_root_container
+        ~Section._interactive_member_name
         ~Section.add
         ~Section.clear
         ~Section.get
@@ -41,6 +71,10 @@ Full name: **ase2sprkkr.common.configuration\_containers.Section**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Section.__dict__
+        ~Section.__doc__
+        ~Section.__module__
+        ~Section.__weakref__
         ~Section.definition
         ~Section.name
         ~Section.seciton_name

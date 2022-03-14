@@ -21,7 +21,8 @@ Usefull links
 -   [SPR-KKR
     manual](https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/)
 
-### Installation of the package using package managers
+Installation of the package using package managers
+--------------------------------------------------
 
 The simplest way how to install and use the package is to install them
 using package managers: either pip
@@ -36,8 +37,7 @@ or conda
 conda install -c ase2sprkkr ase2sprkkr
 ```
 
-Further notes
--------------
+### Further notes
 
 In some systems, the pip utility for python3 is called pip3. If it is
 not installed, you can install it using the linux distribution package
@@ -59,22 +59,21 @@ For the conda installation instructions, see the Anaconda documentation
 <https://docs.anaconda.com/anaconda/install/linux/> however, for the
 users unexperienced with conda, the (simpler) pip way is recommended.
 
-### Install the packages from GIT (and/or source codes)
+Install the packages from GIT (and/or source codes)
+---------------------------------------------------
 
 If you do not want to use public package managers as pip or conda, or
 you want to contribute to development, you can use GIT to obtain the
 package sources.
 
-Requirements
-------------
+### Requirements
 
 -   Python \>= 3.7
 -   SPR-KKR (not checked by the installer)
 -   Python packages: ase, mendeleev, spglib, pyparsing
 -   Git (to obtain the sources)
 
-Obtaining the package using GIT
--------------------------------
+### Obtaining the package using GIT
 
 ``` {.bash}
 git clone https://github.com/ase2sprkkr/ase2sprkkr.git
@@ -100,14 +99,12 @@ git checkout origin/master
 
 to obtain the bleeding edge version.
 
-Using the package (without installing the pip/conda packages)
--------------------------------------------------------------
+### Using the package (without installing the pip/conda packages)
 
 You can either just add the src directory to your PYTHONPATH, or you can
 build and install the package, as it is described below.
 
-Installation of the package from the sources
---------------------------------------------
+### Installation of the package from the sources
 
 To install the package, you have to build the "wheel package" from the
 sources and install it
@@ -134,8 +131,7 @@ environment), you can run
 pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
 ```
 
-One step install from the sources
----------------------------------
+### One step install from the sources
 
 To do all the stuff (after cloning the GIT repository) in one step, you
 can run
@@ -151,7 +147,8 @@ run
 make clean
 ```
 
-### Documentation of the package
+Documentation of the package
+----------------------------
 
 The documentation is published online at
 <https://ase2sprkkr.github.io/ase2sprkkr/>
@@ -177,7 +174,8 @@ the Sphinx behavior will be merged into Sphinx, please use the following
 fork for building the documentation.
 <https://github.com/lokik/sphinx.git>
 
-### How to contribute or to report a bug
+How to contribute or to report a bug
+------------------------------------
 
 Please feel free to make a pull-request or post an issue at:
 <https://github.com/ase2sprkkr/ase2sprkkr>

@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.sprkkr.structure.AtomData**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~AtomData.__delattr__
+        ~AtomData.__dir__
+        ~AtomData.__eq__
+        ~AtomData.__format__
+        ~AtomData.__ge__
+        ~AtomData.__getattribute__
+        ~AtomData.__gt__
+        ~AtomData.__hash__
         ~AtomData.__init__
+        ~AtomData.__init_subclass__
+        ~AtomData.__le__
+        ~AtomData.__lt__
+        ~AtomData.__ne__
+        ~AtomData.__new__
+        ~AtomData.__reduce__
+        ~AtomData.__reduce_ex__
+        ~AtomData.__repr__
+        ~AtomData.__setattr__
+        ~AtomData.__sizeof__
+        ~AtomData.__str__
+        ~AtomData.__subclasshook__
         ~AtomData.from_text
         ~AtomData.get_symbol
 
@@ -27,5 +47,16 @@ Full name: **ase2sprkkr.sprkkr.structure.AtomData**
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~AtomData.__dict__
+        ~AtomData.__doc__
+        ~AtomData.__module__
+        ~AtomData.__weakref__
+
    
    

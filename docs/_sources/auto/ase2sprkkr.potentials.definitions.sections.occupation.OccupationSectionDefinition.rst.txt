@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OccupationSectionDefinition.__contains__
+        ~OccupationSectionDefinition.__delattr__
+        ~OccupationSectionDefinition.__dir__
+        ~OccupationSectionDefinition.__eq__
+        ~OccupationSectionDefinition.__format__
+        ~OccupationSectionDefinition.__ge__
+        ~OccupationSectionDefinition.__getattribute__
+        ~OccupationSectionDefinition.__getitem__
+        ~OccupationSectionDefinition.__gt__
+        ~OccupationSectionDefinition.__hash__
         ~OccupationSectionDefinition.__init__
+        ~OccupationSectionDefinition.__init_subclass__
+        ~OccupationSectionDefinition.__iter__
+        ~OccupationSectionDefinition.__le__
+        ~OccupationSectionDefinition.__lt__
+        ~OccupationSectionDefinition.__ne__
+        ~OccupationSectionDefinition.__new__
+        ~OccupationSectionDefinition.__reduce__
+        ~OccupationSectionDefinition.__reduce_ex__
+        ~OccupationSectionDefinition.__repr__
+        ~OccupationSectionDefinition.__setattr__
+        ~OccupationSectionDefinition.__setitem__
+        ~OccupationSectionDefinition.__sizeof__
+        ~OccupationSectionDefinition.__str__
+        ~OccupationSectionDefinition.__subclasshook__
+        ~OccupationSectionDefinition._dict_from_named_values
+        ~OccupationSectionDefinition._first_section_is_fixed
+        ~OccupationSectionDefinition._grammar
+        ~OccupationSectionDefinition._tuple_with_my_name
+        ~OccupationSectionDefinition._values_grammar
         ~OccupationSectionDefinition.all_member_names
         ~OccupationSectionDefinition.copy
         ~OccupationSectionDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OccupationSectionDefinition.__dict__
+        ~OccupationSectionDefinition.__doc__
+        ~OccupationSectionDefinition.__module__
+        ~OccupationSectionDefinition.__weakref__
+        ~OccupationSectionDefinition._init_args
         ~OccupationSectionDefinition.custom_name_characters
         ~OccupationSectionDefinition.custom_value_name
         ~OccupationSectionDefinition.delimiter

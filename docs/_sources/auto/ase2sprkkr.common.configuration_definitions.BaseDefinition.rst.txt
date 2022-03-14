@@ -19,7 +19,28 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseDefinition.__delattr__
+        ~BaseDefinition.__dir__
+        ~BaseDefinition.__eq__
+        ~BaseDefinition.__format__
+        ~BaseDefinition.__ge__
+        ~BaseDefinition.__getattribute__
+        ~BaseDefinition.__gt__
+        ~BaseDefinition.__hash__
         ~BaseDefinition.__init__
+        ~BaseDefinition.__init_subclass__
+        ~BaseDefinition.__le__
+        ~BaseDefinition.__lt__
+        ~BaseDefinition.__ne__
+        ~BaseDefinition.__new__
+        ~BaseDefinition.__reduce__
+        ~BaseDefinition.__reduce_ex__
+        ~BaseDefinition.__repr__
+        ~BaseDefinition.__setattr__
+        ~BaseDefinition.__sizeof__
+        ~BaseDefinition.__str__
+        ~BaseDefinition.__subclasshook__
+        ~BaseDefinition._tuple_with_my_name
         ~BaseDefinition.create_object
         ~BaseDefinition.grammar
 
@@ -33,6 +54,10 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseDefinition.__dict__
+        ~BaseDefinition.__doc__
+        ~BaseDefinition.__module__
+        ~BaseDefinition.__weakref__
         ~BaseDefinition.do_not_skip_whitespaces_before_name
         ~BaseDefinition.name_in_grammar
         ~BaseDefinition.result_class

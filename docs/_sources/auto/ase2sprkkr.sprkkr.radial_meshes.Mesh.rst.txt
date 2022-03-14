@@ -19,12 +19,43 @@ Full name: **ase2sprkkr.sprkkr.radial\_meshes.Mesh**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Mesh.__delattr__
+        ~Mesh.__dir__
+        ~Mesh.__eq__
+        ~Mesh.__format__
+        ~Mesh.__ge__
+        ~Mesh.__getattribute__
+        ~Mesh.__gt__
+        ~Mesh.__hash__
         ~Mesh.__init__
+        ~Mesh.__init_subclass__
+        ~Mesh.__le__
+        ~Mesh.__lt__
+        ~Mesh.__ne__
+        ~Mesh.__new__
+        ~Mesh.__reduce__
+        ~Mesh.__reduce_ex__
+        ~Mesh.__repr__
+        ~Mesh.__setattr__
+        ~Mesh.__sizeof__
+        ~Mesh.__str__
+        ~Mesh.__subclasshook__
         ~Mesh.default
 
    
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Mesh.__dict__
+        ~Mesh.__doc__
+        ~Mesh.__module__
+        ~Mesh.__weakref__
+
    
    

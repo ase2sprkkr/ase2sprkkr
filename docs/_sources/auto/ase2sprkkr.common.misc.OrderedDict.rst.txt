@@ -19,7 +19,37 @@ Full name: **ase2sprkkr.common.misc.OrderedDict**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OrderedDict.__class_getitem__
+        ~OrderedDict.__contains__
+        ~OrderedDict.__delattr__
+        ~OrderedDict.__delitem__
+        ~OrderedDict.__dir__
+        ~OrderedDict.__eq__
+        ~OrderedDict.__format__
+        ~OrderedDict.__ge__
+        ~OrderedDict.__getattribute__
+        ~OrderedDict.__getitem__
+        ~OrderedDict.__gt__
         ~OrderedDict.__init__
+        ~OrderedDict.__init_subclass__
+        ~OrderedDict.__ior__
+        ~OrderedDict.__iter__
+        ~OrderedDict.__le__
+        ~OrderedDict.__len__
+        ~OrderedDict.__lt__
+        ~OrderedDict.__ne__
+        ~OrderedDict.__new__
+        ~OrderedDict.__or__
+        ~OrderedDict.__reduce__
+        ~OrderedDict.__reduce_ex__
+        ~OrderedDict.__repr__
+        ~OrderedDict.__reversed__
+        ~OrderedDict.__ror__
+        ~OrderedDict.__setattr__
+        ~OrderedDict.__setitem__
+        ~OrderedDict.__sizeof__
+        ~OrderedDict.__str__
+        ~OrderedDict.__subclasshook__
         ~OrderedDict.clear
         ~OrderedDict.copy
         ~OrderedDict.first_item
@@ -39,5 +69,16 @@ Full name: **ase2sprkkr.common.misc.OrderedDict**
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OrderedDict.__dict__
+        ~OrderedDict.__doc__
+        ~OrderedDict.__hash__
+        ~OrderedDict.__module__
+
    
    

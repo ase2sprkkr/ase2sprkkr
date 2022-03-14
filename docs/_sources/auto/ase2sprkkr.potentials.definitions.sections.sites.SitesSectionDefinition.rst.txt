@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefini
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SitesSectionDefinition.__contains__
+        ~SitesSectionDefinition.__delattr__
+        ~SitesSectionDefinition.__dir__
+        ~SitesSectionDefinition.__eq__
+        ~SitesSectionDefinition.__format__
+        ~SitesSectionDefinition.__ge__
+        ~SitesSectionDefinition.__getattribute__
+        ~SitesSectionDefinition.__getitem__
+        ~SitesSectionDefinition.__gt__
+        ~SitesSectionDefinition.__hash__
         ~SitesSectionDefinition.__init__
+        ~SitesSectionDefinition.__init_subclass__
+        ~SitesSectionDefinition.__iter__
+        ~SitesSectionDefinition.__le__
+        ~SitesSectionDefinition.__lt__
+        ~SitesSectionDefinition.__ne__
+        ~SitesSectionDefinition.__new__
+        ~SitesSectionDefinition.__reduce__
+        ~SitesSectionDefinition.__reduce_ex__
+        ~SitesSectionDefinition.__repr__
+        ~SitesSectionDefinition.__setattr__
+        ~SitesSectionDefinition.__setitem__
+        ~SitesSectionDefinition.__sizeof__
+        ~SitesSectionDefinition.__str__
+        ~SitesSectionDefinition.__subclasshook__
+        ~SitesSectionDefinition._dict_from_named_values
+        ~SitesSectionDefinition._first_section_is_fixed
+        ~SitesSectionDefinition._grammar
+        ~SitesSectionDefinition._tuple_with_my_name
+        ~SitesSectionDefinition._values_grammar
         ~SitesSectionDefinition.all_member_names
         ~SitesSectionDefinition.copy
         ~SitesSectionDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefini
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SitesSectionDefinition.__dict__
+        ~SitesSectionDefinition.__doc__
+        ~SitesSectionDefinition.__module__
+        ~SitesSectionDefinition.__weakref__
+        ~SitesSectionDefinition._init_args
         ~SitesSectionDefinition.custom_name_characters
         ~SitesSectionDefinition.custom_value_name
         ~SitesSectionDefinition.delimiter

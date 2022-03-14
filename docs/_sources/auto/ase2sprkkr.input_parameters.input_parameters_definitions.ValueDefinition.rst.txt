@@ -19,7 +19,29 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.ValueDe
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ValueDefinition.__delattr__
+        ~ValueDefinition.__dir__
+        ~ValueDefinition.__eq__
+        ~ValueDefinition.__format__
+        ~ValueDefinition.__ge__
+        ~ValueDefinition.__getattribute__
+        ~ValueDefinition.__gt__
+        ~ValueDefinition.__hash__
         ~ValueDefinition.__init__
+        ~ValueDefinition.__init_subclass__
+        ~ValueDefinition.__le__
+        ~ValueDefinition.__lt__
+        ~ValueDefinition.__ne__
+        ~ValueDefinition.__new__
+        ~ValueDefinition.__reduce__
+        ~ValueDefinition.__reduce_ex__
+        ~ValueDefinition.__repr__
+        ~ValueDefinition.__setattr__
+        ~ValueDefinition.__sizeof__
+        ~ValueDefinition.__str__
+        ~ValueDefinition.__subclasshook__
+        ~ValueDefinition._grammar
+        ~ValueDefinition._tuple_with_my_name
         ~ValueDefinition.copy
         ~ValueDefinition.create_object
         ~ValueDefinition.get_value
@@ -39,6 +61,11 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.ValueDe
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ValueDefinition.__dict__
+        ~ValueDefinition.__doc__
+        ~ValueDefinition.__module__
+        ~ValueDefinition.__weakref__
+        ~ValueDefinition._init_args
         ~ValueDefinition.do_not_skip_whitespaces_before_name
         ~ValueDefinition.formated_name
         ~ValueDefinition.name_in_grammar

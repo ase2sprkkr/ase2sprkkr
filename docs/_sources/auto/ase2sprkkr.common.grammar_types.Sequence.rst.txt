@@ -19,7 +19,31 @@ Full name: **ase2sprkkr.common.grammar\_types.Sequence**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Sequence.__delattr__
+        ~Sequence.__dir__
+        ~Sequence.__eq__
+        ~Sequence.__format__
+        ~Sequence.__ge__
+        ~Sequence.__getattribute__
+        ~Sequence.__gt__
+        ~Sequence.__hash__
         ~Sequence.__init__
+        ~Sequence.__init_subclass__
+        ~Sequence.__le__
+        ~Sequence.__lt__
+        ~Sequence.__ne__
+        ~Sequence.__new__
+        ~Sequence.__reduce__
+        ~Sequence.__reduce_ex__
+        ~Sequence.__repr__
+        ~Sequence.__setattr__
+        ~Sequence.__sizeof__
+        ~Sequence.__str__
+        ~Sequence.__subclasshook__
+        ~Sequence._grammar
+        ~Sequence._string
+        ~Sequence._validate
+        ~Sequence._valueError
         ~Sequence.convert
         ~Sequence.copy
         ~Sequence.enrich
@@ -45,6 +69,10 @@ Full name: **ase2sprkkr.common.grammar\_types.Sequence**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~Sequence.__dict__
+        ~Sequence.__doc__
+        ~Sequence.__module__
+        ~Sequence.__weakref__
         ~Sequence.default_value
         ~Sequence.has_value
         ~Sequence.name_in_grammar

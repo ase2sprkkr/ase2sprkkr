@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseSectionDefinition*
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseSectionDefinition.__contains__
+        ~BaseSectionDefinition.__delattr__
+        ~BaseSectionDefinition.__dir__
+        ~BaseSectionDefinition.__eq__
+        ~BaseSectionDefinition.__format__
+        ~BaseSectionDefinition.__ge__
+        ~BaseSectionDefinition.__getattribute__
+        ~BaseSectionDefinition.__getitem__
+        ~BaseSectionDefinition.__gt__
+        ~BaseSectionDefinition.__hash__
         ~BaseSectionDefinition.__init__
+        ~BaseSectionDefinition.__init_subclass__
+        ~BaseSectionDefinition.__iter__
+        ~BaseSectionDefinition.__le__
+        ~BaseSectionDefinition.__lt__
+        ~BaseSectionDefinition.__ne__
+        ~BaseSectionDefinition.__new__
+        ~BaseSectionDefinition.__reduce__
+        ~BaseSectionDefinition.__reduce_ex__
+        ~BaseSectionDefinition.__repr__
+        ~BaseSectionDefinition.__setattr__
+        ~BaseSectionDefinition.__setitem__
+        ~BaseSectionDefinition.__sizeof__
+        ~BaseSectionDefinition.__str__
+        ~BaseSectionDefinition.__subclasshook__
+        ~BaseSectionDefinition._dict_from_named_values
+        ~BaseSectionDefinition._first_section_is_fixed
+        ~BaseSectionDefinition._grammar
+        ~BaseSectionDefinition._tuple_with_my_name
+        ~BaseSectionDefinition._values_grammar
         ~BaseSectionDefinition.all_member_names
         ~BaseSectionDefinition.copy
         ~BaseSectionDefinition.create_object
@@ -44,6 +73,11 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseSectionDefinition*
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~BaseSectionDefinition.__dict__
+        ~BaseSectionDefinition.__doc__
+        ~BaseSectionDefinition.__module__
+        ~BaseSectionDefinition.__weakref__
+        ~BaseSectionDefinition._init_args
         ~BaseSectionDefinition.custom_name_characters
         ~BaseSectionDefinition.custom_value_name
         ~BaseSectionDefinition.do_not_skip_whitespaces_before_name

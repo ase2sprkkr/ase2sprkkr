@@ -19,7 +19,40 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~LatticeSection.__contains__
+        ~LatticeSection.__delattr__
+        ~LatticeSection.__dir__
+        ~LatticeSection.__eq__
+        ~LatticeSection.__format__
+        ~LatticeSection.__ge__
+        ~LatticeSection.__getattr__
+        ~LatticeSection.__getattribute__
+        ~LatticeSection.__getitem__
+        ~LatticeSection.__gt__
+        ~LatticeSection.__hash__
         ~LatticeSection.__init__
+        ~LatticeSection.__init_subclass__
+        ~LatticeSection.__iter__
+        ~LatticeSection.__le__
+        ~LatticeSection.__lt__
+        ~LatticeSection.__ne__
+        ~LatticeSection.__new__
+        ~LatticeSection.__reduce__
+        ~LatticeSection.__reduce_ex__
+        ~LatticeSection.__repr__
+        ~LatticeSection.__setattr__
+        ~LatticeSection.__sizeof__
+        ~LatticeSection.__str__
+        ~LatticeSection.__subclasshook__
+        ~LatticeSection._add
+        ~LatticeSection._depends_on
+        ~LatticeSection._find_value
+        ~LatticeSection._get_member
+        ~LatticeSection._get_path
+        ~LatticeSection._get_root_container
+        ~LatticeSection._interactive_member_name
+        ~LatticeSection._set_from_atoms
+        ~LatticeSection._update_atoms
         ~LatticeSection.add
         ~LatticeSection.clear
         ~LatticeSection.get
@@ -42,6 +75,10 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~LatticeSection.__dict__
+        ~LatticeSection.__doc__
+        ~LatticeSection.__module__
+        ~LatticeSection.__weakref__
         ~LatticeSection.definition
         ~LatticeSection.name
         ~LatticeSection.seciton_name

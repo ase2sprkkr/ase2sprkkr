@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.LineString**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~LineString.__delattr__
+        ~LineString.__dir__
+        ~LineString.__eq__
+        ~LineString.__format__
+        ~LineString.__ge__
+        ~LineString.__getattribute__
+        ~LineString.__gt__
+        ~LineString.__hash__
         ~LineString.__init__
+        ~LineString.__init_subclass__
+        ~LineString.__le__
+        ~LineString.__lt__
+        ~LineString.__ne__
+        ~LineString.__new__
+        ~LineString.__reduce__
+        ~LineString.__reduce_ex__
+        ~LineString.__repr__
+        ~LineString.__setattr__
+        ~LineString.__sizeof__
+        ~LineString.__str__
+        ~LineString.__subclasshook__
+        ~LineString._string
+        ~LineString._validate
+        ~LineString._valueError
         ~LineString.convert
         ~LineString.copy
         ~LineString.enrich
@@ -46,6 +69,11 @@ Full name: **ase2sprkkr.common.grammar\_types.LineString**
       :template: custom-base-template.rst
      
         ~LineString.I
+        ~LineString.__dict__
+        ~LineString.__doc__
+        ~LineString.__module__
+        ~LineString.__weakref__
+        ~LineString._grammar
         ~LineString.default_value
         ~LineString.has_value
         ~LineString.name_in_grammar

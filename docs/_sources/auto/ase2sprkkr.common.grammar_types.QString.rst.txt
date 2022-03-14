@@ -19,7 +19,30 @@ Full name: **ase2sprkkr.common.grammar\_types.QString**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~QString.__delattr__
+        ~QString.__dir__
+        ~QString.__eq__
+        ~QString.__format__
+        ~QString.__ge__
+        ~QString.__getattribute__
+        ~QString.__gt__
+        ~QString.__hash__
         ~QString.__init__
+        ~QString.__init_subclass__
+        ~QString.__le__
+        ~QString.__lt__
+        ~QString.__ne__
+        ~QString.__new__
+        ~QString.__reduce__
+        ~QString.__reduce_ex__
+        ~QString.__repr__
+        ~QString.__setattr__
+        ~QString.__sizeof__
+        ~QString.__str__
+        ~QString.__subclasshook__
+        ~QString._string
+        ~QString._validate
+        ~QString._valueError
         ~QString.convert
         ~QString.copy
         ~QString.enrich
@@ -46,6 +69,11 @@ Full name: **ase2sprkkr.common.grammar\_types.QString**
       :template: custom-base-template.rst
      
         ~QString.I
+        ~QString.__dict__
+        ~QString.__doc__
+        ~QString.__module__
+        ~QString.__weakref__
+        ~QString._grammar
         ~QString.default_value
         ~QString.has_value
         ~QString.name_in_grammar

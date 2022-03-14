@@ -19,7 +19,36 @@ Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_paramete
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~GlobalSystemParameterDefinition.__contains__
+        ~GlobalSystemParameterDefinition.__delattr__
+        ~GlobalSystemParameterDefinition.__dir__
+        ~GlobalSystemParameterDefinition.__eq__
+        ~GlobalSystemParameterDefinition.__format__
+        ~GlobalSystemParameterDefinition.__ge__
+        ~GlobalSystemParameterDefinition.__getattribute__
+        ~GlobalSystemParameterDefinition.__getitem__
+        ~GlobalSystemParameterDefinition.__gt__
+        ~GlobalSystemParameterDefinition.__hash__
         ~GlobalSystemParameterDefinition.__init__
+        ~GlobalSystemParameterDefinition.__init_subclass__
+        ~GlobalSystemParameterDefinition.__iter__
+        ~GlobalSystemParameterDefinition.__le__
+        ~GlobalSystemParameterDefinition.__lt__
+        ~GlobalSystemParameterDefinition.__ne__
+        ~GlobalSystemParameterDefinition.__new__
+        ~GlobalSystemParameterDefinition.__reduce__
+        ~GlobalSystemParameterDefinition.__reduce_ex__
+        ~GlobalSystemParameterDefinition.__repr__
+        ~GlobalSystemParameterDefinition.__setattr__
+        ~GlobalSystemParameterDefinition.__setitem__
+        ~GlobalSystemParameterDefinition.__sizeof__
+        ~GlobalSystemParameterDefinition.__str__
+        ~GlobalSystemParameterDefinition.__subclasshook__
+        ~GlobalSystemParameterDefinition._dict_from_named_values
+        ~GlobalSystemParameterDefinition._first_section_is_fixed
+        ~GlobalSystemParameterDefinition._grammar
+        ~GlobalSystemParameterDefinition._tuple_with_my_name
+        ~GlobalSystemParameterDefinition._values_grammar
         ~GlobalSystemParameterDefinition.all_member_names
         ~GlobalSystemParameterDefinition.copy
         ~GlobalSystemParameterDefinition.create_object
@@ -47,6 +76,11 @@ Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_paramete
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~GlobalSystemParameterDefinition.__dict__
+        ~GlobalSystemParameterDefinition.__doc__
+        ~GlobalSystemParameterDefinition.__module__
+        ~GlobalSystemParameterDefinition.__weakref__
+        ~GlobalSystemParameterDefinition._init_args
         ~GlobalSystemParameterDefinition.custom_name_characters
         ~GlobalSystemParameterDefinition.custom_value_name
         ~GlobalSystemParameterDefinition.delimiter

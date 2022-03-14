@@ -19,7 +19,27 @@ Full name: **ase2sprkkr.sprkkr.atomic\_types.AtomicType**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~AtomicType.__delattr__
+        ~AtomicType.__dir__
+        ~AtomicType.__eq__
+        ~AtomicType.__format__
+        ~AtomicType.__ge__
+        ~AtomicType.__getattribute__
+        ~AtomicType.__gt__
+        ~AtomicType.__hash__
         ~AtomicType.__init__
+        ~AtomicType.__init_subclass__
+        ~AtomicType.__le__
+        ~AtomicType.__lt__
+        ~AtomicType.__ne__
+        ~AtomicType.__new__
+        ~AtomicType.__reduce__
+        ~AtomicType.__reduce_ex__
+        ~AtomicType.__repr__
+        ~AtomicType.__setattr__
+        ~AtomicType.__sizeof__
+        ~AtomicType.__str__
+        ~AtomicType.__subclasshook__
         ~AtomicType.copy
         ~AtomicType.to_atomic_type
         ~AtomicType.to_tuple
@@ -34,6 +54,11 @@ Full name: **ase2sprkkr.sprkkr.atomic\_types.AtomicType**
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~AtomicType.__dict__
+        ~AtomicType.__doc__
+        ~AtomicType.__module__
+        ~AtomicType.__weakref__
+        ~AtomicType._mendeleev_module
         ~AtomicType.atomic_number
         ~AtomicType.mendeleev
 
