@@ -1,5 +1,5 @@
 ASE2SPRKKR software package
-#######################################
+===========================
 
 .. include:: introduction.rst
 
@@ -34,7 +34,7 @@ Class documentation
    ase2sprkkr
 
 Indices and tables
-******************
+~~~~~~~~~~~~~~~~~~
 
 * :ref:`genindex`
 * :ref:`modindex`

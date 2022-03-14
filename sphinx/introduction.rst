@@ -7,7 +7,7 @@ calculation.
 
 
 Usefull links
--------------
+=============
 
 -  `SPR-KKR <https://software.pan-data.eu/software/111/spr-kkr>`__
 -  `ASE - Atomic Simulation
