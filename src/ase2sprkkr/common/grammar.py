@@ -31,10 +31,10 @@ with generate_grammar():
   """ Grammar for an optinal newline """
   line_end = pp.Suppress(pp.LineEnd()).setName('\n')
   """ Grammar for a required newline """
-  end_of_file = (pp.Regex('[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
+  end_of_file = (pp.Regex(r'[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
   """ Grammar for an end of file (ending whitespaces are allowed) """
 
-  separator_pattern = r'\*'*10+'\**'
+  separator_pattern = r'\*'*10+r'\**'
   """ Pattern for separating sections in an input file """
   separator = pp.Regex(separator_pattern).setName("**********[***....]").suppress()
   """ Grammar for separating sections in an input file """
