@@ -348,7 +348,7 @@ If None, the default class value is used</p></li>
 <td><p>Grammar for the custom - unknown - child</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar" title="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_value_grammar</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Unknown sections are parsed by this grammar</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">delimited_custom_value_grammar</span></code>()</p></td>
 <td><p>Return the grammar for the custom child with delimiter.</p></td>
@@ -360,7 +360,7 @@ If None, the default class value is used</p></li>
 <td><p>Generate grammar with the correct settings of pyparsing</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter" title="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_of_delimiter</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Grammar of the sections delimiter</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">members</span></code>()</p></td>
 <td><p></p></td>
@@ -411,7 +411,7 @@ If None, the default class value is used</p></li>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters" title="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_name_characters</span></code></a></p></td>
-<td><p>Which characters can appears in an unknown child (value/section) name</p></td>
+<td><p>There can be space in a potential-section name</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_value_name</span></code></p></td>
 <td><p>Just the name that appears in the grammar, when it is printed.</p></td>
@@ -468,24 +468,26 @@ If None, the default class value is used</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition.grammar_of_delimiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Grammar of the sections delimiter</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_class">
 <span class="sig-name descname"><span class="pre">custom_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unknown classes will be of this type</p>
+<dd><p>Unknown sections will be of this type</p>
 <p>alias of <a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_value_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition.custom_value_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Unknown sections are parsed by this grammar</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters">
 <span class="sig-name descname"><span class="pre">custom_name_characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Which characters can appears in an unknown child (value/section) name</p>
+<dd><p>There can be space in a potential-section name</p>
 </dd></dl>
 
 </dd></dl>

@@ -210,23 +210,24 @@
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_definitions.</span></span><span class="sig-name descname"><span class="pre">ASEArraySectionDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandatory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#ASEArraySectionDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition" title="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.potential_definitions.PotSectionDefinition</span></code></a></p>
+<p>A definition of a section, that contains an ASE datas (Atoms.setArray)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mandatory</strong> (<em>bool</em>) – </p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandatory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#ASEArraySectionDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>For the documentation of the other parameters, see
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.potential_definitions.PotSectionDefinition()</span></code>
+and its predecessor
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.common.BaseSectionDefinition()</span></code></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name of the value/section</p></li>
-<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value</p></li>
-<li><p><strong>is_hidden</strong> (<em>boolean</em>) – Hidden values are not offered to a user, usually they are
-set by another object (and so a direct setting of their values
-has no sense)</p></li>
-<li><p><strong>name_in_grammar</strong> (<em>boolean</em><em> or </em><em>None</em>) – If False, there the name of the variable is not printed in the
-configuration file. The variable is recognized by its position.
-If None, the default class value is used</p></li>
-<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
-<li><p><strong>description</strong> (<em>str</em>) – Short help message</p></li>
-<li><p><strong>help</strong> (<em>str</em>) – (Long) help message for the value/section</p></li>
+<li><p><strong>array_name</strong> (<em>str</em>) – The name of the ASE array that contains the section’s data</p></li>
+<li><p><strong>mandatory</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -270,12 +271,7 @@ If None, the default class value is used</p></li>
 <td><p>Return hash(self).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.__init__" title="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(*args[, mandatory])</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param name</dt>
-<dd class="field-odd"><p>Name of the value/section</p>
-</dd>
-</dl>
-</p></td>
+<td><p>For the documentation of the other parameters, see <code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.potential_definitions.PotSectionDefinition()</span></code> and its predecessor <code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.common.BaseSectionDefinition()</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
 <td><p>This method is called when a class is subclassed.</p></td>
