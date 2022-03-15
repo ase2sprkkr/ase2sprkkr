@@ -22,7 +22,9 @@ from .potential_sections import PotentialSection, ASEArraySection
 from ..common.misc import lazy_value, cache
 
 class PotValueDefinition(BaseValueDefinition):
-
+  """
+  Definition of a configuration option in a potential
+  """
   @staticmethod
   @lazy_value
   def grammar_of_delimiter():
@@ -36,7 +38,11 @@ class PotValueDefinition(BaseValueDefinition):
 
 
 class Separator(PotValueDefinition):
+  """
+  A special (hidden) value, that appears in a potential header section.
 
+  The separator is a line of stars
+  """
   _counter = 0
   def __init__(self, name = None):
       if not name:
@@ -77,14 +83,38 @@ class PotSectionDefinition(BaseSectionDefinition):
 
   result_class = PotentialSection
 
-  def __init__(self, *args, mandatory=True,  **kwargs):
+  def __init__(self, *args, mandatory:bool=True,  **kwargs):
+      """
+      For the documentation of the other parameters, see
+      :meth:`ase2sprkkr.common.BaseSectionDefinition`
+
+      Parameters
+      ----------
+      mandatory
+        Is the section mandatory? I.e. the potential file is required to
+        contain this sections.
+      """
       self.mandatory = mandatory
       super().__init__(*args, **kwargs)
 
 class ASEArraySectionDefinition(PotSectionDefinition):
+  """
+  A definition of a section, that contains an ASE datas (Atoms.setArray)
+  """
 
   @add_to_signature(PotSectionDefinition.__init__)
   def __init__(self, *args, array_name, **kwargs):
+      """
+      For the documentation of the other parameters, see
+      :meth:`ase2sprkkr.potential_definitions.PotSectionDefinition`
+      and its predecessor
+      :meth:`ase2sprkkr.common.BaseSectionDefinition`
+
+      Parameters
+      ----------
+      array_name: str
+        The name of the ASE array that contains the section's data
+      """
       super().__init__(*args, **kwargs)
       self.array_name = array_name
 
@@ -113,14 +143,17 @@ class PotentialDefinition(ConfDefinition):
   @staticmethod
   @lazy_value
   def grammar_of_delimiter():
+      """ Grammar of the sections delimiter """
       return SectionString.grammar_of_delimiter()
 
   custom_class = CustomPotentialSection
-  """ Unknown classes will be of this type """
+  """ Unknown sections will be of this type """
 
   @classmethod
   @cache
   def custom_value_grammar(cls):
-    return SectionString._grammar
+      """ Unknown sections are parsed by this grammar """
+      return SectionString._grammar
 
   custom_name_characters = ConfDefinition.custom_name_characters + ' '
+  """ There can be space in a potential-section name """

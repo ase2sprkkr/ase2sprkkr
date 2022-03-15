@@ -19,8 +19,10 @@ class CustomPotentialSectionDefinition(BaseValueDefinition):
   custom sections are readed by Potential class
   """
   mandatory = False
+  """ Obviously, the custom sections are not required """
   prefix = ''
   name_value_delimiter = '\n'
+  """ The content of the section is delimited from the name by a newline """
 
 class CustomSectionToken(pp.Token):
    """ The grammar for a custom section - i.e. for unknown section, whose
