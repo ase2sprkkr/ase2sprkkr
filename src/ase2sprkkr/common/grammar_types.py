@@ -25,11 +25,17 @@ import datetime
 
 context =  generate_grammar()
 context.__enter__()
+#it ensures that the generated grammar will have the correct whitespaces
 
 class BaseType:
-  """ Base class for definition of configuration option types """
+  """ Base class for definition of configuration option types
 
-  """ The type without value (e.g. Separator) are just syntactical
+      :ivar: str prefix: The string, that will be printed before the value
+      :ivar: str postfix: The string, that will be printed before the value
+      :ivar: str format: The format string, that will be used for printing the value.
+      :ivar: default_value: The default value of an option of this type, if it does not say otherwise.
+
+      A type without value (e.g. Separator) are just syntactical
       elements in the potentials file, that do not carry an information.
       Such elements do not yields (name, value) pair during parsing the file.
 
@@ -244,7 +250,7 @@ class Integer(BaseType):
 Integer.I = Integer()
 
 class Bool(BaseType):
-
+  """ A bool type, whose value is represented by a letter (T or F) """
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
   def _validate(self, value, parse_check=False):
@@ -262,7 +268,7 @@ Bool.I = Bool()
 
 
 class Real(BaseType):
-
+  """ A real value """
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
 
   def _validate(self, value, parse_check=False):
@@ -276,6 +282,7 @@ class Real(BaseType):
 Real.I = Real()
 
 class Date(BaseType):
+  """ A date value of the form 'DD.MM.YYYY' """
 
   _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
 
@@ -292,8 +299,12 @@ Date.I = Date()
 
 
 class BaseRealWithUnits(BaseType):
+  """ The base class for float value, which can have units append.
+      The value is converted automatically to the base units.
+  """
 
   grammar_cache = {}
+  """ A grammar for units is cached """
 
   def _grammar_units(self, units):
     i = id(units)
@@ -320,22 +331,27 @@ class BaseRealWithUnits(BaseType):
   numpy_type = float
 
 class RealWithUnits(BaseRealWithUnits):
+  """ A float value with user-defined units """
 
   def __init__(self, *args, units, **kwargs):
      self.units = units
      super().__init__(*args, **kwargs)
 
 class Energy(BaseRealWithUnits):
+  """ The grammar type for energy. The default units are Rydberg, one can specify eV. """
 
   units = {
       'Ry' : 1.,
       'eV' : 1. / Rydberg,
       None : 1.,
   }
+  """ The allowed units and their conversion factors """
 
 Energy.I = Energy()
 
 class BaseString(BaseType):
+  """ Base type for string grammar types """
+
   def _validate(self, value, parse_check=False):
     if not isinstance(value, str): return "String value required"
     if not parse_check:
@@ -346,6 +362,7 @@ class BaseString(BaseType):
     return True
 
 class String(BaseString):
+  """ Just a string (without whitespaces and few special chars) """
   _grammar = Word(pp.printables,excludeChars=",;{}").setParseAction(lambda x:x[0])
 
   def grammar_name(self):
@@ -353,7 +370,7 @@ class String(BaseString):
 String.I = String()
 
 class QString(BaseString):
-  """ Quoted string"""
+  """ Either a quoted string, or just a word (without whitespaces or special chars) """
   _grammar = (pp.Word(pp.printables, excludeChars=",;{}") or pp.QuotedString("'")).setParseAction(lambda x:x[0])
 
   def grammar_name(self):
@@ -362,7 +379,7 @@ class QString(BaseString):
 QString.I = String()
 
 class LineString(BaseString):
-  """ String up to the end of line """
+  """ A string, that takes all up to the end of the line """
   _grammar = pp.SkipTo(pp.LineEnd() | pp.StringEnd())
 
   def grammar_name(self):
@@ -371,6 +388,9 @@ class LineString(BaseString):
 LineString.I = LineString()
 
 class Keyword(BaseType):
+  """
+  A value, that can take values from the predefined set of strings.
+  """
 
   def __init__(self, *keywords, **kwargs):
     super().__init__(**kwargs)
@@ -391,10 +411,16 @@ class Keyword(BaseType):
       return value.upper()
 
 def DefKeyword(default, *others, **kwargs):
+  """
+  A value, that can take values from the predefined set of strings, the first one is the default value.
+  """
   return Keyword(default, *others, default_value=default, **kwargs)
 
 
 class Flag(BaseType):
+  """
+  A boolean value, which is True, if a name of the value appears in the input file.
+  """
 
   def grammar_name(self):
       return None
@@ -417,8 +443,17 @@ normalize_type_map = {
     np.float64: float,
     np.bool_: bool
 }
+""" Mapping of alternative types to the 'canonical ones'. """
 
 def normalize_type(type):
+    """ Return the 'canonical type' for a given type
+
+    I.e. it maps numpy internal types to standard python ones
+
+    doctest:
+    >>> normalize_type(np.int64)
+    int
+    """
     return normalize_type_map.get(type, type)
 
 type_from_type_map = OrderedDict([
@@ -427,6 +462,11 @@ type_from_type_map = OrderedDict([
     (bool,  Bool.I),
     (str  , String.I)]
 )
+""" The standard grammar_types for python types.
+
+The value type can be given by a standard python type, this map maps the
+python type for the appropriate grammar_type class.
+"""
 
 def format_for_type(format, type):
   """
@@ -452,7 +492,7 @@ def type_from_type(type, format='', format_all=False):
       Parameters
       ----------
       type: A python type or BaseType
-        A type to be converted to a grammar element (BaseType class descendant)
+        A type to be converted to a grammar type (BaseType class descendant)
 
       format: str or dict
         The format to be applied to the resulting class. If dict is given, see 'format_for_type'
@@ -477,6 +517,7 @@ def type_from_type(type, format='', format_all=False):
 
 
 class Array(BaseType):
+  """ A (numpy) array of values of one type """
 
   delimiter=pp.White(' \t').suppress()
   delimiter_str = ' '
@@ -583,10 +624,21 @@ type_from_set_map = OrderedDict([
     (float, SetOf(float)),
     (int  , SetOf(int)),
 ])
-""" Map python native types to configuration value types """
+""" Map the python type of a collection member to a grammar type of the collection.
+
+Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`
+"""
 
 def type_from_value(value):
-  """ Gues the option type from a python value. E.g. 2 => Integer """
+  """ Gues the grammar type from a python value.
+
+  ..  doctest::
+  >>> type_from_value(2)
+  Integer
+
+  >>> type_from_value(2.0)
+  Real
+  """
   if isinstance(value, (list, np.ndarray)):
      return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else Integer.I
   if isinstance(value, str):
@@ -601,6 +653,14 @@ def type_from_value(value):
   return type.__class__(default_value = value)
 
 def type_from_default_value(value, format='', format_all=False):
+   """ Guess the grammar type from a value, that will become the default value of the grammar type.
+
+   It has to create a new object instance, as it has to set the default
+   value property of the returned object. An (output) format can be applied to the
+   resulting grammar type
+
+   Grammar types passed as types are left as is, unless format_all flag is set.
+   """
    if inspect.isclass(value) or isinstance(value, BaseType):
       return type_from_type(value, format=format, format_all=format_all)
    ptype = normalize_type(value.__class__)
@@ -608,6 +668,15 @@ def type_from_default_value(value, format='', format_all=False):
    return gtype(default_value = value, format=format_for_type(format, ptype))
 
 class BaseMixed(BaseType):
+  """
+  A variant type - it can hold "anything".
+  """
+
+  type = None
+  """ The types, that the value can hold. To be redefined in the descendants. """
+
+  string_type = None
+  """ Type of string grammar_type to be used.  To be redefined in the descendants. """
 
   @classmethod
   def _grammar(cls, param_name=False):
@@ -616,6 +685,7 @@ class BaseMixed(BaseType):
     ))
 
   def get_type(self, value):
+      """ Return the type of the value """
       return self.string_type if isinstance(value, str) else type_from_value(value)
 
   def _validate(self, value, parse_check=False):
@@ -629,8 +699,10 @@ class BaseMixed(BaseType):
 
 
 class Mixed(BaseMixed):
+  """ A variant value to be used in input files (in unknown - custom - options) """
 
   string_type = QString.I
+  """ Input files use quoted strings. """
 
   types = [
       Energy.I,
@@ -648,8 +720,10 @@ class Mixed(BaseMixed):
 Mixed.I = Mixed()
 
 class PotMixed(BaseMixed):
+  """ A variant value to be used in potential files (in unknown - custom - options) """
 
   string_type = LineString.I
+  """ Potential files use line strings. """
 
   types = [
       Energy.I,
@@ -777,9 +851,9 @@ class Sequence(BaseType):
 
 
 class Table(BaseType):
-  """ 
+  """
   Table, optionaly with named columns, e.g.
-    
+
     ::text
 
       IQ     IREFQ       IMQ       NOQ  ITOQ  CONC
@@ -948,19 +1022,29 @@ class Table(BaseType):
       return f"<TABLE of {data}>"
 
 integer = Integer.I
+""" A standard signed integer grammar type instance """
 unsigned = Unsigned.I
+""" A standard unsigned integer grammar type instance """
 boolean = Bool.I
+""" A standard bool grammar type instance (for potential files) """
 flag = Flag.I
+""" A standard bool grammar type instance (for input files) """
 real = Real.I
+""" A standard real grammar type instance """
 string = String.I
+""" A standard string grammar type instance """
 qstring = QString.I
+""" A standard quoted string grammar type instance (for input files) """
 line_string = LineString.I
+""" A standard line string grammar type instance (for potential files) """
 mixed = Mixed.I
+""" A standard variant grammar type instance (for input files) """
 pot_mixed = PotMixed.I
+""" A standard variant grammar type instance (for potential files) """
 separator = Separator.I
+""" A standard separator line grammar type instance (for potential files) """
 energy = Energy.I
-
-
+""" A standard energy float value type instance (for potential files) """
 
 context.__exit__(None, None, None)
 del context
