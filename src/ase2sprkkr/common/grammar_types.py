@@ -375,7 +375,8 @@ class Keyword(BaseType):
   def __init__(self, *keywords, **kwargs):
     super().__init__(**kwargs)
     self.keywords = [ i.upper() for i in keywords ]
-    self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
+    with generate_grammar():
+      self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
 
   def _validate(self, value, parse_check=False):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
@@ -414,7 +415,7 @@ Flag.I = Flag()
 normalize_type_map = {
     np.int64 : int,
     np.float64: float,
-    np.bool: bool
+    np.bool_: bool
 }
 
 def normalize_type(type):

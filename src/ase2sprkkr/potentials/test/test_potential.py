@@ -26,6 +26,7 @@ class TestPotential(TestCase):
        if hasattr(x, 'exprs'):
           for i,e in enumerate(x.exprs):
               check(e, prefix + f'.exprs[{i}]')
+    check(g)
 
   def test_potential(self):
     a = 5.64
