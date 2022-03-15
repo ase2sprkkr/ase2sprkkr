@@ -113,7 +113,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type_map.html">normalize_type_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type_map.html">type_from_type_map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html">type_from_set_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.integer.html">integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.unsigned.html">unsigned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.boolean.html">boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.flag.html">flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.real.html">real</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.string.html">string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.qstring.html">qstring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.line_string.html">line_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html">mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.pot_mixed.html">pot_mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.separator.html">separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.energy.html">energy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html">DefKeyword</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html">format_for_type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html">normalize_type</a></li>
@@ -241,6 +255,29 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">BaseType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for definition of configuration option types</p>
+<dl class="field-list simple">
+<dt class="field-odd">Ivar</dt>
+<dd class="field-odd"><p>str prefix: The string, that will be printed before the value</p>
+</dd>
+<dt class="field-even">Ivar</dt>
+<dd class="field-even"><p>str postfix: The string, that will be printed before the value</p>
+</dd>
+<dt class="field-odd">Ivar</dt>
+<dd class="field-odd"><p>str format: The format string, that will be used for printing the value.</p>
+</dd>
+<dt class="field-even">Ivar</dt>
+<dd class="field-even"><p>default_value: The default value of an option of this type, if it does not say otherwise.</p>
+</dd>
+</dl>
+<p>A type without value (e.g. Separator) are just syntactical
+elements in the potentials file, that do not carry an information.
+Such elements do not yields (name, value) pair during parsing the file.</p>
+<p>Do not confuse this with BaseType.missing_value functionality.
+Missing_value is just the opposite: missing_value can be ommited in the file
+(or even the absence of the name in the file carry the information, that
+the Flag is False), but the name-value tuple of such Type is present
+in the parse result. On the other hand, has_value = False is in the file, but
+not in the result.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.BaseType.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#BaseType.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.BaseType.__init__" title="Permalink to this definition">¶</a></dt>

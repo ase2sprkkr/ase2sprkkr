@@ -79,6 +79,7 @@ Full name: **ase2sprkkr.common.grammar\_types.PotMixed**
         ~PotMixed.has_value
         ~PotMixed.name_in_grammar
         ~PotMixed.string_type
+        ~PotMixed.type
         ~PotMixed.types
 
    

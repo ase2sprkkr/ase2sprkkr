@@ -197,11 +197,17 @@
 
 <span class="n">context</span> <span class="o">=</span>  <span class="n">generate_grammar</span><span class="p">()</span>
 <span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
+<span class="c1">#it ensures that the generated grammar will have the correct whitespaces</span>
 
 <div class="viewcode-block" id="BaseType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType">[docs]</a><span class="k">class</span> <span class="nc">BaseType</span><span class="p">:</span>
-  <span class="sd">&quot;&quot;&quot; Base class for definition of configuration option types &quot;&quot;&quot;</span>
+  <span class="sd">&quot;&quot;&quot; Base class for definition of configuration option types</span>
 
-  <span class="sd">&quot;&quot;&quot; The type without value (e.g. Separator) are just syntactical</span>
+<span class="sd">      :ivar: str prefix: The string, that will be printed before the value</span>
+<span class="sd">      :ivar: str postfix: The string, that will be printed before the value</span>
+<span class="sd">      :ivar: str format: The format string, that will be used for printing the value.</span>
+<span class="sd">      :ivar: default_value: The default value of an option of this type, if it does not say otherwise.</span>
+
+<span class="sd">      A type without value (e.g. Separator) are just syntactical</span>
 <span class="sd">      elements in the potentials file, that do not carry an information.</span>
 <span class="sd">      Such elements do not yields (name, value) pair during parsing the file.</span>
 
@@ -416,7 +422,7 @@
 <span class="n">Integer</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Bool"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Bool.html#ase2sprkkr.common.grammar_types.Bool">[docs]</a><span class="k">class</span> <span class="nc">Bool</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
-
+  <span class="sd">&quot;&quot;&quot; A bool type, whose value is represented by a letter (T or F) &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;F&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="Bool._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Bool.html#ase2sprkkr.common.grammar_types.Bool._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">parse_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -434,7 +440,7 @@
 
 
 <div class="viewcode-block" id="Real"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Real.html#ase2sprkkr.common.grammar_types.Real">[docs]</a><span class="k">class</span> <span class="nc">Real</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
-
+  <span class="sd">&quot;&quot;&quot; A real value &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">ppc</span><span class="o">.</span><span class="n">fnumber</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
 <div class="viewcode-block" id="Real._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Real.html#ase2sprkkr.common.grammar_types.Real._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">parse_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -448,6 +454,7 @@
 <span class="n">Real</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Real</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Date"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Date.html#ase2sprkkr.common.grammar_types.Date">[docs]</a><span class="k">class</span> <span class="nc">Date</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A date value of the form &#39;DD.MM.YYYY&#39; &quot;&quot;&quot;</span>
 
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?P&lt;d&gt;\d</span><span class="si">{2}</span><span class="s1">).(?P&lt;m&gt;\d</span><span class="si">{2}</span><span class="s1">).(?P&lt;y&gt;\d</span><span class="si">{4}</span><span class="s1">)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;m&#39;</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;d&#39;</span><span class="p">])))</span>
 
@@ -464,8 +471,12 @@
 
 
 <div class="viewcode-block" id="BaseRealWithUnits"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.BaseRealWithUnits">[docs]</a><span class="k">class</span> <span class="nc">BaseRealWithUnits</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; The base class for float value, which can have units append.</span>
+<span class="sd">      The value is converted automatically to the base units.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="n">grammar_cache</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="sd">&quot;&quot;&quot; A grammar for units is cached &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseRealWithUnits._grammar_units"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.BaseRealWithUnits._grammar_units">[docs]</a>  <span class="k">def</span> <span class="nf">_grammar_units</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
     <span class="n">i</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
@@ -492,22 +503,27 @@
   <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">float</span></div>
 
 <div class="viewcode-block" id="RealWithUnits"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.RealWithUnits.html#ase2sprkkr.common.grammar_types.RealWithUnits">[docs]</a><span class="k">class</span> <span class="nc">RealWithUnits</span><span class="p">(</span><span class="n">BaseRealWithUnits</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A float value with user-defined units &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RealWithUnits.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.RealWithUnits.html#ase2sprkkr.common.grammar_types.RealWithUnits.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
      <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="Energy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Energy.html#ase2sprkkr.common.grammar_types.Energy">[docs]</a><span class="k">class</span> <span class="nc">Energy</span><span class="p">(</span><span class="n">BaseRealWithUnits</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; The grammar type for energy. The default units are Rydberg, one can specify eV. &quot;&quot;&quot;</span>
 
   <span class="n">units</span> <span class="o">=</span> <span class="p">{</span>
       <span class="s1">&#39;Ry&#39;</span> <span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
       <span class="s1">&#39;eV&#39;</span> <span class="p">:</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">Rydberg</span><span class="p">,</span>
       <span class="kc">None</span> <span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
-  <span class="p">}</span></div>
+  <span class="p">}</span>
+  <span class="sd">&quot;&quot;&quot; The allowed units and their conversion factors &quot;&quot;&quot;</span></div>
 
 <span class="n">Energy</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Energy</span><span class="p">()</span>
 
 <div class="viewcode-block" id="BaseString"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseString.html#ase2sprkkr.common.grammar_types.BaseString">[docs]</a><span class="k">class</span> <span class="nc">BaseString</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; Base type for string grammar types &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="BaseString._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseString.html#ase2sprkkr.common.grammar_types.BaseString._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">parse_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span> <span class="k">return</span> <span class="s2">&quot;String value required&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">parse_check</span><span class="p">:</span>
@@ -518,6 +534,7 @@
     <span class="k">return</span> <span class="kc">True</span></div></div>
 
 <div class="viewcode-block" id="String"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.String.html#ase2sprkkr.common.grammar_types.String">[docs]</a><span class="k">class</span> <span class="nc">String</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; Just a string (without whitespaces and few special chars) &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">printables</span><span class="p">,</span><span class="n">excludeChars</span><span class="o">=</span><span class="s2">&quot;,;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <div class="viewcode-block" id="String.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.String.html#ase2sprkkr.common.grammar_types.String.grammar_name">[docs]</a>  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -525,7 +542,7 @@
 <span class="n">String</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
 
 <div class="viewcode-block" id="QString"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.QString.html#ase2sprkkr.common.grammar_types.QString">[docs]</a><span class="k">class</span> <span class="nc">QString</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; Quoted string&quot;&quot;&quot;</span>
+  <span class="sd">&quot;&quot;&quot; Either a quoted string, or just a word (without whitespaces or special chars) &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">printables</span><span class="p">,</span> <span class="n">excludeChars</span><span class="o">=</span><span class="s2">&quot;,;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pp</span><span class="o">.</span><span class="n">QuotedString</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <div class="viewcode-block" id="QString.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.QString.html#ase2sprkkr.common.grammar_types.QString.grammar_name">[docs]</a>  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -534,7 +551,7 @@
 <span class="n">QString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LineString"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.LineString.html#ase2sprkkr.common.grammar_types.LineString">[docs]</a><span class="k">class</span> <span class="nc">LineString</span><span class="p">(</span><span class="n">BaseString</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; String up to the end of line &quot;&quot;&quot;</span>
+  <span class="sd">&quot;&quot;&quot; A string, that takes all up to the end of the line &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">SkipTo</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">()</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">StringEnd</span><span class="p">())</span>
 
 <div class="viewcode-block" id="LineString.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.LineString.html#ase2sprkkr.common.grammar_types.LineString.grammar_name">[docs]</a>  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -543,6 +560,9 @@
 <span class="n">LineString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Keyword"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Keyword.html#ase2sprkkr.common.grammar_types.Keyword">[docs]</a><span class="k">class</span> <span class="nc">Keyword</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  A value, that can take values from the predefined set of strings.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Keyword.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Keyword.html#ase2sprkkr.common.grammar_types.Keyword.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">keywords</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -563,10 +583,16 @@
       <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div></div>
 
 <div class="viewcode-block" id="DefKeyword"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.DefKeyword.html#ase2sprkkr.common.grammar_types.DefKeyword">[docs]</a><span class="k">def</span> <span class="nf">DefKeyword</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  A value, that can take values from the predefined set of strings, the first one is the default value.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">Keyword</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="o">*</span><span class="n">others</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Flag"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Flag.html#ase2sprkkr.common.grammar_types.Flag">[docs]</a><span class="k">class</span> <span class="nc">Flag</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  A boolean value, which is True, if a name of the value appears in the input file.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Flag.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Flag.html#ase2sprkkr.common.grammar_types.Flag.grammar_name">[docs]</a>  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="kc">None</span></div>
@@ -589,8 +615,17 @@
     <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">np</span><span class="o">.</span><span class="n">bool_</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot; Mapping of alternative types to the &#39;canonical ones&#39;. &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="normalize_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.normalize_type.html#ase2sprkkr.common.grammar_types.normalize_type">[docs]</a><span class="k">def</span> <span class="nf">normalize_type</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return the &#39;canonical type&#39; for a given type</span>
+
+<span class="sd">    I.e. it maps numpy internal types to standard python ones</span>
+
+<span class="sd">    doctest:</span>
+<span class="sd">    &gt;&gt;&gt; normalize_type(np.int64)</span>
+<span class="sd">    int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">normalize_type_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span></div>
 
 <span class="n">type_from_type_map</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([</span>
@@ -599,6 +634,11 @@
     <span class="p">(</span><span class="nb">bool</span><span class="p">,</span>  <span class="n">Bool</span><span class="o">.</span><span class="n">I</span><span class="p">),</span>
     <span class="p">(</span><span class="nb">str</span>  <span class="p">,</span> <span class="n">String</span><span class="o">.</span><span class="n">I</span><span class="p">)]</span>
 <span class="p">)</span>
+<span class="sd">&quot;&quot;&quot; The standard grammar_types for python types.</span>
+
+<span class="sd">The value type can be given by a standard python type, this map maps the</span>
+<span class="sd">python type for the appropriate grammar_type class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="format_for_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.format_for_type.html#ase2sprkkr.common.grammar_types.format_for_type">[docs]</a><span class="k">def</span> <span class="nf">format_for_type</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
@@ -624,7 +664,7 @@
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
 <span class="sd">      type: A python type or BaseType</span>
-<span class="sd">        A type to be converted to a grammar element (BaseType class descendant)</span>
+<span class="sd">        A type to be converted to a grammar type (BaseType class descendant)</span>
 
 <span class="sd">      format: str or dict</span>
 <span class="sd">        The format to be applied to the resulting class. If dict is given, see &#39;format_for_type&#39;</span>
@@ -649,6 +689,7 @@
 
 
 <div class="viewcode-block" id="Array"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Array.html#ase2sprkkr.common.grammar_types.Array">[docs]</a><span class="k">class</span> <span class="nc">Array</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A (numpy) array of values of one type &quot;&quot;&quot;</span>
 
   <span class="n">delimiter</span><span class="o">=</span><span class="n">pp</span><span class="o">.</span><span class="n">White</span><span class="p">(</span><span class="s1">&#39; </span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
   <span class="n">delimiter_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
@@ -755,10 +796,21 @@
     <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">float</span><span class="p">)),</span>
     <span class="p">(</span><span class="nb">int</span>  <span class="p">,</span> <span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">)),</span>
 <span class="p">])</span>
-<span class="sd">&quot;&quot;&quot; Map python native types to configuration value types &quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot; Map the python type of a collection member to a grammar type of the collection.</span>
+
+<span class="sd">Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="type_from_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.type_from_value.html#ase2sprkkr.common.grammar_types.type_from_value">[docs]</a><span class="k">def</span> <span class="nf">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; Gues the option type from a python value. E.g. 2 =&gt; Integer &quot;&quot;&quot;</span>
+  <span class="sd">&quot;&quot;&quot; Gues the grammar type from a python value.</span>
+
+<span class="sd">  ..  doctest::</span>
+<span class="sd">  &gt;&gt;&gt; type_from_value(2)</span>
+<span class="sd">  Integer</span>
+
+<span class="sd">  &gt;&gt;&gt; type_from_value(2.0)</span>
+<span class="sd">  Real</span>
+<span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
      <span class="k">return</span> <span class="n">type_from_set_map</span><span class="p">[</span><span class="n">normalize_type</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span>
   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -773,6 +825,14 @@
   <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="type_from_default_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.type_from_default_value.html#ase2sprkkr.common.grammar_types.type_from_default_value">[docs]</a><span class="k">def</span> <span class="nf">type_from_default_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">format_all</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+   <span class="sd">&quot;&quot;&quot; Guess the grammar type from a value, that will become the default value of the grammar type.</span>
+
+<span class="sd">   It has to create a new object instance, as it has to set the default</span>
+<span class="sd">   value property of the returned object. An (output) format can be applied to the</span>
+<span class="sd">   resulting grammar type</span>
+
+<span class="sd">   Grammar types passed as types are left as is, unless format_all flag is set.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
    <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">BaseType</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">type_from_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">format_all</span><span class="o">=</span><span class="n">format_all</span><span class="p">)</span>
    <span class="n">ptype</span> <span class="o">=</span> <span class="n">normalize_type</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
@@ -780,6 +840,15 @@
    <span class="k">return</span> <span class="n">gtype</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">format_for_type</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="n">ptype</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="BaseMixed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed">[docs]</a><span class="k">class</span> <span class="nc">BaseMixed</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  A variant type - it can hold &quot;anything&quot;.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="sd">&quot;&quot;&quot; The types, that the value can hold. To be redefined in the descendants. &quot;&quot;&quot;</span>
+
+  <span class="n">string_type</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="sd">&quot;&quot;&quot; Type of string grammar_type to be used.  To be redefined in the descendants. &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseMixed._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed._grammar">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -788,6 +857,7 @@
     <span class="p">))</span></div>
 
 <div class="viewcode-block" id="BaseMixed.get_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed.get_type">[docs]</a>  <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Return the type of the value &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseMixed._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">parse_check</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -801,8 +871,10 @@
 
 
 <div class="viewcode-block" id="Mixed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Mixed.html#ase2sprkkr.common.grammar_types.Mixed">[docs]</a><span class="k">class</span> <span class="nc">Mixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A variant value to be used in input files (in unknown - custom - options) &quot;&quot;&quot;</span>
 
   <span class="n">string_type</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span>
+  <span class="sd">&quot;&quot;&quot; Input files use quoted strings. &quot;&quot;&quot;</span>
 
   <span class="n">types</span> <span class="o">=</span> <span class="p">[</span>
       <span class="n">Energy</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
@@ -820,8 +892,10 @@
 <span class="n">Mixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Mixed</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PotMixed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.PotMixed.html#ase2sprkkr.common.grammar_types.PotMixed">[docs]</a><span class="k">class</span> <span class="nc">PotMixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A variant value to be used in potential files (in unknown - custom - options) &quot;&quot;&quot;</span>
 
   <span class="n">string_type</span> <span class="o">=</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span>
+  <span class="sd">&quot;&quot;&quot; Potential files use line strings. &quot;&quot;&quot;</span>
 
   <span class="n">types</span> <span class="o">=</span> <span class="p">[</span>
       <span class="n">Energy</span><span class="o">.</span><span class="n">I</span><span class="p">,</span>
@@ -949,9 +1023,9 @@
 
 
 <div class="viewcode-block" id="Table"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Table.html#ase2sprkkr.common.grammar_types.Table">[docs]</a><span class="k">class</span> <span class="nc">Table</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; </span>
+  <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Table, optionaly with named columns, e.g.</span>
-<span class="sd">    </span>
+
 <span class="sd">    ::text</span>
 
 <span class="sd">      IQ     IREFQ       IMQ       NOQ  ITOQ  CONC</span>
@@ -1120,19 +1194,29 @@
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;TABLE of </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div></div>
 
 <span class="n">integer</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard signed integer grammar type instance &quot;&quot;&quot;</span>
 <span class="n">unsigned</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard unsigned integer grammar type instance &quot;&quot;&quot;</span>
 <span class="n">boolean</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard bool grammar type instance (for potential files) &quot;&quot;&quot;</span>
 <span class="n">flag</span> <span class="o">=</span> <span class="n">Flag</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard bool grammar type instance (for input files) &quot;&quot;&quot;</span>
 <span class="n">real</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard real grammar type instance &quot;&quot;&quot;</span>
 <span class="n">string</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard string grammar type instance &quot;&quot;&quot;</span>
 <span class="n">qstring</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard quoted string grammar type instance (for input files) &quot;&quot;&quot;</span>
 <span class="n">line_string</span> <span class="o">=</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard line string grammar type instance (for potential files) &quot;&quot;&quot;</span>
 <span class="n">mixed</span> <span class="o">=</span> <span class="n">Mixed</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard variant grammar type instance (for input files) &quot;&quot;&quot;</span>
 <span class="n">pot_mixed</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard variant grammar type instance (for potential files) &quot;&quot;&quot;</span>
 <span class="n">separator</span> <span class="o">=</span> <span class="n">Separator</span><span class="o">.</span><span class="n">I</span>
+<span class="sd">&quot;&quot;&quot; A standard separator line grammar type instance (for potential files) &quot;&quot;&quot;</span>
 <span class="n">energy</span> <span class="o">=</span> <span class="n">Energy</span><span class="o">.</span><span class="n">I</span>
-
-
+<span class="sd">&quot;&quot;&quot; A standard energy float value type instance (for potential files) &quot;&quot;&quot;</span>
 
 <span class="n">context</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">context</span>

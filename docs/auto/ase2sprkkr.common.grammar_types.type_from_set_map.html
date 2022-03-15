@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="DefKeyword" href="ase2sprkkr.common.grammar_types.DefKeyword.html" />
-    <link rel="prev" title="grammar_types" href="ase2sprkkr.common.grammar_types.html" /> 
+    <link rel="next" title="integer" href="ase2sprkkr.common.grammar_types.integer.html" />
+    <link rel="prev" title="type_from_type_map" href="ase2sprkkr.common.grammar_types.type_from_type_map.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -113,7 +113,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type_map.html">normalize_type_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type_map.html">type_from_type_map</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">type_from_set_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.integer.html">integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.unsigned.html">unsigned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.boolean.html">boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.flag.html">flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.real.html">real</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.string.html">string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.qstring.html">qstring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.line_string.html">line_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html">mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.pot_mixed.html">pot_mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.separator.html">separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.energy.html">energy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html">DefKeyword</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html">format_for_type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html">normalize_type</a></li>
@@ -239,7 +253,8 @@
 <dl class="py data">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.type_from_set_map">
 <span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">type_from_set_map</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">OrderedDict([(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.SetOf</span> <span class="pre">object&gt;),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">&lt;ase2sprkkr.common.grammar_types.SetOf</span> <span class="pre">object&gt;)])</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.type_from_set_map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Map python native types to configuration value types</p>
+<dd><p>Map the python type of a collection member to a grammar type of the collection.</p>
+<p>Only canonical types are expected, see <a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html#ase2sprkkr.common.grammar_types.normalize_type" title="ase2sprkkr.common.grammar_types.normalize_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.normalize_type()</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -250,8 +265,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.common.grammar_types.DefKeyword.html" class="btn btn-neutral float-right" title="DefKeyword" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="ase2sprkkr.common.grammar_types.html" class="btn btn-neutral float-left" title="grammar_types" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.grammar_types.integer.html" class="btn btn-neutral float-right" title="integer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.grammar_types.type_from_type_map.html" class="btn btn-neutral float-left" title="type_from_type_map" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

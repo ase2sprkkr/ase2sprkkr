@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="type_from_set_map" href="ase2sprkkr.common.grammar_types.type_from_set_map.html" />
+    <link rel="next" title="normalize_type_map" href="ase2sprkkr.common.grammar_types.normalize_type_map.html" />
     <link rel="prev" title="replace_whitechars" href="ase2sprkkr.common.grammar.replace_whitechars.html" /> 
 </head>
 
@@ -113,7 +113,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">grammar_types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type_map.html">normalize_type_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type_map.html">type_from_type_map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html">type_from_set_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.integer.html">integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.unsigned.html">unsigned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.boolean.html">boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.flag.html">flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.real.html">real</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.string.html">string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.qstring.html">qstring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.line_string.html">line_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html">mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.pot_mixed.html">pot_mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.separator.html">separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.energy.html">energy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html">DefKeyword</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html">format_for_type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html">normalize_type</a></li>
@@ -243,8 +257,50 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type_map.html#ase2sprkkr.common.grammar_types.normalize_type_map" title="ase2sprkkr.common.grammar_types.normalize_type_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_type_map</span></code></a></p></td>
+<td><p>Mapping of alternative types to the 'canonical ones'.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type_map.html#ase2sprkkr.common.grammar_types.type_from_type_map" title="ase2sprkkr.common.grammar_types.type_from_type_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_type_map</span></code></a></p></td>
+<td><p>The standard grammar_types for python types.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html#ase2sprkkr.common.grammar_types.type_from_set_map" title="ase2sprkkr.common.grammar_types.type_from_set_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_set_map</span></code></a></p></td>
-<td><p>Map python native types to configuration value types</p></td>
+<td><p>Map the python type of a collection member to a grammar type of the collection.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.integer.html#ase2sprkkr.common.grammar_types.integer" title="ase2sprkkr.common.grammar_types.integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integer</span></code></a></p></td>
+<td><p>A standard signed integer grammar type instance</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.unsigned.html#ase2sprkkr.common.grammar_types.unsigned" title="ase2sprkkr.common.grammar_types.unsigned"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unsigned</span></code></a></p></td>
+<td><p>A standard unsigned integer grammar type instance</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.boolean.html#ase2sprkkr.common.grammar_types.boolean" title="ase2sprkkr.common.grammar_types.boolean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boolean</span></code></a></p></td>
+<td><p>A standard bool grammar type instance (for potential files)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.flag.html#ase2sprkkr.common.grammar_types.flag" title="ase2sprkkr.common.grammar_types.flag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flag</span></code></a></p></td>
+<td><p>A standard bool grammar type instance (for input files)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.real.html#ase2sprkkr.common.grammar_types.real" title="ase2sprkkr.common.grammar_types.real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">real</span></code></a></p></td>
+<td><p>A standard real grammar type instance</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.string.html#ase2sprkkr.common.grammar_types.string" title="ase2sprkkr.common.grammar_types.string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code></a></p></td>
+<td><p>A standard string grammar type instance</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.qstring.html#ase2sprkkr.common.grammar_types.qstring" title="ase2sprkkr.common.grammar_types.qstring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qstring</span></code></a></p></td>
+<td><p>A standard quoted string grammar type instance (for input files)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.line_string.html#ase2sprkkr.common.grammar_types.line_string" title="ase2sprkkr.common.grammar_types.line_string"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line_string</span></code></a></p></td>
+<td><p>A standard line string grammar type instance (for potential files)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html#ase2sprkkr.common.grammar_types.mixed" title="ase2sprkkr.common.grammar_types.mixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mixed</span></code></a></p></td>
+<td><p>A standard variant grammar type instance (for input files)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.pot_mixed.html#ase2sprkkr.common.grammar_types.pot_mixed" title="ase2sprkkr.common.grammar_types.pot_mixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pot_mixed</span></code></a></p></td>
+<td><p>A standard variant grammar type instance (for potential files)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.separator.html#ase2sprkkr.common.grammar_types.separator" title="ase2sprkkr.common.grammar_types.separator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">separator</span></code></a></p></td>
+<td><p>A standard separator line grammar type instance (for potential files)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.energy.html#ase2sprkkr.common.grammar_types.energy" title="ase2sprkkr.common.grammar_types.energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">energy</span></code></a></p></td>
+<td><p>A standard energy float value type instance (for potential files)</p></td>
 </tr>
 </tbody>
 </table>
@@ -256,22 +312,22 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html#ase2sprkkr.common.grammar_types.DefKeyword" title="ase2sprkkr.common.grammar_types.DefKeyword"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DefKeyword</span></code></a>(default, *others, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>A value, that can take values from the predefined set of strings, the first one is the default value.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html#ase2sprkkr.common.grammar_types.format_for_type" title="ase2sprkkr.common.grammar_types.format_for_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_for_type</span></code></a>(format, type)</p></td>
 <td><p>Returns the format appropriate to the given type</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html#ase2sprkkr.common.grammar_types.normalize_type" title="ase2sprkkr.common.grammar_types.normalize_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_type</span></code></a>(type)</p></td>
-<td><p></p></td>
+<td><p>Return the 'canonical type' for a given type</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_default_value.html#ase2sprkkr.common.grammar_types.type_from_default_value" title="ase2sprkkr.common.grammar_types.type_from_default_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_default_value</span></code></a>(value[, format, ...])</p></td>
-<td><p></p></td>
+<td><p>Guess the grammar type from a value, that will become the default value of the grammar type.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type.html#ase2sprkkr.common.grammar_types.type_from_type" title="ase2sprkkr.common.grammar_types.type_from_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_type</span></code></a>(type[, format, format_all])</p></td>
 <td><p>Guess and return the grammar element (BaseType class descendatnt) from a python type.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_value.html#ase2sprkkr.common.grammar_types.type_from_value" title="ase2sprkkr.common.grammar_types.type_from_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type_from_value</span></code></a>(value)</p></td>
-<td><p>Gues the option type from a python value.</p></td>
+<td><p>Gues the grammar type from a python value.</p></td>
 </tr>
 </tbody>
 </table>
@@ -283,55 +339,55 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Array.html#ase2sprkkr.common.grammar_types.Array" title="ase2sprkkr.common.grammar_types.Array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Array</span></code></a>(type[, default_value, length, ...])</p></td>
-<td><p></p></td>
+<td><p>A (numpy) array of values of one type</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed" title="ase2sprkkr.common.grammar_types.BaseMixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseMixed</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A variant type - it can hold &quot;anything&quot;.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.BaseRealWithUnits" title="ase2sprkkr.common.grammar_types.BaseRealWithUnits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseRealWithUnits</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>The base class for float value, which can have units append.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseString.html#ase2sprkkr.common.grammar_types.BaseString" title="ase2sprkkr.common.grammar_types.BaseString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseString</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>Base type for string grammar types</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseType</span></code></a>([prefix, postfix, format, ...])</p></td>
 <td><p>Base class for definition of configuration option types</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Bool.html#ase2sprkkr.common.grammar_types.Bool" title="ase2sprkkr.common.grammar_types.Bool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bool</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A bool type, whose value is represented by a letter (T or F)</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Date.html#ase2sprkkr.common.grammar_types.Date" title="ase2sprkkr.common.grammar_types.Date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Date</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A date value of the form 'DD.MM.YYYY'</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Energy.html#ase2sprkkr.common.grammar_types.Energy" title="ase2sprkkr.common.grammar_types.Energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Energy</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>The grammar type for energy.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Flag.html#ase2sprkkr.common.grammar_types.Flag" title="ase2sprkkr.common.grammar_types.Flag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Flag</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A boolean value, which is True, if a name of the value appears in the input file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Integer.html#ase2sprkkr.common.grammar_types.Integer" title="ase2sprkkr.common.grammar_types.Integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Integer</span></code></a>([prefix, postfix, format, ...])</p></td>
 <td><p>Signed integer</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Keyword.html#ase2sprkkr.common.grammar_types.Keyword" title="ase2sprkkr.common.grammar_types.Keyword"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Keyword</span></code></a>(*keywords, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>A value, that can take values from the predefined set of strings.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.LineString.html#ase2sprkkr.common.grammar_types.LineString" title="ase2sprkkr.common.grammar_types.LineString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineString</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p>String up to the end of line</p></td>
+<td><p>A string, that takes all up to the end of the line</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Mixed.html#ase2sprkkr.common.grammar_types.Mixed" title="ase2sprkkr.common.grammar_types.Mixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mixed</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A variant value to be used in input files (in unknown - custom - options)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.PotMixed.html#ase2sprkkr.common.grammar_types.PotMixed" title="ase2sprkkr.common.grammar_types.PotMixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PotMixed</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A variant value to be used in potential files (in unknown - custom - options)</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.QString.html#ase2sprkkr.common.grammar_types.QString" title="ase2sprkkr.common.grammar_types.QString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QString</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p>Quoted string</p></td>
+<td><p>Either a quoted string, or just a word (without whitespaces or special chars)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Real.html#ase2sprkkr.common.grammar_types.Real" title="ase2sprkkr.common.grammar_types.Real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Real</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>A real value</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.RealWithUnits.html#ase2sprkkr.common.grammar_types.RealWithUnits" title="ase2sprkkr.common.grammar_types.RealWithUnits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealWithUnits</span></code></a>(*args, units, **kwargs)</p></td>
-<td><p></p></td>
+<td><p>A float value with user-defined units</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Separator.html#ase2sprkkr.common.grammar_types.Separator" title="ase2sprkkr.common.grammar_types.Separator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Separator</span></code></a>([prefix, postfix, format, ...])</p></td>
 <td><p>Special class for <code class="docutils literal notranslate"><span class="pre">****</span></code> separator inside a section</p></td>
@@ -343,7 +399,7 @@
 <td><p>Set of values of the same type.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.String.html#ase2sprkkr.common.grammar_types.String" title="ase2sprkkr.common.grammar_types.String"><code class="xref py py-obj docutils literal notranslate"><span class="pre">String</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
+<td><p>Just a string (without whitespaces and few special chars)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.Table.html#ase2sprkkr.common.grammar_types.Table" title="ase2sprkkr.common.grammar_types.Table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Table</span></code></a>([columns, header, free_header, ...])</p></td>
 <td><p>Table, optionaly with named columns, e.g.</p></td>
@@ -361,7 +417,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="ase2sprkkr.common.grammar_types.type_from_set_map.html" class="btn btn-neutral float-right" title="type_from_set_map" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.grammar_types.normalize_type_map.html" class="btn btn-neutral float-right" title="normalize_type_map" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="ase2sprkkr.common.grammar.replace_whitechars.html" class="btn btn-neutral float-left" title="replace_whitechars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

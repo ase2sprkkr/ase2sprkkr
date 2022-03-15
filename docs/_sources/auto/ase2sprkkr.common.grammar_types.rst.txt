@@ -13,7 +13,21 @@ Full name: **ase2sprkkr.common.grammar\_types**
       :toctree:
       :template: custom-base-template.rst
    
+      normalize_type_map
+      type_from_type_map
       type_from_set_map
+      integer
+      unsigned
+      boolean
+      flag
+      real
+      string
+      qstring
+      line_string
+      mixed
+      pot_mixed
+      separator
+      energy
    
    
 

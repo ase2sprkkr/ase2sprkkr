@@ -79,6 +79,7 @@ Full name: **ase2sprkkr.common.grammar\_types.Mixed**
         ~Mixed.has_value
         ~Mixed.name_in_grammar
         ~Mixed.string_type
+        ~Mixed.type
         ~Mixed.types
 
    

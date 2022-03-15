@@ -77,6 +77,8 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseMixed**
         ~BaseMixed.default_value
         ~BaseMixed.has_value
         ~BaseMixed.name_in_grammar
+        ~BaseMixed.string_type
+        ~BaseMixed.type
 
    
    

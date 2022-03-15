@@ -113,7 +113,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type_map.html">normalize_type_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type_map.html">type_from_type_map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html">type_from_set_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.integer.html">integer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.unsigned.html">unsigned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.boolean.html">boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.flag.html">flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.real.html">real</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.string.html">string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.qstring.html">qstring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.line_string.html">line_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html">mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.pot_mixed.html">pot_mixed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.separator.html">separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.energy.html">energy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.DefKeyword.html">DefKeyword</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.format_for_type.html">format_for_type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.normalize_type.html">normalize_type</a></li>
@@ -240,6 +254,7 @@
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.RealWithUnits">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">RealWithUnits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#RealWithUnits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.RealWithUnits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseRealWithUnits.html#ase2sprkkr.common.grammar_types.BaseRealWithUnits" title="ase2sprkkr.common.grammar_types.BaseRealWithUnits"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseRealWithUnits</span></code></a></p>
+<p>A float value with user-defined units</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.RealWithUnits.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#RealWithUnits.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.RealWithUnits.__init__" title="Permalink to this definition">¶</a></dt>
@@ -397,7 +412,7 @@
 <td><p>Deafault type for creating numpy arrays (e.g.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_cache</span></code></p></td>
-<td><p></p></td>
+<td><p>A grammar for units is cached</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_value</span></code></p></td>
 <td><p>Default value for BaseValueDefinition.name_in_grammar.</p></td>
