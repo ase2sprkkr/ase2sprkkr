@@ -37,15 +37,28 @@ def unique_dict(values):
     return out
 
 class BaseDefinition:
+   """ A base class for a configuration definition, either of an option, or of a container.
+   The definition determine the type of value(s) in the configuration/problem-definition file,
+   the format of the values, the way how it/they is/are read etc...
+   """
 
    result_class = None
    """ Parsing of the data results in an instance of this class. To be redefined in descendants. """
 
    name_in_grammar = True
-   """ By default, all values,sections.... are named (in the configuration file)"""
+   """ Is the name of the value/section present in the file?
+
+   When False, the option/section name is not written to the file at all. The value(s)
+   of the option/section is/are then expected to be located in the file
+   just after the previous one.
+
+   By default, all options and sections… are named (in the configuration file). However,
+   the attribute can be redefined in instantiated objects and/or descendant classes to change
+   the behavior.
+   """
 
    def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
-                name_in_grammar=None, description=None, help=None, write_alternative_name=False, grammar_of_delimiter=None):
+                name_in_grammar=None, description=None, help=None, write_alternative_name=False):
        """
        Parameters
        ----------
@@ -75,21 +88,23 @@ class BaseDefinition:
           (Long) help message for the value/section
        """
        self.name = name
+       """ The name of the option/section """
        if isinstance(alternative_names, str):
-          self.alternative_names = [ alternative_names ]
-       else:
-          self.alternative_names = alternative_names
+          alternative_names = [ alternative_names ]
+       self.alternative_names = alternative_names
+       """ Alternative names of the option/section. The option/section can
+       be "denoted" in the configuration file by either by its name or any
+       of the alternative names.
+       """
        self.is_optional = is_optional
+       """ Is it required part of configuration (or can it be ommited)? """
        self.write_alternative_name = write_alternative_name
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
        self.help = help
+       """ A short help text describing the content for the users. """
        self.description = description
-
-       if grammar_of_delimiter is not None:
-          if not callable(grammar_of_delimiter):
-             grammar_of_delimiter = lambda x: grammar_of_delimiter
-          self.grammar_of_delimiter = grammar_of_delimiter
+       """ A longer help text describing the content for the users. """
 
    def create_object(self, container=None):
        """ Creates Section/Option/.... object (whose properties I define) """

@@ -22,6 +22,7 @@ from .grammar import generate_grammar, separator as separator_grammar, \
 from ase.units import Rydberg
 import copy
 import datetime
+from typing import Union, Any, Callable
 
 context =  generate_grammar()
 context.__enter__()
@@ -29,11 +30,6 @@ context.__enter__()
 
 class BaseType:
   """ Base class for definition of configuration option types
-
-      :ivar: str prefix: The string, that will be printed before the value
-      :ivar: str postfix: The string, that will be printed before the value
-      :ivar: str format: The format string, that will be used for printing the value.
-      :ivar: default_value: The default value of an option of this type, if it does not say otherwise.
 
       A type without value (e.g. Separator) are just syntactical
       elements in the potentials file, that do not carry an information.
@@ -45,7 +41,8 @@ class BaseType:
       the Flag is False), but the name-value tuple of such Type is present
       in the parse result. On the other hand, has_value = False is in the file, but
       not in the result.
-  """
+
+        """
   has_value = True
 
   """ Default value for BaseValueDefinition.name_in_grammar.
@@ -54,7 +51,8 @@ class BaseType:
   """
   name_in_grammar = True
 
-  """ Default value for the given type. It can be overriden in the constructor. """
+  """ Default value for the given type. It can be overriden in the constructor (or just by setting
+  the instantiated object attribute) """
   default_value = None
 
   """ Deafault type for creating numpy arrays (e.g. by Table) is object - to be redefined
@@ -62,10 +60,46 @@ class BaseType:
   """
   numpy_type = object
 
-  def __init__(self, prefix=None, postfix=None, format='', default_value=None, condition=None, after_convert=None):
+  def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
+                     format:str='', default_value:Any=None,
+                     condition:Union[Callable[[Any], Union[bool,str]],None]=None,
+                     after_convert:Union[Callable[Any, Any],None]=None):
+      """
+      Create the object.
+
+      Parameters
+      ----------
+      prefix
+        The string, that will be printed before the value
+
+      postfix
+        The string, that will be printed after the value
+
+      format
+        The (python) format string, that will be used for printing the value.
+        The format is passed as format argument to ``str.format`` routine.
+
+      default_value
+        The default value of the options of this type. ``None`` means no default value.
+
+      condition
+        Function, that check the validity of the value. It should return ``True`` for a valid
+        value, and ``False`` or string for invalid. The string is interpreted as an error message
+        that explains the invalidity of the value.
+
+      after_convert
+        Function, that - if it is given - is applied to the (entered or parsed) value. The function
+        is applied on the result of the
+        :meth:`convert<ase2sprkkr.common.grammar_types.BaseType.convert>` method
+      """
+
       self.prefix = prefix
+      """ The string, that will be printed before the value """
       self.postfix = postfix
+      """ The string, that will be printed after the value """
       self.format = format
+      """ The (python) format string, that will be used for printing the value.
+        The format is passed as format argument to ``str.format`` routine.  """
       self.condition = condition
       if after_convert is not None:
          self.convert = lambda v: \
@@ -632,7 +666,7 @@ Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.no
 def type_from_value(value):
   """ Gues the grammar type from a python value.
 
-  ..  doctest::
+  ..doctest::
   >>> type_from_value(2)
   Integer
 

@@ -30,10 +30,10 @@ class TestStructure(TestCase):
        s.seek(0)
        out = pd.read_from_file(s)
 
-       a=out.LATTICE.to_dict()
-       b=sec.to_dict()
+       a=out.LATTICE.as_dict()
+       b=sec.as_dict()
 
-       self.assertEqual(out.LATTICE.to_dict(), sec.to_dict())
+       self.assertEqual(out.LATTICE.as_dict(), sec.as_dict())
        self.assertIsNotNone(out.atoms)
        new_cell = out.atoms.cell
        self.assertIsNotNone(new_cell)

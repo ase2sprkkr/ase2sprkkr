@@ -265,4 +265,4 @@ XSITES NR=3 FLAG
     ips.save_to_file(output)
     output.seek(0)
     ips2 = input_parameters_def.read_from_file(output)
-    self.assertEqual(str(ips.to_dict()), str(ips2.to_dict()))
+    self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))

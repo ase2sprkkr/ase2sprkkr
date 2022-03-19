@@ -15,21 +15,48 @@ import itertools
 import re
 
 class ConfigurationContainer(BaseConfiguration):
-  """ Custom task section. Section created by user with no definition """
+  """ A container for configuration (problem-definition) options and/or sections.
+
+  Options in the configuration (problem-definition) files are grouped to
+  sections, sections are then grouped in a configuration file object.
+  This is a base class for these containers.
+
+  """
 
   def __init__(self, definition, container=None):
+      """ Create the container and its members, according to the definition """
       super().__init__(definition, container)
       self._members = OrderedDict()
-      #to acces the member via container.member notation, the forbidden
-      #characters in the name are replaced by _
+      """
+      The members of the container, in a form of ``{obj.name : obj}``
+      """
       self._interactive_members = OrderedDict()
+      """
+      Non-hidden members of the containers, accesible via sanitized names.
+      I.e. via names with whitespaces and other special characters replaced by underscore.
+      These sanitized names are then used as names for "attributes" of this container, to
+      make the members accesible via ``<container>.<member>`` notation.
+      """
       for v in definition.members():
           self._add(v.create_object(self))
 
   def members(self):
+      """ Members of the container. I.e. the option of the section, or sections
+      of the configuration file e.t.c.
+
+      Returns
+      -------
+      members: dict
+      A dictionary of the shape ``{ name : member }``
+
+      """
       return self._members
 
   def _get_member(self, name):
+      """
+      Return the member of the container of a given name.
+      It search either the members and interactive_members containers
+      """
       if name in self._members:
           out = self._members[name]
       elif name in self._interactive_members:
@@ -41,6 +68,10 @@ class ConfigurationContainer(BaseConfiguration):
       return out
 
   def __getattr__(self, name):
+      """
+      The members of the container are accesible as attributes of the container, too.
+      Either using their normal, or ``sanitized`` names.
+      """
       try:
         out = self._get_member(name)
       except AttributeError as e:
@@ -49,21 +80,37 @@ class ConfigurationContainer(BaseConfiguration):
       return out
 
   def __getitem__(self, name):
-    return self._members[name]
+      """
+      The members of the container are accesible using ``container["member name"]`` notation.
+      """
+      return self._members[name]
 
   def __dir__(self):
+      """
+      Expose the interactive_members in the container attribute listing.
+      Interactive_members are the non-hidden members identified by their sanitized names.
+      """
       return itertools.chain(self._interactive_members.keys(), super().__dir__())
 
   def __contains__(self, name):
+      """ The check for existence of a member with the given name."""
       return name in self._members
 
   def clear(self, do_not_check_required=False):
+      """
+      Erase all values (or reset to default) from all options in the container
+      (ad subcontainers)
+
+      Parameters
+      ----------
+      do_not_check_required: bool
+      Do not check validity of the values after clearing. If ``False`` (default)
+      is passed as this argument, the required option without a default value
+      (or a section containing such value) throw an exception, which prevents the
+      clearing (neverthenless, previous values in the section will be cleared anyway).
+      """
       for i in self._members.values():
           i.clear(do_not_check_required)
-
-  @property
-  def name(self):
-      return self._definition.name
 
   def get(self, name=None, unknown='find'):
       """
@@ -85,7 +132,7 @@ class ConfigurationContainer(BaseConfiguration):
       """
 
       if name is None:
-         return self.to_dict()
+         return self.as_dict()
       if '.' in name:
          section, name = name.split('.')
          return self._members[section].get(name)
@@ -188,27 +235,51 @@ class ConfigurationContainer(BaseConfiguration):
             del self._interactive_members[iname]
 
   def __iter__(self):
+      """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def to_dict(self, dct=None):
+  def as_dict(self):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
+
       """
       out = OrderedDict()
       for i in self:
-          i.to_dict(out)
-      if dct is not None and out:
-          dct[self.name] = out
-      return out
+          value = i.as_dict()
+          if value is not None:
+              out[i.name] = value
+      return out or None
 
   def to_string(self, *, validate=False):
+      """
+      Return the configuration (problem definition) in a string.
+
+      Returns
+      -------
+      configuration:str
+      The configuration, as it should be saved in a configuration/problem definition file.
+      """
       from io import StringIO
       s = StringIO()
       self.save_to_file(s, validate=validate)
       return s.getvalue()
 
   def _find_value(self, name):
+      """
+      Find a value of a given name in self or in any
+      of owned subcontainers.
+
+      Parameters
+      ----------
+      name: str
+      A name of the sought options
+
+      Returns
+      -------
+      value:typing.Optional[ase2sprkkr.common.options.Option]
+      The first option of the given name, if such exists. ``None`` otherwise.
+      """
       for i in self:
           if i._definition.is_hidden:
              continue
@@ -218,7 +289,12 @@ class ConfigurationContainer(BaseConfiguration):
 
   @staticmethod
   def _interactive_member_name(name):
-      return re.sub(r'[ -]','_',name)
+      """ Create a sanitized name from a member-name.
+
+      The sanitized names are keys in ``interactive_members`` array, and thus
+      the members are accesible by ``<container>.<member>`` notation.
+      """
+      return re.sub(r'[\s-.]','_',name)
 
   def _add(self, member):
       name = member.name
@@ -229,13 +305,22 @@ class ConfigurationContainer(BaseConfiguration):
               self._interactive_members[iname] = member
 
   def save_to_file(self, file, *, validate=True):
+      """ Save the configuration to a file. The method is implemented in the descendants.
+
+      TODO
+      ----
+      The implementations in the descendant could be probably merged.
+      """
+
       raise NotImplemented()
 
 
 class BaseSection(ConfigurationContainer):
-  """ A section of SPRKKR configuration  """
+  """ A section of SPRKKR configuration - i.e. part of the configuration file. """
 
   def __setattr__(self, name, value):
+      """ Setting the (unknown) attribute of a section sets the value of the member
+      with a given name """
       if name[0]=='_':
         super().__setattr__(name, value)
       else:
@@ -244,6 +329,8 @@ class BaseSection(ConfigurationContainer):
 
   def has_any_value(self) -> bool:
       """
+      Return True if any member of the section has value.
+
       Return
       ------
         has_any_value: bool
@@ -274,25 +361,19 @@ class BaseSection(ConfigurationContainer):
              file.write(self._definition.delimiter)
       file.flush()
 
-  @property
-  def seciton_name(self):
-      """
-      Name of the section.
-
-      Returns
-      -------
-        name: str
-          The name of the section (according to the definition of the section)
-      """
-
-      return self._definition.name
-
-
 class Section(BaseSection):
   """ A standard section of a task or potential (whose content is predefinded by SectionDefinition) """
 
   @property
   def definition(self):
+      """ The definition of the section.
+
+      Returns
+      -------
+      ase2sprkkr.common.configuration_definitions.BaseContainerDefinition
+      The definition of the section. I.e. the object that defines, which configuration values
+      are in the section, their default values etc.
+      """
       return self._definition
 
 
@@ -328,9 +409,23 @@ class CustomSection(BaseSection):
 
 
 class RootConfigurationContainer(ConfigurationContainer):
+  """ Base class for data of configuration/problem-definition files
+
+  In addition to container capabilities, it can read/write its data from/to file.
+  """
 
   def save_to_file(self, file, *, validate=True):
-      """ Save the configuration to a file in a format readable by SPR-KKR """
+      """ Save the configuration to a file in a format readable by SPR-KKR i
+
+      Parameters
+      ----------
+      file: str or file
+        File to read the data from
+
+      validate: bool
+        Validate the data in the container first and raise an exception,
+        if there is an error (e.g. the the data are not complete)
+      """
       if not hasattr(file, 'write'):
          with open(file, "w") as file:
            return self.save_to_file(file, validate=validate)
@@ -345,6 +440,18 @@ class RootConfigurationContainer(ConfigurationContainer):
       file.flush()
 
   def read_from_file(self, file, clear_first=True):
+      """ Read data from a file
+
+      Parameters
+      ----------
+      file: str or file
+        File to read the data from
+
+      clear_first: bool
+        Clear the container first.
+        Otherwise, the data in the sections that are not present in the
+        file are preserved.
+      """
       values = self._definition.parse_file(file)
       #except Exception as e:
       #   print(e)

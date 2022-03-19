@@ -26,8 +26,12 @@ class SPRKKR(Calculator):
 
     :cvar ase2sprkkr.input_parameters.input_parameters.InputParameters InputParameters: (just for an easier access to the class)
     :cvar ase2sprkkr.potentials.potentials.Potential Potential: (dto.)
-    :ivar Union[str|typing.TextIO] potential_file: the path and name of the potential file to be used (if not specified otherwise in the called method)
-    """
+
+    The parameters of performed calculations are determined mostly by ``input_parameters``, given either
+    in :meth:`constructor<ase2sprkkr.sprkkr.calculator.SPRKKR.__init__>` or in the :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` method.
+    The following attributes of the calculator are mostly the default values of the arguments of the :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` or :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` methods.
+
+        """
     implemented_properties = ['energy']
 
     def __init__(self, restart=None,
@@ -64,12 +68,12 @@ class SPRKKR(Calculator):
         potential_file: str or file or bool
           The template for the potential file name (see the input_file parameter).
 
-        print_output: bool or str
+        print_output: Union[bool,str]
           Write the output of runned executables to stdout (in addition to the output file)?
           (Default value for the calculator)
           If print_output = 'info', only a few info lines per iteration will be printed.
 
-        mpi: list or string or int or bool.
+        mpi: Union[list,string,int,bool]
           Runner for mpi to run a mpi calculation. True and int means autodetect: use True
           for a cluster where mpi is able to autodetect the number of the processes, otherwise
           use integer to specify the number of processes.
@@ -112,25 +116,50 @@ class SPRKKR(Calculator):
         self.atoms = atoms
         self.potential = potential
         self.executable_postfix = executable_postfix
+        """ The default postfix for the names of executables. False means no postfix, True means
+        to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. """
 
         super().__init__(restart,
                          label=label, atoms=atoms, directory=directory)
         self.atoms = atoms
         self.potential = potential
         self.mpi = mpi
+        """ Default value for mpi parameter of calculate - it determine the way whether and how
+        the mpi is employed. """
         self.input_file = input_file
+        """ A pathname or an open named file for the input file (if not specified otherwise in the
+        called method) """
         self.output_file = output_file
+        """ A pathname or an open file for the output of the runned SPR-KKR task (if not specified
+        otherwise in the called method) """
         self.potential_file = potential_file
+        """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) """
         self.input_parameters = input_parameters
         if options:
           self.input_parameters.set(options, unknown = 'find')
         self.print_output = print_output
+        """ The default parameter for the print_output arguments of
+        :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the
+        runned SPR-KKR should be written to the standard ouput (in addition to the output file). """
 
-        #For %c template in file names
         self._counter = 0
+        #For %c template in file names
 
     @property
     def input_parameters(self):
+        """
+        The parameters for the runned task, given either by the
+        :class:`ase2sprkkr.input_parameters.input_parameters.InputParameters`
+        object, or by string resulting in the default parameters for a taks with the given name.
+
+        If a string is set to the property, the
+        :class:`InputPamaters<ase2sprkkr.input_parameters.input_parameters.InputParameters>`
+        object is created with the default values for the task with a given name.
+
+        The parameters can be either overriden by ``input_parameters`` argument of the
+        :meth:`calculate<ase2sprkkr.sprkkr.calculator.SPRKKR.calculate>` method,
+        or (one-time) modified by its ``options`` argument.
+        """
         if self._input_parameters is None:
            self.input_parameters = 'SCF'
         return self._input_parameters
@@ -204,10 +233,11 @@ class SPRKKR(Calculator):
        return self._atoms
 
     @atoms.setter
-    def atoms(self, at):
-       self._atoms = at
+    def atoms(self, atoms):
+       atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+       self._atoms = atoms
        if self._potential and not self._potential is True:
-          self._potential.atoms = at
+          self._potential.atoms = atoms
 
     def _advance_counter(self):
         """ Advance counter for generating filenames with %c counter placeholder """

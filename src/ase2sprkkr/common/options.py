@@ -8,11 +8,11 @@ class Option(BaseConfiguration):
   be used as a part of InputParameters or Potential configuration.
   Usage:
 
-  conf.ENERGY.ImE = 5
-  conf.ENERGY.ImE()
-  > 5
-  conf.ENERGY.ImE.__doc__
-  > The ImE option means ...
+  >>> conf.ENERGY.ImE = 5
+  >>> conf.ENERGY.ImE()
+  5
+  >>> conf.ENERGY.ImE.__doc__
+  The ImE option means ...
   """
   def __init__(self, definition, container=None, value=None):
       """"
@@ -92,10 +92,8 @@ class Option(BaseConfiguration):
   def name(self):
       return self._definition.name
 
-  def to_dict(self, dct):
-      value = self()
-      if value is not None:
-         dct[self.name] = value
+  def as_dict(self, add_to):
+      return self()
 
   def _find_value(self, name):
       if self._definition.name == name:
