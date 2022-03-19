@@ -6,10 +6,15 @@ Full name: **{{ fullname | escape }}**
 
 .. autoclass:: {{ objname }}
    :members:
-   :show-inheritance:
    :inherited-members:
 
-   {% block methods %}
+   .. rubric:: {{ _('Class hierarchy') }}
+   .. inheritance-diagram:: {{ fullname }}
+      :parts: 2
+
+   |
+
+   .. rubric:: {{ _('Constructor') }}
    .. automethod:: __init__
 
    {% if methods %}

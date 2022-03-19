@@ -34,6 +34,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
+    'sphinx.ext.inheritance_diagram'
 ]
 
 autodoc_default_options = {
@@ -98,3 +99,9 @@ def setup(app):
 
 
 exclude_patterns = ['*/test/*', '*/test']
+
+inheritance_graph_attrs = dict(rankdir="LR", #size='"6.0, 8.0"',
+    fontsize=14, ranksep=0.3 )
+inheritance_edge_attrs = { 'arrowsize': 0.7 }
+inheritance_parent_node_attrs = { 'color' : 'gray28', 'fontcolor' : 'gray28', 'style' : 'solid' }
+inheritance_node_attrs = { 'style' : '"filled"', 'fillcolor' : 'lightgray' }

@@ -2,6 +2,18 @@
 
 Full name: **{{ fullname | escape }}**
 
+{% if classes %}
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram:: {% for item in classes %} {{fullname}}.{{ item }} {% endfor %}
+      :parts: 1
+
+|
+{% endif %}
+
+.. rubric:: Description
+
 .. automodule:: {{ fullname }}
 
    {% block attributes %}
