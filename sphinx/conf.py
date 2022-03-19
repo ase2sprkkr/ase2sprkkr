@@ -82,6 +82,15 @@ def skip_member(app, what, name, obj, skip, options):
           return True
        if name.endswith('.test'):
           return True
+    if what=='method':
+       if getattr(obj, '__objclass__', None) is object:
+           return True
+       if getattr(obj, '__module__', None) is None:
+           return True
+    if name == '__subclasshook__':
+       breakpoint()
+    if what=='attribute' and name in ['__module__','__weakref__', '__doc__', '__dict__']:
+       return True
     return False
 
 def setup(app):
