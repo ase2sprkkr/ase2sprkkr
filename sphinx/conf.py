@@ -28,6 +28,7 @@ author = 'Matyáš Novák & Jano Minár'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
+    'sphinx.ext.todo',
     'sphinx_toolbox.sidebar_links',
     'sphinx.ext.viewcode',
     'sphinx.ext.coverage',
