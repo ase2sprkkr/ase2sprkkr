@@ -1,45 +1,77 @@
 OutputNonameValueDefinition
 ===========================
 
-Full name: **ase2sprkkr.outputs.output\_definitions.OutputNonameValueDefinition**
 
 .. currentmodule:: ase2sprkkr.outputs.output_definitions
 
 .. autoclass:: OutputNonameValueDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputNonameValueDefinition.name_in_grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputNonameValueDefinition.do_not_skip_whitespaces_before_name
+        ~OutputNonameValueDefinition.formated_name
+        ~OutputNonameValueDefinition.prefix
+        ~OutputNonameValueDefinition.value_name_format
+        ~OutputNonameValueDefinition.name
+        ~OutputNonameValueDefinition.alternative_names
+        ~OutputNonameValueDefinition.is_optional
+        ~OutputNonameValueDefinition.help
+        ~OutputNonameValueDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~OutputNonameValueDefinition.__delattr__
-        ~OutputNonameValueDefinition.__dir__
-        ~OutputNonameValueDefinition.__eq__
-        ~OutputNonameValueDefinition.__format__
-        ~OutputNonameValueDefinition.__ge__
-        ~OutputNonameValueDefinition.__getattribute__
-        ~OutputNonameValueDefinition.__gt__
-        ~OutputNonameValueDefinition.__hash__
         ~OutputNonameValueDefinition.__init__
-        ~OutputNonameValueDefinition.__init_subclass__
-        ~OutputNonameValueDefinition.__le__
-        ~OutputNonameValueDefinition.__lt__
-        ~OutputNonameValueDefinition.__ne__
-        ~OutputNonameValueDefinition.__new__
-        ~OutputNonameValueDefinition.__reduce__
-        ~OutputNonameValueDefinition.__reduce_ex__
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~OutputNonameValueDefinition.__repr__
-        ~OutputNonameValueDefinition.__setattr__
-        ~OutputNonameValueDefinition.__sizeof__
         ~OutputNonameValueDefinition.__str__
-        ~OutputNonameValueDefinition.__subclasshook__
         ~OutputNonameValueDefinition._grammar
         ~OutputNonameValueDefinition._tuple_with_my_name
         ~OutputNonameValueDefinition.copy
@@ -50,26 +82,6 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputNonameValueDefinition*
         ~OutputNonameValueDefinition.remove
         ~OutputNonameValueDefinition.validate
         ~OutputNonameValueDefinition.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputNonameValueDefinition.__dict__
-        ~OutputNonameValueDefinition.__doc__
-        ~OutputNonameValueDefinition.__module__
-        ~OutputNonameValueDefinition.__weakref__
-        ~OutputNonameValueDefinition.do_not_skip_whitespaces_before_name
-        ~OutputNonameValueDefinition.formated_name
-        ~OutputNonameValueDefinition.name_in_grammar
-        ~OutputNonameValueDefinition.prefix
-        ~OutputNonameValueDefinition.value_name_format
 
    
    

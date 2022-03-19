@@ -1,62 +1,84 @@
 ASEArraySection
 ===============
 
-Full name: **ase2sprkkr.potentials.potential\_sections.ASEArraySection**
 
 .. currentmodule:: ase2sprkkr.potentials.potential_sections
 
 .. autoclass:: ASEArraySection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potential_sections.ASEArraySection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySection.definition
+        ~ASEArraySection.name
+        ~ASEArraySection._members
+        ~ASEArraySection._interactive_members
+        ~ASEArraySection._definition
+        ~ASEArraySection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~ASEArraySection.__contains__
-        ~ASEArraySection.__delattr__
-        ~ASEArraySection.__dir__
-        ~ASEArraySection.__eq__
-        ~ASEArraySection.__format__
-        ~ASEArraySection.__ge__
-        ~ASEArraySection.__getattr__
-        ~ASEArraySection.__getattribute__
-        ~ASEArraySection.__getitem__
-        ~ASEArraySection.__gt__
-        ~ASEArraySection.__hash__
-        ~ASEArraySection.__init__
-        ~ASEArraySection.__init_subclass__
-        ~ASEArraySection.__iter__
-        ~ASEArraySection.__le__
-        ~ASEArraySection.__lt__
-        ~ASEArraySection.__ne__
-        ~ASEArraySection.__new__
-        ~ASEArraySection.__reduce__
-        ~ASEArraySection.__reduce_ex__
-        ~ASEArraySection.__repr__
-        ~ASEArraySection.__setattr__
-        ~ASEArraySection.__sizeof__
-        ~ASEArraySection.__str__
-        ~ASEArraySection.__subclasshook__
-        ~ASEArraySection._add
         ~ASEArraySection._depends_on
+        ~ASEArraySection._set_from_atoms
+        ~ASEArraySection._update_atoms
+        ~ASEArraySection.has_any_value
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySection.__contains__
+        ~ASEArraySection.__dir__
+        ~ASEArraySection.__getattr__
+        ~ASEArraySection.__getitem__
+        ~ASEArraySection.__init__
+        ~ASEArraySection.__iter__
+        ~ASEArraySection.__setattr__
+        ~ASEArraySection._add
         ~ASEArraySection._find_value
         ~ASEArraySection._get_member
         ~ASEArraySection._get_path
         ~ASEArraySection._get_root_container
         ~ASEArraySection._interactive_member_name
-        ~ASEArraySection._set_from_atoms
-        ~ASEArraySection._update_atoms
         ~ASEArraySection.add
+        ~ASEArraySection.as_dict
         ~ASEArraySection.clear
         ~ASEArraySection.get
-        ~ASEArraySection.has_any_value
         ~ASEArraySection.members
         ~ASEArraySection.remove_member
         ~ASEArraySection.reset
@@ -64,24 +86,6 @@ Full name: **ase2sprkkr.potentials.potential\_sections.ASEArraySection**
         ~ASEArraySection.set
         ~ASEArraySection.to_dict
         ~ASEArraySection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySection.__dict__
-        ~ASEArraySection.__doc__
-        ~ASEArraySection.__module__
-        ~ASEArraySection.__weakref__
-        ~ASEArraySection.definition
-        ~ASEArraySection.name
-        ~ASEArraySection.seciton_name
 
    
    

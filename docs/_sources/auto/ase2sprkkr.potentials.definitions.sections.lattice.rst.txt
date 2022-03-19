@@ -3,6 +3,18 @@ lattice
 
 Full name: **ase2sprkkr.potentials.definitions.sections.lattice**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection  ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDefinition  ase2sprkkr.potentials.definitions.sections.lattice.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.potentials.definitions.sections.lattice
 
    

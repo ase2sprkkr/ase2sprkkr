@@ -1,73 +1,22 @@
 PotentialDefinition
 ===================
 
-Full name: **ase2sprkkr.potentials.potential\_definitions.PotentialDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.potential_definitions
 
 .. autoclass:: PotentialDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potential_definitions.PotentialDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialDefinition.__contains__
-        ~PotentialDefinition.__delattr__
-        ~PotentialDefinition.__dir__
-        ~PotentialDefinition.__eq__
-        ~PotentialDefinition.__format__
-        ~PotentialDefinition.__ge__
-        ~PotentialDefinition.__getattribute__
-        ~PotentialDefinition.__getitem__
-        ~PotentialDefinition.__gt__
-        ~PotentialDefinition.__hash__
-        ~PotentialDefinition.__init__
-        ~PotentialDefinition.__init_subclass__
-        ~PotentialDefinition.__iter__
-        ~PotentialDefinition.__le__
-        ~PotentialDefinition.__lt__
-        ~PotentialDefinition.__ne__
-        ~PotentialDefinition.__new__
-        ~PotentialDefinition.__reduce__
-        ~PotentialDefinition.__reduce_ex__
-        ~PotentialDefinition.__repr__
-        ~PotentialDefinition.__setattr__
-        ~PotentialDefinition.__setitem__
-        ~PotentialDefinition.__sizeof__
-        ~PotentialDefinition.__str__
-        ~PotentialDefinition.__subclasshook__
-        ~PotentialDefinition._dict_from_named_values
-        ~PotentialDefinition._first_section_is_fixed
-        ~PotentialDefinition._grammar
-        ~PotentialDefinition._tuple_with_my_name
-        ~PotentialDefinition._values_grammar
-        ~PotentialDefinition.all_member_names
-        ~PotentialDefinition.copy
-        ~PotentialDefinition.create_object
-        ~PotentialDefinition.custom_member_grammar
-        ~PotentialDefinition.custom_value_grammar
-        ~PotentialDefinition.delimited_custom_value_grammar
-        ~PotentialDefinition.from_dict
-        ~PotentialDefinition.grammar
-        ~PotentialDefinition.grammar_of_delimiter
-        ~PotentialDefinition.members
-        ~PotentialDefinition.names
-        ~PotentialDefinition.parse
-        ~PotentialDefinition.parse_file
-        ~PotentialDefinition.parse_from_stream
-        ~PotentialDefinition.parse_return
-        ~PotentialDefinition.read_from_file
-        ~PotentialDefinition.remove
-
-   
    
 
    
@@ -77,20 +26,81 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.PotentialDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~PotentialDefinition.__dict__
-        ~PotentialDefinition.__doc__
-        ~PotentialDefinition.__module__
-        ~PotentialDefinition.__weakref__
-        ~PotentialDefinition._init_args
         ~PotentialDefinition.custom_name_characters
-        ~PotentialDefinition.custom_value_name
         ~PotentialDefinition.delimiter
-        ~PotentialDefinition.do_not_skip_whitespaces_before_name
         ~PotentialDefinition.force_order
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialDefinition._init_args
+        ~PotentialDefinition.custom_value_name
+        ~PotentialDefinition.do_not_skip_whitespaces_before_name
         ~PotentialDefinition.name_in_grammar
         ~PotentialDefinition.sections
         ~PotentialDefinition.validate
         ~PotentialDefinition.value_name_format
+        ~PotentialDefinition.name
+        ~PotentialDefinition.alternative_names
+        ~PotentialDefinition.is_optional
+        ~PotentialDefinition.help
+        ~PotentialDefinition.description
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialDefinition.custom_value_grammar
+        ~PotentialDefinition.grammar_of_delimiter
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialDefinition.__contains__
+        ~PotentialDefinition.__getitem__
+        ~PotentialDefinition.__init__
+        ~PotentialDefinition.__iter__
+        ~PotentialDefinition.__setitem__
+        ~PotentialDefinition._dict_from_named_values
+        ~PotentialDefinition._first_section_is_fixed
+        ~PotentialDefinition._grammar
+        ~PotentialDefinition._tuple_with_my_name
+        ~PotentialDefinition._values_grammar
+        ~PotentialDefinition.all_member_names
+        ~PotentialDefinition.copy
+        ~PotentialDefinition.create_object
+        ~PotentialDefinition.custom_member_grammar
+        ~PotentialDefinition.delimited_custom_value_grammar
+        ~PotentialDefinition.from_dict
+        ~PotentialDefinition.grammar
+        ~PotentialDefinition.members
+        ~PotentialDefinition.names
+        ~PotentialDefinition.parse
+        ~PotentialDefinition.parse_file
+        ~PotentialDefinition.parse_from_stream
+        ~PotentialDefinition.parse_return
+        ~PotentialDefinition.read_from_file
+        ~PotentialDefinition.remove
 
    
    

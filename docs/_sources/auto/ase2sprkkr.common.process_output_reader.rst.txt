@@ -3,6 +3,18 @@ process\_output\_reader
 
 Full name: **ase2sprkkr.common.process\_output\_reader**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.process_output_reader.AsyncioFileReader  ase2sprkkr.common.process_output_reader.BaseProcessOutputReader 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.common.process_output_reader
 
    

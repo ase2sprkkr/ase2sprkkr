@@ -1,64 +1,22 @@
 QString
 =======
 
-Full name: **ase2sprkkr.common.grammar\_types.QString**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: QString
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.QString
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~QString.__delattr__
-        ~QString.__dir__
-        ~QString.__eq__
-        ~QString.__format__
-        ~QString.__ge__
-        ~QString.__getattribute__
-        ~QString.__gt__
-        ~QString.__hash__
-        ~QString.__init__
-        ~QString.__init_subclass__
-        ~QString.__le__
-        ~QString.__lt__
-        ~QString.__ne__
-        ~QString.__new__
-        ~QString.__reduce__
-        ~QString.__reduce_ex__
-        ~QString.__repr__
-        ~QString.__setattr__
-        ~QString.__sizeof__
-        ~QString.__str__
-        ~QString.__subclasshook__
-        ~QString._string
-        ~QString._validate
-        ~QString._valueError
-        ~QString.convert
-        ~QString.copy
-        ~QString.enrich
-        ~QString.grammar
-        ~QString.grammar_name
-        ~QString.missing_value
-        ~QString.parse
-        ~QString.parse_from_stream
-        ~QString.print
-        ~QString.read
-        ~QString.string
-        ~QString.transform_grammar
-        ~QString.validate
-        ~QString.write
-
-   
    
 
    
@@ -69,14 +27,65 @@ Full name: **ase2sprkkr.common.grammar\_types.QString**
       :template: custom-base-template.rst
      
         ~QString.I
-        ~QString.__dict__
-        ~QString.__doc__
-        ~QString.__module__
-        ~QString.__weakref__
         ~QString._grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~QString.default_value
         ~QString.has_value
         ~QString.name_in_grammar
+        ~QString.prefix
+        ~QString.postfix
+        ~QString.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~QString.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~QString.__init__
+        ~QString.__str__
+        ~QString._string
+        ~QString._validate
+        ~QString._valueError
+        ~QString.convert
+        ~QString.copy
+        ~QString.enrich
+        ~QString.grammar
+        ~QString.missing_value
+        ~QString.parse
+        ~QString.parse_from_stream
+        ~QString.print
+        ~QString.read
+        ~QString.string
+        ~QString.transform_grammar
+        ~QString.validate
+        ~QString.write
 
    
    

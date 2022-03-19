@@ -1,54 +1,74 @@
 Sequence
 ========
 
-Full name: **ase2sprkkr.common.grammar\_types.Sequence**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Sequence
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Sequence
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Sequence.default_value
+        ~Sequence.has_value
+        ~Sequence.name_in_grammar
+        ~Sequence.prefix
+        ~Sequence.postfix
+        ~Sequence.format
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Sequence.__delattr__
-        ~Sequence.__dir__
-        ~Sequence.__eq__
-        ~Sequence.__format__
-        ~Sequence.__ge__
-        ~Sequence.__getattribute__
-        ~Sequence.__gt__
-        ~Sequence.__hash__
         ~Sequence.__init__
-        ~Sequence.__init_subclass__
-        ~Sequence.__le__
-        ~Sequence.__lt__
-        ~Sequence.__ne__
-        ~Sequence.__new__
-        ~Sequence.__reduce__
-        ~Sequence.__reduce_ex__
-        ~Sequence.__repr__
-        ~Sequence.__setattr__
-        ~Sequence.__sizeof__
-        ~Sequence.__str__
-        ~Sequence.__subclasshook__
         ~Sequence._grammar
         ~Sequence._string
         ~Sequence._validate
-        ~Sequence._valueError
         ~Sequence.convert
-        ~Sequence.copy
         ~Sequence.enrich
-        ~Sequence.grammar
         ~Sequence.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Sequence.__str__
+        ~Sequence._valueError
+        ~Sequence.copy
+        ~Sequence.grammar
         ~Sequence.missing_value
         ~Sequence.parse
         ~Sequence.parse_from_stream
@@ -58,24 +78,6 @@ Full name: **ase2sprkkr.common.grammar\_types.Sequence**
         ~Sequence.transform_grammar
         ~Sequence.validate
         ~Sequence.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Sequence.__dict__
-        ~Sequence.__doc__
-        ~Sequence.__module__
-        ~Sequence.__weakref__
-        ~Sequence.default_value
-        ~Sequence.has_value
-        ~Sequence.name_in_grammar
 
    
    

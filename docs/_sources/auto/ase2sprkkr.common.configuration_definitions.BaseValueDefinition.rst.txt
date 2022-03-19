@@ -1,56 +1,22 @@
 BaseValueDefinition
 ===================
 
-Full name: **ase2sprkkr.common.configuration\_definitions.BaseValueDefinition**
 
 .. currentmodule:: ase2sprkkr.common.configuration_definitions
 
 .. autoclass:: BaseValueDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_definitions.BaseValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseValueDefinition.__delattr__
-        ~BaseValueDefinition.__dir__
-        ~BaseValueDefinition.__eq__
-        ~BaseValueDefinition.__format__
-        ~BaseValueDefinition.__ge__
-        ~BaseValueDefinition.__getattribute__
-        ~BaseValueDefinition.__gt__
-        ~BaseValueDefinition.__hash__
-        ~BaseValueDefinition.__init__
-        ~BaseValueDefinition.__init_subclass__
-        ~BaseValueDefinition.__le__
-        ~BaseValueDefinition.__lt__
-        ~BaseValueDefinition.__ne__
-        ~BaseValueDefinition.__new__
-        ~BaseValueDefinition.__reduce__
-        ~BaseValueDefinition.__reduce_ex__
-        ~BaseValueDefinition.__repr__
-        ~BaseValueDefinition.__setattr__
-        ~BaseValueDefinition.__sizeof__
-        ~BaseValueDefinition.__str__
-        ~BaseValueDefinition.__subclasshook__
-        ~BaseValueDefinition._grammar
-        ~BaseValueDefinition._tuple_with_my_name
-        ~BaseValueDefinition.copy
-        ~BaseValueDefinition.create_object
-        ~BaseValueDefinition.get_value
-        ~BaseValueDefinition.grammar
-        ~BaseValueDefinition.remove
-        ~BaseValueDefinition.validate
-        ~BaseValueDefinition.write
-
-   
    
 
    
@@ -60,14 +26,60 @@ Full name: **ase2sprkkr.common.configuration\_definitions.BaseValueDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~BaseValueDefinition.__dict__
-        ~BaseValueDefinition.__doc__
-        ~BaseValueDefinition.__module__
-        ~BaseValueDefinition.__weakref__
-        ~BaseValueDefinition.do_not_skip_whitespaces_before_name
         ~BaseValueDefinition.formated_name
         ~BaseValueDefinition.name_in_grammar
         ~BaseValueDefinition.value_name_format
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseValueDefinition.do_not_skip_whitespaces_before_name
+        ~BaseValueDefinition.name
+        ~BaseValueDefinition.alternative_names
+        ~BaseValueDefinition.is_optional
+        ~BaseValueDefinition.help
+        ~BaseValueDefinition.description
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseValueDefinition.__init__
+        ~BaseValueDefinition.__repr__
+        ~BaseValueDefinition.__str__
+        ~BaseValueDefinition._grammar
+        ~BaseValueDefinition.copy
+        ~BaseValueDefinition.get_value
+        ~BaseValueDefinition.remove
+        ~BaseValueDefinition.validate
+        ~BaseValueDefinition.write
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseValueDefinition._tuple_with_my_name
+        ~BaseValueDefinition.create_object
+        ~BaseValueDefinition.grammar
 
    
    

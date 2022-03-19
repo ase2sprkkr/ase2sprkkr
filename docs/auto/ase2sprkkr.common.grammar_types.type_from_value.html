@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -254,13 +255,9 @@
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.type_from_value">
 <span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">type_from_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#type_from_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.type_from_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gues the grammar type from a python value.</p>
-<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">type_from_value</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="go">Integer</span>
-</pre></div>
-</div>
+<p>..doctest::
+&gt;&gt;&gt; type_from_value(2)
+Integer</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">type_from_value</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
 <span class="go">Real</span>
 </pre></div>

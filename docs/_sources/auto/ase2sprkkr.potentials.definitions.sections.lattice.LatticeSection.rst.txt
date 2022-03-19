@@ -1,49 +1,72 @@
 LatticeSection
 ==============
 
-Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.lattice
 
 .. autoclass:: LatticeSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSection.definition
+        ~LatticeSection.name
+        ~LatticeSection._members
+        ~LatticeSection._interactive_members
+        ~LatticeSection._definition
+        ~LatticeSection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~LatticeSection._set_from_atoms
+        ~LatticeSection._update_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~LatticeSection.__contains__
-        ~LatticeSection.__delattr__
         ~LatticeSection.__dir__
-        ~LatticeSection.__eq__
-        ~LatticeSection.__format__
-        ~LatticeSection.__ge__
         ~LatticeSection.__getattr__
-        ~LatticeSection.__getattribute__
         ~LatticeSection.__getitem__
-        ~LatticeSection.__gt__
-        ~LatticeSection.__hash__
         ~LatticeSection.__init__
-        ~LatticeSection.__init_subclass__
         ~LatticeSection.__iter__
-        ~LatticeSection.__le__
-        ~LatticeSection.__lt__
-        ~LatticeSection.__ne__
-        ~LatticeSection.__new__
-        ~LatticeSection.__reduce__
-        ~LatticeSection.__reduce_ex__
-        ~LatticeSection.__repr__
         ~LatticeSection.__setattr__
-        ~LatticeSection.__sizeof__
-        ~LatticeSection.__str__
-        ~LatticeSection.__subclasshook__
         ~LatticeSection._add
         ~LatticeSection._depends_on
         ~LatticeSection._find_value
@@ -51,9 +74,8 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection**
         ~LatticeSection._get_path
         ~LatticeSection._get_root_container
         ~LatticeSection._interactive_member_name
-        ~LatticeSection._set_from_atoms
-        ~LatticeSection._update_atoms
         ~LatticeSection.add
+        ~LatticeSection.as_dict
         ~LatticeSection.clear
         ~LatticeSection.get
         ~LatticeSection.has_any_value
@@ -64,24 +86,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSection**
         ~LatticeSection.set
         ~LatticeSection.to_dict
         ~LatticeSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSection.__dict__
-        ~LatticeSection.__doc__
-        ~LatticeSection.__module__
-        ~LatticeSection.__weakref__
-        ~LatticeSection.definition
-        ~LatticeSection.name
-        ~LatticeSection.seciton_name
 
    
    

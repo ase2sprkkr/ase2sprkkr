@@ -1,45 +1,54 @@
 BaseType
 ========
 
-Full name: **ase2sprkkr.common.grammar\_types.BaseType**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: BaseType
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.BaseType
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseType.default_value
+        ~BaseType.has_value
+        ~BaseType.name_in_grammar
+        ~BaseType.prefix
+        ~BaseType.postfix
+        ~BaseType.format
+
+   
+   
+
+   
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~BaseType.__delattr__
-        ~BaseType.__dir__
-        ~BaseType.__eq__
-        ~BaseType.__format__
-        ~BaseType.__ge__
-        ~BaseType.__getattribute__
-        ~BaseType.__gt__
-        ~BaseType.__hash__
         ~BaseType.__init__
-        ~BaseType.__init_subclass__
-        ~BaseType.__le__
-        ~BaseType.__lt__
-        ~BaseType.__ne__
-        ~BaseType.__new__
-        ~BaseType.__reduce__
-        ~BaseType.__reduce_ex__
-        ~BaseType.__repr__
-        ~BaseType.__setattr__
-        ~BaseType.__sizeof__
         ~BaseType.__str__
-        ~BaseType.__subclasshook__
         ~BaseType._string
         ~BaseType._validate
         ~BaseType._valueError
@@ -62,19 +71,5 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseType**
    
 
    
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseType.__dict__
-        ~BaseType.__doc__
-        ~BaseType.__module__
-        ~BaseType.__weakref__
-        ~BaseType.default_value
-        ~BaseType.has_value
-        ~BaseType.name_in_grammar
-
    
    

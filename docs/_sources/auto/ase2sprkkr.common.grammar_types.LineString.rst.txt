@@ -1,64 +1,22 @@
 LineString
 ==========
 
-Full name: **ase2sprkkr.common.grammar\_types.LineString**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: LineString
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.LineString
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LineString.__delattr__
-        ~LineString.__dir__
-        ~LineString.__eq__
-        ~LineString.__format__
-        ~LineString.__ge__
-        ~LineString.__getattribute__
-        ~LineString.__gt__
-        ~LineString.__hash__
-        ~LineString.__init__
-        ~LineString.__init_subclass__
-        ~LineString.__le__
-        ~LineString.__lt__
-        ~LineString.__ne__
-        ~LineString.__new__
-        ~LineString.__reduce__
-        ~LineString.__reduce_ex__
-        ~LineString.__repr__
-        ~LineString.__setattr__
-        ~LineString.__sizeof__
-        ~LineString.__str__
-        ~LineString.__subclasshook__
-        ~LineString._string
-        ~LineString._validate
-        ~LineString._valueError
-        ~LineString.convert
-        ~LineString.copy
-        ~LineString.enrich
-        ~LineString.grammar
-        ~LineString.grammar_name
-        ~LineString.missing_value
-        ~LineString.parse
-        ~LineString.parse_from_stream
-        ~LineString.print
-        ~LineString.read
-        ~LineString.string
-        ~LineString.transform_grammar
-        ~LineString.validate
-        ~LineString.write
-
-   
    
 
    
@@ -69,14 +27,65 @@ Full name: **ase2sprkkr.common.grammar\_types.LineString**
       :template: custom-base-template.rst
      
         ~LineString.I
-        ~LineString.__dict__
-        ~LineString.__doc__
-        ~LineString.__module__
-        ~LineString.__weakref__
         ~LineString._grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~LineString.default_value
         ~LineString.has_value
         ~LineString.name_in_grammar
+        ~LineString.prefix
+        ~LineString.postfix
+        ~LineString.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LineString.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LineString.__init__
+        ~LineString.__str__
+        ~LineString._string
+        ~LineString._validate
+        ~LineString._valueError
+        ~LineString.convert
+        ~LineString.copy
+        ~LineString.enrich
+        ~LineString.grammar
+        ~LineString.missing_value
+        ~LineString.parse
+        ~LineString.parse_from_stream
+        ~LineString.print
+        ~LineString.read
+        ~LineString.string
+        ~LineString.transform_grammar
+        ~LineString.validate
+        ~LineString.write
 
    
    

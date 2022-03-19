@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
@@ -209,15 +210,28 @@
     <span class="k">return</span> <span class="n">out</span></div>
 
 <div class="viewcode-block" id="BaseDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseDefinition</span><span class="p">:</span>
+   <span class="sd">&quot;&quot;&quot; A base class for a configuration definition, either of an option, or of a container.</span>
+<span class="sd">   The definition determine the type of value(s) in the configuration/problem-definition file,</span>
+<span class="sd">   the format of the values, the way how it/they is/are read etc...</span>
+<span class="sd">   &quot;&quot;&quot;</span>
 
    <span class="n">result_class</span> <span class="o">=</span> <span class="kc">None</span>
    <span class="sd">&quot;&quot;&quot; Parsing of the data results in an instance of this class. To be redefined in descendants. &quot;&quot;&quot;</span>
 
    <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">True</span>
-   <span class="sd">&quot;&quot;&quot; By default, all values,sections.... are named (in the configuration file)&quot;&quot;&quot;</span>
+   <span class="sd">&quot;&quot;&quot; Is the name of the value/section present in the file?</span>
+
+<span class="sd">   When False, the option/section name is not written to the file at all. The value(s)</span>
+<span class="sd">   of the option/section is/are then expected to be located in the file</span>
+<span class="sd">   just after the previous one.</span>
+
+<span class="sd">   By default, all options and sections… are named (in the configuration file). However,</span>
+<span class="sd">   the attribute can be redefined in instantiated objects and/or descendant classes to change</span>
+<span class="sd">   the behavior.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_alternative_name</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grammar_of_delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_alternative_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Parameters</span>
 <span class="sd">       ----------</span>
@@ -247,21 +261,23 @@
 <span class="sd">          (Long) help message for the value/section</span>
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+       <span class="sd">&quot;&quot;&quot; The name of the option/section &quot;&quot;&quot;</span>
        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alternative_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">alternative_names</span> <span class="p">]</span>
-       <span class="k">else</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span> <span class="o">=</span> <span class="n">alternative_names</span>
+          <span class="n">alternative_names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">alternative_names</span> <span class="p">]</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span> <span class="o">=</span> <span class="n">alternative_names</span>
+       <span class="sd">&quot;&quot;&quot; Alternative names of the option/section. The option/section can</span>
+<span class="sd">       be &quot;denoted&quot; in the configuration file by either by its name or any</span>
+<span class="sd">       of the alternative names.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span> <span class="o">=</span> <span class="n">is_optional</span>
+       <span class="sd">&quot;&quot;&quot; Is it required part of configuration (or can it be ommited)? &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">write_alternative_name</span> <span class="o">=</span> <span class="n">write_alternative_name</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">name_in_grammar</span> \
                                <span class="k">if</span> <span class="n">name_in_grammar</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name_in_grammar</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">help</span> <span class="o">=</span> <span class="n">help</span>
+       <span class="sd">&quot;&quot;&quot; A short help text describing the content for the users. &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
-
-       <span class="k">if</span> <span class="n">grammar_of_delimiter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">grammar_of_delimiter</span><span class="p">):</span>
-             <span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">grammar_of_delimiter</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span> <span class="o">=</span> <span class="n">grammar_of_delimiter</span></div>
+       <span class="sd">&quot;&quot;&quot; A longer help text describing the content for the users. &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="BaseDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.create_object">[docs]</a>   <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="sd">&quot;&quot;&quot; Creates Section/Option/.... object (whose properties I define) &quot;&quot;&quot;</span>

@@ -3,6 +3,18 @@ misc
 
 Full name: **ase2sprkkr.common.misc**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.misc.OrderedDict  ase2sprkkr.common.misc.class_property 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.common.misc
 
    

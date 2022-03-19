@@ -1,65 +1,22 @@
 Flag
 ====
 
-Full name: **ase2sprkkr.common.grammar\_types.Flag**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Flag
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Flag
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Flag.__delattr__
-        ~Flag.__dir__
-        ~Flag.__eq__
-        ~Flag.__format__
-        ~Flag.__ge__
-        ~Flag.__getattribute__
-        ~Flag.__gt__
-        ~Flag.__hash__
-        ~Flag.__init__
-        ~Flag.__init_subclass__
-        ~Flag.__le__
-        ~Flag.__lt__
-        ~Flag.__ne__
-        ~Flag.__new__
-        ~Flag.__reduce__
-        ~Flag.__reduce_ex__
-        ~Flag.__repr__
-        ~Flag.__setattr__
-        ~Flag.__sizeof__
-        ~Flag.__str__
-        ~Flag.__subclasshook__
-        ~Flag._string
-        ~Flag._validate
-        ~Flag._valueError
-        ~Flag.convert
-        ~Flag.copy
-        ~Flag.enrich
-        ~Flag.grammar
-        ~Flag.grammar_name
-        ~Flag.missing_value
-        ~Flag.parse
-        ~Flag.parse_from_stream
-        ~Flag.print
-        ~Flag.read
-        ~Flag.str
-        ~Flag.string
-        ~Flag.transform_grammar
-        ~Flag.validate
-        ~Flag.write
-
-   
    
 
    
@@ -70,14 +27,66 @@ Full name: **ase2sprkkr.common.grammar\_types.Flag**
       :template: custom-base-template.rst
      
         ~Flag.I
-        ~Flag.__dict__
-        ~Flag.__doc__
-        ~Flag.__module__
-        ~Flag.__weakref__
         ~Flag._grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~Flag.default_value
         ~Flag.has_value
         ~Flag.name_in_grammar
+        ~Flag.prefix
+        ~Flag.postfix
+        ~Flag.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Flag._validate
+        ~Flag.grammar_name
+        ~Flag.missing_value
+        ~Flag.str
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Flag.__init__
+        ~Flag.__str__
+        ~Flag._string
+        ~Flag._valueError
+        ~Flag.convert
+        ~Flag.copy
+        ~Flag.enrich
+        ~Flag.grammar
+        ~Flag.parse
+        ~Flag.parse_from_stream
+        ~Flag.print
+        ~Flag.read
+        ~Flag.string
+        ~Flag.transform_grammar
+        ~Flag.validate
+        ~Flag.write
 
    
    

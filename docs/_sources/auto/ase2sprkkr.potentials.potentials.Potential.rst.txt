@@ -1,74 +1,22 @@
 Potential
 =========
 
-Full name: **ase2sprkkr.potentials.potentials.Potential**
 
 .. currentmodule:: ase2sprkkr.potentials.potentials
 
 .. autoclass:: Potential
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potentials.Potential
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Potential.__contains__
-        ~Potential.__delattr__
-        ~Potential.__dir__
-        ~Potential.__eq__
-        ~Potential.__format__
-        ~Potential.__ge__
-        ~Potential.__getattr__
-        ~Potential.__getattribute__
-        ~Potential.__getitem__
-        ~Potential.__gt__
-        ~Potential.__hash__
-        ~Potential.__init__
-        ~Potential.__init_subclass__
-        ~Potential.__iter__
-        ~Potential.__le__
-        ~Potential.__lt__
-        ~Potential.__ne__
-        ~Potential.__new__
-        ~Potential.__reduce__
-        ~Potential.__reduce_ex__
-        ~Potential.__repr__
-        ~Potential.__setattr__
-        ~Potential.__sizeof__
-        ~Potential.__str__
-        ~Potential.__subclasshook__
-        ~Potential._add
-        ~Potential._find_value
-        ~Potential._get_member
-        ~Potential._get_path
-        ~Potential._get_root_container
-        ~Potential._interactive_member_name
-        ~Potential.add
-        ~Potential.clear
-        ~Potential.find
-        ~Potential.from_atoms
-        ~Potential.from_file
-        ~Potential.get
-        ~Potential.make_complete
-        ~Potential.members
-        ~Potential.read_from_file
-        ~Potential.remove_member
-        ~Potential.reset
-        ~Potential.save_to_file
-        ~Potential.set
-        ~Potential.set_from_atoms
-        ~Potential.to_dict
-        ~Potential.to_string
-        ~Potential.update_atoms
-
-   
    
 
    
@@ -78,13 +26,76 @@ Full name: **ase2sprkkr.potentials.potentials.Potential**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Potential.__dict__
-        ~Potential.__doc__
-        ~Potential.__module__
-        ~Potential.__weakref__
         ~Potential.atoms
-        ~Potential.name
         ~Potential.potential_definition
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Potential.name
+        ~Potential._members
+        ~Potential._interactive_members
+        ~Potential._definition
+        ~Potential._container
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Potential.__init__
+        ~Potential.from_atoms
+        ~Potential.from_file
+        ~Potential.make_complete
+        ~Potential.read_from_file
+        ~Potential.reset
+        ~Potential.save_to_file
+        ~Potential.set_from_atoms
+        ~Potential.update_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Potential.__contains__
+        ~Potential.__dir__
+        ~Potential.__getattr__
+        ~Potential.__getitem__
+        ~Potential.__iter__
+        ~Potential._add
+        ~Potential._find_value
+        ~Potential._get_member
+        ~Potential._get_path
+        ~Potential._get_root_container
+        ~Potential._interactive_member_name
+        ~Potential.add
+        ~Potential.as_dict
+        ~Potential.clear
+        ~Potential.find
+        ~Potential.get
+        ~Potential.members
+        ~Potential.remove_member
+        ~Potential.set
+        ~Potential.to_dict
+        ~Potential.to_string
 
    
    

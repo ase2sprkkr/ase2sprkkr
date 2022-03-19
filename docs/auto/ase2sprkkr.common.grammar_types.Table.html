@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -249,12 +250,10 @@
             
   <div class="section" id="table">
 <h1>Table<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.common.grammar_types.Table</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;21.17'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseType</span></code></a></p>
-<p>Table, optionaly with named columns, e.g.</p>
+<dd><p>Table, optionaly with named columns, e.g.</p>
 <blockquote>
 <div><p>::text</p>
 <blockquote>
@@ -265,11 +264,77 @@
 </dl>
 </div></blockquote>
 </div></blockquote>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-3ae0032a30e2971448deb9d707cc71c9eec433b7.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.Table" usemap="#inheritance15962ca939" class="inheritance graphviz" /></div>
+<map id="inheritance15962ca939" name="inheritance15962ca939">
+<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,196,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.grammar_types.Table" target="_top" title="Table, optionaly with named columns, e.g." alt="" coords="19,60,182,85"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_header=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format={&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">'&gt;21.17'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">None:</span> <span class="pre">'&gt;16'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_all=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering_format=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_condition=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_values=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">named_result=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Table.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> – The string, that will be printed before the value</p></li>
+<li><p><strong>postfix</strong> – The string, that will be printed after the value</p></li>
+<li><p><strong>format</strong> – The (python) format string, that will be used for printing the value.
+The format is passed as format argument to <code class="docutils literal notranslate"><span class="pre">str.format</span></code> routine.</p></li>
+<li><p><strong>default_value</strong> – The default value of the options of this type. <code class="docutils literal notranslate"><span class="pre">None</span></code> means no default value.</p></li>
+<li><p><strong>condition</strong> – Function, that check the validity of the value. It should return <code class="docutils literal notranslate"><span class="pre">True</span></code> for a valid
+value, and <code class="docutils literal notranslate"><span class="pre">False</span></code> or string for invalid. The string is interpreted as an error message
+that explains the invalidity of the value.</p></li>
+<li><p><strong>after_convert</strong> – Function, that - if it is given - is applied to the (entered or parsed) value. The function
+is applied on the result of the
+<a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.convert" title="ase2sprkkr.common.grammar_types.BaseType.convert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convert</span></code></a> method</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.name_in_grammar" title="ase2sprkkr.common.grammar_types.Table.name_in_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></a></p></td>
+<td><p>Default value for the given type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.numpy_type" title="ase2sprkkr.common.grammar_types.Table.numpy_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy_type</span></code></a></p></td>
+<td><p>The base class of the class hierarchy.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_value</span></code></p></td>
+<td><p>Deafault type for creating numpy arrays (e.g.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_value</span></code></p></td>
+<td><p>Default value for BaseValueDefinition.name_in_grammar.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.prefix" title="ase2sprkkr.common.grammar_types.BaseType.prefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prefix</span></code></a></p></td>
+<td><p>The string, that will be printed before the value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.postfix" title="ase2sprkkr.common.grammar_types.BaseType.postfix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">postfix</span></code></a></p></td>
+<td><p>The string, that will be printed after the value</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.format" title="ase2sprkkr.common.grammar_types.BaseType.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></p></td>
+<td><p>The (python) format string, that will be used for printing the value.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -277,68 +342,8 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.__init__" title="ase2sprkkr.common.grammar_types.Table.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([columns, header, free_header, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
-<td><p>Return repr(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
-<td><p>Return str(self).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
+<td><p>Create the object.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table._grammar" title="ase2sprkkr.common.grammar_types.Table._grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_grammar</span></code></a>([param_name])</p></td>
 <td><p></p></td>
@@ -349,11 +354,32 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table._validate" title="ase2sprkkr.common.grammar_types.Table._validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate</span></code></a>(value[, parse_check])</p></td>
 <td><p>Return error message if the value is not valid</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_valueError</span></code>(value[, error_message, param_name])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.convert" title="ase2sprkkr.common.grammar_types.Table.convert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert</span></code></a>(value)</p></td>
+<td><p>Convert a value from user to a &quot;cannonical form&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.grammar_name" title="ase2sprkkr.common.grammar_types.Table.grammar_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_name</span></code></a>()</p></td>
+<td><p>Human readable expression of the grammar.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.number_of_collumns" title="ase2sprkkr.common.grammar_types.Table.number_of_collumns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_collumns</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.convert" title="ase2sprkkr.common.grammar_types.Table.convert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert</span></code></a>(value)</p></td>
-<td><p>Convert a value from user to a &quot;cannonical form&quot;</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.zero_data" title="ase2sprkkr.common.grammar_types.Table.zero_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_data</span></code></a>(length)</p></td>
+<td><p>Return array of zeros with the given number of rows and with the dtype of the table</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
+<td><p>Return str(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_valueError</span></code>(value[, error_message, param_name])</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
 <td><p></p></td>
@@ -364,14 +390,8 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code>([param_name])</p></td>
 <td><p>Return a pyparsing grammar for the type</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.grammar_name" title="ase2sprkkr.common.grammar_types.Table.grammar_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_name</span></code></a>()</p></td>
-<td><p>Human readable expression of the grammar.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">missing_value</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">missing_value</span></code>()</p></td>
 <td><p>Is the configuraion value a flag? I.e.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.number_of_collumns" title="ase2sprkkr.common.grammar_types.Table.number_of_collumns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_collumns</span></code></a>()</p></td>
-<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse</span></code>(str[, whole_string])</p></td>
 <td><p></p></td>
@@ -397,48 +417,13 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(f, val)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.zero_data" title="ase2sprkkr.common.grammar_types.Table.zero_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zero_data</span></code></a>(length)</p></td>
-<td><p>Return array of zeros with the given number of rows and with the dtype of the table</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_value</span></code></p></td>
-<td><p>Deafault type for creating numpy arrays (e.g.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_value</span></code></p></td>
-<td><p>Default value for BaseValueDefinition.name_in_grammar.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.name_in_grammar" title="ase2sprkkr.common.grammar_types.Table.name_in_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></a></p></td>
-<td><p>Default value for the given type.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Table.numpy_type" title="ase2sprkkr.common.grammar_types.Table.numpy_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy_type</span></code></a></p></td>
-<td><p>The base class of the class hierarchy.</p></td>
-</tr>
 </tbody>
 </table>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Table.name_in_grammar">
 <span class="sig-name descname"><span class="pre">name_in_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Table.name_in_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for the given type. It can be overriden in the constructor.</p>
+<dd><p>Default value for the given type. It can be overriden in the constructor (or just by setting
+the instantiated object attribute)</p>
 </dd></dl>
 
 <dl class="py method">

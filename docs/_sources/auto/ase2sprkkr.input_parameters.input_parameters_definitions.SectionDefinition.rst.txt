@@ -1,71 +1,22 @@
 SectionDefinition
 =================
 
-Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.SectionDefinition**
 
 .. currentmodule:: ase2sprkkr.input_parameters.input_parameters_definitions
 
 .. autoclass:: SectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SectionDefinition.__contains__
-        ~SectionDefinition.__delattr__
-        ~SectionDefinition.__dir__
-        ~SectionDefinition.__eq__
-        ~SectionDefinition.__format__
-        ~SectionDefinition.__ge__
-        ~SectionDefinition.__getattribute__
-        ~SectionDefinition.__getitem__
-        ~SectionDefinition.__gt__
-        ~SectionDefinition.__hash__
-        ~SectionDefinition.__init__
-        ~SectionDefinition.__init_subclass__
-        ~SectionDefinition.__iter__
-        ~SectionDefinition.__le__
-        ~SectionDefinition.__lt__
-        ~SectionDefinition.__ne__
-        ~SectionDefinition.__new__
-        ~SectionDefinition.__reduce__
-        ~SectionDefinition.__reduce_ex__
-        ~SectionDefinition.__repr__
-        ~SectionDefinition.__setattr__
-        ~SectionDefinition.__setitem__
-        ~SectionDefinition.__sizeof__
-        ~SectionDefinition.__str__
-        ~SectionDefinition.__subclasshook__
-        ~SectionDefinition._dict_from_named_values
-        ~SectionDefinition._first_section_is_fixed
-        ~SectionDefinition._grammar
-        ~SectionDefinition._tuple_with_my_name
-        ~SectionDefinition._values_grammar
-        ~SectionDefinition.all_member_names
-        ~SectionDefinition.copy
-        ~SectionDefinition.create_object
-        ~SectionDefinition.custom_class
-        ~SectionDefinition.custom_member_grammar
-        ~SectionDefinition.delimited_custom_value_grammar
-        ~SectionDefinition.grammar
-        ~SectionDefinition.grammar_of_delimiter
-        ~SectionDefinition.members
-        ~SectionDefinition.names
-        ~SectionDefinition.parse
-        ~SectionDefinition.parse_file
-        ~SectionDefinition.parse_from_stream
-        ~SectionDefinition.parse_return
-        ~SectionDefinition.remove
-
-   
    
 
    
@@ -75,20 +26,79 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters\_definitions.Section
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~SectionDefinition.__dict__
-        ~SectionDefinition.__doc__
-        ~SectionDefinition.__module__
-        ~SectionDefinition.__weakref__
+        ~SectionDefinition.delimiter
+        ~SectionDefinition.do_not_skip_whitespaces_before_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~SectionDefinition._init_args
         ~SectionDefinition.custom_name_characters
         ~SectionDefinition.custom_value_name
-        ~SectionDefinition.delimiter
-        ~SectionDefinition.do_not_skip_whitespaces_before_name
         ~SectionDefinition.force_order
         ~SectionDefinition.name_in_grammar
         ~SectionDefinition.validate
         ~SectionDefinition.value_name_format
         ~SectionDefinition.values
+        ~SectionDefinition.name
+        ~SectionDefinition.alternative_names
+        ~SectionDefinition.is_optional
+        ~SectionDefinition.help
+        ~SectionDefinition.description
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionDefinition.custom_class
+        ~SectionDefinition.grammar_of_delimiter
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionDefinition.__contains__
+        ~SectionDefinition.__getitem__
+        ~SectionDefinition.__init__
+        ~SectionDefinition.__iter__
+        ~SectionDefinition.__setitem__
+        ~SectionDefinition._dict_from_named_values
+        ~SectionDefinition._first_section_is_fixed
+        ~SectionDefinition._grammar
+        ~SectionDefinition._tuple_with_my_name
+        ~SectionDefinition._values_grammar
+        ~SectionDefinition.all_member_names
+        ~SectionDefinition.copy
+        ~SectionDefinition.create_object
+        ~SectionDefinition.custom_member_grammar
+        ~SectionDefinition.delimited_custom_value_grammar
+        ~SectionDefinition.grammar
+        ~SectionDefinition.members
+        ~SectionDefinition.names
+        ~SectionDefinition.parse
+        ~SectionDefinition.parse_file
+        ~SectionDefinition.parse_from_stream
+        ~SectionDefinition.parse_return
+        ~SectionDefinition.remove
 
    
    

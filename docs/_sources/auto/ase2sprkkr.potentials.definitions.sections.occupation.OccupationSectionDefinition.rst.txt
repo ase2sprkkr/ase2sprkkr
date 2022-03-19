@@ -1,49 +1,78 @@
 OccupationSectionDefinition
 ===========================
 
-Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSectionDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.occupation
 
 .. autoclass:: OccupationSectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.occupation.OccupationSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OccupationSectionDefinition._init_args
+        ~OccupationSectionDefinition.custom_name_characters
+        ~OccupationSectionDefinition.custom_value_name
+        ~OccupationSectionDefinition.delimiter
+        ~OccupationSectionDefinition.do_not_skip_whitespaces_before_name
+        ~OccupationSectionDefinition.force_order
+        ~OccupationSectionDefinition.name_in_grammar
+        ~OccupationSectionDefinition.validate
+        ~OccupationSectionDefinition.value_name_format
+        ~OccupationSectionDefinition.values
+        ~OccupationSectionDefinition.name
+        ~OccupationSectionDefinition.alternative_names
+        ~OccupationSectionDefinition.is_optional
+        ~OccupationSectionDefinition.help
+        ~OccupationSectionDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~OccupationSectionDefinition.__contains__
-        ~OccupationSectionDefinition.__delattr__
-        ~OccupationSectionDefinition.__dir__
-        ~OccupationSectionDefinition.__eq__
-        ~OccupationSectionDefinition.__format__
-        ~OccupationSectionDefinition.__ge__
-        ~OccupationSectionDefinition.__getattribute__
-        ~OccupationSectionDefinition.__getitem__
-        ~OccupationSectionDefinition.__gt__
-        ~OccupationSectionDefinition.__hash__
         ~OccupationSectionDefinition.__init__
-        ~OccupationSectionDefinition.__init_subclass__
+        ~OccupationSectionDefinition.depends_on
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OccupationSectionDefinition.__contains__
+        ~OccupationSectionDefinition.__getitem__
         ~OccupationSectionDefinition.__iter__
-        ~OccupationSectionDefinition.__le__
-        ~OccupationSectionDefinition.__lt__
-        ~OccupationSectionDefinition.__ne__
-        ~OccupationSectionDefinition.__new__
-        ~OccupationSectionDefinition.__reduce__
-        ~OccupationSectionDefinition.__reduce_ex__
-        ~OccupationSectionDefinition.__repr__
-        ~OccupationSectionDefinition.__setattr__
         ~OccupationSectionDefinition.__setitem__
-        ~OccupationSectionDefinition.__sizeof__
-        ~OccupationSectionDefinition.__str__
-        ~OccupationSectionDefinition.__subclasshook__
         ~OccupationSectionDefinition._dict_from_named_values
         ~OccupationSectionDefinition._first_section_is_fixed
         ~OccupationSectionDefinition._grammar
@@ -55,7 +84,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
         ~OccupationSectionDefinition.custom_class
         ~OccupationSectionDefinition.custom_member_grammar
         ~OccupationSectionDefinition.delimited_custom_value_grammar
-        ~OccupationSectionDefinition.depends_on
         ~OccupationSectionDefinition.grammar
         ~OccupationSectionDefinition.grammar_of_delimiter
         ~OccupationSectionDefinition.members
@@ -65,31 +93,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
         ~OccupationSectionDefinition.parse_from_stream
         ~OccupationSectionDefinition.parse_return
         ~OccupationSectionDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSectionDefinition.__dict__
-        ~OccupationSectionDefinition.__doc__
-        ~OccupationSectionDefinition.__module__
-        ~OccupationSectionDefinition.__weakref__
-        ~OccupationSectionDefinition._init_args
-        ~OccupationSectionDefinition.custom_name_characters
-        ~OccupationSectionDefinition.custom_value_name
-        ~OccupationSectionDefinition.delimiter
-        ~OccupationSectionDefinition.do_not_skip_whitespaces_before_name
-        ~OccupationSectionDefinition.force_order
-        ~OccupationSectionDefinition.name_in_grammar
-        ~OccupationSectionDefinition.validate
-        ~OccupationSectionDefinition.value_name_format
-        ~OccupationSectionDefinition.values
 
    
    

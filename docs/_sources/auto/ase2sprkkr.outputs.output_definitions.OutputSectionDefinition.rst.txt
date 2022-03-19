@@ -1,49 +1,86 @@
 OutputSectionDefinition
 =======================
 
-Full name: **ase2sprkkr.outputs.output\_definitions.OutputSectionDefinition**
 
 .. currentmodule:: ase2sprkkr.outputs.output_definitions
 
 .. autoclass:: OutputSectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.output_definitions.OutputSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputSectionDefinition.custom_class
+        ~OutputSectionDefinition.delimiter
+        ~OutputSectionDefinition.force_order
+        ~OutputSectionDefinition.name_in_grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputSectionDefinition._init_args
+        ~OutputSectionDefinition.custom_name_characters
+        ~OutputSectionDefinition.custom_value_name
+        ~OutputSectionDefinition.do_not_skip_whitespaces_before_name
+        ~OutputSectionDefinition.validate
+        ~OutputSectionDefinition.value_name_format
+        ~OutputSectionDefinition.values
+        ~OutputSectionDefinition.name
+        ~OutputSectionDefinition.alternative_names
+        ~OutputSectionDefinition.is_optional
+        ~OutputSectionDefinition.help
+        ~OutputSectionDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OutputSectionDefinition.grammar_of_delimiter
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~OutputSectionDefinition.__contains__
-        ~OutputSectionDefinition.__delattr__
-        ~OutputSectionDefinition.__dir__
-        ~OutputSectionDefinition.__eq__
-        ~OutputSectionDefinition.__format__
-        ~OutputSectionDefinition.__ge__
-        ~OutputSectionDefinition.__getattribute__
         ~OutputSectionDefinition.__getitem__
-        ~OutputSectionDefinition.__gt__
-        ~OutputSectionDefinition.__hash__
         ~OutputSectionDefinition.__init__
-        ~OutputSectionDefinition.__init_subclass__
         ~OutputSectionDefinition.__iter__
-        ~OutputSectionDefinition.__le__
-        ~OutputSectionDefinition.__lt__
-        ~OutputSectionDefinition.__ne__
-        ~OutputSectionDefinition.__new__
-        ~OutputSectionDefinition.__reduce__
-        ~OutputSectionDefinition.__reduce_ex__
-        ~OutputSectionDefinition.__repr__
-        ~OutputSectionDefinition.__setattr__
         ~OutputSectionDefinition.__setitem__
-        ~OutputSectionDefinition.__sizeof__
-        ~OutputSectionDefinition.__str__
-        ~OutputSectionDefinition.__subclasshook__
         ~OutputSectionDefinition._dict_from_named_values
         ~OutputSectionDefinition._first_section_is_fixed
         ~OutputSectionDefinition._grammar
@@ -55,7 +92,6 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputSectionDefinition**
         ~OutputSectionDefinition.custom_member_grammar
         ~OutputSectionDefinition.delimited_custom_value_grammar
         ~OutputSectionDefinition.grammar
-        ~OutputSectionDefinition.grammar_of_delimiter
         ~OutputSectionDefinition.members
         ~OutputSectionDefinition.names
         ~OutputSectionDefinition.parse
@@ -63,32 +99,6 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputSectionDefinition**
         ~OutputSectionDefinition.parse_from_stream
         ~OutputSectionDefinition.parse_return
         ~OutputSectionDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputSectionDefinition.__dict__
-        ~OutputSectionDefinition.__doc__
-        ~OutputSectionDefinition.__module__
-        ~OutputSectionDefinition.__weakref__
-        ~OutputSectionDefinition._init_args
-        ~OutputSectionDefinition.custom_class
-        ~OutputSectionDefinition.custom_name_characters
-        ~OutputSectionDefinition.custom_value_name
-        ~OutputSectionDefinition.delimiter
-        ~OutputSectionDefinition.do_not_skip_whitespaces_before_name
-        ~OutputSectionDefinition.force_order
-        ~OutputSectionDefinition.name_in_grammar
-        ~OutputSectionDefinition.validate
-        ~OutputSectionDefinition.value_name_format
-        ~OutputSectionDefinition.values
 
    
    

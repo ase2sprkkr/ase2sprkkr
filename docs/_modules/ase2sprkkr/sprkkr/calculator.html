@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
@@ -198,8 +199,12 @@
 
 <span class="sd">    :cvar ase2sprkkr.input_parameters.input_parameters.InputParameters InputParameters: (just for an easier access to the class)</span>
 <span class="sd">    :cvar ase2sprkkr.potentials.potentials.Potential Potential: (dto.)</span>
-<span class="sd">    :ivar Union[str|typing.TextIO] potential_file: the path and name of the potential file to be used (if not specified otherwise in the called method)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="sd">    The parameters of performed calculations are determined mostly by ``input_parameters``, given either</span>
+<span class="sd">    in :meth:`constructor&lt;ase2sprkkr.sprkkr.calculator.SPRKKR.__init__&gt;` or in the :meth:`calculate&lt;ase2sprkkr.sprkkr.calculator.SPRKKR.calculate&gt;` method.</span>
+<span class="sd">    The following attributes of the calculator are mostly the default values of the arguments of the :meth:`calculate&lt;ase2sprkkr.sprkkr.calculator.SPRKKR.calculate&gt;` or :meth:`calculate&lt;ase2sprkkr.sprkkr.calculator.SPRKKR.calculate&gt;` methods.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">implemented_properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="SPRKKR.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -236,12 +241,12 @@
 <span class="sd">        potential_file: str or file or bool</span>
 <span class="sd">          The template for the potential file name (see the input_file parameter).</span>
 
-<span class="sd">        print_output: bool or str</span>
+<span class="sd">        print_output: Union[bool,str]</span>
 <span class="sd">          Write the output of runned executables to stdout (in addition to the output file)?</span>
 <span class="sd">          (Default value for the calculator)</span>
 <span class="sd">          If print_output = &#39;info&#39;, only a few info lines per iteration will be printed.</span>
 
-<span class="sd">        mpi: list or string or int or bool.</span>
+<span class="sd">        mpi: Union[list,string,int,bool]</span>
 <span class="sd">          Runner for mpi to run a mpi calculation. True and int means autodetect: use True</span>
 <span class="sd">          for a cluster where mpi is able to autodetect the number of the processes, otherwise</span>
 <span class="sd">          use integer to specify the number of processes.</span>
@@ -284,25 +289,50 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">executable_postfix</span> <span class="o">=</span> <span class="n">executable_postfix</span>
+        <span class="sd">&quot;&quot;&quot; The default postfix for the names of executables. False means no postfix, True means</span>
+<span class="sd">        to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">restart</span><span class="p">,</span>
                          <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi</span>
+        <span class="sd">&quot;&quot;&quot; Default value for mpi parameter of calculate - it determine the way whether and how</span>
+<span class="sd">        the mpi is employed. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="n">input_file</span>
+        <span class="sd">&quot;&quot;&quot; A pathname or an open named file for the input file (if not specified otherwise in the</span>
+<span class="sd">        called method) &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_file</span> <span class="o">=</span> <span class="n">output_file</span>
+        <span class="sd">&quot;&quot;&quot; A pathname or an open file for the output of the runned SPR-KKR task (if not specified</span>
+<span class="sd">        otherwise in the called method) &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential_file</span> <span class="o">=</span> <span class="n">potential_file</span>
+        <span class="sd">&quot;&quot;&quot; A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
         <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;find&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
+        <span class="sd">&quot;&quot;&quot; The default parameter for the print_output arguments of</span>
+<span class="sd">        :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the</span>
+<span class="sd">        runned SPR-KKR should be written to the standard ouput (in addition to the output file). &quot;&quot;&quot;</span>
 
-        <span class="c1">#For %c template in file names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span></div>
+        <span class="c1">#For %c template in file names</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The parameters for the runned task, given either by the</span>
+<span class="sd">        :class:`ase2sprkkr.input_parameters.input_parameters.InputParameters`</span>
+<span class="sd">        object, or by string resulting in the default parameters for a taks with the given name.</span>
+
+<span class="sd">        If a string is set to the property, the</span>
+<span class="sd">        :class:`InputPamaters&lt;ase2sprkkr.input_parameters.input_parameters.InputParameters&gt;`</span>
+<span class="sd">        object is created with the default values for the task with a given name.</span>
+
+<span class="sd">        The parameters can be either overriden by ``input_parameters`` argument of the</span>
+<span class="sd">        :meth:`calculate&lt;ase2sprkkr.sprkkr.calculator.SPRKKR.calculate&gt;` method,</span>
+<span class="sd">        or (one-time) modified by its ``options`` argument.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="s1">&#39;SCF&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_parameters</span>
@@ -376,10 +406,11 @@
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span>
 
     <span class="nd">@atoms</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">at</span><span class="p">):</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">at</span>
+    <span class="k">def</span> <span class="nf">atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
+       <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">_atoms</span> <span class="o">=</span> <span class="n">atoms</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">at</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_potential</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
 
 <div class="viewcode-block" id="SPRKKR._advance_counter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR._advance_counter">[docs]</a>    <span class="k">def</span> <span class="nf">_advance_counter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Advance counter for generating filenames with %c counter placeholder &quot;&quot;&quot;</span>

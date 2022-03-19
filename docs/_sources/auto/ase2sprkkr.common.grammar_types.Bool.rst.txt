@@ -1,64 +1,22 @@
 Bool
 ====
 
-Full name: **ase2sprkkr.common.grammar\_types.Bool**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Bool
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Bool
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Bool.__delattr__
-        ~Bool.__dir__
-        ~Bool.__eq__
-        ~Bool.__format__
-        ~Bool.__ge__
-        ~Bool.__getattribute__
-        ~Bool.__gt__
-        ~Bool.__hash__
-        ~Bool.__init__
-        ~Bool.__init_subclass__
-        ~Bool.__le__
-        ~Bool.__lt__
-        ~Bool.__ne__
-        ~Bool.__new__
-        ~Bool.__reduce__
-        ~Bool.__reduce_ex__
-        ~Bool.__repr__
-        ~Bool.__setattr__
-        ~Bool.__sizeof__
-        ~Bool.__str__
-        ~Bool.__subclasshook__
-        ~Bool._string
-        ~Bool._validate
-        ~Bool._valueError
-        ~Bool.convert
-        ~Bool.copy
-        ~Bool.enrich
-        ~Bool.grammar
-        ~Bool.grammar_name
-        ~Bool.missing_value
-        ~Bool.parse
-        ~Bool.parse_from_stream
-        ~Bool.print
-        ~Bool.read
-        ~Bool.string
-        ~Bool.transform_grammar
-        ~Bool.validate
-        ~Bool.write
-
-   
    
 
    
@@ -69,14 +27,65 @@ Full name: **ase2sprkkr.common.grammar\_types.Bool**
       :template: custom-base-template.rst
      
         ~Bool.I
-        ~Bool.__dict__
-        ~Bool.__doc__
-        ~Bool.__module__
-        ~Bool.__weakref__
         ~Bool._grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~Bool.default_value
         ~Bool.has_value
         ~Bool.name_in_grammar
+        ~Bool.prefix
+        ~Bool.postfix
+        ~Bool.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Bool._string
+        ~Bool._validate
+        ~Bool.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Bool.__init__
+        ~Bool.__str__
+        ~Bool._valueError
+        ~Bool.convert
+        ~Bool.copy
+        ~Bool.enrich
+        ~Bool.grammar
+        ~Bool.missing_value
+        ~Bool.parse
+        ~Bool.parse_from_stream
+        ~Bool.print
+        ~Bool.read
+        ~Bool.string
+        ~Bool.transform_grammar
+        ~Bool.validate
+        ~Bool.write
 
    
    

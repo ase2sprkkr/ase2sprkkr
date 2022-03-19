@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -249,17 +250,103 @@
             
   <div class="section" id="mixed">
 <h1>Mixed<a class="headerlink" href="#mixed" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.common.grammar_types.Mixed</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar_types.</span></span><span class="sig-name descname"><span class="pre">Mixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar_types.html#Mixed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed" title="ase2sprkkr.common.grammar_types.BaseMixed"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.BaseMixed</span></code></a></p>
-<p>A variant value to be used in input files (in unknown - custom - options)</p>
+<dd><p>A variant value to be used in input files (in unknown - custom - options)</p>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-9b03a8d68246142d7bfa0e76bf1bc3e009d63299.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.Mixed" usemap="#inheritanceeb89099eee" class="inheritance graphviz" /></div>
+<map id="inheritanceeb89099eee" name="inheritanceeb89099eee">
+<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed" target="_top" title="A variant type &#45; it can hold &quot;anything&quot;." alt="" coords="5,60,205,85"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.common.grammar_types.Mixed" target="_top" title="A variant value to be used in input files (in unknown &#45; custom &#45; options)" alt="" coords="21,115,189,140"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" target="_top" title="Base class for definition of configuration option types" alt="" coords="10,5,201,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>postfix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>format</strong> (<em>str</em>) – </p></li>
+<li><p><strong>default_value</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>condition</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>bool</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>after_convert</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.grammar_types.Mixed.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">postfix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.common.grammar_types.Mixed.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The string, that will be printed before the value</p></li>
+<li><p><strong>postfix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The string, that will be printed after the value</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – The (python) format string, that will be used for printing the value.
+The format is passed as format argument to <code class="docutils literal notranslate"><span class="pre">str.format</span></code> routine.</p></li>
+<li><p><strong>default_value</strong> (<em>Optional</em><em>[</em><em>Any</em><em>]</em>) – The default value of the options of this type. <code class="docutils literal notranslate"><span class="pre">None</span></code> means no default value.</p></li>
+<li><p><strong>condition</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>bool</em><em>, </em><em>str</em><em>]</em><em>]</em><em>]</em>) – Function, that check the validity of the value. It should return <code class="docutils literal notranslate"><span class="pre">True</span></code> for a valid
+value, and <code class="docutils literal notranslate"><span class="pre">False</span></code> or string for invalid. The string is interpreted as an error message
+that explains the invalidity of the value.</p></li>
+<li><p><strong>after_convert</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Function, that - if it is given - is applied to the (entered or parsed) value. The function
+is applied on the result of the
+<a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.convert" title="ase2sprkkr.common.grammar_types.BaseType.convert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">convert</span></code></a> method</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.I" title="ase2sprkkr.common.grammar_types.Mixed.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.string_type" title="ase2sprkkr.common.grammar_types.Mixed.string_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string_type</span></code></a></p></td>
+<td><p>Input files use quoted strings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.types" title="ase2sprkkr.common.grammar_types.Mixed.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_value</span></code></p></td>
+<td><p>Deafault type for creating numpy arrays (e.g.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_value</span></code></p></td>
+<td><p>Default value for BaseValueDefinition.name_in_grammar.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></p></td>
+<td><p>Default value for the given type.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p>The types, that the value can hold.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.prefix" title="ase2sprkkr.common.grammar_types.BaseType.prefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prefix</span></code></a></p></td>
+<td><p>The string, that will be printed before the value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.postfix" title="ase2sprkkr.common.grammar_types.BaseType.postfix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">postfix</span></code></a></p></td>
+<td><p>The string, that will be printed after the value</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.format" title="ase2sprkkr.common.grammar_types.BaseType.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></p></td>
+<td><p>The (python) format string, that will be used for printing the value.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -267,101 +354,53 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.missing_value" title="ase2sprkkr.common.grammar_types.Mixed.missing_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">missing_value</span></code></a>()</p></td>
+<td><p>Is the configuraion value a flag? I.e.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.__init__" title="ase2sprkkr.common.grammar_types.Mixed.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([prefix, postfix, format, ...])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
-<td><p>Return repr(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
+<td><p>Create the object.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
 <td><p>Return str(self).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_grammar</span></code>([param_name])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_grammar</span></code>([param_name])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_string</span></code>(val)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_string</span></code>(val)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate</span></code>(value[, parse_check])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_validate</span></code>(value[, parse_check])</p></td>
 <td><p>Return error message if the value is not valid</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_valueError</span></code>(value[, error_message, param_name])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_valueError</span></code>(value[, error_message, param_name])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert</span></code>(value)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert</span></code>(value)</p></td>
 <td><p>Convert a value from user to a &quot;cannonical form&quot;</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enrich</span></code>(option)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enrich</span></code>(option)</p></td>
 <td><p>Some types can add properties to the options that have the type, e.g.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_type</span></code>(value)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_type</span></code>(value)</p></td>
 <td><p>Return the type of the value</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code>([param_name])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code>([param_name])</p></td>
 <td><p>Return a pyparsing grammar for the type</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_name</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar_name</span></code>()</p></td>
 <td><p>Human readable expression of the grammar.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.missing_value" title="ase2sprkkr.common.grammar_types.Mixed.missing_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">missing_value</span></code></a>()</p></td>
-<td><p>Is the configuraion value a flag? I.e.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse</span></code>(str[, whole_string])</p></td>
 <td><p></p></td>
@@ -385,48 +424,6 @@
 <td><p>Validate either the pyparsing result or a user given value</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code>(f, val)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.I" title="ase2sprkkr.common.grammar_types.Mixed.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_value</span></code></p></td>
-<td><p>Deafault type for creating numpy arrays (e.g.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_value</span></code></p></td>
-<td><p>Default value for BaseValueDefinition.name_in_grammar.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></p></td>
-<td><p>Default value for the given type.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.string_type" title="ase2sprkkr.common.grammar_types.Mixed.string_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">string_type</span></code></a></p></td>
-<td><p>Input files use quoted strings.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></p></td>
-<td><p>The types, that the value can hold.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar_types.Mixed.types" title="ase2sprkkr.common.grammar_types.Mixed.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

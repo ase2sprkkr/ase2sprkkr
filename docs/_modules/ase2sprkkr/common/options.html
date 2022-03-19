@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
@@ -180,11 +181,11 @@
 <span class="sd">  be used as a part of InputParameters or Potential configuration.</span>
 <span class="sd">  Usage:</span>
 
-<span class="sd">  conf.ENERGY.ImE = 5</span>
-<span class="sd">  conf.ENERGY.ImE()</span>
-<span class="sd">  &gt; 5</span>
-<span class="sd">  conf.ENERGY.ImE.__doc__</span>
-<span class="sd">  &gt; The ImE option means ...</span>
+<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE = 5</span>
+<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE()</span>
+<span class="sd">  5</span>
+<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE.__doc__</span>
+<span class="sd">  The ImE option means ...</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Option.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;&quot;</span>
@@ -264,10 +265,8 @@
   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
 
-<div class="viewcode-block" id="Option.to_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.to_dict">[docs]</a>  <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
-      <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
-      <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-         <span class="n">dct</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+<div class="viewcode-block" id="Option.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">add_to</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Option._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>

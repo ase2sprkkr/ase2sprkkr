@@ -1,64 +1,22 @@
 Array
 =====
 
-Full name: **ase2sprkkr.common.grammar\_types.Array**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Array
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Array
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Array.__delattr__
-        ~Array.__dir__
-        ~Array.__eq__
-        ~Array.__format__
-        ~Array.__ge__
-        ~Array.__getattribute__
-        ~Array.__gt__
-        ~Array.__hash__
-        ~Array.__init__
-        ~Array.__init_subclass__
-        ~Array.__le__
-        ~Array.__lt__
-        ~Array.__ne__
-        ~Array.__new__
-        ~Array.__reduce__
-        ~Array.__reduce_ex__
-        ~Array.__repr__
-        ~Array.__setattr__
-        ~Array.__sizeof__
-        ~Array.__str__
-        ~Array.__subclasshook__
-        ~Array._string
-        ~Array._validate
-        ~Array._valueError
-        ~Array.convert
-        ~Array.copy
-        ~Array.enrich
-        ~Array.grammar
-        ~Array.grammar_name
-        ~Array.missing_value
-        ~Array.parse
-        ~Array.parse_from_stream
-        ~Array.print
-        ~Array.read
-        ~Array.string
-        ~Array.transform_grammar
-        ~Array.validate
-        ~Array.write
-
-   
    
 
    
@@ -68,16 +26,67 @@ Full name: **ase2sprkkr.common.grammar\_types.Array**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Array.__dict__
-        ~Array.__doc__
-        ~Array.__module__
         ~Array.__slotnames__
-        ~Array.__weakref__
-        ~Array.default_value
         ~Array.delimiter
         ~Array.delimiter_str
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Array.default_value
         ~Array.has_value
         ~Array.name_in_grammar
+        ~Array.prefix
+        ~Array.postfix
+        ~Array.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Array.__init__
+        ~Array.__str__
+        ~Array._string
+        ~Array._validate
+        ~Array.convert
+        ~Array.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Array._valueError
+        ~Array.copy
+        ~Array.enrich
+        ~Array.grammar
+        ~Array.missing_value
+        ~Array.parse
+        ~Array.parse_from_stream
+        ~Array.print
+        ~Array.read
+        ~Array.string
+        ~Array.transform_grammar
+        ~Array.validate
+        ~Array.write
 
    
    

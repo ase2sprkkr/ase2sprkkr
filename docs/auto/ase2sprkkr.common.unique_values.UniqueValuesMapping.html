@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -206,12 +207,10 @@
             
   <div class="section" id="uniquevaluesmapping">
 <h1>UniqueValuesMapping<a class="headerlink" href="#uniquevaluesmapping" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.common.unique_values.UniqueValuesMapping</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.unique_values.UniqueValuesMapping">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.unique_values.</span></span><span class="sig-name descname"><span class="pre">UniqueValuesMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_to_class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class, that can map a collection of (possible non-unique) values to a set
+<dd><p>A class, that can map a collection of (possible non-unique) values to a set
 of unique identifiers.</p>
 <p>The instances of the class can be merged to distinct the values, that are
 the same according to one criterion, but distinct on the other.</p>
@@ -226,6 +225,14 @@ the same according to one criterion, but distinct on the other.</p>
 </div>
 </dd>
 </dl>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-4875fe43185e8c3aaa0ed9562b89509e0c216716.png" alt="Inheritance diagram of ase2sprkkr.common.unique_values.UniqueValuesMapping" usemap="#inheritance924ff828d6" class="inheritance graphviz" /></div>
+<map id="inheritance924ff828d6" name="inheritance924ff828d6">
+<area shape="rect" id="node1" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping" target="_top" title="A class, that can map a collection of (possible non&#45;unique) values to a set" alt="" coords="5,5,271,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_to_class_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/unique_values.html#UniqueValuesMapping.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__" title="Permalink to this definition">¶</a></dt>
@@ -247,30 +254,6 @@ members[id] = &lt;eq class id&gt;</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__" title="ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(mapping[, value_to_class_id])</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param mapping</dt>
@@ -279,44 +262,8 @@ members[id] = &lt;eq class id&gt;</p></li>
 </dl>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__len__</span></code>()</p></td>
 <td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
-<td><p>Return repr(self).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
-<td><p>Return str(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values" title="ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_values</span></code></a>(values[, length, none_tuples])</p></td>
 <td><p>values: iterable</p></td>
@@ -329,27 +276,6 @@ members[id] = &lt;eq class id&gt;</p></li>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.unique_values.UniqueValuesMapping.merge" title="ase2sprkkr.common.unique_values.UniqueValuesMapping.merge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge</span></code></a>(other)</p></td>
 <td><p>Merge two sets.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
 </tr>
 </tbody>
 </table>

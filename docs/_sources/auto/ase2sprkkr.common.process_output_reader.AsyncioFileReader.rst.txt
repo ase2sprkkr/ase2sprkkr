@@ -1,18 +1,33 @@
 AsyncioFileReader
 =================
 
-Full name: **ase2sprkkr.common.process\_output\_reader.AsyncioFileReader**
 
 .. currentmodule:: ase2sprkkr.common.process_output_reader
 
 .. autoclass:: AsyncioFileReader
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.process_output_reader.AsyncioFileReader
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   
+
+   
    
    .. rubric:: Methods
 
@@ -20,29 +35,9 @@ Full name: **ase2sprkkr.common.process\_output\_reader.AsyncioFileReader**
       :template: custom-base-template.rst
      
         ~AsyncioFileReader.__del__
-        ~AsyncioFileReader.__delattr__
-        ~AsyncioFileReader.__dir__
         ~AsyncioFileReader.__enter__
-        ~AsyncioFileReader.__eq__
         ~AsyncioFileReader.__exit__
-        ~AsyncioFileReader.__format__
-        ~AsyncioFileReader.__ge__
-        ~AsyncioFileReader.__getattribute__
-        ~AsyncioFileReader.__gt__
-        ~AsyncioFileReader.__hash__
         ~AsyncioFileReader.__init__
-        ~AsyncioFileReader.__init_subclass__
-        ~AsyncioFileReader.__le__
-        ~AsyncioFileReader.__lt__
-        ~AsyncioFileReader.__ne__
-        ~AsyncioFileReader.__new__
-        ~AsyncioFileReader.__reduce__
-        ~AsyncioFileReader.__reduce_ex__
-        ~AsyncioFileReader.__repr__
-        ~AsyncioFileReader.__setattr__
-        ~AsyncioFileReader.__sizeof__
-        ~AsyncioFileReader.__str__
-        ~AsyncioFileReader.__subclasshook__
         ~AsyncioFileReader.close
         ~AsyncioFileReader.readline
         ~AsyncioFileReader.readuntil
@@ -52,16 +47,5 @@ Full name: **ase2sprkkr.common.process\_output\_reader.AsyncioFileReader**
    
 
    
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~AsyncioFileReader.__dict__
-        ~AsyncioFileReader.__doc__
-        ~AsyncioFileReader.__module__
-        ~AsyncioFileReader.__weakref__
-
    
    

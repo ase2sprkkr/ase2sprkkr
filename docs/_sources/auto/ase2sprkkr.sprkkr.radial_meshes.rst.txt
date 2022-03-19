@@ -3,6 +3,18 @@ radial\_meshes
 
 Full name: **ase2sprkkr.sprkkr.radial\_meshes**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh  ase2sprkkr.sprkkr.radial_meshes.Mesh 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.sprkkr.radial_meshes
 
    

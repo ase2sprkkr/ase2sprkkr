@@ -3,6 +3,18 @@ options
 
 Full name: **ase2sprkkr.common.options**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.options.CustomOption  ase2sprkkr.common.options.Option 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.common.options
 
    

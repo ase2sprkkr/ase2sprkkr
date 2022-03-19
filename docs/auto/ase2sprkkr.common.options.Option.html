@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -207,11 +208,18 @@
             
   <div class="section" id="option">
 <h1>Option<a class="headerlink" href="#option" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.common.options.Option</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.options.</span></span><span class="sig-name descname"><span class="pre">Option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" title="ase2sprkkr.common.base_configuration.BaseConfiguration"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.base_configuration.BaseConfiguration</span></code></a></p>
+<dd><p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-deb0d6394335ee4bab4cad1078dd61c56f1ed1b9.png" alt="Inheritance diagram of ase2sprkkr.common.options.Option" usemap="#inheritance8f372ee86e" class="inheritance graphviz" /></div>
+<map id="inheritance8f372ee86e" name="inheritance8f372ee86e">
+<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,273,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.options.Option" target="_top" title="options.Option" alt="" coords="81,60,198,85"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.__init__" title="Permalink to this definition">¶</a></dt>
@@ -223,6 +231,36 @@
 :type value: mixed</p>
 </dd></dl>
 
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
+<td><p>str(object='') -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.name" title="ase2sprkkr.common.options.Option.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>Return the name of the option/section.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration._definition" title="ase2sprkkr.common.base_configuration.BaseConfiguration._definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_definition</span></code></a></p></td>
+<td><p>The &quot;definition&quot; of the option or section.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration._container" title="ase2sprkkr.common.base_configuration.BaseConfiguration._container"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_container</span></code></a></p></td>
+<td><p>The parent container.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -233,77 +271,17 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>()</p></td>
 <td><p>Call self as a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.__init__" title="ase2sprkkr.common.options.Option.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(definition[, container, value])</p></td>
 <td><p><p>&quot;</p>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
 <td><p>Return repr(self).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
-<td><p>Return str(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option._find_value" title="ase2sprkkr.common.options.Option._find_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_find_value</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option._find_value" title="ase2sprkkr.common.options.Option._find_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_find_value</span></code></a>(name)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_path</span></code>([include_root])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_root_container</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.as_dict" title="ase2sprkkr.common.options.Option.as_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_dict</span></code></a>(add_to)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.clear" title="ase2sprkkr.common.options.Option.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>([do_not_check_required])</p></td>
@@ -321,32 +299,23 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.set" title="ase2sprkkr.common.options.Option.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(value, *[, unknown])</p></td>
 <td><p>Set the value of the option.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.to_dict" title="ase2sprkkr.common.options.Option.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>(dct)</p></td>
-<td><p></p></td>
-</tr>
 </tbody>
 </table>
-<p class="rubric">Attributes</p>
+<p class="rubric">Inherited methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_path</span></code>([include_root])</p></td>
+<td><p>Return the dot-delimited path to the item in the configuration tree.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p>str(object='') -&gt; str str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_root_container</span></code>()</p></td>
+<td><p>Return the root object of the configuration tree.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.options.Option.name" title="ase2sprkkr.common.options.Option.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code>()</p></td>
+<td><p>Return the value of self, in the case of container as a dictionary.</p></td>
 </tr>
 </tbody>
 </table>
@@ -387,11 +356,22 @@ is set.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ase2sprkkr.common.options.Option.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return the name of the option/section. The name is defined by the definition
+of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><em>The name of the object.</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.to_dict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_to</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.as_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

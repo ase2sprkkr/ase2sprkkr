@@ -1,49 +1,72 @@
 TypesSection
 ============
 
-Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSection**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.types
 
 .. autoclass:: TypesSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.types.TypesSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
    
-   .. rubric:: Methods
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TypesSection._value_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~TypesSection.__annotations__
+        ~TypesSection.definition
+        ~TypesSection.name
+        ~TypesSection._members
+        ~TypesSection._interactive_members
+        ~TypesSection._definition
+        ~TypesSection._container
+
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
         ~TypesSection.__contains__
-        ~TypesSection.__delattr__
         ~TypesSection.__dir__
-        ~TypesSection.__eq__
-        ~TypesSection.__format__
-        ~TypesSection.__ge__
         ~TypesSection.__getattr__
-        ~TypesSection.__getattribute__
         ~TypesSection.__getitem__
-        ~TypesSection.__gt__
-        ~TypesSection.__hash__
         ~TypesSection.__init__
-        ~TypesSection.__init_subclass__
         ~TypesSection.__iter__
-        ~TypesSection.__le__
-        ~TypesSection.__lt__
-        ~TypesSection.__ne__
-        ~TypesSection.__new__
-        ~TypesSection.__reduce__
-        ~TypesSection.__reduce_ex__
-        ~TypesSection.__repr__
         ~TypesSection.__setattr__
-        ~TypesSection.__sizeof__
-        ~TypesSection.__str__
-        ~TypesSection.__subclasshook__
         ~TypesSection._add
         ~TypesSection._depends_on
         ~TypesSection._find_value
@@ -54,6 +77,7 @@ Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSection**
         ~TypesSection._set_from_atoms
         ~TypesSection._update_atoms
         ~TypesSection.add
+        ~TypesSection.as_dict
         ~TypesSection.clear
         ~TypesSection.get
         ~TypesSection.has_any_value
@@ -64,26 +88,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.types.TypesSection**
         ~TypesSection.set
         ~TypesSection.to_dict
         ~TypesSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSection.__annotations__
-        ~TypesSection.__dict__
-        ~TypesSection.__doc__
-        ~TypesSection.__module__
-        ~TypesSection.__weakref__
-        ~TypesSection._value_name
-        ~TypesSection.definition
-        ~TypesSection.name
-        ~TypesSection.seciton_name
 
    
    

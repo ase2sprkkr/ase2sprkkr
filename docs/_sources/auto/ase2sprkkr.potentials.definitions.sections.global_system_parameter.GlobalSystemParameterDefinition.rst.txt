@@ -1,49 +1,77 @@
 GlobalSystemParameterDefinition
 ===============================
 
-Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_parameter.GlobalSystemParameterDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.global_system_parameter
 
 .. autoclass:: GlobalSystemParameterDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.global_system_parameter.GlobalSystemParameterDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~GlobalSystemParameterDefinition._init_args
+        ~GlobalSystemParameterDefinition.custom_name_characters
+        ~GlobalSystemParameterDefinition.custom_value_name
+        ~GlobalSystemParameterDefinition.delimiter
+        ~GlobalSystemParameterDefinition.do_not_skip_whitespaces_before_name
+        ~GlobalSystemParameterDefinition.force_order
+        ~GlobalSystemParameterDefinition.name_in_grammar
+        ~GlobalSystemParameterDefinition.validate
+        ~GlobalSystemParameterDefinition.value_name_format
+        ~GlobalSystemParameterDefinition.values
+        ~GlobalSystemParameterDefinition.name
+        ~GlobalSystemParameterDefinition.alternative_names
+        ~GlobalSystemParameterDefinition.is_optional
+        ~GlobalSystemParameterDefinition.help
+        ~GlobalSystemParameterDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~GlobalSystemParameterDefinition.__contains__
-        ~GlobalSystemParameterDefinition.__delattr__
-        ~GlobalSystemParameterDefinition.__dir__
-        ~GlobalSystemParameterDefinition.__eq__
-        ~GlobalSystemParameterDefinition.__format__
-        ~GlobalSystemParameterDefinition.__ge__
-        ~GlobalSystemParameterDefinition.__getattribute__
-        ~GlobalSystemParameterDefinition.__getitem__
-        ~GlobalSystemParameterDefinition.__gt__
-        ~GlobalSystemParameterDefinition.__hash__
         ~GlobalSystemParameterDefinition.__init__
-        ~GlobalSystemParameterDefinition.__init_subclass__
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~GlobalSystemParameterDefinition.__contains__
+        ~GlobalSystemParameterDefinition.__getitem__
         ~GlobalSystemParameterDefinition.__iter__
-        ~GlobalSystemParameterDefinition.__le__
-        ~GlobalSystemParameterDefinition.__lt__
-        ~GlobalSystemParameterDefinition.__ne__
-        ~GlobalSystemParameterDefinition.__new__
-        ~GlobalSystemParameterDefinition.__reduce__
-        ~GlobalSystemParameterDefinition.__reduce_ex__
-        ~GlobalSystemParameterDefinition.__repr__
-        ~GlobalSystemParameterDefinition.__setattr__
         ~GlobalSystemParameterDefinition.__setitem__
-        ~GlobalSystemParameterDefinition.__sizeof__
-        ~GlobalSystemParameterDefinition.__str__
-        ~GlobalSystemParameterDefinition.__subclasshook__
         ~GlobalSystemParameterDefinition._dict_from_named_values
         ~GlobalSystemParameterDefinition._first_section_is_fixed
         ~GlobalSystemParameterDefinition._grammar
@@ -65,31 +93,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.global\_system\_paramete
         ~GlobalSystemParameterDefinition.parse_from_stream
         ~GlobalSystemParameterDefinition.parse_return
         ~GlobalSystemParameterDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameterDefinition.__dict__
-        ~GlobalSystemParameterDefinition.__doc__
-        ~GlobalSystemParameterDefinition.__module__
-        ~GlobalSystemParameterDefinition.__weakref__
-        ~GlobalSystemParameterDefinition._init_args
-        ~GlobalSystemParameterDefinition.custom_name_characters
-        ~GlobalSystemParameterDefinition.custom_value_name
-        ~GlobalSystemParameterDefinition.delimiter
-        ~GlobalSystemParameterDefinition.do_not_skip_whitespaces_before_name
-        ~GlobalSystemParameterDefinition.force_order
-        ~GlobalSystemParameterDefinition.name_in_grammar
-        ~GlobalSystemParameterDefinition.validate
-        ~GlobalSystemParameterDefinition.value_name_format
-        ~GlobalSystemParameterDefinition.values
 
    
    

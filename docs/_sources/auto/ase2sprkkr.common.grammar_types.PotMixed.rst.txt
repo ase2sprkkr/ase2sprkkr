@@ -1,47 +1,78 @@
 PotMixed
 ========
 
-Full name: **ase2sprkkr.common.grammar\_types.PotMixed**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: PotMixed
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.PotMixed
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotMixed.I
+        ~PotMixed.string_type
+        ~PotMixed.types
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotMixed.default_value
+        ~PotMixed.has_value
+        ~PotMixed.name_in_grammar
+        ~PotMixed.type
+        ~PotMixed.prefix
+        ~PotMixed.postfix
+        ~PotMixed.format
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~PotMixed.__delattr__
-        ~PotMixed.__dir__
-        ~PotMixed.__eq__
-        ~PotMixed.__format__
-        ~PotMixed.__ge__
-        ~PotMixed.__getattribute__
-        ~PotMixed.__gt__
-        ~PotMixed.__hash__
-        ~PotMixed.__init__
-        ~PotMixed.__init_subclass__
-        ~PotMixed.__le__
-        ~PotMixed.__lt__
-        ~PotMixed.__ne__
-        ~PotMixed.__new__
-        ~PotMixed.__reduce__
-        ~PotMixed.__reduce_ex__
-        ~PotMixed.__repr__
-        ~PotMixed.__setattr__
-        ~PotMixed.__sizeof__
-        ~PotMixed.__str__
-        ~PotMixed.__subclasshook__
-        ~PotMixed._grammar
         ~PotMixed._string
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotMixed.__init__
+        ~PotMixed.__str__
+        ~PotMixed._grammar
         ~PotMixed._validate
         ~PotMixed._valueError
         ~PotMixed.convert
@@ -59,28 +90,6 @@ Full name: **ase2sprkkr.common.grammar\_types.PotMixed**
         ~PotMixed.transform_grammar
         ~PotMixed.validate
         ~PotMixed.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotMixed.I
-        ~PotMixed.__dict__
-        ~PotMixed.__doc__
-        ~PotMixed.__module__
-        ~PotMixed.__weakref__
-        ~PotMixed.default_value
-        ~PotMixed.has_value
-        ~PotMixed.name_in_grammar
-        ~PotMixed.string_type
-        ~PotMixed.type
-        ~PotMixed.types
 
    
    

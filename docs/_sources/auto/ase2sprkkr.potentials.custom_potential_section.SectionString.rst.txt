@@ -1,65 +1,22 @@
 SectionString
 =============
 
-Full name: **ase2sprkkr.potentials.custom\_potential\_section.SectionString**
 
 .. currentmodule:: ase2sprkkr.potentials.custom_potential_section
 
 .. autoclass:: SectionString
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.custom_potential_section.SectionString
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SectionString.__delattr__
-        ~SectionString.__dir__
-        ~SectionString.__eq__
-        ~SectionString.__format__
-        ~SectionString.__ge__
-        ~SectionString.__getattribute__
-        ~SectionString.__gt__
-        ~SectionString.__hash__
-        ~SectionString.__init__
-        ~SectionString.__init_subclass__
-        ~SectionString.__le__
-        ~SectionString.__lt__
-        ~SectionString.__ne__
-        ~SectionString.__new__
-        ~SectionString.__reduce__
-        ~SectionString.__reduce_ex__
-        ~SectionString.__repr__
-        ~SectionString.__setattr__
-        ~SectionString.__sizeof__
-        ~SectionString.__str__
-        ~SectionString.__subclasshook__
-        ~SectionString._string
-        ~SectionString._validate
-        ~SectionString._valueError
-        ~SectionString.convert
-        ~SectionString.copy
-        ~SectionString.enrich
-        ~SectionString.grammar
-        ~SectionString.grammar_name
-        ~SectionString.grammar_of_delimiter
-        ~SectionString.missing_value
-        ~SectionString.parse
-        ~SectionString.parse_from_stream
-        ~SectionString.print
-        ~SectionString.read
-        ~SectionString.string
-        ~SectionString.transform_grammar
-        ~SectionString.validate
-        ~SectionString.write
-
-   
    
 
    
@@ -70,15 +27,67 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.SectionString**
       :template: custom-base-template.rst
      
         ~SectionString.I
-        ~SectionString.__dict__
-        ~SectionString.__doc__
-        ~SectionString.__module__
-        ~SectionString.__weakref__
         ~SectionString._grammar
-        ~SectionString.default_value
         ~SectionString.delimiter_pattern
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionString.default_value
         ~SectionString.has_value
         ~SectionString.name_in_grammar
+        ~SectionString.prefix
+        ~SectionString.postfix
+        ~SectionString.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionString.grammar_name
+        ~SectionString.grammar_of_delimiter
+        ~SectionString.write
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SectionString.__init__
+        ~SectionString.__str__
+        ~SectionString._string
+        ~SectionString._validate
+        ~SectionString._valueError
+        ~SectionString.convert
+        ~SectionString.copy
+        ~SectionString.enrich
+        ~SectionString.grammar
+        ~SectionString.missing_value
+        ~SectionString.parse
+        ~SectionString.parse_from_stream
+        ~SectionString.print
+        ~SectionString.read
+        ~SectionString.string
+        ~SectionString.transform_grammar
+        ~SectionString.validate
 
    
    

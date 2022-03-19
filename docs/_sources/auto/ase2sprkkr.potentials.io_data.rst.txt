@@ -3,6 +3,18 @@ io\_data
 
 Full name: **ase2sprkkr.potentials.io\_data**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.io_data.BaseIoData  ase2sprkkr.potentials.io_data.ReadIoData  ase2sprkkr.potentials.io_data.WriteIoData 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.potentials.io_data
 
    

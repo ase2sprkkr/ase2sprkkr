@@ -1,57 +1,22 @@
 OutputValueDefinition
 =====================
 
-Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueDefinition**
 
 .. currentmodule:: ase2sprkkr.outputs.output_definitions
 
 .. autoclass:: OutputValueDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.output_definitions.OutputValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueDefinition.__delattr__
-        ~OutputValueDefinition.__dir__
-        ~OutputValueDefinition.__eq__
-        ~OutputValueDefinition.__format__
-        ~OutputValueDefinition.__ge__
-        ~OutputValueDefinition.__getattribute__
-        ~OutputValueDefinition.__gt__
-        ~OutputValueDefinition.__hash__
-        ~OutputValueDefinition.__init__
-        ~OutputValueDefinition.__init_subclass__
-        ~OutputValueDefinition.__le__
-        ~OutputValueDefinition.__lt__
-        ~OutputValueDefinition.__ne__
-        ~OutputValueDefinition.__new__
-        ~OutputValueDefinition.__reduce__
-        ~OutputValueDefinition.__reduce_ex__
-        ~OutputValueDefinition.__repr__
-        ~OutputValueDefinition.__setattr__
-        ~OutputValueDefinition.__sizeof__
-        ~OutputValueDefinition.__str__
-        ~OutputValueDefinition.__subclasshook__
-        ~OutputValueDefinition._grammar
-        ~OutputValueDefinition._tuple_with_my_name
-        ~OutputValueDefinition.copy
-        ~OutputValueDefinition.create_object
-        ~OutputValueDefinition.get_value
-        ~OutputValueDefinition.grammar
-        ~OutputValueDefinition.grammar_of_delimiter
-        ~OutputValueDefinition.remove
-        ~OutputValueDefinition.validate
-        ~OutputValueDefinition.write
-
-   
    
 
    
@@ -61,15 +26,62 @@ Full name: **ase2sprkkr.outputs.output\_definitions.OutputValueDefinition**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~OutputValueDefinition.__dict__
-        ~OutputValueDefinition.__doc__
-        ~OutputValueDefinition.__module__
-        ~OutputValueDefinition.__weakref__
+        ~OutputValueDefinition.prefix
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~OutputValueDefinition.do_not_skip_whitespaces_before_name
         ~OutputValueDefinition.formated_name
         ~OutputValueDefinition.name_in_grammar
-        ~OutputValueDefinition.prefix
         ~OutputValueDefinition.value_name_format
+        ~OutputValueDefinition.name
+        ~OutputValueDefinition.alternative_names
+        ~OutputValueDefinition.is_optional
+        ~OutputValueDefinition.help
+        ~OutputValueDefinition.description
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputValueDefinition.__init__
+        ~OutputValueDefinition.grammar_of_delimiter
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OutputValueDefinition.__repr__
+        ~OutputValueDefinition.__str__
+        ~OutputValueDefinition._grammar
+        ~OutputValueDefinition._tuple_with_my_name
+        ~OutputValueDefinition.copy
+        ~OutputValueDefinition.create_object
+        ~OutputValueDefinition.get_value
+        ~OutputValueDefinition.grammar
+        ~OutputValueDefinition.remove
+        ~OutputValueDefinition.validate
+        ~OutputValueDefinition.write
 
    
    

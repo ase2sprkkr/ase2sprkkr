@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -209,6 +210,19 @@
   <div class="section" id="configuration-containers">
 <h1>configuration_containers<a class="headerlink" href="#configuration-containers" title="Permalink to this headline">¶</a></h1>
 <p>Full name: <strong>ase2sprkkr.common.configuration_containers</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-13dca66f5d9f84756e4340eb0574a38160ac3413.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.BaseSection, ase2sprkkr.common.configuration_containers.ConfigurationContainer, ase2sprkkr.common.configuration_containers.CustomSection, ase2sprkkr.common.configuration_containers.RootConfigurationContainer, ase2sprkkr.common.configuration_containers.Section" usemap="#inheritance05f00e9c05" class="inheritance graphviz" /></div>
+<map id="inheritance05f00e9c05" name="inheritance05f00e9c05">
+<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,55,147,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="176,55,348,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="427,29,530,55"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection" target="_top" title="Custom task section. Section created by user with no definition" alt="" coords="609,5,729,31"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="633,55,705,80"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="377,79,580,104"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
 <span class="target" id="module-ase2sprkkr.common.configuration_containers"></span><p>In this file the common containers of configuration values are,
 either for task or potential.</p>
 <p>Configuration containers are classes, that holds configuration values
@@ -222,16 +236,16 @@ and that are results of parsing of a configuration file.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" title="ase2sprkkr.common.configuration_containers.BaseSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSection</span></code></a>(definition[, container])</p></td>
-<td><p>A section of SPRKKR configuration</p></td>
+<td><p>A section of SPRKKR configuration - i.e. part of the configuration file.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigurationContainer</span></code></a>(definition[, container])</p></td>
-<td><p>Custom task section.</p></td>
+<td><p>A container for configuration (problem-definition) options and/or sections.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection" title="ase2sprkkr.common.configuration_containers.CustomSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomSection</span></code></a>(definition[, container])</p></td>
 <td><p>Custom task section.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" title="ase2sprkkr.common.configuration_containers.RootConfigurationContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RootConfigurationContainer</span></code></a>(definition[, ...])</p></td>
-<td><p></p></td>
+<td><p>Base class for data of configuration/problem-definition files</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a>(definition[, container])</p></td>
 <td><p>A standard section of a task or potential (whose content is predefinded by SectionDefinition)</p></td>

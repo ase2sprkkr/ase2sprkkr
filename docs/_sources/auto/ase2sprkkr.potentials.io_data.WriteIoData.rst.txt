@@ -1,68 +1,22 @@
 WriteIoData
 ===========
 
-Full name: **ase2sprkkr.potentials.io\_data.WriteIoData**
 
 .. currentmodule:: ase2sprkkr.potentials.io_data
 
 .. autoclass:: WriteIoData
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.io_data.WriteIoData
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~WriteIoData.__class_getitem__
-        ~WriteIoData.__contains__
-        ~WriteIoData.__delattr__
-        ~WriteIoData.__delitem__
-        ~WriteIoData.__dir__
-        ~WriteIoData.__eq__
-        ~WriteIoData.__format__
-        ~WriteIoData.__ge__
-        ~WriteIoData.__getattribute__
-        ~WriteIoData.__getitem__
-        ~WriteIoData.__gt__
-        ~WriteIoData.__init__
-        ~WriteIoData.__init_subclass__
-        ~WriteIoData.__ior__
-        ~WriteIoData.__iter__
-        ~WriteIoData.__le__
-        ~WriteIoData.__len__
-        ~WriteIoData.__lt__
-        ~WriteIoData.__ne__
-        ~WriteIoData.__new__
-        ~WriteIoData.__or__
-        ~WriteIoData.__reduce__
-        ~WriteIoData.__reduce_ex__
-        ~WriteIoData.__repr__
-        ~WriteIoData.__reversed__
-        ~WriteIoData.__ror__
-        ~WriteIoData.__setattr__
-        ~WriteIoData.__setitem__
-        ~WriteIoData.__sizeof__
-        ~WriteIoData.__str__
-        ~WriteIoData.__subclasshook__
-        ~WriteIoData.clear
-        ~WriteIoData.copy
-        ~WriteIoData.fromkeys
-        ~WriteIoData.get
-        ~WriteIoData.items
-        ~WriteIoData.keys
-        ~WriteIoData.pop
-        ~WriteIoData.popitem
-        ~WriteIoData.setdefault
-        ~WriteIoData.update
-        ~WriteIoData.values
-
-   
    
 
    
@@ -72,15 +26,38 @@ Full name: **ase2sprkkr.potentials.io\_data.WriteIoData**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~WriteIoData.__dict__
-        ~WriteIoData.__doc__
-        ~WriteIoData.__hash__
-        ~WriteIoData.__module__
-        ~WriteIoData.__weakref__
         ~WriteIoData.meshes
         ~WriteIoData.reference_systems
         ~WriteIoData.sites
         ~WriteIoData.types
 
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~WriteIoData.__hash__
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~WriteIoData.__init__
+
+   
+   
+
+   
    
    

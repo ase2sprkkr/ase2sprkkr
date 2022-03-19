@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -206,16 +207,71 @@
             
   <div class="section" id="referencesystemsection">
 <h1>ReferenceSystemSection<a class="headerlink" href="#referencesystemsection" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.definitions.sections.reference_system.</span></span><span class="sig-name descname"><span class="pre">ReferenceSystemSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/definitions/sections/reference_system.html#ReferenceSystemSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection" title="ase2sprkkr.potentials.potential_sections.UniqueListSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.potentials.potential_sections.UniqueListSection</span></code></a></p>
+<dd><p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-09b859447965b28b76dfdd956d0644fea985fa26.png" alt="Inheritance diagram of ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection" usemap="#inheritance4f3275e7c8" class="inheritance graphviz" /></div>
+<map id="inheritance4f3275e7c8" name="inheritance4f3275e7c8">
+<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="39,5,307,31"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="5,60,341,85"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="40,115,307,140"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="56,169,291,195"/>
+<area shape="rect" id="node5" href="ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A generic class for a section in a potential" alt="" coords="48,224,299,249"/>
+<area shape="rect" id="node6" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection" target="_top" title="The section, whose data is list of something," alt="" coords="42,279,305,304"/>
+<area shape="rect" id="node7" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection" target="_top" title="reference_system.ReferenceSystemSection" alt="" coords="20,333,327,359"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create the container and its members, according to the definition</p>
+</dd></dl>
 
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._value_name" title="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._value_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_value_name</span></code></a></p></td>
+<td><p>The name of the property of write_io_data to store the list of data</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__annotations__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">definition</span></code></p></td>
+<td><p>The definition of the section.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>Return the name of the option/section.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._members" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer._members"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_members</span></code></a></p></td>
+<td><p>The members of the container, in a form of <code class="docutils literal notranslate"><span class="pre">{obj.name</span> <span class="pre">:</span> <span class="pre">obj}</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._interactive_members" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer._interactive_members"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_interactive_members</span></code></a></p></td>
+<td><p>Non-hidden members of the containers, accesible via sanitized names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration._definition" title="ase2sprkkr.common.base_configuration.BaseConfiguration._definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_definition</span></code></a></p></td>
+<td><p>The &quot;definition&quot; of the option or section.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration._container" title="ase2sprkkr.common.base_configuration.BaseConfiguration._container"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_container</span></code></a></p></td>
+<td><p>The parent container.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -223,80 +279,38 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._set_from_atoms" title="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._set_from_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_from_atoms</span></code></a>(atoms, io_data)</p></td>
+<td><p>Set the values of the section from the write_io_data.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__contains__</span></code>(name)</p></td>
-<td><p></p></td>
+<td><p>The check for existence of a member with the given name.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
+<td><p>Expose the interactive_members in the container attribute listing.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattr__</span></code>(name)</p></td>
-<td><p></p></td>
+<td><p>The members of the container are accesible as attributes of the container, too.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code>(name)</p></td>
+<td><p>The members of the container are accesible using <code class="docutils literal notranslate"><span class="pre">container[&quot;member</span> <span class="pre">name&quot;]</span></code> notation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code>(name)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection.__init__" title="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(definition[, container])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection.__init__" title="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(definition[, container])</p></td>
+<td><p>Create the container and its members, according to the definition</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iter__</span></code>()</p></td>
-<td><p></p></td>
+<td><p>Iterate over all members of the container</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
-<td><p>Return repr(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
-<td><p>Return str(self).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value)</p></td>
+<td><p>Setting the (unknown) attribute of a section sets the value of the member with a given name</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_add</span></code>(member)</p></td>
 <td><p></p></td>
@@ -305,45 +319,40 @@
 <td><p>The order of processing of sections during reading can be different than the order during a write.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_find_value</span></code>(name)</p></td>
-<td><p></p></td>
+<td><p>Find a value of a given name in self or in any of owned subcontainers.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_member</span></code>(name)</p></td>
-<td><p></p></td>
+<td><p>Return the member of the container of a given name.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_path</span></code>([include_root])</p></td>
-<td><p></p></td>
+<td><p>Return the dot-delimited path to the item in the configuration tree.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_root_container</span></code>()</p></td>
-<td><p></p></td>
+<td><p>Return the root object of the configuration tree.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_interactive_member_name</span></code>(name)</p></td>
-<td><p></p></td>
+<td><p>Create a sanitized name from a member-name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._set_from_atoms" title="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._set_from_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_from_atoms</span></code></a>(atoms, io_data)</p></td>
-<td><p>Set the values of the section from the write_io_data.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_update_atoms</span></code>(atoms, read_io_data)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_update_atoms</span></code>(atoms, read_io_data)</p></td>
 <td><p>Update a ReadIoData object accordingly the data in the section: set its _value_name to list of self_value_class.from_tuple(&lt;data&gt;)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code>(name[, value])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code>(name[, value])</p></td>
 <td><p>Add custom value to the container</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_dict</span></code>()</p></td>
+<td><p>Return the content of the container as a dictionary.</p></td>
+</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>([do_not_check_required])</p></td>
-<td><p></p></td>
+<td><p>Erase all values (or reset to default) from all options in the container (ad subcontainers)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code>([name, unknown])</p></td>
 <td><p>Get the value, either of self or of a child of a given name.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_any_value</span></code>()</p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">returns</dt>
-<dd class="field-odd"><p><strong>has_any_value</strong> -- True, if no value in the container is set, False otherwise</p>
-</dd>
-</dl>
-</p></td>
+<td><p>Return True if any member of the section has value.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">members</span></code>()</p></td>
-<td><p></p></td>
+<td><p>Members of the container.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_member</span></code>(name)</p></td>
 <td><p>Remove a (previously added) custom value from the container</p></td>
@@ -357,47 +366,11 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>([values, unknown])</p></td>
 <td><p>Set the value(s) of parameter(s).</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code>([dct])</p></td>
-<td><p>Return the content of the container as a dictionary.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code>()</p></td>
+<td><p>Return the value of self, in the case of container as a dictionary.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_string</span></code>(*[, validate])</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__annotations__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._value_name" title="ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection._value_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_value_name</span></code></a></p></td>
-<td><p>The name of the property of write_io_data to store the list of data</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">definition</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">seciton_name</span></code></p></td>
-<td><p>Name of the section.</p></td>
+<td><p>Return the configuration (problem definition) in a string.</p></td>
 </tr>
 </tbody>
 </table>

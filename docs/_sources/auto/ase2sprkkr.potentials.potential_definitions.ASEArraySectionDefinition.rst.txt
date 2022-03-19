@@ -1,49 +1,78 @@
 ASEArraySectionDefinition
 =========================
 
-Full name: **ase2sprkkr.potentials.potential\_definitions.ASEArraySectionDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.potential_definitions
 
 .. autoclass:: ASEArraySectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySectionDefinition._init_args
+        ~ASEArraySectionDefinition.custom_name_characters
+        ~ASEArraySectionDefinition.custom_value_name
+        ~ASEArraySectionDefinition.delimiter
+        ~ASEArraySectionDefinition.do_not_skip_whitespaces_before_name
+        ~ASEArraySectionDefinition.force_order
+        ~ASEArraySectionDefinition.name_in_grammar
+        ~ASEArraySectionDefinition.validate
+        ~ASEArraySectionDefinition.value_name_format
+        ~ASEArraySectionDefinition.values
+        ~ASEArraySectionDefinition.name
+        ~ASEArraySectionDefinition.alternative_names
+        ~ASEArraySectionDefinition.is_optional
+        ~ASEArraySectionDefinition.help
+        ~ASEArraySectionDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~ASEArraySectionDefinition.__contains__
-        ~ASEArraySectionDefinition.__delattr__
-        ~ASEArraySectionDefinition.__dir__
-        ~ASEArraySectionDefinition.__eq__
-        ~ASEArraySectionDefinition.__format__
-        ~ASEArraySectionDefinition.__ge__
-        ~ASEArraySectionDefinition.__getattribute__
-        ~ASEArraySectionDefinition.__getitem__
-        ~ASEArraySectionDefinition.__gt__
-        ~ASEArraySectionDefinition.__hash__
         ~ASEArraySectionDefinition.__init__
-        ~ASEArraySectionDefinition.__init_subclass__
+        ~ASEArraySectionDefinition.depends_on
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ASEArraySectionDefinition.__contains__
+        ~ASEArraySectionDefinition.__getitem__
         ~ASEArraySectionDefinition.__iter__
-        ~ASEArraySectionDefinition.__le__
-        ~ASEArraySectionDefinition.__lt__
-        ~ASEArraySectionDefinition.__ne__
-        ~ASEArraySectionDefinition.__new__
-        ~ASEArraySectionDefinition.__reduce__
-        ~ASEArraySectionDefinition.__reduce_ex__
-        ~ASEArraySectionDefinition.__repr__
-        ~ASEArraySectionDefinition.__setattr__
         ~ASEArraySectionDefinition.__setitem__
-        ~ASEArraySectionDefinition.__sizeof__
-        ~ASEArraySectionDefinition.__str__
-        ~ASEArraySectionDefinition.__subclasshook__
         ~ASEArraySectionDefinition._dict_from_named_values
         ~ASEArraySectionDefinition._first_section_is_fixed
         ~ASEArraySectionDefinition._grammar
@@ -55,7 +84,6 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.ASEArraySectionDefinit
         ~ASEArraySectionDefinition.custom_class
         ~ASEArraySectionDefinition.custom_member_grammar
         ~ASEArraySectionDefinition.delimited_custom_value_grammar
-        ~ASEArraySectionDefinition.depends_on
         ~ASEArraySectionDefinition.grammar
         ~ASEArraySectionDefinition.grammar_of_delimiter
         ~ASEArraySectionDefinition.members
@@ -65,31 +93,6 @@ Full name: **ase2sprkkr.potentials.potential\_definitions.ASEArraySectionDefinit
         ~ASEArraySectionDefinition.parse_from_stream
         ~ASEArraySectionDefinition.parse_return
         ~ASEArraySectionDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySectionDefinition.__dict__
-        ~ASEArraySectionDefinition.__doc__
-        ~ASEArraySectionDefinition.__module__
-        ~ASEArraySectionDefinition.__weakref__
-        ~ASEArraySectionDefinition._init_args
-        ~ASEArraySectionDefinition.custom_name_characters
-        ~ASEArraySectionDefinition.custom_value_name
-        ~ASEArraySectionDefinition.delimiter
-        ~ASEArraySectionDefinition.do_not_skip_whitespaces_before_name
-        ~ASEArraySectionDefinition.force_order
-        ~ASEArraySectionDefinition.name_in_grammar
-        ~ASEArraySectionDefinition.validate
-        ~ASEArraySectionDefinition.value_name_format
-        ~ASEArraySectionDefinition.values
 
    
    

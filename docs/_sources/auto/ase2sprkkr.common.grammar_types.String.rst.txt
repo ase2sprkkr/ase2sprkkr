@@ -1,64 +1,22 @@
 String
 ======
 
-Full name: **ase2sprkkr.common.grammar\_types.String**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: String
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.String
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~String.__delattr__
-        ~String.__dir__
-        ~String.__eq__
-        ~String.__format__
-        ~String.__ge__
-        ~String.__getattribute__
-        ~String.__gt__
-        ~String.__hash__
-        ~String.__init__
-        ~String.__init_subclass__
-        ~String.__le__
-        ~String.__lt__
-        ~String.__ne__
-        ~String.__new__
-        ~String.__reduce__
-        ~String.__reduce_ex__
-        ~String.__repr__
-        ~String.__setattr__
-        ~String.__sizeof__
-        ~String.__str__
-        ~String.__subclasshook__
-        ~String._string
-        ~String._validate
-        ~String._valueError
-        ~String.convert
-        ~String.copy
-        ~String.enrich
-        ~String.grammar
-        ~String.grammar_name
-        ~String.missing_value
-        ~String.parse
-        ~String.parse_from_stream
-        ~String.print
-        ~String.read
-        ~String.string
-        ~String.transform_grammar
-        ~String.validate
-        ~String.write
-
-   
    
 
    
@@ -69,15 +27,66 @@ Full name: **ase2sprkkr.common.grammar\_types.String**
       :template: custom-base-template.rst
      
         ~String.I
-        ~String.__dict__
-        ~String.__doc__
-        ~String.__module__
         ~String.__slotnames__
-        ~String.__weakref__
         ~String._grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~String.default_value
         ~String.has_value
         ~String.name_in_grammar
+        ~String.prefix
+        ~String.postfix
+        ~String.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~String.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~String.__init__
+        ~String.__str__
+        ~String._string
+        ~String._validate
+        ~String._valueError
+        ~String.convert
+        ~String.copy
+        ~String.enrich
+        ~String.grammar
+        ~String.missing_value
+        ~String.parse
+        ~String.parse_from_stream
+        ~String.print
+        ~String.read
+        ~String.string
+        ~String.transform_grammar
+        ~String.validate
+        ~String.write
 
    
    

@@ -1,49 +1,72 @@
 OccupationSection
 =================
 
-Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSection**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.occupation
 
 .. autoclass:: OccupationSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.occupation.OccupationSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~OccupationSection.definition
+        ~OccupationSection.name
+        ~OccupationSection._members
+        ~OccupationSection._interactive_members
+        ~OccupationSection._definition
+        ~OccupationSection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~OccupationSection._set_from_atoms
+        ~OccupationSection._update_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~OccupationSection.__contains__
-        ~OccupationSection.__delattr__
         ~OccupationSection.__dir__
-        ~OccupationSection.__eq__
-        ~OccupationSection.__format__
-        ~OccupationSection.__ge__
         ~OccupationSection.__getattr__
-        ~OccupationSection.__getattribute__
         ~OccupationSection.__getitem__
-        ~OccupationSection.__gt__
-        ~OccupationSection.__hash__
         ~OccupationSection.__init__
-        ~OccupationSection.__init_subclass__
         ~OccupationSection.__iter__
-        ~OccupationSection.__le__
-        ~OccupationSection.__lt__
-        ~OccupationSection.__ne__
-        ~OccupationSection.__new__
-        ~OccupationSection.__reduce__
-        ~OccupationSection.__reduce_ex__
-        ~OccupationSection.__repr__
         ~OccupationSection.__setattr__
-        ~OccupationSection.__sizeof__
-        ~OccupationSection.__str__
-        ~OccupationSection.__subclasshook__
         ~OccupationSection._add
         ~OccupationSection._depends_on
         ~OccupationSection._find_value
@@ -51,9 +74,8 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
         ~OccupationSection._get_path
         ~OccupationSection._get_root_container
         ~OccupationSection._interactive_member_name
-        ~OccupationSection._set_from_atoms
-        ~OccupationSection._update_atoms
         ~OccupationSection.add
+        ~OccupationSection.as_dict
         ~OccupationSection.clear
         ~OccupationSection.get
         ~OccupationSection.has_any_value
@@ -64,24 +86,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.occupation.OccupationSec
         ~OccupationSection.set
         ~OccupationSection.to_dict
         ~OccupationSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSection.__dict__
-        ~OccupationSection.__doc__
-        ~OccupationSection.__module__
-        ~OccupationSection.__weakref__
-        ~OccupationSection.definition
-        ~OccupationSection.name
-        ~OccupationSection.seciton_name
 
    
    

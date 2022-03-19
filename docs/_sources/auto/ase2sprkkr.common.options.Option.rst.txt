@@ -1,57 +1,22 @@
 Option
 ======
 
-Full name: **ase2sprkkr.common.options.Option**
 
 .. currentmodule:: ase2sprkkr.common.options
 
 .. autoclass:: Option
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.options.Option
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Option.__call__
-        ~Option.__delattr__
-        ~Option.__dir__
-        ~Option.__eq__
-        ~Option.__format__
-        ~Option.__ge__
-        ~Option.__getattribute__
-        ~Option.__gt__
-        ~Option.__hash__
-        ~Option.__init__
-        ~Option.__init_subclass__
-        ~Option.__le__
-        ~Option.__lt__
-        ~Option.__ne__
-        ~Option.__new__
-        ~Option.__reduce__
-        ~Option.__reduce_ex__
-        ~Option.__repr__
-        ~Option.__setattr__
-        ~Option.__sizeof__
-        ~Option.__str__
-        ~Option.__subclasshook__
-        ~Option._find_value
-        ~Option._get_path
-        ~Option._get_root_container
-        ~Option.clear
-        ~Option.get
-        ~Option.get_path
-        ~Option.save_to_file
-        ~Option.set
-        ~Option.to_dict
-
-   
    
 
    
@@ -61,11 +26,56 @@ Full name: **ase2sprkkr.common.options.Option**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Option.__dict__
         ~Option.__doc__
-        ~Option.__module__
-        ~Option.__weakref__
         ~Option.name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Option._definition
+        ~Option._container
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Option.__call__
+        ~Option.__init__
+        ~Option.__repr__
+        ~Option._find_value
+        ~Option.as_dict
+        ~Option.clear
+        ~Option.get
+        ~Option.get_path
+        ~Option.save_to_file
+        ~Option.set
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Option._get_path
+        ~Option._get_root_container
+        ~Option.to_dict
 
    
    

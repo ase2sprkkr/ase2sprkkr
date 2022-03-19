@@ -1,60 +1,45 @@
 LayerData
 =========
 
-Full name: **ase2sprkkr.sprkkr.structure.LayerData**
 
 .. currentmodule:: ase2sprkkr.sprkkr.structure
 
 .. autoclass:: LayerData
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.structure.LayerData
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~LayerData.__delattr__
-        ~LayerData.__dir__
-        ~LayerData.__eq__
-        ~LayerData.__format__
-        ~LayerData.__ge__
-        ~LayerData.__getattribute__
-        ~LayerData.__gt__
-        ~LayerData.__hash__
         ~LayerData.__init__
-        ~LayerData.__init_subclass__
-        ~LayerData.__le__
-        ~LayerData.__lt__
-        ~LayerData.__ne__
-        ~LayerData.__new__
-        ~LayerData.__reduce__
-        ~LayerData.__reduce_ex__
         ~LayerData.__repr__
-        ~LayerData.__setattr__
-        ~LayerData.__sizeof__
-        ~LayerData.__str__
-        ~LayerData.__subclasshook__
 
    
    
 
    
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LayerData.__dict__
-        ~LayerData.__doc__
-        ~LayerData.__module__
-        ~LayerData.__weakref__
-
    
    

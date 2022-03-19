@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -212,11 +213,18 @@
             
   <div class="section" id="basevaluedefinition">
 <h1>BaseValueDefinition<a class="headerlink" href="#basevaluedefinition" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.common.configuration_definitions.BaseValueDefinition</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseValueDefinition">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_definitions.</span></span><span class="sig-name descname"><span class="pre">BaseValueDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseValueDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="ase2sprkkr.common.configuration_definitions.BaseDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.configuration_definitions.BaseDefinition</span></code></a></p>
+<dd><p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-de7b313fba31e52f22c1c4cb814af0a5916b9469.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.BaseValueDefinition" usemap="#inheritance4044d471c3" class="inheritance graphviz" /></div>
+<map id="inheritance4044d471c3" name="inheritance4044d471c3">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="23,5,305,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" target="_top" title="configuration_definitions.BaseValueDefinition" alt="" coords="5,60,323,85"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseValueDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__" title="Permalink to this definition">¶</a></dt>
@@ -243,105 +251,6 @@ None means True if required is False</p></li>
 </dl>
 </dd></dl>
 
-<p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name, type[, default_value, ...])</p></td>
-<td><p>Creates the object</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
-<td><p>Return repr(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
-<td><p>Return str(self).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition._grammar" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition._grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_grammar</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_tuple_with_my_name</span></code>(expr[, delimiter, has_value])</p></td>
-<td><p>Create the grammar returning tuple (self.name, &lt;result of the expr&gt;)</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.copy" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_object</span></code>([container])</p></td>
-<td><p>Creates Section/Option/.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.get_value" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value</span></code></a>([option])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code>()</p></td>
-<td><p>Generate grammar with the correct settings of pyparsing</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.remove" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(name)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.validate" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code></a>(value)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(f, value)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
 <p class="rubric">Attributes</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -349,29 +258,95 @@ None means True if required is False</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.formated_name" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.formated_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formated_name</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.name_in_grammar" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.name_in_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></a></p></td>
+<td><p>Is the name of the value/section present in the file?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.value_name_format" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.value_name_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_name_format</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">do_not_skip_whitespaces_before_name</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.formated_name" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.formated_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formated_name</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.name" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>The name of the option/section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.alternative_names" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.alternative_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">alternative_names</span></code></a></p></td>
+<td><p>Alternative names of the option/section.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.is_optional" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.is_optional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_optional</span></code></a></p></td>
+<td><p>Is it required part of configuration (or can it be ommited)?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.help" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.help"><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code></a></p></td>
+<td><p>A short help text describing the content for the users.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition.description" title="ase2sprkkr.common.configuration_definitions.BaseDefinition.description"><code class="xref py py-obj docutils literal notranslate"><span class="pre">description</span></code></a></p></td>
+<td><p>A longer help text describing the content for the users.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name, type[, default_value, ...])</p></td>
+<td><p>Creates the object</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
+<td><p>Return repr(self).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
+<td><p>Return str(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition._grammar" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition._grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_grammar</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.name_in_grammar" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.name_in_grammar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_in_grammar</span></code></a></p></td>
-<td><p>By default, all values,sections.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.value_name_format" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.value_name_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_name_format</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.copy" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>(**kwargs)</p></td>
 <td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.get_value" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.get_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_value</span></code></a>([option])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.remove" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.remove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code></a>(name)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.validate" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write" title="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write</span></code></a>(f, value)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_tuple_with_my_name</span></code>(expr[, delimiter, has_value])</p></td>
+<td><p>Create the grammar returning tuple (self.name, &lt;result of the expr&gt;)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_object</span></code>([container])</p></td>
+<td><p>Creates Section/Option/.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grammar</span></code>()</p></td>
+<td><p>Generate grammar with the correct settings of pyparsing</p></td>
 </tr>
 </tbody>
 </table>
@@ -384,7 +359,13 @@ None means True if required is False</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.name_in_grammar">
 <span class="sig-name descname"><span class="pre">name_in_grammar</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseValueDefinition.name_in_grammar" title="Permalink to this definition">¶</a></dt>
-<dd><p>By default, all values,sections…. are named (in the configuration file)</p>
+<dd><p>Is the name of the value/section present in the file?</p>
+<p>When False, the option/section name is not written to the file at all. The value(s)
+of the option/section is/are then expected to be located in the file
+just after the previous one.</p>
+<p>By default, all options and sections… are named (in the configuration file). However,
+the attribute can be redefined in instantiated objects and/or descendant classes to change
+the behavior.</p>
 </dd></dl>
 
 <dl class="py property">

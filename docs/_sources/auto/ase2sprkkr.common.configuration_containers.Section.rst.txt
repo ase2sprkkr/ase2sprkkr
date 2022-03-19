@@ -1,67 +1,22 @@
 Section
 =======
 
-Full name: **ase2sprkkr.common.configuration\_containers.Section**
 
 .. currentmodule:: ase2sprkkr.common.configuration_containers
 
 .. autoclass:: Section
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_containers.Section
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Section.__contains__
-        ~Section.__delattr__
-        ~Section.__dir__
-        ~Section.__eq__
-        ~Section.__format__
-        ~Section.__ge__
-        ~Section.__getattr__
-        ~Section.__getattribute__
-        ~Section.__getitem__
-        ~Section.__gt__
-        ~Section.__hash__
-        ~Section.__init__
-        ~Section.__init_subclass__
-        ~Section.__iter__
-        ~Section.__le__
-        ~Section.__lt__
-        ~Section.__ne__
-        ~Section.__new__
-        ~Section.__reduce__
-        ~Section.__reduce_ex__
-        ~Section.__repr__
-        ~Section.__setattr__
-        ~Section.__sizeof__
-        ~Section.__str__
-        ~Section.__subclasshook__
-        ~Section._add
-        ~Section._find_value
-        ~Section._get_member
-        ~Section._get_path
-        ~Section._get_root_container
-        ~Section._interactive_member_name
-        ~Section.add
-        ~Section.clear
-        ~Section.get
-        ~Section.has_any_value
-        ~Section.members
-        ~Section.remove_member
-        ~Section.save_to_file
-        ~Section.set
-        ~Section.to_dict
-        ~Section.to_string
-
-   
    
 
    
@@ -71,13 +26,62 @@ Full name: **ase2sprkkr.common.configuration\_containers.Section**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Section.__dict__
-        ~Section.__doc__
-        ~Section.__module__
-        ~Section.__weakref__
         ~Section.definition
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~Section.name
-        ~Section.seciton_name
+        ~Section._members
+        ~Section._interactive_members
+        ~Section._definition
+        ~Section._container
+
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Section.__contains__
+        ~Section.__dir__
+        ~Section.__getattr__
+        ~Section.__getitem__
+        ~Section.__init__
+        ~Section.__iter__
+        ~Section.__setattr__
+        ~Section._add
+        ~Section._find_value
+        ~Section._get_member
+        ~Section._get_path
+        ~Section._get_root_container
+        ~Section._interactive_member_name
+        ~Section.add
+        ~Section.as_dict
+        ~Section.clear
+        ~Section.get
+        ~Section.has_any_value
+        ~Section.members
+        ~Section.remove_member
+        ~Section.save_to_file
+        ~Section.set
+        ~Section.to_dict
+        ~Section.to_string
 
    
    

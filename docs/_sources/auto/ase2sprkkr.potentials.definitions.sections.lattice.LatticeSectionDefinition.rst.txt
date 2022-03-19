@@ -1,49 +1,77 @@
 LatticeSectionDefinition
 ========================
 
-Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.lattice
 
 .. autoclass:: LatticeSectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSectionDefinition._init_args
+        ~LatticeSectionDefinition.custom_name_characters
+        ~LatticeSectionDefinition.custom_value_name
+        ~LatticeSectionDefinition.delimiter
+        ~LatticeSectionDefinition.do_not_skip_whitespaces_before_name
+        ~LatticeSectionDefinition.force_order
+        ~LatticeSectionDefinition.name_in_grammar
+        ~LatticeSectionDefinition.validate
+        ~LatticeSectionDefinition.value_name_format
+        ~LatticeSectionDefinition.values
+        ~LatticeSectionDefinition.name
+        ~LatticeSectionDefinition.alternative_names
+        ~LatticeSectionDefinition.is_optional
+        ~LatticeSectionDefinition.help
+        ~LatticeSectionDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~LatticeSectionDefinition.__contains__
-        ~LatticeSectionDefinition.__delattr__
-        ~LatticeSectionDefinition.__dir__
-        ~LatticeSectionDefinition.__eq__
-        ~LatticeSectionDefinition.__format__
-        ~LatticeSectionDefinition.__ge__
-        ~LatticeSectionDefinition.__getattribute__
-        ~LatticeSectionDefinition.__getitem__
-        ~LatticeSectionDefinition.__gt__
-        ~LatticeSectionDefinition.__hash__
         ~LatticeSectionDefinition.__init__
-        ~LatticeSectionDefinition.__init_subclass__
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~LatticeSectionDefinition.__contains__
+        ~LatticeSectionDefinition.__getitem__
         ~LatticeSectionDefinition.__iter__
-        ~LatticeSectionDefinition.__le__
-        ~LatticeSectionDefinition.__lt__
-        ~LatticeSectionDefinition.__ne__
-        ~LatticeSectionDefinition.__new__
-        ~LatticeSectionDefinition.__reduce__
-        ~LatticeSectionDefinition.__reduce_ex__
-        ~LatticeSectionDefinition.__repr__
-        ~LatticeSectionDefinition.__setattr__
         ~LatticeSectionDefinition.__setitem__
-        ~LatticeSectionDefinition.__sizeof__
-        ~LatticeSectionDefinition.__str__
-        ~LatticeSectionDefinition.__subclasshook__
         ~LatticeSectionDefinition._dict_from_named_values
         ~LatticeSectionDefinition._first_section_is_fixed
         ~LatticeSectionDefinition._grammar
@@ -65,31 +93,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDe
         ~LatticeSectionDefinition.parse_from_stream
         ~LatticeSectionDefinition.parse_return
         ~LatticeSectionDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSectionDefinition.__dict__
-        ~LatticeSectionDefinition.__doc__
-        ~LatticeSectionDefinition.__module__
-        ~LatticeSectionDefinition.__weakref__
-        ~LatticeSectionDefinition._init_args
-        ~LatticeSectionDefinition.custom_name_characters
-        ~LatticeSectionDefinition.custom_value_name
-        ~LatticeSectionDefinition.delimiter
-        ~LatticeSectionDefinition.do_not_skip_whitespaces_before_name
-        ~LatticeSectionDefinition.force_order
-        ~LatticeSectionDefinition.name_in_grammar
-        ~LatticeSectionDefinition.validate
-        ~LatticeSectionDefinition.value_name_format
-        ~LatticeSectionDefinition.values
 
    
    

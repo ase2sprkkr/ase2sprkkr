@@ -3,6 +3,18 @@ scf
 
 Full name: **ase2sprkkr.outputs.readers.scf**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.scf.ScfOutputReader  ase2sprkkr.outputs.readers.scf.ScfResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.outputs.readers.scf
 
    

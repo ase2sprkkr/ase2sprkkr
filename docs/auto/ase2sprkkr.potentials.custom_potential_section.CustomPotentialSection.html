@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -204,15 +205,24 @@
             
   <div class="section" id="custompotentialsection">
 <h1>CustomPotentialSection<a class="headerlink" href="#custompotentialsection" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.custom_potential_section.</span></span><span class="sig-name descname"><span class="pre">CustomPotentialSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#CustomPotentialSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" title="ase2sprkkr.common.options.CustomOption"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.options.CustomOption</span></code></a></p>
-<p>Unknown sections of the potential file are mapped to a “section”
+<dd><p>Unknown sections of the potential file are mapped to a “section”
 of this type.</p>
 <p>In fact, it is not a Section - a container - but just an Option,
 that holds a string value: a content of the section.</p>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-a9c0f01f79d12bc7d974b0077588706c1dea62f3.png" alt="Inheritance diagram of ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" usemap="#inheritance40caee8619" class="inheritance graphviz" /></div>
+<map id="inheritance40caee8619" name="inheritance40caee8619">
+<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="46,5,314,31"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="options.Option" alt="" coords="121,60,239,85"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" target="_top" title="Unknown sections of the potential file are mapped to a &quot;section&quot;" alt="" coords="5,169,355,195"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="97,115,263,140"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#CustomPotentialSection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.__init__" title="Permalink to this definition">¶</a></dt>
@@ -224,7 +234,50 @@ that holds a string value: a content of the section.</p>
 :type value: mixed</p>
 </dd></dl>
 
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>Return the name of the option/section.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration._definition" title="ase2sprkkr.common.base_configuration.BaseConfiguration._definition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_definition</span></code></a></p></td>
+<td><p>The &quot;definition&quot; of the option or section.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration._container" title="ase2sprkkr.common.base_configuration.BaseConfiguration._container"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_container</span></code></a></p></td>
+<td><p>The parent container.</p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.__init__" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name[, container])</p></td>
+<td><p><p>&quot;</p>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._depends_on" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._depends_on"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_depends_on</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._set_from_atoms" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._set_from_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_from_atoms</span></code></a>(atoms, io_data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._update_atoms" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._update_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_update_atoms</span></code></a>(atoms, io_data)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.reset" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -234,86 +287,19 @@ that holds a string value: a content of the section.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>()</p></td>
 <td><p>Call self as a function.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(value, /)</p></td>
-<td><p>Return self==value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
-<td><p>Return hash(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.__init__" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(name[, container])</p></td>
-<td><p><p>&quot;</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(value, /)</p></td>
-<td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
 <td><p>Return repr(self).</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
-<td><p>Return str(self).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._depends_on" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._depends_on"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_depends_on</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_find_value</span></code>(name)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_find_value</span></code>(name)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_path</span></code>([include_root])</p></td>
+<td><p>Return the dot-delimited path to the item in the configuration tree.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_path</span></code>([include_root])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_root_container</span></code>()</p></td>
+<td><p>Return the root object of the configuration tree.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_root_container</span></code>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._set_from_atoms" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._set_from_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_set_from_atoms</span></code></a>(atoms, io_data)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._update_atoms" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection._update_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_update_atoms</span></code></a>(atoms, io_data)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_dict</span></code>(add_to)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code>([do_not_check_required])</p></td>
@@ -331,41 +317,14 @@ that holds a string value: a content of the section.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove</span></code>()</p></td>
 <td><p>Remove me from my &quot;parent&quot; section</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.reset" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_to_file</span></code>(file, *[, validate])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_to_file</span></code>(file, *[, validate])</p></td>
 <td><p>Write the name-value pair to the given file, if the value is set.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>(value, *[, unknown])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code>(value, *[, unknown])</p></td>
 <td><p>Set the value of the option.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code>(dct)</p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code>()</p></td>
+<td><p>Return the value of self, in the case of container as a dictionary.</p></td>
 </tr>
 </tbody>
 </table>

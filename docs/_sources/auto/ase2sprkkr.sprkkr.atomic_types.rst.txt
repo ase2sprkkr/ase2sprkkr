@@ -3,6 +3,18 @@ atomic\_types
 
 Full name: **ase2sprkkr.sprkkr.atomic\_types**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.atomic_types.AtomicType 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.sprkkr.atomic_types
 
    

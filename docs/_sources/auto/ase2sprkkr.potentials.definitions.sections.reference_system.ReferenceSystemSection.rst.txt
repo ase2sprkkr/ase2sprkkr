@@ -1,49 +1,80 @@
 ReferenceSystemSection
 ======================
 
-Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.ReferenceSystemSection**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.reference_system
 
 .. autoclass:: ReferenceSystemSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystemSection._value_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ReferenceSystemSection.__annotations__
+        ~ReferenceSystemSection.definition
+        ~ReferenceSystemSection.name
+        ~ReferenceSystemSection._members
+        ~ReferenceSystemSection._interactive_members
+        ~ReferenceSystemSection._definition
+        ~ReferenceSystemSection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~ReferenceSystemSection._set_from_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~ReferenceSystemSection.__contains__
-        ~ReferenceSystemSection.__delattr__
         ~ReferenceSystemSection.__dir__
-        ~ReferenceSystemSection.__eq__
-        ~ReferenceSystemSection.__format__
-        ~ReferenceSystemSection.__ge__
         ~ReferenceSystemSection.__getattr__
-        ~ReferenceSystemSection.__getattribute__
         ~ReferenceSystemSection.__getitem__
-        ~ReferenceSystemSection.__gt__
-        ~ReferenceSystemSection.__hash__
         ~ReferenceSystemSection.__init__
-        ~ReferenceSystemSection.__init_subclass__
         ~ReferenceSystemSection.__iter__
-        ~ReferenceSystemSection.__le__
-        ~ReferenceSystemSection.__lt__
-        ~ReferenceSystemSection.__ne__
-        ~ReferenceSystemSection.__new__
-        ~ReferenceSystemSection.__reduce__
-        ~ReferenceSystemSection.__reduce_ex__
-        ~ReferenceSystemSection.__repr__
         ~ReferenceSystemSection.__setattr__
-        ~ReferenceSystemSection.__sizeof__
-        ~ReferenceSystemSection.__str__
-        ~ReferenceSystemSection.__subclasshook__
         ~ReferenceSystemSection._add
         ~ReferenceSystemSection._depends_on
         ~ReferenceSystemSection._find_value
@@ -51,9 +82,9 @@ Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.Refere
         ~ReferenceSystemSection._get_path
         ~ReferenceSystemSection._get_root_container
         ~ReferenceSystemSection._interactive_member_name
-        ~ReferenceSystemSection._set_from_atoms
         ~ReferenceSystemSection._update_atoms
         ~ReferenceSystemSection.add
+        ~ReferenceSystemSection.as_dict
         ~ReferenceSystemSection.clear
         ~ReferenceSystemSection.get
         ~ReferenceSystemSection.has_any_value
@@ -64,26 +95,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system.Refere
         ~ReferenceSystemSection.set
         ~ReferenceSystemSection.to_dict
         ~ReferenceSystemSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSection.__annotations__
-        ~ReferenceSystemSection.__dict__
-        ~ReferenceSystemSection.__doc__
-        ~ReferenceSystemSection.__module__
-        ~ReferenceSystemSection.__weakref__
-        ~ReferenceSystemSection._value_name
-        ~ReferenceSystemSection.definition
-        ~ReferenceSystemSection.name
-        ~ReferenceSystemSection.seciton_name
 
    
    

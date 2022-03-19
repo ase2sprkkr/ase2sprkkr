@@ -1,49 +1,72 @@
 SitesSection
 ============
 
-Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSection**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.sites
 
 .. autoclass:: SitesSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.sites.SitesSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSection.definition
+        ~SitesSection.name
+        ~SitesSection._members
+        ~SitesSection._interactive_members
+        ~SitesSection._definition
+        ~SitesSection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
+        ~SitesSection._set_from_atoms
+        ~SitesSection._update_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~SitesSection.__contains__
-        ~SitesSection.__delattr__
         ~SitesSection.__dir__
-        ~SitesSection.__eq__
-        ~SitesSection.__format__
-        ~SitesSection.__ge__
         ~SitesSection.__getattr__
-        ~SitesSection.__getattribute__
         ~SitesSection.__getitem__
-        ~SitesSection.__gt__
-        ~SitesSection.__hash__
         ~SitesSection.__init__
-        ~SitesSection.__init_subclass__
         ~SitesSection.__iter__
-        ~SitesSection.__le__
-        ~SitesSection.__lt__
-        ~SitesSection.__ne__
-        ~SitesSection.__new__
-        ~SitesSection.__reduce__
-        ~SitesSection.__reduce_ex__
-        ~SitesSection.__repr__
         ~SitesSection.__setattr__
-        ~SitesSection.__sizeof__
-        ~SitesSection.__str__
-        ~SitesSection.__subclasshook__
         ~SitesSection._add
         ~SitesSection._depends_on
         ~SitesSection._find_value
@@ -51,9 +74,8 @@ Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSection**
         ~SitesSection._get_path
         ~SitesSection._get_root_container
         ~SitesSection._interactive_member_name
-        ~SitesSection._set_from_atoms
-        ~SitesSection._update_atoms
         ~SitesSection.add
+        ~SitesSection.as_dict
         ~SitesSection.clear
         ~SitesSection.get
         ~SitesSection.has_any_value
@@ -64,24 +86,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSection**
         ~SitesSection.set
         ~SitesSection.to_dict
         ~SitesSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSection.__dict__
-        ~SitesSection.__doc__
-        ~SitesSection.__module__
-        ~SitesSection.__weakref__
-        ~SitesSection.definition
-        ~SitesSection.name
-        ~SitesSection.seciton_name
 
    
    

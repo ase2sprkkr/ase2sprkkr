@@ -1,87 +1,91 @@
 PotentialSection
 ================
 
-Full name: **ase2sprkkr.potentials.potential\_sections.PotentialSection**
 
 .. currentmodule:: ase2sprkkr.potentials.potential_sections
 
 .. autoclass:: PotentialSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potential_sections.PotentialSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialSection.definition
+        ~PotentialSection.name
+        ~PotentialSection._members
+        ~PotentialSection._interactive_members
+        ~PotentialSection._definition
+        ~PotentialSection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~PotentialSection.__contains__
-        ~PotentialSection.__delattr__
-        ~PotentialSection.__dir__
-        ~PotentialSection.__eq__
-        ~PotentialSection.__format__
-        ~PotentialSection.__ge__
-        ~PotentialSection.__getattr__
-        ~PotentialSection.__getattribute__
-        ~PotentialSection.__getitem__
-        ~PotentialSection.__gt__
-        ~PotentialSection.__hash__
-        ~PotentialSection.__init__
-        ~PotentialSection.__init_subclass__
-        ~PotentialSection.__iter__
-        ~PotentialSection.__le__
-        ~PotentialSection.__lt__
-        ~PotentialSection.__ne__
-        ~PotentialSection.__new__
-        ~PotentialSection.__reduce__
-        ~PotentialSection.__reduce_ex__
-        ~PotentialSection.__repr__
-        ~PotentialSection.__setattr__
-        ~PotentialSection.__sizeof__
-        ~PotentialSection.__str__
-        ~PotentialSection.__subclasshook__
-        ~PotentialSection._add
         ~PotentialSection._depends_on
+        ~PotentialSection._set_from_atoms
+        ~PotentialSection._update_atoms
+        ~PotentialSection.reset
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~PotentialSection.__contains__
+        ~PotentialSection.__dir__
+        ~PotentialSection.__getattr__
+        ~PotentialSection.__getitem__
+        ~PotentialSection.__init__
+        ~PotentialSection.__iter__
+        ~PotentialSection.__setattr__
+        ~PotentialSection._add
         ~PotentialSection._find_value
         ~PotentialSection._get_member
         ~PotentialSection._get_path
         ~PotentialSection._get_root_container
         ~PotentialSection._interactive_member_name
-        ~PotentialSection._set_from_atoms
-        ~PotentialSection._update_atoms
         ~PotentialSection.add
+        ~PotentialSection.as_dict
         ~PotentialSection.clear
         ~PotentialSection.get
         ~PotentialSection.has_any_value
         ~PotentialSection.members
         ~PotentialSection.remove_member
-        ~PotentialSection.reset
         ~PotentialSection.save_to_file
         ~PotentialSection.set
         ~PotentialSection.to_dict
         ~PotentialSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialSection.__dict__
-        ~PotentialSection.__doc__
-        ~PotentialSection.__module__
-        ~PotentialSection.__weakref__
-        ~PotentialSection.definition
-        ~PotentialSection.name
-        ~PotentialSection.seciton_name
 
    
    

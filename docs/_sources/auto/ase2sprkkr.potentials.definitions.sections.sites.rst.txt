@@ -3,6 +3,18 @@ sites
 
 Full name: **ase2sprkkr.potentials.definitions.sections.sites**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.sites.SitesSection  ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition  ase2sprkkr.potentials.definitions.sections.sites.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.potentials.definitions.sections.sites
 
    

@@ -1,49 +1,22 @@
 ScfResult
 =========
 
-Full name: **ase2sprkkr.outputs.readers.scf.ScfResult**
 
 .. currentmodule:: ase2sprkkr.outputs.readers.scf
 
 .. autoclass:: ScfResult
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.scf.ScfResult
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfResult.__delattr__
-        ~ScfResult.__dir__
-        ~ScfResult.__eq__
-        ~ScfResult.__format__
-        ~ScfResult.__ge__
-        ~ScfResult.__getattribute__
-        ~ScfResult.__gt__
-        ~ScfResult.__hash__
-        ~ScfResult.__init__
-        ~ScfResult.__init_subclass__
-        ~ScfResult.__le__
-        ~ScfResult.__lt__
-        ~ScfResult.__ne__
-        ~ScfResult.__new__
-        ~ScfResult.__reduce__
-        ~ScfResult.__reduce_ex__
-        ~ScfResult.__repr__
-        ~ScfResult.__setattr__
-        ~ScfResult.__sizeof__
-        ~ScfResult.__str__
-        ~ScfResult.__subclasshook__
-        ~ScfResult.iteration_values
-        ~ScfResult.plot
-
-   
    
 
    
@@ -53,11 +26,6 @@ Full name: **ase2sprkkr.outputs.readers.scf.ScfResult**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~ScfResult.__dict__
-        ~ScfResult.__doc__
-        ~ScfResult.__module__
-        ~ScfResult.__weakref__
-        ~ScfResult.atoms
         ~ScfResult.calculator
         ~ScfResult.converged
         ~ScfResult.energy
@@ -65,6 +33,43 @@ Full name: **ase2sprkkr.outputs.readers.scf.ScfResult**
         ~ScfResult.last_iteration
         ~ScfResult.potential
         ~ScfResult.potential_filename
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfResult.atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfResult.iteration_values
+        ~ScfResult.plot
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~ScfResult.__init__
 
    
    

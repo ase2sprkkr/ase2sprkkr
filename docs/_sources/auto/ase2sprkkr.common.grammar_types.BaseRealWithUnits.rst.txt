@@ -1,66 +1,22 @@
 BaseRealWithUnits
 =================
 
-Full name: **ase2sprkkr.common.grammar\_types.BaseRealWithUnits**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: BaseRealWithUnits
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.BaseRealWithUnits
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseRealWithUnits.__delattr__
-        ~BaseRealWithUnits.__dir__
-        ~BaseRealWithUnits.__eq__
-        ~BaseRealWithUnits.__format__
-        ~BaseRealWithUnits.__ge__
-        ~BaseRealWithUnits.__getattribute__
-        ~BaseRealWithUnits.__gt__
-        ~BaseRealWithUnits.__hash__
-        ~BaseRealWithUnits.__init__
-        ~BaseRealWithUnits.__init_subclass__
-        ~BaseRealWithUnits.__le__
-        ~BaseRealWithUnits.__lt__
-        ~BaseRealWithUnits.__ne__
-        ~BaseRealWithUnits.__new__
-        ~BaseRealWithUnits.__reduce__
-        ~BaseRealWithUnits.__reduce_ex__
-        ~BaseRealWithUnits.__repr__
-        ~BaseRealWithUnits.__setattr__
-        ~BaseRealWithUnits.__sizeof__
-        ~BaseRealWithUnits.__str__
-        ~BaseRealWithUnits.__subclasshook__
-        ~BaseRealWithUnits._grammar
-        ~BaseRealWithUnits._grammar_units
-        ~BaseRealWithUnits._string
-        ~BaseRealWithUnits._validate
-        ~BaseRealWithUnits._valueError
-        ~BaseRealWithUnits.convert
-        ~BaseRealWithUnits.copy
-        ~BaseRealWithUnits.enrich
-        ~BaseRealWithUnits.grammar
-        ~BaseRealWithUnits.grammar_name
-        ~BaseRealWithUnits.missing_value
-        ~BaseRealWithUnits.parse
-        ~BaseRealWithUnits.parse_from_stream
-        ~BaseRealWithUnits.print
-        ~BaseRealWithUnits.read
-        ~BaseRealWithUnits.string
-        ~BaseRealWithUnits.transform_grammar
-        ~BaseRealWithUnits.validate
-        ~BaseRealWithUnits.write
-
-   
    
 
    
@@ -70,14 +26,67 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseRealWithUnits**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~BaseRealWithUnits.__dict__
-        ~BaseRealWithUnits.__doc__
-        ~BaseRealWithUnits.__module__
-        ~BaseRealWithUnits.__weakref__
-        ~BaseRealWithUnits.default_value
         ~BaseRealWithUnits.grammar_cache
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseRealWithUnits.default_value
         ~BaseRealWithUnits.has_value
         ~BaseRealWithUnits.name_in_grammar
+        ~BaseRealWithUnits.prefix
+        ~BaseRealWithUnits.postfix
+        ~BaseRealWithUnits.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseRealWithUnits._grammar
+        ~BaseRealWithUnits._grammar_units
+        ~BaseRealWithUnits._validate
+        ~BaseRealWithUnits.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseRealWithUnits.__init__
+        ~BaseRealWithUnits.__str__
+        ~BaseRealWithUnits._string
+        ~BaseRealWithUnits._valueError
+        ~BaseRealWithUnits.convert
+        ~BaseRealWithUnits.copy
+        ~BaseRealWithUnits.enrich
+        ~BaseRealWithUnits.grammar
+        ~BaseRealWithUnits.missing_value
+        ~BaseRealWithUnits.parse
+        ~BaseRealWithUnits.parse_from_stream
+        ~BaseRealWithUnits.print
+        ~BaseRealWithUnits.read
+        ~BaseRealWithUnits.string
+        ~BaseRealWithUnits.transform_grammar
+        ~BaseRealWithUnits.validate
+        ~BaseRealWithUnits.write
 
    
    

@@ -1,56 +1,22 @@
 CustomPotentialSectionDefinition
 ================================
 
-Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSectionDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.custom_potential_section
 
 .. autoclass:: CustomPotentialSectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSectionDefinition.__delattr__
-        ~CustomPotentialSectionDefinition.__dir__
-        ~CustomPotentialSectionDefinition.__eq__
-        ~CustomPotentialSectionDefinition.__format__
-        ~CustomPotentialSectionDefinition.__ge__
-        ~CustomPotentialSectionDefinition.__getattribute__
-        ~CustomPotentialSectionDefinition.__gt__
-        ~CustomPotentialSectionDefinition.__hash__
-        ~CustomPotentialSectionDefinition.__init__
-        ~CustomPotentialSectionDefinition.__init_subclass__
-        ~CustomPotentialSectionDefinition.__le__
-        ~CustomPotentialSectionDefinition.__lt__
-        ~CustomPotentialSectionDefinition.__ne__
-        ~CustomPotentialSectionDefinition.__new__
-        ~CustomPotentialSectionDefinition.__reduce__
-        ~CustomPotentialSectionDefinition.__reduce_ex__
-        ~CustomPotentialSectionDefinition.__repr__
-        ~CustomPotentialSectionDefinition.__setattr__
-        ~CustomPotentialSectionDefinition.__sizeof__
-        ~CustomPotentialSectionDefinition.__str__
-        ~CustomPotentialSectionDefinition.__subclasshook__
-        ~CustomPotentialSectionDefinition._grammar
-        ~CustomPotentialSectionDefinition._tuple_with_my_name
-        ~CustomPotentialSectionDefinition.copy
-        ~CustomPotentialSectionDefinition.create_object
-        ~CustomPotentialSectionDefinition.get_value
-        ~CustomPotentialSectionDefinition.grammar
-        ~CustomPotentialSectionDefinition.remove
-        ~CustomPotentialSectionDefinition.validate
-        ~CustomPotentialSectionDefinition.write
-
-   
    
 
    
@@ -60,17 +26,56 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomPotentialSec
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~CustomPotentialSectionDefinition.__dict__
-        ~CustomPotentialSectionDefinition.__doc__
-        ~CustomPotentialSectionDefinition.__module__
-        ~CustomPotentialSectionDefinition.__weakref__
-        ~CustomPotentialSectionDefinition.do_not_skip_whitespaces_before_name
-        ~CustomPotentialSectionDefinition.formated_name
         ~CustomPotentialSectionDefinition.mandatory
-        ~CustomPotentialSectionDefinition.name_in_grammar
         ~CustomPotentialSectionDefinition.name_value_delimiter
         ~CustomPotentialSectionDefinition.prefix
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomPotentialSectionDefinition.do_not_skip_whitespaces_before_name
+        ~CustomPotentialSectionDefinition.formated_name
+        ~CustomPotentialSectionDefinition.name_in_grammar
         ~CustomPotentialSectionDefinition.value_name_format
+        ~CustomPotentialSectionDefinition.name
+        ~CustomPotentialSectionDefinition.alternative_names
+        ~CustomPotentialSectionDefinition.is_optional
+        ~CustomPotentialSectionDefinition.help
+        ~CustomPotentialSectionDefinition.description
+
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomPotentialSectionDefinition.__init__
+        ~CustomPotentialSectionDefinition.__repr__
+        ~CustomPotentialSectionDefinition.__str__
+        ~CustomPotentialSectionDefinition._grammar
+        ~CustomPotentialSectionDefinition._tuple_with_my_name
+        ~CustomPotentialSectionDefinition.copy
+        ~CustomPotentialSectionDefinition.create_object
+        ~CustomPotentialSectionDefinition.get_value
+        ~CustomPotentialSectionDefinition.grammar
+        ~CustomPotentialSectionDefinition.remove
+        ~CustomPotentialSectionDefinition.validate
+        ~CustomPotentialSectionDefinition.write
 
    
    

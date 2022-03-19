@@ -1,45 +1,76 @@
 SetOf
 =====
 
-Full name: **ase2sprkkr.common.grammar\_types.SetOf**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: SetOf
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.SetOf
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SetOf.delimiter
+        ~SetOf.delimiter_str
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SetOf.__slotnames__
+        ~SetOf.default_value
+        ~SetOf.has_value
+        ~SetOf.name_in_grammar
+        ~SetOf.prefix
+        ~SetOf.postfix
+        ~SetOf.format
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~SetOf.__delattr__
-        ~SetOf.__dir__
-        ~SetOf.__eq__
-        ~SetOf.__format__
-        ~SetOf.__ge__
-        ~SetOf.__getattribute__
-        ~SetOf.__gt__
-        ~SetOf.__hash__
         ~SetOf.__init__
-        ~SetOf.__init_subclass__
-        ~SetOf.__le__
-        ~SetOf.__lt__
-        ~SetOf.__ne__
-        ~SetOf.__new__
-        ~SetOf.__reduce__
-        ~SetOf.__reduce_ex__
-        ~SetOf.__repr__
-        ~SetOf.__setattr__
-        ~SetOf.__sizeof__
         ~SetOf.__str__
-        ~SetOf.__subclasshook__
+        ~SetOf.transform_grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~SetOf._string
         ~SetOf._validate
         ~SetOf._valueError
@@ -54,30 +85,8 @@ Full name: **ase2sprkkr.common.grammar\_types.SetOf**
         ~SetOf.print
         ~SetOf.read
         ~SetOf.string
-        ~SetOf.transform_grammar
         ~SetOf.validate
         ~SetOf.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SetOf.__dict__
-        ~SetOf.__doc__
-        ~SetOf.__module__
-        ~SetOf.__slotnames__
-        ~SetOf.__weakref__
-        ~SetOf.default_value
-        ~SetOf.delimiter
-        ~SetOf.delimiter_str
-        ~SetOf.has_value
-        ~SetOf.name_in_grammar
 
    
    

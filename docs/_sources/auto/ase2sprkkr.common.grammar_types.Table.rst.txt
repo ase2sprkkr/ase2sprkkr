@@ -1,67 +1,22 @@
 Table
 =====
 
-Full name: **ase2sprkkr.common.grammar\_types.Table**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Table
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Table
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Table.__delattr__
-        ~Table.__dir__
-        ~Table.__eq__
-        ~Table.__format__
-        ~Table.__ge__
-        ~Table.__getattribute__
-        ~Table.__gt__
-        ~Table.__hash__
-        ~Table.__init__
-        ~Table.__init_subclass__
-        ~Table.__le__
-        ~Table.__lt__
-        ~Table.__ne__
-        ~Table.__new__
-        ~Table.__reduce__
-        ~Table.__reduce_ex__
-        ~Table.__repr__
-        ~Table.__setattr__
-        ~Table.__sizeof__
-        ~Table.__str__
-        ~Table.__subclasshook__
-        ~Table._grammar
-        ~Table._string
-        ~Table._validate
-        ~Table._valueError
-        ~Table.convert
-        ~Table.copy
-        ~Table.enrich
-        ~Table.grammar
-        ~Table.grammar_name
-        ~Table.missing_value
-        ~Table.number_of_collumns
-        ~Table.parse
-        ~Table.parse_from_stream
-        ~Table.print
-        ~Table.read
-        ~Table.string
-        ~Table.transform_grammar
-        ~Table.validate
-        ~Table.write
-        ~Table.zero_data
-
-   
    
 
    
@@ -71,14 +26,68 @@ Full name: **ase2sprkkr.common.grammar\_types.Table**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Table.__dict__
-        ~Table.__doc__
-        ~Table.__module__
-        ~Table.__weakref__
-        ~Table.default_value
-        ~Table.has_value
         ~Table.name_in_grammar
         ~Table.numpy_type
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Table.default_value
+        ~Table.has_value
+        ~Table.prefix
+        ~Table.postfix
+        ~Table.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Table.__init__
+        ~Table._grammar
+        ~Table._string
+        ~Table._validate
+        ~Table.convert
+        ~Table.grammar_name
+        ~Table.number_of_collumns
+        ~Table.zero_data
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Table.__str__
+        ~Table._valueError
+        ~Table.copy
+        ~Table.enrich
+        ~Table.grammar
+        ~Table.missing_value
+        ~Table.parse
+        ~Table.parse_from_stream
+        ~Table.print
+        ~Table.read
+        ~Table.string
+        ~Table.transform_grammar
+        ~Table.validate
+        ~Table.write
 
    
    

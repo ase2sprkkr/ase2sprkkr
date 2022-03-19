@@ -3,6 +3,18 @@ task\_result
 
 Full name: **ase2sprkkr.outputs.task\_result**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.task_result.OutputReader  ase2sprkkr.outputs.task_result.TaskResult 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.outputs.task_result
 
    

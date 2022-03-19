@@ -1,66 +1,22 @@
 BaseMixed
 =========
 
-Full name: **ase2sprkkr.common.grammar\_types.BaseMixed**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: BaseMixed
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.BaseMixed
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseMixed.__delattr__
-        ~BaseMixed.__dir__
-        ~BaseMixed.__eq__
-        ~BaseMixed.__format__
-        ~BaseMixed.__ge__
-        ~BaseMixed.__getattribute__
-        ~BaseMixed.__gt__
-        ~BaseMixed.__hash__
-        ~BaseMixed.__init__
-        ~BaseMixed.__init_subclass__
-        ~BaseMixed.__le__
-        ~BaseMixed.__lt__
-        ~BaseMixed.__ne__
-        ~BaseMixed.__new__
-        ~BaseMixed.__reduce__
-        ~BaseMixed.__reduce_ex__
-        ~BaseMixed.__repr__
-        ~BaseMixed.__setattr__
-        ~BaseMixed.__sizeof__
-        ~BaseMixed.__str__
-        ~BaseMixed.__subclasshook__
-        ~BaseMixed._grammar
-        ~BaseMixed._string
-        ~BaseMixed._validate
-        ~BaseMixed._valueError
-        ~BaseMixed.convert
-        ~BaseMixed.copy
-        ~BaseMixed.enrich
-        ~BaseMixed.get_type
-        ~BaseMixed.grammar
-        ~BaseMixed.grammar_name
-        ~BaseMixed.missing_value
-        ~BaseMixed.parse
-        ~BaseMixed.parse_from_stream
-        ~BaseMixed.print
-        ~BaseMixed.read
-        ~BaseMixed.string
-        ~BaseMixed.transform_grammar
-        ~BaseMixed.validate
-        ~BaseMixed.write
-
-   
    
 
    
@@ -70,15 +26,68 @@ Full name: **ase2sprkkr.common.grammar\_types.BaseMixed**
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~BaseMixed.__dict__
-        ~BaseMixed.__doc__
-        ~BaseMixed.__module__
-        ~BaseMixed.__weakref__
+        ~BaseMixed.string_type
+        ~BaseMixed.type
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~BaseMixed.default_value
         ~BaseMixed.has_value
         ~BaseMixed.name_in_grammar
-        ~BaseMixed.string_type
-        ~BaseMixed.type
+        ~BaseMixed.prefix
+        ~BaseMixed.postfix
+        ~BaseMixed.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseMixed._grammar
+        ~BaseMixed._validate
+        ~BaseMixed.get_type
+        ~BaseMixed.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseMixed.__init__
+        ~BaseMixed.__str__
+        ~BaseMixed._string
+        ~BaseMixed._valueError
+        ~BaseMixed.convert
+        ~BaseMixed.copy
+        ~BaseMixed.enrich
+        ~BaseMixed.grammar
+        ~BaseMixed.missing_value
+        ~BaseMixed.parse
+        ~BaseMixed.parse_from_stream
+        ~BaseMixed.print
+        ~BaseMixed.read
+        ~BaseMixed.string
+        ~BaseMixed.transform_grammar
+        ~BaseMixed.validate
+        ~BaseMixed.write
 
    
    

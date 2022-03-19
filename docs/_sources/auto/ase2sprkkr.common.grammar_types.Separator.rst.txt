@@ -1,48 +1,77 @@
 Separator
 =========
 
-Full name: **ase2sprkkr.common.grammar\_types.Separator**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Separator
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Separator
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.I
+        ~Separator._grammar
+        ~Separator.has_value
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.default_value
+        ~Separator.name_in_grammar
+        ~Separator.prefix
+        ~Separator.postfix
+        ~Separator.format
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Separator.__delattr__
-        ~Separator.__dir__
-        ~Separator.__eq__
-        ~Separator.__format__
-        ~Separator.__ge__
-        ~Separator.__getattribute__
-        ~Separator.__gt__
-        ~Separator.__hash__
-        ~Separator.__init__
-        ~Separator.__init_subclass__
-        ~Separator.__le__
-        ~Separator.__lt__
-        ~Separator.__ne__
-        ~Separator.__new__
-        ~Separator.__reduce__
-        ~Separator.__reduce_ex__
-        ~Separator.__repr__
-        ~Separator.__setattr__
-        ~Separator.__sizeof__
-        ~Separator.__str__
-        ~Separator.__subclasshook__
         ~Separator._grammar_name
         ~Separator._string
         ~Separator._validate
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Separator.__init__
+        ~Separator.__str__
         ~Separator._valueError
         ~Separator.convert
         ~Separator.copy
@@ -58,26 +87,6 @@ Full name: **ase2sprkkr.common.grammar\_types.Separator**
         ~Separator.transform_grammar
         ~Separator.validate
         ~Separator.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Separator.I
-        ~Separator.__dict__
-        ~Separator.__doc__
-        ~Separator.__module__
-        ~Separator.__weakref__
-        ~Separator._grammar
-        ~Separator.default_value
-        ~Separator.has_value
-        ~Separator.name_in_grammar
 
    
    

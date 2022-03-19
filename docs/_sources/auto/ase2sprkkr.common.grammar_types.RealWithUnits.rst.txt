@@ -1,45 +1,66 @@
 RealWithUnits
 =============
 
-Full name: **ase2sprkkr.common.grammar\_types.RealWithUnits**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: RealWithUnits
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.RealWithUnits
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~RealWithUnits.default_value
+        ~RealWithUnits.grammar_cache
+        ~RealWithUnits.has_value
+        ~RealWithUnits.name_in_grammar
+        ~RealWithUnits.prefix
+        ~RealWithUnits.postfix
+        ~RealWithUnits.format
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~RealWithUnits.__delattr__
-        ~RealWithUnits.__dir__
-        ~RealWithUnits.__eq__
-        ~RealWithUnits.__format__
-        ~RealWithUnits.__ge__
-        ~RealWithUnits.__getattribute__
-        ~RealWithUnits.__gt__
-        ~RealWithUnits.__hash__
         ~RealWithUnits.__init__
-        ~RealWithUnits.__init_subclass__
-        ~RealWithUnits.__le__
-        ~RealWithUnits.__lt__
-        ~RealWithUnits.__ne__
-        ~RealWithUnits.__new__
-        ~RealWithUnits.__reduce__
-        ~RealWithUnits.__reduce_ex__
-        ~RealWithUnits.__repr__
-        ~RealWithUnits.__setattr__
-        ~RealWithUnits.__sizeof__
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~RealWithUnits.__str__
-        ~RealWithUnits.__subclasshook__
         ~RealWithUnits._grammar
         ~RealWithUnits._grammar_units
         ~RealWithUnits._string
@@ -59,25 +80,6 @@ Full name: **ase2sprkkr.common.grammar\_types.RealWithUnits**
         ~RealWithUnits.transform_grammar
         ~RealWithUnits.validate
         ~RealWithUnits.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RealWithUnits.__dict__
-        ~RealWithUnits.__doc__
-        ~RealWithUnits.__module__
-        ~RealWithUnits.__weakref__
-        ~RealWithUnits.default_value
-        ~RealWithUnits.grammar_cache
-        ~RealWithUnits.has_value
-        ~RealWithUnits.name_in_grammar
 
    
    

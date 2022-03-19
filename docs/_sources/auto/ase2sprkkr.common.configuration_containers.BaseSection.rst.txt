@@ -1,49 +1,71 @@
 BaseSection
 ===========
 
-Full name: **ase2sprkkr.common.configuration\_containers.BaseSection**
 
 .. currentmodule:: ase2sprkkr.common.configuration_containers
 
 .. autoclass:: BaseSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_containers.BaseSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseSection.name
+        ~BaseSection._members
+        ~BaseSection._interactive_members
+        ~BaseSection._definition
+        ~BaseSection._container
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~BaseSection.__contains__
-        ~BaseSection.__delattr__
-        ~BaseSection.__dir__
-        ~BaseSection.__eq__
-        ~BaseSection.__format__
-        ~BaseSection.__ge__
-        ~BaseSection.__getattr__
-        ~BaseSection.__getattribute__
-        ~BaseSection.__getitem__
-        ~BaseSection.__gt__
-        ~BaseSection.__hash__
-        ~BaseSection.__init__
-        ~BaseSection.__init_subclass__
-        ~BaseSection.__iter__
-        ~BaseSection.__le__
-        ~BaseSection.__lt__
-        ~BaseSection.__ne__
-        ~BaseSection.__new__
-        ~BaseSection.__reduce__
-        ~BaseSection.__reduce_ex__
-        ~BaseSection.__repr__
         ~BaseSection.__setattr__
-        ~BaseSection.__sizeof__
-        ~BaseSection.__str__
-        ~BaseSection.__subclasshook__
+        ~BaseSection.has_any_value
+        ~BaseSection.save_to_file
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~BaseSection.__contains__
+        ~BaseSection.__dir__
+        ~BaseSection.__getattr__
+        ~BaseSection.__getitem__
+        ~BaseSection.__init__
+        ~BaseSection.__iter__
         ~BaseSection._add
         ~BaseSection._find_value
         ~BaseSection._get_member
@@ -51,32 +73,14 @@ Full name: **ase2sprkkr.common.configuration\_containers.BaseSection**
         ~BaseSection._get_root_container
         ~BaseSection._interactive_member_name
         ~BaseSection.add
+        ~BaseSection.as_dict
         ~BaseSection.clear
         ~BaseSection.get
-        ~BaseSection.has_any_value
         ~BaseSection.members
         ~BaseSection.remove_member
-        ~BaseSection.save_to_file
         ~BaseSection.set
         ~BaseSection.to_dict
         ~BaseSection.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSection.__dict__
-        ~BaseSection.__doc__
-        ~BaseSection.__module__
-        ~BaseSection.__weakref__
-        ~BaseSection.name
-        ~BaseSection.seciton_name
 
    
    

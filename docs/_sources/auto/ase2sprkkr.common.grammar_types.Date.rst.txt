@@ -1,64 +1,22 @@
 Date
 ====
 
-Full name: **ase2sprkkr.common.grammar\_types.Date**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Date
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Date
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Date.__delattr__
-        ~Date.__dir__
-        ~Date.__eq__
-        ~Date.__format__
-        ~Date.__ge__
-        ~Date.__getattribute__
-        ~Date.__gt__
-        ~Date.__hash__
-        ~Date.__init__
-        ~Date.__init_subclass__
-        ~Date.__le__
-        ~Date.__lt__
-        ~Date.__ne__
-        ~Date.__new__
-        ~Date.__reduce__
-        ~Date.__reduce_ex__
-        ~Date.__repr__
-        ~Date.__setattr__
-        ~Date.__sizeof__
-        ~Date.__str__
-        ~Date.__subclasshook__
-        ~Date._string
-        ~Date._validate
-        ~Date._valueError
-        ~Date.convert
-        ~Date.copy
-        ~Date.enrich
-        ~Date.grammar
-        ~Date.grammar_name
-        ~Date.missing_value
-        ~Date.parse
-        ~Date.parse_from_stream
-        ~Date.print
-        ~Date.read
-        ~Date.string
-        ~Date.transform_grammar
-        ~Date.validate
-        ~Date.write
-
-   
    
 
    
@@ -69,14 +27,65 @@ Full name: **ase2sprkkr.common.grammar\_types.Date**
       :template: custom-base-template.rst
      
         ~Date.I
-        ~Date.__dict__
-        ~Date.__doc__
-        ~Date.__module__
-        ~Date.__weakref__
         ~Date._grammar
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~Date.default_value
         ~Date.has_value
         ~Date.name_in_grammar
+        ~Date.prefix
+        ~Date.postfix
+        ~Date.format
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Date._string
+        ~Date._validate
+        ~Date.grammar_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Date.__init__
+        ~Date.__str__
+        ~Date._valueError
+        ~Date.convert
+        ~Date.copy
+        ~Date.enrich
+        ~Date.grammar
+        ~Date.missing_value
+        ~Date.parse
+        ~Date.parse_from_stream
+        ~Date.print
+        ~Date.read
+        ~Date.string
+        ~Date.transform_grammar
+        ~Date.validate
+        ~Date.write
 
    
    

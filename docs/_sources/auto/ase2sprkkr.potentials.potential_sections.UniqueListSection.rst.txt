@@ -1,71 +1,22 @@
 UniqueListSection
 =================
 
-Full name: **ase2sprkkr.potentials.potential\_sections.UniqueListSection**
 
 .. currentmodule:: ase2sprkkr.potentials.potential_sections
 
 .. autoclass:: UniqueListSection
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.potential_sections.UniqueListSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
-
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~UniqueListSection.__contains__
-        ~UniqueListSection.__delattr__
-        ~UniqueListSection.__dir__
-        ~UniqueListSection.__eq__
-        ~UniqueListSection.__format__
-        ~UniqueListSection.__ge__
-        ~UniqueListSection.__getattr__
-        ~UniqueListSection.__getattribute__
-        ~UniqueListSection.__getitem__
-        ~UniqueListSection.__gt__
-        ~UniqueListSection.__hash__
-        ~UniqueListSection.__init__
-        ~UniqueListSection.__init_subclass__
-        ~UniqueListSection.__iter__
-        ~UniqueListSection.__le__
-        ~UniqueListSection.__lt__
-        ~UniqueListSection.__ne__
-        ~UniqueListSection.__new__
-        ~UniqueListSection.__reduce__
-        ~UniqueListSection.__reduce_ex__
-        ~UniqueListSection.__repr__
-        ~UniqueListSection.__setattr__
-        ~UniqueListSection.__sizeof__
-        ~UniqueListSection.__str__
-        ~UniqueListSection.__subclasshook__
-        ~UniqueListSection._add
-        ~UniqueListSection._depends_on
-        ~UniqueListSection._find_value
-        ~UniqueListSection._get_member
-        ~UniqueListSection._get_path
-        ~UniqueListSection._get_root_container
-        ~UniqueListSection._interactive_member_name
-        ~UniqueListSection._set_from_atoms
-        ~UniqueListSection._update_atoms
-        ~UniqueListSection.add
-        ~UniqueListSection.clear
-        ~UniqueListSection.get
-        ~UniqueListSection.has_any_value
-        ~UniqueListSection.members
-        ~UniqueListSection.remove_member
-        ~UniqueListSection.reset
-        ~UniqueListSection.save_to_file
-        ~UniqueListSection.set
-        ~UniqueListSection.to_dict
-        ~UniqueListSection.to_string
-
-   
    
 
    
@@ -76,15 +27,75 @@ Full name: **ase2sprkkr.potentials.potential\_sections.UniqueListSection**
       :template: custom-base-template.rst
      
         ~UniqueListSection.__annotations__
-        ~UniqueListSection.__dict__
-        ~UniqueListSection.__doc__
-        ~UniqueListSection.__module__
-        ~UniqueListSection.__weakref__
         ~UniqueListSection._value_class
         ~UniqueListSection._value_name
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~UniqueListSection.definition
         ~UniqueListSection.name
-        ~UniqueListSection.seciton_name
+        ~UniqueListSection._members
+        ~UniqueListSection._interactive_members
+        ~UniqueListSection._definition
+        ~UniqueListSection._container
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~UniqueListSection._set_from_atoms
+        ~UniqueListSection._update_atoms
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~UniqueListSection.__contains__
+        ~UniqueListSection.__dir__
+        ~UniqueListSection.__getattr__
+        ~UniqueListSection.__getitem__
+        ~UniqueListSection.__init__
+        ~UniqueListSection.__iter__
+        ~UniqueListSection.__setattr__
+        ~UniqueListSection._add
+        ~UniqueListSection._depends_on
+        ~UniqueListSection._find_value
+        ~UniqueListSection._get_member
+        ~UniqueListSection._get_path
+        ~UniqueListSection._get_root_container
+        ~UniqueListSection._interactive_member_name
+        ~UniqueListSection.add
+        ~UniqueListSection.as_dict
+        ~UniqueListSection.clear
+        ~UniqueListSection.get
+        ~UniqueListSection.has_any_value
+        ~UniqueListSection.members
+        ~UniqueListSection.remove_member
+        ~UniqueListSection.reset
+        ~UniqueListSection.save_to_file
+        ~UniqueListSection.set
+        ~UniqueListSection.to_dict
+        ~UniqueListSection.to_string
 
    
    

@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
 
   
@@ -194,6 +195,7 @@
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="n">context</span> <span class="o">=</span>  <span class="n">generate_grammar</span><span class="p">()</span>
 <span class="n">context</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
@@ -201,11 +203,6 @@
 
 <div class="viewcode-block" id="BaseType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType">[docs]</a><span class="k">class</span> <span class="nc">BaseType</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot; Base class for definition of configuration option types</span>
-
-<span class="sd">      :ivar: str prefix: The string, that will be printed before the value</span>
-<span class="sd">      :ivar: str postfix: The string, that will be printed before the value</span>
-<span class="sd">      :ivar: str format: The format string, that will be used for printing the value.</span>
-<span class="sd">      :ivar: default_value: The default value of an option of this type, if it does not say otherwise.</span>
 
 <span class="sd">      A type without value (e.g. Separator) are just syntactical</span>
 <span class="sd">      elements in the potentials file, that do not carry an information.</span>
@@ -217,7 +214,8 @@
 <span class="sd">      the Flag is False), but the name-value tuple of such Type is present</span>
 <span class="sd">      in the parse result. On the other hand, has_value = False is in the file, but</span>
 <span class="sd">      not in the result.</span>
-<span class="sd">  &quot;&quot;&quot;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
   <span class="n">has_value</span> <span class="o">=</span> <span class="kc">True</span>
 
   <span class="sd">&quot;&quot;&quot; Default value for BaseValueDefinition.name_in_grammar.</span>
@@ -226,7 +224,8 @@
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">True</span>
 
-  <span class="sd">&quot;&quot;&quot; Default value for the given type. It can be overriden in the constructor. &quot;&quot;&quot;</span>
+  <span class="sd">&quot;&quot;&quot; Default value for the given type. It can be overriden in the constructor (or just by setting</span>
+<span class="sd">  the instantiated object attribute) &quot;&quot;&quot;</span>
   <span class="n">default_value</span> <span class="o">=</span> <span class="kc">None</span>
 
   <span class="sd">&quot;&quot;&quot; Deafault type for creating numpy arrays (e.g. by Table) is object - to be redefined</span>
@@ -234,10 +233,46 @@
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">object</span>
 
-<div class="viewcode-block" id="BaseType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">after_convert</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">postfix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="nb">format</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="p">:</span><span class="n">Any</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">condition</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]],</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">after_convert</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Create the object.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      prefix</span>
+<span class="sd">        The string, that will be printed before the value</span>
+
+<span class="sd">      postfix</span>
+<span class="sd">        The string, that will be printed after the value</span>
+
+<span class="sd">      format</span>
+<span class="sd">        The (python) format string, that will be used for printing the value.</span>
+<span class="sd">        The format is passed as format argument to ``str.format`` routine.</span>
+
+<span class="sd">      default_value</span>
+<span class="sd">        The default value of the options of this type. ``None`` means no default value.</span>
+
+<span class="sd">      condition</span>
+<span class="sd">        Function, that check the validity of the value. It should return ``True`` for a valid</span>
+<span class="sd">        value, and ``False`` or string for invalid. The string is interpreted as an error message</span>
+<span class="sd">        that explains the invalidity of the value.</span>
+
+<span class="sd">      after_convert</span>
+<span class="sd">        Function, that - if it is given - is applied to the (entered or parsed) value. The function</span>
+<span class="sd">        is applied on the result of the</span>
+<span class="sd">        :meth:`convert&lt;ase2sprkkr.common.grammar_types.BaseType.convert&gt;` method</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
       <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+      <span class="sd">&quot;&quot;&quot; The string, that will be printed before the value &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">postfix</span> <span class="o">=</span> <span class="n">postfix</span>
+      <span class="sd">&quot;&quot;&quot; The string, that will be printed after the value &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
+      <span class="sd">&quot;&quot;&quot; The (python) format string, that will be used for printing the value.</span>
+<span class="sd">        The format is passed as format argument to ``str.format`` routine.  &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
       <span class="k">if</span> <span class="n">after_convert</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">convert</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> \
@@ -804,7 +839,7 @@
 <div class="viewcode-block" id="type_from_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.type_from_value.html#ase2sprkkr.common.grammar_types.type_from_value">[docs]</a><span class="k">def</span> <span class="nf">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Gues the grammar type from a python value.</span>
 
-<span class="sd">  ..  doctest::</span>
+<span class="sd">  ..doctest::</span>
 <span class="sd">  &gt;&gt;&gt; type_from_value(2)</span>
 <span class="sd">  Integer</span>
 

@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
 
   
@@ -204,20 +205,80 @@
             
   <div class="section" id="customsectiontoken">
 <h1>CustomSectionToken<a class="headerlink" href="#customsectiontoken" title="Permalink to this headline">¶</a></h1>
-<p>Full name: <strong>ase2sprkkr.potentials.custom_potential_section.CustomSectionToken</strong></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.custom_potential_section.</span></span><span class="sig-name descname"><span class="pre">CustomSectionToken</span></span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/custom_potential_section.html#CustomSectionToken"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyparsing.Token</span></code></p>
-<p>The grammar for a custom section - i.e. for unknown section, whose
+<dd><p>The grammar for a custom section - i.e. for unknown section, whose
 content is let as is.</p>
 <p>The grammar just reads all up to the section separator.</p>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-782e2a697897980524a65216c06dcff777854bc0.png" alt="Inheritance diagram of ase2sprkkr.potentials.custom_potential_section.CustomSectionToken" usemap="#inheritance8b2e949fcc" class="inheritance graphviz" /></div>
+<map id="inheritance8b2e949fcc" name="inheritance8b2e949fcc">
+<area shape="rect" id="node1" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken" target="_top" title="The grammar for a custom section &#45; i.e. for unknown section, whose" alt="" coords="5,115,333,140"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<p class="rubric">Attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pattern</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_WHITE_CHARS</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_packratEnabled</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_lock</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_stats</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">verbose_stacktrace</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseImpl</span></code></a>(instr, loc[, doActions])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -233,29 +294,11 @@ content is let as is.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>([name])</p></td>
 <td><p>Shortcut for <code class="xref py py-class docutils literal notranslate"><span class="pre">setResultsName</span></code>, with <code class="docutils literal notranslate"><span class="pre">listAllMatches=False</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__delattr__</span></code>(name, /)</p></td>
-<td><p>Implement delattr(self, name).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dir__</span></code>()</p></td>
-<td><p>Default dir() implementation.</p></td>
-</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(other)</p></td>
 <td><p>Return self==value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__format__</span></code>(format_spec, /)</p></td>
-<td><p>Default object formatter.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ge__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getattribute__</span></code>(name, /)</p></td>
-<td><p>Return getattr(self, name).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code>(key)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code>(key)</p></td>
 <td><p>use <code class="docutils literal notranslate"><span class="pre">[]</span></code> indexing notation as a short form for expression repetition:</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__gt__</span></code>(value, /)</p></td>
-<td><p>Return self&gt;value.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
 <td><p>Return hash(self).</p></td>
@@ -263,29 +306,17 @@ content is let as is.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init_subclass__</span></code></p></td>
-<td><p>This method is called when a class is subclassed.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__invert__</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__invert__</span></code>()</p></td>
 <td><p>Implementation of ~ operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">NotAny</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iter__</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iter__</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__le__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;=value.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__lt__</span></code>(value, /)</p></td>
-<td><p>Return self&lt;value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code>(other)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code>(other)</p></td>
 <td><p>Implementation of * operator, allows use of <code class="docutils literal notranslate"><span class="pre">expr</span> <span class="pre">*</span> <span class="pre">3</span></code> in place of <code class="docutils literal notranslate"><span class="pre">expr</span> <span class="pre">+</span> <span class="pre">expr</span> <span class="pre">+</span> <span class="pre">expr</span></code>. Expressions may also me multiplied by a 2-integer tuple, similar to <code class="docutils literal notranslate"><span class="pre">{min,</span> <span class="pre">max}</span></code> multipliers in regular expressions. Tuples may also include <code class="docutils literal notranslate"><span class="pre">None</span></code> as in:  - <code class="docutils literal notranslate"><span class="pre">expr*(n,</span> <span class="pre">None)</span></code> or <code class="docutils literal notranslate"><span class="pre">expr*(n,</span> <span class="pre">)</span></code> is equivalent       to <code class="docutils literal notranslate"><span class="pre">expr*n</span> <span class="pre">+</span> <span class="pre">ZeroOrMore(expr)</span></code>       (read as &quot;at least n instances of <code class="docutils literal notranslate"><span class="pre">expr</span></code>&quot;)  - <code class="docutils literal notranslate"><span class="pre">expr*(None,</span> <span class="pre">n)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">expr*(0,</span> <span class="pre">n)</span></code>       (read as &quot;0 to n instances of <code class="docutils literal notranslate"><span class="pre">expr</span></code>&quot;)  - <code class="docutils literal notranslate"><span class="pre">expr*(None,</span> <span class="pre">None)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">ZeroOrMore(expr)</span></code>  - <code class="docutils literal notranslate"><span class="pre">expr*(1,</span> <span class="pre">None)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">OneOrMore(expr)</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(other)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(other)</p></td>
 <td><p>Return self!=value.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__new__</span></code>(**kwargs)</p></td>
-<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__or__</span></code>(other)</p></td>
 <td><p>Implementation of | operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">MatchFirst</span></code></p></td>
@@ -295,12 +326,6 @@ content is let as is.</p>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rand__</span></code>(other)</p></td>
 <td><p>Implementation of &amp; operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce__</span></code>()</p></td>
-<td><p>Helper for pickle.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__reduce_ex__</span></code>(protocol, /)</p></td>
-<td><p>Helper for pickle.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
 <td><p>Return repr(self).</p></td>
@@ -323,83 +348,71 @@ content is let as is.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rxor__</span></code>(other)</p></td>
 <td><p>Implementation of ^ operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__setattr__</span></code>(name, value, /)</p></td>
-<td><p>Implement setattr(self, name, value).</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sizeof__</span></code>()</p></td>
-<td><p>Size of object in memory, in bytes.</p></td>
-</tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
 <td><p>Return str(self).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sub__</span></code>(other)</p></td>
 <td><p>Implementation of - operator, returns <code class="xref py py-class docutils literal notranslate"><span class="pre">And</span></code> with error stop</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__subclasshook__</span></code></p></td>
-<td><p>Abstract classes can override this to customize issubclass().</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__xor__</span></code>(other)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__xor__</span></code>(other)</p></td>
 <td><p>Implementation of ^ operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Or</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse</span></code>(instring, loc[, doActions, callPreParse])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse</span></code>(instring, loc[, doActions, callPreParse])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parseCache</span></code>(instring, loc[, doActions, ...])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parseCache</span></code>(instring, loc[, doActions, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parseNoCache</span></code>(instring, loc[, doActions, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parseNoCache</span></code>(instring, loc[, doActions, ...])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setResultsName</span></code>(name[, listAllMatches])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setResultsName</span></code>(name[, listAllMatches])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_skipIgnorables</span></code>(instring, loc)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_skipIgnorables</span></code>(instring, loc)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_trim_traceback</span></code>(tb)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_trim_traceback</span></code>(tb)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addCondition</span></code>(*fns, **kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addCondition</span></code>(*fns, **kwargs)</p></td>
 <td><p>Add a boolean predicate function to expression's list of parse actions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addConditionEx</span></code>(condition, message)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addConditionEx</span></code>(condition, message)</p></td>
 <td><p>Add check condition to the pyparsing ParseElement, that, if it failed, raise a parse exception with a given message.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseAction</span></code>(*fns, **kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseAction</span></code>(*fns, **kwargs)</p></td>
 <td><p>Add one or more parse actions to expression's list of parse actions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseActionEx</span></code>(pa[, message])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseActionEx</span></code>(pa[, message])</p></td>
 <td><p>Add parse action to a given pyparsing ParseElemenet, that, if it raise an exception, fail with a given message</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">canParseNext</span></code>(instring, loc)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">canParseNext</span></code>(instring, loc)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkRecursion</span></code>(parseElementList)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkRecursion</span></code>(parseElementList)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
 <td><p>Make a copy of this <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enablePackrat</span></code>([cache_size_limit])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enablePackrat</span></code>([cache_size_limit])</p></td>
 <td><p>Enables &quot;packrat&quot; parsing, which adds memoizing to the parsing logic.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore</span></code>(other)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore</span></code>(other)</p></td>
 <td><p>Define expression to be ignored (e.g., comments) while doing pattern matching; may be called repeatedly, to define multiple comment or other ignorable patterns.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inlineLiteralsUsing</span></code>(cls)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inlineLiteralsUsing</span></code>(cls)</p></td>
 <td><p>Set class to be used for inclusion of string literals into a parser.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaveWhitespace</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaveWhitespace</span></code>()</p></td>
 <td><p>Disables the skipping of whitespace before matching the characters in the <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>'s defined pattern.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matches</span></code>(testString[, parseAll])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matches</span></code>(testString[, parseAll])</p></td>
 <td><p>Method for quick testing of a parser against a test string.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseFile</span></code>(file_or_filename[, parseAll])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseFile</span></code>(file_or_filename[, parseAll])</p></td>
 <td><p>Execute the parse expression on the given file or filename.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.parseImpl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseImpl</span></code></a>(instr, loc[, doActions])</p></td>
-<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseString</span></code>(instring[, parseAll])</p></td>
 <td><p>Execute the parse expression with the given string.</p></td>
@@ -469,51 +482,6 @@ content is let as is.</p>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>([validateTrace])</p></td>
 <td><p>Check defined expressions for valid structure, check for infinite recursive definitions.</p></td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_WHITE_CHARS</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__dict__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__doc__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__module__</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__weakref__</span></code></p></td>
-<td><p>list of weak references to the object (if defined)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_packratEnabled</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_lock</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_stats</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern" title="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.pattern"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pattern</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">verbose_stacktrace</span></code></p></td>
-<td><p></p></td>
 </tr>
 </tbody>
 </table>

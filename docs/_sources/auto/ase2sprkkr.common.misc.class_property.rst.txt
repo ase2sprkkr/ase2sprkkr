@@ -1,61 +1,45 @@
 class\_property
 ===============
 
-Full name: **ase2sprkkr.common.misc.class\_property**
 
 .. currentmodule:: ase2sprkkr.common.misc
 
 .. autoclass:: class_property
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.misc.class_property
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~class_property.__delattr__
-        ~class_property.__dir__
-        ~class_property.__eq__
-        ~class_property.__format__
-        ~class_property.__ge__
         ~class_property.__get__
-        ~class_property.__getattribute__
-        ~class_property.__gt__
-        ~class_property.__hash__
         ~class_property.__init__
-        ~class_property.__init_subclass__
-        ~class_property.__le__
-        ~class_property.__lt__
-        ~class_property.__ne__
-        ~class_property.__new__
-        ~class_property.__reduce__
-        ~class_property.__reduce_ex__
-        ~class_property.__repr__
-        ~class_property.__setattr__
-        ~class_property.__sizeof__
-        ~class_property.__str__
-        ~class_property.__subclasshook__
 
    
    
 
    
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~class_property.__dict__
-        ~class_property.__doc__
-        ~class_property.__module__
-        ~class_property.__weakref__
-
    
    

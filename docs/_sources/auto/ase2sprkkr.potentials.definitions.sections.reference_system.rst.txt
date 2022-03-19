@@ -3,6 +3,18 @@ reference\_system
 
 Full name: **ase2sprkkr.potentials.definitions.sections.reference\_system**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSection  ase2sprkkr.potentials.definitions.sections.reference_system.ReferenceSystemSectionDefinition  ase2sprkkr.potentials.definitions.sections.reference_system.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.potentials.definitions.sections.reference_system
 
    

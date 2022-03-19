@@ -1,20 +1,69 @@
 CustomSectionToken
 ==================
 
-Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomSectionToken**
 
 .. currentmodule:: ase2sprkkr.potentials.custom_potential_section
 
 .. autoclass:: CustomSectionToken
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.custom_potential_section.CustomSectionToken
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSectionToken.name
+        ~CustomSectionToken.pattern
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSectionToken.DEFAULT_WHITE_CHARS
+        ~CustomSectionToken._packratEnabled
+        ~CustomSectionToken.packrat_cache
+        ~CustomSectionToken.packrat_cache_lock
+        ~CustomSectionToken.packrat_cache_stats
+        ~CustomSectionToken.verbose_stacktrace
+
+   
+   
+
+   
+   
    .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~CustomSectionToken.parseImpl
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
 
    .. autosummary::
       :template: custom-base-template.rst
@@ -22,29 +71,17 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomSectionToken
         ~CustomSectionToken.__add__
         ~CustomSectionToken.__and__
         ~CustomSectionToken.__call__
-        ~CustomSectionToken.__delattr__
-        ~CustomSectionToken.__dir__
         ~CustomSectionToken.__eq__
-        ~CustomSectionToken.__format__
-        ~CustomSectionToken.__ge__
-        ~CustomSectionToken.__getattribute__
         ~CustomSectionToken.__getitem__
-        ~CustomSectionToken.__gt__
         ~CustomSectionToken.__hash__
         ~CustomSectionToken.__init__
-        ~CustomSectionToken.__init_subclass__
         ~CustomSectionToken.__invert__
         ~CustomSectionToken.__iter__
-        ~CustomSectionToken.__le__
-        ~CustomSectionToken.__lt__
         ~CustomSectionToken.__mul__
         ~CustomSectionToken.__ne__
-        ~CustomSectionToken.__new__
         ~CustomSectionToken.__or__
         ~CustomSectionToken.__radd__
         ~CustomSectionToken.__rand__
-        ~CustomSectionToken.__reduce__
-        ~CustomSectionToken.__reduce_ex__
         ~CustomSectionToken.__repr__
         ~CustomSectionToken.__req__
         ~CustomSectionToken.__rmul__
@@ -52,11 +89,8 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomSectionToken
         ~CustomSectionToken.__ror__
         ~CustomSectionToken.__rsub__
         ~CustomSectionToken.__rxor__
-        ~CustomSectionToken.__setattr__
-        ~CustomSectionToken.__sizeof__
         ~CustomSectionToken.__str__
         ~CustomSectionToken.__sub__
-        ~CustomSectionToken.__subclasshook__
         ~CustomSectionToken.__xor__
         ~CustomSectionToken._parse
         ~CustomSectionToken._parseCache
@@ -77,7 +111,6 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomSectionToken
         ~CustomSectionToken.leaveWhitespace
         ~CustomSectionToken.matches
         ~CustomSectionToken.parseFile
-        ~CustomSectionToken.parseImpl
         ~CustomSectionToken.parseString
         ~CustomSectionToken.parseWithTabs
         ~CustomSectionToken.postParse
@@ -101,29 +134,6 @@ Full name: **ase2sprkkr.potentials.custom\_potential\_section.CustomSectionToken
         ~CustomSectionToken.transformString
         ~CustomSectionToken.tryParse
         ~CustomSectionToken.validate
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomSectionToken.DEFAULT_WHITE_CHARS
-        ~CustomSectionToken.__dict__
-        ~CustomSectionToken.__doc__
-        ~CustomSectionToken.__module__
-        ~CustomSectionToken.__weakref__
-        ~CustomSectionToken._packratEnabled
-        ~CustomSectionToken.name
-        ~CustomSectionToken.packrat_cache
-        ~CustomSectionToken.packrat_cache_lock
-        ~CustomSectionToken.packrat_cache_stats
-        ~CustomSectionToken.pattern
-        ~CustomSectionToken.verbose_stacktrace
 
    
    

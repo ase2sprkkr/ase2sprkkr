@@ -1,45 +1,68 @@
 Energy
 ======
 
-Full name: **ase2sprkkr.common.grammar\_types.Energy**
 
 .. currentmodule:: ase2sprkkr.common.grammar_types
 
 .. autoclass:: Energy
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.Energy
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
    
-   .. rubric:: Methods
+   
+   .. rubric:: Attributes
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~Energy.__delattr__
-        ~Energy.__dir__
-        ~Energy.__eq__
-        ~Energy.__format__
-        ~Energy.__ge__
-        ~Energy.__getattribute__
-        ~Energy.__gt__
-        ~Energy.__hash__
+        ~Energy.I
+        ~Energy.units
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~Energy.default_value
+        ~Energy.grammar_cache
+        ~Energy.has_value
+        ~Energy.name_in_grammar
+        ~Energy.prefix
+        ~Energy.postfix
+        ~Energy.format
+
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
         ~Energy.__init__
-        ~Energy.__init_subclass__
-        ~Energy.__le__
-        ~Energy.__lt__
-        ~Energy.__ne__
-        ~Energy.__new__
-        ~Energy.__reduce__
-        ~Energy.__reduce_ex__
-        ~Energy.__repr__
-        ~Energy.__setattr__
-        ~Energy.__sizeof__
         ~Energy.__str__
-        ~Energy.__subclasshook__
         ~Energy._grammar
         ~Energy._grammar_units
         ~Energy._string
@@ -59,27 +82,6 @@ Full name: **ase2sprkkr.common.grammar\_types.Energy**
         ~Energy.transform_grammar
         ~Energy.validate
         ~Energy.write
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Energy.I
-        ~Energy.__dict__
-        ~Energy.__doc__
-        ~Energy.__module__
-        ~Energy.__weakref__
-        ~Energy.default_value
-        ~Energy.grammar_cache
-        ~Energy.has_value
-        ~Energy.name_in_grammar
-        ~Energy.units
 
    
    

@@ -3,6 +3,18 @@ grammar\_types
 
 Full name: **ase2sprkkr.common.grammar\_types**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.grammar_types.Array  ase2sprkkr.common.grammar_types.BaseMixed  ase2sprkkr.common.grammar_types.BaseRealWithUnits  ase2sprkkr.common.grammar_types.BaseString  ase2sprkkr.common.grammar_types.BaseType  ase2sprkkr.common.grammar_types.Bool  ase2sprkkr.common.grammar_types.Date  ase2sprkkr.common.grammar_types.Energy  ase2sprkkr.common.grammar_types.Flag  ase2sprkkr.common.grammar_types.Integer  ase2sprkkr.common.grammar_types.Keyword  ase2sprkkr.common.grammar_types.LineString  ase2sprkkr.common.grammar_types.Mixed  ase2sprkkr.common.grammar_types.PotMixed  ase2sprkkr.common.grammar_types.QString  ase2sprkkr.common.grammar_types.Real  ase2sprkkr.common.grammar_types.RealWithUnits  ase2sprkkr.common.grammar_types.Separator  ase2sprkkr.common.grammar_types.Sequence  ase2sprkkr.common.grammar_types.SetOf  ase2sprkkr.common.grammar_types.String  ase2sprkkr.common.grammar_types.Table  ase2sprkkr.common.grammar_types.Unsigned 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.common.grammar_types
 
    

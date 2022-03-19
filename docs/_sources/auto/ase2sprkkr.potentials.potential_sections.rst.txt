@@ -3,6 +3,18 @@ potential\_sections
 
 Full name: **ase2sprkkr.potentials.potential\_sections**
 
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.potential_sections.ASEArraySection  ase2sprkkr.potentials.potential_sections.PotentialSection  ase2sprkkr.potentials.potential_sections.UniqueListSection 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
 .. automodule:: ase2sprkkr.potentials.potential_sections
 
    

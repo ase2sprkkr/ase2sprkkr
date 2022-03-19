@@ -1,49 +1,77 @@
 SitesSectionDefinition
 ======================
 
-Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition**
 
 .. currentmodule:: ase2sprkkr.potentials.definitions.sections.sites
 
 .. autoclass:: SitesSectionDefinition
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSectionDefinition._init_args
+        ~SitesSectionDefinition.custom_name_characters
+        ~SitesSectionDefinition.custom_value_name
+        ~SitesSectionDefinition.delimiter
+        ~SitesSectionDefinition.do_not_skip_whitespaces_before_name
+        ~SitesSectionDefinition.force_order
+        ~SitesSectionDefinition.name_in_grammar
+        ~SitesSectionDefinition.validate
+        ~SitesSectionDefinition.value_name_format
+        ~SitesSectionDefinition.values
+        ~SitesSectionDefinition.name
+        ~SitesSectionDefinition.alternative_names
+        ~SitesSectionDefinition.is_optional
+        ~SitesSectionDefinition.help
+        ~SitesSectionDefinition.description
+
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~SitesSectionDefinition.__contains__
-        ~SitesSectionDefinition.__delattr__
-        ~SitesSectionDefinition.__dir__
-        ~SitesSectionDefinition.__eq__
-        ~SitesSectionDefinition.__format__
-        ~SitesSectionDefinition.__ge__
-        ~SitesSectionDefinition.__getattribute__
-        ~SitesSectionDefinition.__getitem__
-        ~SitesSectionDefinition.__gt__
-        ~SitesSectionDefinition.__hash__
         ~SitesSectionDefinition.__init__
-        ~SitesSectionDefinition.__init_subclass__
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~SitesSectionDefinition.__contains__
+        ~SitesSectionDefinition.__getitem__
         ~SitesSectionDefinition.__iter__
-        ~SitesSectionDefinition.__le__
-        ~SitesSectionDefinition.__lt__
-        ~SitesSectionDefinition.__ne__
-        ~SitesSectionDefinition.__new__
-        ~SitesSectionDefinition.__reduce__
-        ~SitesSectionDefinition.__reduce_ex__
-        ~SitesSectionDefinition.__repr__
-        ~SitesSectionDefinition.__setattr__
         ~SitesSectionDefinition.__setitem__
-        ~SitesSectionDefinition.__sizeof__
-        ~SitesSectionDefinition.__str__
-        ~SitesSectionDefinition.__subclasshook__
         ~SitesSectionDefinition._dict_from_named_values
         ~SitesSectionDefinition._first_section_is_fixed
         ~SitesSectionDefinition._grammar
@@ -65,31 +93,6 @@ Full name: **ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefini
         ~SitesSectionDefinition.parse_from_stream
         ~SitesSectionDefinition.parse_return
         ~SitesSectionDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSectionDefinition.__dict__
-        ~SitesSectionDefinition.__doc__
-        ~SitesSectionDefinition.__module__
-        ~SitesSectionDefinition.__weakref__
-        ~SitesSectionDefinition._init_args
-        ~SitesSectionDefinition.custom_name_characters
-        ~SitesSectionDefinition.custom_value_name
-        ~SitesSectionDefinition.delimiter
-        ~SitesSectionDefinition.do_not_skip_whitespaces_before_name
-        ~SitesSectionDefinition.force_order
-        ~SitesSectionDefinition.name_in_grammar
-        ~SitesSectionDefinition.validate
-        ~SitesSectionDefinition.value_name_format
-        ~SitesSectionDefinition.values
 
    
    

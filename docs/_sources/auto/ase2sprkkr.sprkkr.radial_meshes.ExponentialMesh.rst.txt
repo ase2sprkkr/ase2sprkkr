@@ -1,47 +1,41 @@
 ExponentialMesh
 ===============
 
-Full name: **ase2sprkkr.sprkkr.radial\_meshes.ExponentialMesh**
 
 .. currentmodule:: ase2sprkkr.sprkkr.radial_meshes
 
 .. autoclass:: ExponentialMesh
    :members:
-   :show-inheritance:
    :inherited-members:
 
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
    
    .. automethod:: __init__
+   
 
+   
+   
+   
+
+   
+   
+   
+
+   
    
    .. rubric:: Methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~ExponentialMesh.__delattr__
-        ~ExponentialMesh.__dir__
-        ~ExponentialMesh.__eq__
-        ~ExponentialMesh.__format__
-        ~ExponentialMesh.__ge__
-        ~ExponentialMesh.__getattribute__
-        ~ExponentialMesh.__gt__
-        ~ExponentialMesh.__hash__
         ~ExponentialMesh.__init__
-        ~ExponentialMesh.__init_subclass__
-        ~ExponentialMesh.__le__
-        ~ExponentialMesh.__lt__
-        ~ExponentialMesh.__ne__
-        ~ExponentialMesh.__new__
-        ~ExponentialMesh.__reduce__
-        ~ExponentialMesh.__reduce_ex__
-        ~ExponentialMesh.__repr__
-        ~ExponentialMesh.__setattr__
-        ~ExponentialMesh.__sizeof__
-        ~ExponentialMesh.__str__
-        ~ExponentialMesh.__subclasshook__
         ~ExponentialMesh.copy
-        ~ExponentialMesh.default
         ~ExponentialMesh.to_tuple
 
    
@@ -49,15 +43,12 @@ Full name: **ase2sprkkr.sprkkr.radial\_meshes.ExponentialMesh**
 
    
    
-   .. rubric:: Attributes
+   .. rubric:: Inherited methods
 
    .. autosummary::
       :template: custom-base-template.rst
      
-        ~ExponentialMesh.__dict__
-        ~ExponentialMesh.__doc__
-        ~ExponentialMesh.__module__
-        ~ExponentialMesh.__weakref__
+        ~ExponentialMesh.default
 
    
    
