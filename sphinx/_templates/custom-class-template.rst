@@ -1,6 +1,5 @@
 {{ name | escape | underline}}
 
-Full name: **{{ fullname | escape }}**
 
 .. currentmodule:: {{ module }}
 
@@ -15,27 +14,56 @@ Full name: **{{ fullname | escape }}**
    |
 
    .. rubric:: {{ _('Constructor') }}
+   {% block init %}
    .. automethod:: __init__
+   {% endblock %}
 
-   {% if methods %}
-   .. rubric:: {{ _('Methods') }}
+   {% block own_attributes %}
+   {% if own_attributes %}
+   .. rubric:: {{ _('Attributes') }}
 
    .. autosummary::
       :template: custom-base-template.rst
-     {% for item in methods %}
+     {% for item in own_attributes %}
         ~{{ name }}.{{ item }}
      {%- endfor %}
 
    {% endif %}
    {% endblock %}
 
-   {% block attributes %}
-   {% if attributes %}
-   .. rubric:: {{ _('Attributes') }}
+   {% block inherited_attributes %}
+   {% if inherited_attributes %}
+   .. rubric:: {{ _('Inherited attributes') }}
 
    .. autosummary::
       :template: custom-base-template.rst
-     {% for item in attributes %}
+     {% for item in inherited_attributes %}
+        ~{{ name }}.{{ item }}
+     {%- endfor %}
+
+   {% endif %}
+   {% endblock %}
+
+   {% block own_methods %}
+   {% if own_methods %}
+   .. rubric:: {{ _('Methods') }}
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     {% for item in own_methods %}
+        ~{{ name }}.{{ item }}
+     {%- endfor %}
+
+   {% endif %}
+   {% endblock %}
+
+   {% block inherited_methods %}
+   {% if inherited_methods %}
+   .. rubric:: {{ _('Inherited methods') }}
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     {% for item in inherited_methods %}
         ~{{ name }}.{{ item }}
      {%- endfor %}
 
