@@ -100,8 +100,11 @@ def setup(app):
 
 exclude_patterns = ['*/test/*', '*/test']
 
-inheritance_graph_attrs = dict(rankdir="LR", #size='"6.0, 8.0"',
+inheritance_graph_attrs = dict(size='"10.0, 10.0"',
     fontsize=14, ranksep=0.3 )
 inheritance_edge_attrs = { 'arrowsize': 0.7 }
 inheritance_parent_node_attrs = { 'color' : 'gray28', 'fontcolor' : 'gray28', 'style' : 'solid' }
 inheritance_node_attrs = { 'style' : '"filled"', 'fillcolor' : 'lightgray' }
+
+def inheritance_style_callback(class_names, current_module, styles):
+    styles['graph']['rankdir'] = 'TB' if len(class_names) <= 2 else 'LR'
