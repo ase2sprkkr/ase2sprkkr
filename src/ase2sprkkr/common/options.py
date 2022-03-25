@@ -92,7 +92,7 @@ class Option(BaseConfiguration):
   def name(self):
       return self._definition.name
 
-  def as_dict(self, add_to):
+  def as_dict(self):
       return self()
 
   def _find_value(self, name):
