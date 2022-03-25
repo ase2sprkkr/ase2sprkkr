@@ -467,7 +467,7 @@
 <span class="sd">      The sanitized names are keys in ``interactive_members`` array, and thus</span>
 <span class="sd">      the members are accesible by ``&lt;container&gt;.&lt;member&gt;`` notation.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\s-.]&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">)</span></div>
+      <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-\s.]&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConfigurationContainer._add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.input_parameters.input_parameters_definitions.ConfigurationContainer._add">[docs]</a>  <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
       <span class="n">name</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span>
