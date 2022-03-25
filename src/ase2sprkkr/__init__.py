@@ -15,3 +15,6 @@ from .potentials.potentials import Potential
 
 """ An extension of ASE atoms object """
 from .sprkkr.sprkkr_atoms import SPRKKRAtoms
+
+""" Version of the package """
+from .version import __version__
