@@ -63,7 +63,7 @@ class BaseType:
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
                      format:str='', default_value:Any=None,
                      condition:Union[Callable[[Any], Union[bool,str]],None]=None,
-                     after_convert:Union[Callable[Any, Any],None]=None):
+                     after_convert:Union[Callable[[Any], Any],None]=None):
       """
       Create the object.
 
