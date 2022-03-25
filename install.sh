@@ -19,13 +19,16 @@ if [[ -z "$CURRENT" ]] ; then
 	echo "Checking out the current version of the code"
 	if ! git fetch ; then
 		echo "Warning - either git is not installed, or the package source
-		is not a git repository, the origin of the repository is not available.
-		Attemp to get the latest version of the package failed!!!"
+is not a git repository, the origin of the repository is not available.
+Attemp to get the latest version of the package failed!!!"
 	fi
+	COMMIT="`git symbolic-ref --short HEAD 2> /dev/null ||  git rev-parse HEAD`"
+	echo "Remebering your commit: $COMMIT, checking out origin/release"
 	if ! git checkout origin/release ; then
-		echo "Warning - either git is not installed, or the package source
-		is not a git repository. I will install the current (possibly development?)
-		version of the code!!!"
+		echo "Warning - either git is not installed, the package source
+is not a git repository or the repository is "dirty" and thus it
+is not possible to checkout. I will install the current (possibly development?)
+version of the code!!!"
 	fi
 fi
 
@@ -48,3 +51,14 @@ $PYTHON -m build
 
 echo "Installing the package"
 $PYTHON -m pip install $FORCE `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+
+if [[ -z "$CURRENT" ]] ; then
+	 if [[ "`git rev-parse $COMMIT`" != "`git rev-parse HEAD`" ]] ; then
+		  echo "Version from the online release have been installed!!!
+Use -c parameter to install the current version"
+	 fi
+	 if [[ $COMMIT != "`git rev-parse HEAD`" ]] ; then
+			echo "Restoring the original commit $COMMIT"
+			git checkout $COMMIT
+	 fi
+fi
