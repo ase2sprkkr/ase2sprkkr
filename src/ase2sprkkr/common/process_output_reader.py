@@ -141,8 +141,10 @@ class BaseProcessOutputReader:
               task = loop.create_task(self.read_error(air))
               return loop.run_until_complete(task)
 
-      return self.result(out(), err(), return_code)
-
+      try:
+        return self.result(out(), err(), return_code)
+      finally:
+        loop.close()
 
 class AsyncioFileReader:
   """ File reader that mimics asyncio StreamReader.
