@@ -17,7 +17,7 @@ from .misc import OrderedDict, cached_property, cache
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
-                     replace_whitechars
+                     replace_whitechars, White
 
 from ase.units import Rydberg
 import copy
@@ -553,7 +553,7 @@ def type_from_type(type, format='', format_all=False):
 class Array(BaseType):
   """ A (numpy) array of values of one type """
 
-  delimiter=pp.White(' \t').suppress()
+  delimiter=White(' \t').suppress()
   delimiter_str = ' '
 
   def __init__(self, type, default_value=None,
@@ -640,7 +640,7 @@ class Array(BaseType):
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
 
-  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | pp.White(' \t')).setName('[,; ]')
+  delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).setName('[,; ]')
   delimiter_str = ','
 
   def __init__(self, type, **kwargs):

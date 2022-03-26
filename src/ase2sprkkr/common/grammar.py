@@ -79,5 +79,16 @@ def addParseActionEx(self, pa, message = None):
 
   self.addParseAction(parse_action)
 
+class White(pp.White):
+  """ Fix for whitechars in pp.White
+
+      In Python 3.10, pyparsing.White do not respect default_white_chars.
+      This class fixes this.
+  """
+
+  def __init__(self, white):
+      super().__init__(white)
+      self.setWhitespaceChars('')
+
 pp.ParserElement.addConditionEx = addConditionEx
 pp.ParserElement.addParseActionEx = addParseActionEx
