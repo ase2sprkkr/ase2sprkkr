@@ -570,16 +570,17 @@ class Array(BaseType):
     super().__init__(default_value=default_value, **kwargs)
     self.min_length = min_length or length
     self.max_length = max_length or length
-    grammar = self.type.grammar()
-    grammar = delimitedList(grammar, self.delimiter)
-    if self.as_list:
-       if callable(self.as_list):
+    with generate_grammar():
+      grammar = self.type.grammar()
+      grammar = delimitedList(grammar, self.delimiter)
+      if self.as_list:
+        if callable(self.as_list):
           grammar = grammar.setParseAction(lambda x: self.as_list(x.asList()))
-       else:
+        else:
           grammar = grammar.setParseAction(lambda x: [x.asList()])
-    else:
-       grammar.setParseAction(lambda x: self.convert(x.asList()))
-    grammar.setName(self.grammar_name())
+      else:
+        grammar.setParseAction(lambda x: self.convert(x.asList()))
+        grammar.setName(self.grammar_name())
     self._grammar = grammar
 
   def __str__(self):
