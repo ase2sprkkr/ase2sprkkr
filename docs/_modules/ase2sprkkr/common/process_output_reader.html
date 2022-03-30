@@ -314,8 +314,10 @@
               <span class="n">task</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_error</span><span class="p">(</span><span class="n">air</span><span class="p">))</span>
               <span class="k">return</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
 
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">out</span><span class="p">(),</span> <span class="n">err</span><span class="p">(),</span> <span class="n">return_code</span><span class="p">)</span></div></div>
-
+      <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">out</span><span class="p">(),</span> <span class="n">err</span><span class="p">(),</span> <span class="n">return_code</span><span class="p">)</span>
+      <span class="k">finally</span><span class="p">:</span>
+        <span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
 
 <div class="viewcode-block" id="AsyncioFileReader"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader">[docs]</a><span class="k">class</span> <span class="nc">AsyncioFileReader</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot; File reader that mimics asyncio StreamReader.</span>

@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>White &mdash; ASE2SPRKKR  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="grammar_types" href="ase2sprkkr.common.grammar_types.html" />
+    <link rel="prev" title="replace_whitechars" href="ase2sprkkr.common.grammar.replace_whitechars.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_line_end.html">optional_line_end</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.line_end.html">line_end</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.end_of_file.html">end_of_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_pattern.html">separator_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator.html">separator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_quote.html">optional_quote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addConditionEx.html">addConditionEx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addParseActionEx.html">addParseActionEx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.delimitedList.html">delimitedList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.generate_grammar.html">generate_grammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.replace_whitechars.html">replace_whitechars</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">White</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.common.html">common</a> &raquo;</li>
+        
+          <li><a href="ase2sprkkr.common.grammar.html">grammar</a> &raquo;</li>
+        
+      <li>White</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/auto/ase2sprkkr.common.grammar.White.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="white">
+<h1>White<a class="headerlink" href="#white" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.White">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.grammar.</span></span><span class="sig-name descname"><span class="pre">White</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">white</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#White"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.White" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fix for whitechars in pp.White</p>
+<p>In Python 3.10, pyparsing.White do not respect default_white_chars.
+This class fixes this.</p>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-956f4d082af250dc56020d5fc4d3a8996e4f0076.png" alt="Inheritance diagram of ase2sprkkr.common.grammar.White" usemap="#inheritancec6f907d56b" class="inheritance graphviz" /></div>
+<map id="inheritancec6f907d56b" name="inheritancec6f907d56b">
+<area shape="rect" id="node1" href="#ase2sprkkr.common.grammar.White" target="_top" title="Fix for whitechars in pp.White" alt="" coords="36,169,159,195"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.grammar.White.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">white</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/grammar.html#White.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.grammar.White.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Inherited attributes</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_WHITE_CHARS</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__slotnames__</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_packratEnabled</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_lock</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">packrat_cache_stats</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">verbose_stacktrace</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">whiteStrs</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ase2sprkkr.common.grammar.White.__init__" title="ase2sprkkr.common.grammar.White.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(white)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__add__</span></code>(other)</p></td>
+<td><p>Implementation of + operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">And</span></code>. Adding strings to a ParserElement converts them to :class:<a href="#id1"><span class="problematic" id="id2">`</span></a>Literal`s by default.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__and__</span></code>(other)</p></td>
+<td><p>Implementation of &amp; operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Each</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>([name])</p></td>
+<td><p>Shortcut for <code class="xref py py-class docutils literal notranslate"><span class="pre">setResultsName</span></code>, with <code class="docutils literal notranslate"><span class="pre">listAllMatches=False</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__eq__</span></code>(other)</p></td>
+<td><p>Return self==value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code>(key)</p></td>
+<td><p>use <code class="docutils literal notranslate"><span class="pre">[]</span></code> indexing notation as a short form for expression repetition:</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__hash__</span></code>()</p></td>
+<td><p>Return hash(self).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__invert__</span></code>()</p></td>
+<td><p>Implementation of ~ operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">NotAny</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iter__</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code>(other)</p></td>
+<td><p>Implementation of * operator, allows use of <code class="docutils literal notranslate"><span class="pre">expr</span> <span class="pre">*</span> <span class="pre">3</span></code> in place of <code class="docutils literal notranslate"><span class="pre">expr</span> <span class="pre">+</span> <span class="pre">expr</span> <span class="pre">+</span> <span class="pre">expr</span></code>. Expressions may also me multiplied by a 2-integer tuple, similar to <code class="docutils literal notranslate"><span class="pre">{min,</span> <span class="pre">max}</span></code> multipliers in regular expressions. Tuples may also include <code class="docutils literal notranslate"><span class="pre">None</span></code> as in:  - <code class="docutils literal notranslate"><span class="pre">expr*(n,</span> <span class="pre">None)</span></code> or <code class="docutils literal notranslate"><span class="pre">expr*(n,</span> <span class="pre">)</span></code> is equivalent       to <code class="docutils literal notranslate"><span class="pre">expr*n</span> <span class="pre">+</span> <span class="pre">ZeroOrMore(expr)</span></code>       (read as &quot;at least n instances of <code class="docutils literal notranslate"><span class="pre">expr</span></code>&quot;)  - <code class="docutils literal notranslate"><span class="pre">expr*(None,</span> <span class="pre">n)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">expr*(0,</span> <span class="pre">n)</span></code>       (read as &quot;0 to n instances of <code class="docutils literal notranslate"><span class="pre">expr</span></code>&quot;)  - <code class="docutils literal notranslate"><span class="pre">expr*(None,</span> <span class="pre">None)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">ZeroOrMore(expr)</span></code>  - <code class="docutils literal notranslate"><span class="pre">expr*(1,</span> <span class="pre">None)</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">OneOrMore(expr)</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ne__</span></code>(other)</p></td>
+<td><p>Return self!=value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__or__</span></code>(other)</p></td>
+<td><p>Implementation of | operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">MatchFirst</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__radd__</span></code>(other)</p></td>
+<td><p>Implementation of + operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rand__</span></code>(other)</p></td>
+<td><p>Implementation of &amp; operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__repr__</span></code>()</p></td>
+<td><p>Return repr(self).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__req__</span></code>(other)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rmul__</span></code>(other)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rne__</span></code>(other)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__ror__</span></code>(other)</p></td>
+<td><p>Implementation of | operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rsub__</span></code>(other)</p></td>
+<td><p>Implementation of - operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__rxor__</span></code>(other)</p></td>
+<td><p>Implementation of ^ operator when left operand is not a <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__str__</span></code>()</p></td>
+<td><p>Return str(self).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__sub__</span></code>(other)</p></td>
+<td><p>Implementation of - operator, returns <code class="xref py py-class docutils literal notranslate"><span class="pre">And</span></code> with error stop</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__xor__</span></code>(other)</p></td>
+<td><p>Implementation of ^ operator - returns <code class="xref py py-class docutils literal notranslate"><span class="pre">Or</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parse</span></code>(instring, loc[, doActions, callPreParse])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parseCache</span></code>(instring, loc[, doActions, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_parseNoCache</span></code>(instring, loc[, doActions, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setResultsName</span></code>(name[, listAllMatches])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_skipIgnorables</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_trim_traceback</span></code>(tb)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addCondition</span></code>(*fns, **kwargs)</p></td>
+<td><p>Add a boolean predicate function to expression's list of parse actions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addConditionEx</span></code>(condition, message)</p></td>
+<td><p>Add check condition to the pyparsing ParseElement, that, if it failed, raise a parse exception with a given message.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseAction</span></code>(*fns, **kwargs)</p></td>
+<td><p>Add one or more parse actions to expression's list of parse actions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">addParseActionEx</span></code>(pa[, message])</p></td>
+<td><p>Add parse action to a given pyparsing ParseElemenet, that, if it raise an exception, fail with a given message</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">canParseNext</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkRecursion</span></code>(parseElementList)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>()</p></td>
+<td><p>Make a copy of this <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enablePackrat</span></code>([cache_size_limit])</p></td>
+<td><p>Enables &quot;packrat&quot; parsing, which adds memoizing to the parsing logic.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ignore</span></code>(other)</p></td>
+<td><p>Define expression to be ignored (e.g., comments) while doing pattern matching; may be called repeatedly, to define multiple comment or other ignorable patterns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inlineLiteralsUsing</span></code>(cls)</p></td>
+<td><p>Set class to be used for inclusion of string literals into a parser.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaveWhitespace</span></code>()</p></td>
+<td><p>Disables the skipping of whitespace before matching the characters in the <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>'s defined pattern.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">matches</span></code>(testString[, parseAll])</p></td>
+<td><p>Method for quick testing of a parser against a test string.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseFile</span></code>(file_or_filename[, parseAll])</p></td>
+<td><p>Execute the parse expression on the given file or filename.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseImpl</span></code>(instring, loc[, doActions])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseString</span></code>(instring[, parseAll])</p></td>
+<td><p>Execute the parse expression with the given string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseWithTabs</span></code>()</p></td>
+<td><p>Overrides default behavior to expand <a href="#id3"><span class="problematic" id="id4">``</span></a>&lt;TAB&gt;``s to spaces before parsing the input string.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">postParse</span></code>(instring, loc, tokenlist)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">preParse</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetCache</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">runTests</span></code>(tests[, parseAll, comment, ...])</p></td>
+<td><p>Execute the parse expression on a series of test strings, showing each test, the parsed results or where the parse failed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scanString</span></code>(instring[, maxMatches, overlap])</p></td>
+<td><p>Scan the input string for expression matches.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">searchString</span></code>(instring[, maxMatches])</p></td>
+<td><p>Another extension to <code class="xref py py-class docutils literal notranslate"><span class="pre">scanString</span></code>, simplifying the access to the tokens found to match the given parse expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setBreak</span></code>([breakFlag])</p></td>
+<td><p>Method to invoke the Python pdb debugger when this element is about to be parsed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDebug</span></code>([flag])</p></td>
+<td><p>Enable display of debugging messages while doing pattern matching.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDebugActions</span></code>(startAction, successAction, ...)</p></td>
+<td><p>Enable display of debugging messages while doing pattern matching.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setDefaultWhitespaceChars</span></code>(chars)</p></td>
+<td><p>Overrides the default whitespace chars</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setFailAction</span></code>(fn)</p></td>
+<td><p>Define action to perform if parsing fails at this expression.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setName</span></code>(name)</p></td>
+<td><p>Define name for this expression, makes debugging and exception messages clearer.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setParseAction</span></code>(*fns, **kwargs)</p></td>
+<td><p>Define one or more actions to perform when successfully matching parse element definition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setResultsName</span></code>(name[, listAllMatches])</p></td>
+<td><p>Define name for referencing matching tokens as a nested attribute of the returned parse results.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setWhitespaceChars</span></code>(chars)</p></td>
+<td><p>Overrides the default whitespace chars</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">split</span></code>(instring[, maxsplit, includeSeparators])</p></td>
+<td><p>Generator method to split a string using the given expression as a separator.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">streamline</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">suppress</span></code>()</p></td>
+<td><p>Suppresses the output of this <code class="xref py py-class docutils literal notranslate"><span class="pre">ParserElement</span></code>; useful to keep punctuation from cluttering up returned output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transformString</span></code>(instring)</p></td>
+<td><p>Extension to <code class="xref py py-class docutils literal notranslate"><span class="pre">scanString</span></code>, to modify matching text with modified tokens that may be returned from a parse action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tryParse</span></code>(instring, loc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>([validateTrace])</p></td>
+<td><p>Check defined expressions for valid structure, check for infinite recursive definitions.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="ase2sprkkr.common.grammar_types.html" class="btn btn-neutral float-right" title="grammar_types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.grammar.replace_whitechars.html" class="btn btn-neutral float-left" title="replace_whitechars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -252,6 +252,17 @@
 
   <span class="bp">self</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">parse_action</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="White"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White">[docs]</a><span class="k">class</span> <span class="nc">White</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">White</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; Fix for whitechars in pp.White</span>
+
+<span class="sd">      In Python 3.10, pyparsing.White do not respect default_white_chars.</span>
+<span class="sd">      This class fixes this.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="White.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">white</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">white</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">setWhitespaceChars</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div></div>
+
 <span class="n">pp</span><span class="o">.</span><span class="n">ParserElement</span><span class="o">.</span><span class="n">addConditionEx</span> <span class="o">=</span> <span class="n">addConditionEx</span>
 <span class="n">pp</span><span class="o">.</span><span class="n">ParserElement</span><span class="o">.</span><span class="n">addParseActionEx</span> <span class="o">=</span> <span class="n">addParseActionEx</span>
 </pre></div>

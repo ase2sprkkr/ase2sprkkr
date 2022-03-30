@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.common.grammar**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.grammar.White 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.common.grammar
@@ -45,6 +53,14 @@ Full name: **ase2sprkkr.common.grammar**
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      White
    
    
 

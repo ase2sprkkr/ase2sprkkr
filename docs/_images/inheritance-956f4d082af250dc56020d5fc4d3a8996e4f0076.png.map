@@ -1,0 +1,6 @@
+<map id="inheritancec6f907d56b" name="inheritancec6f907d56b">
+<area shape="rect" id="node1" href="#ase2sprkkr.common.grammar.White" target="_top" title="Fix for whitechars in pp.White" alt="" coords="36,169,159,195"/>
+<area shape="rect" id="node2" title="Special matching class for matching whitespace. &#160;Normally," alt="" coords="33,115,161,140"/>
+<area shape="rect" id="node3" title="Abstract base level parser element class." alt="" coords="5,5,189,31"/>
+<area shape="rect" id="node4" title="Abstract :class:`ParserElement` subclass, for defining atomic" alt="" coords="34,60,161,85"/>
+</map>

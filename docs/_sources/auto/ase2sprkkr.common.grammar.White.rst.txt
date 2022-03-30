@@ -1,0 +1,132 @@
+White
+=====
+
+
+.. currentmodule:: ase2sprkkr.common.grammar
+
+.. autoclass:: White
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar.White
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Inherited attributes
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~White.DEFAULT_WHITE_CHARS
+        ~White.__slotnames__
+        ~White._packratEnabled
+        ~White.packrat_cache
+        ~White.packrat_cache_lock
+        ~White.packrat_cache_stats
+        ~White.verbose_stacktrace
+        ~White.whiteStrs
+
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~White.__init__
+
+   
+   
+
+   
+   
+   .. rubric:: Inherited methods
+
+   .. autosummary::
+      :template: custom-base-template.rst
+     
+        ~White.__add__
+        ~White.__and__
+        ~White.__call__
+        ~White.__eq__
+        ~White.__getitem__
+        ~White.__hash__
+        ~White.__invert__
+        ~White.__iter__
+        ~White.__mul__
+        ~White.__ne__
+        ~White.__or__
+        ~White.__radd__
+        ~White.__rand__
+        ~White.__repr__
+        ~White.__req__
+        ~White.__rmul__
+        ~White.__rne__
+        ~White.__ror__
+        ~White.__rsub__
+        ~White.__rxor__
+        ~White.__str__
+        ~White.__sub__
+        ~White.__xor__
+        ~White._parse
+        ~White._parseCache
+        ~White._parseNoCache
+        ~White._setResultsName
+        ~White._skipIgnorables
+        ~White._trim_traceback
+        ~White.addCondition
+        ~White.addConditionEx
+        ~White.addParseAction
+        ~White.addParseActionEx
+        ~White.canParseNext
+        ~White.checkRecursion
+        ~White.copy
+        ~White.enablePackrat
+        ~White.ignore
+        ~White.inlineLiteralsUsing
+        ~White.leaveWhitespace
+        ~White.matches
+        ~White.parseFile
+        ~White.parseImpl
+        ~White.parseString
+        ~White.parseWithTabs
+        ~White.postParse
+        ~White.preParse
+        ~White.resetCache
+        ~White.runTests
+        ~White.scanString
+        ~White.searchString
+        ~White.setBreak
+        ~White.setDebug
+        ~White.setDebugActions
+        ~White.setDefaultWhitespaceChars
+        ~White.setFailAction
+        ~White.setName
+        ~White.setParseAction
+        ~White.setResultsName
+        ~White.setWhitespaceChars
+        ~White.split
+        ~White.streamline
+        ~White.suppress
+        ~White.transformString
+        ~White.tryParse
+        ~White.validate
+
+   
+   
