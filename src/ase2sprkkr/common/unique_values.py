@@ -1,6 +1,6 @@
 """ UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. """
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 import numpy as np
 
 class UniqueValuesMapping:
@@ -15,6 +15,8 @@ class UniqueValuesMapping:
 
         >>> UniqueValuesMapping.from_values([1,4,1]).mapping
         array([1, 2, 1])
+        >>> UniqueValuesMapping.from_values([int, int, str]).mapping
+        array([1, 1, 2])
         >>> UniqueValuesMapping.from_values([1,4,1]).value_to_class_id
         {1: 1, 4: 2}
         >>> UniqueValuesMapping.from_values([1,4,1,1]).merge([1,1,2,1]).mapping
@@ -38,6 +40,27 @@ class UniqueValuesMapping:
       #: Map from <object> to <object equivalence class id>.
       #: If two mappings are merged, this attribute is not available.
       self.value_to_class_id = value_to_class_id
+
+  def indexes(self, start_from:int=0):
+      """
+      Returns the dictionary that maps equivalence class id to the list
+      of class members indexes.
+
+      Parameters
+      ----------
+      start_from:
+        The indexes are by default zero-based, however they can start with
+        the given number (typically with 1).
+
+      ..doctest::
+        >>> UniqueValuesMapping.from_values([1,4,1]).indexes(start_from = 1)
+        {1: [1, 3], 2: [2]}
+      """
+
+      indexes = {}
+      for i,ec in enumerate(self.mapping):
+          indexes.setdefault(ec, []).append(i+start_from)
+      return indexes
 
   def iter_unique(self):
       return self.value_to_class_id.keys()
