@@ -49,5 +49,5 @@ class TestDefinitions(TestCase):
           t.save_to_file(fp)
           fp.seek(0)
           out = fp.read()
-          self.assertTrue(re.sub('\s','', out).endswith('TASKPHAGEN'))
+          self.assertTrue(re.sub(r'\s','', out).endswith('TASKPHAGEN'))
       td['TASK']['TASK'].default_value = 'PHAGEN'
