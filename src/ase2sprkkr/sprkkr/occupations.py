@@ -32,6 +32,10 @@ class Occupation:
       self._normalize()
       self._update_atoms()
 
+  def items(self):
+      """ dict.items() like enumeration """
+      return self._occupation.items()
+
   def __repr__(self):
       return f"Occupation {self._occupation}"
 
