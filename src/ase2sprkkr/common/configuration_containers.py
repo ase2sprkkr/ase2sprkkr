@@ -13,6 +13,7 @@ import pyparsing as pp
 from .base_configuration import BaseConfiguration
 import itertools
 import re
+from typing import Union, Any, Dict
 
 class ConfigurationContainer(BaseConfiguration):
   """ A container for configuration (problem-definition) options and/or sections.
@@ -147,7 +148,7 @@ class ConfigurationContainer(BaseConfiguration):
       return val.get()
 
 
-  def set(self, values={}, *, unknown='find', **kwargs):
+  def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', **kwargs):
       """
       Set the value(s) of parameter(s). Usage:
 
@@ -158,8 +159,11 @@ class ConfigurationContainer(BaseConfiguration):
       Parameters
       ----------
 
-      options: values or None
-        Dictionary of values to be set.
+      values:
+        Dictionary of values to be set, or the name of the value, if the value is given.
+
+      value:
+        Value to be set. Setting this argument require to pass string name to the values argument.
 
       unkwnown: 'add', 'find' or None
         How to handle unknown (not known by the definition) parameters.
@@ -171,6 +175,11 @@ class ConfigurationContainer(BaseConfiguration):
       **kwargs: dict
         The values to be set (an alternative syntax as syntactical sugar)
       """
+      if values.__class__ is str:
+         values = { values : value }
+      elif value is not None:
+         raise ValueError("If value argument of Container.set method is given,"
+         " the values have to be string name of the value")
 
       def set_value(name, value):
         if '.' in name:

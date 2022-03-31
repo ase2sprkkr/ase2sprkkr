@@ -29,6 +29,8 @@ class CalculatorTest(TestCase):
      self.assertEqual(calculator.input_parameters.get('NE'),41111)
      calculator.set({'ENERGY.NE':51111})
      self.assertEqual(calculator.input_parameters.get('NE'),51111)
+     calculator.set('ENERGY.NE', 451111)
+     self.assertEqual(calculator.input_parameters.get('NE'),451111)
 
      calculator.input_parameters.set(NE=11111)
      self.assertEqual(calculator.input_parameters.get('NE'),11111)

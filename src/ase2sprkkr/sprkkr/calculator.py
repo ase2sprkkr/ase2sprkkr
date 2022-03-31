@@ -19,6 +19,7 @@ from ..common.misc import add_to_signature
 import shutil
 import copy
 import subprocess
+from typing import Union, Any, Dict
 
 class SPRKKR(Calculator):
     """
@@ -188,16 +189,40 @@ class SPRKKR(Calculator):
           self._potential = Potential.from_atoms(self._atoms)
        return self._potential
 
-    def set(self, options={}, *, parameters=None, **kwargs):
+    def set(self, options:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', **kwargs):
        """
        ASE method to set the parameters.
 
        Beware, currently, the method sets only input file parameters, not the potential parameters (see the SPRKKR documentation), and do not call the reset() function at all.
+
+      Parameters
+      ----------
+
+      options:
+        Dictionary of values to be set, or the name of the value, if the value is given.
+
+      value:
+        Value to be set. Setting this argument require to pass string name to the options argument.
+
+      unknown: 'add', 'find' or None
+        How to handle unknown (not known by the definition) parameters.
+        If 'find', try to find the values in descendant containers, throw and exception if none is found.
+        If 'add', add unknown values as custom values (use SECTION.OPTION_NAME notation)
+        If None, throw an exception.
+        Keyword only argument.
+
+      **kwargs: dict
+        The values to be set (an alternative syntax as syntactical sugar)
+
+
        """
-       if parameters is not None:
-          self.input_parameters = InputParameters.from_file(parameters)
+       if options.__class__ is str:
+          options = { options : value }
+       elif value is not None:
+          raise ValueError("If value argument is given to SPRKKR.set, the options"
+              " argument have to be string name of the value")
        if kwargs or options:
-          self.input_parameters.set(options, **kwargs)
+          self.input_parameters.set(options, **kwargs, unknown=unknown)
 
     def get(self, name):
        """ Get the value of an input parameter.
