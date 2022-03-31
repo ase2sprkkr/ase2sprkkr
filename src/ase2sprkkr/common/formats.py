@@ -8,10 +8,10 @@ def fortran_format(value, format=':.12e'):
     but with a leading zero
 
      >>> fortran_format(0.1)
-     0.1000000000000e-00
+     '0.1000000000000e-00'
 
      >>> fortran_format(1, ":> 14.6E")
-       0.1000000E+01
+     '  0.1000000E+01'
 
     Parameters
     ----------
@@ -30,7 +30,6 @@ def fortran_format(value, format=':.12e'):
 
     """
     la = ('{'+format+'}').format(float(value))
-    print(f"*{la}*")
     a = la.lstrip()
     leading = la[:len(la)-len(a)]
     la = a

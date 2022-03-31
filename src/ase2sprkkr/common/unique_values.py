@@ -5,18 +5,20 @@ import numpy as np
 
 class UniqueValuesMapping:
   """ A class, that can map a collection of (possible non-unique) values to a set
-      of unique identifiers.
+      of unique identifiers. It effectively makes the classes of equivalence
+      between indexes of the input array.
 
       The instances of the class can be merged to distinct the values, that are
       the same according to one criterion, but distinct on the other.
 
-      ..doctest::
+      .. doctest::
+
         >>> UniqueValuesMapping.from_values([1,4,1]).mapping
-        np.array([1, 2, 1])
+        array([1, 2, 1])
         >>> UniqueValuesMapping.from_values([1,4,1]).value_to_class_id
-        { 1: 1, 4: 2 }
-        >>> UniqueValuesMapping.from_values([1,4,1]).merge([1,1,2]).mapping
-        np.array([1, 2, 5])
+        {1: 1, 4: 2}
+        >>> UniqueValuesMapping.from_values([1,4,1,1]).merge([1,1,2,1]).mapping
+        array([1, 2, 3, 1])
   """
 
   def __init__(self, mapping, value_to_class_id=None):
@@ -30,7 +32,11 @@ class UniqueValuesMapping:
       reverse: dict
         Mapping { value: <eq class id> }
       """
+
+      #: Map from <object index> to <object equivalence class id>.
       self.mapping = mapping
+      #: Map from <object> to <object equivalence class id>.
+      #: If two mappings are merged, this attribute is not available.
       self.value_to_class_id = value_to_class_id
 
   def iter_unique(self):

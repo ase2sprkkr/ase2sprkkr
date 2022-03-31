@@ -252,6 +252,9 @@ class BaseType:
     access the items of the sequence using [] """
     pass
 
+  def __repr__(self):
+    return "<{}>".format(self.__class__.__name__)
+
 class Unsigned(BaseType):
   """ Unsigned integer (zero is possible) """
 
@@ -486,7 +489,7 @@ def normalize_type(type):
 
     doctest:
     >>> normalize_type(np.int64)
-    int
+    <class 'int'>
     """
     return normalize_type_map.get(type, type)
 
@@ -669,10 +672,10 @@ def type_from_value(value):
 
   ..doctest::
   >>> type_from_value(2)
-  Integer
+  <Integer>
 
   >>> type_from_value(2.0)
-  Real
+  <Real>
   """
   if isinstance(value, (list, np.ndarray)):
      return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else Integer.I
