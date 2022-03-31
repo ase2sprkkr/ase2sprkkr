@@ -22,16 +22,13 @@ class TestDefinitions(TestCase):
           self.assertEqual(t.TASK.TASK(), uname)
 
       for i in os.listdir( path ):
-      #for i in ['dos.in']:
         try:
           if not i.endswith('.in'):
              continue
           filename = os.path.join(path, i)
           self.assertTrue(i[:-3].upper() in InputParameters.definitions())
           td = InputParameters.definitions()[i[:-3].upper()]
-          #if i!='scf.in':
           t = td.read_from_file(filename)
-          #breakpoint()
 
           name = i[:-3]
           check(t, name)
