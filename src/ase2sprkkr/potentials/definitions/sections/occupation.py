@@ -6,6 +6,7 @@ from ....common.grammar_types import Table, unsigned, Array, Sequence
 from ....common.unique_values import UniqueValuesMapping
 import numpy as np
 from ....sprkkr.sites import Site, Occupation
+from ....bindings.spglib import compute_spacegroup, equivalent_sites_for_spacegroup
 
 class OccupationSection(PotentialSection):
   """ This section retrieves the atomic positions and
@@ -33,8 +34,10 @@ class OccupationSection(PotentialSection):
   def _update_atoms(self, atoms, read_io_data):
       data = self['DATA']
       indexes = [ tuple(d) for d in data() ]
+
       mapping = UniqueValuesMapping.from_values(indexes)
-      unique = atoms.compute_spacegroup_for_atomic_numbers(mapping.mapping).tag_sites(atoms.get_scaled_positions())
+      spacegroup = compute_spacegroup(atoms, mapping.mapping)
+      unique = equivalent_sites_for_spacegroup(atoms, spacegroup).mapping
 
       tags = {}
       def site(i, d):

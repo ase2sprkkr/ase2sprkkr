@@ -4,14 +4,15 @@ with SPRKKR """
 
 from ase import Atoms
 from ..common.unique_values import UniqueValuesMapping
-import spglib
-from ase.spacegroup import Spacegroup
+from ..bindings.spglib import compute_spacegroup, equivalent_sites_for_spacegroup
 import numpy as np
 from ..sprkkr.sites import Site
 from ..common.misc import numpy_index
 
 class SPRKKRAtoms(Atoms):
    """ ASE Atoms object extended by the data necessary for SPR-KKR calculations """
+
+   sites_array_name = 'sprkkr_sites_data'
 
    @staticmethod
    def promote_ase_atoms(obj, symmetry=None):
@@ -25,7 +26,7 @@ class SPRKKRAtoms(Atoms):
            obj: ase.Atoms
             The atoms object to be promoted to be used for SPRKKR calculations
 
-           symmetry: boolean or None
+           symmetry: bool or None
             The sites property of the resulting object will consider the symmetry of the structure.
             I.e., the by-symmetry-equal atomic sites will share the same sites object.
             Default None is the same as True, however it does not change the symmetry
@@ -56,7 +57,7 @@ class SPRKKRAtoms(Atoms):
        ----------
        *args: list
           The positionals arguments of ase.Atoms.__init__
-       symmetry: boolean
+       symmetry: bool
           The symmetry will be computed when the sites property will be initialized.
           I.e., the by-symmetry-equal atomic sites will share the same sites object.
        **kwargs: dict
@@ -68,7 +69,6 @@ class SPRKKRAtoms(Atoms):
    def _init(self, symmetry=True, potential=None):
        """ The initialization of the additional (not-in-ASE) properties. To be used
        by constructor and by promote_ase_atoms"""
-       self._unique_sites = None
        self._potential = potential
        self._symmetry = symmetry
 
@@ -90,28 +90,14 @@ class SPRKKRAtoms(Atoms):
        if self._symmetry == value:
           return
        self._symmetry = value
-       if self._unique_sites is not None:
-          if value:
+       try:
+         self.get_array(SPRKKRAtoms.sites_array_name)
+         if value:
              self._compute_sites_symmetry()
-          else:
+         else:
              self._cancel_sites_symmetry()
-
-
-   def compute_spacegroup_for_atomic_numbers(self, atomic_numbers=None, symprec=1e-5):
-       """ Return spacegroup that suits to the atoms' cell structure and to the given
-           atomic_numbers (not necessary the real ones, they can be just ''labels'').
-       """
-
-       atomic_numbers = atomic_numbers if atomic_numbers is not None else self.get_atomic_numbers()
-       sg = spglib.get_spacegroup((self.get_cell(),
-                             self.get_scaled_positions(),
-                             atomic_numbers),
-                             symprec=symprec)
-       if sg is None:
-           return None
-       sg_no = int(sg[sg.find('(') + 1:sg.find(')')])
-       spacegroup = Spacegroup(sg_no)
-       return spacegroup
+       except KeyError:
+         pass
 
    def compute_sites_symmetry(self, spacegroup=None, atomic_numbers=None, consider_old=False, symprec=1e-5):
         """ SPRKKR has some properties shared by all by-symmetry-equal sites.
@@ -138,7 +124,7 @@ class SPRKKRAtoms(Atoms):
               If None, self.symbols are used.
 
             consider_old: bool
-              If True, and _unique_sites is not None, the non-symmetry-equivalent sites won't
+              If True, and self.sites is not None, the non-symmetry-equivalent sites won't
               be equivalent in the newly computed symmetry.
 
             symprec: float
@@ -146,49 +132,38 @@ class SPRKKRAtoms(Atoms):
 
         """
         self._symmetry = True
-        SPRKKRAtoms._compute_sites_symmetry(**locals())
+        return SPRKKRAtoms._compute_sites_symmetry(**locals())
 
    def _compute_sites_symmetry(self, spacegroup=None, atomic_numbers=None, consider_old=False, symprec=1e-5):
         """ See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property."""
-
-        occupation = self.info.get('occupancy', {})
-        if not spacegroup and self._symmetry:
-          if atomic_numbers:
-            mapping = UniqueValuesMapping(atomic_numbers)
-          else:
-            mapping = UniqueValuesMapping(self.get_atomic_numbers())
-            if consider_old and self._unique_sites:
-              mapping = mapping.merge(self._unique_sites)
-          if occupation:
-            def gen_occ():
-                for i in range(len(mapping)):
-                    val = occupation.get(i, None)
-                    if val is None:
-                        yield val
-                    else:
-                        yield tuple((k, val[k]) for k in val)
-            mapping = mapping.merge(gen_occ())
-
-          spacegroup = self.compute_spacegroup_for_atomic_numbers(mapping.mapping, symprec=symprec)
-
-        self.info['spacegroup'] = spacegroup
+        if self._symmetry:
+           if spacegroup is None:
+              spacegroup = compute_spacegroup(self, atomic_numbers, consider_old, symprec)
+           if spacegroup is not None:
+              tags = equivalent_sites_for_spacegroup(self, spacegroup, atomic_numbers, consider_old)
+              tags = tags.mapping
+        else:
+           spacegroup = None
 
         if not spacegroup:
             return self.cancel_sites_symmetry()
 
-        tags = spacegroup.tag_sites(self.get_scaled_positions())
-        mapping = mapping.merge( tags )
-        tags = mapping.mapping
-
+        self.info['spacegroup'] = spacegroup
         sites = np.empty(len(tags), dtype=object)
 
         uniq, umap = np.unique(tags, return_inverse = True)
         used = set()
+        occupation = self.info.get('occupancy', {})
+        try:
+           old_sites=self.get_array(SPRKKRAtoms.sites_array_name)
+        except KeyError:
+           old_sites=None
+
         for i in range(len(uniq)):
              index = umap == i
-             if self._unique_sites is not None:
+             if old_sites is not None:
                 #first non-none of the given index
-                possible =  (i for i in self._unique_sites[index])
+                possible =  (i for i in old_sites[index])
                 site = next(filter(None, possible), None)
                 if site in used:
                    site = site.copy()
@@ -204,6 +179,7 @@ class SPRKKRAtoms(Atoms):
                 site = Site(self, symbol)
              sites[index] = site
         self.sites = sites
+        return sites
 
    def cancel_sites_symmetry(self):
         """ Cancel the use of symmetry in the structure, i.e., makes the Site object
@@ -212,19 +188,27 @@ class SPRKKRAtoms(Atoms):
         Calling this method is nearly equivalent to the setting the symmetry property
         to False, however, this method always recompute the sites object, while
         setting symmetry=False recomputes the sites property only if it was previously
-        set to False.
+        set to True.
         """
         self._symmetry = False
+        self.info['spacegroup'] = None
         self._cancel_sites_symmetry()
+        return self.sites
 
    def _cancel_sites_symmetry(self):
         """ See cancel_sites_symmetry - this metod does just the same, but it does not set the symmetry property."""
         sites = np.empty(len(self), dtype=object)
         used = set()
         occupation = self.info.get('occupancy', {})
+
+        try:
+          old_sites = self.get_array(SPRKKRAtoms.sites_array_name)
+        except KeyError:
+          old_sites = None
+
         for i in range(len(self)):
-            if self._unique_sites is not None:
-                site=self._unique_sites[i]
+            if old_sites is not None:
+                site=old_sites[i]
                 if site in used:
                    site = site.copy()
                 else:
@@ -235,6 +219,7 @@ class SPRKKRAtoms(Atoms):
                 site = Site(self, symbol)
             sites[i] = site
         self.sites = sites
+        return sites
 
    @property
    def sites(self):
@@ -250,9 +235,10 @@ class SPRKKRAtoms(Atoms):
            to the ASE properties, but the opposite does not hold - to reflect the changes
            in these properties please create a new Atoms object with given properties.
        """
-       if self._unique_sites is None:
-          self._compute_sites_symmetry()
-       return self._unique_sites
+       try:
+          return self.get_array(SPRKKRAtoms.sites_array_name, copy=False)
+       except KeyError:
+          return self._compute_sites_symmetry()
 
    @sites.setter
    def sites(self, v):
@@ -265,7 +251,7 @@ class SPRKKRAtoms(Atoms):
            an[i] = j.occupation.primary_atomic_number
        self.set_atomic_numbers(an)
        self.info['occupancy'] = occ
-       self._unique_sites = v
+       self.set_array(SPRKKRAtoms.sites_array_name, v)
 
    @property
    def potential(self):
@@ -283,8 +269,6 @@ class SPRKKRAtoms(Atoms):
        if self._potential:
           self._potential.reset(update_atoms = False)
           self._potential.set_from_atoms()
-
-
 
 #at the last - to avoid circular imports
 from ..potentials import potentials
