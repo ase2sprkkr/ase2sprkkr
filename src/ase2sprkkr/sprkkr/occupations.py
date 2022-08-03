@@ -42,6 +42,9 @@ class Occupation:
   def __str__(self):
       return f"Occupation {self._occupation}"
 
+  def __iter__(self):
+      return iter(self._occupation)
+
   def _update_atoms(self):
       if self._site:
          self._site.update_atoms()
