@@ -82,7 +82,7 @@ class UniqueValuesMapping:
 
       none_tuples: bool
         If True, the items of the values are 2-items tuples. Then, None in the second one
-        means "any class". Suchi one will be assigned to the first available class of
+        means "any class". Such one will be assigned to the first available class of
         the first tuple's value.
       """
 
