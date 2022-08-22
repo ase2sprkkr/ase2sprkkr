@@ -164,11 +164,14 @@ class SPRKKRAtoms(Atoms):
              if old_sites is not None:
                 #first non-none of the given index
                 possible =  (i for i in old_sites[index])
-                site = next(filter(None, possible), None)
-                if site in used:
-                   site = site.copy()
-                else:
-                   used.add(site)
+                try:
+                   site = next(filter(None, possible), None)
+                   if site in used:
+                      site = site.copy()
+                   else:
+                      used.add(site)
+                except StopIteration:
+                   site = None
              else:
                 site = None
              if not site:
@@ -269,6 +272,16 @@ class SPRKKRAtoms(Atoms):
        if self._potential:
           self._potential.reset(update_atoms = False)
           self._potential.set_from_atoms()
+
+   def extend(self, other):
+       out = super().extend(other)
+       if self.symmetry:
+          try:
+              self.get_array(SPRKKRAtoms.sites_array_name, copy=False)
+          except KeyError:
+              return out
+          self._compute_sites_symmetry(consider_old=True)
+       return out
 
 #at the last - to avoid circular imports
 from ..potentials import potentials
