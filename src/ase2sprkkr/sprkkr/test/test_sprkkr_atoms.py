@@ -10,7 +10,7 @@ from .. sprkkr_atoms import SPRKKRAtoms
 
 class SPRKKRAtomsTest(TestCase):
 
- def xtest_atoms(self):
+ def test_atoms(self):
      a = Atoms('NaCl')
      a.set_positions([[0,0,0],[0,1,0]])
      a.info['occupancy'] = { 1: {'Cl' : 0.4, 'I' : 0.6 } }
