@@ -60,12 +60,13 @@ class AtomicType:
            self.symbol = symbol
            self.atomic_number = atomic_number
 
-        if self.symbol == 'Vc' or self.atomic_number == 0:
+        if self.symbol == 'Vc' or self.atomic_number == 0 or \
+           (self.symbol == 'X' and self.atomic_number is None):
            self.symbol = 'Vc'
            self.atomic_number = self.n_electrons = self.n_core = self.n_valence = self.n_semicore = 0
         else:
           if not self.symbol: self.symbol = self.mendeleev.symbol
-          if not self.atomic_number: self.atomic_number = self.mendeleev.atomic_number
+          if self.atomic_number is None: self.atomic_number = self.mendeleev.atomic_number
 
           if n_electrons is not None:
              self.n_electrons = n_electrons
@@ -81,7 +82,7 @@ class AtomicType:
         return copy.copy(self)
 
     def __repr__(self):
-        return f"({self.n_electrons})" if self.symbol == 'X' else self.symbol
+        return f"({self.atomic_number})" if self.symbol == 'X' else self.symbol
 
     def __str__(self):
         return self.__repr__()
