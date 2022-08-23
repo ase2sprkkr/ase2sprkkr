@@ -3,7 +3,6 @@ Binding for the es_finder package, that can determine the ideal positions
 of empty spheres to fill the gaps in the primitive cell.
 """
 
-from pymatgen.io.ase import AseAtomsAdaptor
 import numpy as np
 
 try:
@@ -11,6 +10,7 @@ try:
   from es_finder.core.parameters import Parameters
   from es_finder.core.symmetry import Symmetry
   from es_finder.adapter.pymatgen import StructureAdapter
+  from pymatgen.io.ase import AseAtomsAdaptor
 except ImportError as error:
   import_error = error
   run_finder = None
@@ -81,7 +81,7 @@ def empty_spheres(atoms: Atoms,
 
   """
   if run_finder is None:
-     raise ImportError('Cannot import es_finder. Please install it, or set empty_spheres parameter to None') \
+     raise ImportError('Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False') \
          from import_error
 
   params = locals()
