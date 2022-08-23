@@ -2,6 +2,7 @@
 Binding for the es_finder package, that can determine the ideal positions
 of empty spheres to fill the gaps in the primitive cell.
 """
+from __future__ import annotations
 
 import numpy as np
 
