@@ -10,6 +10,7 @@ For more informations about SPR-KKR, follow this
 view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`
 
 """
+from __future__ import annotations
 import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
