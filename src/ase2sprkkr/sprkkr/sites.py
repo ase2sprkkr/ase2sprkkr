@@ -102,3 +102,6 @@ class Site:
 
   def __repr__(self):
       return f"Site:{self.occupation}"
+
+  def is_vacuum(self):
+      return len(self._occupation) == 1 and next(iter(self.occupation)).is_vacuum()
