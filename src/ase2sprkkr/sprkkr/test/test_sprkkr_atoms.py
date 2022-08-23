@@ -6,7 +6,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 from ase import Atoms
 from ase.build import bulk
-from .. sprkkr_atoms import SPRKKRAtoms
+from ..sprkkr_atoms import SPRKKRAtoms
 
 class SPRKKRAtomsTest(TestCase):
 
