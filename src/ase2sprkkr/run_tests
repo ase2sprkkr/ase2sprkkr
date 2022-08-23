@@ -4,4 +4,5 @@ if [[ $1 == '--no-kkr' ]] ; then
 	 shift
 fi
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
 py.test  --doctest-modules . $@
