@@ -1,9 +1,12 @@
 """ More atomic types can be on one site. """
-
+from __future__ import annotations
 
 import numpy as np
 from .atomic_types import AtomicType
 from ..common.misc import OrderedDict
+from typing import Dict
+from collections.abc import Iterable
+from .sites import Site
 
 
 class Occupation:
@@ -14,14 +17,20 @@ class Occupation:
    alloys).
   """
 
-  def __init__(self, dct, site=None):
+  def __init__(self, dct:Dict[AtomicType|str, float], site:Site|None=None, update_atoms=False):
       self._site = site
-      self.set(dct)
+      self.set(dct, update_atoms)
 
-  def copy(self):
-      return Occupation({ a.copy(): v for a,v in self._occupation.items() })
+  def copy(self, site:Site|None=None) -> Occupation:
+      """ Create a copy of the object, associated with a given site. """
+      return Occupation({ a.copy(): v for a,v in self._occupation.items() }, site)
 
-  def set(self, dct):
+  def set(self, dct: Dict[AtomicType | str, float ], update_atoms=True) -> None:
+      """ Set (replace) the occupation data.
+
+      The method automatically updates the symbols, atomic numbers and the occupancy property (if exists)
+      of the underlying Atoms object.
+      """
       if isinstance(dct, (int, str, AtomicType)):
          dct = {dct : 1.0}
       if hasattr(dct, 'items'):
@@ -30,7 +39,8 @@ class Occupation:
          iterator = dct
       self._occupation = OrderedDict( (AtomicType.to_atomic_type(i), j) for i,j in iterator )
       self._normalize()
-      self._update_atoms()
+      if update_atoms:
+          self._update_atoms()
 
   def items(self):
       """ dict.items() like enumeration """
@@ -43,7 +53,7 @@ class Occupation:
       return f"Occupation {self._occupation}"
 
   def __iter__(self):
-      return iter(self._occupation)
+      return iter(self._oc/cupation)
 
   def _update_atoms(self):
       if self._site:
@@ -53,25 +63,63 @@ class Occupation:
       return iter(self._occupation)
 
   def _find_key(self, name):
+      if isinstance(name, int):
+          return list(self._occupation.keys())[name]
       if isinstance(name, AtomicType):
           return name
       for i in self:
           if i.symbol == name: return i
       raise KeyError(f"No {name} in the occupation")
 
+  def atomic_types(self) -> Iterable[AtomicType]:
+      """ Returns the atomic types that can be present on the site. """
+      return self._occupation.keys()
+
+  def atomic_type(self, name: str|int|AtomicType) -> AtomicType | None:
+      """ Find the corresponding atomic type according to the provided argument.
+
+      Parameters
+      ----------
+      name
+          The identification of the atomic type.
+          If it is integer, returns the n-th atomic type (according to the orderd supplied
+          when the occupation is set).
+          If it is a string, the first atomic type of given chemical element is returned
+          If it is AtomicType, it is returned "as is"
+      """
+      return self._find_key(name)
+
   def __getitem__(self, name):
       name = self._find_key(name)
       return self._occupation[name]
 
+  def replace_type(self, name:str|int|AtomicType, to:str|AtomicType):
+      """
+      Replace the given atomic type (see :meth:`atomic_type<ase2sprkkr.sprkkr.occupations.Occupation.atomic_type>`, how
+      it can be identified) by the new one (given either by AtomicType or by its chemical symbol)
+      """
+      key = self._find_key(name)
+      to = AtomicType.to_atomic_type(to)
+      self._occupation = OrderedDict(
+          (k if k is not key else to, v) for k,v in self._occupation.items()
+        )
+
+  def clean(self):
+      """ Remove all items with zero probability. """
+      self._occupation = OrderedDict(
+          (k, v) for k,v in self._occupation.items() if v > 0
+      )
+
   def __setitem__(self, name, value):
-      try:
-          name = self._find_key(name)
-          self._normalize(1. - value, name)
-          self._occupation[name] = value
-      except KeyError:
-          self.add(name, value)
-          return
-      self._update_atoms()
+       try:
+           name = self._find_key(name)
+           self._normalize(1. - value, name)
+           self._occupation[name] = value
+       except KeyError:
+           if isinstance(name, int):
+              raise ValueError(f"Cannot add an atomic type using integer key. Please use a string (chemical symbol).")
+           self.add(name, value)
+       self._update_atoms()
 
   @property
   def primary_atomic_type(self):
@@ -118,7 +166,10 @@ class Occupation:
 
   def _normalize(self, to=1., except_from=None):
       """
-      Normalizes occupation so the sum will be equal to value
+      Normalizes occupation so the sum will be equal to the value 'to' (by default to 1.).
+      If there are no None values, all the values are multiplied by the same number to make
+      their sum equal to to.
+      If there are None values, the remainder to the 'to' value is equally divided among them.
 
       Parameters
       ----------
@@ -126,17 +177,35 @@ class Occupation:
         Desired value
 
       except_from: AtomicType
-        Skip given atom during normalizing
+        Skip the given atom during normalizing
       """
-      suma = self.total_occupation
-      if except_from:
-         suma -= self._occupation[except_from]
+      suma = 0.
+      none = []
+      for i in self._occupation:
+          if i is except_from:
+             continue
+          v = self._occupation[i]
+          if v is None:
+             none.append(i)
+          else:
+            suma+=v
+
+      if suma >= to and none:
+         for i in none:
+             self._occupation[i] = 0.
+         none = []
       if suma == to:
          return
-      ratio = to / suma
-      for i in self._occupation:
-         if i != except_from:
-            self._occupation[i] *= ratio
+      if none:
+         for i in none:
+             self._occupation[i] = (to - suma) / len(none)
+      else:
+         ratio = to / suma
+
+         for i in self._occupation:
+             if i != except_from:
+                 self._occupation[i] *= ratio
+
 
   @property
   def as_dict(self):
@@ -156,9 +225,12 @@ class Occupation:
       return sum(self._occupation.values())
 
   @staticmethod
-  def to_occupation(occupation):
+  def to_occupation(occupation, site):
+      """ Create an occupation object associated with the given sites object """
       if not isinstance(occupation, Occupation):
-         occupation = Occupation(occupation)
+         occupation = Occupation(occupation, site)
+      elif site is not None:
+         occupation = Occupation.copy(occupation, site)
       return occupation
 
   def check(self):
