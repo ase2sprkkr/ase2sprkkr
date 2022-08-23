@@ -21,71 +21,16 @@ Bool
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Bool.I
-        ~Bool._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Bool.default_value
-        ~Bool.has_value
-        ~Bool.name_in_grammar
-        ~Bool.prefix
-        ~Bool.postfix
-        ~Bool.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Bool._string
-        ~Bool._validate
-        ~Bool.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Bool.__init__
-        ~Bool.__str__
-        ~Bool._valueError
-        ~Bool.convert
-        ~Bool.copy
-        ~Bool.enrich
-        ~Bool.grammar
-        ~Bool.missing_value
-        ~Bool.parse
-        ~Bool.parse_from_stream
-        ~Bool.print
-        ~Bool.read
-        ~Bool.string
-        ~Bool.transform_grammar
-        ~Bool.validate
-        ~Bool.write
-
    
    

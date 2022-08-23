@@ -25,67 +25,12 @@ GlobalSystemParameter
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameter.definition
-        ~GlobalSystemParameter.name
-        ~GlobalSystemParameter._members
-        ~GlobalSystemParameter._interactive_members
-        ~GlobalSystemParameter._definition
-        ~GlobalSystemParameter._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameter._set_from_atoms
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameter.__contains__
-        ~GlobalSystemParameter.__dir__
-        ~GlobalSystemParameter.__getattr__
-        ~GlobalSystemParameter.__getitem__
-        ~GlobalSystemParameter.__init__
-        ~GlobalSystemParameter.__iter__
-        ~GlobalSystemParameter.__setattr__
-        ~GlobalSystemParameter._add
-        ~GlobalSystemParameter._depends_on
-        ~GlobalSystemParameter._find_value
-        ~GlobalSystemParameter._get_member
-        ~GlobalSystemParameter._get_path
-        ~GlobalSystemParameter._get_root_container
-        ~GlobalSystemParameter._interactive_member_name
-        ~GlobalSystemParameter._update_atoms
-        ~GlobalSystemParameter.add
-        ~GlobalSystemParameter.as_dict
-        ~GlobalSystemParameter.clear
-        ~GlobalSystemParameter.get
-        ~GlobalSystemParameter.has_any_value
-        ~GlobalSystemParameter.members
-        ~GlobalSystemParameter.remove_member
-        ~GlobalSystemParameter.reset
-        ~GlobalSystemParameter.save_to_file
-        ~GlobalSystemParameter.set
-        ~GlobalSystemParameter.to_dict
-        ~GlobalSystemParameter.to_string
-
    
    

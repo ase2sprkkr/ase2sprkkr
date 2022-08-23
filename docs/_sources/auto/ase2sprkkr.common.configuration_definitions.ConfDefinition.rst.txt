@@ -21,84 +21,16 @@ ConfDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfDefinition.custom_value_name
-        ~ConfDefinition.name_in_grammar
-        ~ConfDefinition.sections
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfDefinition._init_args
-        ~ConfDefinition.custom_name_characters
-        ~ConfDefinition.do_not_skip_whitespaces_before_name
-        ~ConfDefinition.force_order
-        ~ConfDefinition.result_class
-        ~ConfDefinition.validate
-        ~ConfDefinition.value_name_format
-        ~ConfDefinition.name
-        ~ConfDefinition.alternative_names
-        ~ConfDefinition.is_optional
-        ~ConfDefinition.help
-        ~ConfDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfDefinition.__init__
-        ~ConfDefinition._grammar
-        ~ConfDefinition._tuple_with_my_name
-        ~ConfDefinition.from_dict
-        ~ConfDefinition.parse_return
-        ~ConfDefinition.read_from_file
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfDefinition.__contains__
-        ~ConfDefinition.__getitem__
-        ~ConfDefinition.__iter__
-        ~ConfDefinition.__setitem__
-        ~ConfDefinition._dict_from_named_values
-        ~ConfDefinition._first_section_is_fixed
-        ~ConfDefinition._values_grammar
-        ~ConfDefinition.all_member_names
-        ~ConfDefinition.copy
-        ~ConfDefinition.create_object
-        ~ConfDefinition.custom_member_grammar
-        ~ConfDefinition.delimited_custom_value_grammar
-        ~ConfDefinition.grammar
-        ~ConfDefinition.members
-        ~ConfDefinition.names
-        ~ConfDefinition.parse
-        ~ConfDefinition.parse_file
-        ~ConfDefinition.parse_from_stream
-        ~ConfDefinition.remove
-
    
    

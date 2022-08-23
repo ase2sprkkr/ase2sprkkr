@@ -25,58 +25,12 @@ BaseString
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseString.default_value
-        ~BaseString.has_value
-        ~BaseString.name_in_grammar
-        ~BaseString.prefix
-        ~BaseString.postfix
-        ~BaseString.format
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseString._validate
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseString.__init__
-        ~BaseString.__str__
-        ~BaseString._string
-        ~BaseString._valueError
-        ~BaseString.convert
-        ~BaseString.copy
-        ~BaseString.enrich
-        ~BaseString.grammar
-        ~BaseString.grammar_name
-        ~BaseString.missing_value
-        ~BaseString.parse
-        ~BaseString.parse_from_stream
-        ~BaseString.print
-        ~BaseString.read
-        ~BaseString.string
-        ~BaseString.transform_grammar
-        ~BaseString.validate
-        ~BaseString.write
-
    
    

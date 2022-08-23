@@ -1,0 +1,36 @@
+TestCustomSection
+=================
+
+
+.. currentmodule:: ase2sprkkr.potentials.test.test_custom_section
+
+.. autoclass:: TestCustomSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.test.test_custom_section.TestCustomSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

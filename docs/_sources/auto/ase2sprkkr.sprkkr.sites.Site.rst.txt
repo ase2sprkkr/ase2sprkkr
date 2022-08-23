@@ -21,15 +21,6 @@ Site
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Site.occupation
-        ~Site.primary_symbol
-
-   
    
 
    
@@ -37,19 +28,6 @@ Site
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Site.__init__
-        ~Site.__repr__
-        ~Site.__str__
-        ~Site.copy
-        ~Site.reset
-        ~Site.update_atoms
-
    
    
 

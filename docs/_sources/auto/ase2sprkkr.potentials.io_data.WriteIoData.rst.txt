@@ -21,40 +21,13 @@ WriteIoData
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~WriteIoData.meshes
-        ~WriteIoData.reference_systems
-        ~WriteIoData.sites
-        ~WriteIoData.types
-
-   
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~WriteIoData.__hash__
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~WriteIoData.__init__
-
    
    
 

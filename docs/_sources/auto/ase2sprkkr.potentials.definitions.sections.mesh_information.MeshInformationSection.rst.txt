@@ -21,32 +21,6 @@ MeshInformationSection
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~MeshInformationSection._value_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~MeshInformationSection.__annotations__
-        ~MeshInformationSection.definition
-        ~MeshInformationSection.name
-        ~MeshInformationSection._members
-        ~MeshInformationSection._interactive_members
-        ~MeshInformationSection._definition
-        ~MeshInformationSection._container
-
-   
    
 
    
@@ -55,39 +29,8 @@ MeshInformationSection
 
    
    
-   .. rubric:: Inherited methods
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~MeshInformationSection.__contains__
-        ~MeshInformationSection.__dir__
-        ~MeshInformationSection.__getattr__
-        ~MeshInformationSection.__getitem__
-        ~MeshInformationSection.__init__
-        ~MeshInformationSection.__iter__
-        ~MeshInformationSection.__setattr__
-        ~MeshInformationSection._add
-        ~MeshInformationSection._depends_on
-        ~MeshInformationSection._find_value
-        ~MeshInformationSection._get_member
-        ~MeshInformationSection._get_path
-        ~MeshInformationSection._get_root_container
-        ~MeshInformationSection._interactive_member_name
-        ~MeshInformationSection._set_from_atoms
-        ~MeshInformationSection._update_atoms
-        ~MeshInformationSection.add
-        ~MeshInformationSection.as_dict
-        ~MeshInformationSection.clear
-        ~MeshInformationSection.get
-        ~MeshInformationSection.has_any_value
-        ~MeshInformationSection.members
-        ~MeshInformationSection.remove_member
-        ~MeshInformationSection.reset
-        ~MeshInformationSection.save_to_file
-        ~MeshInformationSection.set
-        ~MeshInformationSection.to_dict
-        ~MeshInformationSection.to_string
-
+   
    
    

@@ -1,0 +1,36 @@
+CommonTest
+==========
+
+
+.. currentmodule:: ase2sprkkr.common.test.test_common
+
+.. autoclass:: CommonTest
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.test.test_common.CommonTest
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

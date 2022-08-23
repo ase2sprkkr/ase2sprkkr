@@ -25,51 +25,12 @@ CustomOption
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomOption.name
-        ~CustomOption._definition
-        ~CustomOption._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomOption.factory
-        ~CustomOption.remove
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomOption.__call__
-        ~CustomOption.__init__
-        ~CustomOption.__repr__
-        ~CustomOption._find_value
-        ~CustomOption._get_path
-        ~CustomOption._get_root_container
-        ~CustomOption.as_dict
-        ~CustomOption.clear
-        ~CustomOption.get
-        ~CustomOption.get_path
-        ~CustomOption.save_to_file
-        ~CustomOption.set
-        ~CustomOption.to_dict
-
    
    

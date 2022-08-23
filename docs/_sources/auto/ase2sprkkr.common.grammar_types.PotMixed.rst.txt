@@ -21,75 +21,16 @@ PotMixed
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotMixed.I
-        ~PotMixed.string_type
-        ~PotMixed.types
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotMixed.default_value
-        ~PotMixed.has_value
-        ~PotMixed.name_in_grammar
-        ~PotMixed.type
-        ~PotMixed.prefix
-        ~PotMixed.postfix
-        ~PotMixed.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotMixed._string
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotMixed.__init__
-        ~PotMixed.__str__
-        ~PotMixed._grammar
-        ~PotMixed._validate
-        ~PotMixed._valueError
-        ~PotMixed.convert
-        ~PotMixed.copy
-        ~PotMixed.enrich
-        ~PotMixed.get_type
-        ~PotMixed.grammar
-        ~PotMixed.grammar_name
-        ~PotMixed.missing_value
-        ~PotMixed.parse
-        ~PotMixed.parse_from_stream
-        ~PotMixed.print
-        ~PotMixed.read
-        ~PotMixed.string
-        ~PotMixed.transform_grammar
-        ~PotMixed.validate
-        ~PotMixed.write
-
    
    

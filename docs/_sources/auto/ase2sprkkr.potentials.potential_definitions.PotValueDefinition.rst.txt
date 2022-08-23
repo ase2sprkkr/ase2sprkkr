@@ -21,68 +21,16 @@ PotValueDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotValueDefinition.name_value_delimiter
-        ~PotValueDefinition.prefix
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotValueDefinition.do_not_skip_whitespaces_before_name
-        ~PotValueDefinition.formated_name
-        ~PotValueDefinition.name_in_grammar
-        ~PotValueDefinition.value_name_format
-        ~PotValueDefinition.name
-        ~PotValueDefinition.alternative_names
-        ~PotValueDefinition.is_optional
-        ~PotValueDefinition.help
-        ~PotValueDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotValueDefinition.__init__
-        ~PotValueDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotValueDefinition.__repr__
-        ~PotValueDefinition.__str__
-        ~PotValueDefinition._grammar
-        ~PotValueDefinition._tuple_with_my_name
-        ~PotValueDefinition.copy
-        ~PotValueDefinition.create_object
-        ~PotValueDefinition.get_value
-        ~PotValueDefinition.grammar
-        ~PotValueDefinition.remove
-        ~PotValueDefinition.validate
-        ~PotValueDefinition.write
-
    
    

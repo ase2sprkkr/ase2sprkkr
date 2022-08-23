@@ -21,72 +21,16 @@ Array
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Array.__slotnames__
-        ~Array.delimiter
-        ~Array.delimiter_str
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Array.default_value
-        ~Array.has_value
-        ~Array.name_in_grammar
-        ~Array.prefix
-        ~Array.postfix
-        ~Array.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Array.__init__
-        ~Array.__str__
-        ~Array._string
-        ~Array._validate
-        ~Array.convert
-        ~Array.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Array._valueError
-        ~Array.copy
-        ~Array.enrich
-        ~Array.grammar
-        ~Array.missing_value
-        ~Array.parse
-        ~Array.parse_from_stream
-        ~Array.print
-        ~Array.read
-        ~Array.string
-        ~Array.transform_grammar
-        ~Array.validate
-        ~Array.write
-
    
    

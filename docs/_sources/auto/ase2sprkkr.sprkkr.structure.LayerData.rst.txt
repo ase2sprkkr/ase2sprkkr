@@ -29,15 +29,6 @@ LayerData
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LayerData.__init__
-        ~LayerData.__repr__
-
-   
    
 
    

@@ -21,67 +21,16 @@ OutputNonameValueDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputNonameValueDefinition.name_in_grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputNonameValueDefinition.do_not_skip_whitespaces_before_name
-        ~OutputNonameValueDefinition.formated_name
-        ~OutputNonameValueDefinition.prefix
-        ~OutputNonameValueDefinition.value_name_format
-        ~OutputNonameValueDefinition.name
-        ~OutputNonameValueDefinition.alternative_names
-        ~OutputNonameValueDefinition.is_optional
-        ~OutputNonameValueDefinition.help
-        ~OutputNonameValueDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputNonameValueDefinition.__init__
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputNonameValueDefinition.__repr__
-        ~OutputNonameValueDefinition.__str__
-        ~OutputNonameValueDefinition._grammar
-        ~OutputNonameValueDefinition._tuple_with_my_name
-        ~OutputNonameValueDefinition.copy
-        ~OutputNonameValueDefinition.create_object
-        ~OutputNonameValueDefinition.get_value
-        ~OutputNonameValueDefinition.grammar
-        ~OutputNonameValueDefinition.grammar_of_delimiter
-        ~OutputNonameValueDefinition.remove
-        ~OutputNonameValueDefinition.validate
-        ~OutputNonameValueDefinition.write
-
    
    

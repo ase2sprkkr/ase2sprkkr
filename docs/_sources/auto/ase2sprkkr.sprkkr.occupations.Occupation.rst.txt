@@ -21,18 +21,6 @@ Occupation
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Occupation.as_dict
-        ~Occupation.primary_atomic_number
-        ~Occupation.primary_atomic_type
-        ~Occupation.primary_symbol
-        ~Occupation.total_occupation
-
-   
    
 
    
@@ -40,31 +28,6 @@ Occupation
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Occupation.__delitem__
-        ~Occupation.__getitem__
-        ~Occupation.__init__
-        ~Occupation.__iter__
-        ~Occupation.__len__
-        ~Occupation.__repr__
-        ~Occupation.__setitem__
-        ~Occupation.__str__
-        ~Occupation._find_key
-        ~Occupation._normalize
-        ~Occupation._update_atoms
-        ~Occupation.add
-        ~Occupation.atomic_types
-        ~Occupation.check
-        ~Occupation.copy
-        ~Occupation.set
-        ~Occupation.to_occupation
-        ~Occupation.to_tuple
-
    
    
 

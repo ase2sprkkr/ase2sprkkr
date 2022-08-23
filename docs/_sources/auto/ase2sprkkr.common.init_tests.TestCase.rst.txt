@@ -25,126 +25,12 @@ TestCase
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TestCase._classSetupFailed
-        ~TestCase._class_cleanups
-        ~TestCase._diffThreshold
-        ~TestCase.longMessage
-        ~TestCase.maxDiff
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TestCase.assertAsyncEqual
-        ~TestCase.assertAsyncRaises
-        ~TestCase.runAsync
-        ~TestCase.setUp
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TestCase.__call__
-        ~TestCase.__eq__
-        ~TestCase.__hash__
-        ~TestCase.__init__
-        ~TestCase.__repr__
-        ~TestCase.__str__
-        ~TestCase._addExpectedFailure
-        ~TestCase._addSkip
-        ~TestCase._addUnexpectedSuccess
-        ~TestCase._baseAssertEqual
-        ~TestCase._callCleanup
-        ~TestCase._callSetUp
-        ~TestCase._callTearDown
-        ~TestCase._callTestMethod
-        ~TestCase._deprecate
-        ~TestCase._feedErrorsToResult
-        ~TestCase._formatMessage
-        ~TestCase._getAssertEqualityFunc
-        ~TestCase._truncateMessage
-        ~TestCase.addClassCleanup
-        ~TestCase.addCleanup
-        ~TestCase.addTypeEqualityFunc
-        ~TestCase.assertAlmostEqual
-        ~TestCase.assertAlmostEquals
-        ~TestCase.assertCountEqual
-        ~TestCase.assertDictContainsSubset
-        ~TestCase.assertDictEqual
-        ~TestCase.assertEqual
-        ~TestCase.assertEquals
-        ~TestCase.assertFalse
-        ~TestCase.assertGreater
-        ~TestCase.assertGreaterEqual
-        ~TestCase.assertIn
-        ~TestCase.assertIs
-        ~TestCase.assertIsInstance
-        ~TestCase.assertIsNone
-        ~TestCase.assertIsNot
-        ~TestCase.assertIsNotNone
-        ~TestCase.assertLess
-        ~TestCase.assertLessEqual
-        ~TestCase.assertListEqual
-        ~TestCase.assertLogs
-        ~TestCase.assertMultiLineEqual
-        ~TestCase.assertNotAlmostEqual
-        ~TestCase.assertNotAlmostEquals
-        ~TestCase.assertNotEqual
-        ~TestCase.assertNotEquals
-        ~TestCase.assertNotIn
-        ~TestCase.assertNotIsInstance
-        ~TestCase.assertNotRegex
-        ~TestCase.assertNotRegexpMatches
-        ~TestCase.assertRaises
-        ~TestCase.assertRaisesRegex
-        ~TestCase.assertRaisesRegexp
-        ~TestCase.assertRegex
-        ~TestCase.assertRegexpMatches
-        ~TestCase.assertSequenceEqual
-        ~TestCase.assertSetEqual
-        ~TestCase.assertTrue
-        ~TestCase.assertTupleEqual
-        ~TestCase.assertWarns
-        ~TestCase.assertWarnsRegex
-        ~TestCase.assert_
-        ~TestCase.countTestCases
-        ~TestCase.debug
-        ~TestCase.defaultTestResult
-        ~TestCase.doClassCleanups
-        ~TestCase.doCleanups
-        ~TestCase.fail
-        ~TestCase.failIf
-        ~TestCase.failIfAlmostEqual
-        ~TestCase.failIfEqual
-        ~TestCase.failUnless
-        ~TestCase.failUnlessAlmostEqual
-        ~TestCase.failUnlessEqual
-        ~TestCase.failUnlessRaises
-        ~TestCase.id
-        ~TestCase.run
-        ~TestCase.setUpClass
-        ~TestCase.shortDescription
-        ~TestCase.skipTest
-        ~TestCase.subTest
-        ~TestCase.tearDown
-        ~TestCase.tearDownClass
-
    
    

@@ -21,87 +21,16 @@ InputParametersDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParametersDefinition.delimiter
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParametersDefinition._init_args
-        ~InputParametersDefinition.custom_name_characters
-        ~InputParametersDefinition.custom_value_name
-        ~InputParametersDefinition.do_not_skip_whitespaces_before_name
-        ~InputParametersDefinition.force_order
-        ~InputParametersDefinition.name_in_grammar
-        ~InputParametersDefinition.sections
-        ~InputParametersDefinition.validate
-        ~InputParametersDefinition.value_name_format
-        ~InputParametersDefinition.name
-        ~InputParametersDefinition.alternative_names
-        ~InputParametersDefinition.is_optional
-        ~InputParametersDefinition.help
-        ~InputParametersDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParametersDefinition.__init__
-        ~InputParametersDefinition.custom_class
-        ~InputParametersDefinition.custom_value_grammar
-        ~InputParametersDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParametersDefinition.__contains__
-        ~InputParametersDefinition.__getitem__
-        ~InputParametersDefinition.__iter__
-        ~InputParametersDefinition.__setitem__
-        ~InputParametersDefinition._dict_from_named_values
-        ~InputParametersDefinition._first_section_is_fixed
-        ~InputParametersDefinition._grammar
-        ~InputParametersDefinition._tuple_with_my_name
-        ~InputParametersDefinition._values_grammar
-        ~InputParametersDefinition.all_member_names
-        ~InputParametersDefinition.copy
-        ~InputParametersDefinition.create_object
-        ~InputParametersDefinition.custom_member_grammar
-        ~InputParametersDefinition.delimited_custom_value_grammar
-        ~InputParametersDefinition.from_dict
-        ~InputParametersDefinition.grammar
-        ~InputParametersDefinition.members
-        ~InputParametersDefinition.names
-        ~InputParametersDefinition.parse
-        ~InputParametersDefinition.parse_file
-        ~InputParametersDefinition.parse_from_stream
-        ~InputParametersDefinition.parse_return
-        ~InputParametersDefinition.read_from_file
-        ~InputParametersDefinition.remove
-
    
    

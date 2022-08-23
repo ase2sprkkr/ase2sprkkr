@@ -21,85 +21,16 @@ PotSectionDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotSectionDefinition.delimiter
-        ~PotSectionDefinition.force_order
-        ~PotSectionDefinition.value_name_format
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotSectionDefinition._init_args
-        ~PotSectionDefinition.custom_name_characters
-        ~PotSectionDefinition.custom_value_name
-        ~PotSectionDefinition.do_not_skip_whitespaces_before_name
-        ~PotSectionDefinition.name_in_grammar
-        ~PotSectionDefinition.validate
-        ~PotSectionDefinition.values
-        ~PotSectionDefinition.name
-        ~PotSectionDefinition.alternative_names
-        ~PotSectionDefinition.is_optional
-        ~PotSectionDefinition.help
-        ~PotSectionDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotSectionDefinition.__init__
-        ~PotSectionDefinition.custom_class
-        ~PotSectionDefinition.depends_on
-        ~PotSectionDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotSectionDefinition.__contains__
-        ~PotSectionDefinition.__getitem__
-        ~PotSectionDefinition.__iter__
-        ~PotSectionDefinition.__setitem__
-        ~PotSectionDefinition._dict_from_named_values
-        ~PotSectionDefinition._first_section_is_fixed
-        ~PotSectionDefinition._grammar
-        ~PotSectionDefinition._tuple_with_my_name
-        ~PotSectionDefinition._values_grammar
-        ~PotSectionDefinition.all_member_names
-        ~PotSectionDefinition.copy
-        ~PotSectionDefinition.create_object
-        ~PotSectionDefinition.custom_member_grammar
-        ~PotSectionDefinition.delimited_custom_value_grammar
-        ~PotSectionDefinition.grammar
-        ~PotSectionDefinition.members
-        ~PotSectionDefinition.names
-        ~PotSectionDefinition.parse
-        ~PotSectionDefinition.parse_file
-        ~PotSectionDefinition.parse_from_stream
-        ~PotSectionDefinition.parse_return
-        ~PotSectionDefinition.remove
-
    
    

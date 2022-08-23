@@ -21,69 +21,16 @@ Separator
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Separator._counter
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Separator.do_not_skip_whitespaces_before_name
-        ~Separator.formated_name
-        ~Separator.name_in_grammar
-        ~Separator.name_value_delimiter
-        ~Separator.prefix
-        ~Separator.value_name_format
-        ~Separator.name
-        ~Separator.alternative_names
-        ~Separator.is_optional
-        ~Separator.help
-        ~Separator.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Separator.__init__
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Separator.__repr__
-        ~Separator.__str__
-        ~Separator._grammar
-        ~Separator._tuple_with_my_name
-        ~Separator.copy
-        ~Separator.create_object
-        ~Separator.get_value
-        ~Separator.grammar
-        ~Separator.grammar_of_delimiter
-        ~Separator.remove
-        ~Separator.validate
-        ~Separator.write
-
    
    

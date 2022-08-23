@@ -29,26 +29,8 @@ ExponentialMesh
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ExponentialMesh.__init__
-        ~ExponentialMesh.copy
-        ~ExponentialMesh.to_tuple
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ExponentialMesh.default
-
    
    

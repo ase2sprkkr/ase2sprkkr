@@ -21,72 +21,16 @@ Flag
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Flag.I
-        ~Flag._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Flag.default_value
-        ~Flag.has_value
-        ~Flag.name_in_grammar
-        ~Flag.prefix
-        ~Flag.postfix
-        ~Flag.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Flag._validate
-        ~Flag.grammar_name
-        ~Flag.missing_value
-        ~Flag.str
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Flag.__init__
-        ~Flag.__str__
-        ~Flag._string
-        ~Flag._valueError
-        ~Flag.convert
-        ~Flag.copy
-        ~Flag.enrich
-        ~Flag.grammar
-        ~Flag.parse
-        ~Flag.parse_from_stream
-        ~Flag.print
-        ~Flag.read
-        ~Flag.string
-        ~Flag.transform_grammar
-        ~Flag.validate
-        ~Flag.write
-
    
    

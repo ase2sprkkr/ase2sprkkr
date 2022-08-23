@@ -21,16 +21,6 @@ AtomicType
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~AtomicType._mendeleev_module
-        ~AtomicType.atomic_number
-        ~AtomicType.mendeleev
-
-   
    
 
    
@@ -38,19 +28,6 @@ AtomicType
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~AtomicType.__init__
-        ~AtomicType.__repr__
-        ~AtomicType.__str__
-        ~AtomicType.copy
-        ~AtomicType.to_atomic_type
-        ~AtomicType.to_tuple
-
    
    
 

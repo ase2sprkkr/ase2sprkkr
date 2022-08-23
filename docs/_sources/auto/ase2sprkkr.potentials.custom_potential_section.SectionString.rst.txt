@@ -21,73 +21,16 @@ SectionString
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SectionString.I
-        ~SectionString._grammar
-        ~SectionString.delimiter_pattern
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SectionString.default_value
-        ~SectionString.has_value
-        ~SectionString.name_in_grammar
-        ~SectionString.prefix
-        ~SectionString.postfix
-        ~SectionString.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SectionString.grammar_name
-        ~SectionString.grammar_of_delimiter
-        ~SectionString.write
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SectionString.__init__
-        ~SectionString.__str__
-        ~SectionString._string
-        ~SectionString._validate
-        ~SectionString._valueError
-        ~SectionString.convert
-        ~SectionString.copy
-        ~SectionString.enrich
-        ~SectionString.grammar
-        ~SectionString.missing_value
-        ~SectionString.parse
-        ~SectionString.parse_from_stream
-        ~SectionString.print
-        ~SectionString.read
-        ~SectionString.string
-        ~SectionString.transform_grammar
-        ~SectionString.validate
-
    
    

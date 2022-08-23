@@ -21,16 +21,6 @@ BaseConfiguration
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseConfiguration.name
-        ~BaseConfiguration._definition
-        ~BaseConfiguration._container
-
-   
    
 
    
@@ -38,17 +28,6 @@ BaseConfiguration
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseConfiguration.__init__
-        ~BaseConfiguration._get_path
-        ~BaseConfiguration._get_root_container
-        ~BaseConfiguration.to_dict
-
    
    
 

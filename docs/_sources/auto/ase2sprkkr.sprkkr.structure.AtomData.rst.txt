@@ -29,17 +29,6 @@ AtomData
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~AtomData.__init__
-        ~AtomData.__repr__
-        ~AtomData.from_text
-        ~AtomData.get_symbol
-
-   
    
 
    

@@ -21,72 +21,16 @@ BaseRealWithUnits
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseRealWithUnits.grammar_cache
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseRealWithUnits.default_value
-        ~BaseRealWithUnits.has_value
-        ~BaseRealWithUnits.name_in_grammar
-        ~BaseRealWithUnits.prefix
-        ~BaseRealWithUnits.postfix
-        ~BaseRealWithUnits.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseRealWithUnits._grammar
-        ~BaseRealWithUnits._grammar_units
-        ~BaseRealWithUnits._validate
-        ~BaseRealWithUnits.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseRealWithUnits.__init__
-        ~BaseRealWithUnits.__str__
-        ~BaseRealWithUnits._string
-        ~BaseRealWithUnits._valueError
-        ~BaseRealWithUnits.convert
-        ~BaseRealWithUnits.copy
-        ~BaseRealWithUnits.enrich
-        ~BaseRealWithUnits.grammar
-        ~BaseRealWithUnits.missing_value
-        ~BaseRealWithUnits.parse
-        ~BaseRealWithUnits.parse_from_stream
-        ~BaseRealWithUnits.print
-        ~BaseRealWithUnits.read
-        ~BaseRealWithUnits.string
-        ~BaseRealWithUnits.transform_grammar
-        ~BaseRealWithUnits.validate
-        ~BaseRealWithUnits.write
-
    
    

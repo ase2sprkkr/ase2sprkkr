@@ -25,14 +25,6 @@ ReadIoData
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReadIoData.__hash__
-
-   
    
 
    

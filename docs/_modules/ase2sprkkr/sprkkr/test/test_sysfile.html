@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.test.test_sysfile &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>ase2sprkkr.sprkkr.test.test_sysfile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.test.test_sysfile</h1><div class="highlight"><pre>
+<span></span><span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
+   <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
+<span class="k">else</span><span class="p">:</span>
+   <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
+<span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+<span class="kn">from</span> <span class="nn">ase.spacegroup</span> <span class="kn">import</span> <span class="n">crystal</span>
+<span class="kn">from</span> <span class="nn">..sysfile</span> <span class="kn">import</span> <span class="n">sysfile_content</span><span class="p">,</span> <span class="n">write_sysfile</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">tempfile</span>
+
+<div class="viewcode-block" id="SysfileTest"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest.html#ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest">[docs]</a><span class="k">class</span> <span class="nc">SysfileTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SysfileTest.test"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest.html#ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mf">4.6</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mf">2.95</span>
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">crystal</span><span class="p">([</span><span class="s1">&#39;Ti&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">],</span> <span class="n">basis</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)],</span>
+                    <span class="n">spacegroup</span><span class="o">=</span><span class="mi">136</span><span class="p">,</span> <span class="n">cellpar</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+        <span class="c1">#atoms = bulk(&#39;Ag&#39;)</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">system data-file created by python ase2sprkkr</span>
+<span class="s2">&lt;unknown&gt;</span>
+<span class="s2">xband-version</span>
+<span class="s2">5.0</span>
+<span class="s2">dimension</span>
+<span class="s2">3D</span>
+<span class="s2">Bravais lattice</span>
+<span class="s2">8 tetragonal primitive 4/mmm D_4hspace group number (ITXC and AP)</span>
+<span class="s2">  136  384</span>
+<span class="s2">structure type</span>
+<span class="s2">UNKNOWN</span>
+<span class="s2">lattice parameter A  [a.u.]</span>
+<span class="s2">    8.692740178850</span>
+<span class="s2">ratio of lattice parameters  b/a  c/a</span>
+<span class="s2">    1.000000000000    0.641304347826</span>
+<span class="s2">lattice parameters  a b c  [a.u.]</span>
+<span class="s2">    8.692740178850    8.692740178850    5.574692071219</span>
+<span class="s2">lattice angles  alpha beta gamma  [deg]</span>
+<span class="s2">   90.000000000000   90.000000000000   90.000000000000</span>
+<span class="s2">primitive vectors     (cart. coord.) [A]</span>
+<span class="s2">    1.000000000000    0.000000000000    0.000000000000</span>
+<span class="s2">    0.000000000000    1.000000000000    0.000000000000</span>
+<span class="s2">    0.000000000000    0.000000000000    1.000000000000</span>
+<span class="s2">number of sites NQ</span>
+<span class="s2">  6</span>
+<span class="s2"> IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ</span>
+<span class="s2">  1   1    0.000000000000    0.000000000000    0.000000000000      0.000000000000   4    1   1</span>
+<span class="s2">  2   1    2.300000000000    2.300000000000    1.475000000000      0.000000000000   4    1   1</span>
+<span class="s2">  3   2    1.380000000000    1.380000000000    0.000000000000      0.000000000000   4    1   2</span>
+<span class="s2">  4   2    3.220000000000    3.220000000000    0.000000000000      0.000000000000   4    1   2</span>
+<span class="s2">  5   2    0.920000000000    3.680000000000    1.475000000000      0.000000000000   4    1   2</span>
+<span class="s2">  6   2    3.680000000000    0.920000000000    1.475000000000      0.000000000000   4    1   2</span>
+<span class="s2">number of sites classes NCL</span>
+<span class="s2">  2</span>
+<span class="s2">ICL WYCK NQCL IQECL (equivalent sites)</span>
+<span class="s2">  1   -    2  1  2</span>
+<span class="s2">  2   -    4  3  4  5  6</span>
+<span class="s2">number of atom types NT</span>
+<span class="s2">  2</span>
+<span class="s2"> IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)</span>
+<span class="s2">  1  22        Ti    2 1.000  1  2</span>
+<span class="s2">  2   8         O    4 1.000  3  4  5  6</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">sanitize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">sanitize</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="n">sanitize</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+           <span class="n">write_sysfile</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

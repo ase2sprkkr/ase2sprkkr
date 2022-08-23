@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.sysfile &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>ase2sprkkr.sprkkr.sysfile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.sysfile</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Thys module contain functions to write xband sysfiles.</span>
+
+<span class="sd">TODO: Just a-bit-cleaned-up old legacy code. Please, use it with a propper caution.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">from</span> <span class="nn">..physics.lattice_data</span> <span class="kn">import</span> <span class="n">LatticeData</span>
+<span class="kn">from</span> <span class="nn">..common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
+
+<div class="viewcode-block" id="sysfile_content"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sysfile.sysfile_content.html#ase2sprkkr.sprkkr.sysfile.sysfile_content">[docs]</a><span class="k">def</span> <span class="nf">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&lt;unknown&gt;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return the content of the xband sysfile for the given atoms object.</span>
+
+<span class="sd">    TODO</span>
+<span class="sd">    ----</span>
+<span class="sd">    Not thoroughly tested nor guaranted to be fully correct</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">SiteData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iq</span><span class="p">,</span> <span class="n">icl</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">coors</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iq</span> <span class="o">=</span><span class="n">iq</span>     <span class="c1">#id of the site</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">icl</span> <span class="o">=</span> <span class="n">icl</span>  <span class="c1">#id of the unique site</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">site</span> <span class="o">=</span> <span class="n">site</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coors</span> <span class="o">=</span> <span class="n">coors</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">occupancy</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&lt;SiteData(iq=</span><span class="si">{:d}</span><span class="s2">, noq=</span><span class="si">{:d}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iq</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">s</span>
+
+
+    <span class="k">class</span> <span class="nc">TypeData</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">atomic_number</span><span class="p">,</span> <span class="n">concentration</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">it</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iqs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span> <span class="o">=</span> <span class="n">atomic_number</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span> <span class="o">=</span> <span class="n">concentration</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">it</span> <span class="o">=</span> <span class="n">it</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iqs</span> <span class="o">=</span> <span class="n">iqs</span>
+
+        <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&lt;TypeData(</span><span class="se">\&#39;</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s2">, id=</span><span class="si">{:d}</span><span class="s2">, concentration=</span><span class="si">{:.4f}</span><span class="s2">, site=</span><span class="si">{:d}</span><span class="s2">,equivalent_sites=</span><span class="si">{}</span><span class="s2">)&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">equivalent_sites</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">s</span>
+
+    <span class="c1"># create lattice site and types from ase.atoms</span>
+    <span class="n">ld</span> <span class="o">=</span> <span class="n">LatticeData</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="n">atomic_types</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1">#types</span>
+    <span class="n">sites</span> <span class="o">=</span> <span class="p">[]</span>     <span class="c1">#sites</span>
+
+    <span class="c1">#Use symmetry in order to find equivalet sites</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">)</span>
+    <span class="n">equivalent_sites</span><span class="o">=</span><span class="n">uv</span><span class="o">.</span><span class="n">indexes</span><span class="p">(</span><span class="n">start_from</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1">#mapping unique_sites =&gt; sites</span>
+    <span class="n">iqref</span><span class="o">=</span><span class="n">uv</span><span class="o">.</span><span class="n">mapping</span> <span class="c1">#mapping sites =&gt; unique_sites</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">coors</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">,</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">)):</span>
+        <span class="n">sd</span> <span class="o">=</span> <span class="n">SiteData</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">iqref</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">site</span><span class="p">,</span> <span class="n">coors</span><span class="p">)</span>
+        <span class="n">sites</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sd</span><span class="p">)</span>
+
+    <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">icl</span> <span class="ow">in</span> <span class="n">uv</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">concentration</span> <span class="ow">in</span> <span class="n">site</span><span class="o">.</span><span class="n">occupation</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">it</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">iqs</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="p">[</span><span class="n">icl</span><span class="p">]</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">TypeData</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">symbol</span><span class="p">),</span> <span class="n">symbol</span><span class="o">.</span><span class="n">atomic_number</span><span class="p">,</span> <span class="n">concentration</span><span class="p">,</span><span class="n">it</span><span class="o">=</span><span class="n">it</span><span class="p">,</span> <span class="n">iqs</span><span class="o">=</span><span class="n">iqs</span><span class="p">)</span>
+            <span class="n">atomic_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">iq</span> <span class="ow">in</span> <span class="n">equivalent_sites</span><span class="p">[</span><span class="n">icl</span><span class="p">]:</span>
+              <span class="n">sites</span><span class="p">[</span><span class="n">iq</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">occupancy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+    <span class="n">filestring</span> <span class="o">=</span> <span class="s2">&quot;system data-file created by python ase2sprkkr </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="n">filename</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;xband-version</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;5.0</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="c1"># It would be really cool to support lower dimensions...one day.</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;dimension</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;3D</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;Bravais lattice</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">ld</span><span class="o">.</span><span class="n">crys_sys</span><span class="p">))</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;space group number (ITXC and AP)</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%5i%5i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">sgno</span><span class="p">,</span><span class="n">ld</span><span class="o">.</span><span class="n">apno</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;structure type</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;UNKNOWN</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;lattice parameter A  [a.u.]</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%18.12f</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">ld</span><span class="o">.</span><span class="n">alat</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;ratio of lattice parameters  b/a  c/a</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%18.12f%18.12f</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">boa</span><span class="p">,</span><span class="n">ld</span><span class="o">.</span><span class="n">coa</span><span class="p">)</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;lattice parameters  a b c  [a.u.]</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%18.12f%18.12f%18.12f</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">alat</span><span class="p">,</span><span class="n">ld</span><span class="o">.</span><span class="n">blat</span><span class="p">,</span><span class="n">ld</span><span class="o">.</span><span class="n">clat</span><span class="p">)</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;lattice angles  alpha beta gamma  [deg]</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%18.12f%18.12f%18.12f</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ld</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span><span class="n">ld</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span><span class="n">ld</span><span class="o">.</span><span class="n">gamma</span><span class="p">)</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;primitive vectors     (cart. coord.) [A]</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">vec</span> <span class="ow">in</span> <span class="n">ld</span><span class="o">.</span><span class="n">rbas</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">vec</span><span class="p">:</span>
+            <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%18.12f</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">p</span>
+        <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="c1"># Get number of sites and fill out with empty spheres if the sites are not fully filled</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;number of sites NQ</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sites</span><span class="p">))</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot; IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">s</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="n">rws</span><span class="o">=</span><span class="mf">0.0</span>
+    <span class="n">angmom</span><span class="o">=</span><span class="mi">4</span>
+    <span class="k">for</span> <span class="n">sd</span> <span class="ow">in</span> <span class="n">sites</span><span class="p">:</span>
+        <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i%4i%18.12f%18.12f%18.12f</span><span class="s2">  </span><span class="si">%18.12f%4i%5i</span><span class="s2"> &quot;</span><span class="o">%</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">iq</span><span class="p">,</span><span class="n">sd</span><span class="o">.</span><span class="n">icl</span><span class="p">,</span><span class="n">sd</span><span class="o">.</span><span class="n">coors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">sd</span><span class="o">.</span><span class="n">coors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">sd</span><span class="o">.</span><span class="n">coors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">rws</span><span class="p">,</span><span class="n">angmom</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">occupancy</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">sd</span><span class="o">.</span><span class="n">occupancy</span><span class="p">:</span>
+           <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">at</span><span class="p">)</span>
+        <span class="n">filestring</span><span class="o">+=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span><span class="o">+=</span><span class="s2">&quot;number of sites classes NCL </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">filestring</span><span class="o">+=</span><span class="s2">&quot;ICL WYCK NQCL IQECL (equivalent sites)</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">icl</span><span class="p">,</span> <span class="n">iqs</span> <span class="ow">in</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="s2">   </span><span class="si">%1s%5i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">icl</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">iqs</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">iqs</span><span class="p">:</span>
+            <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">filestring</span><span class="o">+=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;number of atom types NT</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_types</span><span class="p">)</span>
+
+    <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot; IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">itdone</span><span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atomic_types</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">iat</span><span class="p">,</span> <span class="n">at</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">atomic_types</span><span class="p">):</span>
+        <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">%2i%4i</span><span class="s2">  </span><span class="si">%8s%5i%6.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">at</span><span class="o">.</span><span class="n">it</span><span class="p">,</span><span class="n">at</span><span class="o">.</span><span class="n">atomic_number</span><span class="p">,</span><span class="n">at</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">at</span><span class="o">.</span><span class="n">iqs</span><span class="p">),</span><span class="n">at</span><span class="o">.</span><span class="n">concentration</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">at</span><span class="o">.</span><span class="n">iqs</span><span class="p">:</span>
+            <span class="n">filestring</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">%3i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">filestring</span><span class="o">+=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="c1"># Average Wigner-Seitz radi</span>
+<span class="c1"># =============================================================================</span>
+<span class="c1">#         rws = 0.</span>
+<span class="c1">#         iq = 0</span>
+<span class="c1">#         icl = 0</span>
+<span class="c1">#         itoq = 0</span>
+<span class="c1">#         for a in cell.atomdata:</span>
+<span class="c1">#             icl += 1</span>
+<span class="c1">#             itoqs = []</span>
+<span class="c1">#             for sp in a[0].species:</span>
+<span class="c1">#                 itoq += 1</span>
+<span class="c1">#                 itoqs.append(itoq)</span>
+<span class="c1">#             for b in a:</span>
+<span class="c1">#                 iq += 1</span>
+<span class="c1">#                 if minangmom:</span>
+<span class="c1">#                     angmom = max(max([ed.angularmomentum[ed.elementblock[spcs]] for spcs in b.species])+1,minangmom)</span>
+<span class="c1">#                 else:</span>
+<span class="c1">#                     angmom = max([ed.angularmomentum[ed.elementblock[spcs]] for spcs in b.species])+1</span>
+<span class="c1">#                 v = mvmult3(cell.latticevectors,b.position)</span>
+<span class="c1">#                 filestring += &quot;%3i%4i%18.12f%18.12f%18.12f  %18.12f%4i%5i &quot;%(iq,icl,v[0],v[1],v[2],rws,angmom,len(a[0].species))</span>
+<span class="c1">#                 for i in itoqs:</span>
+<span class="c1">#                     filestring += &quot;%3i&quot;%i</span>
+<span class="c1">#                 filestring += &quot;\n&quot;</span>
+<span class="c1">#         filestring += &quot;number of sites classes NCL\n&quot;</span>
+<span class="c1">#         filestring += &quot;%3i\n&quot;%len(len(atomic_types))</span>
+<span class="c1">#         filestring += &quot;ICL WYCK NQCL IQECL (equivalent sites)\n&quot;</span>
+<span class="c1">#         iq = 0</span>
+<span class="c1">#         icl = 0</span>
+<span class="c1">#         for a in cell.atomdata:</span>
+<span class="c1">#             icl += 1</span>
+<span class="c1">#             filestring += &quot;%3i   %1s%5i&quot;%(icl,&#39;-&#39;,len(a))</span>
+<span class="c1">#             for b in a:</span>
+<span class="c1">#                 iq += 1</span>
+<span class="c1">#                 filestring += &quot;%3i&quot;%iq</span>
+<span class="c1">#             filestring += &quot;\n&quot;</span>
+<span class="c1">#         filestring += &quot;number of atom types NT\n&quot;</span>
+<span class="c1">#         len(atomic_types) = 0</span>
+<span class="c1">#         for a in cell.atomdata:</span>
+<span class="c1">#             len(atomic_types) += len(a[0].species)</span>
+<span class="c1">#         filestring += &quot;%3i\n&quot;%len(atomic_types)</span>
+<span class="c1">#         filestring += &quot; IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)\n&quot;</span>
+<span class="c1">#         iq = 0</span>
+<span class="c1">#         it = 0</span>
+<span class="c1">#         for a in cell.atomdata:</span>
+<span class="c1">#             corr = 0</span>
+<span class="c1">#             for sp,conc in a[0].species.iteritems():</span>
+<span class="c1">#                 it += 1</span>
+<span class="c1">#                 filestring += &quot; %2i%4i  %8s%5i%6.3f&quot;%(it,ed.elementnr[sp],sp,len(a),conc)</span>
+<span class="c1">#                 iq -= corr*len(a)</span>
+<span class="c1">#                 for b in a:</span>
+<span class="c1">#                     iq += 1</span>
+<span class="c1">#                     filestring += &quot;%3i&quot;%iq</span>
+<span class="c1">#                 corr = 1</span>
+<span class="c1">#                 filestring += &quot;\n&quot;</span>
+<span class="c1"># =============================================================================</span>
+    <span class="k">return</span> <span class="n">filestring</span></div>
+
+<div class="viewcode-block" id="write_sysfile"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sysfile.write_sysfile.html#ase2sprkkr.sprkkr.sysfile.write_sysfile">[docs]</a><span class="k">def</span> <span class="nf">write_sysfile</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+       <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="p">)))</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

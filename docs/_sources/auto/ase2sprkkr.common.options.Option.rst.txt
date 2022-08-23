@@ -21,61 +21,16 @@ Option
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Option.__doc__
-        ~Option.name
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Option._definition
-        ~Option._container
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Option.__call__
-        ~Option.__init__
-        ~Option.__repr__
-        ~Option._find_value
-        ~Option.as_dict
-        ~Option.clear
-        ~Option.get
-        ~Option.get_path
-        ~Option.save_to_file
-        ~Option.set
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Option._get_path
-        ~Option._get_root_container
-        ~Option.to_dict
-
    
    

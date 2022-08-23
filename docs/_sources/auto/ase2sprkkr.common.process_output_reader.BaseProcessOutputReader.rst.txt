@@ -29,19 +29,6 @@ BaseProcessOutputReader
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseProcessOutputReader.read_error
-        ~BaseProcessOutputReader.read_from_file
-        ~BaseProcessOutputReader.read_output
-        ~BaseProcessOutputReader.result
-        ~BaseProcessOutputReader.run
-        ~BaseProcessOutputReader.run_subprocess
-
-   
    
 
    

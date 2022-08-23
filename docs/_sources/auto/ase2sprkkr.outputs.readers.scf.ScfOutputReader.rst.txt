@@ -21,14 +21,6 @@ ScfOutputReader
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfOutputReader.atoms_conf_type
-
-   
    
 
    
@@ -37,29 +29,8 @@ ScfOutputReader
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfOutputReader.read_output
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfOutputReader.__init__
-        ~ScfOutputReader.read_error
-        ~ScfOutputReader.read_from_file
-        ~ScfOutputReader.result
-        ~ScfOutputReader.run
-        ~ScfOutputReader.run_subprocess
-
    
    

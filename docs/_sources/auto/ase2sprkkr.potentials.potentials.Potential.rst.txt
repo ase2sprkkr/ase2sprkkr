@@ -21,81 +21,16 @@ Potential
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Potential.atoms
-        ~Potential.potential_definition
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Potential.name
-        ~Potential._members
-        ~Potential._interactive_members
-        ~Potential._definition
-        ~Potential._container
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Potential.__init__
-        ~Potential.from_atoms
-        ~Potential.from_file
-        ~Potential.make_complete
-        ~Potential.read_from_file
-        ~Potential.reset
-        ~Potential.save_to_file
-        ~Potential.set_from_atoms
-        ~Potential.update_atoms
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Potential.__contains__
-        ~Potential.__dir__
-        ~Potential.__getattr__
-        ~Potential.__getitem__
-        ~Potential.__iter__
-        ~Potential._add
-        ~Potential._find_value
-        ~Potential._get_member
-        ~Potential._get_path
-        ~Potential._get_root_container
-        ~Potential._interactive_member_name
-        ~Potential.add
-        ~Potential.as_dict
-        ~Potential.clear
-        ~Potential.find
-        ~Potential.get
-        ~Potential.members
-        ~Potential.remove_member
-        ~Potential.set
-        ~Potential.to_dict
-        ~Potential.to_string
-
    
    

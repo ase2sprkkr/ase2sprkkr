@@ -25,59 +25,12 @@ Sequence
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Sequence.default_value
-        ~Sequence.has_value
-        ~Sequence.name_in_grammar
-        ~Sequence.prefix
-        ~Sequence.postfix
-        ~Sequence.format
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Sequence.__init__
-        ~Sequence._grammar
-        ~Sequence._string
-        ~Sequence._validate
-        ~Sequence.convert
-        ~Sequence.enrich
-        ~Sequence.grammar_name
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Sequence.__str__
-        ~Sequence._valueError
-        ~Sequence.copy
-        ~Sequence.grammar
-        ~Sequence.missing_value
-        ~Sequence.parse
-        ~Sequence.parse_from_stream
-        ~Sequence.print
-        ~Sequence.read
-        ~Sequence.string
-        ~Sequence.transform_grammar
-        ~Sequence.validate
-        ~Sequence.write
-
    
    

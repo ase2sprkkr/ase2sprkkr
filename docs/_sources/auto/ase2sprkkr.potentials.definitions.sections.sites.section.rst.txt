@@ -25,74 +25,12 @@ section
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~section._init_args
-        ~section.custom_name_characters
-        ~section.custom_value_name
-        ~section.delimiter
-        ~section.do_not_skip_whitespaces_before_name
-        ~section.force_order
-        ~section.name_in_grammar
-        ~section.validate
-        ~section.value_name_format
-        ~section.values
-        ~section.name
-        ~section.alternative_names
-        ~section.is_optional
-        ~section.help
-        ~section.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~section.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~section.__contains__
-        ~section.__getitem__
-        ~section.__iter__
-        ~section.__setitem__
-        ~section._dict_from_named_values
-        ~section._first_section_is_fixed
-        ~section._grammar
-        ~section._tuple_with_my_name
-        ~section._values_grammar
-        ~section.all_member_names
-        ~section.copy
-        ~section.create_object
-        ~section.custom_class
-        ~section.custom_member_grammar
-        ~section.delimited_custom_value_grammar
-        ~section.depends_on
-        ~section.grammar
-        ~section.grammar_of_delimiter
-        ~section.members
-        ~section.names
-        ~section.parse
-        ~section.parse_file
-        ~section.parse_from_stream
-        ~section.parse_return
-        ~section.remove
-
    
    

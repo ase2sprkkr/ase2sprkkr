@@ -21,84 +21,16 @@ OutputSectionDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputSectionDefinition.custom_class
-        ~OutputSectionDefinition.delimiter
-        ~OutputSectionDefinition.force_order
-        ~OutputSectionDefinition.name_in_grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputSectionDefinition._init_args
-        ~OutputSectionDefinition.custom_name_characters
-        ~OutputSectionDefinition.custom_value_name
-        ~OutputSectionDefinition.do_not_skip_whitespaces_before_name
-        ~OutputSectionDefinition.validate
-        ~OutputSectionDefinition.value_name_format
-        ~OutputSectionDefinition.values
-        ~OutputSectionDefinition.name
-        ~OutputSectionDefinition.alternative_names
-        ~OutputSectionDefinition.is_optional
-        ~OutputSectionDefinition.help
-        ~OutputSectionDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputSectionDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputSectionDefinition.__contains__
-        ~OutputSectionDefinition.__getitem__
-        ~OutputSectionDefinition.__init__
-        ~OutputSectionDefinition.__iter__
-        ~OutputSectionDefinition.__setitem__
-        ~OutputSectionDefinition._dict_from_named_values
-        ~OutputSectionDefinition._first_section_is_fixed
-        ~OutputSectionDefinition._grammar
-        ~OutputSectionDefinition._tuple_with_my_name
-        ~OutputSectionDefinition._values_grammar
-        ~OutputSectionDefinition.all_member_names
-        ~OutputSectionDefinition.copy
-        ~OutputSectionDefinition.create_object
-        ~OutputSectionDefinition.custom_member_grammar
-        ~OutputSectionDefinition.delimited_custom_value_grammar
-        ~OutputSectionDefinition.grammar
-        ~OutputSectionDefinition.members
-        ~OutputSectionDefinition.names
-        ~OutputSectionDefinition.parse
-        ~OutputSectionDefinition.parse_file
-        ~OutputSectionDefinition.parse_from_stream
-        ~OutputSectionDefinition.parse_return
-        ~OutputSectionDefinition.remove
-
    
    

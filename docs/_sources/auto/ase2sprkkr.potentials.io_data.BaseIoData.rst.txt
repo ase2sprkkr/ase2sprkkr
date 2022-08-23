@@ -25,14 +25,6 @@ BaseIoData
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseIoData.__hash__
-
-   
    
 
    

@@ -25,67 +25,12 @@ LatticeSection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSection.definition
-        ~LatticeSection.name
-        ~LatticeSection._members
-        ~LatticeSection._interactive_members
-        ~LatticeSection._definition
-        ~LatticeSection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSection._set_from_atoms
-        ~LatticeSection._update_atoms
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSection.__contains__
-        ~LatticeSection.__dir__
-        ~LatticeSection.__getattr__
-        ~LatticeSection.__getitem__
-        ~LatticeSection.__init__
-        ~LatticeSection.__iter__
-        ~LatticeSection.__setattr__
-        ~LatticeSection._add
-        ~LatticeSection._depends_on
-        ~LatticeSection._find_value
-        ~LatticeSection._get_member
-        ~LatticeSection._get_path
-        ~LatticeSection._get_root_container
-        ~LatticeSection._interactive_member_name
-        ~LatticeSection.add
-        ~LatticeSection.as_dict
-        ~LatticeSection.clear
-        ~LatticeSection.get
-        ~LatticeSection.has_any_value
-        ~LatticeSection.members
-        ~LatticeSection.remove_member
-        ~LatticeSection.reset
-        ~LatticeSection.save_to_file
-        ~LatticeSection.set
-        ~LatticeSection.to_dict
-        ~LatticeSection.to_string
-
    
    

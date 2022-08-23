@@ -1,0 +1,45 @@
+test
+====
+
+Full name: **ase2sprkkr.input\_parameters.test**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.input_parameters.test
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.input_parameters.test.init_tests
+     ase2sprkkr.input_parameters.test.test_definitions
+     ase2sprkkr.input_parameters.test.test_input_parameters
+  
+  

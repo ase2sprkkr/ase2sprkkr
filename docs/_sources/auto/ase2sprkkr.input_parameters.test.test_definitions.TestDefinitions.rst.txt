@@ -1,0 +1,36 @@
+TestDefinitions
+===============
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.test.test_definitions
+
+.. autoclass:: TestDefinitions
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

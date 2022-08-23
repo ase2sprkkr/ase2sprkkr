@@ -1,0 +1,47 @@
+test
+====
+
+Full name: **ase2sprkkr.sprkkr.test**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.test
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.sprkkr.test.init_tests
+     ase2sprkkr.sprkkr.test.test_calculator
+     ase2sprkkr.sprkkr.test.test_sites
+     ase2sprkkr.sprkkr.test.test_sprkkr_atoms
+     ase2sprkkr.sprkkr.test.test_sysfile
+  
+  

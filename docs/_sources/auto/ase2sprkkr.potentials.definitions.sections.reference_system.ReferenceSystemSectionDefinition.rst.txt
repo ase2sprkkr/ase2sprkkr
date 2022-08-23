@@ -25,74 +25,12 @@ ReferenceSystemSectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSectionDefinition._init_args
-        ~ReferenceSystemSectionDefinition.custom_name_characters
-        ~ReferenceSystemSectionDefinition.custom_value_name
-        ~ReferenceSystemSectionDefinition.delimiter
-        ~ReferenceSystemSectionDefinition.do_not_skip_whitespaces_before_name
-        ~ReferenceSystemSectionDefinition.force_order
-        ~ReferenceSystemSectionDefinition.name_in_grammar
-        ~ReferenceSystemSectionDefinition.value_name_format
-        ~ReferenceSystemSectionDefinition.values
-        ~ReferenceSystemSectionDefinition.name
-        ~ReferenceSystemSectionDefinition.alternative_names
-        ~ReferenceSystemSectionDefinition.is_optional
-        ~ReferenceSystemSectionDefinition.help
-        ~ReferenceSystemSectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSectionDefinition.__init__
-        ~ReferenceSystemSectionDefinition.validate
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSectionDefinition.__contains__
-        ~ReferenceSystemSectionDefinition.__getitem__
-        ~ReferenceSystemSectionDefinition.__iter__
-        ~ReferenceSystemSectionDefinition.__setitem__
-        ~ReferenceSystemSectionDefinition._dict_from_named_values
-        ~ReferenceSystemSectionDefinition._first_section_is_fixed
-        ~ReferenceSystemSectionDefinition._grammar
-        ~ReferenceSystemSectionDefinition._tuple_with_my_name
-        ~ReferenceSystemSectionDefinition._values_grammar
-        ~ReferenceSystemSectionDefinition.all_member_names
-        ~ReferenceSystemSectionDefinition.copy
-        ~ReferenceSystemSectionDefinition.create_object
-        ~ReferenceSystemSectionDefinition.custom_class
-        ~ReferenceSystemSectionDefinition.custom_member_grammar
-        ~ReferenceSystemSectionDefinition.delimited_custom_value_grammar
-        ~ReferenceSystemSectionDefinition.depends_on
-        ~ReferenceSystemSectionDefinition.grammar
-        ~ReferenceSystemSectionDefinition.grammar_of_delimiter
-        ~ReferenceSystemSectionDefinition.members
-        ~ReferenceSystemSectionDefinition.names
-        ~ReferenceSystemSectionDefinition.parse
-        ~ReferenceSystemSectionDefinition.parse_file
-        ~ReferenceSystemSectionDefinition.parse_from_stream
-        ~ReferenceSystemSectionDefinition.parse_return
-        ~ReferenceSystemSectionDefinition.remove
-
    
    

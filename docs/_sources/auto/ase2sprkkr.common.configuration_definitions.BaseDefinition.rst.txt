@@ -21,21 +21,6 @@ BaseDefinition
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseDefinition.do_not_skip_whitespaces_before_name
-        ~BaseDefinition.name_in_grammar
-        ~BaseDefinition.result_class
-        ~BaseDefinition.name
-        ~BaseDefinition.alternative_names
-        ~BaseDefinition.is_optional
-        ~BaseDefinition.help
-        ~BaseDefinition.description
-
-   
    
 
    
@@ -43,17 +28,6 @@ BaseDefinition
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseDefinition.__init__
-        ~BaseDefinition._tuple_with_my_name
-        ~BaseDefinition.create_object
-        ~BaseDefinition.grammar
-
    
    
 

@@ -25,74 +25,12 @@ LatticeSectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSectionDefinition._init_args
-        ~LatticeSectionDefinition.custom_name_characters
-        ~LatticeSectionDefinition.custom_value_name
-        ~LatticeSectionDefinition.delimiter
-        ~LatticeSectionDefinition.do_not_skip_whitespaces_before_name
-        ~LatticeSectionDefinition.force_order
-        ~LatticeSectionDefinition.name_in_grammar
-        ~LatticeSectionDefinition.validate
-        ~LatticeSectionDefinition.value_name_format
-        ~LatticeSectionDefinition.values
-        ~LatticeSectionDefinition.name
-        ~LatticeSectionDefinition.alternative_names
-        ~LatticeSectionDefinition.is_optional
-        ~LatticeSectionDefinition.help
-        ~LatticeSectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSectionDefinition.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LatticeSectionDefinition.__contains__
-        ~LatticeSectionDefinition.__getitem__
-        ~LatticeSectionDefinition.__iter__
-        ~LatticeSectionDefinition.__setitem__
-        ~LatticeSectionDefinition._dict_from_named_values
-        ~LatticeSectionDefinition._first_section_is_fixed
-        ~LatticeSectionDefinition._grammar
-        ~LatticeSectionDefinition._tuple_with_my_name
-        ~LatticeSectionDefinition._values_grammar
-        ~LatticeSectionDefinition.all_member_names
-        ~LatticeSectionDefinition.copy
-        ~LatticeSectionDefinition.create_object
-        ~LatticeSectionDefinition.custom_class
-        ~LatticeSectionDefinition.custom_member_grammar
-        ~LatticeSectionDefinition.delimited_custom_value_grammar
-        ~LatticeSectionDefinition.depends_on
-        ~LatticeSectionDefinition.grammar
-        ~LatticeSectionDefinition.grammar_of_delimiter
-        ~LatticeSectionDefinition.members
-        ~LatticeSectionDefinition.names
-        ~LatticeSectionDefinition.parse
-        ~LatticeSectionDefinition.parse_file
-        ~LatticeSectionDefinition.parse_from_stream
-        ~LatticeSectionDefinition.parse_return
-        ~LatticeSectionDefinition.remove
-
    
    

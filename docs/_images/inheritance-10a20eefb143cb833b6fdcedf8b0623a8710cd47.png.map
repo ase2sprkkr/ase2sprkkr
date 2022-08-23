@@ -1,0 +1,5 @@
+<map id="inheritance2461dc3b9e" name="inheritance2461dc3b9e">
+<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.BaseString.html#ase2sprkkr.common.grammar_types.BaseString" target="_top" title="Base type for string grammar types" alt="" coords="225,5,424,31"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.common.grammar_types.QString" target="_top" title="Either a quoted string, or just a word (without whitespaces or special chars)" alt="" coords="453,5,631,31"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,196,31"/>
+</map>

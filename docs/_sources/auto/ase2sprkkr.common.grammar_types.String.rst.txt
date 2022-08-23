@@ -21,72 +21,16 @@ String
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~String.I
-        ~String.__slotnames__
-        ~String._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~String.default_value
-        ~String.has_value
-        ~String.name_in_grammar
-        ~String.prefix
-        ~String.postfix
-        ~String.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~String.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~String.__init__
-        ~String.__str__
-        ~String._string
-        ~String._validate
-        ~String._valueError
-        ~String.convert
-        ~String.copy
-        ~String.enrich
-        ~String.grammar
-        ~String.missing_value
-        ~String.parse
-        ~String.parse_from_stream
-        ~String.print
-        ~String.read
-        ~String.string
-        ~String.transform_grammar
-        ~String.validate
-        ~String.write
-
    
    

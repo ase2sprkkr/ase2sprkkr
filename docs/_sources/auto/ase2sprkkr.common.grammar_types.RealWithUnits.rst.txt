@@ -25,61 +25,12 @@ RealWithUnits
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RealWithUnits.default_value
-        ~RealWithUnits.grammar_cache
-        ~RealWithUnits.has_value
-        ~RealWithUnits.name_in_grammar
-        ~RealWithUnits.prefix
-        ~RealWithUnits.postfix
-        ~RealWithUnits.format
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RealWithUnits.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RealWithUnits.__str__
-        ~RealWithUnits._grammar
-        ~RealWithUnits._grammar_units
-        ~RealWithUnits._string
-        ~RealWithUnits._validate
-        ~RealWithUnits._valueError
-        ~RealWithUnits.convert
-        ~RealWithUnits.copy
-        ~RealWithUnits.enrich
-        ~RealWithUnits.grammar
-        ~RealWithUnits.grammar_name
-        ~RealWithUnits.missing_value
-        ~RealWithUnits.parse
-        ~RealWithUnits.parse_from_stream
-        ~RealWithUnits.print
-        ~RealWithUnits.read
-        ~RealWithUnits.string
-        ~RealWithUnits.transform_grammar
-        ~RealWithUnits.validate
-        ~RealWithUnits.write
-
    
    

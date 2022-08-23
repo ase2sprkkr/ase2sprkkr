@@ -21,80 +21,16 @@ ReferenceSystemSection
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSection._value_name
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSection.__annotations__
-        ~ReferenceSystemSection.definition
-        ~ReferenceSystemSection.name
-        ~ReferenceSystemSection._members
-        ~ReferenceSystemSection._interactive_members
-        ~ReferenceSystemSection._definition
-        ~ReferenceSystemSection._container
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSection._set_from_atoms
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystemSection.__contains__
-        ~ReferenceSystemSection.__dir__
-        ~ReferenceSystemSection.__getattr__
-        ~ReferenceSystemSection.__getitem__
-        ~ReferenceSystemSection.__init__
-        ~ReferenceSystemSection.__iter__
-        ~ReferenceSystemSection.__setattr__
-        ~ReferenceSystemSection._add
-        ~ReferenceSystemSection._depends_on
-        ~ReferenceSystemSection._find_value
-        ~ReferenceSystemSection._get_member
-        ~ReferenceSystemSection._get_path
-        ~ReferenceSystemSection._get_root_container
-        ~ReferenceSystemSection._interactive_member_name
-        ~ReferenceSystemSection._update_atoms
-        ~ReferenceSystemSection.add
-        ~ReferenceSystemSection.as_dict
-        ~ReferenceSystemSection.clear
-        ~ReferenceSystemSection.get
-        ~ReferenceSystemSection.has_any_value
-        ~ReferenceSystemSection.members
-        ~ReferenceSystemSection.remove_member
-        ~ReferenceSystemSection.reset
-        ~ReferenceSystemSection.save_to_file
-        ~ReferenceSystemSection.set
-        ~ReferenceSystemSection.to_dict
-        ~ReferenceSystemSection.to_string
-
    
    
