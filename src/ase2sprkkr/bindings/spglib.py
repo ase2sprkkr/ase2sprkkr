@@ -7,6 +7,7 @@ from typing import List, Dict
 import spglib
 from ase.spacegroup import Spacegroup
 from ..common.unique_values import UniqueValuesMapping
+from ..sprkkr import sprkkr_atoms
 
 def possibly_equivalent_sites(atoms: Atoms,
                        atomic_numbers : List=None,
@@ -103,8 +104,10 @@ def equivalent_sites_for_spacegroup(atoms, spacegroup, atomic_numbers=None, cons
     return mapping.merge(spacegroup.tag_sites(spositions))
 
 def spacegroup_dataset(atoms):
+    atoms = sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms(atoms)
     if not atoms.symmetry:
        return None
+
     sg = atoms.info.get('spacegroup', None)
     if sg:
        if not hasattr(sg, 'dataset'):
