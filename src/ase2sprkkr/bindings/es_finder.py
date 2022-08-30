@@ -12,9 +12,12 @@ try:
   from es_finder.core.symmetry import Symmetry
   from es_finder.adapter.pymatgen import StructureAdapter
   from pymatgen.io.ase import AseAtomsAdaptor
+  import_error = None
+  is_enabled = True
 except ImportError as error:
   import_error = error
   run_finder = None
+  is_enabled = False
 
 from ase import Atoms
 from ase.spacegroup import Spacegroup
