@@ -153,6 +153,8 @@ n_semicore: {self._n_semicore}""")
            return self._n_valence
         if self._n_core is not None:
            return self.n_electrons - self._n_core
+        if self.n_electrons == 0:
+           return 0
         return self.mendeleev.nvalence()
 
     @n_valence.setter
