@@ -118,6 +118,10 @@ def empty_spheres(atoms: Atoms,
   params = Parameters(**params)
 
   res = run_finder(params, structure, symmetry)
+  num = len(res.es_radii)
+  if num == 0:
+     return None
+
   empty = SPRKKRAtoms(symbols='X'*len(res.es_radii), symmetry = False)
   empty.set_positions(res.es_positions)
   for i,radius in zip(empty.sites, res.es_radii):
