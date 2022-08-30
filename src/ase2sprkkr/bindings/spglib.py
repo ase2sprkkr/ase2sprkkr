@@ -120,5 +120,6 @@ def spacegroup_dataset(atoms):
        atoms.compute_sites_symmetry()
        if not atoms.symmetry:
           return None
+       sg = atoms.info.get('spacegroup')
 
     return sg.dataset
