@@ -86,10 +86,8 @@ def empty_spheres(atoms: Atoms,
          from import_error
 
   params = locals()
-  del params['atoms']
-  del params['overlap']
-  del params['radii_ratios_map']
-
+  for i in ('atoms', 'overlap_matrix', 'radii_ratios_map', 'extend'):
+      del params[i]
 
   if radii_ratios_map is None:
     radii_ratios_map = {}
@@ -115,7 +113,7 @@ def empty_spheres(atoms: Atoms,
   )
 
   pmg_structure = AseAtomsAdaptor.get_structure(atoms)
-  structure = StructureAdapter(pmg_structure, radii_ratios_map, overlap)
+  structure = StructureAdapter(pmg_structure, radii_ratios_map, overlap_matrix)
 
   params = Parameters(**params)
 
