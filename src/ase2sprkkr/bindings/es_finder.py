@@ -20,8 +20,6 @@ except ImportError as error:
   is_enabled = False
 
 from ase import Atoms
-from ase.spacegroup import Spacegroup
-from .spglib import spacegroup_dataset
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 from typing import Dict
 
@@ -98,7 +96,8 @@ def empty_spheres(atoms: Atoms,
     if not s in radii_ratios_map:
       radii_ratios_map[s] = 1.0
 
-  sym_dataset = spacegroup_dataset(atoms)
+  atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+  sym_dataset = atoms.spacegroup_info.dataset
   if sym_dataset is None:
      sym_dataset = {
          'translations' : np.empty((0,3)),
