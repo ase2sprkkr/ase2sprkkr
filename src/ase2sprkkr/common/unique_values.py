@@ -57,8 +57,10 @@ class UniqueValuesMapping:
         the given number (typically with 1).
 
       ..doctest::
+        >>> UniqueValuesMapping([1,4,1]).indexes()
+        {1: [0, 2], 4: [1]}
         >>> UniqueValuesMapping([1,4,1]).indexes(start_from = 1)
-        {1: [1, 3], 2: [2]}
+        {1: [1, 3], 4: [2]}
       """
 
       indexes = {}
@@ -93,15 +95,15 @@ class UniqueValuesMapping:
 
       .. doctest::
         >>> UniqueValuesMapping.from_values([1.,4.,1.]).mapping
-        np.array([0,1,0])
+        array([1, 2, 1])
         >>> UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id
-        {1.:0, 4.:1}
+        {1.0: 1, 4.0: 2}
       """
       mapping, reverse = UniqueValuesMapping._create_mapping(values, length)
       return UniqueValuesMapping(mapping, reverse)
 
   @staticmethod
-  def _create_mapping(values, length=None):
+  def _create_mapping(values, length=None, start_from=1):
       mapping = np.empty(length or len(values), int)
       reverse = {}
 
@@ -109,7 +111,7 @@ class UniqueValuesMapping:
           if v in reverse:
              tag = reverse[v]
           else:
-             tag = len(reverse) + 1
+             tag = len(reverse) + start_from
              reverse[v] = tag
           mapping[i] = tag
       return mapping, reverse
@@ -164,24 +166,37 @@ class UniqueValuesMapping:
              mp[i]=j
       return True
 
-  def normalize(self, strict:bool=False):
+  def normalize(self, start_from=1, strict:bool=False):
       """ Replace the names of equivalent classes by the integers.
 
       Parameters
       ----------
       strict
-         If True, the resulting integer names will be from range 1..n, where n is the number
-         of equivalence classes.
+         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),
+         where n is the number of equivalence classes.
          If False and the names are already integers in a numpy array, do nothing.
 
-      >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
-      np.array([0,1,0])
-      >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[1]
-      (0,3)
+      start_from
+         Number the equivalent classes starting from.
+
+      Returns
+      -------
+      unique_values_mapping
+         Return self.
+
+      .. doctest::
+
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
+        array([1, 2, 1])
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]
+        2
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
+        array([0, 1, 0])
       """
       if not strict and isinstance(self.mapping, np.ndarray) and np.issubdtype(np.integer, self.mapping.dtype):
            return
-      mapping, reverse = self._create_mapping(self.mapping)
+      mapping, reverse = self._create_mapping(self.mapping, start_from=start_from)
       if self.value_to_class_id is not None:
          self.value_to_class_id = { k: reverse[v] for k,v in self.value_to_class_id.items() }
       self.mapping = mapping
+      return self
