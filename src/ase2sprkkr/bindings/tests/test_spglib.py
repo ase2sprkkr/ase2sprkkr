@@ -44,5 +44,18 @@ class TestSpgilib(TestCase):
       atoms = bulk('NaCl',  "rocksalt", a=5.64)
       sgi = SpacegroupInfo.from_atoms(atoms)
       ssert([0,1], sgi.equivalent_sites)
+      self.assertEqual(225, sgi.spacegroup.no)
+      self.assertEqual(225, sgi.number())
+      self.assertEqual(225, sgi.dataset['number'])
 
+      sgi = SpacegroupInfo(atoms, sgi.spacegroup)
+      self.assertEqual(225, sgi.spacegroup.no)
+      self.assertEqual(225, sgi.dataset['number'])
+      ssert([0,1], sgi.equivalent_sites)
 
+      atoms = SPRKKRAtoms('ION')
+      atoms.set_positions(np.arange(9).reshape((3,3)))
+      sgi = SpacegroupInfo.from_atoms(atoms)
+      self.assertIsNone(sgi.spacegroup)
+      self.assertIsNone(sgi.dataset)
+      ssert([0,1,2], sgi.equivalent_sites)

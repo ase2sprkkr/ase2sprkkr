@@ -16,8 +16,10 @@ import numpy as np
 class SpacegroupInfo:
     """ Class, that carry information about spacegroup and symmetry of a structure """
 
-    def __init__(self, atoms: sprkkr_atoms.SPRKKRAtoms, spacegroup: Optional[Spacegroup],
-                       dataset: Optional[Dict], equivalent_sites: Optional[UniqueValuesMapping]):
+    def __init__(self, atoms: sprkkr_atoms.SPRKKRAtoms,
+                       spacegroup: Optional[Spacegroup],
+                       dataset: Optional[Dict]=None,
+                       equivalent_sites: Optional[UniqueValuesMapping]=None):
         """
         Parameters
         ----------
@@ -37,10 +39,27 @@ class SpacegroupInfo:
           and ``spacegroup`` is not ``None``, the spacegroup is recomputed to obtain the equivalence
           equivalent_sites, if the equivalent_sites is requested.
         """
+
+        atoms = sprkkr_atoms.SPRKKRAtoms.promote_ase_atoms(atoms)
         self.atoms = atoms
         self.spacegroup = spacegroup
         self._dataset = dataset
         self._equivalent_sites = equivalent_sites
+
+    def __repr__(self):
+        return f"Spacegroup {self.spacegroup() or 0}"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def number(self) -> Optional[int]:
+        """
+        Returns
+        -------
+        spacegroup
+          Spacegroup number or None, if there is no spacegroup.
+        """
+        return self.spacegroup.no if self.spacegroup else None
 
     @property
     def dataset(self)->Optional[Dict]:
@@ -74,17 +93,19 @@ class SpacegroupInfo:
           without providing spglib dataset.
         """
 
-        if not atoms.symmetry:
+        if not self.atoms.symmetry:
            self.spacegroup = None
            self._dataset = None
            self._equivalent_sites = UniqueValuesMapping(np.arange(len(self.atoms)))
 
-        sg, dataset, equivalent_sites = compute_spacegroup_info(self.atoms, return_as_object=False)
-        if not allow_change and self.spacegroupsg.no != sg_new.no:
-             raise "The stored spacegroup do not correspond to the actual one"
+        sg, dataset, equivalent_sites = self.compute_spacegroup_info(self.atoms)
+        if not allow_change and (
+             bool(sg) != bool(self.spacegroup) or
+             (sg and self.spacegroup.no != sg.no)):
+                 raise "The stored spacegroup do not correspond to the actual one"
 
         self.spacegroup = sg
-        self._dataset = _dataset
+        self._dataset = dataset
         self._equivalent_sites = equivalent_sites
 
     @staticmethod
