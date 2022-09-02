@@ -166,3 +166,13 @@ class GrammarTest(TestCase):
     data2 = type.string(parsed)
     #propper column widths: numbering + 3 columns + newline, no newline on the end of the string
     self.assertEqual(len(data2),  2 * (4 + 3 * 21 +1) - 1)
+
+
+    type = gt.Range(float)
+    for val, res in [
+         ('{40,50}', np.array([40.,50.])),
+         ('40', 40.),
+         ('{40,50,60}', Error),
+         ('{40}', Error),
+         ]:
+         test(val, res)
