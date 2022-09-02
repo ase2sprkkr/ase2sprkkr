@@ -621,7 +621,7 @@ class Array(BaseType):
            raise ValueError("Value {} in the set is incorrect: {}".format(i, str(e))) from e
     if self.min_length is not None and len(value) < self.min_length:
        return f"The array should be at least {self.min_length} items long, it has {len(value)} items"
-    if self.max_length is not None and len(value) > self.min_length:
+    if self.max_length is not None and len(value) > self.max_length:
        return f"The array can not have more than {self.max_length} items, it has {len(value)} items"
     return True
 
