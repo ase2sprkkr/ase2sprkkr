@@ -21,67 +21,16 @@ OutputValueDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueDefinition.prefix
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueDefinition.do_not_skip_whitespaces_before_name
-        ~OutputValueDefinition.formated_name
-        ~OutputValueDefinition.name_in_grammar
-        ~OutputValueDefinition.value_name_format
-        ~OutputValueDefinition.name
-        ~OutputValueDefinition.alternative_names
-        ~OutputValueDefinition.is_optional
-        ~OutputValueDefinition.help
-        ~OutputValueDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueDefinition.__init__
-        ~OutputValueDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueDefinition.__repr__
-        ~OutputValueDefinition.__str__
-        ~OutputValueDefinition._grammar
-        ~OutputValueDefinition._tuple_with_my_name
-        ~OutputValueDefinition.copy
-        ~OutputValueDefinition.create_object
-        ~OutputValueDefinition.get_value
-        ~OutputValueDefinition.grammar
-        ~OutputValueDefinition.remove
-        ~OutputValueDefinition.validate
-        ~OutputValueDefinition.write
-
    
    

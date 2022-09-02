@@ -25,62 +25,12 @@ RootConfigurationContainer
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RootConfigurationContainer.name
-        ~RootConfigurationContainer._members
-        ~RootConfigurationContainer._interactive_members
-        ~RootConfigurationContainer._definition
-        ~RootConfigurationContainer._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RootConfigurationContainer.find
-        ~RootConfigurationContainer.read_from_file
-        ~RootConfigurationContainer.save_to_file
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~RootConfigurationContainer.__contains__
-        ~RootConfigurationContainer.__dir__
-        ~RootConfigurationContainer.__getattr__
-        ~RootConfigurationContainer.__getitem__
-        ~RootConfigurationContainer.__init__
-        ~RootConfigurationContainer.__iter__
-        ~RootConfigurationContainer._add
-        ~RootConfigurationContainer._find_value
-        ~RootConfigurationContainer._get_member
-        ~RootConfigurationContainer._get_path
-        ~RootConfigurationContainer._get_root_container
-        ~RootConfigurationContainer._interactive_member_name
-        ~RootConfigurationContainer.add
-        ~RootConfigurationContainer.as_dict
-        ~RootConfigurationContainer.clear
-        ~RootConfigurationContainer.get
-        ~RootConfigurationContainer.members
-        ~RootConfigurationContainer.remove_member
-        ~RootConfigurationContainer.set
-        ~RootConfigurationContainer.to_dict
-        ~RootConfigurationContainer.to_string
-
    
    

@@ -1,6 +1,0 @@
-<map id="inheritance9ab0aadb71" name="inheritance9ab0aadb71">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="35,5,317,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" target="_top" title="configuration_definitions.BaseValueDefinition" alt="" coords="17,60,335,85"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="33,115,319,140"/>
-<area shape="rect" id="node3" href="#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" target="_top" title="Value in an output file, that has no name, there is just the value" alt="" coords="5,169,347,195"/>
-</map>

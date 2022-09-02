@@ -29,29 +29,8 @@ DefaultOutputReader
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~DefaultOutputReader.read_output
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~DefaultOutputReader.__init__
-        ~DefaultOutputReader.read_error
-        ~DefaultOutputReader.read_from_file
-        ~DefaultOutputReader.result
-        ~DefaultOutputReader.run
-        ~DefaultOutputReader.run_subprocess
-
    
    

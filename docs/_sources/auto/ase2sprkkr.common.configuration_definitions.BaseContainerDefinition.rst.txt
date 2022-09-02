@@ -21,80 +21,16 @@ BaseContainerDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseContainerDefinition._init_args
-        ~BaseContainerDefinition.custom_name_characters
-        ~BaseContainerDefinition.force_order
-        ~BaseContainerDefinition.validate
-        ~BaseContainerDefinition.value_name_format
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseContainerDefinition.do_not_skip_whitespaces_before_name
-        ~BaseContainerDefinition.name_in_grammar
-        ~BaseContainerDefinition.result_class
-        ~BaseContainerDefinition.name
-        ~BaseContainerDefinition.alternative_names
-        ~BaseContainerDefinition.is_optional
-        ~BaseContainerDefinition.help
-        ~BaseContainerDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseContainerDefinition.__contains__
-        ~BaseContainerDefinition.__getitem__
-        ~BaseContainerDefinition.__init__
-        ~BaseContainerDefinition.__iter__
-        ~BaseContainerDefinition.__setitem__
-        ~BaseContainerDefinition._dict_from_named_values
-        ~BaseContainerDefinition._first_section_is_fixed
-        ~BaseContainerDefinition._grammar
-        ~BaseContainerDefinition._values_grammar
-        ~BaseContainerDefinition.all_member_names
-        ~BaseContainerDefinition.copy
-        ~BaseContainerDefinition.create_object
-        ~BaseContainerDefinition.custom_member_grammar
-        ~BaseContainerDefinition.delimited_custom_value_grammar
-        ~BaseContainerDefinition.members
-        ~BaseContainerDefinition.names
-        ~BaseContainerDefinition.parse
-        ~BaseContainerDefinition.parse_file
-        ~BaseContainerDefinition.parse_from_stream
-        ~BaseContainerDefinition.parse_return
-        ~BaseContainerDefinition.remove
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseContainerDefinition._tuple_with_my_name
-        ~BaseContainerDefinition.grammar
-
    
    

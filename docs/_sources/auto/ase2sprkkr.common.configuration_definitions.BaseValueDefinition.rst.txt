@@ -21,65 +21,16 @@ BaseValueDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseValueDefinition.formated_name
-        ~BaseValueDefinition.name_in_grammar
-        ~BaseValueDefinition.value_name_format
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseValueDefinition.do_not_skip_whitespaces_before_name
-        ~BaseValueDefinition.name
-        ~BaseValueDefinition.alternative_names
-        ~BaseValueDefinition.is_optional
-        ~BaseValueDefinition.help
-        ~BaseValueDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseValueDefinition.__init__
-        ~BaseValueDefinition.__repr__
-        ~BaseValueDefinition.__str__
-        ~BaseValueDefinition._grammar
-        ~BaseValueDefinition.copy
-        ~BaseValueDefinition.get_value
-        ~BaseValueDefinition.remove
-        ~BaseValueDefinition.validate
-        ~BaseValueDefinition.write
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseValueDefinition._tuple_with_my_name
-        ~BaseValueDefinition.create_object
-        ~BaseValueDefinition.grammar
-
    
    

@@ -1,0 +1,5 @@
+<map id="inheritance690916ae7f" name="inheritance690916ae7f">
+<area shape="rect" id="node1" href="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,55,200,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.task_result.OutputReader" target="_top" title="Process reader, that construct (a descendant of) InputParametersResult as a result." alt="" coords="229,55,341,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="57,5,149,31"/>
+</map>

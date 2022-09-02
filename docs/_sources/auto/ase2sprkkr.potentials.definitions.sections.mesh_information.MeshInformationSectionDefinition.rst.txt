@@ -25,74 +25,12 @@ MeshInformationSectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~MeshInformationSectionDefinition._init_args
-        ~MeshInformationSectionDefinition.custom_name_characters
-        ~MeshInformationSectionDefinition.custom_value_name
-        ~MeshInformationSectionDefinition.delimiter
-        ~MeshInformationSectionDefinition.do_not_skip_whitespaces_before_name
-        ~MeshInformationSectionDefinition.force_order
-        ~MeshInformationSectionDefinition.name_in_grammar
-        ~MeshInformationSectionDefinition.validate
-        ~MeshInformationSectionDefinition.value_name_format
-        ~MeshInformationSectionDefinition.values
-        ~MeshInformationSectionDefinition.name
-        ~MeshInformationSectionDefinition.alternative_names
-        ~MeshInformationSectionDefinition.is_optional
-        ~MeshInformationSectionDefinition.help
-        ~MeshInformationSectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~MeshInformationSectionDefinition.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~MeshInformationSectionDefinition.__contains__
-        ~MeshInformationSectionDefinition.__getitem__
-        ~MeshInformationSectionDefinition.__iter__
-        ~MeshInformationSectionDefinition.__setitem__
-        ~MeshInformationSectionDefinition._dict_from_named_values
-        ~MeshInformationSectionDefinition._first_section_is_fixed
-        ~MeshInformationSectionDefinition._grammar
-        ~MeshInformationSectionDefinition._tuple_with_my_name
-        ~MeshInformationSectionDefinition._values_grammar
-        ~MeshInformationSectionDefinition.all_member_names
-        ~MeshInformationSectionDefinition.copy
-        ~MeshInformationSectionDefinition.create_object
-        ~MeshInformationSectionDefinition.custom_class
-        ~MeshInformationSectionDefinition.custom_member_grammar
-        ~MeshInformationSectionDefinition.delimited_custom_value_grammar
-        ~MeshInformationSectionDefinition.depends_on
-        ~MeshInformationSectionDefinition.grammar
-        ~MeshInformationSectionDefinition.grammar_of_delimiter
-        ~MeshInformationSectionDefinition.members
-        ~MeshInformationSectionDefinition.names
-        ~MeshInformationSectionDefinition.parse
-        ~MeshInformationSectionDefinition.parse_file
-        ~MeshInformationSectionDefinition.parse_from_stream
-        ~MeshInformationSectionDefinition.parse_return
-        ~MeshInformationSectionDefinition.remove
-
    
    

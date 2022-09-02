@@ -25,67 +25,12 @@ SitesSection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSection.definition
-        ~SitesSection.name
-        ~SitesSection._members
-        ~SitesSection._interactive_members
-        ~SitesSection._definition
-        ~SitesSection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSection._set_from_atoms
-        ~SitesSection._update_atoms
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSection.__contains__
-        ~SitesSection.__dir__
-        ~SitesSection.__getattr__
-        ~SitesSection.__getitem__
-        ~SitesSection.__init__
-        ~SitesSection.__iter__
-        ~SitesSection.__setattr__
-        ~SitesSection._add
-        ~SitesSection._depends_on
-        ~SitesSection._find_value
-        ~SitesSection._get_member
-        ~SitesSection._get_path
-        ~SitesSection._get_root_container
-        ~SitesSection._interactive_member_name
-        ~SitesSection.add
-        ~SitesSection.as_dict
-        ~SitesSection.clear
-        ~SitesSection.get
-        ~SitesSection.has_any_value
-        ~SitesSection.members
-        ~SitesSection.remove_member
-        ~SitesSection.reset
-        ~SitesSection.save_to_file
-        ~SitesSection.set
-        ~SitesSection.to_dict
-        ~SitesSection.to_string
-
    
    

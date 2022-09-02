@@ -46,8 +46,10 @@ Full name: **ase2sprkkr.common**
      ase2sprkkr.common.grammar_types
      ase2sprkkr.common.init_tests
      ase2sprkkr.common.misc
+     ase2sprkkr.common.no_output
      ase2sprkkr.common.options
      ase2sprkkr.common.process_output_reader
+     ase2sprkkr.common.test
      ase2sprkkr.common.unique_values
   
   

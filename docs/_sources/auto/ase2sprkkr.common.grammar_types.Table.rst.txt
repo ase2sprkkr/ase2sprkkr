@@ -21,73 +21,16 @@ Table
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Table.name_in_grammar
-        ~Table.numpy_type
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Table.default_value
-        ~Table.has_value
-        ~Table.prefix
-        ~Table.postfix
-        ~Table.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Table.__init__
-        ~Table._grammar
-        ~Table._string
-        ~Table._validate
-        ~Table.convert
-        ~Table.grammar_name
-        ~Table.number_of_collumns
-        ~Table.zero_data
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Table.__str__
-        ~Table._valueError
-        ~Table.copy
-        ~Table.enrich
-        ~Table.grammar
-        ~Table.missing_value
-        ~Table.parse
-        ~Table.parse_from_stream
-        ~Table.print
-        ~Table.read
-        ~Table.string
-        ~Table.transform_grammar
-        ~Table.validate
-        ~Table.write
-
    
    

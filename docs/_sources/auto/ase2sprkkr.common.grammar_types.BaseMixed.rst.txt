@@ -21,73 +21,16 @@ BaseMixed
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseMixed.string_type
-        ~BaseMixed.type
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseMixed.default_value
-        ~BaseMixed.has_value
-        ~BaseMixed.name_in_grammar
-        ~BaseMixed.prefix
-        ~BaseMixed.postfix
-        ~BaseMixed.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseMixed._grammar
-        ~BaseMixed._validate
-        ~BaseMixed.get_type
-        ~BaseMixed.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseMixed.__init__
-        ~BaseMixed.__str__
-        ~BaseMixed._string
-        ~BaseMixed._valueError
-        ~BaseMixed.convert
-        ~BaseMixed.copy
-        ~BaseMixed.enrich
-        ~BaseMixed.grammar
-        ~BaseMixed.missing_value
-        ~BaseMixed.parse
-        ~BaseMixed.parse_from_stream
-        ~BaseMixed.print
-        ~BaseMixed.read
-        ~BaseMixed.string
-        ~BaseMixed.transform_grammar
-        ~BaseMixed.validate
-        ~BaseMixed.write
-
    
    

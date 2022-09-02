@@ -25,26 +25,9 @@ OrderedDict
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OrderedDict.__hash__
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OrderedDict.first_item
-        ~OrderedDict.index
-
    
    
 

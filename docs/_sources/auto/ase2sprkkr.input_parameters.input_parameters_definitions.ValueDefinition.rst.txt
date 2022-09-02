@@ -21,69 +21,16 @@ ValueDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ValueDefinition._init_args
-        ~ValueDefinition.name_value_delimiter
-        ~ValueDefinition.prefix
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ValueDefinition.do_not_skip_whitespaces_before_name
-        ~ValueDefinition.formated_name
-        ~ValueDefinition.name_in_grammar
-        ~ValueDefinition.value_name_format
-        ~ValueDefinition.name
-        ~ValueDefinition.alternative_names
-        ~ValueDefinition.is_optional
-        ~ValueDefinition.help
-        ~ValueDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ValueDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ValueDefinition.__init__
-        ~ValueDefinition.__repr__
-        ~ValueDefinition.__str__
-        ~ValueDefinition._grammar
-        ~ValueDefinition._tuple_with_my_name
-        ~ValueDefinition.copy
-        ~ValueDefinition.create_object
-        ~ValueDefinition.get_value
-        ~ValueDefinition.grammar
-        ~ValueDefinition.remove
-        ~ValueDefinition.validate
-        ~ValueDefinition.write
-
    
    

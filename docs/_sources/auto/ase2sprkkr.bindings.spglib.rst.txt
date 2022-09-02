@@ -1,0 +1,45 @@
+spglib
+======
+
+Full name: **ase2sprkkr.bindings.spglib**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.spglib
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      compute_spacegroup
+      equivalent_sites_for_spacegroup
+      possibly_equivalent_sites
+      spacegroup_dataset
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

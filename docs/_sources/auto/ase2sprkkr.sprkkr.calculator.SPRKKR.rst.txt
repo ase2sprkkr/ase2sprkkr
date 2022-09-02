@@ -21,105 +21,16 @@ SPRKKR
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SPRKKR.__abstractmethods__
-        ~SPRKKR._abc_impl
-        ~SPRKKR.atoms
-        ~SPRKKR.implemented_properties
-        ~SPRKKR.input_parameters
-        ~SPRKKR.potential
-        ~SPRKKR.potential_object
-        ~SPRKKR.executable_postfix
-        ~SPRKKR.mpi
-        ~SPRKKR.input_file
-        ~SPRKKR.output_file
-        ~SPRKKR.potential_file
-        ~SPRKKR.print_output
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SPRKKR.__annotations__
-        ~SPRKKR.__slots__
-        ~SPRKKR._deprecated
-        ~SPRKKR.default_parameters
-        ~SPRKKR.directory
-        ~SPRKKR.discard_results_on_any_change
-        ~SPRKKR.ignored_changes
-        ~SPRKKR.label
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SPRKKR.__init__
-        ~SPRKKR._advance_counter
-        ~SPRKKR._open_file
-        ~SPRKKR.calculate
-        ~SPRKKR.copy_with_potential
-        ~SPRKKR.get
-        ~SPRKKR.kkrch
-        ~SPRKKR.kkrgen
-        ~SPRKKR.kkrspec
-        ~SPRKKR.phagen
-        ~SPRKKR.run
-        ~SPRKKR.run_xband
-        ~SPRKKR.save_input
-        ~SPRKKR.scf
-        ~SPRKKR.set
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SPRKKR._deprecated_get_spin_polarized
-        ~SPRKKR.band_structure
-        ~SPRKKR.calculate_numerical_forces
-        ~SPRKKR.calculate_numerical_stress
-        ~SPRKKR.calculate_properties
-        ~SPRKKR.calculation_required
-        ~SPRKKR.check_state
-        ~SPRKKR.export_properties
-        ~SPRKKR.get_atoms
-        ~SPRKKR.get_charges
-        ~SPRKKR.get_default_parameters
-        ~SPRKKR.get_dipole_moment
-        ~SPRKKR.get_forces
-        ~SPRKKR.get_magnetic_moment
-        ~SPRKKR.get_magnetic_moments
-        ~SPRKKR.get_potential_energies
-        ~SPRKKR.get_potential_energy
-        ~SPRKKR.get_property
-        ~SPRKKR.get_stress
-        ~SPRKKR.get_stresses
-        ~SPRKKR.read
-        ~SPRKKR.read_atoms
-        ~SPRKKR.reset
-        ~SPRKKR.set_label
-        ~SPRKKR.todict
-
    
    

@@ -1,0 +1,50 @@
+test\_potential
+===============
+
+Full name: **ase2sprkkr.potentials.test.test\_potential**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.test.test_potential.TestPotential 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.test.test_potential
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TestPotential
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

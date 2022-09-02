@@ -21,32 +21,6 @@ TypesSection
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSection._value_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSection.__annotations__
-        ~TypesSection.definition
-        ~TypesSection.name
-        ~TypesSection._members
-        ~TypesSection._interactive_members
-        ~TypesSection._definition
-        ~TypesSection._container
-
-   
    
 
    
@@ -55,39 +29,8 @@ TypesSection
 
    
    
-   .. rubric:: Inherited methods
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSection.__contains__
-        ~TypesSection.__dir__
-        ~TypesSection.__getattr__
-        ~TypesSection.__getitem__
-        ~TypesSection.__init__
-        ~TypesSection.__iter__
-        ~TypesSection.__setattr__
-        ~TypesSection._add
-        ~TypesSection._depends_on
-        ~TypesSection._find_value
-        ~TypesSection._get_member
-        ~TypesSection._get_path
-        ~TypesSection._get_root_container
-        ~TypesSection._interactive_member_name
-        ~TypesSection._set_from_atoms
-        ~TypesSection._update_atoms
-        ~TypesSection.add
-        ~TypesSection.as_dict
-        ~TypesSection.clear
-        ~TypesSection.get
-        ~TypesSection.has_any_value
-        ~TypesSection.members
-        ~TypesSection.remove_member
-        ~TypesSection.reset
-        ~TypesSection.save_to_file
-        ~TypesSection.set
-        ~TypesSection.to_dict
-        ~TypesSection.to_string
-
+   
    
    

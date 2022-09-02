@@ -25,67 +25,12 @@ ASEArraySection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySection.definition
-        ~ASEArraySection.name
-        ~ASEArraySection._members
-        ~ASEArraySection._interactive_members
-        ~ASEArraySection._definition
-        ~ASEArraySection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySection._depends_on
-        ~ASEArraySection._set_from_atoms
-        ~ASEArraySection._update_atoms
-        ~ASEArraySection.has_any_value
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySection.__contains__
-        ~ASEArraySection.__dir__
-        ~ASEArraySection.__getattr__
-        ~ASEArraySection.__getitem__
-        ~ASEArraySection.__init__
-        ~ASEArraySection.__iter__
-        ~ASEArraySection.__setattr__
-        ~ASEArraySection._add
-        ~ASEArraySection._find_value
-        ~ASEArraySection._get_member
-        ~ASEArraySection._get_path
-        ~ASEArraySection._get_root_container
-        ~ASEArraySection._interactive_member_name
-        ~ASEArraySection.add
-        ~ASEArraySection.as_dict
-        ~ASEArraySection.clear
-        ~ASEArraySection.get
-        ~ASEArraySection.members
-        ~ASEArraySection.remove_member
-        ~ASEArraySection.reset
-        ~ASEArraySection.save_to_file
-        ~ASEArraySection.set
-        ~ASEArraySection.to_dict
-        ~ASEArraySection.to_string
-
    
    

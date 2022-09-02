@@ -21,14 +21,6 @@ TaskResult
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TaskResult.atoms
-
-   
    
 
    
@@ -36,14 +28,6 @@ TaskResult
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TaskResult.__init__
-
    
    
 

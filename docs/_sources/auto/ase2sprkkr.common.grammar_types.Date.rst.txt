@@ -21,71 +21,16 @@ Date
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Date.I
-        ~Date._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Date.default_value
-        ~Date.has_value
-        ~Date.name_in_grammar
-        ~Date.prefix
-        ~Date.postfix
-        ~Date.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Date._string
-        ~Date._validate
-        ~Date.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Date.__init__
-        ~Date.__str__
-        ~Date._valueError
-        ~Date.convert
-        ~Date.copy
-        ~Date.enrich
-        ~Date.grammar
-        ~Date.missing_value
-        ~Date.parse
-        ~Date.parse_from_stream
-        ~Date.print
-        ~Date.read
-        ~Date.string
-        ~Date.transform_grammar
-        ~Date.validate
-        ~Date.write
-
    
    

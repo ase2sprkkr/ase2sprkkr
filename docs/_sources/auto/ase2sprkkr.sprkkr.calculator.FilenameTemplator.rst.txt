@@ -21,14 +21,6 @@ FilenameTemplator
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~FilenameTemplator.replacements
-
-   
    
 
    
@@ -36,16 +28,6 @@ FilenameTemplator
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~FilenameTemplator.__call__
-        ~FilenameTemplator.__init__
-        ~FilenameTemplator._get
-
    
    
 

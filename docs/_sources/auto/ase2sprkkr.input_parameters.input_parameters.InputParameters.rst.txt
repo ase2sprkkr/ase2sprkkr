@@ -21,91 +21,16 @@ InputParameters
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParameters._default_mpi_runner
-        ~InputParameters.task_name
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParameters.name
-        ~InputParameters._members
-        ~InputParameters._interactive_members
-        ~InputParameters._definition
-        ~InputParameters._container
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParameters.__init__
-        ~InputParameters.__str__
-        ~InputParameters.calculate
-        ~InputParameters.create
-        ~InputParameters.create_input_parameters
-        ~InputParameters.default_mpi_runner
-        ~InputParameters.default_parameters
-        ~InputParameters.definitions
-        ~InputParameters.executable_params
-        ~InputParameters.from_file
-        ~InputParameters.is_it_a_input_parameters_name
-        ~InputParameters.is_mpi
-        ~InputParameters.mpi_runner
-        ~InputParameters.read_output_from_file
-        ~InputParameters.result_reader
-        ~InputParameters.run_process
-        ~InputParameters.set_option
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~InputParameters.__contains__
-        ~InputParameters.__dir__
-        ~InputParameters.__getattr__
-        ~InputParameters.__getitem__
-        ~InputParameters.__iter__
-        ~InputParameters._add
-        ~InputParameters._find_value
-        ~InputParameters._get_member
-        ~InputParameters._get_path
-        ~InputParameters._get_root_container
-        ~InputParameters._interactive_member_name
-        ~InputParameters.add
-        ~InputParameters.as_dict
-        ~InputParameters.clear
-        ~InputParameters.find
-        ~InputParameters.get
-        ~InputParameters.members
-        ~InputParameters.read_from_file
-        ~InputParameters.remove_member
-        ~InputParameters.save_to_file
-        ~InputParameters.set
-        ~InputParameters.to_dict
-        ~InputParameters.to_string
-
    
    

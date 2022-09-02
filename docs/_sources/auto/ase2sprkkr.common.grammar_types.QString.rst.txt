@@ -21,71 +21,16 @@ QString
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~QString.I
-        ~QString._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~QString.default_value
-        ~QString.has_value
-        ~QString.name_in_grammar
-        ~QString.prefix
-        ~QString.postfix
-        ~QString.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~QString.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~QString.__init__
-        ~QString.__str__
-        ~QString._string
-        ~QString._validate
-        ~QString._valueError
-        ~QString.convert
-        ~QString.copy
-        ~QString.enrich
-        ~QString.grammar
-        ~QString.missing_value
-        ~QString.parse
-        ~QString.parse_from_stream
-        ~QString.print
-        ~QString.read
-        ~QString.string
-        ~QString.transform_grammar
-        ~QString.validate
-        ~QString.write
-
    
    

@@ -29,15 +29,6 @@ class\_property
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~class_property.__get__
-        ~class_property.__init__
-
-   
    
 
    

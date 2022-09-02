@@ -1,0 +1,36 @@
+TestStructure
+=============
+
+
+.. currentmodule:: ase2sprkkr.potentials.test.test_structure
+
+.. autoclass:: TestStructure
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.test.test_structure.TestStructure
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

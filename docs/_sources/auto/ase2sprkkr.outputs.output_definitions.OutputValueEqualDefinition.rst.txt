@@ -21,68 +21,16 @@ OutputValueEqualDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueEqualDefinition.name_value_delimiter
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueEqualDefinition.do_not_skip_whitespaces_before_name
-        ~OutputValueEqualDefinition.formated_name
-        ~OutputValueEqualDefinition.name_in_grammar
-        ~OutputValueEqualDefinition.prefix
-        ~OutputValueEqualDefinition.value_name_format
-        ~OutputValueEqualDefinition.name
-        ~OutputValueEqualDefinition.alternative_names
-        ~OutputValueEqualDefinition.is_optional
-        ~OutputValueEqualDefinition.help
-        ~OutputValueEqualDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueEqualDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputValueEqualDefinition.__init__
-        ~OutputValueEqualDefinition.__repr__
-        ~OutputValueEqualDefinition.__str__
-        ~OutputValueEqualDefinition._grammar
-        ~OutputValueEqualDefinition._tuple_with_my_name
-        ~OutputValueEqualDefinition.copy
-        ~OutputValueEqualDefinition.create_object
-        ~OutputValueEqualDefinition.get_value
-        ~OutputValueEqualDefinition.grammar
-        ~OutputValueEqualDefinition.remove
-        ~OutputValueEqualDefinition.validate
-        ~OutputValueEqualDefinition.write
-
    
    

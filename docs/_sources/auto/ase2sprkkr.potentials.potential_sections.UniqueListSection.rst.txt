@@ -21,81 +21,16 @@ UniqueListSection
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~UniqueListSection.__annotations__
-        ~UniqueListSection._value_class
-        ~UniqueListSection._value_name
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~UniqueListSection.definition
-        ~UniqueListSection.name
-        ~UniqueListSection._members
-        ~UniqueListSection._interactive_members
-        ~UniqueListSection._definition
-        ~UniqueListSection._container
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~UniqueListSection._set_from_atoms
-        ~UniqueListSection._update_atoms
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~UniqueListSection.__contains__
-        ~UniqueListSection.__dir__
-        ~UniqueListSection.__getattr__
-        ~UniqueListSection.__getitem__
-        ~UniqueListSection.__init__
-        ~UniqueListSection.__iter__
-        ~UniqueListSection.__setattr__
-        ~UniqueListSection._add
-        ~UniqueListSection._depends_on
-        ~UniqueListSection._find_value
-        ~UniqueListSection._get_member
-        ~UniqueListSection._get_path
-        ~UniqueListSection._get_root_container
-        ~UniqueListSection._interactive_member_name
-        ~UniqueListSection.add
-        ~UniqueListSection.as_dict
-        ~UniqueListSection.clear
-        ~UniqueListSection.get
-        ~UniqueListSection.has_any_value
-        ~UniqueListSection.members
-        ~UniqueListSection.remove_member
-        ~UniqueListSection.reset
-        ~UniqueListSection.save_to_file
-        ~UniqueListSection.set
-        ~UniqueListSection.to_dict
-        ~UniqueListSection.to_string
-
    
    

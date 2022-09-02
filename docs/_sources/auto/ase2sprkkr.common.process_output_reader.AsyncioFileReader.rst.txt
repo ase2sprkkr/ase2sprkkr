@@ -29,21 +29,6 @@ AsyncioFileReader
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~AsyncioFileReader.__del__
-        ~AsyncioFileReader.__enter__
-        ~AsyncioFileReader.__exit__
-        ~AsyncioFileReader.__init__
-        ~AsyncioFileReader.close
-        ~AsyncioFileReader.readline
-        ~AsyncioFileReader.readuntil
-        ~AsyncioFileReader.separator_shifts
-
-   
    
 
    

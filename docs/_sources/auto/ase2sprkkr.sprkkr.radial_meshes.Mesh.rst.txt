@@ -29,14 +29,6 @@ Mesh
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Mesh.default
-
-   
    
 
    

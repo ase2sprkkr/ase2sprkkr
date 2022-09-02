@@ -21,72 +21,16 @@ Unsigned
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Unsigned.I
-        ~Unsigned.__slotnames__
-        ~Unsigned._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Unsigned.default_value
-        ~Unsigned.has_value
-        ~Unsigned.name_in_grammar
-        ~Unsigned.prefix
-        ~Unsigned.postfix
-        ~Unsigned.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Unsigned._validate
-        ~Unsigned.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Unsigned.__init__
-        ~Unsigned.__str__
-        ~Unsigned._string
-        ~Unsigned._valueError
-        ~Unsigned.convert
-        ~Unsigned.copy
-        ~Unsigned.enrich
-        ~Unsigned.grammar
-        ~Unsigned.missing_value
-        ~Unsigned.parse
-        ~Unsigned.parse_from_stream
-        ~Unsigned.print
-        ~Unsigned.read
-        ~Unsigned.string
-        ~Unsigned.transform_grammar
-        ~Unsigned.validate
-        ~Unsigned.write
-
    
    

@@ -25,74 +25,12 @@ OccupationSectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSectionDefinition._init_args
-        ~OccupationSectionDefinition.custom_name_characters
-        ~OccupationSectionDefinition.custom_value_name
-        ~OccupationSectionDefinition.delimiter
-        ~OccupationSectionDefinition.do_not_skip_whitespaces_before_name
-        ~OccupationSectionDefinition.force_order
-        ~OccupationSectionDefinition.name_in_grammar
-        ~OccupationSectionDefinition.validate
-        ~OccupationSectionDefinition.value_name_format
-        ~OccupationSectionDefinition.values
-        ~OccupationSectionDefinition.name
-        ~OccupationSectionDefinition.alternative_names
-        ~OccupationSectionDefinition.is_optional
-        ~OccupationSectionDefinition.help
-        ~OccupationSectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSectionDefinition.__init__
-        ~OccupationSectionDefinition.depends_on
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSectionDefinition.__contains__
-        ~OccupationSectionDefinition.__getitem__
-        ~OccupationSectionDefinition.__iter__
-        ~OccupationSectionDefinition.__setitem__
-        ~OccupationSectionDefinition._dict_from_named_values
-        ~OccupationSectionDefinition._first_section_is_fixed
-        ~OccupationSectionDefinition._grammar
-        ~OccupationSectionDefinition._tuple_with_my_name
-        ~OccupationSectionDefinition._values_grammar
-        ~OccupationSectionDefinition.all_member_names
-        ~OccupationSectionDefinition.copy
-        ~OccupationSectionDefinition.create_object
-        ~OccupationSectionDefinition.custom_class
-        ~OccupationSectionDefinition.custom_member_grammar
-        ~OccupationSectionDefinition.delimited_custom_value_grammar
-        ~OccupationSectionDefinition.grammar
-        ~OccupationSectionDefinition.grammar_of_delimiter
-        ~OccupationSectionDefinition.members
-        ~OccupationSectionDefinition.names
-        ~OccupationSectionDefinition.parse
-        ~OccupationSectionDefinition.parse_file
-        ~OccupationSectionDefinition.parse_from_stream
-        ~OccupationSectionDefinition.parse_return
-        ~OccupationSectionDefinition.remove
-
    
    

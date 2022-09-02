@@ -1,6 +1,0 @@
-<map id="inheritancef06c53c2da" name="inheritancef06c53c2da">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="36,5,177,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="21,60,193,85"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="5,115,208,140"/>
-<area shape="rect" id="node3" href="ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" target="_top" title="It holds data form SPR&#45;KKR potential file" alt="" coords="67,169,147,195"/>
-</map>

@@ -1,0 +1,50 @@
+lattice\_data
+=============
+
+Full name: **ase2sprkkr.physics.lattice\_data**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.physics.lattice_data.LatticeData 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.physics.lattice_data
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      LatticeData
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -25,62 +25,12 @@ BaseSection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSection.name
-        ~BaseSection._members
-        ~BaseSection._interactive_members
-        ~BaseSection._definition
-        ~BaseSection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSection.__setattr__
-        ~BaseSection.has_any_value
-        ~BaseSection.save_to_file
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSection.__contains__
-        ~BaseSection.__dir__
-        ~BaseSection.__getattr__
-        ~BaseSection.__getitem__
-        ~BaseSection.__init__
-        ~BaseSection.__iter__
-        ~BaseSection._add
-        ~BaseSection._find_value
-        ~BaseSection._get_member
-        ~BaseSection._get_path
-        ~BaseSection._get_root_container
-        ~BaseSection._interactive_member_name
-        ~BaseSection.add
-        ~BaseSection.as_dict
-        ~BaseSection.clear
-        ~BaseSection.get
-        ~BaseSection.members
-        ~BaseSection.remove_member
-        ~BaseSection.set
-        ~BaseSection.to_dict
-        ~BaseSection.to_string
-
    
    

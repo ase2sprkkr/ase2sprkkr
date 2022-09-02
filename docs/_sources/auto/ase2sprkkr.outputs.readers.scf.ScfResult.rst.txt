@@ -21,55 +21,16 @@ ScfResult
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfResult.calculator
-        ~ScfResult.converged
-        ~ScfResult.energy
-        ~ScfResult.iterations
-        ~ScfResult.last_iteration
-        ~ScfResult.potential
-        ~ScfResult.potential_filename
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfResult.atoms
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfResult.iteration_values
-        ~ScfResult.plot
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ScfResult.__init__
-
    
    

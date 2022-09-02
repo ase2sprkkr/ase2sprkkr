@@ -21,72 +21,16 @@ Real
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Real.I
-        ~Real.__slotnames__
-        ~Real._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Real.default_value
-        ~Real.has_value
-        ~Real.name_in_grammar
-        ~Real.prefix
-        ~Real.postfix
-        ~Real.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Real._validate
-        ~Real.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Real.__init__
-        ~Real.__str__
-        ~Real._string
-        ~Real._valueError
-        ~Real.convert
-        ~Real.copy
-        ~Real.enrich
-        ~Real.grammar
-        ~Real.missing_value
-        ~Real.parse
-        ~Real.parse_from_stream
-        ~Real.print
-        ~Real.read
-        ~Real.string
-        ~Real.transform_grammar
-        ~Real.validate
-        ~Real.write
-
    
    

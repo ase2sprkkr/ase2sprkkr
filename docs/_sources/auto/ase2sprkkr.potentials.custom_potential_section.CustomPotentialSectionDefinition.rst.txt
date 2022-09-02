@@ -21,36 +21,6 @@ CustomPotentialSectionDefinition
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSectionDefinition.mandatory
-        ~CustomPotentialSectionDefinition.name_value_delimiter
-        ~CustomPotentialSectionDefinition.prefix
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSectionDefinition.do_not_skip_whitespaces_before_name
-        ~CustomPotentialSectionDefinition.formated_name
-        ~CustomPotentialSectionDefinition.name_in_grammar
-        ~CustomPotentialSectionDefinition.value_name_format
-        ~CustomPotentialSectionDefinition.name
-        ~CustomPotentialSectionDefinition.alternative_names
-        ~CustomPotentialSectionDefinition.is_optional
-        ~CustomPotentialSectionDefinition.help
-        ~CustomPotentialSectionDefinition.description
-
-   
    
 
    
@@ -59,23 +29,8 @@ CustomPotentialSectionDefinition
 
    
    
-   .. rubric:: Inherited methods
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSectionDefinition.__init__
-        ~CustomPotentialSectionDefinition.__repr__
-        ~CustomPotentialSectionDefinition.__str__
-        ~CustomPotentialSectionDefinition._grammar
-        ~CustomPotentialSectionDefinition._tuple_with_my_name
-        ~CustomPotentialSectionDefinition.copy
-        ~CustomPotentialSectionDefinition.create_object
-        ~CustomPotentialSectionDefinition.get_value
-        ~CustomPotentialSectionDefinition.grammar
-        ~CustomPotentialSectionDefinition.remove
-        ~CustomPotentialSectionDefinition.validate
-        ~CustomPotentialSectionDefinition.write
-
+   
    
    

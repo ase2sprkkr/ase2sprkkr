@@ -21,71 +21,16 @@ LineString
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LineString.I
-        ~LineString._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LineString.default_value
-        ~LineString.has_value
-        ~LineString.name_in_grammar
-        ~LineString.prefix
-        ~LineString.postfix
-        ~LineString.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LineString.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~LineString.__init__
-        ~LineString.__str__
-        ~LineString._string
-        ~LineString._validate
-        ~LineString._valueError
-        ~LineString.convert
-        ~LineString.copy
-        ~LineString.enrich
-        ~LineString.grammar
-        ~LineString.missing_value
-        ~LineString.parse
-        ~LineString.parse_from_stream
-        ~LineString.print
-        ~LineString.read
-        ~LineString.string
-        ~LineString.transform_grammar
-        ~LineString.validate
-        ~LineString.write
-
    
    

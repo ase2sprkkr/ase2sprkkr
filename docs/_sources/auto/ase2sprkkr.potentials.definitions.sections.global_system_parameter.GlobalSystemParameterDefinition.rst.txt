@@ -25,74 +25,12 @@ GlobalSystemParameterDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameterDefinition._init_args
-        ~GlobalSystemParameterDefinition.custom_name_characters
-        ~GlobalSystemParameterDefinition.custom_value_name
-        ~GlobalSystemParameterDefinition.delimiter
-        ~GlobalSystemParameterDefinition.do_not_skip_whitespaces_before_name
-        ~GlobalSystemParameterDefinition.force_order
-        ~GlobalSystemParameterDefinition.name_in_grammar
-        ~GlobalSystemParameterDefinition.validate
-        ~GlobalSystemParameterDefinition.value_name_format
-        ~GlobalSystemParameterDefinition.values
-        ~GlobalSystemParameterDefinition.name
-        ~GlobalSystemParameterDefinition.alternative_names
-        ~GlobalSystemParameterDefinition.is_optional
-        ~GlobalSystemParameterDefinition.help
-        ~GlobalSystemParameterDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameterDefinition.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~GlobalSystemParameterDefinition.__contains__
-        ~GlobalSystemParameterDefinition.__getitem__
-        ~GlobalSystemParameterDefinition.__iter__
-        ~GlobalSystemParameterDefinition.__setitem__
-        ~GlobalSystemParameterDefinition._dict_from_named_values
-        ~GlobalSystemParameterDefinition._first_section_is_fixed
-        ~GlobalSystemParameterDefinition._grammar
-        ~GlobalSystemParameterDefinition._tuple_with_my_name
-        ~GlobalSystemParameterDefinition._values_grammar
-        ~GlobalSystemParameterDefinition.all_member_names
-        ~GlobalSystemParameterDefinition.copy
-        ~GlobalSystemParameterDefinition.create_object
-        ~GlobalSystemParameterDefinition.custom_class
-        ~GlobalSystemParameterDefinition.custom_member_grammar
-        ~GlobalSystemParameterDefinition.delimited_custom_value_grammar
-        ~GlobalSystemParameterDefinition.depends_on
-        ~GlobalSystemParameterDefinition.grammar
-        ~GlobalSystemParameterDefinition.grammar_of_delimiter
-        ~GlobalSystemParameterDefinition.members
-        ~GlobalSystemParameterDefinition.names
-        ~GlobalSystemParameterDefinition.parse
-        ~GlobalSystemParameterDefinition.parse_file
-        ~GlobalSystemParameterDefinition.parse_from_stream
-        ~GlobalSystemParameterDefinition.parse_return
-        ~GlobalSystemParameterDefinition.remove
-
    
    

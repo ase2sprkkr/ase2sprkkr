@@ -21,30 +21,6 @@ Section
 
    
    
-   .. rubric:: Attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Section.definition
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Section.name
-        ~Section._members
-        ~Section._interactive_members
-        ~Section._definition
-        ~Section._container
-
-   
    
 
    
@@ -53,35 +29,8 @@ Section
 
    
    
-   .. rubric:: Inherited methods
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Section.__contains__
-        ~Section.__dir__
-        ~Section.__getattr__
-        ~Section.__getitem__
-        ~Section.__init__
-        ~Section.__iter__
-        ~Section.__setattr__
-        ~Section._add
-        ~Section._find_value
-        ~Section._get_member
-        ~Section._get_path
-        ~Section._get_root_container
-        ~Section._interactive_member_name
-        ~Section.add
-        ~Section.as_dict
-        ~Section.clear
-        ~Section.get
-        ~Section.has_any_value
-        ~Section.members
-        ~Section.remove_member
-        ~Section.save_to_file
-        ~Section.set
-        ~Section.to_dict
-        ~Section.to_string
-
+   
    
    

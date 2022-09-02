@@ -1,6 +1,0 @@
-<map id="inheritancee3b13e4d8b" name="inheritancee3b13e4d8b">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" target="_top" title="Base class for a definition of the format of a container" alt="" coords="5,60,349,85"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="13,115,342,140"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="37,5,318,31"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="14,169,341,195"/>
-</map>

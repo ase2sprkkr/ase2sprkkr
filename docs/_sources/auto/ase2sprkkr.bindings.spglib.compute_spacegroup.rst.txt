@@ -1,0 +1,8 @@
+compute\_spacegroup
+===================
+
+Full name: **ase2sprkkr.bindings.spglib.compute\_spacegroup**
+
+.. currentmodule:: ase2sprkkr.bindings.spglib
+
+.. autofunction:: compute_spacegroup

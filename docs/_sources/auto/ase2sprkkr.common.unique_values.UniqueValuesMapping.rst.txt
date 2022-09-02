@@ -29,19 +29,6 @@ UniqueValuesMapping
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~UniqueValuesMapping.__init__
-        ~UniqueValuesMapping.__len__
-        ~UniqueValuesMapping.from_values
-        ~UniqueValuesMapping.iter_unique
-        ~UniqueValuesMapping.len_of_unique
-        ~UniqueValuesMapping.merge
-
-   
    
 
    

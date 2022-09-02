@@ -1,0 +1,8 @@
+spacegroup\_dataset
+===================
+
+Full name: **ase2sprkkr.bindings.spglib.spacegroup\_dataset**
+
+.. currentmodule:: ase2sprkkr.bindings.spglib
+
+.. autofunction:: spacegroup_dataset

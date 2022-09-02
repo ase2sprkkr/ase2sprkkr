@@ -21,119 +21,16 @@ CustomSectionToken
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomSectionToken.name
-        ~CustomSectionToken.pattern
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomSectionToken.DEFAULT_WHITE_CHARS
-        ~CustomSectionToken._packratEnabled
-        ~CustomSectionToken.packrat_cache
-        ~CustomSectionToken.packrat_cache_lock
-        ~CustomSectionToken.packrat_cache_stats
-        ~CustomSectionToken.verbose_stacktrace
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomSectionToken.parseImpl
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomSectionToken.__add__
-        ~CustomSectionToken.__and__
-        ~CustomSectionToken.__call__
-        ~CustomSectionToken.__eq__
-        ~CustomSectionToken.__getitem__
-        ~CustomSectionToken.__hash__
-        ~CustomSectionToken.__init__
-        ~CustomSectionToken.__invert__
-        ~CustomSectionToken.__iter__
-        ~CustomSectionToken.__mul__
-        ~CustomSectionToken.__ne__
-        ~CustomSectionToken.__or__
-        ~CustomSectionToken.__radd__
-        ~CustomSectionToken.__rand__
-        ~CustomSectionToken.__repr__
-        ~CustomSectionToken.__req__
-        ~CustomSectionToken.__rmul__
-        ~CustomSectionToken.__rne__
-        ~CustomSectionToken.__ror__
-        ~CustomSectionToken.__rsub__
-        ~CustomSectionToken.__rxor__
-        ~CustomSectionToken.__str__
-        ~CustomSectionToken.__sub__
-        ~CustomSectionToken.__xor__
-        ~CustomSectionToken._parse
-        ~CustomSectionToken._parseCache
-        ~CustomSectionToken._parseNoCache
-        ~CustomSectionToken._setResultsName
-        ~CustomSectionToken._skipIgnorables
-        ~CustomSectionToken._trim_traceback
-        ~CustomSectionToken.addCondition
-        ~CustomSectionToken.addConditionEx
-        ~CustomSectionToken.addParseAction
-        ~CustomSectionToken.addParseActionEx
-        ~CustomSectionToken.canParseNext
-        ~CustomSectionToken.checkRecursion
-        ~CustomSectionToken.copy
-        ~CustomSectionToken.enablePackrat
-        ~CustomSectionToken.ignore
-        ~CustomSectionToken.inlineLiteralsUsing
-        ~CustomSectionToken.leaveWhitespace
-        ~CustomSectionToken.matches
-        ~CustomSectionToken.parseFile
-        ~CustomSectionToken.parseString
-        ~CustomSectionToken.parseWithTabs
-        ~CustomSectionToken.postParse
-        ~CustomSectionToken.preParse
-        ~CustomSectionToken.resetCache
-        ~CustomSectionToken.runTests
-        ~CustomSectionToken.scanString
-        ~CustomSectionToken.searchString
-        ~CustomSectionToken.setBreak
-        ~CustomSectionToken.setDebug
-        ~CustomSectionToken.setDebugActions
-        ~CustomSectionToken.setDefaultWhitespaceChars
-        ~CustomSectionToken.setFailAction
-        ~CustomSectionToken.setName
-        ~CustomSectionToken.setParseAction
-        ~CustomSectionToken.setResultsName
-        ~CustomSectionToken.setWhitespaceChars
-        ~CustomSectionToken.split
-        ~CustomSectionToken.streamline
-        ~CustomSectionToken.suppress
-        ~CustomSectionToken.transformString
-        ~CustomSectionToken.tryParse
-        ~CustomSectionToken.validate
-
    
    

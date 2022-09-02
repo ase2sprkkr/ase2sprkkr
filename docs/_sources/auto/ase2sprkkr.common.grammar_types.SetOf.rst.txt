@@ -21,72 +21,16 @@ SetOf
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SetOf.delimiter
-        ~SetOf.delimiter_str
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SetOf.__slotnames__
-        ~SetOf.default_value
-        ~SetOf.has_value
-        ~SetOf.name_in_grammar
-        ~SetOf.prefix
-        ~SetOf.postfix
-        ~SetOf.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SetOf.__init__
-        ~SetOf.__str__
-        ~SetOf.transform_grammar
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SetOf._string
-        ~SetOf._validate
-        ~SetOf._valueError
-        ~SetOf.convert
-        ~SetOf.copy
-        ~SetOf.enrich
-        ~SetOf.grammar
-        ~SetOf.grammar_name
-        ~SetOf.missing_value
-        ~SetOf.parse
-        ~SetOf.parse_from_stream
-        ~SetOf.print
-        ~SetOf.read
-        ~SetOf.string
-        ~SetOf.validate
-        ~SetOf.write
-
    
    

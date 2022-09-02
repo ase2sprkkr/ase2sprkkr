@@ -25,58 +25,12 @@ Keyword
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Keyword.default_value
-        ~Keyword.has_value
-        ~Keyword.name_in_grammar
-        ~Keyword.prefix
-        ~Keyword.postfix
-        ~Keyword.format
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Keyword.__init__
-        ~Keyword.__str__
-        ~Keyword._validate
-        ~Keyword.convert
-        ~Keyword.grammar_name
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Keyword._string
-        ~Keyword._valueError
-        ~Keyword.copy
-        ~Keyword.enrich
-        ~Keyword.grammar
-        ~Keyword.missing_value
-        ~Keyword.parse
-        ~Keyword.parse_from_stream
-        ~Keyword.print
-        ~Keyword.read
-        ~Keyword.string
-        ~Keyword.transform_grammar
-        ~Keyword.validate
-        ~Keyword.write
-
    
    

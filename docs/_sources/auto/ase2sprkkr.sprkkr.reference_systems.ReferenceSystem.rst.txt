@@ -29,17 +29,6 @@ ReferenceSystem
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ReferenceSystem.__init__
-        ~ReferenceSystem.copy
-        ~ReferenceSystem.default
-        ~ReferenceSystem.to_tuple
-
-   
    
 
    

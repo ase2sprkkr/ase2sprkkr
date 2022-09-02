@@ -21,72 +21,16 @@ Integer
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Integer.I
-        ~Integer.__slotnames__
-        ~Integer._grammar
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Integer.default_value
-        ~Integer.has_value
-        ~Integer.name_in_grammar
-        ~Integer.prefix
-        ~Integer.postfix
-        ~Integer.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Integer._validate
-        ~Integer.grammar_name
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Integer.__init__
-        ~Integer.__str__
-        ~Integer._string
-        ~Integer._valueError
-        ~Integer.convert
-        ~Integer.copy
-        ~Integer.enrich
-        ~Integer.grammar
-        ~Integer.missing_value
-        ~Integer.parse
-        ~Integer.parse_from_stream
-        ~Integer.print
-        ~Integer.read
-        ~Integer.string
-        ~Integer.transform_grammar
-        ~Integer.validate
-        ~Integer.write
-
    
    

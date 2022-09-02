@@ -21,86 +21,16 @@ PotentialDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialDefinition.custom_name_characters
-        ~PotentialDefinition.delimiter
-        ~PotentialDefinition.force_order
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialDefinition._init_args
-        ~PotentialDefinition.custom_value_name
-        ~PotentialDefinition.do_not_skip_whitespaces_before_name
-        ~PotentialDefinition.name_in_grammar
-        ~PotentialDefinition.sections
-        ~PotentialDefinition.validate
-        ~PotentialDefinition.value_name_format
-        ~PotentialDefinition.name
-        ~PotentialDefinition.alternative_names
-        ~PotentialDefinition.is_optional
-        ~PotentialDefinition.help
-        ~PotentialDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialDefinition.custom_value_grammar
-        ~PotentialDefinition.grammar_of_delimiter
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialDefinition.__contains__
-        ~PotentialDefinition.__getitem__
-        ~PotentialDefinition.__init__
-        ~PotentialDefinition.__iter__
-        ~PotentialDefinition.__setitem__
-        ~PotentialDefinition._dict_from_named_values
-        ~PotentialDefinition._first_section_is_fixed
-        ~PotentialDefinition._grammar
-        ~PotentialDefinition._tuple_with_my_name
-        ~PotentialDefinition._values_grammar
-        ~PotentialDefinition.all_member_names
-        ~PotentialDefinition.copy
-        ~PotentialDefinition.create_object
-        ~PotentialDefinition.custom_member_grammar
-        ~PotentialDefinition.delimited_custom_value_grammar
-        ~PotentialDefinition.from_dict
-        ~PotentialDefinition.grammar
-        ~PotentialDefinition.members
-        ~PotentialDefinition.names
-        ~PotentialDefinition.parse
-        ~PotentialDefinition.parse_file
-        ~PotentialDefinition.parse_from_stream
-        ~PotentialDefinition.parse_return
-        ~PotentialDefinition.read_from_file
-        ~PotentialDefinition.remove
-
    
    

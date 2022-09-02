@@ -21,75 +21,16 @@ Mixed
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Mixed.I
-        ~Mixed.string_type
-        ~Mixed.types
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Mixed.default_value
-        ~Mixed.has_value
-        ~Mixed.name_in_grammar
-        ~Mixed.type
-        ~Mixed.prefix
-        ~Mixed.postfix
-        ~Mixed.format
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Mixed.missing_value
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~Mixed.__init__
-        ~Mixed.__str__
-        ~Mixed._grammar
-        ~Mixed._string
-        ~Mixed._validate
-        ~Mixed._valueError
-        ~Mixed.convert
-        ~Mixed.copy
-        ~Mixed.enrich
-        ~Mixed.get_type
-        ~Mixed.grammar
-        ~Mixed.grammar_name
-        ~Mixed.parse
-        ~Mixed.parse_from_stream
-        ~Mixed.print
-        ~Mixed.read
-        ~Mixed.string
-        ~Mixed.transform_grammar
-        ~Mixed.validate
-        ~Mixed.write
-
    
    

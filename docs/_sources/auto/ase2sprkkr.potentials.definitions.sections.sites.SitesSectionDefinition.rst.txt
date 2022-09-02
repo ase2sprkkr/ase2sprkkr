@@ -25,74 +25,12 @@ SitesSectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSectionDefinition._init_args
-        ~SitesSectionDefinition.custom_name_characters
-        ~SitesSectionDefinition.custom_value_name
-        ~SitesSectionDefinition.delimiter
-        ~SitesSectionDefinition.do_not_skip_whitespaces_before_name
-        ~SitesSectionDefinition.force_order
-        ~SitesSectionDefinition.name_in_grammar
-        ~SitesSectionDefinition.validate
-        ~SitesSectionDefinition.value_name_format
-        ~SitesSectionDefinition.values
-        ~SitesSectionDefinition.name
-        ~SitesSectionDefinition.alternative_names
-        ~SitesSectionDefinition.is_optional
-        ~SitesSectionDefinition.help
-        ~SitesSectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSectionDefinition.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~SitesSectionDefinition.__contains__
-        ~SitesSectionDefinition.__getitem__
-        ~SitesSectionDefinition.__iter__
-        ~SitesSectionDefinition.__setitem__
-        ~SitesSectionDefinition._dict_from_named_values
-        ~SitesSectionDefinition._first_section_is_fixed
-        ~SitesSectionDefinition._grammar
-        ~SitesSectionDefinition._tuple_with_my_name
-        ~SitesSectionDefinition._values_grammar
-        ~SitesSectionDefinition.all_member_names
-        ~SitesSectionDefinition.copy
-        ~SitesSectionDefinition.create_object
-        ~SitesSectionDefinition.custom_class
-        ~SitesSectionDefinition.custom_member_grammar
-        ~SitesSectionDefinition.delimited_custom_value_grammar
-        ~SitesSectionDefinition.depends_on
-        ~SitesSectionDefinition.grammar
-        ~SitesSectionDefinition.grammar_of_delimiter
-        ~SitesSectionDefinition.members
-        ~SitesSectionDefinition.names
-        ~SitesSectionDefinition.parse
-        ~SitesSectionDefinition.parse_file
-        ~SitesSectionDefinition.parse_from_stream
-        ~SitesSectionDefinition.parse_return
-        ~SitesSectionDefinition.remove
-
    
    

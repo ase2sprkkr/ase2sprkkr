@@ -25,67 +25,12 @@ OccupationSection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSection.definition
-        ~OccupationSection.name
-        ~OccupationSection._members
-        ~OccupationSection._interactive_members
-        ~OccupationSection._definition
-        ~OccupationSection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSection._set_from_atoms
-        ~OccupationSection._update_atoms
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OccupationSection.__contains__
-        ~OccupationSection.__dir__
-        ~OccupationSection.__getattr__
-        ~OccupationSection.__getitem__
-        ~OccupationSection.__init__
-        ~OccupationSection.__iter__
-        ~OccupationSection.__setattr__
-        ~OccupationSection._add
-        ~OccupationSection._depends_on
-        ~OccupationSection._find_value
-        ~OccupationSection._get_member
-        ~OccupationSection._get_path
-        ~OccupationSection._get_root_container
-        ~OccupationSection._interactive_member_name
-        ~OccupationSection.add
-        ~OccupationSection.as_dict
-        ~OccupationSection.clear
-        ~OccupationSection.get
-        ~OccupationSection.has_any_value
-        ~OccupationSection.members
-        ~OccupationSection.remove_member
-        ~OccupationSection.reset
-        ~OccupationSection.save_to_file
-        ~OccupationSection.set
-        ~OccupationSection.to_dict
-        ~OccupationSection.to_string
-
    
    

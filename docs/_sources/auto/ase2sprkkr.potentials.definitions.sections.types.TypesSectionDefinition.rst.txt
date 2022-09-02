@@ -25,74 +25,12 @@ TypesSectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSectionDefinition._init_args
-        ~TypesSectionDefinition.custom_name_characters
-        ~TypesSectionDefinition.custom_value_name
-        ~TypesSectionDefinition.delimiter
-        ~TypesSectionDefinition.do_not_skip_whitespaces_before_name
-        ~TypesSectionDefinition.force_order
-        ~TypesSectionDefinition.name_in_grammar
-        ~TypesSectionDefinition.validate
-        ~TypesSectionDefinition.value_name_format
-        ~TypesSectionDefinition.values
-        ~TypesSectionDefinition.name
-        ~TypesSectionDefinition.alternative_names
-        ~TypesSectionDefinition.is_optional
-        ~TypesSectionDefinition.help
-        ~TypesSectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSectionDefinition.__init__
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~TypesSectionDefinition.__contains__
-        ~TypesSectionDefinition.__getitem__
-        ~TypesSectionDefinition.__iter__
-        ~TypesSectionDefinition.__setitem__
-        ~TypesSectionDefinition._dict_from_named_values
-        ~TypesSectionDefinition._first_section_is_fixed
-        ~TypesSectionDefinition._grammar
-        ~TypesSectionDefinition._tuple_with_my_name
-        ~TypesSectionDefinition._values_grammar
-        ~TypesSectionDefinition.all_member_names
-        ~TypesSectionDefinition.copy
-        ~TypesSectionDefinition.create_object
-        ~TypesSectionDefinition.custom_class
-        ~TypesSectionDefinition.custom_member_grammar
-        ~TypesSectionDefinition.delimited_custom_value_grammar
-        ~TypesSectionDefinition.depends_on
-        ~TypesSectionDefinition.grammar
-        ~TypesSectionDefinition.grammar_of_delimiter
-        ~TypesSectionDefinition.members
-        ~TypesSectionDefinition.names
-        ~TypesSectionDefinition.parse
-        ~TypesSectionDefinition.parse_file
-        ~TypesSectionDefinition.parse_from_stream
-        ~TypesSectionDefinition.parse_return
-        ~TypesSectionDefinition.remove
-
    
    

@@ -1,0 +1,50 @@
+init\_tests
+===========
+
+Full name: **ase2sprkkr.potentials.test.init\_tests**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.test.init_tests.TestCase 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.test.init_tests
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TestCase
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

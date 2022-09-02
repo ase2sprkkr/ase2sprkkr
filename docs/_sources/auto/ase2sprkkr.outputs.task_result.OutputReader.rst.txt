@@ -29,29 +29,8 @@ OutputReader
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputReader.__init__
-        ~OutputReader.result
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~OutputReader.read_error
-        ~OutputReader.read_from_file
-        ~OutputReader.read_output
-        ~OutputReader.run
-        ~OutputReader.run_subprocess
-
    
    

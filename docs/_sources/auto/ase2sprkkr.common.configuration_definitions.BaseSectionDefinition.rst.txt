@@ -21,81 +21,16 @@ BaseSectionDefinition
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSectionDefinition.custom_value_name
-        ~BaseSectionDefinition.values
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSectionDefinition._init_args
-        ~BaseSectionDefinition.custom_name_characters
-        ~BaseSectionDefinition.do_not_skip_whitespaces_before_name
-        ~BaseSectionDefinition.force_order
-        ~BaseSectionDefinition.name_in_grammar
-        ~BaseSectionDefinition.validate
-        ~BaseSectionDefinition.value_name_format
-        ~BaseSectionDefinition.name
-        ~BaseSectionDefinition.alternative_names
-        ~BaseSectionDefinition.is_optional
-        ~BaseSectionDefinition.help
-        ~BaseSectionDefinition.description
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSectionDefinition.delimited_custom_value_grammar
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~BaseSectionDefinition.__contains__
-        ~BaseSectionDefinition.__getitem__
-        ~BaseSectionDefinition.__init__
-        ~BaseSectionDefinition.__iter__
-        ~BaseSectionDefinition.__setitem__
-        ~BaseSectionDefinition._dict_from_named_values
-        ~BaseSectionDefinition._first_section_is_fixed
-        ~BaseSectionDefinition._grammar
-        ~BaseSectionDefinition._tuple_with_my_name
-        ~BaseSectionDefinition._values_grammar
-        ~BaseSectionDefinition.all_member_names
-        ~BaseSectionDefinition.copy
-        ~BaseSectionDefinition.create_object
-        ~BaseSectionDefinition.custom_member_grammar
-        ~BaseSectionDefinition.grammar
-        ~BaseSectionDefinition.members
-        ~BaseSectionDefinition.names
-        ~BaseSectionDefinition.parse
-        ~BaseSectionDefinition.parse_file
-        ~BaseSectionDefinition.parse_from_stream
-        ~BaseSectionDefinition.parse_return
-        ~BaseSectionDefinition.remove
-
    
    

@@ -25,67 +25,12 @@ PotentialSection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialSection.definition
-        ~PotentialSection.name
-        ~PotentialSection._members
-        ~PotentialSection._interactive_members
-        ~PotentialSection._definition
-        ~PotentialSection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialSection._depends_on
-        ~PotentialSection._set_from_atoms
-        ~PotentialSection._update_atoms
-        ~PotentialSection.reset
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~PotentialSection.__contains__
-        ~PotentialSection.__dir__
-        ~PotentialSection.__getattr__
-        ~PotentialSection.__getitem__
-        ~PotentialSection.__init__
-        ~PotentialSection.__iter__
-        ~PotentialSection.__setattr__
-        ~PotentialSection._add
-        ~PotentialSection._find_value
-        ~PotentialSection._get_member
-        ~PotentialSection._get_path
-        ~PotentialSection._get_root_container
-        ~PotentialSection._interactive_member_name
-        ~PotentialSection.add
-        ~PotentialSection.as_dict
-        ~PotentialSection.clear
-        ~PotentialSection.get
-        ~PotentialSection.has_any_value
-        ~PotentialSection.members
-        ~PotentialSection.remove_member
-        ~PotentialSection.save_to_file
-        ~PotentialSection.set
-        ~PotentialSection.to_dict
-        ~PotentialSection.to_string
-
    
    

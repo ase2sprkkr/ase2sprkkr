@@ -21,71 +21,16 @@ ConfigurationContainer
 
    
    
-   .. rubric:: Attributes
+   
 
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfigurationContainer._members
-        ~ConfigurationContainer._interactive_members
-
+   
    
    
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfigurationContainer.name
-        ~ConfigurationContainer._definition
-        ~ConfigurationContainer._container
-
-   
    
 
    
-   
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfigurationContainer.__contains__
-        ~ConfigurationContainer.__dir__
-        ~ConfigurationContainer.__getattr__
-        ~ConfigurationContainer.__getitem__
-        ~ConfigurationContainer.__init__
-        ~ConfigurationContainer.__iter__
-        ~ConfigurationContainer._add
-        ~ConfigurationContainer._find_value
-        ~ConfigurationContainer._get_member
-        ~ConfigurationContainer._interactive_member_name
-        ~ConfigurationContainer.add
-        ~ConfigurationContainer.as_dict
-        ~ConfigurationContainer.clear
-        ~ConfigurationContainer.get
-        ~ConfigurationContainer.members
-        ~ConfigurationContainer.remove_member
-        ~ConfigurationContainer.save_to_file
-        ~ConfigurationContainer.set
-        ~ConfigurationContainer.to_string
-
-   
-   
-
-   
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ConfigurationContainer._get_path
-        ~ConfigurationContainer._get_root_container
-        ~ConfigurationContainer.to_dict
-
    
    

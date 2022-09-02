@@ -25,55 +25,12 @@ CustomPotentialSection
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSection.name
-        ~CustomPotentialSection._definition
-        ~CustomPotentialSection._container
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSection.__init__
-        ~CustomPotentialSection._depends_on
-        ~CustomPotentialSection._set_from_atoms
-        ~CustomPotentialSection._update_atoms
-        ~CustomPotentialSection.reset
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~CustomPotentialSection.__call__
-        ~CustomPotentialSection.__repr__
-        ~CustomPotentialSection._find_value
-        ~CustomPotentialSection._get_path
-        ~CustomPotentialSection._get_root_container
-        ~CustomPotentialSection.as_dict
-        ~CustomPotentialSection.clear
-        ~CustomPotentialSection.factory
-        ~CustomPotentialSection.get
-        ~CustomPotentialSection.get_path
-        ~CustomPotentialSection.remove
-        ~CustomPotentialSection.save_to_file
-        ~CustomPotentialSection.set
-        ~CustomPotentialSection.to_dict
-
    
    

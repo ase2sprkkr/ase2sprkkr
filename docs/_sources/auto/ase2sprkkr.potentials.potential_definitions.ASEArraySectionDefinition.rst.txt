@@ -25,74 +25,12 @@ ASEArraySectionDefinition
 
    
    
-   .. rubric:: Inherited attributes
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySectionDefinition._init_args
-        ~ASEArraySectionDefinition.custom_name_characters
-        ~ASEArraySectionDefinition.custom_value_name
-        ~ASEArraySectionDefinition.delimiter
-        ~ASEArraySectionDefinition.do_not_skip_whitespaces_before_name
-        ~ASEArraySectionDefinition.force_order
-        ~ASEArraySectionDefinition.name_in_grammar
-        ~ASEArraySectionDefinition.validate
-        ~ASEArraySectionDefinition.value_name_format
-        ~ASEArraySectionDefinition.values
-        ~ASEArraySectionDefinition.name
-        ~ASEArraySectionDefinition.alternative_names
-        ~ASEArraySectionDefinition.is_optional
-        ~ASEArraySectionDefinition.help
-        ~ASEArraySectionDefinition.description
-
-   
    
 
    
    
-   .. rubric:: Methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySectionDefinition.__init__
-        ~ASEArraySectionDefinition.depends_on
-
-   
    
 
    
-   
-   .. rubric:: Inherited methods
-
-   .. autosummary::
-      :template: custom-base-template.rst
-     
-        ~ASEArraySectionDefinition.__contains__
-        ~ASEArraySectionDefinition.__getitem__
-        ~ASEArraySectionDefinition.__iter__
-        ~ASEArraySectionDefinition.__setitem__
-        ~ASEArraySectionDefinition._dict_from_named_values
-        ~ASEArraySectionDefinition._first_section_is_fixed
-        ~ASEArraySectionDefinition._grammar
-        ~ASEArraySectionDefinition._tuple_with_my_name
-        ~ASEArraySectionDefinition._values_grammar
-        ~ASEArraySectionDefinition.all_member_names
-        ~ASEArraySectionDefinition.copy
-        ~ASEArraySectionDefinition.create_object
-        ~ASEArraySectionDefinition.custom_class
-        ~ASEArraySectionDefinition.custom_member_grammar
-        ~ASEArraySectionDefinition.delimited_custom_value_grammar
-        ~ASEArraySectionDefinition.grammar
-        ~ASEArraySectionDefinition.grammar_of_delimiter
-        ~ASEArraySectionDefinition.members
-        ~ASEArraySectionDefinition.names
-        ~ASEArraySectionDefinition.parse
-        ~ASEArraySectionDefinition.parse_file
-        ~ASEArraySectionDefinition.parse_from_stream
-        ~ASEArraySectionDefinition.parse_return
-        ~ASEArraySectionDefinition.remove
-
    
    
