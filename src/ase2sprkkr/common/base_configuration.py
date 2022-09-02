@@ -74,3 +74,6 @@ class BaseConfiguration:
       """ Alias of the method :meth:`as_dict`. """
       return self.as_dict()
 
+  def show(self):
+      """ Print the configuration, as it will be saved into the configuration/problem definition file. """
+      print(self.to_string())
