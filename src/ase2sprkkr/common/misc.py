@@ -52,21 +52,6 @@ def add_to_signature(func, prepend=False, self_name='self'):
   The modified function has to have its arguments defined as
   in the following example:
 
-  Parameters
-  ----------
-  func
-    A function, whose parameters will be added to the resulting function signature.
-
-  prepend
-    If true, the new positional arguments will be the first.
-    If false, they will be after the parents positional arguments.
-    The same-named arguments just alter the properties of the "old"
-     arguments, retaining their position.
-
-  self_name
-    Name of the self-parameter, that should be the first, even if prepend is used.
-    Default self, set to None if you do not want special handling of self parameter.
-
   .. code-block::
 
       def parent(.....):
@@ -76,6 +61,24 @@ def add_to_signature(func, prepend=False, self_name='self'):
       def child(new_param, *args, **kwargs):
           print(f'New param is {new_param})
           parent(*args, **kwargs)
+
+
+  Parameters
+  ----------
+  func
+    A function, whose parameters will be added to the resulting function signature.
+
+  prepend
+    If true, the new positional arguments will be the first.
+    If false, they will be after the parents positional arguments.
+    The same-named arguments just alter the properties of the "old"
+    arguments, retaining their position.
+
+  self_name
+    Name of the self-parameter (for object method), that should be the first, even
+    if ``prepend`` is True.
+    Default self, set to None if you do not want special handling of self parameter
+    (i.e. if your function has the first argument named *self* and it is not a method).
 
   """
 
