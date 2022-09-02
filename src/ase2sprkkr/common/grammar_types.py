@@ -563,6 +563,28 @@ class Array(BaseType):
                length=None, max_length=None, min_length=None,
                as_list=False,
                **kwargs):
+    """
+    Parameters
+    ----------
+    type
+      The grammar type of the values in the list (it can be given by a python type)
+
+    default_value
+      The default value for the list
+
+    length
+      If it is set, the list have to have just this length (it sets ``min_`` and ``max_length`` to the ``length``)
+
+    min_length
+      The minimal allowed length of the list.
+
+    max_length
+      The maximal allowed length of the list.
+
+    as_list
+      Type of the value array. True means List, False means np.ndarray, or custom type (e.g. tuple)
+      can be provided. However, the value can be set using tuple or list anyway.
+    """
     if isinstance(type, (list, np.ndarray)):
         if default_value is not None:
            raise ValueException("It is not possible for an Array to provide default_value both in 'default_value' and in 'type' argument")
@@ -629,7 +651,8 @@ class Array(BaseType):
     if self.as_list:
        if callable(self.as_list):
           return value if isinstance(value, self.as_list) else self.as_list(value)
-       return list(value) if isinstance(value, tuple) else value
+       else:
+          return list(value) if isinstance(value, tuple) else value
     if not isinstance(value, np.ndarray):
        if self.type.numpy_type == object:
           #https://stackoverflow.com/questions/60939396/forcing-a-creation-of-1d-numpy-array-from-a-list-array-of-possibly-iterable-obje
