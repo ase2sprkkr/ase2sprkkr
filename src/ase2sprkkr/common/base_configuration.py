@@ -66,6 +66,11 @@ class BaseConfiguration:
       return self._definition.name
 
 
-  def to_dict(self):
+  def as_dict(self):
       """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants. """
       raise NotImplemented()
+
+  def to_dict(self):
+      """ Alias of the method :meth:`as_dict`. """
+      return self.as_dict()
+
