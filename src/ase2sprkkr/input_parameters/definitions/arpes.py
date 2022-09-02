@@ -12,7 +12,7 @@ input_parameters = InputParameters(
     CONTROL('ARPES'),
     TAU,
     ENERGY.copy([
-        V('EMINEV', -10.),
+        V('EMINEV', -10., help='Minimum of the energy window in eV with respect to the Fermi level'),
         V('EMAXEV', -10.),
         V('EWORKEV', 4.2),
         V('IMV_INI_EV', 0.05),
@@ -25,7 +25,7 @@ input_parameters = InputParameters(
     TASK('ARPES').copy([
       V('STRVER', 0),
       V('IQ_AT_SURF', 2),
-      V('MILLER_HKL', SetOf(int, length=0), [0,0,1]),
+      V('MILLER_HKL', SetOf(int, length=3), [0,0,1]),
       V('NTMP', 1),
       V('TMPMIN', 11.),
       V('CTMPMAX', 11.),
@@ -38,6 +38,15 @@ input_parameters = InputParameters(
       V('PHI', 0.),
       V('POL_P', 'P'),
       V('EPHOT', 6675.),
+    ]),
+    Section('SPEC_EL', [
+      V('THETA', Range(float), 45.),
+      V('PHI', Range(float), 0),
+      V('NT', 1),
+      V('NP', 1),
+      V('POL_E', DefKeyword('PZ')),
+      V('SPOL', int, required=False),
+      V('PSPIN', SetOf(float, length=3), required=False)
     ]),
     Section('SPEC_STR', [
       V('N_LAYDBL', SetOf(int), [10,10]),
