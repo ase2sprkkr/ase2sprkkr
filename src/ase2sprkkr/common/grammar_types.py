@@ -168,8 +168,8 @@ class BaseType:
         Is an ommision of the value possible, e.g. the option is given as Flag (only by name of the option)
     default_value
         The value used if the value is ommitted
-    do_not_output_value
-        The value, with which the variable should not be outputed at all (e.g. False for a flag)
+    do_not_output_the_option
+        The value, for which the variable should not be outputed at all (e.g. False for a flag)
     """
     return False, None, None
 
@@ -261,8 +261,8 @@ class Unsigned(BaseType):
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
-    if not isinstance(value, int): return "Integer value required"
-    return value >= 0 or "Positive value required"
+    if not isinstance(value, int): return "An integer value required"
+    return value >= 0 or "A positive value required"
 
   def grammar_name(self):
     return '<+int>'
@@ -277,7 +277,7 @@ class Integer(BaseType):
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, (int, np.int64) ) or f'Integer value required ({value.__class__} was given)'
+    return isinstance(value, (int, np.int64) ) or f'An integer value required, ({value.__class__} was given)'
 
   def grammar_name(self):
     return '<int>'
@@ -291,7 +291,7 @@ class Bool(BaseType):
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, bool) or "Bool value rquired"
+    return isinstance(value, bool) or "A bool value rquired"
 
   def grammar_name(self):
     return '<T|F>'
@@ -309,7 +309,7 @@ class Real(BaseType):
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, float) or "Float value required"
+    return isinstance(value, float) or "A float value required"
 
   def grammar_name(self):
     return '<float>'
@@ -324,7 +324,7 @@ class Date(BaseType):
   _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, datetime.date) or "Date (datetime.date) value required"
+    return isinstance(value, datetime.date) or "A date (datetime.date) value required"
 
   def grammar_name(self):
     return '<dd.mm.yyyy>'
@@ -360,7 +360,7 @@ class BaseRealWithUnits(BaseType):
     return self._grammar_units(self.units)
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, float) or "Float value required"
+    return isinstance(value, float) or "A float value required"
 
   def grammar_name(self):
     return '<float>[{}]'.format("|".join(('' if i is None else i for i in self.units)))
@@ -390,7 +390,7 @@ class BaseString(BaseType):
   """ Base type for string grammar types """
 
   def _validate(self, value, parse_check=False):
-    if not isinstance(value, str): return "String value required"
+    if not isinstance(value, str): return "A string value required"
     if not parse_check:
       try:
         self._grammar.parseString(value, True)
@@ -612,7 +612,7 @@ class Array(BaseType):
     else:
        cls = np.ndarray
     if not isinstance(value, cls):
-       return f'{cls} type required, {value.__class__} is given'
+       return f'The {cls} type required, a {value.__class__} is given'
 
     for i,v in enumerate(value):
         try:
