@@ -256,7 +256,7 @@ class BaseValueDefinition(BaseDefinition):
   def __str__(self):
     out="SPRKKR({} of {})".format(self.name, str(self.type))
     val = self.get_value()
-    if val:
+    if val is not None:
       out+= "={}".format(val)
     return out
 
