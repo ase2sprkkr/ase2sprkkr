@@ -58,7 +58,7 @@ class BaseDefinition:
    """
 
    def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
-                name_in_grammar=None, description=None, help=None, write_alternative_name=False):
+                name_in_grammar=None, help=None, description=None, write_alternative_name=False):
        """
        Parameters
        ----------
@@ -81,11 +81,11 @@ class BaseDefinition:
         is_optional: boolean
           If True, this section/value can be missing in the .pot/task file
 
-        description: str
-          Short help message
-
         help: str
-          (Long) help message for the value/section
+          A short help message for the value/section. It will be the perex for description.
+
+        description: str
+           The additional informations for the users.
        """
        self.name = name
        """ The name of the option/section """
