@@ -13,7 +13,7 @@ import itertools
 import numpy as np
 from collections import namedtuple
 from collections.abc import Hashable
-from .misc import OrderedDict, cached_property, cache
+from .misc import OrderedDict, cached_property, cache, add_to_signature
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
@@ -667,6 +667,8 @@ type_from_set_map = OrderedDict([
 Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`
 """
 
+recognized_set_types = ( list, tuple, np.ndarray )
+
 def type_from_value(value):
   """ Gues the grammar type from a python value.
 
@@ -677,7 +679,7 @@ def type_from_value(value):
   >>> type_from_value(2.0)
   <Real>
   """
-  if isinstance(value, (list, np.ndarray)):
+  if isinstance(value, recognized_set_types):
      return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else Integer.I
   if isinstance(value, str):
      try:
@@ -716,25 +718,44 @@ class BaseMixed(BaseType):
   string_type = None
   """ Type of string grammar_type to be used.  To be redefined in the descendants. """
 
-  @classmethod
-  def _grammar(cls, param_name=False):
-    return pp.MatchFirst((
-      i.grammar(param_name) for i in cls.types
-    ))
+  def _grammar(self, param_name=False):
+      return pp.MatchFirst((
+        i.grammar(param_name) for i in self.types
+      ))
 
   def get_type(self, value):
       """ Return the type of the value """
       return self.string_type if isinstance(value, str) else type_from_value(value)
 
   def _validate(self, value, parse_check=False):
-    type = self.get_type(value)
-    if type is value:
-       return 'Can not determine the type of value {}'.format(value)
-    return type.validate(value, parse_check)
+      type = self.get_type(value)
+      if type is value:
+         return 'Can not determine the type of value {}'.format(value)
+      return type.validate(value, parse_check)
 
   def grammar_name(self):
-    return '<mixed>'
+      return '<mixed>'
 
+  def convert(self, value):
+      return self.get_type(value).convert(value)
+
+class Range(BaseMixed):
+  """ A range type - it accepts either one value or range of two values of a given type."""
+
+  @add_to_signature(BaseMixed.__init__, prepend=True)
+  def __init__(self, type, *args, **kwargs):
+      self._type = type_from_type(type)
+      super().__init__(*args, **kwargs)
+
+  @cached_property
+  def types(self):
+      return [
+          self._type,
+          SetOf(self._type, min_length=2, max_length=2)
+      ]
+
+  def get_type(self, value):
+      return self.types[1 if isinstance(value, recognized_set_types) else 0]
 
 class Mixed(BaseMixed):
   """ A variant value to be used in input files (in unknown - custom - options) """
