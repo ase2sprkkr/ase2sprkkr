@@ -612,7 +612,7 @@ class Array(BaseType):
     else:
        cls = np.ndarray
     if not isinstance(value, cls):
-       return f'The {cls} type required, a {value.__class__} is given'
+       return f'A value of the {cls} type is required, a {value.__class__} is given'
 
     for i,v in enumerate(value):
         try:
