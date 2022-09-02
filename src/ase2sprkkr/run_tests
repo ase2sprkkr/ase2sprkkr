@@ -1,2 +1,7 @@
 #!/bin/bash
+if [[ $1 == '--no-kkr' ]] ; then
+	 export DO_NOT_RUN_SPRKKR=1
+	 shift
+fi
+
 py.test  --doctest-modules . $@
