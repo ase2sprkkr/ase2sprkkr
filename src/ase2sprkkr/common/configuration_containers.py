@@ -202,7 +202,7 @@ class ConfigurationContainer(BaseConfiguration):
         try:
            items = values.items()
         except AttributeError:
-          raise ValueError('Only dictionaries can be assigned to section.')
+          raise ValueError('Only a dictionary can be assigned to a section.')
         for i,v in items:
            set_value(i,v)
       if kwargs:
