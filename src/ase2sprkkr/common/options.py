@@ -14,9 +14,9 @@ class Option(BaseConfiguration):
   >>> conf.ENERGY.ImE = 5.
   >>> conf.ENERGY.ImE()
   5.0
-  >>> conf.ENERGY.ImE.help
+  >>> conf.ENERGY.ImE.info
   'Configuration value ImE'
-  >>> print(conf.ENERGY.ImE.doc)                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+  >>> conf.ENERGY.ImE.help()                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   Configuration value ImE
   Data description
   ----------------
