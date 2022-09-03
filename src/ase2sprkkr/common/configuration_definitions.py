@@ -313,7 +313,7 @@ class BaseValueDefinition(BaseDefinition):
 
   def additional_description(self, prefix=''):
     """ Return the additional runtime-documentation for the configuration value.
-        E.g. return the possible choices for the value, etc....
+        E.g. return the possible choices for the value, etc...
     """
     return self.type.additional_description(prefix)
 
@@ -377,6 +377,7 @@ class BaseValueDefinition(BaseDefinition):
     return out
 
   def get_value(self, option=None):
+     """ Return the default or fixed value of this option. """
      if self.fixed_value is not None:
         return self.fixed_value
      if self.default_value is not None:

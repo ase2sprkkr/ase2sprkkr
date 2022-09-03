@@ -8,11 +8,19 @@ class Option(BaseConfiguration):
   be used as a part of InputParameters or Potential configuration.
   Usage:
 
-  >>> conf.ENERGY.ImE = 5
+  >>> from ase2sprkkr.sprkkr.calculator import SPRKKR
+  >>> calculator = SPRKKR()
+  >>> conf = calculator.input_parameters
+  >>> conf.ENERGY.ImE = 5.
   >>> conf.ENERGY.ImE()
-  5
-  >>> conf.ENERGY.ImE.__doc__
-  The ImE option means ...
+  5.0
+  >>> conf.ENERGY.ImE.help
+  'Configuration value ImE'
+  >>> print(conf.ENERGY.ImE.doc)                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
+  Configuration value ImE
+  Data description
+  ----------------
+  ...
   """
   def __init__(self, definition, container=None, value=None):
       """"
