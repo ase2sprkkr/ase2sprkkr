@@ -20,6 +20,7 @@ import numpy as np
 import inspect
 from .misc import cache
 import itertools
+from typing import Dict
 
 #:This serves just for dealing with various pyparsing versions
 _parse_all_name = 'parse_all' if \
@@ -109,10 +110,24 @@ class BaseDefinition:
        self.write_alternative_name = write_alternative_name
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
-       self.help = help
+       self._help = help
        """ A short help text describing the content for the users. """
-       self.description = description
+       self._description = description
        """ A longer help text describing the content for the users. """
+
+   def help(self, generic:bool=True) -> str:
+       """ Return short help string.
+
+       Parameters
+       ----------
+       generic
+         If the definition has no help specified and generic is True, return a (not saying much) generic help string
+       """
+       out = self._help
+       if not out and generic:
+          out = self._generic_help()
+       return out
+
 
    def create_object(self, container=None):
        """ Creates Section/Option/.... object (whose properties I define) """
@@ -122,6 +137,19 @@ class BaseDefinition:
        """ Generate grammar with the correct settings of pyparsing """
        with generate_grammar():
          return self._grammar()
+
+   def description(self):
+       out = [
+          self.help(), ''
+       ]
+
+       out.append("Data description\n"
+                  "----------------")
+       out.append(self.data_description(additional = True))
+       if self._description:
+          out.append(' ')
+          out.append(self._description)
+       return '\n'.join(out)
 
    def _tuple_with_my_name(self, expr, delimiter=None, has_value=True):
         """ Create the grammar returning tuple (self.name, <result of the expr>) """
@@ -418,6 +446,9 @@ class BaseValueDefinition(BaseDefinition):
      del self.section[name]
      return self
 
+  def _generic_help(self):
+      return f"Configuration value {self.name}"
+
 def add_excluded_names_condition(element, names):
     """ Add the condition to the element, that
     its value is not any of given names """
@@ -466,6 +497,78 @@ class BaseContainerDefinition(BaseDefinition):
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
           self.force_order = force_order
+
+    configuration_type_name = 'SECTION'
+    """ Name of the container type in the runtime documentation """
+
+    def data_description(self, prefix='', additional:bool=False):
+        """
+        Return the runtime documentation for the configuration described by this object.
+
+        Parameters
+        ----------
+        additional
+          If it is False, only one line with the section name and basic info is returned.
+          Otherwise, the items contained in the section are listed.
+        """
+        def container_name():
+            out = self.configuration_type_name
+            if out:
+               out+=' '
+            out+=self.name
+            return out
+
+        out = f"{prefix}{container_name()}"
+        flags = []
+        if self.force_order:
+           flags.append('order fixed')
+        if self.is_hidden:
+           flags.append('hidden')
+        if self.is_optional:
+           flags.append('optional')
+        if self.is_expert:
+           flags.append('optional')
+        if flags:
+           flags = join(', ').join(flags)
+           out+=f" ({flags})"
+
+        if additional:
+           add = self.additional_description()
+           if add:
+              out+=f' contains:\n{add}'
+        return out
+
+    def additional_description(self, prefix=''):
+        """
+        Return the description (documentation for runtime) of the items in the container.
+        """
+        cprefix=prefix+'    '
+        out = []
+
+        def write(i):
+           s = i.data_description(cprefix)
+           if not '\n' in s:
+              help = i.help(False)
+              if help:
+                 s = s + (' ' * (max(40 - len(s), 0) + 2)) + help
+           out.append(s)
+
+        expert = False
+        for i in self:
+            if not i.is_expert:
+               write(i)
+            else:
+               expert=True
+
+        if expert:
+          out.append(f'\n{prefix}  Expert options')
+          out.append(prefix +   '  --------------')
+
+          for i in self:
+              if i.is_expert:
+                 write(i)
+
+        return '\n'.join(out)
 
     def __iter__(self):
         return iter(self._members.values())
@@ -662,8 +765,6 @@ class BaseContainerDefinition(BaseDefinition):
            result = start + result
         return self.parse(result, whole_string)
 
-
-
 class BaseSectionDefinition(BaseContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 
@@ -689,6 +790,9 @@ class BaseSectionDefinition(BaseContainerDefinition):
         if optional:
            out = out | pp.Empty().setParseAction(lambda x: df)
         return out
+
+   def _generic_help(self):
+      return f"Configuration section {self.name}"
 
 
 class ConfDefinition(BaseContainerDefinition):

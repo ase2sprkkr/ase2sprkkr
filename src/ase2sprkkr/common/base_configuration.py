@@ -76,3 +76,23 @@ class BaseConfiguration:
   def show(self):
       """ Print the configuration, as it will be saved into the configuration/problem definition file. """
       print(self.to_string())
+
+  @property
+  def help(self):
+      return self._definition.help()
+
+  @property
+  def doc(self):
+      try:
+         return self._definition.description()
+      except AttributeError as e:
+         raise Exception("Cannot retrieve documentation") from e
+
+  def print_doc(self):
+      print(self.doc)
+
+  def __repr__(self):
+      d = self._definition
+      out = d.configuration_type_name
+      out = out + ' ' + d.name.upper()
+      return out

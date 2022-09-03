@@ -70,10 +70,6 @@ class Option(BaseConfiguration):
       """ Return the value of self """
       return self()
 
-  @property
-  def __doc__(self):
-      return self._definition.help
-
   def clear(self, do_not_check_required=False):
       """ Clear the value: set it to None """
       if not self._definition.type.has_value:

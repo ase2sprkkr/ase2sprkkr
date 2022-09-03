@@ -133,6 +133,8 @@ class PotentialDefinition(ConfDefinition):
   result_class = Potential
   """ The parsing of a potential file results in an instance of Potential. """
 
+  configuration_type_name = 'POTENTIAL FILE'
+  """ Name of the container type in the runtime documentation """
 
   force_order = True
   """ The order of items in potential file is fixed """
