@@ -56,7 +56,16 @@ class BaseType:
   default_value = None
 
   """ Deafault type for creating numpy arrays (e.g. by Table) is object - to be redefined
-      in the descendatns
+      in the descendatns.
+
+      The functions called during...
+      ------------------------------
+
+      User input:  convert, validate
+
+      Output: string -> _string
+
+      Parsing: parse -> ( <_grammar parse actions>, validate(parse_check = True) )
   """
   numpy_type = object
 
@@ -139,6 +148,9 @@ class BaseType:
     return grammar
 
   def parse(self, str, whole_string=True):
+    """
+    Parse the string, return the obtained value.
+    """
     return self.grammar().parseString(str, whole_string)[0]
 
   async def parse_from_stream(self, stream, up_to, start=None, whole_string=True):
@@ -159,8 +171,8 @@ class BaseType:
     return grammar
 
   def missing_value(self):
-    """ Is the configuraion value a flag? I.e. can be =<value> ommited
-    in the configuration
+    """ Is the configuraion value a flag? I.e., can be =<value> ommited
+    in the configuration?
 
     Return
     ------
@@ -174,7 +186,10 @@ class BaseType:
     return False, None, None
 
   def validate(self, value, param_name='<Unknown>', parse_check=False):
-    """ Validate either the pyparsing result or a user given value
+    """ Validate either the pyparsing result or a user given value.
+
+    Do not override this method in subclasses for the validation implementation,
+    this method calls :meth:`_validate`, which should contain the actual validation
 
     Parameters
     ---------
@@ -197,7 +212,7 @@ class BaseType:
     return True
 
   def _validate(self, value, parse_check=False):
-    """ Return error message if the value is not valid """
+    """ Return error message if the value is not valid. """
     return True
 
   def _valueError(self, value, error_message=False, param_name=False):
@@ -221,13 +236,20 @@ class BaseType:
     return val
 
   def convert(self, value):
-    """ Convert a value from user to a "cannonical form" """
+    """ Convert a value from user to the "cannonical form" """
     return value
 
   def _string(self, val):
+    """ The string method do some additional transformation (add prefix, postfix etc.),
+    so the actual way how to convert the value for the output should be here. """
     return val
 
   def string(self, val):
+    """ Convert the value to the string according to the class definition.
+    Do not redefine this function, redefine the :meth:`_string` method instead,
+    to retain the common functionality (as adding prefix or postfix to the resulting
+    string).
+    """
     val = self._string(val)
     if self.prefix:
        val = self.prefix + str(val)
@@ -238,9 +260,11 @@ class BaseType:
     return str(val)
 
   def write(self, f, val):
+    """ Output the value to the stream (in the propper format). """
     f.write(self.string(val))
 
   def print(self, val):
+    """ Output the value to stdout (in the propper format). """
     print(self.string(val))
 
   def copy(self):
@@ -747,7 +771,10 @@ class BaseMixed(BaseType):
       ))
 
   def get_type(self, value):
-      """ Return the type of the value """
+      """ Return the type of the value.
+      Actualy, this implementation is a simple implementation that suits for the common
+      Mixed types, so if you make a custom Mixed type, redefine it.
+      """
       return self.string_type if isinstance(value, str) else type_from_value(value)
 
   def _validate(self, value, parse_check=False):
