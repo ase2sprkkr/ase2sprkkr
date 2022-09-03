@@ -14,14 +14,14 @@ def CONTROL(ADSI):
   ADSI: string
     the default value for the ADSI parameter of the resulting section
 
-
   Return
   ------
   CONTROL: SectionDefinition
   """
+
   return Section('CONTROL',[
-      V('DATASET', str, 'case', required = True, help="Meaning of the parameter"),
-      V('ADSI', DefKeyword(ADSI), required = True, help="Type of the computation -- do DFT selfconsistent cycle"),
+      V('DATASET', str, 'case', required = True, help="The custom field for the description of the problem."),
+      V('ADSI', DefKeyword(ADSI), required = True, help="Type of the computation."),
       V('POTFIL', str, required=True, help="Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator."),
       V('KRWS', int, required=False)
   ])
@@ -34,7 +34,7 @@ TAU = Section('TAU',[
 
 ENERGY = Section('ENERGY',[
       V('GRID', [5], required=True),
-      V('NE', [32], required=True),
+      V('NE', [32], required=True, help='Number of energy points'),
       V('ImE', energy, 0.0),
       V('EMIN', -0.2),
   ])

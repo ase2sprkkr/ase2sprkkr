@@ -12,8 +12,8 @@ input_parameters = InputParameters(
         ENERGY,
         SCF,
       ],
-      description = "SCF calculation",
-      help = "Set at least options ..., ...., .....",
+      help = "PHAGEN",
+      description = "<TODO: change to something meaningfull>",
       executable = 'kkrscf',
       mpi=False
 )
