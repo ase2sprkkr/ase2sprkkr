@@ -114,7 +114,8 @@ class BaseType:
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
                      format:str='', default_value:Any=None,
                      condition:Union[Callable[[Any], Union[bool,str]],None]=None,
-                     after_convert:Union[Callable[[Any], Any],None]=None):
+                     after_convert:Union[Callable[[Any], Any],None]=None,
+                     additional_description=''):
       """
       Create the object.
 
@@ -159,6 +160,7 @@ class BaseType:
       """ Some subclasses has default_value defined via read-only property. """
       if default_value is not None:
          self.default_value = self.convert(default_value)
+      self._additional_description = additional_description
 
   def __str__(self):
       return self.__class__.__name__
