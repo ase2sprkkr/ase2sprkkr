@@ -20,6 +20,7 @@ import numpy as np
 import inspect
 from .misc import cache
 import itertools
+import builtins
 from typing import Dict
 
 #:This serves just for dealing with various pyparsing versions
@@ -258,22 +259,25 @@ class BaseValueDefinition(BaseDefinition):
       The way how the name is written
 
     expert: Optional[mixed]
-      If not None, set is_expert to True, default_value to the given value and
-      required to False.
+      If not None, set ``is_expert`` to True, ``default_value`` to the given value and
+      ``required`` to False. Note, that also ``type`` can be determined from such given
+      ``default_value``.
     """
     if expert is not None:
        if type is None:
           type = expert
+       else:
+          default_value=expert
        is_expert = True
        required = False
     elif type is None:
        raise TypeError("The data-type of the configuration value is required.")
 
-    self.type = type_from_type(type)
-    if default_value is None and not isinstance(self.type, GrammarType):
+    if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
        self.type = type_from_value(type)
        self.default_value = self.type.convert(type)
     else:
+       self.type = type_from_type(type)
        self.default_value = self.type.convert(default_value) if default_value is not None else None
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
 
