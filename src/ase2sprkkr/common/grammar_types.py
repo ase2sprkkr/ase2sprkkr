@@ -712,10 +712,11 @@ class SetOf(Array):
   delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).setName('[,; ]')
   delimiter_str = ','
 
-  def __init__(self, type, **kwargs):
+  @add_to_signature(Array.__init__)
+  def __init__(self, type, *args, **kwargs):
     kwargs.setdefault('prefix', '{')
     kwargs.setdefault('postfix', '}')
-    super().__init__(type, **kwargs)
+    super().__init__(type, *args, **kwargs)
 
   def transform_grammar(self, grammar, param_name=False):
     return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
