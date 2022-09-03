@@ -65,14 +65,13 @@ class BaseConfiguration:
       """
       return self._definition.name
 
-
-  def as_dict(self):
+  def as_dict(self, expert_values:bool=False):
       """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants. """
       raise NotImplemented()
 
-  def to_dict(self):
+  def to_dict(self, expert_values:bool=False):
       """ Alias of the method :meth:`as_dict`. """
-      return self.as_dict()
+      return self.as_dict(*args, **kwargs)
 
   def show(self):
       """ Print the configuration, as it will be saved into the configuration/problem definition file. """

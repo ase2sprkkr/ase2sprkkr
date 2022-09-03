@@ -92,8 +92,12 @@ class Option(BaseConfiguration):
   def name(self):
       return self._definition.name
 
-  def as_dict(self):
-      return self()
+  def as_dict(self, expert_values:bool=False):
+      out = self()
+      d = self._definition
+      if d.is_expert and d.type.is_the_same_value(d.default_value, out):
+         return None
+      return out
 
   def _find_value(self, name):
       if self._definition.name == name:

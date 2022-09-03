@@ -57,8 +57,10 @@ class BaseDefinition:
    the behavior.
    """
 
-   def __init__(self, name, alternative_names=None, is_optional=False, is_hidden=False,
-                name_in_grammar=None, help=None, description=None, write_alternative_name=False):
+   def __init__(self, name, alternative_names=None,
+                is_optional=False, is_hidden=False,is_expert=False,
+                name_in_grammar=None, help=None, description=None, write_alternative_name=False,
+                ):
        """
        Parameters
        ----------
@@ -68,18 +70,22 @@ class BaseDefinition:
         alternative_names: str or [str]
           Alternative names that can denotes the value
 
+        is_optional: boolean
+          If True, this section/value can be missing in the .pot/task file
+
         is_hidden: boolean
           Hidden values are not offered to a user, usually they are
           set by another object (and so a direct setting of their values
           has no sense)
 
+        is_expert: boolean
+          Expert values/sections are not required and they are somewhat hidden
+          from the user
+
         name_in_grammar: boolean or None
           If False, there the name of the variable is not printed in the
           configuration file. The variable is recognized by its position.
           If None, the default class value is used
-
-        is_optional: boolean
-          If True, this section/value can be missing in the .pot/task file
 
         help: str
           A short help message for the value/section. It will be the perex for description.
@@ -97,6 +103,8 @@ class BaseDefinition:
        of the alternative names.
        """
        self.is_optional = is_optional
+       self.is_expert = is_expert
+       self.is_hidden = is_hidden
        """ Is it required part of configuration (or can it be ommited)? """
        self.write_alternative_name = write_alternative_name
        self.name_in_grammar = self.__class__.name_in_grammar \
@@ -143,16 +151,34 @@ class BaseDefinition:
 
    do_not_skip_whitespaces_before_name = False
 
+   def _get_copy_args(self)->Dict[str, str]:
+       """
+       Compute the dictionary that defines the attributes to create a copy of this object.
+
+       Returns
+       -------
+       copy: Dict
+          The returning dictionary has this structure:
+          { name of the argument of the __init__ function : name of the object attribute }
+       """
+
+       if not '_copy_args' in self.__class__.__dict__:
+          args = inspect.getfullargspec(self.__class__.__init__).args[1:]
+          self.__class__._copy_args = { v: '_'+v if '_'+v in self.__dict__ else v for v in args if v not in self._copy_excluded_args }
+       return self.__class__._copy_args
+
+   _copy_excluded_args = ['expert']
+
 class BaseValueDefinition(BaseDefinition):
 
   result_class = Option
 
   name_in_grammar = None
 
-  def __init__(self, name, type, default_value=None, alternative_names=None,
+  def __init__(self, name, type=None, default_value=None, alternative_names=None,
                fixed_value=None, required=None, help=None, description=None,
-               is_hidden=False, name_in_grammar=None, name_format=None,
-               is_optional=None):
+               is_hidden=False, is_optional=None, is_expert=False,
+               name_in_grammar=None, name_format=None, expert=None):
     """
     Creates the object
 
@@ -161,11 +187,14 @@ class BaseValueDefinition(BaseDefinition):
     name: str
       Name of the configuration value
 
-    type: BaseType
-      Configuration value type
+    type: Optional[BaseType|mixed]
+      Configuration value data type.
+      If it is set to anyting what is not derived from BaseType, the given value is used as the default value
+      and the data type is derived from it.
+      If it is None, the default value have to be set using ``expert`` parameter.
 
     default: mixed
-      Default value for configuration
+      Default value for the configuration option.
 
     alternative_names: str or [str]
       Value can have an alternative name (that alternativelly denotes the value)
@@ -178,20 +207,38 @@ class BaseValueDefinition(BaseDefinition):
       can be still be optional, if it has a default values).
       If required = None, required = not is_optional and default_value is None
 
+    is_optional: bool or None
+      If True, the value can be omited, if the fixed order is required
+      None means True just if required is False (or it is determined to be False),
+      see the ``required`` parameter.
+
+    is_hidden: bool
+      The value is hidden from the user (no container.name access to the value).
+
+    is_expert: Union[bool|mixed]
+      Expert values are somewhat hidden (e.g. listed at end) from the user.
+      Expert values are not exported to the result, if they are set to the
+      default value.
+
     name_in_grammar: bool or None
       The value in the conf file is prefixed by <name><name_value_delimiter>
       If None, the default type value (type.name_in_grammar) is used
 
-    is_optional: bool or None
-      If True, the value can be omited, if the fixed order is required
-      None means True if required is False
-
-    is_hidden: bool
-      The value is hidden from the user (no container.name access to the value)
-
     name_format: str or None
       The way how the name is written
+
+    expert: Optional[mixed]
+      If not None, set is_expert to True, default_value to the given value and
+      required to False.
     """
+    if expert is not None:
+       if type is None:
+          type = expert
+       is_expert = True
+       required = False
+    elif type is None:
+       raise TypeError("The data-type of the configuration value is required.")
+
     self.type = type_from_type(type)
     if default_value is None and not isinstance(self.type, BaseType):
        self.type = type_from_value(type)
@@ -209,11 +256,14 @@ class BaseValueDefinition(BaseDefinition):
     if is_optional is None:
        is_optional = required is False
 
+    configuration_type_name = 'OPTION'
+
     super().__init__(
          name = name,
          alternative_names = alternative_names,
          is_optional = is_optional,
          is_hidden = is_hidden,
+         is_expert = is_expert,
          name_in_grammar = name_in_grammar,
          help = help,
          description = description
@@ -224,9 +274,6 @@ class BaseValueDefinition(BaseDefinition):
 
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = self.default_value is not None if required is None else required
-    self.help = None
-    self.is_hidden = is_hidden
-    self.is_optional = is_optional
     self.name_format = name_format
 
   @property
@@ -235,6 +282,40 @@ class BaseValueDefinition(BaseDefinition):
     if self.name_format:
        return "{:{}}".format(name, self.name_format)
     return name
+
+  def data_description(self, prefix='', additional=False):
+    """
+    Return the description of the contained data type and their type.
+    """
+    out = f"{self.name} : {self.type}"
+    value = self.get_value()
+    if value:
+       out+=f" ≝ {value}"
+
+    flags = []
+    if self.is_optional:
+       flags.append('optional')
+    if self.is_hidden:
+       flags.append('hidden')
+    if self.is_hidden:
+       flags.append('expert')
+    if self.fixed_value is not None:
+       flags.append('read_only')
+    if flags:
+       flags = ', '.join(flags)
+       out+= f"  ({flags})"
+    out = prefix + out
+    if additional:
+       add = self.additional_description()
+       if add:
+          out+='\n' + add
+    return out
+
+  def additional_description(self, prefix=''):
+    """ Return the additional runtime-documentation for the configuration value.
+        E.g. return the possible choices for the value, etc....
+    """
+    return self.type.additional_description(prefix)
 
   def validate(self, value):
     if value is None:
@@ -327,11 +408,8 @@ class BaseValueDefinition(BaseDefinition):
         self.type.write(f, value)
      return True
 
-
   def copy(self, **kwargs):
-     if not '_init_args' in self.__class__.__dict__:
-        self.__class__._init_args = inspect.getfullargspec(self.__init__).args[1:]
-     default = { k: getattr(self, k) for k in self._init_args }
+     default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
      default.update(kwargs)
      return self.__class__(**default)
 
@@ -410,8 +488,6 @@ class BaseContainerDefinition(BaseDefinition):
         del self._members[name]
         return self
 
-    _init_args = inspect.getfullargspec(__init__).args[3:]
-
     def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
         """ Copy the section with the contained values modified by the arguments."""
         members = OrderedDict( ( (k,i.copy()) for k,i in self._members.items() ) )
@@ -421,9 +497,10 @@ class BaseContainerDefinition(BaseDefinition):
         for i,v in defaults.items():
             members[i].default_value = members[i].type.convert(v)
 
-        default = { k: getattr(self, k) for k in self._init_args }
+        default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
         default.update(kwargs)
-        return self.__class__(self.name, members=members, **default)
+        default['members'] = members
+        return self.__class__(**default)
 
     def create_object(self, container=None):
         return self.result_class(self, container)

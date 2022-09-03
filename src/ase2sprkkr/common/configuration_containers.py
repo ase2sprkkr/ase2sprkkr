@@ -247,15 +247,17 @@ class ConfigurationContainer(BaseConfiguration):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def as_dict(self):
+  def as_dict(self, expert_values:bool=False):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
 
+      expert_values
+        Include expert values which have theirs default values
       """
       out = OrderedDict()
       for i in self:
-          value = i.as_dict()
+          value = i.as_dict(expert_values)
           if value is not None:
               out[i.name] = value
       return out or None
