@@ -247,17 +247,23 @@ class ConfigurationContainer(BaseConfiguration):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def as_dict(self, expert_values:bool=False):
+  def as_dict(self, only_changed:Union[bool,str]='basic'):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
 
-      expert_values
-        Include expert values which have theirs default values
+      Parameters
+      ----------
+      only_changed
+        Return only changed values, or all of them?
+        If True, return only the values, that differ from the defaults.
+        If False, return all the values.
+        The default value 'basic' means, return all non-expert values
+        and all changed expert values.
       """
       out = OrderedDict()
       for i in self:
-          value = i.as_dict(expert_values)
+          value = i.as_dict(only_changed)
           if value is not None:
               out[i.name] = value
       return out or None

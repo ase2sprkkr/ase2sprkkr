@@ -1,5 +1,5 @@
 """ The classes for storing one configuration value. """
-
+from typing import Union
 from ..common.grammar_types import mixed
 from .base_configuration import BaseConfiguration
 
@@ -43,6 +43,10 @@ class Option(BaseConfiguration):
   def __call__(self):
       if self._value is not None:
          return self._value
+      return self.default_value
+
+  @property
+  def default_value(self):
       return self._definition.get_value(self)
 
   def set(self, value, *, unknown=None):
@@ -99,12 +103,29 @@ class Option(BaseConfiguration):
   def name(self):
       return self._definition.name
 
-  def as_dict(self, expert_values:bool=False):
-      out = self()
+  def as_dict(self, only_changed: Union[bool,str]='basic'):
       d = self._definition
-      if d.is_expert and d.type.is_the_same_value(d.default_value, out):
-         return None
-      return out
+      if only_changed and (only_changed!='basic' or d.is_expert):
+           v,c = self.value_and_changed()
+           return v if c else None
+      return self()
+
+  def value_and_changed(self):
+      """ Return value and whether the value was changed
+
+          Returns
+          -------
+          value:mixed
+            The value of the options
+
+          changed:bool
+            Whether the value is the same as the default value or not
+      """
+      d = self._definition
+      default = self.default_value
+      if self._value is not None:
+         return self._value, not d.type.is_the_same_value(self._value, default)
+      return default, False
 
   def _find_value(self, name):
       if self._definition.name == name:

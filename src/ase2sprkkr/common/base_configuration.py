@@ -2,6 +2,8 @@
 and configuration containers ("Sections")
 """
 
+from typing import Union
+
 class BaseConfiguration:
   """ Common base class for all configurations values and containers. I.e.
   for options and sections
@@ -65,13 +67,23 @@ class BaseConfiguration:
       """
       return self._definition.name
 
-  def as_dict(self, expert_values:bool=False):
-      """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants. """
+  def as_dict(self, only_changed:Union[bool,str]='basic'):
+      """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.
+
+      Parameters
+      ----------
+      only_changed
+        Return only changed values, or all of them?
+        If True, return only the values, that differ from the defaults.
+        If False, return all the values.
+        The default value 'basic' means, return all non-expert values
+        and all changed expert values.
+      """
       raise NotImplemented()
 
-  def to_dict(self, expert_values:bool=False):
+  def to_dict(self, only_changed:Union[bool,str]='basic'):
       """ Alias of the method :meth:`as_dict`. """
-      return self.as_dict(*args, **kwargs)
+      return self.as_dict(only_changed)
 
   def show(self):
       """ Print the configuration, as it will be saved into the configuration/problem definition file. """
