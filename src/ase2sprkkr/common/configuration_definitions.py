@@ -61,7 +61,7 @@ class BaseDefinition:
 
    def __init__(self, name, alternative_names=None,
                 is_optional=False, is_hidden=False,is_expert=False,
-                name_in_grammar=None, help=None, description=None, write_alternative_name=False,
+                name_in_grammar=None, info=None, description=None, write_alternative_name=False,
                 ):
        """
        Parameters
@@ -89,7 +89,7 @@ class BaseDefinition:
           configuration file. The variable is recognized by its position.
           If None, the default class value is used
 
-        help: str
+        info: str
           A short help message for the value/section. It will be the perex for description.
 
         description: str
@@ -111,12 +111,12 @@ class BaseDefinition:
        self.write_alternative_name = write_alternative_name
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
-       self._help = help
+       self._info = info
        """ A short help text describing the content for the users. """
        self._description = description
        """ A longer help text describing the content for the users. """
 
-   def help(self, generic:bool=True) -> str:
+   def info(self, generic:bool=True) -> str:
        """ Return short help string.
 
        Parameters
@@ -124,9 +124,9 @@ class BaseDefinition:
        generic
          If the definition has no help specified and generic is True, return a (not saying much) generic help string
        """
-       out = self._help
+       out = self._info
        if not out and generic:
-          out = self._generic_help()
+          out = self._generic_info()
        return out
 
 
@@ -141,7 +141,7 @@ class BaseDefinition:
 
    def description(self):
        out = [
-          self.help(), ''
+          self.info(), ''
        ]
 
        out.append("Data description\n"
@@ -205,7 +205,7 @@ class BaseValueDefinition(BaseDefinition):
   name_in_grammar = None
 
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
-               fixed_value=None, required=None, help=None, description=None,
+               fixed_value=None, required=None, info=None, description=None,
                is_hidden=False, is_optional=None, is_expert=False,
                name_in_grammar=None, name_format=None, expert=None):
     """
@@ -299,7 +299,7 @@ class BaseValueDefinition(BaseDefinition):
          is_hidden = is_hidden,
          is_expert = is_expert,
          name_in_grammar = name_in_grammar,
-         help = help,
+         info=info,
          description = description
     )
 
@@ -452,7 +452,7 @@ class BaseValueDefinition(BaseDefinition):
      del self.section[name]
      return self
 
-  def _generic_help(self):
+  def _generic_info(self):
       return f"Configuration value {self.name}"
 
 def add_excluded_names_condition(element, names):
@@ -480,14 +480,14 @@ class BaseContainerDefinition(BaseDefinition):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], alternative_names=[], help=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None, force_order=None):
+    def __init__(self, name, members=[], alternative_names=[], info=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None, force_order=None):
        super().__init__(
            name = name,
            alternative_names = alternative_names,
            is_optional = is_optional,
            is_hidden = is_hidden,
            name_in_grammar = name_in_grammar,
-           help = help,
+           info = info,
            description = description
        )
 
@@ -554,9 +554,9 @@ class BaseContainerDefinition(BaseDefinition):
         def write(i):
            s = i.data_description(cprefix)
            if not '\n' in s:
-              help = i.help(False)
-              if help:
-                 s = s + (' ' * (max(40 - len(s), 0) + 2)) + help
+              info = i.info(False)
+              if info:
+                 s = s + (' ' * (max(40 - len(s), 0) + 2)) + info
            out.append(s)
 
         expert = False
@@ -797,7 +797,7 @@ class BaseSectionDefinition(BaseContainerDefinition):
            out = out | pp.Empty().setParseAction(lambda x: df)
         return out
 
-   def _generic_help(self):
+   def _generic_info(self):
       return f"Configuration section {self.name}"
 
 

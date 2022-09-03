@@ -90,8 +90,8 @@ class BaseConfiguration:
       print(self.to_string())
 
   @property
-  def help(self):
-      return self._definition.help()
+  def info(self):
+      return self._definition.info()
 
   @property
   def doc(self):
@@ -100,7 +100,7 @@ class BaseConfiguration:
       except AttributeError as e:
          raise Exception("Cannot retrieve documentation") from e
 
-  def print_doc(self):
+  def help(self):
       print(self.doc)
 
   def __repr__(self):

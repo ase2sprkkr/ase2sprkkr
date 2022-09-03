@@ -20,9 +20,9 @@ def CONTROL(ADSI):
   """
 
   return Section('CONTROL',[
-      V('DATASET', str, 'case', required = True, help="The custom field for the description of the problem."),
-      V('ADSI', DefKeyword(ADSI), required = True, help="Type of the computation."),
-      V('POTFIL', str, required=True, help="Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator."),
+      V('DATASET', str, 'case', required = True, info="The custom field for the description of the problem."),
+      V('ADSI', DefKeyword(ADSI), required = True, info="Type of the computation."),
+      V('POTFIL', str, required=True, info="Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator."),
       V('KRWS', int, required=False)
   ])
 
@@ -34,7 +34,7 @@ TAU = Section('TAU',[
 
 ENERGY = Section('ENERGY',[
       V('GRID', [5], required=True),
-      V('NE', [32], required=True, help='Number of energy points'),
+      V('NE', [32], required=True, info='Number of energy points'),
       V('ImE', energy, 0.0),
       V('EMIN', -0.2),
   ])

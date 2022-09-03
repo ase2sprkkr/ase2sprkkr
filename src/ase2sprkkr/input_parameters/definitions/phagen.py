@@ -12,7 +12,7 @@ input_parameters = InputParameters(
         ENERGY,
         SCF,
       ],
-      help = "PHAGEN",
+      info = "PHAGEN",
       description = "<TODO: change to something meaningfull>",
       executable = 'kkrscf',
       mpi=False
