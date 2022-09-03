@@ -469,6 +469,8 @@ class Energy(BaseRealWithUnits):
   }
   """ The allowed units and their conversion factors """
 
+  def __str__(self):
+      return "Energy (<Real> [Ry|eV])"
 
 class BaseString(BaseType):
   """ Base type for string grammar types """
@@ -527,7 +529,9 @@ class Keyword(BaseType):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
   def grammar_name(self):
-      return '|'.join(('"'+i+'"' for i in self.keywords ))
+      if len(self.keywords) == 1:
+         return f'FixedValue({next(iter(self.keywords))})'
+      return 'AnyOf(' + ','.join((i for i in self.keywords )) + ')'
 
   def __str__(self):
       return self.grammar_name()
@@ -633,7 +637,20 @@ class Array(BaseType):
       grammar.setParseAction(lambda x: self.convert(x.asList()))
 
   def __str__(self):
-    return "Array({})".format(str(self.type))
+    if self.min_length == self.max_length:
+       if self.min_length:
+          length = f' of length {self.min_length}'
+       else:
+          length = ''
+    else:
+       if self.min_length is not None:
+          length='{self.min_length}<=n'
+       else:
+          length='n'
+       if self.max_length is not None:
+          length+=f'<=self.max_length'
+       length=' with length '
+    return f"Array(of {self.type}{length})"
 
   def grammar_name(self):
       gn = self.type.grammar_name()
@@ -708,8 +725,6 @@ class Complex(SetOf):
   @add_to_signature(SetOf.__init__)
   def __init__(self, *args, **kwargs):
     super().__init__(Real.I, *args, as_list=complex, length=2, **kwargs)
-  def __str__(self):
-    return "SetOf({})".format(str(self.type))
 
   def convert(self, value):
     return complex(value)
