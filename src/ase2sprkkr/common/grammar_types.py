@@ -513,7 +513,13 @@ class Keyword(BaseType):
 
   def __init__(self, *keywords, **kwargs):
     super().__init__(**kwargs)
-    self.keywords = [ i.upper() for i in keywords ]
+    if len(keywords)==1 and isinstance(keywords[0], dict):
+       self.choices = keywords[0]
+       keywords = self.choices.keys()
+    else:
+       self.choices = None
+
+    self.keywords = [ str(i).upper() for i in keywords ]
     with generate_grammar():
       self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
 
@@ -528,6 +534,17 @@ class Keyword(BaseType):
 
   def convert(self, value):
       return value.upper()
+
+  def additional_description(self, prefix=''):
+      ad = super().additional_description(prefix)
+      if not self.choices:
+         return ad
+      out = f'{prefix}Possible values:\n'
+      out += '\n'.join([f"{prefix}  {k:<10}{v}" for k,v in self.choices.items()])
+      if ad:
+         out += '\n' + ad
+      return out
+
 
 def DefKeyword(default, *others, **kwargs):
   """
