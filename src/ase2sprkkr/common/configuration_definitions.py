@@ -233,7 +233,9 @@ class BaseValueDefinition(BaseDefinition):
     required: bool
       Required option can not be set to None (however, a required one
       can be still be optional, if it has a default values).
-      If required = None, required = not is_optional and default_value is None
+      If required = None, it is set to True if both the conditions are met
+        * the value is not expert
+        * the optional is not True and the option has not a default_value
 
     is_optional: bool or None
       If True, the value can be omited, if the fixed order is required
@@ -279,7 +281,7 @@ class BaseValueDefinition(BaseDefinition):
        self.default_value = self.type.default_value
 
     if required is None:
-       required = not is_optional and default_value is None
+       required = not is_expert and (not is_optional and default_value is None)
 
     if is_optional is None:
        is_optional = required is False
