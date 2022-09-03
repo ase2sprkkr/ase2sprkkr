@@ -618,15 +618,19 @@ class Array(BaseType):
     with generate_grammar():
       grammar = self.type.grammar()
       grammar = delimitedList(grammar, self.delimiter)
-      if self.as_list:
-        if callable(self.as_list):
-          grammar = grammar.setParseAction(lambda x: self.as_list(x.asList()))
-        else:
-          grammar = grammar.setParseAction(lambda x: [x.asList()])
-      else:
-        grammar.setParseAction(lambda x: self.convert(x.asList()))
-        grammar.setName(self.grammar_name())
+      self._set_convert_action(grammar)
+      grammar.setName(self.grammar_name())
+
     self._grammar = grammar
+
+  def _set_convert_action(self, grammar):
+    if self.as_list:
+      if callable(self.as_list):
+        grammar = grammar.setParseAction(lambda x: self.as_list(x.asList()))
+      else:
+        grammar = grammar.setParseAction(lambda x: [x.asList()])
+    else:
+      grammar.setParseAction(lambda x: self.convert(x.asList()))
 
   def __str__(self):
     return "Array({})".format(str(self.type))
