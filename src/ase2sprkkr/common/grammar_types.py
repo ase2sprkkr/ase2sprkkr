@@ -28,6 +28,13 @@ context =  generate_grammar()
 context.__enter__()
 #it ensures that the generated grammar will have the correct whitespaces
 
+def compare_numpy_values(a,b):
+    """ The numpy arrays cannot be compared by =, that's why this method.
+    However, the method is still far from to be perfect, it can not
+    compare nested numpy arrays.
+    """
+    return np.array_equal(a,b)
+
 class BaseType:
   """ Base class for definition of configuration option types
 
@@ -120,6 +127,15 @@ class BaseType:
 
   def __str__(self):
       return self.__class__.__name__
+
+  @staticmethod
+  def is_the_same_value(a,b):
+    """ Comparison function for the values of "this type".
+
+    Not all values (e.g. numpy arrays) can be compared by equal sign,
+    so this function has to be used for comparison of the values.
+    """
+    return a == b
 
   @cache
   def grammar(self, param_name=False):
@@ -687,6 +703,7 @@ class Array(BaseType):
           return np.atleast_1d(value)
     return value
 
+  is_the_same_value = staticmethod(compare_numpy_values)
 
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
@@ -826,6 +843,8 @@ class Mixed(BaseMixed):
   def missing_value(self):
     return True, True, False
 
+  is_the_same_value = staticmethod(compare_numpy_values)
+
 Mixed.I = Mixed()
 
 class PotMixed(BaseMixed):
@@ -850,6 +869,7 @@ class PotMixed(BaseMixed):
     else:
        return super()._string(val)
 
+  is_the_same_value = staticmethod(compare_numpy_values)
 PotMixed.I = PotMixed()
 
 
@@ -958,6 +978,7 @@ class Sequence(BaseType):
 
       option.__class__ = cls
 
+  is_the_same_value = staticmethod(compare_numpy_values)
 
 class Table(BaseType):
   """

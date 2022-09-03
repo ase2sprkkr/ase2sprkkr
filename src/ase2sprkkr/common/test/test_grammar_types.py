@@ -12,6 +12,23 @@ from ase.units import Rydberg
 
 class GrammarTest(TestCase):
 
+  def test_is_the_same_value(self):
+      self.assertTrue(gt.Integer.is_the_same_value(1,1))
+      self.assertFalse(gt.Integer.is_the_same_value(1,0))
+      self.assertTrue(gt.Real.is_the_same_value(1.,1.))
+      self.assertFalse(gt.Real.is_the_same_value(1.,0.))
+      self.assertTrue(gt.String.is_the_same_value("1111","1111"))
+      self.assertFalse(gt.String.is_the_same_value("1112","1111"))
+      self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,3]),np.array([1,2,3])))
+      self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,3]),np.array([1,2,4])))
+      self.assertTrue(gt.Array.is_the_same_value([1,2,3],[1,2,3]))
+      self.assertFalse(gt.Array.is_the_same_value([1,2,3],[1,2,4]))
+      #TODO this is not working. However, it should not be needed, so i let it as it for now
+      #self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,np.array([1,2])]),np.array([1,2,np.array([1,2])])))
+      #self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,np.array([1,2])]),np.array([1,2,np.array([1,3])])))
+      #self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,(np.array([1,2]),1)]),np.array([1,2,(np.array([1,2]),1)])))
+      #self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,(np.array([1,2]),1)]),np.array([1,2,(np.array([1,3]),1)])))
+
   def test_types(self):
     with generate_grammar():
        self._test_types()
