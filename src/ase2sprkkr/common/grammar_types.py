@@ -680,11 +680,27 @@ class SetOf(Array):
   def transform_grammar(self, grammar, param_name=False):
     return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
 
+class Complex(SetOf):
+
+  @add_to_signature(SetOf.__init__)
+  def __init__(self, *args, **kwargs):
+    super().__init__(Real.I, *args, as_list=complex, length=2, **kwargs)
   def __str__(self):
     return "SetOf({})".format(str(self.type))
 
+  def convert(self, value):
+    return complex(value)
 
+  def _validate(self, value, parse_check=False):
+    return isinstance(value, (complex, np.complexfloating)) or 'A complex value required, {value} given.'
 
+  def _grammar_name(self):
+    return '{complex (as 2 reals)}'
+
+  def _string(self, val):
+    return real._string(val.real) + ' ' + real._string(val.imag)
+
+  __str__ = BaseType.__str__
 
 def type_from_value(value):
   """ Gues the grammar type from a python value.
@@ -1131,6 +1147,8 @@ line_string = LineString.I = LineString()
 """ A standard grammar type instance for one-line strings in potential files """
 energy = Energy.I = Energy()
 """ A standard grammar type instance for energy values (float) for potential files """
+complex_number = Complex.I = Complex()
+""" A standard grammar type instance for complex numbers """
 
 set_of_integers = SetOf(integer)
 """ A standard grammar type instance for array of integers (of any length, used by variant types) """
@@ -1153,6 +1171,7 @@ pot_mixed = PotMixed.I = PotMixed()
 normalize_type_map = {
     np.int64 : int,
     np.float64: float,
+    np.complex128 : complex,
     np.bool_: bool
 }
 """ Mapping of alternative types to the 'canonical ones'. """
@@ -1170,6 +1189,7 @@ def normalize_type(type):
 
 type_from_type_map = OrderedDict([
     (float, Real.I),
+    (complex, Complex.I),
     (int  , Integer.I),
     (bool,  Bool.I),
     (str  , String.I)]
