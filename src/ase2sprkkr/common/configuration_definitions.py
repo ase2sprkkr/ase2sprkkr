@@ -323,7 +323,7 @@ class BaseValueDefinition(BaseDefinition):
     """
     out = f"{self.name} : {self.type}"
     value = self.get_value()
-    if value:
+    if value is not None:
        out+=f" ≝ {value}"
 
     flags = []
