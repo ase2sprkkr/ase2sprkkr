@@ -4,7 +4,7 @@ I.e. these sections can has any content (they are readed up to the section separ
 """
 
 
-from ..common.grammar_types import BaseType
+from ..common.grammar_types import GrammarType
 from ..common.options import CustomOption
 from ..common.configuration_definitions import BaseValueDefinition
 from ..common.misc import class_property, cache
@@ -44,7 +44,7 @@ class CustomSectionToken(pp.Token):
           loc = len(instr)
        return loc, pp.ParseResults(out.strip())
 
-class SectionString(BaseType):
+class SectionString(GrammarType):
       """
       The grammar_type of a custom section - i.e. string, that
       ends with a section separator.

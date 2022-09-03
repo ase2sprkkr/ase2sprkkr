@@ -10,7 +10,7 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 ), or write such object to a file.
 """
 
-from ..common.grammar_types  import type_from_type, type_from_value, BaseType
+from ..common.grammar_types  import type_from_type, type_from_value, GrammarType
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 import pyparsing as pp
 from ..common.misc import OrderedDict
@@ -215,9 +215,9 @@ class BaseValueDefinition(BaseDefinition):
     name: str
       Name of the configuration value
 
-    type: Optional[BaseType|mixed]
+    type: Optional[GrammarType|mixed]
       Configuration value data type.
-      If it is set to anyting what is not derived from BaseType, the given value is used as the default value
+      If it is set to anyting what is not derived from GrammarType, the given value is used as the default value
       and the data type is derived from it.
       If it is None, the default value have to be set using ``expert`` parameter.
 
@@ -268,12 +268,12 @@ class BaseValueDefinition(BaseDefinition):
        raise TypeError("The data-type of the configuration value is required.")
 
     self.type = type_from_type(type)
-    if default_value is None and not isinstance(self.type, BaseType):
+    if default_value is None and not isinstance(self.type, GrammarType):
        self.type = type_from_value(type)
        self.default_value = self.type.convert(type)
     else:
        self.default_value = self.type.convert(default_value) if default_value is not None else None
-    assert isinstance(self.type, BaseType), "grammar_type (sprkkr.common.grammar_types.BaseType descendat) required as a value type"
+    assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value

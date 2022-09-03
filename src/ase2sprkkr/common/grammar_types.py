@@ -38,21 +38,21 @@ def compare_numpy_values(a,b):
 type_from_type_map = {}
 
 def type_from_type(type, format='', format_all=False):
-  """ Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int => Integer.
+  """ Guess and return the grammar element (GrammarType class descendatnt) from a python type. E.g. int => Integer.
 
       The given format can be optionally set to the returned grammar element.
 
       Parameters
       ----------
-      type: A python type or BaseType
-        A type to be converted to a grammar type (BaseType class descendant)
+      type: A python type or GrammarType
+        A type to be converted to a grammar type (GrammarType class descendant)
 
       format: str or dict
         The format to be applied to the resulting class. If dict is given, see 'format_for_type'
         for the way how the format is determined
 
       format_all: boolean
-        If False (default), the format is not applied, if instance of BaseType is given as
+        If False (default), the format is not applied, if instance of GrammarType is given as
         the type parameter. Otherwise, a copy of the input type with the applied format is returned
   """
   if isinstance(type, Hashable) and type in type_from_type_map:
@@ -69,14 +69,14 @@ def type_from_type(type, format='', format_all=False):
   return type
 
 
-class BaseType:
+class GrammarType:
   """ Base class for definition of configuration option types
 
       A type without value (e.g. Separator) are just syntactical
       elements in the potentials file, that do not carry an information.
       Such elements do not yields (name, value) pair during parsing the file.
 
-      Do not confuse this with BaseType.missing_value functionality.
+      Do not confuse this with GrammarType.missing_value functionality.
       Missing_value is just the opposite: missing_value can be ommited in the file
       (or even the absence of the name in the file carry the information, that
       the Flag is False), but the name-value tuple of such Type is present
@@ -141,7 +141,7 @@ class BaseType:
       after_convert
         Function, that - if it is given - is applied to the (entered or parsed) value. The function
         is applied on the result of the
-        :meth:`convert<ase2sprkkr.common.grammar_types.BaseType.convert>` method
+        :meth:`convert<ase2sprkkr.common.grammar_types.GrammarType.convert>` method
       """
 
       self.prefix = prefix
@@ -345,7 +345,7 @@ class BaseType:
        out.replace('\n', '\n' + prefix)
     return out
 
-class Unsigned(BaseType):
+class Unsigned(GrammarType):
   """ Unsigned integer (zero is possible) """
 
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
@@ -360,7 +360,7 @@ class Unsigned(BaseType):
   numpy_type = int
 
 
-class Integer(BaseType):
+class Integer(GrammarType):
   """ Signed integer """
 
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
@@ -374,7 +374,7 @@ class Integer(BaseType):
   numpy_type = int
 
 
-class Bool(BaseType):
+class Bool(GrammarType):
   """ A bool type, whose value is represented by a letter (T or F) """
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
@@ -390,7 +390,7 @@ class Bool(BaseType):
   numpy_type = bool
 
 
-class Real(BaseType):
+class Real(GrammarType):
   """ A real value """
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
 
@@ -403,7 +403,7 @@ class Real(BaseType):
   numpy_type = float
 
 
-class Date(BaseType):
+class Date(GrammarType):
   """ A date value of the form 'DD.MM.YYYY' """
 
   _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
@@ -419,7 +419,7 @@ class Date(BaseType):
 
 
 
-class BaseRealWithUnits(BaseType):
+class BaseRealWithUnits(GrammarType):
   """ The base class for float value, which can have units append.
       The value is converted automatically to the base units.
   """
@@ -471,7 +471,7 @@ class Energy(BaseRealWithUnits):
   def __str__(self):
       return "Energy (<Real> [Ry|eV])"
 
-class BaseString(BaseType):
+class BaseString(GrammarType):
   """ Base type for string grammar types """
 
   def _validate(self, value, parse_check=False):
@@ -507,7 +507,7 @@ class LineString(BaseString):
     return "'<str....>\n'"
 
 
-class Keyword(BaseType):
+class Keyword(GrammarType):
   """
   A value, that can take values from the predefined set of strings.
   """
@@ -556,7 +556,7 @@ def DefKeyword(default, *others, **kwargs):
   return Keyword(default, *others, default_value=default, **kwargs)
 
 
-class Flag(BaseType):
+class Flag(GrammarType):
   """
   A boolean value, which is True, if a name of the value appears in the input file.
   """
@@ -576,7 +576,7 @@ class Flag(BaseType):
   _grammar = pp.Empty().setParseAction(lambda x: True)
 
 
-class Array(BaseType):
+class Array(GrammarType):
   """ A (numpy) array of values of one type """
 
   delimiter=White(' \t').suppress()
@@ -738,7 +738,7 @@ class Complex(SetOf):
   def _string(self, val):
     return real._string(val.real) + ' ' + real._string(val.imag)
 
-  __str__ = BaseType.__str__
+  __str__ = GrammarType.__str__
 
 def type_from_value(value):
   """ Gues the grammar type from a python value.
@@ -772,13 +772,13 @@ def type_from_default_value(value, format='', format_all=False):
 
    Grammar types passed as types are left as is, unless format_all flag is set.
    """
-   if inspect.isclass(value) or isinstance(value, BaseType):
+   if inspect.isclass(value) or isinstance(value, GrammarType):
       return type_from_type(value, format=format, format_all=format_all)
    ptype = normalize_type(value.__class__)
    gtype = type_from_type(value.__class__).__class__
    return gtype(default_value = value, format=format_for_type(format, ptype))
 
-class BaseMixed(BaseType):
+class BaseMixed(GrammarType):
   """
   A variant type - it can hold "anything".
   """
@@ -883,7 +883,7 @@ class PotMixed(BaseMixed):
 
   is_the_same_value = staticmethod(compare_numpy_values)
 
-class Separator(BaseType):
+class Separator(GrammarType):
   """ Special class for ``****`` separator inside a section """
 
   _grammar = separator_grammar.copy().setParseAction(lambda x: [None])
@@ -899,7 +899,7 @@ class Separator(BaseType):
       return '*'*79
 
 
-class Sequence(BaseType):
+class Sequence(GrammarType):
   """ A sequence of values of given types """
 
   def __init__(self, *types, format='', format_all=False, allowed_values=None,
@@ -989,7 +989,7 @@ class Sequence(BaseType):
 
   is_the_same_value = staticmethod(compare_numpy_values)
 
-class Table(BaseType):
+class Table(GrammarType):
   """
   Table, optionaly with named columns, e.g.
 
