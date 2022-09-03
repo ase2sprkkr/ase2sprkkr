@@ -35,6 +35,41 @@ def compare_numpy_values(a,b):
     """
     return np.array_equal(a,b)
 
+#will be initialized later
+type_from_type_map = {}
+
+def type_from_type(type, format='', format_all=False):
+  """ Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int => Integer.
+
+      The given format can be optionally set to the returned grammar element.
+
+      Parameters
+      ----------
+      type: A python type or BaseType
+        A type to be converted to a grammar type (BaseType class descendant)
+
+      format: str or dict
+        The format to be applied to the resulting class. If dict is given, see 'format_for_type'
+        for the way how the format is determined
+
+      format_all: boolean
+        If False (default), the format is not applied, if instance of BaseType is given as
+        the type parameter. Otherwise, a copy of the input type with the applied format is returned
+  """
+  if isinstance(type, Hashable) and type in type_from_type_map:
+    type = normalize_type(type)
+    format = format_for_type(format, type)
+    type = type_from_type_map[type]
+    if format:
+        type = type.copy()
+        type.format = format
+    return type
+  elif format_all:
+    type = type.copy()
+    type.format = format_for_type(format, normalize_type(type.numpy_type))
+  return type
+
+
 class BaseType:
   """ Base class for definition of configuration option types
 
@@ -295,6 +330,20 @@ class BaseType:
   def __repr__(self):
     return "<{}>".format(self.__class__.__name__)
 
+  def additional_description(self, prefix='') -> str:
+    """ If the description of the type does not fit on one line,
+    this method should return
+
+    Returns
+    -------
+    additional_description
+      The additional description (e.g. possible choices) of the type. Multiline string.
+    """
+    out = self._additional_description
+    if prefix:
+       out.replace('\n', '\n' + prefix)
+    return out
+
 class Unsigned(BaseType):
   """ Unsigned integer (zero is possible) """
 
@@ -309,7 +358,6 @@ class Unsigned(BaseType):
 
   numpy_type = int
 
-Unsigned.I = Unsigned()
 
 class Integer(BaseType):
   """ Signed integer """
@@ -324,7 +372,6 @@ class Integer(BaseType):
 
   numpy_type = int
 
-Integer.I = Integer()
 
 class Bool(BaseType):
   """ A bool type, whose value is represented by a letter (T or F) """
@@ -341,8 +388,6 @@ class Bool(BaseType):
 
   numpy_type = bool
 
-Bool.I = Bool()
-
 
 class Real(BaseType):
   """ A real value """
@@ -356,7 +401,6 @@ class Real(BaseType):
 
   numpy_type = float
 
-Real.I = Real()
 
 class Date(BaseType):
   """ A date value of the form 'DD.MM.YYYY' """
@@ -372,7 +416,6 @@ class Date(BaseType):
   def _string(self, val):
     return val.strftime("%d.%m.%Y")
 
-Date.I = Date()
 
 
 class BaseRealWithUnits(BaseType):
@@ -424,7 +467,6 @@ class Energy(BaseRealWithUnits):
   }
   """ The allowed units and their conversion factors """
 
-Energy.I = Energy()
 
 class BaseString(BaseType):
   """ Base type for string grammar types """
@@ -444,7 +486,7 @@ class String(BaseString):
 
   def grammar_name(self):
     return '<str>'
-String.I = String()
+
 
 class QString(BaseString):
   """ Either a quoted string, or just a word (without whitespaces or special chars) """
@@ -453,7 +495,6 @@ class QString(BaseString):
   def grammar_name(self):
     return "'<str>'"
 
-QString.I = String()
 
 class LineString(BaseString):
   """ A string, that takes all up to the end of the line """
@@ -462,7 +503,6 @@ class LineString(BaseString):
   def grammar_name(self):
     return "'<str....>\n'"
 
-LineString.I = LineString()
 
 class Keyword(BaseType):
   """
@@ -512,85 +552,6 @@ class Flag(BaseType):
       return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
 
   _grammar = pp.Empty().setParseAction(lambda x: True)
-
-Flag.I = Flag()
-
-normalize_type_map = {
-    np.int64 : int,
-    np.float64: float,
-    np.bool_: bool
-}
-""" Mapping of alternative types to the 'canonical ones'. """
-
-def normalize_type(type):
-    """ Return the 'canonical type' for a given type
-
-    I.e. it maps numpy internal types to standard python ones
-
-    doctest:
-    >>> normalize_type(np.int64)
-    <class 'int'>
-    """
-    return normalize_type_map.get(type, type)
-
-type_from_type_map = OrderedDict([
-    (float, Real.I),
-    (int  , Integer.I),
-    (bool,  Bool.I),
-    (str  , String.I)]
-)
-""" The standard grammar_types for python types.
-
-The value type can be given by a standard python type, this map maps the
-python type for the appropriate grammar_type class.
-"""
-
-def format_for_type(format, type):
-  """
-  Returns the format appropriate to the given type
-
-  Parameters
-  ----------
-  format: str or dict
-    If it is str, just return it.
-    Dict should has the form { type : format_for_the_type } + { None : default_format }
-  """
-  if isinstance(format, dict):
-     if type in format:
-        return format[type]
-     return format[None]
-  return format
-
-def type_from_type(type, format='', format_all=False):
-  """ Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int => Integer.
-
-      The given format can be optionally set to the returned grammar element.
-
-      Parameters
-      ----------
-      type: A python type or BaseType
-        A type to be converted to a grammar type (BaseType class descendant)
-
-      format: str or dict
-        The format to be applied to the resulting class. If dict is given, see 'format_for_type'
-        for the way how the format is determined
-
-      format_all: boolean
-        If False (default), the format is not applied, if instance of BaseType is given as
-        the type parameter. Otherwise, a copy of the input type with the applied format is returned
-  """
-  if isinstance(type, Hashable) and type in type_from_type_map:
-    type = normalize_type(type)
-    format = format_for_type(format, type)
-    type = type_from_type_map[type]
-    if format:
-        type = type.copy()
-        type.format = format
-    return type
-  elif format_all:
-    type = type.copy()
-    type.format = format_for_type(format, normalize_type(type.numpy_type))
-  return type
 
 
 class Array(BaseType):
@@ -722,16 +683,8 @@ class SetOf(Array):
   def __str__(self):
     return "SetOf({})".format(str(self.type))
 
-type_from_set_map = OrderedDict([
-    (float, SetOf(float)),
-    (int  , SetOf(int)),
-])
-""" Map the python type of a collection member to a grammar type of the collection.
 
-Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`
-"""
 
-recognized_set_types = ( list, tuple, np.ndarray )
 
 def type_from_value(value):
   """ Gues the grammar type from a python value.
@@ -824,44 +777,49 @@ class Range(BaseMixed):
   def get_type(self, value):
       return self.types[1 if isinstance(value, recognized_set_types) else 0]
 
+
 class Mixed(BaseMixed):
   """ A variant value to be used in input files (in unknown - custom - options) """
 
-  string_type = QString.I
-  """ Input files use quoted strings. """
 
-  types = [
-      Energy.I,
-      Real.I,
-      Integer.I,
-      type_from_set_map[int],
-      type_from_set_map[float],
-      QString.I,
-      Flag.I,
-  ]
+  @classmethod
+  def _initialize(cls):
+    """ Have to be called later, after the used types are instantiated """
+    cls.types = [
+        Energy.I,
+        Real.I,
+        Integer.I,
+        set_of_integers,
+        set_of_reals,
+        QString.I,
+        Flag.I,
+    ]
+    cls.string_type = QString.I
+    """ Input files use quoted strings. """
 
   def missing_value(self):
     return True, True, False
 
   is_the_same_value = staticmethod(compare_numpy_values)
 
-Mixed.I = Mixed()
-
 class PotMixed(BaseMixed):
   """ A variant value to be used in potential files (in unknown - custom - options) """
 
-  string_type = LineString.I
-  """ Potential files use line strings. """
+  @classmethod
+  def _initialize(cls):
+    """ Have to be called later, after the used types are instantiated """
+    cls.types = [
+        Energy.I,
+        Real.I,
+        Integer.I,
+        Bool.I,
+        set_of_integers,
+        set_of_reals,
+        LineString.I,
+    ]
 
-  types = [
-      Energy.I,
-      Real.I,
-      Integer.I,
-      Bool.I,
-      type_from_set_map[int],
-      type_from_set_map[float],
-      LineString.I,
-  ]
+    cls.string_type = LineString.I
+    """ Potential files use line strings. """
 
   def _string(self, val):
     if isinstance(val, bool):
@@ -870,8 +828,6 @@ class PotMixed(BaseMixed):
        return super()._string(val)
 
   is_the_same_value = staticmethod(compare_numpy_values)
-PotMixed.I = PotMixed()
-
 
 class Separator(BaseType):
   """ Special class for ``****`` separator inside a section """
@@ -888,7 +844,6 @@ class Separator(BaseType):
   def _string(self, val=None):
       return '*'*79
 
-Separator.I = Separator()
 
 class Sequence(BaseType):
   """ A sequence of values of given types """
@@ -1151,30 +1106,110 @@ class Table(BaseType):
         data = self.sequence.grammar_name()
       return f"<TABLE of {data}>"
 
-integer = Integer.I
-""" A standard signed integer grammar type instance """
-unsigned = Unsigned.I
-""" A standard unsigned integer grammar type instance """
-boolean = Bool.I
-""" A standard bool grammar type instance (for potential files) """
-flag = Flag.I
-""" A standard bool grammar type instance (for input files) """
-real = Real.I
-""" A standard real grammar type instance """
-string = String.I
-""" A standard string grammar type instance """
-qstring = QString.I
-""" A standard quoted string grammar type instance (for input files) """
-line_string = LineString.I
-""" A standard line string grammar type instance (for potential files) """
-mixed = Mixed.I
-""" A standard variant grammar type instance (for input files) """
-pot_mixed = PotMixed.I
-""" A standard variant grammar type instance (for potential files) """
-separator = Separator.I
-""" A standard separator line grammar type instance (for potential files) """
-energy = Energy.I
-""" A standard energy float value type instance (for potential files) """
+  is_the_same_value = staticmethod(compare_numpy_values)
 
+
+#commonly used types
+
+integer = Integer.I = Integer()
+""" A standard grammar type instance for (signed) integers """
+unsigned = Unsigned.I = Unsigned()
+""" A standard grammar type instance for unsigned integers """
+boolean = Bool.I = Bool()
+""" A standard grammar type instance for booleans in potential files """
+flag = Flag.I = Flag()
+""" A standard grammar type instance for booleans in input files """
+real = Real.I = Real()
+""" A standard grammar type instance for reals"""
+date = Date.I = Date()
+""" A standard instance for the grammar type for dates """
+string = String.I = String()
+""" A standard grammar type instance for strings """
+qstring = QString.I = QString()
+""" A standard grammar type instance for quoted strings in input files """
+line_string = LineString.I = LineString()
+""" A standard grammar type instance for one-line strings in potential files """
+energy = Energy.I = Energy()
+""" A standard grammar type instance for energy values (float) for potential files """
+
+set_of_integers = SetOf(integer)
+""" A standard grammar type instance for array of integers (of any length, used by variant types) """
+set_of_reals = SetOf(real)
+""" A standard grammar type instance for array of reals (of any length, used by variant types) """
+
+separator = Separator.I = Separator()
+""" A standard grammar type instance for separators in potential files """
+
+#Now, we can finally initialize the mixed types
+Mixed._initialize()
+PotMixed._initialize()
+
+mixed = Mixed.I = Mixed()
+""" A standard grammar type instance for variant (mixed) in input files """
+pot_mixed = PotMixed.I = PotMixed()
+""" A standard grammar type instance for variant (mixed) values in potential files """
+
+# some mapping and other stuff used by the types
+normalize_type_map = {
+    np.int64 : int,
+    np.float64: float,
+    np.bool_: bool
+}
+""" Mapping of alternative types to the 'canonical ones'. """
+
+def normalize_type(type):
+    """ Return the 'canonical type' for a given type.
+
+    I.e. it maps numpy internal types to standard python ones.
+
+    doctest:
+    >>> normalize_type(np.int64)
+    <class 'int'>
+    """
+    return normalize_type_map.get(type, type)
+
+type_from_type_map = OrderedDict([
+    (float, Real.I),
+    (int  , Integer.I),
+    (bool,  Bool.I),
+    (str  , String.I)]
+)
+""" The standard grammar_types for python types.
+
+The value type can be given by a standard python type, this map maps the
+python type for the appropriate grammar_type class.
+"""
+
+recognized_set_types = ( list, tuple, np.ndarray )
+""" The types, that are recognized as 'list of values' and so that will
+be accepted as values for array_like type (e.g. :class:`Array` or :class:`SetOf`). """
+
+def format_for_type(format, type):
+  """
+  Returns the format appropriate to the given type
+
+  Parameters
+  ----------
+  format: str or dict
+    If it is str, just return it.
+    Dict should has the form { type : format_for_the_type } + { None : default_format }
+  """
+  if isinstance(format, dict):
+     if type in format:
+        return format[type]
+     return format[None]
+  return format
+
+type_from_set_map = OrderedDict([
+    (float, set_of_reals),
+    (int  , set_of_integers),
+])
+""" Map the python type of a collection member to a grammar type of the collection.
+
+Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`
+"""
+
+
+#some cleanup
 context.__exit__(None, None, None)
 del context
