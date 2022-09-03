@@ -199,7 +199,11 @@ class ConfigurationContainer(BaseConfiguration):
            self._members[name].set(value, unknown=unknown)
 
       if values:
-        for i,v in values.items():
+        try:
+           items = values.items()
+        except AttributeError:
+          raise ValueError('Only dictionaries can be assigned to section.')
+        for i,v in items:
            set_value(i,v)
       if kwargs:
         for i,v in kwargs.items():
@@ -331,10 +335,6 @@ class ConfigurationContainer(BaseConfiguration):
 
       raise NotImplemented()
 
-
-class BaseSection(ConfigurationContainer):
-  """ A section of SPRKKR configuration - i.e. part of the configuration file. """
-
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member
       with a given name """
@@ -343,6 +343,9 @@ class BaseSection(ConfigurationContainer):
       else:
         val = self._get_member(name)
         val.set(value)
+
+class BaseSection(ConfigurationContainer):
+  """ A section of SPRKKR configuration - i.e. part of the configuration file. """
 
   def has_any_value(self) -> bool:
       """
