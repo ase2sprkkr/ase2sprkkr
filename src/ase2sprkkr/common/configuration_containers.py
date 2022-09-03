@@ -338,7 +338,8 @@ class ConfigurationContainer(BaseConfiguration):
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member
       with a given name """
-      if name[0]=='_':
+      if name[0]=='_' or name in self.__dict__ \
+          or hasattr(getattr(self.__class__, name, None),'__set__'):
         super().__setattr__(name, value)
       else:
         val = self._get_member(name)
