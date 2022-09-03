@@ -760,7 +760,7 @@ def type_from_value(value):
         return QString.I
   type = type_from_type(value.__class__)
   if type is value.__class__:
-     raise ValueError('Cannot determine grammar type from value {value}')
+     raise ValueError(f'Cannot determine grammar type from value {value}')
   return type.__class__(default_value = value)
 
 def type_from_default_value(value, format='', format_all=False):
