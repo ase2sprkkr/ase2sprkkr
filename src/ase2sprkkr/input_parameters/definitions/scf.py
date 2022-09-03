@@ -15,8 +15,8 @@ input_parameters = InputParameters(
         SCF,
         SITES
       ],
-      description = "SCF calculation",
-      help = "Set at least options ..., ...., .....",
+      info = "SCF - calculate a self-consistent potential",
+      description = "<TODO: fill something meaningfull>",
       executable = 'kkrscf',
       mpi = True
 )

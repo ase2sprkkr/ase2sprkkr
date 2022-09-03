@@ -4,7 +4,6 @@ Classes, that represents various value types that can appear in the configuratio
 Each grammar type can both parse string containing a value of a given type, and to create the string containing a given value.
 """
 
-
 import pyparsing as pp
 import io
 import inspect
@@ -13,7 +12,7 @@ import itertools
 import numpy as np
 from collections import namedtuple
 from collections.abc import Hashable
-from .misc import OrderedDict, cached_property, cache
+from .misc import OrderedDict, cached_property, cache, add_to_signature
 ppc = pp.pyparsing_common
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
@@ -28,14 +27,56 @@ context =  generate_grammar()
 context.__enter__()
 #it ensures that the generated grammar will have the correct whitespaces
 
-class BaseType:
+def compare_numpy_values(a,b):
+    """ The numpy arrays cannot be compared by =, that's why this method.
+    However, the method is still far from to be perfect, it can not
+    compare nested numpy arrays.
+    """
+    return np.array_equal(a,b)
+
+#will be initialized later
+type_from_type_map = {}
+
+def type_from_type(type, format='', format_all=False):
+  """ Guess and return the grammar element (GrammarType class descendatnt) from a python type. E.g. int => Integer.
+
+      The given format can be optionally set to the returned grammar element.
+
+      Parameters
+      ----------
+      type: A python type or GrammarType
+        A type to be converted to a grammar type (GrammarType class descendant)
+
+      format: str or dict
+        The format to be applied to the resulting class. If dict is given, see 'format_for_type'
+        for the way how the format is determined
+
+      format_all: boolean
+        If False (default), the format is not applied, if instance of GrammarType is given as
+        the type parameter. Otherwise, a copy of the input type with the applied format is returned
+  """
+  if isinstance(type, Hashable) and type in type_from_type_map:
+    type = normalize_type(type)
+    format = format_for_type(format, type)
+    type = type_from_type_map[type]
+    if format:
+        type = type.copy()
+        type.format = format
+    return type
+  elif format_all:
+    type = type.copy()
+    type.format = format_for_type(format, normalize_type(type.numpy_type))
+  return type
+
+
+class GrammarType:
   """ Base class for definition of configuration option types
 
       A type without value (e.g. Separator) are just syntactical
       elements in the potentials file, that do not carry an information.
       Such elements do not yields (name, value) pair during parsing the file.
 
-      Do not confuse this with BaseType.missing_value functionality.
+      Do not confuse this with GrammarType.missing_value functionality.
       Missing_value is just the opposite: missing_value can be ommited in the file
       (or even the absence of the name in the file carry the information, that
       the Flag is False), but the name-value tuple of such Type is present
@@ -56,14 +97,24 @@ class BaseType:
   default_value = None
 
   """ Deafault type for creating numpy arrays (e.g. by Table) is object - to be redefined
-      in the descendatns
+      in the descendatns.
+
+      The functions called during...
+      ------------------------------
+
+      User input:  convert, validate
+
+      Output: string -> _string
+
+      Parsing: parse -> ( <_grammar parse actions>, validate(parse_check = True) )
   """
   numpy_type = object
 
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
                      format:str='', default_value:Any=None,
                      condition:Union[Callable[[Any], Union[bool,str]],None]=None,
-                     after_convert:Union[Callable[[Any], Any],None]=None):
+                     after_convert:Union[Callable[[Any], Any],None]=None,
+                     additional_description=''):
       """
       Create the object.
 
@@ -90,7 +141,7 @@ class BaseType:
       after_convert
         Function, that - if it is given - is applied to the (entered or parsed) value. The function
         is applied on the result of the
-        :meth:`convert<ase2sprkkr.common.grammar_types.BaseType.convert>` method
+        :meth:`convert<ase2sprkkr.common.grammar_types.GrammarType.convert>` method
       """
 
       self.prefix = prefix
@@ -108,9 +159,19 @@ class BaseType:
       """ Some subclasses has default_value defined via read-only property. """
       if default_value is not None:
          self.default_value = self.convert(default_value)
+      self._additional_description = additional_description
 
   def __str__(self):
       return self.__class__.__name__
+
+  @staticmethod
+  def is_the_same_value(a,b):
+    """ Comparison function for the values of "this type".
+
+    Not all values (e.g. numpy arrays) can be compared by equal sign,
+    so this function has to be used for comparison of the values.
+    """
+    return a == b
 
   @cache
   def grammar(self, param_name=False):
@@ -139,6 +200,9 @@ class BaseType:
     return grammar
 
   def parse(self, str, whole_string=True):
+    """
+    Parse the string, return the obtained value.
+    """
     return self.grammar().parseString(str, whole_string)[0]
 
   async def parse_from_stream(self, stream, up_to, start=None, whole_string=True):
@@ -159,8 +223,8 @@ class BaseType:
     return grammar
 
   def missing_value(self):
-    """ Is the configuraion value a flag? I.e. can be =<value> ommited
-    in the configuration
+    """ Is the configuraion value a flag? I.e., can be =<value> ommited
+    in the configuration?
 
     Return
     ------
@@ -168,13 +232,16 @@ class BaseType:
         Is an ommision of the value possible, e.g. the option is given as Flag (only by name of the option)
     default_value
         The value used if the value is ommitted
-    do_not_output_value
-        The value, with which the variable should not be outputed at all (e.g. False for a flag)
+    do_not_output_the_option
+        The value, for which the variable should not be outputed at all (e.g. False for a flag)
     """
     return False, None, None
 
   def validate(self, value, param_name='<Unknown>', parse_check=False):
-    """ Validate either the pyparsing result or a user given value
+    """ Validate either the pyparsing result or a user given value.
+
+    Do not override this method in subclasses for the validation implementation,
+    this method calls :meth:`_validate`, which should contain the actual validation
 
     Parameters
     ---------
@@ -197,7 +264,7 @@ class BaseType:
     return True
 
   def _validate(self, value, parse_check=False):
-    """ Return error message if the value is not valid """
+    """ Return error message if the value is not valid. """
     return True
 
   def _valueError(self, value, error_message=False, param_name=False):
@@ -221,13 +288,20 @@ class BaseType:
     return val
 
   def convert(self, value):
-    """ Convert a value from user to a "cannonical form" """
+    """ Convert a value from user to the "cannonical form" """
     return value
 
   def _string(self, val):
+    """ The string method do some additional transformation (add prefix, postfix etc.),
+    so the actual way how to convert the value for the output should be here. """
     return val
 
   def string(self, val):
+    """ Convert the value to the string according to the class definition.
+    Do not redefine this function, redefine the :meth:`_string` method instead,
+    to retain the common functionality (as adding prefix or postfix to the resulting
+    string).
+    """
     val = self._string(val)
     if self.prefix:
        val = self.prefix + str(val)
@@ -238,9 +312,11 @@ class BaseType:
     return str(val)
 
   def write(self, f, val):
+    """ Output the value to the stream (in the propper format). """
     f.write(self.string(val))
 
   def print(self, val):
+    """ Output the value to stdout (in the propper format). """
     print(self.string(val))
 
   def copy(self):
@@ -255,43 +331,55 @@ class BaseType:
   def __repr__(self):
     return "<{}>".format(self.__class__.__name__)
 
-class Unsigned(BaseType):
+  def additional_description(self, prefix='') -> str:
+    """ If the description of the type does not fit on one line,
+    this method should return
+
+    Returns
+    -------
+    additional_description
+      The additional description (e.g. possible choices) of the type. Multiline string.
+    """
+    out = self._additional_description
+    if prefix:
+       out.replace('\n', '\n' + prefix)
+    return out
+
+class Unsigned(GrammarType):
   """ Unsigned integer (zero is possible) """
 
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
-    if not isinstance(value, int): return "Integer value required"
-    return value >= 0 or "Positive value required"
+    if not isinstance(value, int): return "An integer value required"
+    return value >= 0 or "A positive value required"
 
   def grammar_name(self):
     return '<+int>'
 
   numpy_type = int
 
-Unsigned.I = Unsigned()
 
-class Integer(BaseType):
+class Integer(GrammarType):
   """ Signed integer """
 
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, (int, np.int64) ) or f'Integer value required ({value.__class__} was given)'
+    return isinstance(value, (int, np.int64) ) or f'An integer value required, ({value.__class__} was given)'
 
   def grammar_name(self):
     return '<int>'
 
   numpy_type = int
 
-Integer.I = Integer()
 
-class Bool(BaseType):
+class Bool(GrammarType):
   """ A bool type, whose value is represented by a letter (T or F) """
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, bool) or "Bool value rquired"
+    return isinstance(value, bool) or "A bool value rquired"
 
   def grammar_name(self):
     return '<T|F>'
@@ -301,30 +389,27 @@ class Bool(BaseType):
 
   numpy_type = bool
 
-Bool.I = Bool()
 
-
-class Real(BaseType):
+class Real(GrammarType):
   """ A real value """
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, float) or "Float value required"
+    return isinstance(value, float) or "A float value required"
 
   def grammar_name(self):
     return '<float>'
 
   numpy_type = float
 
-Real.I = Real()
 
-class Date(BaseType):
+class Date(GrammarType):
   """ A date value of the form 'DD.MM.YYYY' """
 
   _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, datetime.date) or "Date (datetime.date) value required"
+    return isinstance(value, datetime.date) or "A date (datetime.date) value required"
 
   def grammar_name(self):
     return '<dd.mm.yyyy>'
@@ -332,10 +417,9 @@ class Date(BaseType):
   def _string(self, val):
     return val.strftime("%d.%m.%Y")
 
-Date.I = Date()
 
 
-class BaseRealWithUnits(BaseType):
+class BaseRealWithUnits(GrammarType):
   """ The base class for float value, which can have units append.
       The value is converted automatically to the base units.
   """
@@ -360,7 +444,7 @@ class BaseRealWithUnits(BaseType):
     return self._grammar_units(self.units)
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, float) or "Float value required"
+    return isinstance(value, float) or "A float value required"
 
   def grammar_name(self):
     return '<float>[{}]'.format("|".join(('' if i is None else i for i in self.units)))
@@ -384,13 +468,14 @@ class Energy(BaseRealWithUnits):
   }
   """ The allowed units and their conversion factors """
 
-Energy.I = Energy()
+  def __str__(self):
+      return "Energy (<Real> [Ry|eV])"
 
-class BaseString(BaseType):
+class BaseString(GrammarType):
   """ Base type for string grammar types """
 
   def _validate(self, value, parse_check=False):
-    if not isinstance(value, str): return "String value required"
+    if not isinstance(value, str): return "A string value required"
     if not parse_check:
       try:
         self._grammar.parseString(value, True)
@@ -404,7 +489,7 @@ class String(BaseString):
 
   def grammar_name(self):
     return '<str>'
-String.I = String()
+
 
 class QString(BaseString):
   """ Either a quoted string, or just a word (without whitespaces or special chars) """
@@ -413,7 +498,6 @@ class QString(BaseString):
   def grammar_name(self):
     return "'<str>'"
 
-QString.I = String()
 
 class LineString(BaseString):
   """ A string, that takes all up to the end of the line """
@@ -422,16 +506,21 @@ class LineString(BaseString):
   def grammar_name(self):
     return "'<str....>\n'"
 
-LineString.I = LineString()
 
-class Keyword(BaseType):
+class Keyword(GrammarType):
   """
   A value, that can take values from the predefined set of strings.
   """
 
   def __init__(self, *keywords, **kwargs):
     super().__init__(**kwargs)
-    self.keywords = [ i.upper() for i in keywords ]
+    if len(keywords)==1 and isinstance(keywords[0], dict):
+       self.choices = keywords[0]
+       keywords = self.choices.keys()
+    else:
+       self.choices = None
+
+    self.keywords = [ str(i).upper() for i in keywords ]
     with generate_grammar():
       self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
 
@@ -439,13 +528,26 @@ class Keyword(BaseType):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
   def grammar_name(self):
-      return '|'.join(('"'+i+'"' for i in self.keywords ))
+      if len(self.keywords) == 1:
+         return f'FixedValue({next(iter(self.keywords))})'
+      return 'AnyOf(' + ','.join((i for i in self.keywords )) + ')'
 
   def __str__(self):
       return self.grammar_name()
 
   def convert(self, value):
-      return value.upper()
+      return str(value).upper()
+
+  def additional_description(self, prefix=''):
+      ad = super().additional_description(prefix)
+      if not self.choices:
+         return ad
+      out = f'{prefix}Possible values:\n'
+      out += '\n'.join([f"{prefix}  {k:<10}{v}" for k,v in self.choices.items()])
+      if ad:
+         out += '\n' + ad
+      return out
+
 
 def DefKeyword(default, *others, **kwargs):
   """
@@ -454,7 +556,7 @@ def DefKeyword(default, *others, **kwargs):
   return Keyword(default, *others, default_value=default, **kwargs)
 
 
-class Flag(BaseType):
+class Flag(GrammarType):
   """
   A boolean value, which is True, if a name of the value appears in the input file.
   """
@@ -473,87 +575,8 @@ class Flag(BaseType):
 
   _grammar = pp.Empty().setParseAction(lambda x: True)
 
-Flag.I = Flag()
 
-normalize_type_map = {
-    np.int64 : int,
-    np.float64: float,
-    np.bool_: bool
-}
-""" Mapping of alternative types to the 'canonical ones'. """
-
-def normalize_type(type):
-    """ Return the 'canonical type' for a given type
-
-    I.e. it maps numpy internal types to standard python ones
-
-    doctest:
-    >>> normalize_type(np.int64)
-    <class 'int'>
-    """
-    return normalize_type_map.get(type, type)
-
-type_from_type_map = OrderedDict([
-    (float, Real.I),
-    (int  , Integer.I),
-    (bool,  Bool.I),
-    (str  , String.I)]
-)
-""" The standard grammar_types for python types.
-
-The value type can be given by a standard python type, this map maps the
-python type for the appropriate grammar_type class.
-"""
-
-def format_for_type(format, type):
-  """
-  Returns the format appropriate to the given type
-
-  Parameters
-  ----------
-  format: str or dict
-    If it is str, just return it.
-    Dict should has the form { type : format_for_the_type } + { None : default_format }
-  """
-  if isinstance(format, dict):
-     if type in format:
-        return format[type]
-     return format[None]
-  return format
-
-def type_from_type(type, format='', format_all=False):
-  """ Guess and return the grammar element (BaseType class descendatnt) from a python type. E.g. int => Integer.
-
-      The given format can be optionally set to the returned grammar element.
-
-      Parameters
-      ----------
-      type: A python type or BaseType
-        A type to be converted to a grammar type (BaseType class descendant)
-
-      format: str or dict
-        The format to be applied to the resulting class. If dict is given, see 'format_for_type'
-        for the way how the format is determined
-
-      format_all: boolean
-        If False (default), the format is not applied, if instance of BaseType is given as
-        the type parameter. Otherwise, a copy of the input type with the applied format is returned
-  """
-  if isinstance(type, Hashable) and type in type_from_type_map:
-    type = normalize_type(type)
-    format = format_for_type(format, type)
-    type = type_from_type_map[type]
-    if format:
-        type = type.copy()
-        type.format = format
-    return type
-  elif format_all:
-    type = type.copy()
-    type.format = format_for_type(format, normalize_type(type.numpy_type))
-  return type
-
-
-class Array(BaseType):
+class Array(GrammarType):
   """ A (numpy) array of values of one type """
 
   delimiter=White(' \t').suppress()
@@ -563,6 +586,28 @@ class Array(BaseType):
                length=None, max_length=None, min_length=None,
                as_list=False,
                **kwargs):
+    """
+    Parameters
+    ----------
+    type
+      The grammar type of the values in the list (it can be given by a python type)
+
+    default_value
+      The default value for the list
+
+    length
+      If it is set, the list have to have just this length (it sets ``min_`` and ``max_length`` to the ``length``)
+
+    min_length
+      The minimal allowed length of the list.
+
+    max_length
+      The maximal allowed length of the list.
+
+    as_list
+      Type of the value array. True means List, False means np.ndarray, or custom type (e.g. tuple)
+      can be provided. However, the value can be set using tuple or list anyway.
+    """
     if isinstance(type, (list, np.ndarray)):
         if default_value is not None:
            raise ValueException("It is not possible for an Array to provide default_value both in 'default_value' and in 'type' argument")
@@ -576,18 +621,35 @@ class Array(BaseType):
     with generate_grammar():
       grammar = self.type.grammar()
       grammar = delimitedList(grammar, self.delimiter)
-      if self.as_list:
-        if callable(self.as_list):
-          grammar = grammar.setParseAction(lambda x: self.as_list(x.asList()))
-        else:
-          grammar = grammar.setParseAction(lambda x: [x.asList()])
-      else:
-        grammar.setParseAction(lambda x: self.convert(x.asList()))
-        grammar.setName(self.grammar_name())
+      self._set_convert_action(grammar)
+      grammar.setName(self.grammar_name())
+
     self._grammar = grammar
 
+  def _set_convert_action(self, grammar):
+    if self.as_list:
+      if callable(self.as_list):
+        grammar = grammar.setParseAction(lambda x: self.as_list(x.asList()))
+      else:
+        grammar = grammar.setParseAction(lambda x: [x.asList()])
+    else:
+      grammar.setParseAction(lambda x: self.convert(x.asList()))
+
   def __str__(self):
-    return "Array({})".format(str(self.type))
+    if self.min_length == self.max_length:
+       if self.min_length:
+          length = f' of length {self.min_length}'
+       else:
+          length = ''
+    else:
+       if self.min_length is not None:
+          length='{self.min_length}<=n'
+       else:
+          length='n'
+       if self.max_length is not None:
+          length+=f'<=self.max_length'
+       length=' with length '
+    return f"Array(of {self.type}{length})"
 
   def grammar_name(self):
       gn = self.type.grammar_name()
@@ -612,7 +674,7 @@ class Array(BaseType):
     else:
        cls = np.ndarray
     if not isinstance(value, cls):
-       return f'{cls} type required, {value.__class__} is given'
+       return f'A value of the {cls} type is required, a {value.__class__} is given'
 
     for i,v in enumerate(value):
         try:
@@ -621,7 +683,7 @@ class Array(BaseType):
            raise ValueError("Value {} in the set is incorrect: {}".format(i, str(e))) from e
     if self.min_length is not None and len(value) < self.min_length:
        return f"The array should be at least {self.min_length} items long, it has {len(value)} items"
-    if self.max_length is not None and len(value) > self.min_length:
+    if self.max_length is not None and len(value) > self.max_length:
        return f"The array can not have more than {self.max_length} items, it has {len(value)} items"
     return True
 
@@ -629,7 +691,8 @@ class Array(BaseType):
     if self.as_list:
        if callable(self.as_list):
           return value if isinstance(value, self.as_list) else self.as_list(value)
-       return list(value) if isinstance(value, tuple) else value
+       else:
+          return list(value) if isinstance(value, tuple) else value
     if not isinstance(value, np.ndarray):
        if self.type.numpy_type == object:
           #https://stackoverflow.com/questions/60939396/forcing-a-creation-of-1d-numpy-array-from-a-list-array-of-possibly-iterable-obje
@@ -640,6 +703,7 @@ class Array(BaseType):
           return np.atleast_1d(value)
     return value
 
+  is_the_same_value = staticmethod(compare_numpy_values)
 
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
@@ -647,25 +711,34 @@ class SetOf(Array):
   delimiter = pp.Suppress(pp.Literal(',') | pp.Literal(';') | White(' \t')).setName('[,; ]')
   delimiter_str = ','
 
-  def __init__(self, type, **kwargs):
+  @add_to_signature(Array.__init__)
+  def __init__(self, type, *args, **kwargs):
     kwargs.setdefault('prefix', '{')
     kwargs.setdefault('postfix', '}')
-    super().__init__(type, **kwargs)
+    super().__init__(type, *args, **kwargs)
 
   def transform_grammar(self, grammar, param_name=False):
     return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
 
-  def __str__(self):
-    return "SetOf({})".format(str(self.type))
+class Complex(SetOf):
 
-type_from_set_map = OrderedDict([
-    (float, SetOf(float)),
-    (int  , SetOf(int)),
-])
-""" Map the python type of a collection member to a grammar type of the collection.
+  @add_to_signature(SetOf.__init__)
+  def __init__(self, *args, **kwargs):
+    super().__init__(Real.I, *args, as_list=complex, length=2, **kwargs)
 
-Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`
-"""
+  def convert(self, value):
+    return complex(value)
+
+  def _validate(self, value, parse_check=False):
+    return isinstance(value, (complex, np.complexfloating)) or 'A complex value required, {value} given.'
+
+  def _grammar_name(self):
+    return '{complex (as 2 reals)}'
+
+  def _string(self, val):
+    return real._string(val.real) + ' ' + real._string(val.imag)
+
+  __str__ = GrammarType.__str__
 
 def type_from_value(value):
   """ Gues the grammar type from a python value.
@@ -677,7 +750,7 @@ def type_from_value(value):
   >>> type_from_value(2.0)
   <Real>
   """
-  if isinstance(value, (list, np.ndarray)):
+  if isinstance(value, recognized_set_types):
      return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else Integer.I
   if isinstance(value, str):
      try:
@@ -687,7 +760,7 @@ def type_from_value(value):
         return QString.I
   type = type_from_type(value.__class__)
   if type is value.__class__:
-     raise ValueError('Cannot determine grammar type from value {value}')
+     raise ValueError(f'Cannot determine grammar type from value {value}')
   return type.__class__(default_value = value)
 
 def type_from_default_value(value, format='', format_all=False):
@@ -699,13 +772,13 @@ def type_from_default_value(value, format='', format_all=False):
 
    Grammar types passed as types are left as is, unless format_all flag is set.
    """
-   if inspect.isclass(value) or isinstance(value, BaseType):
+   if inspect.isclass(value) or isinstance(value, GrammarType):
       return type_from_type(value, format=format, format_all=format_all)
    ptype = normalize_type(value.__class__)
    gtype = type_from_type(value.__class__).__class__
    return gtype(default_value = value, format=format_for_type(format, ptype))
 
-class BaseMixed(BaseType):
+class BaseMixed(GrammarType):
   """
   A variant type - it can hold "anything".
   """
@@ -716,62 +789,91 @@ class BaseMixed(BaseType):
   string_type = None
   """ Type of string grammar_type to be used.  To be redefined in the descendants. """
 
-  @classmethod
-  def _grammar(cls, param_name=False):
-    return pp.MatchFirst((
-      i.grammar(param_name) for i in cls.types
-    ))
+  def _grammar(self, param_name=False):
+      return pp.MatchFirst((
+        i.grammar(param_name) for i in self.types
+      ))
 
   def get_type(self, value):
-      """ Return the type of the value """
+      """ Return the type of the value.
+      Actualy, this implementation is a simple implementation that suits for the common
+      Mixed types, so if you make a custom Mixed type, redefine it.
+      """
       return self.string_type if isinstance(value, str) else type_from_value(value)
 
   def _validate(self, value, parse_check=False):
-    type = self.get_type(value)
-    if type is value:
-       return 'Can not determine the type of value {}'.format(value)
-    return type.validate(value, parse_check)
+      type = self.get_type(value)
+      if type is value:
+         return 'Can not determine the type of value {}'.format(value)
+      return type.validate(value, parse_check)
 
   def grammar_name(self):
-    return '<mixed>'
+      return '<mixed>'
+
+  def convert(self, value):
+      return self.get_type(value).convert(value)
+
+class Range(BaseMixed):
+  """ A range type - it accepts either one value or range of two values of a given type."""
+
+  @add_to_signature(BaseMixed.__init__, prepend=True)
+  def __init__(self, type, *args, **kwargs):
+      self._type = type_from_type(type)
+      super().__init__(*args, **kwargs)
+
+  @cached_property
+  def types(self):
+      return [
+          self._type,
+          SetOf(self._type, min_length=2, max_length=2)
+      ]
+
+  def get_type(self, value):
+      return self.types[1 if isinstance(value, recognized_set_types) else 0]
 
 
 class Mixed(BaseMixed):
   """ A variant value to be used in input files (in unknown - custom - options) """
 
-  string_type = QString.I
-  """ Input files use quoted strings. """
 
-  types = [
-      Energy.I,
-      Real.I,
-      Integer.I,
-      type_from_set_map[int],
-      type_from_set_map[float],
-      QString.I,
-      Flag.I,
-  ]
+  @classmethod
+  def _initialize(cls):
+    """ Have to be called later, after the used types are instantiated """
+    cls.types = [
+        Energy.I,
+        Real.I,
+        Integer.I,
+        set_of_integers,
+        set_of_reals,
+        QString.I,
+        Flag.I,
+    ]
+    cls.string_type = QString.I
+    """ Input files use quoted strings. """
 
   def missing_value(self):
     return True, True, False
 
-Mixed.I = Mixed()
+  is_the_same_value = staticmethod(compare_numpy_values)
 
 class PotMixed(BaseMixed):
   """ A variant value to be used in potential files (in unknown - custom - options) """
 
-  string_type = LineString.I
-  """ Potential files use line strings. """
+  @classmethod
+  def _initialize(cls):
+    """ Have to be called later, after the used types are instantiated """
+    cls.types = [
+        Energy.I,
+        Real.I,
+        Integer.I,
+        Bool.I,
+        set_of_integers,
+        set_of_reals,
+        LineString.I,
+    ]
 
-  types = [
-      Energy.I,
-      Real.I,
-      Integer.I,
-      Bool.I,
-      type_from_set_map[int],
-      type_from_set_map[float],
-      LineString.I,
-  ]
+    cls.string_type = LineString.I
+    """ Potential files use line strings. """
 
   def _string(self, val):
     if isinstance(val, bool):
@@ -779,10 +881,9 @@ class PotMixed(BaseMixed):
     else:
        return super()._string(val)
 
-PotMixed.I = PotMixed()
+  is_the_same_value = staticmethod(compare_numpy_values)
 
-
-class Separator(BaseType):
+class Separator(GrammarType):
   """ Special class for ``****`` separator inside a section """
 
   _grammar = separator_grammar.copy().setParseAction(lambda x: [None])
@@ -797,9 +898,8 @@ class Separator(BaseType):
   def _string(self, val=None):
       return '*'*79
 
-Separator.I = Separator()
 
-class Sequence(BaseType):
+class Sequence(GrammarType):
   """ A sequence of values of given types """
 
   def __init__(self, *types, format='', format_all=False, allowed_values=None,
@@ -887,8 +987,9 @@ class Sequence(BaseType):
 
       option.__class__ = cls
 
+  is_the_same_value = staticmethod(compare_numpy_values)
 
-class Table(BaseType):
+class Table(GrammarType):
   """
   Table, optionaly with named columns, e.g.
 
@@ -1059,30 +1160,114 @@ class Table(BaseType):
         data = self.sequence.grammar_name()
       return f"<TABLE of {data}>"
 
-integer = Integer.I
-""" A standard signed integer grammar type instance """
-unsigned = Unsigned.I
-""" A standard unsigned integer grammar type instance """
-boolean = Bool.I
-""" A standard bool grammar type instance (for potential files) """
-flag = Flag.I
-""" A standard bool grammar type instance (for input files) """
-real = Real.I
-""" A standard real grammar type instance """
-string = String.I
-""" A standard string grammar type instance """
-qstring = QString.I
-""" A standard quoted string grammar type instance (for input files) """
-line_string = LineString.I
-""" A standard line string grammar type instance (for potential files) """
-mixed = Mixed.I
-""" A standard variant grammar type instance (for input files) """
-pot_mixed = PotMixed.I
-""" A standard variant grammar type instance (for potential files) """
-separator = Separator.I
-""" A standard separator line grammar type instance (for potential files) """
-energy = Energy.I
-""" A standard energy float value type instance (for potential files) """
+  is_the_same_value = staticmethod(compare_numpy_values)
 
+
+#commonly used types
+
+integer = Integer.I = Integer()
+""" A standard grammar type instance for (signed) integers """
+unsigned = Unsigned.I = Unsigned()
+""" A standard grammar type instance for unsigned integers """
+boolean = Bool.I = Bool()
+""" A standard grammar type instance for booleans in potential files """
+flag = Flag.I = Flag()
+""" A standard grammar type instance for booleans in input files """
+real = Real.I = Real()
+""" A standard grammar type instance for reals"""
+date = Date.I = Date()
+""" A standard instance for the grammar type for dates """
+string = String.I = String()
+""" A standard grammar type instance for strings """
+qstring = QString.I = QString()
+""" A standard grammar type instance for quoted strings in input files """
+line_string = LineString.I = LineString()
+""" A standard grammar type instance for one-line strings in potential files """
+energy = Energy.I = Energy()
+""" A standard grammar type instance for energy values (float) for potential files """
+complex_number = Complex.I = Complex()
+""" A standard grammar type instance for complex numbers """
+
+set_of_integers = SetOf(integer)
+""" A standard grammar type instance for array of integers (of any length, used by variant types) """
+set_of_reals = SetOf(real)
+""" A standard grammar type instance for array of reals (of any length, used by variant types) """
+
+separator = Separator.I = Separator()
+""" A standard grammar type instance for separators in potential files """
+
+#Now, we can finally initialize the mixed types
+Mixed._initialize()
+PotMixed._initialize()
+
+mixed = Mixed.I = Mixed()
+""" A standard grammar type instance for variant (mixed) in input files """
+pot_mixed = PotMixed.I = PotMixed()
+""" A standard grammar type instance for variant (mixed) values in potential files """
+
+# some mapping and other stuff used by the types
+normalize_type_map = {
+    np.int64 : int,
+    np.float64: float,
+    np.complex128 : complex,
+    np.bool_: bool
+}
+""" Mapping of alternative types to the 'canonical ones'. """
+
+def normalize_type(type):
+    """ Return the 'canonical type' for a given type.
+
+    I.e. it maps numpy internal types to standard python ones.
+
+    doctest:
+    >>> normalize_type(np.int64)
+    <class 'int'>
+    """
+    return normalize_type_map.get(type, type)
+
+type_from_type_map = OrderedDict([
+    (float, Real.I),
+    (complex, Complex.I),
+    (int  , Integer.I),
+    (bool,  Bool.I),
+    (str  , String.I)]
+)
+""" The standard grammar_types for python types.
+
+The value type can be given by a standard python type, this map maps the
+python type for the appropriate grammar_type class.
+"""
+
+recognized_set_types = ( list, tuple, np.ndarray )
+""" The types, that are recognized as 'list of values' and so that will
+be accepted as values for array_like type (e.g. :class:`Array` or :class:`SetOf`). """
+
+def format_for_type(format, type):
+  """
+  Returns the format appropriate to the given type
+
+  Parameters
+  ----------
+  format: str or dict
+    If it is str, just return it.
+    Dict should has the form { type : format_for_the_type } + { None : default_format }
+  """
+  if isinstance(format, dict):
+     if type in format:
+        return format[type]
+     return format[None]
+  return format
+
+type_from_set_map = OrderedDict([
+    (float, set_of_reals),
+    (int  , set_of_integers),
+])
+""" Map the python type of a collection member to a grammar type of the collection.
+
+Only canonical types are expected, see :meth:`ase2sprkkr.common.grammar_types.normalize_type`
+"""
+
+
+#some cleanup
 context.__exit__(None, None, None)
 del context

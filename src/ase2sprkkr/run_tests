@@ -1,3 +1,8 @@
 #!/bin/bash
+if [[ $1 == '--no-kkr' ]] ; then
+	 export DO_NOT_RUN_SPRKKR=1
+	 shift
+fi
+
 cd "$(dirname "${BASH_SOURCE[0]}")"
 py.test  --doctest-modules . $@

@@ -47,10 +47,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -86,8 +86,8 @@
 <span class="sd">Binding for the es_finder package, that can determine the ideal positions</span>
 <span class="sd">of empty spheres to fill the gaps in the primitive cell.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">pymatgen.io.ase</span> <span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -95,13 +95,15 @@
   <span class="kn">from</span> <span class="nn">es_finder.core.parameters</span> <span class="kn">import</span> <span class="n">Parameters</span>
   <span class="kn">from</span> <span class="nn">es_finder.core.symmetry</span> <span class="kn">import</span> <span class="n">Symmetry</span>
   <span class="kn">from</span> <span class="nn">es_finder.adapter.pymatgen</span> <span class="kn">import</span> <span class="n">StructureAdapter</span>
+  <span class="kn">from</span> <span class="nn">pymatgen.io.ase</span> <span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
+  <span class="n">import_error</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="n">is_enabled</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
   <span class="n">import_error</span> <span class="o">=</span> <span class="n">error</span>
   <span class="n">run_finder</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="n">is_enabled</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">from</span> <span class="nn">ase.spacegroup</span> <span class="kn">import</span> <span class="n">Spacegroup</span>
-<span class="kn">from</span> <span class="nn">.spglib</span> <span class="kn">import</span> <span class="n">spacegroup_dataset</span>
 <span class="kn">from</span> <span class="nn">..sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
 
@@ -165,14 +167,12 @@
 
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">if</span> <span class="n">run_finder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;Cannot import es_finder. Please install it, or set empty_spheres parameter to None&#39;</span><span class="p">)</span> \
+     <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False&#39;</span><span class="p">)</span> \
          <span class="kn">from</span> <span class="nn">import_error</span>
 
   <span class="n">params</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span>
-  <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;atoms&#39;</span><span class="p">]</span>
-  <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;overlap&#39;</span><span class="p">]</span>
-  <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;radii_ratios_map&#39;</span><span class="p">]</span>
-
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">,</span> <span class="s1">&#39;overlap_matrix&#39;</span><span class="p">,</span> <span class="s1">&#39;radii_ratios_map&#39;</span><span class="p">,</span> <span class="s1">&#39;extend&#39;</span><span class="p">):</span>
+      <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
   <span class="k">if</span> <span class="n">radii_ratios_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">radii_ratios_map</span> <span class="o">=</span> <span class="p">{}</span>
@@ -180,7 +180,8 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">radii_ratios_map</span><span class="p">:</span>
       <span class="n">radii_ratios_map</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-  <span class="n">sym_dataset</span> <span class="o">=</span> <span class="n">spacegroup_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+  <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+  <span class="n">sym_dataset</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">spacegroup_info</span><span class="o">.</span><span class="n">dataset</span>
   <span class="k">if</span> <span class="n">sym_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
      <span class="n">sym_dataset</span> <span class="o">=</span> <span class="p">{</span>
          <span class="s1">&#39;translations&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span>
@@ -198,11 +199,15 @@
   <span class="p">)</span>
 
   <span class="n">pmg_structure</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-  <span class="n">structure</span> <span class="o">=</span> <span class="n">StructureAdapter</span><span class="p">(</span><span class="n">pmg_structure</span><span class="p">,</span> <span class="n">radii_ratios_map</span><span class="p">,</span> <span class="n">overlap</span><span class="p">)</span>
+  <span class="n">structure</span> <span class="o">=</span> <span class="n">StructureAdapter</span><span class="p">(</span><span class="n">pmg_structure</span><span class="p">,</span> <span class="n">radii_ratios_map</span><span class="p">,</span> <span class="n">overlap_matrix</span><span class="p">)</span>
 
   <span class="n">params</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
   <span class="n">res</span> <span class="o">=</span> <span class="n">run_finder</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">structure</span><span class="p">,</span> <span class="n">symmetry</span><span class="p">)</span>
+  <span class="n">num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">es_radii</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+     <span class="k">return</span> <span class="kc">None</span>
+
   <span class="n">empty</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">es_radii</span><span class="p">),</span> <span class="n">symmetry</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
   <span class="n">empty</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">es_positions</span><span class="p">)</span>
   <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">radius</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">empty</span><span class="o">.</span><span class="n">sites</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">es_radii</span><span class="p">):</span>

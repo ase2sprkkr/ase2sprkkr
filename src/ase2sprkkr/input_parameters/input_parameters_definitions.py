@@ -57,9 +57,13 @@ class SectionDefinition(BaseSectionDefinition):
 class InputParametersDefinition(ConfDefinition):
   """ This class describes the format of a task file. """
 
-  """ standard child class """
   child_class = SectionDefinition
+  """ Sections of the :class:`InputParameters` are defined by :class:`SectionDefinition` """
   result_class = InputParameters
+  """ The parsing of a potential file results in an instance of :class:`InputParameters` """
+
+  configuration_type_name = 'INPUT PARAMETERS'
+  """ Name of the container type in the runtime documentation """
 
   delimiter = "\n"
   @staticmethod

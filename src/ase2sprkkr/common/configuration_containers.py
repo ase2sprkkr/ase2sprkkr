@@ -199,7 +199,11 @@ class ConfigurationContainer(BaseConfiguration):
            self._members[name].set(value, unknown=unknown)
 
       if values:
-        for i,v in values.items():
+        try:
+           items = values.items()
+        except AttributeError:
+          raise ValueError('Only dictionaries can be assigned to section.')
+        for i,v in items:
            set_value(i,v)
       if kwargs:
         for i,v in kwargs.items():
@@ -247,15 +251,23 @@ class ConfigurationContainer(BaseConfiguration):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def as_dict(self):
+  def as_dict(self, only_changed:Union[bool,str]='basic'):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
 
+      Parameters
+      ----------
+      only_changed
+        Return only changed values, or all of them?
+        If True, return only the values, that differ from the defaults.
+        If False, return all the values.
+        The default value 'basic' means, return all non-expert values
+        and all changed expert values.
       """
       out = OrderedDict()
       for i in self:
-          value = i.as_dict()
+          value = i.as_dict(only_changed)
           if value is not None:
               out[i.name] = value
       return out or None
@@ -323,10 +335,6 @@ class ConfigurationContainer(BaseConfiguration):
 
       raise NotImplemented()
 
-
-class BaseSection(ConfigurationContainer):
-  """ A section of SPRKKR configuration - i.e. part of the configuration file. """
-
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member
       with a given name """
@@ -335,6 +343,9 @@ class BaseSection(ConfigurationContainer):
       else:
         val = self._get_member(name)
         val.set(value)
+
+class BaseSection(ConfigurationContainer):
+  """ A section of SPRKKR configuration - i.e. part of the configuration file. """
 
   def has_any_value(self) -> bool:
       """

@@ -50,10 +50,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
@@ -185,7 +185,7 @@ symmetric atomic sites.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry">
-<span class="sig-name descname"><span class="pre">compute_sites_symmetry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.compute_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute_sites_symmetry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetry_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.compute_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.compute_sites_symmetry" title="Permalink to this definition"></a></dt>
 <dd><p>SPRKKR has some properties shared by all by-symmetry-equal sites.
 This method initializes _sites property, that holds these properties:
 makes identical all the atoms on the “symmetry identical positions” with
@@ -208,7 +208,7 @@ If None, self.symbols are used.</p>
 <dt>consider_old: bool</dt><dd><p>If True, and self.sites is not None, the non-symmetry-equivalent sites won’t
 be equivalent in the newly computed symmetry.</p>
 </dd>
-<dt>symprec: float</dt><dd><p>A threshold for spatial error for the symmetry computing. See spglib.get_spacegroup</p>
+<dt>symmetry_precision: float</dt><dd><p>A threshold for spatial error for the symmetry computing. See spglib.get_spacegroup</p>
 </dd>
 </dl>
 </p></li>
@@ -218,8 +218,8 @@ be equivalent in the newly computed symmetry.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._compute_sites_symmetry">
-<span class="sig-name descname"><span class="pre">_compute_sites_symmetry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._compute_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._compute_sites_symmetry" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init_sites">
+<span class="sig-name descname"><span class="pre">_init_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetry_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._init_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._init_sites" title="Permalink to this definition"></a></dt>
 <dd><p>See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property.</p>
 </dd></dl>
 
@@ -228,16 +228,10 @@ be equivalent in the newly computed symmetry.</p>
 <span class="sig-name descname"><span class="pre">cancel_sites_symmetry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.cancel_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.cancel_sites_symmetry" title="Permalink to this definition"></a></dt>
 <dd><p>Cancel the use of symmetry in the structure, i.e., makes the Site object
 uniqe (not shared) for each atomic site.</p>
-<p>Calling this method is nearly equivalent to the setting the symmetry property
+<p>Calling this method is nearly equivalent to setting the symmetry property
 to False, however, this method always recompute the sites object, while
 setting symmetry=False recomputes the sites property only if it was previously
 set to True.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._cancel_sites_symmetry">
-<span class="sig-name descname"><span class="pre">_cancel_sites_symmetry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms._cancel_sites_symmetry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms._cancel_sites_symmetry" title="Permalink to this definition"></a></dt>
-<dd><p>See cancel_sites_symmetry - this metod does just the same, but it does not set the symmetry property.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -254,6 +248,28 @@ are hold in this array.</p>
 to the ASE properties, but the opposite does not hold - to reflect the changes
 in these properties please create a new Atoms object with given properties.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_sites">
+<span class="sig-name descname"><span class="pre">set_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sites</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacegroup_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.set_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_sites" title="Permalink to this definition"></a></dt>
+<dd><p>Set the sites property and update all other dependent
+properties (symbols, occupancy) according to the sites.</p>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">sites</span></code> setter, this method  allow also set the spacegoup_info
+containing the computed informations about the symmetry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sites</strong> (<em>ndarray</em>) – </p></li>
+<li><p><strong>spacegroup_info</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><em>SpacegroupInfo</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.spacegroup_info">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spacegroup_info</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.spacegroup_info" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.potential">

@@ -50,10 +50,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
@@ -77,6 +77,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
@@ -145,15 +146,17 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the value/section</p></li>
 <li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value</p></li>
+<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
 <li><p><strong>is_hidden</strong> (<em>boolean</em>) – Hidden values are not offered to a user, usually they are
 set by another object (and so a direct setting of their values
 has no sense)</p></li>
+<li><p><strong>is_expert</strong> (<em>boolean</em>) – Expert values/sections are not required and they are somewhat hidden
+from the user</p></li>
 <li><p><strong>name_in_grammar</strong> (<em>boolean</em><em> or </em><em>None</em>) – If False, there the name of the variable is not printed in the
 configuration file. The variable is recognized by its position.
 If None, the default class value is used</p></li>
-<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
-<li><p><strong>description</strong> (<em>str</em>) – Short help message</p></li>
-<li><p><strong>help</strong> (<em>str</em>) – (Long) help message for the value/section</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – A short help message for the value/section. It will be the perex for description.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – The additional informations for the users.</p></li>
 </ul>
 </dd>
 </dl>

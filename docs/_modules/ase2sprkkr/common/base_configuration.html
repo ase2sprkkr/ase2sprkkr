@@ -47,10 +47,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -85,6 +85,8 @@
 <span></span><span class="sd">&quot;&quot;&quot; This module contains just a base class for both configuration values (Options)</span>
 <span class="sd">and configuration containers (&quot;Sections&quot;)</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <div class="viewcode-block" id="BaseConfiguration"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration">[docs]</a><span class="k">class</span> <span class="nc">BaseConfiguration</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot;</span>
@@ -149,10 +151,47 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
 
+<div class="viewcode-block" id="BaseConfiguration.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.</span>
 
-<div class="viewcode-block" id="BaseConfiguration.to_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration.to_dict">[docs]</a>  <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot; Return the value of self, in the case of container as a dictionary. To be redefined in the descendants. &quot;&quot;&quot;</span>
-      <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div></div>
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      only_changed</span>
+<span class="sd">        Return only changed values, or all of them?</span>
+<span class="sd">        If True, return only the values, that differ from the defaults.</span>
+<span class="sd">        If False, return all the values.</span>
+<span class="sd">        The default value &#39;basic&#39; means, return all non-expert values</span>
+<span class="sd">        and all changed expert values.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseConfiguration.to_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration.to_dict">[docs]</a>  <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Alias of the method :meth:`as_dict`. &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseConfiguration.show"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration.show">[docs]</a>  <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Print the configuration, as it will be saved into the configuration/problem definition file. &quot;&quot;&quot;</span>
+      <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span></div>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">doc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">description</span><span class="p">()</span>
+      <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Cannot retrieve documentation&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<div class="viewcode-block" id="BaseConfiguration.help"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration.help">[docs]</a>  <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="p">)</span></div>
+
+  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">configuration_type_name</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+      <span class="k">return</span> <span class="n">out</span></div>
 </pre></div>
 
            </div>

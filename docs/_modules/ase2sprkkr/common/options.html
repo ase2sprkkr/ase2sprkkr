@@ -47,10 +47,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -83,7 +83,7 @@
              
   <h1>Source code for ase2sprkkr.common.options</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; The classes for storing one configuration value. &quot;&quot;&quot;</span>
-
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">mixed</span>
 <span class="kn">from</span> <span class="nn">.base_configuration</span> <span class="kn">import</span> <span class="n">BaseConfiguration</span>
 
@@ -92,11 +92,19 @@
 <span class="sd">  be used as a part of InputParameters or Potential configuration.</span>
 <span class="sd">  Usage:</span>
 
-<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE = 5</span>
+<span class="sd">  &gt;&gt;&gt; from ase2sprkkr.sprkkr.calculator import SPRKKR</span>
+<span class="sd">  &gt;&gt;&gt; calculator = SPRKKR()</span>
+<span class="sd">  &gt;&gt;&gt; conf = calculator.input_parameters</span>
+<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE = 5.</span>
 <span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE()</span>
-<span class="sd">  5</span>
-<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE.__doc__</span>
-<span class="sd">  The ImE option means ...</span>
+<span class="sd">  5.0</span>
+<span class="sd">  &gt;&gt;&gt; conf.ENERGY.ImE.help</span>
+<span class="sd">  &#39;Configuration value ImE&#39;</span>
+<span class="sd">  &gt;&gt;&gt; print(conf.ENERGY.ImE.doc)                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE</span>
+<span class="sd">  Configuration value ImE</span>
+<span class="sd">  Data description</span>
+<span class="sd">  ----------------</span>
+<span class="sd">  ...</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Option.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;&quot;</span>
@@ -119,6 +127,10 @@
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Option.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -146,10 +158,6 @@
       <span class="sd">&quot;&quot;&quot; Return the value of self &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="p">()</span></div>
 
-  <span class="nd">@property</span>
-  <span class="k">def</span> <span class="nf">__doc__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">help</span>
-
 <div class="viewcode-block" id="Option.clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Clear the value: set it to None &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
@@ -163,11 +171,14 @@
 <div class="viewcode-block" id="Option.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Write the name-value pair to the given file, if the value</span>
 <span class="sd">      is set. &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
-         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
+         <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
       <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
       <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_expert</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">default_value</span><span class="p">):</span>
+           <span class="k">return</span>
+        <span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
       <span class="k">elif</span> <span class="n">validate</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_root_container</span><span class="p">()</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Value </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s1"> is None and it is not an optional value. Therefore, I cannot save the </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
@@ -176,8 +187,29 @@
   <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span>
 
-<div class="viewcode-block" id="Option.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Option.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">):</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">only_changed</span> <span class="ow">and</span> <span class="p">(</span><span class="n">only_changed</span><span class="o">!=</span><span class="s1">&#39;basic&#39;</span> <span class="ow">or</span> <span class="n">d</span><span class="o">.</span><span class="n">is_expert</span><span class="p">):</span>
+           <span class="n">v</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_and_changed</span><span class="p">()</span>
+           <span class="k">return</span> <span class="n">v</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="kc">None</span>
       <span class="k">return</span> <span class="bp">self</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Option.value_and_changed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.value_and_changed">[docs]</a>  <span class="k">def</span> <span class="nf">value_and_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Return value and whether the value was changed</span>
+
+<span class="sd">          Returns</span>
+<span class="sd">          -------</span>
+<span class="sd">          value:mixed</span>
+<span class="sd">            The value of the options</span>
+
+<span class="sd">          changed:bool</span>
+<span class="sd">            Whether the value is the same as the default value or not</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="n">default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="ow">not</span> <span class="n">d</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">default</span><span class="p">,</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Option._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
@@ -187,7 +219,20 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span></div>
 
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Option </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s2"> with value &#39;</span><span class="si">{</span><span class="bp">self</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39; of type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+      <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+      <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_value</span>
+         <span class="k">if</span> <span class="n">v</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">=</span><span class="s1">&#39; (default)&#39;</span>
+            <span class="n">v</span><span class="o">=</span><span class="s1">&#39; = &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+         <span class="k">else</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">=</span><span class="s1">&#39;out&#39;</span>
+            <span class="n">v</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">v</span><span class="o">=</span><span class="s1">&#39; = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+          <span class="n">o</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+
+      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Option </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s2"> of type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2"> with</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2"> value</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
 
 <div class="viewcode-block" id="CustomOption"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption">[docs]</a><span class="k">class</span> <span class="nc">CustomOption</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; An user-added option (configuration value). It can be removed from the section. &quot;&quot;&quot;</span>

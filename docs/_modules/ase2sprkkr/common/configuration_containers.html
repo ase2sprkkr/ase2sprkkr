@@ -47,10 +47,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -283,7 +283,11 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">)</span>
 
       <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+           <span class="n">items</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only dictionaries can be assigned to section.&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
            <span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -331,15 +335,23 @@
       <span class="sd">&quot;&quot;&quot; Iterate over all members of the container &quot;&quot;&quot;</span>
       <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.input_parameters.input_parameters_definitions.ConfigurationContainer.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.input_parameters.input_parameters_definitions.ConfigurationContainer.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the content of the container as a dictionary.</span>
 <span class="sd">      Nested containers will be transformed to dictionaries as well.</span>
 
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      only_changed</span>
+<span class="sd">        Return only changed values, or all of them?</span>
+<span class="sd">        If True, return only the values, that differ from the defaults.</span>
+<span class="sd">        If False, return all the values.</span>
+<span class="sd">        The default value &#39;basic&#39; means, return all non-expert values</span>
+<span class="sd">        and all changed expert values.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="n">out</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-          <span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+          <span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="p">)</span>
           <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
               <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
       <span class="k">return</span> <span class="n">out</span> <span class="ow">or</span> <span class="kc">None</span></div>
@@ -405,11 +417,7 @@
 <span class="sd">      The implementations in the descendant could be probably merged.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
 
-      <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div></div>
-
-
-<div class="viewcode-block" id="BaseSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.input_parameters.input_parameters_definitions.BaseSection">[docs]</a><span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; A section of SPRKKR configuration - i.e. part of the configuration file. &quot;&quot;&quot;</span>
+      <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div>
 
   <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Setting the (unknown) attribute of a section sets the value of the member</span>
@@ -418,7 +426,10 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">val</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">val</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.input_parameters.input_parameters_definitions.BaseSection">[docs]</a><span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A section of SPRKKR configuration - i.e. part of the configuration file. &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseSection.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.input_parameters.input_parameters_definitions.BaseSection.has_any_value">[docs]</a>  <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
       <span class="sd">&quot;&quot;&quot;</span>

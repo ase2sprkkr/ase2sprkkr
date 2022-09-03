@@ -313,5 +313,11 @@ class InputParameters(RootConfigurationContainer):
       calc = calculator.SPRKKR()
       calc.calculate(input_parameters=self, *args, **kwargs)
 
+  def __repr__(self):
+      d = self._definition
+      out = d.configuration_type_name
+      out = out + ' for task ' + d.name.upper()
+      return out
+
 #at least, to avoid a circular import
 from ..sprkkr import calculator

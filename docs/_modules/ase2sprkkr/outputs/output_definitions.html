@@ -47,10 +47,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://software.pan-data.eu/software/111/spr-kkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-download/251/chk,b2f3ab5f57c7629207b121be0d31a38d/no_html,1/lang,en-gb/">SPR-KKR manual</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul>
@@ -99,42 +99,42 @@
     <span class="n">BaseSectionDefinition</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">lazy_value</span>
 
-<div class="viewcode-block" id="OutputValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputValueDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputValueDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Value in an output file, of a form &#39;NAME   VALUE&#39; &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="OutputValueDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="OutputValueDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">()</span></div>
 
   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-<div class="viewcode-block" id="OutputValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="OutputValueEqualDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputValueEqualDefinition</span><span class="p">(</span><span class="n">OutputValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputValueEqualDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueEqualDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputValueEqualDefinition</span><span class="p">(</span><span class="n">OutputValueDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Value in an output file, of a form &#39;NAME=VALUE&#39; (spaces possible) &quot;&quot;&quot;</span>
 
   <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s1">&#39;=&#39;</span>
 
-<div class="viewcode-block" id="OutputValueEqualDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="OutputValueEqualDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.readers.scf.OutputValueEqualDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="OutputNonameValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputNonameValueDefinition</span><span class="p">(</span><span class="n">OutputValueDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputNonameValueDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputNonameValueDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputNonameValueDefinition</span><span class="p">(</span><span class="n">OutputValueDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Value in an output file, that has no name, there is just the value</span>
 <span class="sd">  (identified by its position after some other known stuff)</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="OutputNonameValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputNonameValueDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.readers.scf.OutputNonameValueDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="n">required</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
 
-<div class="viewcode-block" id="OutputSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.output_definitions.OutputSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputSectionDefinition</span><span class="p">(</span><span class="n">BaseSectionDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.readers.scf.OutputSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">OutputSectionDefinition</span><span class="p">(</span><span class="n">BaseSectionDefinition</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; This class describes the format of one</span>
 <span class="sd">  value of a standard potential section &quot;&quot;&quot;</span>
 
@@ -153,7 +153,7 @@
   <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
   <span class="sd">&quot;&quot;&quot; options are delimited by newline in ouptut. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="OutputSectionDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="OutputSectionDefinition.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.readers.scf.OutputSectionDefinition.grammar_of_delimiter">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="nd">@lazy_value</span>
   <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
       <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">line_end</span><span class="p">)</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">WordStart</span><span class="p">())</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>

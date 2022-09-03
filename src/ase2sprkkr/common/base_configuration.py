@@ -2,6 +2,8 @@
 and configuration containers ("Sections")
 """
 
+from typing import Union
+
 class BaseConfiguration:
   """
   The common base class for all configurations values and containers,
@@ -65,7 +67,44 @@ class BaseConfiguration:
       """
       return self._definition.name
 
+  def as_dict(self, only_changed:Union[bool,str]='basic'):
+      """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.
 
-  def to_dict(self):
-      """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants. """
+      Parameters
+      ----------
+      only_changed
+        Return only changed values, or all of them?
+        If True, return only the values, that differ from the defaults.
+        If False, return all the values.
+        The default value 'basic' means, return all non-expert values
+        and all changed expert values.
+      """
       raise NotImplemented()
+
+  def to_dict(self, only_changed:Union[bool,str]='basic'):
+      """ Alias of the method :meth:`as_dict`. """
+      return self.as_dict(only_changed)
+
+  def show(self):
+      """ Print the configuration, as it will be saved into the configuration/problem definition file. """
+      print(self.to_string())
+
+  @property
+  def info(self):
+      return self._definition.info()
+
+  @property
+  def doc(self):
+      try:
+         return self._definition.description()
+      except AttributeError as e:
+         raise Exception("Cannot retrieve documentation") from e
+
+  def help(self):
+      print(self.doc)
+
+  def __repr__(self):
+      d = self._definition
+      out = d.configuration_type_name
+      out = out + ' ' + d.name.upper()
+      return out
