@@ -536,7 +536,7 @@ class Keyword(GrammarType):
       return self.grammar_name()
 
   def convert(self, value):
-      return value.upper()
+      return str(value).upper()
 
   def additional_description(self, prefix=''):
       ad = super().additional_description(prefix)
