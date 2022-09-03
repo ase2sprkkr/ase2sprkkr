@@ -135,7 +135,20 @@ class Option(BaseConfiguration):
       return self._get_path()
 
   def __repr__(self):
-      return f"<Option {self._get_path()} with value '{self()}' of type {self._definition.type}>"
+      v = self._value
+      if v is None:
+         v = self.default_value
+         if v:
+            o=' (default)'
+            v=' = '+str(v)
+         else:
+            o='out'
+            v=''
+      else:
+          v=' = ' + str(v)
+          o=''
+
+      return f"<Option {self._get_path()} of type {self._definition.type} with{o} value{v}>"
 
 class CustomOption(Option):
   """ An user-added option (configuration value). It can be removed from the section. """
