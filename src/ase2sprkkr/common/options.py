@@ -87,11 +87,14 @@ class Option(BaseConfiguration):
   def save_to_file(self, file, *, validate=True):
       """ Write the name-value pair to the given file, if the value
       is set. """
-      if not self._definition.type.has_value:
-         return self._definition.write(file, None)
+      d = self._definition
+      if not d.type.has_value:
+         return d.write(file, None)
       value = self()
       if value is not None:
-        return self._definition.write(file, value)
+        if d.is_expert and d.type.is_the_same_value(value, d.default_value):
+           return
+        return d.write(file, value)
       elif validate and not self._definition.is_optional:
         name = self._get_root_container()
         raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
