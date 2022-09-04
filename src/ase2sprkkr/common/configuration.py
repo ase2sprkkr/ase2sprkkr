@@ -1,13 +1,12 @@
-""" This module contains just a base class for both configuration values (Options)
-and configuration containers ("Sections")
+""" This module contains just a base class for both configuration values - :class:`Options<ase2sprkkr.common.options.Option>`
+and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
 """
 
 from typing import Union
 
-class BaseConfiguration:
-  """
-  The common base class for all configurations values and containers,
-  i.e. for options and sections
+class Configuration:
+  """ The common base class for all configurations values and containers. I.e.
+  for :class:`Options<ase2sprkkr.common.options.Option>` and :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
   """
 
   def __init__(self, definition, container=None):
@@ -100,8 +99,12 @@ class BaseConfiguration:
       except AttributeError as e:
          raise Exception("Cannot retrieve documentation") from e
 
-  def help(self):
-      print(self.doc)
+  def help(self, verbose=False, show_hidden=False):
+      if verbose is True:
+         verbose='all'
+      elif verbose is False:
+         verbose=True
+      print(self._definition.description(verbose, show_hidden))
 
   def __repr__(self):
       d = self._definition

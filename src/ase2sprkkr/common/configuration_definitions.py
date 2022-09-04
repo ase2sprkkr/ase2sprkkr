@@ -4,7 +4,7 @@ the syntax of a configuration file, or its parts
 (sections or configuration options)
 
 They are able both to parse a file, which results in an
-instance of (an instance of :py:class:`ase2sprkkr.common.BaseConfiguration`,
+instance of (an instance of :py:class:`ase2sprkkr.common.Configuration`,
 e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 :py:class:`Section<ase2sprkkr.common.configuration_containers.Section>`
 ), or write such object to a file.
@@ -21,7 +21,7 @@ import inspect
 from .misc import cache
 import itertools
 import builtins
-from typing import Dict
+from typing import Dict, Union
 
 #:This serves just for dealing with various pyparsing versions
 _parse_all_name = 'parse_all' if \
@@ -139,17 +139,32 @@ class BaseDefinition:
        with generate_grammar():
          return self._grammar()
 
-   def description(self):
+   _description_indentation = '    '
+   """ Nested levels of description will be indented using this 'prefix' """
+
+   def description(self, verbose:bool=True, show_hidden=False, prefix:str=''):
+       """
+       Parameters
+       ----------
+       verbose: bool
+         If true, add also detailed documentation of all included items (e.g. members of a container)
+
+       show_hidden: bool
+         If ``False`` (default), do not show descriptions of hidden members.
+
+       prefix
+         The string, with with each line will begin (commonly the spaces for the indentation).
+       """
        out = [
-          self.info(), ''
+          prefix + self.info().replace('\n', '\n' + prefix), prefix
        ]
 
-       out.append("Data description\n"
-                  "----------------")
-       out.append(self.data_description(additional = True))
+       #out.append(f"{prefix}Data description\n"
+       #           f"{prefix}----------------")
+       out.append(self.data_description(verbose, show_hidden, prefix))
        if self._description:
-          out.append(' ')
-          out.append(self._description)
+          out.append('\n')
+          out.append(prefix + self._description.replace('\n', '\n' + prefix))
        return '\n'.join(out)
 
    def _tuple_with_my_name(self, expr, delimiter=None, has_value=True):
@@ -198,7 +213,7 @@ class BaseDefinition:
 
    _copy_excluded_args = ['expert']
 
-class BaseValueDefinition(BaseDefinition):
+class ValueDefinition(BaseDefinition):
 
   result_class = Option
 
@@ -209,7 +224,7 @@ class BaseValueDefinition(BaseDefinition):
                is_hidden=False, is_optional=None, is_expert=False,
                name_in_grammar=None, name_format=None, expert=None):
     """
-    Creates the object
+    Definition of a configuration value.
 
     Parameters
     ----------
@@ -229,14 +244,16 @@ class BaseValueDefinition(BaseDefinition):
       Value can have an alternative name (that alternativelly denotes the value)
 
     fixed: mixed
-      If given, this option is not user given, but with fixed_value value (provided by this parameter)
+      If it is given, this option have a fixed_value value (provided by this parameter),
+      that can not be changed by user.
 
     required: bool
       Required option can not be set to None (however, a required one
       can be still be optional, if it has a default values).
-      If required = None, it is set to True if both the conditions are met
-        * the value is not expert
-        * the optional is not True and the option has not a default_value
+      If required = None, it is set to True if both the conditions are met:
+
+       * the value is not expert
+       * the optional is not True and the option has not a default_value
 
     is_optional: bool or None
       If True, the value can be omited, if the fixed order is required
@@ -317,11 +334,24 @@ class BaseValueDefinition(BaseDefinition):
        return "{:{}}".format(name, self.name_format)
     return name
 
-  def data_description(self, prefix='', additional=False):
+  def data_description(self, verbose:Union[bool|str]=False, show_hidden=False, prefix:str=''):
     """
     Return the description of the contained data type and their type.
+
+    Parameters
+    ----------
+    verbose
+      If ``False``, return only one-line string with a basic info.
+      If ``True``, return more detailed informations.
+      'verbose' means here the same thing as True
+
+    show_hidden
+      If `False``, do not show hidden members... which has no meaning for Values.
+
+    prefix
+      The string, with with each line will begin (commonly the spaces for the indentation).
     """
-    out = f"{self.name} : {self.type}"
+    out = f"{prefix}{self.name} : {self.type}"
     value = self.get_value()
     if value is not None:
        out+=f" ≝ {value}"
@@ -338,16 +368,34 @@ class BaseValueDefinition(BaseDefinition):
     if flags:
        flags = ', '.join(flags)
        out+= f"  ({flags})"
-    out = prefix + out
-    if additional:
-       add = self.additional_description()
+
+    if verbose:
+       add = self.additional_data_description(prefix=prefix + self._description_indentation)
        if add:
-          out+='\n' + add
+          out+= f'\n'
+          out+= add
     return out
 
-  def additional_description(self, prefix=''):
+  def additional_data_description(self, verbose=False, show_hidden=False, prefix:str='') -> str:
     """ Return the additional runtime-documentation for the configuration value.
         E.g. return the possible choices for the value, etc...
+
+        Parameters
+        ----------
+        verbose
+          This parameter has no effect here. See :meth:`BaseDefinition.data_description` for its explanation.
+
+        show_hidden
+          This parameter has no effect here. See :meth:`BaseDefinition.data_description` for its explanation.
+
+        prefix
+          Prefix for the indentation of the description.
+
+        Returns
+        -------
+        additional_data_description
+
+          An additional description of the values accepted by this configuration option, retrieved from the documentation type.
     """
     return self.type.additional_description(prefix)
 
@@ -463,8 +511,13 @@ def add_excluded_names_condition(element, names):
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
 
-class BaseContainerDefinition(BaseDefinition):
-    """ Base class for a definition of the format of a container """
+class ContainerDefinition(BaseDefinition):
+    """ Base class for a definition (of contained data, format, etc)
+    of either a whole configuration file
+    (e.g. :class:`InputParameters<ase2sprkkr.input_parameters.input_parameters.InputParameters>` or
+    e.g. :class:`Potential<ase2sprkkr.potentials.potentials.Potential>`) or
+    its :class:`Section<ase2sprkkr.common.configuration_containers.Section>`.
+    """
 
     force_order = False
     """ Force order of its members """
@@ -507,15 +560,23 @@ class BaseContainerDefinition(BaseDefinition):
     configuration_type_name = 'SECTION'
     """ Name of the container type in the runtime documentation """
 
-    def data_description(self, prefix='', additional:bool=False):
+    def data_description(self, verbose:Union[bool,str,int]=False, show_hidden:bool=False, prefix:str=''):
         """
         Return the runtime documentation for the configuration described by this object.
 
         Parameters
         ----------
-        additional
-          If it is False, only one line with the section name and basic info is returned.
-          Otherwise, the items contained in the section are listed.
+        verbose
+          If ``False``, only one line with the section name and basic info is returned.
+          If ``True``, the items contained in the section are listed.
+          If ``'all'``, add also detailed info about all descendants.
+          If an ``int`` is given, print detailed informations about n levels. I.e. ``1`` is the same as ``True``
+
+        show_hidden
+          If False, do not show hidden members.
+
+        prefix
+          The string, with with each line will begin (commonly the spaces for the indentation).
         """
         def container_name():
             out = self.configuration_type_name
@@ -524,7 +585,7 @@ class BaseContainerDefinition(BaseDefinition):
             out+=self.name
             return out
 
-        out = f"{prefix}{container_name()}"
+        out = f"{container_name()}"
         flags = []
         if self.force_order:
            flags.append('order fixed')
@@ -538,40 +599,66 @@ class BaseContainerDefinition(BaseDefinition):
            flags = join(', ').join(flags)
            out+=f" ({flags})"
 
-        if additional:
-           add = self.additional_description()
+        if verbose:
+           if isinstance(verbose, int):
+              verbose-=1
+           else:
+              verbose = verbose if verbose=='all' else False
+           add = self.additional_data_description(verbose, show_hidden, prefix)
            if add:
-              out+=f' contains:\n{add}'
+              out+=f' contains:'
+              under=prefix + "-"*len(out) + '\n'
+              out=f"{prefix}{out}\n{under}{add}"
         return out
 
-    def additional_description(self, prefix=''):
+    def additional_data_description(self, verbose:Union[bool,str,int]=False, show_hidden=False, prefix:str=''):
         """
         Return the description (documentation for runtime) of the items in the container.
+
+        Parameters
+        ----------
+        verbose
+          If ``True``, include detailed description of the children.
+          If ``'all'``, include even detailed description.
+          If ``int`` is given, print detailed informations up to n levels.
+
+        show_hidden
+          If False, do not show hidden members.
+
+        prefix
+          The string, with with each line will begin (commonly the spaces for the indentation).
         """
-        cprefix=prefix+'    '
+        cprefix=prefix + self._description_indentation
         out = []
 
         def write(i):
-           s = i.data_description(cprefix)
+           s = i.data_description(verbose, show_hidden, cprefix)
            if not '\n' in s:
               info = i.info(False)
               if info:
                  s = s + (' ' * (max(40 - len(s), 0) + 2)) + info
+           else:
+              s+='\n'
            out.append(s)
 
         expert = False
         for i in self:
+            if i.is_hidden and not show_hidden:
+               continue
             if not i.is_expert:
                write(i)
             else:
                expert=True
 
         if expert:
-          out.append(f'\n{prefix}  Expert options')
-          out.append(prefix +   '  --------------')
+          out.append(f'\n{cprefix}Expert options:')
+          out.append(cprefix +   '--------------')
+          cprefix+=self._description_indentation
 
           for i in self:
               if i.is_expert:
+                 if i.is_hidden and not show_hidden:
+                    continue
                  write(i)
 
         return '\n'.join(out)
@@ -771,7 +858,7 @@ class BaseContainerDefinition(BaseDefinition):
            result = start + result
         return self.parse(result, whole_string)
 
-class BaseSectionDefinition(BaseContainerDefinition):
+class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 
        It just redefine a few properties/methods to values/behavior typical for the sections
@@ -801,7 +888,7 @@ class BaseSectionDefinition(BaseContainerDefinition):
       return f"Configuration section {self.name}"
 
 
-class ConfDefinition(BaseContainerDefinition):
+class ConfigurationRootDefinition(ContainerDefinition):
    """ From this class, the definition of the format of a whole configuration file should be derived.
 
    """
@@ -822,7 +909,7 @@ class ConfDefinition(BaseContainerDefinition):
        """
        def gen(i):
            section = defs[i]
-           if not isinstance(defs, BaseSectionDefinition):
+           if not isinstance(defs, SectionDefinition):
               section = cls.child_class(i, section)
            return section
 
@@ -857,7 +944,7 @@ class ConfDefinition(BaseContainerDefinition):
 
    def parse_return(self, val, return_value_only=True):
         """ There is no name in the parsed results (see how
-            ConfDefinition._tuple_with_my_name is redefined)
+            ConfigurationRootDefinition._tuple_with_my_name is redefined)
         """
         val = val[0]
         return val

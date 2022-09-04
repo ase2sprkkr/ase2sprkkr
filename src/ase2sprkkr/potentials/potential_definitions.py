@@ -13,15 +13,15 @@ from ..common.grammar_types import separator, pot_mixed
 from ..common.misc import add_to_signature
 from ..common.options import CustomOption
 from ..common.configuration_definitions import \
-    BaseValueDefinition, \
-    BaseSectionDefinition, \
-    ConfDefinition
+    ValueDefinition, \
+    SectionDefinition, \
+    ConfigurationRootDefinition
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
 from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
 from ..common.misc import lazy_value, cache
 
-class PotValueDefinition(BaseValueDefinition):
+class PotValueDefinition(ValueDefinition):
   """
   Definition of a configuration option in a potential
   """
@@ -50,7 +50,7 @@ class Separator(PotValueDefinition):
          name = f'_Separator_{Separator._counter}'
       super().__init__(name, separator, is_hidden=True, name_in_grammar=False)
 
-class PotSectionDefinition(BaseSectionDefinition):
+class PotSectionDefinition(SectionDefinition):
   """ This class describes the format of one
   value of a standard potential section """
 
@@ -86,7 +86,7 @@ class PotSectionDefinition(BaseSectionDefinition):
   def __init__(self, *args, mandatory:bool=True,  **kwargs):
       """
       For the documentation of the other parameters, see
-      :meth:`ase2sprkkr.common.BaseSectionDefinition`
+      :meth:`ase2sprkkr.common.SectionDefinition`
 
       Parameters
       ----------
@@ -108,7 +108,7 @@ class ASEArraySectionDefinition(PotSectionDefinition):
       For the documentation of the other parameters, see
       :meth:`ase2sprkkr.potential_definitions.PotSectionDefinition`
       and its predecessor
-      :meth:`ase2sprkkr.common.BaseSectionDefinition`
+      :meth:`ase2sprkkr.common.SectionDefinition`
 
       Parameters
       ----------
@@ -124,7 +124,7 @@ class ASEArraySectionDefinition(PotSectionDefinition):
 
   result_class = ASEArraySection
 
-class PotentialDefinition(ConfDefinition):
+class PotentialDefinition(ConfigurationRootDefinition):
   """ This class describes the format of a potential file """
 
   child_class = PotSectionDefinition
@@ -151,11 +151,14 @@ class PotentialDefinition(ConfDefinition):
   custom_class = CustomPotentialSection
   """ Unknown sections will be of this type """
 
+  def _generic_info(self):
+      return f"Definition of the format of SPRKKR potential file"
+
   @classmethod
   @cache
   def custom_value_grammar(cls):
       """ Unknown sections are parsed by this grammar """
       return SectionString._grammar
 
-  custom_name_characters = ConfDefinition.custom_name_characters + ' '
+  custom_name_characters = ConfigurationRootDefinition.custom_name_characters + ' '
   """ There can be space in a potential-section name """

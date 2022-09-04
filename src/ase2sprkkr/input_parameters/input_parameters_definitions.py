@@ -9,9 +9,9 @@ sprkkr.common.configuration_definitions
 import functools
 import pyparsing as pp
 from ..common.configuration_definitions import \
-    BaseValueDefinition, \
-    BaseSectionDefinition, \
-    ConfDefinition, \
+    ValueDefinition, \
+    SectionDefinition, \
+    ConfigurationRootDefinition, \
     unique_dict
 from ..common.options import CustomOption
 from ..common.configuration_containers import CustomSection
@@ -24,7 +24,7 @@ from .input_parameters import InputParameters
 with generate_grammar():
   section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
 
-class ValueDefinition(BaseValueDefinition):
+class InputValueDefinition(ValueDefinition):
   """ This class describes the format of one value of
   a task configuration """
   @staticmethod
@@ -35,14 +35,14 @@ class ValueDefinition(BaseValueDefinition):
   prefix = "\t"
   name_value_delimiter = '='
 
-class SectionDefinition(BaseSectionDefinition):
+class InputSectionDefinition(SectionDefinition):
   """ This class describes the format of one
   value of a task section """
 
   """ standard child class """
-  child_class = ValueDefinition
+  child_class = InputValueDefinition
   """ This class is used for user-added values. """
-  custom_class = staticmethod(CustomOption.factory(ValueDefinition, mixed))
+  custom_class = staticmethod(CustomOption.factory(InputValueDefinition, mixed))
 
   """ options are delimited by newline in ouptut. """
   delimiter = '\n'
@@ -54,11 +54,11 @@ class SectionDefinition(BaseSectionDefinition):
 
   do_not_skip_whitespaces_before_name = True
 
-class InputParametersDefinition(ConfDefinition):
+class InputParametersDefinition(ConfigurationRootDefinition):
   """ This class describes the format of a task file. """
 
-  child_class = SectionDefinition
-  """ Sections of the :class:`InputParameters` are defined by :class:`SectionDefinition` """
+  child_class = InputSectionDefinition
+  """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
   result_class = InputParameters
   """ The parsing of a potential file results in an instance of :class:`InputParameters` """
 
@@ -75,7 +75,7 @@ class InputParametersDefinition(ConfDefinition):
       out.setName('<newline><printable>')
       return out
 
-  custom_class = staticmethod(CustomSection.factory(SectionDefinition))
+  custom_class = staticmethod(CustomSection.factory(InputSectionDefinition))
 
   @classmethod
   @cache
@@ -83,6 +83,9 @@ class InputParametersDefinition(ConfDefinition):
       value  = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
+
+  def _generic_info(self):
+      return f"Input parameters for task {self.name}"
 
   def __init__(self, name, sections=None,
                executable='kkrscf', mpi=True, result_reader=None,
@@ -108,6 +111,6 @@ class InputParametersDefinition(ConfDefinition):
 
       super().__init__(name, sections, **kwargs)
       if not 'TASK' in self:
-         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
+         self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
       elif not 'TASK' in self['TASK']:
-         self['TASK']['TASK'] = ValueDefinition(DefKeyword(self.name), name_in_grammar=False)
+         self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)

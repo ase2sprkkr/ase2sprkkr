@@ -6,7 +6,7 @@ I.e. these sections can has any content (they are readed up to the section separ
 
 from ..common.grammar_types import GrammarType
 from ..common.options import CustomOption
-from ..common.configuration_definitions import BaseValueDefinition
+from ..common.configuration_definitions import ValueDefinition
 from ..common.misc import class_property, cache
 import pyparsing as pp
 from ..common.grammar import separator, line_end
@@ -14,7 +14,7 @@ from ..common.misc import lazy_value
 import re
 import pyparsing
 
-class CustomPotentialSectionDefinition(BaseValueDefinition):
+class CustomPotentialSectionDefinition(ValueDefinition):
   """ There is no grammar in a custom potential section -
   custom sections are readed by Potential class
   """

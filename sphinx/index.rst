@@ -10,6 +10,7 @@ ASE2SPRKKR software package
    How to use the package <usage.rst>
    More about the package installation <how-to-install.rst>
    Philosophy of the package (for developers) <philosophy.rst>
+   Changelog <changelog.rst>
 
 .. sidebar-links::
    :caption: Links

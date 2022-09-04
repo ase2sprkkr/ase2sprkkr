@@ -1,9 +1,9 @@
 """ The classes for storing one configuration value. """
 from typing import Union
 from ..common.grammar_types import mixed
-from .base_configuration import BaseConfiguration
+from .configuration import Configuration
 
-class Option(BaseConfiguration):
+class Option(Configuration):
   """ Class for one option (a configuration value) of SPRKKR - either to
   be used as a part of InputParameters or Potential configuration.
   Usage:
@@ -18,9 +18,8 @@ class Option(BaseConfiguration):
   'Configuration value ImE'
   >>> conf.ENERGY.ImE.help()                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   Configuration value ImE
-  Data description
-  ----------------
-  ...
+  <BLANKLINE>
+  ImE : Energy (<Real> [Ry|eV]) ≝ 0.0  (optional)
   """
   def __init__(self, definition, container=None, value=None):
       """"

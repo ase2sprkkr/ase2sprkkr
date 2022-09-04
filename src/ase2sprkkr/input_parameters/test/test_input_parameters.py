@@ -28,7 +28,7 @@ class TestInputParameters(TestCase):
 
   def test_custom_value(self):
      with generate_grammar():
-       cv = cd.SectionDefinition.custom_member_grammar(['aaa'])
+       cv = cd.InputSectionDefinition.custom_member_grammar(['aaa'])
      self.assertTrue('\n' not in cv.whiteChars)
      def assertParse(text,result):
          assert cv.parseString(text, True)[0] == result
@@ -49,7 +49,7 @@ class TestInputParameters(TestCase):
 
 
   def test_input_parameters_definition(self):
-    V = cd.ValueDefinition
+    V = cd.InputValueDefinition
 
     input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
