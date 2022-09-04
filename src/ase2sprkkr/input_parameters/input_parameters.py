@@ -82,7 +82,7 @@ class InputParameters(RootConfigurationContainer):
 
       Parameters
       ----------
-      mpi_runner: Union[bool|str|list|int]
+      mpi_runner: Union[bool,str,list,int]
 
 
         - If True is given, return the default mpi-runner

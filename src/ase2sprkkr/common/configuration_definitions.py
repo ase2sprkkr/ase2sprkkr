@@ -263,7 +263,7 @@ class ValueDefinition(BaseDefinition):
     is_hidden: bool
       The value is hidden from the user (no container.name access to the value).
 
-    is_expert: Union[bool|mixed]
+    is_expert: Union[bool,mixed]
       Expert values are somewhat hidden (e.g. listed at end) from the user.
       Expert values are not exported to the result, if they are set to the
       default value.
@@ -334,7 +334,7 @@ class ValueDefinition(BaseDefinition):
        return "{:{}}".format(name, self.name_format)
     return name
 
-  def data_description(self, verbose:Union[bool|str]=False, show_hidden=False, prefix:str=''):
+  def data_description(self, verbose:Union[bool,str]=False, show_hidden=False, prefix:str=''):
     """
     Return the description of the contained data type and their type.
 
