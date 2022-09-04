@@ -15,6 +15,5 @@ jobs:
     - uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
-    - run: |
-        ./install_dependencies.sh
-        DO_NOT_RUN_SPRKKR=1 ./src/ase2sprkkr/run_tests
+    - run: ./install_dependencies.sh
+    - run: DO_NOT_RUN_SPRKKR=1 ./src/ase2sprkkr/run_tests
