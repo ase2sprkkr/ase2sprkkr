@@ -106,8 +106,19 @@ class Configuration:
          verbose=True
       print(self._definition.description(verbose, show_hidden))
 
+      global _help_warning_printed
+      if not _help_warning_printed:
+          import __main__ as main
+          if verbose is True and not hasattr(main, '__file__'): #I'm in repl
+             print('\n You can use <Configuration>.help(True) for a more detailed description of the possible configuration options. Enjoy ASE2SPRKKR.')
+          _help_warning_printed = True
+
+
+
   def __repr__(self):
       d = self._definition
       out = d.configuration_type_name
       out = out + ' ' + d.name.upper()
       return out
+
+_help_warning_printed=False
