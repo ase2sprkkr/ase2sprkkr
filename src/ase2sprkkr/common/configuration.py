@@ -1,13 +1,12 @@
-""" This module contains just a base class for both configuration values (Options)
-and configuration containers ("Sections")
+""" This module contains just a base class for both configuration values - :class:`Options<ase2sprkkr.common.options.Option>`
+and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
 """
 
 from typing import Union
 
-class BaseConfiguration:
+class Configuration:
   """ Common base class for all configurations values and containers. I.e.
-  for options and sections
-
+  for :class:`Options<ase2sprkkr.common.options.Option>` and :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
   """
 
   def __init__(self, definition, container=None):

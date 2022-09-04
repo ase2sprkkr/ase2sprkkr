@@ -10,12 +10,12 @@ from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
 import pyparsing as pp
-from .base_configuration import BaseConfiguration
+from .configuration import Configuration
 import itertools
 import re
 from typing import Union, Any, Dict
 
-class ConfigurationContainer(BaseConfiguration):
+class ConfigurationContainer(Configuration):
   """ A container for configuration (problem-definition) options and/or sections.
 
   Options in the configuration (problem-definition) files are grouped to

@@ -4,7 +4,7 @@ the syntax of a configuration file, or its parts
 (sections or configuration options)
 
 They are able both to parse a file, which results in an
-instance of (an instance of :py:class:`ase2sprkkr.common.BaseConfiguration`,
+instance of (an instance of :py:class:`ase2sprkkr.common.Configuration`,
 e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 :py:class:`Section<ase2sprkkr.common.configuration_containers.Section>`
 ), or write such object to a file.
