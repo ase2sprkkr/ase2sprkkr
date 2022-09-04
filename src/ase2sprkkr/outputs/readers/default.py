@@ -12,4 +12,3 @@ class DefaultOutputReader(OutputReader):
         pass
 
   result_class = DefaultResult
-
