@@ -3,7 +3,7 @@
 
 from ...common.grammar_types  import DefKeyword, SetOf, Flag, energy
 from ..input_parameters_definitions import \
-      SectionDefinition as Section, \
+      InputSectionDefinition as Section, \
       InputValueDefinition as V
 
 def CONTROL(ADSI):
@@ -16,7 +16,7 @@ def CONTROL(ADSI):
 
   Return
   ------
-  CONTROL: SectionDefinition
+  CONTROL: InputSectionDefinition
   """
 
   return Section('CONTROL',[
@@ -65,7 +65,7 @@ def TASK(TASK):
 
   Return
   ------
-  TASK: SectionDefinition
+  TASK: InputSectionDefinition
   """
   return Section('TASK', [
     V('TASK', DefKeyword(TASK), name_in_grammar=False)

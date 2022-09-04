@@ -4,7 +4,7 @@ from .sections import *
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V, \
-    SectionDefinition as Section
+    InputSectionDefinition as Section
 
 input_parameters = InputParameters(
     'arpes', [

@@ -14,7 +14,7 @@ from ..common.misc import add_to_signature
 from ..common.options import CustomOption
 from ..common.configuration_definitions import \
     ValueDefinition, \
-    BaseSectionDefinition, \
+    SectionDefinition, \
     ConfigurationRootDefinition
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
 from .potentials import Potential
@@ -50,7 +50,7 @@ class Separator(PotValueDefinition):
          name = f'_Separator_{Separator._counter}'
       super().__init__(name, separator, is_hidden=True, name_in_grammar=False)
 
-class PotSectionDefinition(BaseSectionDefinition):
+class PotSectionDefinition(SectionDefinition):
   """ This class describes the format of one
   value of a standard potential section """
 
@@ -86,7 +86,7 @@ class PotSectionDefinition(BaseSectionDefinition):
   def __init__(self, *args, mandatory:bool=True,  **kwargs):
       """
       For the documentation of the other parameters, see
-      :meth:`ase2sprkkr.common.BaseSectionDefinition`
+      :meth:`ase2sprkkr.common.SectionDefinition`
 
       Parameters
       ----------
@@ -108,7 +108,7 @@ class ASEArraySectionDefinition(PotSectionDefinition):
       For the documentation of the other parameters, see
       :meth:`ase2sprkkr.potential_definitions.PotSectionDefinition`
       and its predecessor
-      :meth:`ase2sprkkr.common.BaseSectionDefinition`
+      :meth:`ase2sprkkr.common.SectionDefinition`
 
       Parameters
       ----------

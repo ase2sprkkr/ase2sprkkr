@@ -853,7 +853,7 @@ class BaseContainerDefinition(BaseDefinition):
            result = start + result
         return self.parse(result, whole_string)
 
-class BaseSectionDefinition(BaseContainerDefinition):
+class SectionDefinition(BaseContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 
        It just redefine a few properties/methods to values/behavior typical for the sections
@@ -904,7 +904,7 @@ class ConfigurationRootDefinition(BaseContainerDefinition):
        """
        def gen(i):
            section = defs[i]
-           if not isinstance(defs, BaseSectionDefinition):
+           if not isinstance(defs, SectionDefinition):
               section = cls.child_class(i, section)
            return section
 

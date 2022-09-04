@@ -12,7 +12,7 @@ import pyparsing as pp
 from ..common.grammar import line_end
 from ..common.configuration_definitions import \
     ValueDefinition, \
-    BaseSectionDefinition
+    SectionDefinition
 from ..common.misc import lazy_value
 
 class OutputValueDefinition(ValueDefinition):
@@ -50,7 +50,7 @@ class OutputNonameValueDefinition(OutputValueDefinition):
 
 
 
-class OutputSectionDefinition(BaseSectionDefinition):
+class OutputSectionDefinition(SectionDefinition):
   """ This class describes the format of one
   value of a standard potential section """
 

@@ -10,7 +10,7 @@ import functools
 import pyparsing as pp
 from ..common.configuration_definitions import \
     ValueDefinition, \
-    BaseSectionDefinition, \
+    SectionDefinition, \
     ConfigurationRootDefinition, \
     unique_dict
 from ..common.options import CustomOption
@@ -35,7 +35,7 @@ class InputValueDefinition(ValueDefinition):
   prefix = "\t"
   name_value_delimiter = '='
 
-class SectionDefinition(BaseSectionDefinition):
+class InputSectionDefinition(SectionDefinition):
   """ This class describes the format of one
   value of a task section """
 
@@ -57,8 +57,8 @@ class SectionDefinition(BaseSectionDefinition):
 class InputParametersDefinition(ConfigurationRootDefinition):
   """ This class describes the format of a task file. """
 
-  child_class = SectionDefinition
-  """ Sections of the :class:`InputParameters` are defined by :class:`SectionDefinition` """
+  child_class = InputSectionDefinition
+  """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
   result_class = InputParameters
   """ The parsing of a potential file results in an instance of :class:`InputParameters` """
 
@@ -75,7 +75,7 @@ class InputParametersDefinition(ConfigurationRootDefinition):
       out.setName('<newline><printable>')
       return out
 
-  custom_class = staticmethod(CustomSection.factory(SectionDefinition))
+  custom_class = staticmethod(CustomSection.factory(InputSectionDefinition))
 
   @classmethod
   @cache
@@ -111,6 +111,6 @@ class InputParametersDefinition(ConfigurationRootDefinition):
 
       super().__init__(name, sections, **kwargs)
       if not 'TASK' in self:
-         self['TASK'] = SectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
+         self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
       elif not 'TASK' in self['TASK']:
          self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)
