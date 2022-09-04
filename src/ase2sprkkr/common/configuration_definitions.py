@@ -209,7 +209,7 @@ class BaseValueDefinition(BaseDefinition):
                is_hidden=False, is_optional=None, is_expert=False,
                name_in_grammar=None, name_format=None, expert=None):
     """
-    Creates the object
+    Definition of a configuration value.
 
     Parameters
     ----------
@@ -229,14 +229,16 @@ class BaseValueDefinition(BaseDefinition):
       Value can have an alternative name (that alternativelly denotes the value)
 
     fixed: mixed
-      If given, this option is not user given, but with fixed_value value (provided by this parameter)
+      If it is given, this option have a fixed_value value (provided by this parameter),
+      that can not be changed by user.
 
     required: bool
       Required option can not be set to None (however, a required one
       can be still be optional, if it has a default values).
-      If required = None, it is set to True if both the conditions are met
-        * the value is not expert
-        * the optional is not True and the option has not a default_value
+      If required = None, it is set to True if both the conditions are met:
+
+       * the value is not expert
+       * the optional is not True and the option has not a default_value
 
     is_optional: bool or None
       If True, the value can be omited, if the fixed order is required

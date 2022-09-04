@@ -83,32 +83,31 @@ class GrammarType:
       in the parse result. On the other hand, has_value = False is in the file, but
       not in the result.
 
-        """
-  has_value = True
-
-  """ Default value for BaseValueDefinition.name_in_grammar.
-      Some types (e.g. Tables) commonly have no name (are identified
-      by its position in the potential file.
-  """
-  name_in_grammar = True
-
-  """ Default value for the given type. It can be overriden in the constructor (or just by setting
-  the instantiated object attribute) """
-  default_value = None
-
-  """ Deafault type for creating numpy arrays (e.g. by Table) is object - to be redefined
-      in the descendatns.
-
-      The functions called during...
-      ------------------------------
+      **The functions called during...**
 
       User input:  convert, validate
 
       Output: string -> _string
 
       Parsing: parse -> ( <_grammar parse actions>, validate(parse_check = True) )
+
   """
+
+  has_value = True
+
+  name_in_grammar = True
+  """ Default value for BaseValueDefinition.name_in_grammar.
+      Some types (e.g. Tables) commonly have no name (are identified
+      by its position in the potential file) -- such type could redefine
+      this class property."""
+
+  default_value = None
+  """ Default value for the given type. It can be overriden for particular instances
+  in the constructor (or just by setting the attribute of an instantiated object). """
+
   numpy_type = object
+  """ The numpy dtype of the array, that contains values of this type (see e.g. :class:`Array`).
+      The default type ``object`` can and should be redefined in the descendatns. """
 
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
                      format:str='', default_value:Any=None,
