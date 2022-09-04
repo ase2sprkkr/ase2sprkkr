@@ -21,3 +21,6 @@ input_parameters = InputParameters(
       mpi = True
 )
 """ SCF task input parameters definition"""
+
+from ...common.doc import process_input_parameters_definition
+process_input_parameters_definition(__name__)

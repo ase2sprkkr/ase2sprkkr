@@ -6,7 +6,6 @@ from ..input_parameters_definitions import \
     ValueDefinition as V, \
     SectionDefinition as Section
 
-#: ARPES task input parameters definition
 input_parameters = InputParameters(
     'arpes', [
     CONTROL('ARPES'),
@@ -105,3 +104,6 @@ input_parameters = InputParameters(
   info = 'ARPES - angle resolved photoemission spectroscopy'
 )
 """ ARPES task input parameters definition"""
+
+from ...common.doc import process_input_parameters_definition
+process_input_parameters_definition(__name__)
