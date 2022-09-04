@@ -151,6 +151,9 @@ class PotentialDefinition(ConfDefinition):
   custom_class = CustomPotentialSection
   """ Unknown sections will be of this type """
 
+  def _generic_info(self):
+      return f"Definition of the format of SPRKKR potential file"
+
   @classmethod
   @cache
   def custom_value_grammar(cls):

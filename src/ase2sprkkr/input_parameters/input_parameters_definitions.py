@@ -84,6 +84,9 @@ class InputParametersDefinition(ConfDefinition):
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
 
+  def _generic_info(self):
+      return f"Input parameters for task {self.name}"
+
   def __init__(self, name, sections=None,
                executable='kkrscf', mpi=True, result_reader=None,
                **kwargs):
