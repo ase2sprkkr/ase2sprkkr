@@ -340,8 +340,8 @@ class GrammarType:
       The additional description (e.g. possible choices) of the type. Multiline string.
     """
     out = self._additional_description
-    if prefix:
-       out.replace('\n', '\n' + prefix)
+    if prefix and out:
+       out = out.replace('\n', '\n' + prefix)
     return out
 
 class Unsigned(GrammarType):
@@ -541,10 +541,10 @@ class Keyword(GrammarType):
       ad = super().additional_description(prefix)
       if not self.choices:
          return ad
-      out = f'{prefix}Possible values:\n'
+      out = f'\n{prefix}Possible values:\n'
       out += '\n'.join([f"{prefix}  {k:<10}{v}" for k,v in self.choices.items()])
       if ad:
-         out += '\n' + ad
+         out += f'\n\n{prefix}' + ad
       return out
 
 

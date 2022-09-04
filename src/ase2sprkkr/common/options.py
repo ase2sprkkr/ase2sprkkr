@@ -18,9 +18,8 @@ class Option(Configuration):
   'Configuration value ImE'
   >>> conf.ENERGY.ImE.help()                     # doctest: +ELLIPSIS, +NORMALIZE_WHITESPACE
   Configuration value ImE
-  Data description
-  ----------------
-  ...
+  <BLANKLINE>
+  ImE : Energy (<Real> [Ry|eV]) ≝ 0.0  (optional)
   """
   def __init__(self, definition, container=None, value=None):
       """"

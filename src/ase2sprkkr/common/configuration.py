@@ -99,8 +99,12 @@ class Configuration:
       except AttributeError as e:
          raise Exception("Cannot retrieve documentation") from e
 
-  def help(self):
-      print(self.doc)
+  def help(self, verbose=False, show_hidden=False):
+      if verbose is True:
+         verbose='all'
+      elif verbose is False:
+         verbose=True
+      print(self._definition.description(verbose, show_hidden))
 
   def __repr__(self):
       d = self._definition
