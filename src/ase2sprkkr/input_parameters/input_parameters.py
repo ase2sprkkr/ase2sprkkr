@@ -172,16 +172,16 @@ class InputParameters(RootConfigurationContainer):
       print_output = print_output if print_output is not None else calculator.print_output
       executable_postfix = calculator.executable_postfix if executable_postfix is None else executable_postfix
       executable += resolve_executable_postfix(calculator.executable_postfix)
-      self.directory = calculator._directory
+      directory = calculator._directory
       process = self.result_reader(calculator)
       try:
         mpi = self.mpi_runner(mpi)
         if mpi:
              executable = mpi + [ executable + 'MPI', input_file.name ]
-             return process.run(executable, output_file, stdin = None, print_output=print_output, directory=self.directory)
+             return process.run(executable, output_file, stdin = None, print_output=print_output, directory=directory)
         else:
              executable = [ executable ]
-             return process.run(executable, output_file, stdin = input_file, print_output=print_output, directory=self.directory)
+             return process.run(executable, output_file, stdin = input_file, print_output=print_output, directory=directory)
       except FileNotFoundError as e:
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?\n' + \
                      e.strerror
@@ -189,10 +189,25 @@ class InputParameters(RootConfigurationContainer):
       finally:
         input_file.close()
 
-  def result_reader(self, calculator=None):
+  def result_reader(self, calculator=None, directory=None):
       """ Return the result readed: the class that parse the output
-      of the runned task """
+      of the runned task
+
+      calculator
+        Calculator, which will be attached to the resulting class
+        for ruther processing the results
+
+      directory
+        Directory, to which will be related the relative paths
+        in the result.
+        If none, get the directory from the calculator, or the current
+        directory
+      """
       cls = self._definition.result_reader
+
+      if not directory and calculator.directory:
+         directory = calculator.directory
+
       if cls is None:
          task = self.TASK.TASK().lower()
          try:
@@ -204,14 +219,21 @@ class InputParameters(RootConfigurationContainer):
                                 "No {clsname} class in the module {oo.__name__}.{task}")
          except ModuleNotFoundError:
             cls = DefaultOutputReader
-      return cls(self, calculator)
+      return cls(self, calculator, directory)
 
   def read_output_from_file(self, filename, directory=None):
       """ Read output of a previously runned task from a file and parse it in a same
       way, as the process would be runned again.
+
+      filename
+        Filename, from which the result will be read
+
+      directory
+        A directory, to which are related the paths in the output
+        Default None means the directory, where the file is
       """
-      self.directory = directory or os.path.dirname(filename)
-      return self.result_reader().read_from_file(filename)
+      directory = directory or os.path.dirname(filename)
+      return self.result_reader(directory=directory).read_from_file(filename)
 
   def executable_params(self, directory=None, ):
       """
