@@ -46,3 +46,7 @@ anaconda:
 conda:
 	rm -rf ~/anaconda3/conda-bld/src_cache/ase2sprkkr-*
 	PWD="`pwd`" conda build .
+
+checkout-docs:
+	rm -rf docs
+	git checkout docs
