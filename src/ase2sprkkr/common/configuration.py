@@ -110,7 +110,7 @@ class Configuration:
       if not _help_warning_printed:
           import __main__ as main
           if verbose is True and not hasattr(main, '__file__'): #I'm in repl
-             print('\n You can use <Configuration>.help(True) for a more detailed description of the possible configuration options. Enjoy ASE2SPRKKR.')
+             print('\n You can use <Configuration>.help(True) for a more detailed description of the possible configuration options. Enjoy ASE2SPRKKR!\n')
           _help_warning_printed = True
 
 
