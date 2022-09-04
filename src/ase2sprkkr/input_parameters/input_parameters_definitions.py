@@ -9,7 +9,7 @@ sprkkr.common.configuration_definitions
 import functools
 import pyparsing as pp
 from ..common.configuration_definitions import \
-    BaseValueDefinition, \
+    ValueDefinition, \
     BaseSectionDefinition, \
     ConfigurationRootDefinition, \
     unique_dict
@@ -24,7 +24,7 @@ from .input_parameters import InputParameters
 with generate_grammar():
   section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
 
-class ValueDefinition(BaseValueDefinition):
+class InputValueDefinition(ValueDefinition):
   """ This class describes the format of one value of
   a task configuration """
   @staticmethod
@@ -40,9 +40,9 @@ class SectionDefinition(BaseSectionDefinition):
   value of a task section """
 
   """ standard child class """
-  child_class = ValueDefinition
+  child_class = InputValueDefinition
   """ This class is used for user-added values. """
-  custom_class = staticmethod(CustomOption.factory(ValueDefinition, mixed))
+  custom_class = staticmethod(CustomOption.factory(InputValueDefinition, mixed))
 
   """ options are delimited by newline in ouptut. """
   delimiter = '\n'
@@ -111,6 +111,6 @@ class InputParametersDefinition(ConfigurationRootDefinition):
 
       super().__init__(name, sections, **kwargs)
       if not 'TASK' in self:
-         self['TASK'] = SectionDefinition('TASK', [ ValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
+         self['TASK'] = SectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
       elif not 'TASK' in self['TASK']:
-         self['TASK']['TASK'] = ValueDefinition(DefKeyword(self.name), name_in_grammar=False)
+         self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)

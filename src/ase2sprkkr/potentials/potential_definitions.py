@@ -13,7 +13,7 @@ from ..common.grammar_types import separator, pot_mixed
 from ..common.misc import add_to_signature
 from ..common.options import CustomOption
 from ..common.configuration_definitions import \
-    BaseValueDefinition, \
+    ValueDefinition, \
     BaseSectionDefinition, \
     ConfigurationRootDefinition
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
@@ -21,7 +21,7 @@ from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
 from ..common.misc import lazy_value, cache
 
-class PotValueDefinition(BaseValueDefinition):
+class PotValueDefinition(ValueDefinition):
   """
   Definition of a configuration option in a potential
   """

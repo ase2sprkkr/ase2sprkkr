@@ -11,11 +11,11 @@ import functools
 import pyparsing as pp
 from ..common.grammar import line_end
 from ..common.configuration_definitions import \
-    BaseValueDefinition, \
+    ValueDefinition, \
     BaseSectionDefinition
 from ..common.misc import lazy_value
 
-class OutputValueDefinition(BaseValueDefinition):
+class OutputValueDefinition(ValueDefinition):
   """ Value in an output file, of a form 'NAME   VALUE' """
 
   @staticmethod

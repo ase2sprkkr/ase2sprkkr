@@ -4,7 +4,7 @@
 from ...common.grammar_types  import DefKeyword, SetOf, Flag, energy
 from ..input_parameters_definitions import \
       SectionDefinition as Section, \
-      ValueDefinition as V
+      InputValueDefinition as V
 
 def CONTROL(ADSI):
   """ Create the definition of the CONTROL section of the task input file.

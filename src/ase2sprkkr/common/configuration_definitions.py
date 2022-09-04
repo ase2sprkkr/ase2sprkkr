@@ -213,7 +213,7 @@ class BaseDefinition:
 
    _copy_excluded_args = ['expert']
 
-class BaseValueDefinition(BaseDefinition):
+class ValueDefinition(BaseDefinition):
 
   result_class = Option
 

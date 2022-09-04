@@ -96,7 +96,7 @@ class GrammarType:
   has_value = True
 
   name_in_grammar = True
-  """ Default value for BaseValueDefinition.name_in_grammar.
+  """ Default value for ValueDefinition.name_in_grammar.
       Some types (e.g. Tables) commonly have no name (are identified
       by its position in the potential file) -- such type could redefine
       this class property."""

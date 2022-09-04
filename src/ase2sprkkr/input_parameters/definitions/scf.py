@@ -3,7 +3,7 @@ from ...common.grammar_types  import *
 from .sections import *
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
-    ValueDefinition as V
+    InputValueDefinition as V
 
 input_parameters = InputParameters(
       'scf', [
