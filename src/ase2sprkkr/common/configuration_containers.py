@@ -391,7 +391,7 @@ class Section(BaseSection):
 
       Returns
       -------
-      ase2sprkkr.common.configuration_definitions.BaseContainerDefinition
+      ase2sprkkr.common.configuration_definitions.ContainerDefinition
       The definition of the section. I.e. the object that defines, which configuration values
       are in the section, their default values etc.
       """

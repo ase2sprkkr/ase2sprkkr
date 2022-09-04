@@ -511,7 +511,7 @@ def add_excluded_names_condition(element, names):
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
 
-class BaseContainerDefinition(BaseDefinition):
+class ContainerDefinition(BaseDefinition):
     """ Base class for a definition of the format of a container """
 
     force_order = False
@@ -853,7 +853,7 @@ class BaseContainerDefinition(BaseDefinition):
            result = start + result
         return self.parse(result, whole_string)
 
-class SectionDefinition(BaseContainerDefinition):
+class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 
        It just redefine a few properties/methods to values/behavior typical for the sections
@@ -883,7 +883,7 @@ class SectionDefinition(BaseContainerDefinition):
       return f"Configuration section {self.name}"
 
 
-class ConfigurationRootDefinition(BaseContainerDefinition):
+class ConfigurationRootDefinition(ContainerDefinition):
    """ From this class, the definition of the format of a whole configuration file should be derived.
 
    """
