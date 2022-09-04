@@ -11,7 +11,7 @@ import pyparsing as pp
 from ..common.configuration_definitions import \
     BaseValueDefinition, \
     BaseSectionDefinition, \
-    ConfDefinition, \
+    ConfigurationRootDefinition, \
     unique_dict
 from ..common.options import CustomOption
 from ..common.configuration_containers import CustomSection
@@ -54,7 +54,7 @@ class SectionDefinition(BaseSectionDefinition):
 
   do_not_skip_whitespaces_before_name = True
 
-class InputParametersDefinition(ConfDefinition):
+class InputParametersDefinition(ConfigurationRootDefinition):
   """ This class describes the format of a task file. """
 
   child_class = SectionDefinition

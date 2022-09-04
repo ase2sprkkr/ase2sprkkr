@@ -883,7 +883,7 @@ class BaseSectionDefinition(BaseContainerDefinition):
       return f"Configuration section {self.name}"
 
 
-class ConfDefinition(BaseContainerDefinition):
+class ConfigurationRootDefinition(BaseContainerDefinition):
    """ From this class, the definition of the format of a whole configuration file should be derived.
 
    """
@@ -939,7 +939,7 @@ class ConfDefinition(BaseContainerDefinition):
 
    def parse_return(self, val, return_value_only=True):
         """ There is no name in the parsed results (see how
-            ConfDefinition._tuple_with_my_name is redefined)
+            ConfigurationRootDefinition._tuple_with_my_name is redefined)
         """
         val = val[0]
         return val

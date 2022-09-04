@@ -15,7 +15,7 @@ from ..common.options import CustomOption
 from ..common.configuration_definitions import \
     BaseValueDefinition, \
     BaseSectionDefinition, \
-    ConfDefinition
+    ConfigurationRootDefinition
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
 from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
@@ -124,7 +124,7 @@ class ASEArraySectionDefinition(PotSectionDefinition):
 
   result_class = ASEArraySection
 
-class PotentialDefinition(ConfDefinition):
+class PotentialDefinition(ConfigurationRootDefinition):
   """ This class describes the format of a potential file """
 
   child_class = PotSectionDefinition
@@ -160,5 +160,5 @@ class PotentialDefinition(ConfDefinition):
       """ Unknown sections are parsed by this grammar """
       return SectionString._grammar
 
-  custom_name_characters = ConfDefinition.custom_name_characters + ' '
+  custom_name_characters = ConfigurationRootDefinition.custom_name_characters + ' '
   """ There can be space in a potential-section name """
