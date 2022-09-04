@@ -512,7 +512,12 @@ def add_excluded_names_condition(element, names):
     element.addCondition(lambda x: x[0].upper() not in names)
 
 class ContainerDefinition(BaseDefinition):
-    """ Base class for a definition of the format of a container """
+    """ Base class for a definition (of contained data, format, etc)
+    of either a whole configuration file
+    (e.g. :class:`InputParameters<ase2sprkkr.input_parameters.input_parameters.InputParameters>` or
+    e.g. :class:`Potential<ase2sprkkr.potentials.potentials.Potential>`) or
+    its :class:`Section<ase2sprkkr.common.configuration_containers.Section>`.
+    """
 
     force_order = False
     """ Force order of its members """
