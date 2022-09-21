@@ -21,25 +21,30 @@ except ImportError as error:
 
 from ase import Atoms
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
+from ..physics.winger_seitz_radii import winger_seitz_radii
 from typing import Dict
 
 
 def empty_spheres(atoms: Atoms,
                   extend: bool = False,
 
-                  overlap_matrix:float|np.ndarray=0.14,
+                  overlap_matrix:float|np.ndarray=0.18,
                   radii_ratios_map: Dict[str, float]=None,
-                  max_es_overlap:float = 0.26,  # Maximum overlap of ES
-                  adjust_overlap:float = 0.36,  # Overlap that will be adjusted to max. overlap
-                  max_es_radius :float = 3.0,  # Max. accepted sphere radius
+                  max_es_overlap:float = 0.24,  # Maximum overlap of ES
+                  adjust_overlap:float = 0.28,  # Overlap that will be adjusted to max. overlap
                   min_es_radius: float = 0.2,  # Min. accepted sphere radius
-                  symmetrize_threshold: float = 0.8,  # Threshold for overlap when symmetrization is used
-                  max_iterations: int = 2,  # Number of iterations for the sphere search
-                  grid: np.ndarray = np.array([[4, 0, 0], [0, 192, 0], [0, 0, 192]]),
+                  max_es_radius :float = 1.0,  # Max. accepted sphere radius
+                  symmetrize_threshold: float = 0.7,  # Threshold for overlap when symmetrization is used
+                  max_iterations: int = 100,  # Number of iterations for the sphere search
+                  grid: np.ndarray = np.array([[48, 0, 0], [0, 48, 0], [0, 0, 48]]),
                   verbosity: int = 0,  # Verbosity of output
     ):
   """
-  Compute "empty spheres" that optimally fills the empty space in the primitive cell
+  Compute the best coverage of the primitive cell with spheres.
+
+  The function computes:
+   - the best radii of atomic-sites spheres
+   - the positions of 'vacuum pseudoatom' spheres and their radii to be added to the structure
 
   Parameters
   ----------
@@ -53,11 +58,14 @@ def empty_spheres(atoms: Atoms,
     #TODO
 
   radii_ratios_map
-    Dict, that defines the radii of given chemical elements
-    #TODO - generate it automatically
+    Dict, that defines the ratios of radii of used chemical elements.
+    It is dimensionless value (it is not the sizes, only
+    the ratios of the given values, that matter).
+    The default walues are :module:`Winger-Seitz radii<ase2sprkkr.physics.winger_seitz_radii>`.
+    If only some of the elements are provided, they are supplemented with the default values.
 
   max_es_overlap
-    Max allowed overlap of empty spheres
+    Max allowed overlap of empty spheres.
 
   adjust_overlap
     #TODO
@@ -90,8 +98,11 @@ def empty_spheres(atoms: Atoms,
   for i in ('atoms', 'overlap_matrix', 'radii_ratios_map', 'extend'):
       del params[i]
 
-  if radii_ratios_map is None:
-    radii_ratios_map = {}
+  if radii_ratios_map:
+    radii_ratios_map = { **winger_seitz_radii, **radii_ratios_map }
+  else:
+    radii_ratios_map = winger_seitz_radii
+
   for s in atoms.symbols:
     if not s in radii_ratios_map:
       radii_ratios_map[s] = 1.0
@@ -120,6 +131,19 @@ def empty_spheres(atoms: Atoms,
   params = Parameters(**params)
 
   res = run_finder(params, structure, symmetry)
+  out = (rs.
+
+  if extend:
+     add_empty_spheres(atoms, radii)
+  return res
+
+def add_empty_spheres(atoms, es_dataset):
+  """
+  Update the structure of the (SPRKKR) ASE atoms, adding the empty
+  spheres and updating the shpheres radii of the atomic sites, according
+  to the 
+  """
+  return res
   num = len(res.es_radii)
   if num == 0:
      return None
@@ -127,7 +151,6 @@ def empty_spheres(atoms: Atoms,
   empty = SPRKKRAtoms(symbols='X'*len(res.es_radii), symmetry = False)
   empty.set_positions(res.es_positions)
   for i,radius in zip(empty.sites, res.es_radii):
+      #TODO set the radius of the sphere
       next(iter(i.occupation)).radius=radius
-  if extend:
-     atoms.extend(empty)
-  return empty
+
