@@ -2,11 +2,11 @@
 there are a generic classes for these sections.
 """
 
-from ..common.configuration_containers import Section
-from .io_data import ReadIoData, WriteIoData
+from ..sprkkr.configuration import ConfigurationSection
+from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
-class PotentialSection(Section):
+class PotentialSection(ConfigurationSection):
     """ A generic class for a section in a potential """
 
     def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data:WriteIoData):

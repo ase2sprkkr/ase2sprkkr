@@ -11,17 +11,16 @@ import pyparsing as pp
 from ..common.grammar import line_end, separator as separator_grammar
 from ..common.grammar_types import separator, pot_mixed
 from ..common.options import CustomOption
-from ..common.configuration_definitions import \
-    ValueDefinition, \
-    SectionDefinition, \
-    ConfigurationRootDefinition
+from ..sprkkr.configuration import \
+         ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
+         CustomConfigurationValue
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
 from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
 from ..common.decorators import cached_class_property, cache
 from ..common.decorators import add_to_signature
 
-class PotValueDefinition(ValueDefinition):
+class PotValueDefinition(ConfigurationValueDefinition):
   """
   Definition of a configuration option in a potential
   """
@@ -49,7 +48,7 @@ class Separator(PotValueDefinition):
          name = f'_Separator_{Separator._counter}'
       super().__init__(name, separator, is_hidden=True, name_in_grammar=False)
 
-class PotSectionDefinition(SectionDefinition):
+class PotSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one
   value of a standard potential section """
 
@@ -61,7 +60,7 @@ class PotSectionDefinition(SectionDefinition):
   child_class = PotValueDefinition
   """ standard child class """
 
-  custom_class = staticmethod(CustomOption.factory(PotValueDefinition, pot_mixed))
+  custom_class = staticmethod(CustomConfigurationValue.factory(PotValueDefinition, pot_mixed))
   """ Adding a custom values is allowed """
 
   delimiter = '\n'
@@ -123,7 +122,7 @@ class ASEArraySectionDefinition(PotSectionDefinition):
 
   result_class = ASEArraySection
 
-class PotentialDefinition(ConfigurationRootDefinition):
+class PotentialDefinition(ConfigurationFileDefinition):
   """ This class describes the format of a potential file """
 
   child_class = PotSectionDefinition
@@ -158,5 +157,5 @@ class PotentialDefinition(ConfigurationRootDefinition):
       """ Unknown sections are parsed by this grammar """
       return SectionString._grammar
 
-  custom_name_characters = ConfigurationRootDefinition.custom_name_characters + ' '
+  custom_name_characters = ConfigurationFileDefinition.custom_name_characters + ' '
   """ There can be space in a potential-section name """

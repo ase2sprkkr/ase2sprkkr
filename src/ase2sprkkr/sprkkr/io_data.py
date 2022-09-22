@@ -1,5 +1,5 @@
 """ IoData classes serves are intermediate object used as storage during
-reading or writing a potential file."""
+reading or writing of potential/input_parameters files."""
 
 from ..common.decorators import cached_property
 from ..common.unique_values import UniqueValuesMapping

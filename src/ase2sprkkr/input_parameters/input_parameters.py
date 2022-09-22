@@ -13,7 +13,7 @@ import importlib
 from . import definitions
 from ..outputs import readers
 from ..outputs.readers.default import DefaultOutputReader
-from ..common.configuration_containers import RootConfigurationContainer
+from ..sprkkr.configuration import ConfigurationFile
 from ..common.misc import OrderedDict
 from ..common.decorators import cached_class_property
 import shutil
@@ -35,7 +35,7 @@ def resolve_executable_postfix(postfix:Union[str,bool]):
         return os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
     return postfix
 
-class InputParameters(RootConfigurationContainer):
+class InputParameters(ConfigurationFile):
   """ It holds the configuration values for a SPR-KKR task and run the task
 
   This class is a ConfigurationContainer, thus, it holds the configuration values

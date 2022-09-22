@@ -1,10 +1,10 @@
 """ Potential is object that holds data form SPR-KKR potential file """
 
-from ..common.configuration_containers import RootConfigurationContainer
-from .io_data import ReadIoData, WriteIoData
-from ..common.misc import class_property, cache
+from ..sprkkr.configuration import ConfigurationFile
+from ..sprkkr.io_data import ReadIoData, WriteIoData
+from ..common.decorators import class_property, cache
 
-class Potential(RootConfigurationContainer):
+class Potential(ConfigurationFile):
   """ It holds data form SPR-KKR potential file
 
   It, in addition to being a containers for their sections, can read/write
@@ -60,23 +60,27 @@ class Potential(RootConfigurationContainer):
 
       return atoms
 
-  def save_to_file(self, file, atoms=None, *, validate=True):
-      if atoms is not False:
-         self.set_from_atoms(atoms or self._atoms)
-      self.make_complete()
-      super().save_to_file(file, validate=validate)
+  def set_from_atoms(self, atoms=None, io_data:WriteIoData=None):
+      """ Set the sections' values of the potential according to the given ASE atoms object.
 
-  def set_from_atoms(self, atoms = None):
-      """ Set the sections of the potential accoring to an ASE atoms object. """
-      atoms = SPRKKRAtoms.promote_ase_atoms(atoms or self._atoms)
-      iodata = WriteIoData(self.atoms)
-      for i in self:
-          i._set_from_atoms(atoms, iodata)
+      Parameters
+      ----------
+      atoms
+        The atoms object, from which the data will be set. If it is None, the ``atoms`` property
+        of the potential (``self.atoms``) is used.
+
+      io_data
+        The additional (in the time of the creation frozen) state of the atoms object,
+        that contains e.g. numbering of the sites, atomic types etc.
+        If is not set, it is created from the atoms.
+      """
+      super().set_from_atoms(atoms or self._atoms, io_data)
+      self.make_complete()
 
   @class_property
   @cache
   def potential_definition(cls):
-      #import he to avoid the circular import issues
+      #import here to avoid circular import issues
       from .definitions import potential as definition
       return definition.potential_definition
 

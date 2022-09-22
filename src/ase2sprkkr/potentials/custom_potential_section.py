@@ -3,23 +3,25 @@
 I.e. these sections can has any content (they are readed up to the section separator).
 """
 
-
 from ..common.grammar_types import GrammarType
-from ..common.options import CustomOption
-from ..common.configuration_definitions import ValueDefinition
+from ..sprkkr.configuration import ConfigurationValueDefinition, CustomConfigurationValue
 from ..common.grammar import separator, line_end
 from ..common.decorators import cached_class_property, class_property, cache
 
 import re
 import pyparsing as pp
 
-class CustomPotentialSectionDefinition(ValueDefinition):
-  """ There is no grammar in a custom potential section -
-  custom sections are readed by Potential class
+class CustomPotentialSectionDefinition(ConfigurationValueDefinition):
+  """ The custom sections are in fact values - their content can be
+  readed or writed as one value (in the most cases string).
   """
+
   mandatory = False
   """ Obviously, the custom sections are not required """
+
   prefix = ''
+
+
   name_value_delimiter = '\n'
   """ The content of the section is delimited from the name by a newline """
 
@@ -27,7 +29,7 @@ class CustomSectionToken(pp.Token):
    """ The grammar for a custom section - i.e. for unknown section, whose
    content is let as is.
 
-   The grammar just reads all up to the section separator.
+   The grammar just reads all  up to the section separator.
    """
 
    pattern = re.compile('\n' + separator.pattern + '[ \r\t]*\n',  re.DOTALL)
@@ -70,7 +72,7 @@ class SectionString(GrammarType):
 
 SectionString.I = SectionString()
 
-class CustomPotentialSection(CustomOption):
+class CustomPotentialSection(CustomConfigurationValue):
       """
       Unknown sections of the potential file are mapped to a "section"
       of this type.

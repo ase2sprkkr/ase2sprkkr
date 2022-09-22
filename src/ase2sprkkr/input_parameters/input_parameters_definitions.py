@@ -8,13 +8,10 @@ sprkkr.common.configuration_definitions
 
 import functools
 import pyparsing as pp
-from ..common.configuration_definitions import \
-    ValueDefinition, \
-    SectionDefinition, \
-    ConfigurationRootDefinition, \
-    unique_dict
-from ..common.options import CustomOption
-from ..common.configuration_containers import CustomSection
+from ..common.configuration_definitions import unique_dict
+from ..sprkkr.configuration import \
+         ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
+         CustomConfigurationValue, CustomConfigurationSection
 from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
@@ -24,7 +21,7 @@ from .input_parameters import InputParameters
 with generate_grammar():
   section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
 
-class InputValueDefinition(ValueDefinition):
+class InputValueDefinition(ConfigurationValueDefinition):
   """ This class describes the format of one value of
   a task configuration """
   @cached_class_property
@@ -34,17 +31,19 @@ class InputValueDefinition(ValueDefinition):
   prefix = "\t"
   name_value_delimiter = '='
 
-class InputSectionDefinition(SectionDefinition):
+class InputSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one
   value of a task section """
 
-  """ standard child class """
   child_class = InputValueDefinition
-  """ This class is used for user-added values. """
-  custom_class = staticmethod(CustomOption.factory(InputValueDefinition, mixed))
+  """ standard child class """
 
-  """ options are delimited by newline in ouptut. """
+  custom_class = staticmethod(CustomConfigurationValue.factory(InputValueDefinition, mixed))
+  """ Factory for custom values in the input sections. """
+
   delimiter = '\n'
+  """ options are delimited by newline in ouptut. """
+
   @cached_class_property
   def grammar_of_delimiter():
       out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
@@ -52,18 +51,24 @@ class InputSectionDefinition(SectionDefinition):
 
   do_not_skip_whitespaces_before_name = True
 
-class InputParametersDefinition(ConfigurationRootDefinition):
+class InputParametersDefinition(ConfigurationFileDefinition):
   """ This class describes the format of a task file. """
 
   child_class = InputSectionDefinition
   """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
+
   result_class = InputParameters
   """ The parsing of a potential file results in an instance of :class:`InputParameters` """
+
+  custom_class = staticmethod(CustomConfigurationSection.factory(InputSectionDefinition))
+  """ The class factory for custom sections in the container """
 
   configuration_type_name = 'INPUT PARAMETERS'
   """ Name of the container type in the runtime documentation """
 
   delimiter = "\n"
+  """ Sections are delimited by newline in the output """
+
   @cached_class_property
   def grammar_of_delimiter():
       def ws(x):
@@ -71,8 +76,6 @@ class InputParametersDefinition(ConfigurationRootDefinition):
       out = (pp.Optional(section_line_ends) + pp.OneOrMore(ws(pp.LineEnd())) + pp.FollowedBy(ws(pp.Regex(r'[^\s]'))) ).suppress()
       out.setName('<newline><printable>')
       return out
-
-  custom_class = staticmethod(CustomSection.factory(InputSectionDefinition))
 
   @classmethod
   @cache
@@ -90,7 +93,9 @@ class InputParametersDefinition(ConfigurationRootDefinition):
       """
       Parameters
       ---------
-      ....
+      others:
+        For the meaning of the others parameters please see :class:`ConfigurationRootDefinition`
+
       executable: str
         Executable to run
 
