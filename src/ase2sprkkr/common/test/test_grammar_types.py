@@ -45,7 +45,7 @@ class GrammarTest(TestCase):
           out = out[0]
           self.assertEqual(out, res, "{} should be {} and is {} for type {}".format(val, res, out, type.__class__.__name__))
         except (ValueError, pyparsing.ParseException) as e:
-          assert res is Error, "{} should be validated as {} for type {}".format(val, res, type.__class__.__name__)
+          assert res is Error, "{} should be validated as {} for type {}, an error {} have been given".format(val, res, type.__class__.__name__, e)
           return
         assert type.validate(out)
         out = g.parseString(val, True)
