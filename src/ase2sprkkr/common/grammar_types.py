@@ -116,7 +116,7 @@ class GrammarType:
                      format:str='', default_value:Any=None,
                      condition:Union[Callable[[Any], Union[bool,str]],None]=None,
                      after_convert:Union[Callable[[Any], Any],None]=None,
-                     additional_description=''):
+                     description=''):
       """
       Create the object.
 
@@ -161,7 +161,7 @@ class GrammarType:
       """ Some subclasses has default_value defined via read-only property. """
       if default_value is not None:
          self.default_value = self.convert(default_value)
-      self._additional_description = additional_description
+      self._description = description
 
   def __str__(self):
       return self.__class__.__name__
@@ -354,7 +354,7 @@ class GrammarType:
     additional_description
       The additional description (e.g. possible choices) of the type. Multiline string.
     """
-    out = self._additional_description
+    out = self._description
     if prefix and out:
        out = out.replace('\n', '\n' + prefix)
     return out

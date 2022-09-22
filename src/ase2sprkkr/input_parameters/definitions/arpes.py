@@ -80,7 +80,7 @@ input_parameters = InputParameters(
                         2: "scattering-angle diagram -> theta scan",
                         3: "orthonormal projection",
                         4: "stereographic projection"},
-                      additional_description = '3,4 only for angular resolved\npe (ups, xps) note: nt=np-> nx,ny'
+                       description = '3,4 only for angular resolved\npe (ups, xps) note: nt=np-> nx,ny'
               ), expert=1,
               info='Crystal coordinats in splout, xpsrun, or upsrun'),
       V('ISTR', Array(int, length=2), expert=[0,0], info="beam number (h,k)"),
