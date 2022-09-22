@@ -7,7 +7,7 @@ import pyparsing as pp
 import numpy as np
 from ase.units import Rydberg
 from ..task_result import TaskResult, OutputReader
-from ...common.misc import cached_property
+from ...common.decorators import cached_property
 from ...potentials.potentials import Potential
 import os
 import copy

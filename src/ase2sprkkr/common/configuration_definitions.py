@@ -18,7 +18,7 @@ from .configuration_containers import Section
 from .options import Option
 import numpy as np
 import inspect
-from .misc import cache
+from .decorators import cache
 import itertools
 import builtins
 from typing import Dict, Union

@@ -14,7 +14,8 @@ from . import definitions
 from ..outputs import readers
 from ..outputs.readers.default import DefaultOutputReader
 from ..common.configuration_containers import RootConfigurationContainer
-from ..common.misc import lazy_value, OrderedDict
+from ..common.misc import OrderedDict
+from ..common.decorators import cached_class_property
 import shutil
 from typing import Union
 
@@ -252,8 +253,7 @@ class InputParameters(RootConfigurationContainer):
       else:
           raise KeyError("No option with name {} in any of the members".format(name))
 
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def definitions():
       names = (i for i in pkgutil.iter_modules(definitions.__path__) if i.name != 'sections')
       im = importlib.import_module
@@ -263,7 +263,7 @@ class InputParameters(RootConfigurationContainer):
   @classmethod
   def is_it_a_input_parameters_name(cls, name):
       name = name.upper()
-      return name if name in cls.definitions() else False
+      return name if name in cls.definitions else False
 
   @classmethod
   def create_input_parameters(cls, arg):
@@ -304,7 +304,7 @@ class InputParameters(RootConfigurationContainer):
       input_parameters: InputParameters
         Input parameters with the default values for the given task.
       """
-      return InputParameters(cls.definitions()[name.upper()])
+      return InputParameters(cls.definitions[name.upper()])
 
   @classmethod
   def default_parameters(cls):
@@ -320,7 +320,7 @@ class InputParameters(RootConfigurationContainer):
       filename: str or file
         Input file (either its filename, or an open file)
       """
-      definitions = cls.definitions()
+      definitions = cls.definitions
       for d in definitions.values():
           try:
              out = d.read_from_file(filename)

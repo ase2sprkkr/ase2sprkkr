@@ -10,7 +10,6 @@ import functools
 import pyparsing as pp
 from ..common.grammar import line_end, separator as separator_grammar
 from ..common.grammar_types import separator, pot_mixed
-from ..common.misc import add_to_signature
 from ..common.options import CustomOption
 from ..common.configuration_definitions import \
     ValueDefinition, \
@@ -19,14 +18,14 @@ from ..common.configuration_definitions import \
 from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
 from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
-from ..common.misc import lazy_value, cache
+from ..common.decorators import cached_class_property, cache
+from ..common.decorators import add_to_signature
 
 class PotValueDefinition(ValueDefinition):
   """
   Definition of a configuration option in a potential
   """
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
     return pp.Empty().setName(' ')
 
@@ -142,8 +141,7 @@ class PotentialDefinition(ConfigurationRootDefinition):
   delimiter="*"*79 + "\n"
   """ Sections delimiter """
 
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
       """ Grammar of the sections delimiter """
       return SectionString.grammar_of_delimiter()

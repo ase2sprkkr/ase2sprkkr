@@ -26,8 +26,8 @@ class TestDefinitions(TestCase):
           if not i.endswith('.in'):
              continue
           filename = os.path.join(path, i)
-          self.assertTrue(i[:-3].upper() in InputParameters.definitions())
-          td = InputParameters.definitions()[i[:-3].upper()]
+          self.assertTrue(i[:-3].upper() in InputParameters.definitions)
+          td = InputParameters.definitions[i[:-3].upper()]
           t = td.read_from_file(filename)
 
           name = i[:-3]
@@ -37,7 +37,7 @@ class TestDefinitions(TestCase):
         except Exception as e:
           raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)
 
-      td = InputParameters.definitions()['PHAGEN']
+      td = InputParameters.definitions['PHAGEN']
       td['TASK']['TASK'].default_value = 'scf'
       t = td.read_from_file(os.path.join(path,'phagen.in'))
       self.assertEqual(t.TASK.TASK(), 'PHAGEN')

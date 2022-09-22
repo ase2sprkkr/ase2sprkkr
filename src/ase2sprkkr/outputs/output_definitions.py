@@ -13,13 +13,12 @@ from ..common.grammar import line_end
 from ..common.configuration_definitions import \
     ValueDefinition, \
     SectionDefinition
-from ..common.misc import lazy_value
+from ..common.decorators import cached_class_property
 
 class OutputValueDefinition(ValueDefinition):
   """ Value in an output file, of a form 'NAME   VALUE' """
 
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
     return pp.WordStart()
 
@@ -33,8 +32,7 @@ class OutputValueEqualDefinition(OutputValueDefinition):
 
   name_value_delimiter = '='
 
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
     return pp.Suppress("=").setName('=')
 
@@ -47,7 +45,6 @@ class OutputNonameValueDefinition(OutputValueDefinition):
 
   def __init__(self, *args, required=True, **kwargs):
       super().__init__(*args, required=required, **kwargs)
-
 
 
 class OutputSectionDefinition(SectionDefinition):
@@ -69,8 +66,7 @@ class OutputSectionDefinition(SectionDefinition):
   delimiter = '\n'
   """ options are delimited by newline in ouptut. """
 
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
       out = (pp.Optional(line_end) + pp.WordStart()).suppress()
       return out

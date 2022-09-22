@@ -1,6 +1,6 @@
 """ This module contains classes, used by parsers of the output files """
 
-from ..common.misc import cached_property, add_to_signature
+from ..common.decorators import cached_property, add_to_signature
 from ..common.process_output_reader import BaseProcessOutputReader
 import os
 

@@ -4,7 +4,7 @@ else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..misc import add_to_signature
+from ..decorators import add_to_signature
 import inspect
 import tempfile
 import asyncio

@@ -7,12 +7,11 @@ I.e. these sections can has any content (they are readed up to the section separ
 from ..common.grammar_types import GrammarType
 from ..common.options import CustomOption
 from ..common.configuration_definitions import ValueDefinition
-from ..common.misc import class_property, cache
-import pyparsing as pp
 from ..common.grammar import separator, line_end
-from ..common.misc import lazy_value
+from ..common.decorators import cached_class_property, class_property, cache
+
 import re
-import pyparsing
+import pyparsing as pp
 
 class CustomPotentialSectionDefinition(ValueDefinition):
   """ There is no grammar in a custom potential section -
@@ -54,14 +53,12 @@ class SectionString(GrammarType):
 
       delimiter_pattern = '(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n' +separator.pattern + '(?:[ \t\r]*(?:\n[ \t\r]*))*\n'
 
-      @staticmethod
-      @lazy_value
+      @cached_class_property
       def grammar_of_delimiter():
           return pp.Regex(SectionString.delimiter_pattern).setName('*'*79 + '<newline>').suppress()
 
-      @class_property
-      @cache
-      def _grammar(cls):
+      @cached_class_property
+      def _grammar():
           return CustomSectionToken()
 
       def grammar_name(self):

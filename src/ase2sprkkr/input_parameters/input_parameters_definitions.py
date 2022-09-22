@@ -17,7 +17,7 @@ from ..common.options import CustomOption
 from ..common.configuration_containers import CustomSection
 from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar, delimitedList
-from ..common.misc import lazy_value, cache
+from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters
 
 
@@ -27,8 +27,7 @@ with generate_grammar():
 class InputValueDefinition(ValueDefinition):
   """ This class describes the format of one value of
   a task configuration """
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
     return pp.Suppress("=").setName('=')
 
@@ -46,8 +45,7 @@ class InputSectionDefinition(SectionDefinition):
 
   """ options are delimited by newline in ouptut. """
   delimiter = '\n'
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
       out = (pp.Optional(section_line_ends) + pp.WordStart()).suppress()
       return out
@@ -66,8 +64,7 @@ class InputParametersDefinition(ConfigurationRootDefinition):
   """ Name of the container type in the runtime documentation """
 
   delimiter = "\n"
-  @staticmethod
-  @lazy_value
+  @cached_class_property
   def grammar_of_delimiter():
       def ws(x):
           return x.setWhitespaceChars('')

@@ -5,15 +5,18 @@ Each grammar type can both parse string containing a value of a given type, and 
 """
 
 import pyparsing as pp
+ppc = pp.pyparsing_common
+from pyparsing import Word, Suppress
+
 import io
 import inspect
-from pyparsing import Word, Suppress
 import itertools
 import numpy as np
 from collections import namedtuple
 from collections.abc import Hashable
-from .misc import OrderedDict, cached_property, cache, add_to_signature
-ppc = pp.pyparsing_common
+from .misc import OrderedDict
+from .decorators import cached_class_property, cached_property, cache, \
+                        add_to_signature
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
                      replace_whitechars, White

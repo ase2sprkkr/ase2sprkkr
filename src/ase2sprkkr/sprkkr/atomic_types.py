@@ -1,6 +1,6 @@
 """ Atomic could be placed at the atomic site. """
 
-from ..common.misc import cached_property
+from ..common.decorators import cached_property
 import copy
 
 class AtomicType:
