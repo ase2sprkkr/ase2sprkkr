@@ -173,11 +173,23 @@ class GrammarType:
     return a == b
 
   @cache
-  def grammar(self, param_name=False):
-    """ Return a pyparsing grammar for the type """
+  def grammar(self, param_name:str=False):
+    """ Return a pyparsing grammar for the type
+
+    Parameters
+    ----------
+
+    param_name
+      The name of the value, that can be assigned to the generated grammar element.
+    """
     grammar = self._grammar
-    if not isinstance(grammar, pp.ParserElement):
+
+    if isinstance(self._grammar, pp.ParserElement):
+       grammar = pp.Forward()
+       grammar << self._grammar
+    else:
        grammar = grammar(param_name)
+
     if self.prefix or self.postfix:
        with generate_grammar():
         if self.prefix:
