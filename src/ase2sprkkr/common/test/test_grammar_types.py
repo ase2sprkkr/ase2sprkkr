@@ -63,7 +63,23 @@ class GrammarTest(TestCase):
         ('a', Error),
         ('1.1', Error),
         ('1.1 a', Error),
-        ('-1', -1)
+        ('-1', -1),
+        ('-111', -111),
+        ('999', 999),
+        ]:
+        test(val, res)
+
+    type = gt.Integer(min=-5, max=15)
+    for val, res in [
+        ('1', 1),
+        ('a', Error),
+        ('1.1', Error),
+        ('1.1 a', Error),
+        ('-1', -1),
+        ('15', 15),
+        ('16', Error),
+        ('-6', Error),
+        ('-5', -5)
         ]:
         test(val, res)
 
@@ -71,7 +87,19 @@ class GrammarTest(TestCase):
     for val, res in [
         ('1', 1.0),
         ('a', Error),
-        ('1.1', 1.1),
+        ('-1.1', -1.1),
+        ('1.1 a', Error),
+        ('-1e-2', -1e-2)
+        ]:
+        test(val, res)
+
+    type = gt.Real(min=-5., max=10.)
+    for val, res in [
+        ('10', 10.0),
+        ('10.0001', Error),
+        ('a', Error),
+        ('-5.1', Error),
+        ('-5', -5.),
         ('1.1 a', Error),
         ('-1e-2', -1e-2)
         ]:

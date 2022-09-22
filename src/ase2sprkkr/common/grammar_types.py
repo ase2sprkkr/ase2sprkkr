@@ -21,7 +21,7 @@ from .grammar import generate_grammar, separator as separator_grammar, \
 from ase.units import Rydberg
 import copy
 import datetime
-from typing import Union, Any, Callable
+from typing import Union, Any, Callable, Optional, Type
 
 context =  generate_grammar()
 context.__enter__()
@@ -356,14 +356,63 @@ class GrammarType:
        out = out.replace('\n', '\n' + prefix)
     return out
 
-class Unsigned(GrammarType):
+  def type_validation(self, value, types:Union[list[Type], Type], typename:Optional[str]=None):
+    """
+    Parameters
+    ----------
+    value: mixed
+      Value to be checked
+
+    types
+      The required type or types. If more types is given, it is sufficient, if the value is of
+      any of given types.
+
+    Returns
+    -------
+    error_message: Union[str, bool]
+      The function returns either False, if the value is ok, or string containing an error
+      message describing the error.
+
+    """
+    if isinstance(value, types): return False
+    if not typename:
+       typename = types
+    return f"An {typename} value is required, a value {value} of type {value.__class__} have been given"
+
+class Number(GrammarType):
+  """ Base class for a number - descendants of this class can have minimal and/or maximal possible value. """
+
+  @add_to_signature(GrammarType.__init__)
+  def __init__(self, min:Optional[int]=None, max:Optional[int]=None, *args, **kwargs):
+      """
+      Parameters
+      ----------
+      min:
+        Minimal allowed value.
+
+      max:
+        Maximal allowed value.
+      """
+      self.min = min
+      self.max = max
+      super().__init__(*args, **kwargs)
+
+  def min_max_validation(self, value):
+      if self.min is not None and self.min > value:
+         return f"A value greater that or equal to {self.min} is required, {value} have been given."
+      if self.max is not None and self.max < value:
+         return f"A value less than or equal to {self.max} is required, {value} have been given."
+      return True
+
+class Unsigned(Number):
   """ Unsigned integer (zero is possible) """
 
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
-    if not isinstance(value, int): return "An integer value required"
-    return value >= 0 or "A positive value required"
+    return self.type_validation(value,  (int, np.int64), 'integer') or \
+           self.min_max_validation(value) or \
+           ( True if value >= 0 else "A positive value required")
 
   def grammar_name(self):
     return '<+int>'
@@ -371,13 +420,14 @@ class Unsigned(GrammarType):
   numpy_type = int
 
 
-class Integer(GrammarType):
+class Integer(Number):
   """ Signed integer """
 
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, (int, np.int64) ) or f'An integer value required, ({value.__class__} was given)'
+    return self.type_validation(value,  (int, np.int64), 'integer') or \
+           self.min_max_validation(value) or True
 
   def grammar_name(self):
     return '<int>'
@@ -390,7 +440,7 @@ class Bool(GrammarType):
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, bool) or "A bool value rquired"
+    return isinstance(value, bool) or "A bool value is required"
 
   def grammar_name(self):
     return '<T|F>'
@@ -401,12 +451,13 @@ class Bool(GrammarType):
   numpy_type = bool
 
 
-class Real(GrammarType):
+class Real(Number):
   """ A real value """
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, float) or "A float value required"
+    return self.type_validation(value, float, 'float') or \
+           self.min_max_validation(value) or True
 
   def grammar_name(self):
     return '<float>'
@@ -414,20 +465,20 @@ class Real(GrammarType):
   numpy_type = float
 
 
-class Date(GrammarType):
+class Date(Number):
   """ A date value of the form 'DD.MM.YYYY' """
 
   _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
 
   def _validate(self, value, parse_check=False):
-    return isinstance(value, datetime.date) or "A date (datetime.date) value required"
+    return self.type_validation(value, date_time.date, 'date (datetime.date)') or \
+           self.min_max_validation(value) or True
 
   def grammar_name(self):
     return '<dd.mm.yyyy>'
 
   def _string(self, val):
     return val.strftime("%d.%m.%Y")
-
 
 
 class BaseRealWithUnits(GrammarType):
