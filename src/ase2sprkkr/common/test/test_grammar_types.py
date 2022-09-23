@@ -8,6 +8,7 @@ import pyparsing
 from .. import grammar_types as gt
 from ..grammar import generate_grammar
 import numpy as np
+import datetime
 from ase.units import Rydberg
 
 class GrammarTest(TestCase):
@@ -34,18 +35,24 @@ class GrammarTest(TestCase):
        self._test_types()
 
   def _test_types(self):
-    Error = "ERROR"
+    Error = object()
+
+    class Invalid:
+
+      def __init__(self, v):
+          self.value = v
 
     def test(val, res):
       #try:
+        g = type.grammar()
         try:
-          g = type.grammar()
-          out = g.parseString(val, True)
+          out = g.parseString(str(val), True)
           assert len(out) == 1
           out = out[0]
           self.assertEqual(out, res, "{} should be {} and is {} for type {}".format(val, res, out, type.__class__.__name__))
         except (ValueError, pyparsing.ParseException) as e:
           assert res is Error, "{} should be validated as {} for type {}, an error {} have been given".format(val, res, type.__class__.__name__, e)
+          test_invalid(val)
           return
         assert type.validate(out)
         out = g.parseString(val, True)
@@ -57,31 +64,58 @@ class GrammarTest(TestCase):
       #    raise
       #  raise AssertionError(f"Error '{val}' should be validated to '{res}', {str(e)} occurs")
 
+    def test_invalid(val):
+      try:
+        val = type.convert(val)
+        self.assertTrue(type.validate(val) is not True)
+      except ValueError:
+        pass
+      else:
+        self.assertTrue(False)
+
+    def test_valid(val):
+      val = type.convert(val)
+      self.assertTrue(type.validate(val) is True)
+
+    type = gt.Integer()
+    for val, res in [
+        ('1', 1),
+        ]:
+        test(val, res)
+
+    type = gt.Integer(min=-5, max=15)
+    for val, res in [
+        (-101, Error),
+    ]:
+        test(val, res)
+
     type = gt.Integer()
     for val, res in [
         ('1', 1),
         ('a', Error),
-        ('1.1', Error),
+        (1.1, Error),
         ('1.1 a', Error),
         ('-1', -1),
         ('-111', -111),
         ('999', 999),
         ]:
         test(val, res)
+    for v in [1., 'aaaa', (1,2,3)]: test_invalid(v)
 
     type = gt.Integer(min=-5, max=15)
     for val, res in [
         ('1', 1),
         ('a', Error),
-        ('1.1', Error),
+        (1.1, Error),
         ('1.1 a', Error),
         ('-1', -1),
         ('15', 15),
-        ('16', Error),
-        ('-6', Error),
+        (16, Error),
+        (-6, Error),
         ('-5', -5)
         ]:
         test(val, res)
+    for v in [-10, 1., 'aaaa', (1,2,3)]: test_invalid(v)
 
     type = gt.Real()
     for val, res in [
@@ -92,6 +126,7 @@ class GrammarTest(TestCase):
         ('-1e-2', -1e-2)
         ]:
         test(val, res)
+    for v in [1, 'aaaa', (1,2,3)]: test_invalid(v)
 
     type = gt.Real(min=-5., max=10.)
     for val, res in [
@@ -104,6 +139,7 @@ class GrammarTest(TestCase):
         ('-1e-2', -1e-2)
         ]:
         test(val, res)
+    for v in [1, 15., 'aaaa', (1,2,3)]: test_invalid(v)
 
     type = gt.String()
     for val, res in [
@@ -112,6 +148,7 @@ class GrammarTest(TestCase):
          ('1','1')
          ]:
          test(val, res)
+    for v in [1, 15., (1,2,3)]: test_invalid(v)
 
     type = gt.Energy()
     for val, res in [
@@ -121,7 +158,7 @@ class GrammarTest(TestCase):
          ('1 eV', 1.0/Rydberg),
          ]:
          test(val, res)
-
+    for v in [1, 15, 'aaaa', (1,2,3)]: test_invalid(v)
 
 
     type = gt.SetOf(int)
@@ -132,6 +169,8 @@ class GrammarTest(TestCase):
         ('{1,a}', Error)
         ]:
         test(val, res)
+    for v in [[1.,2,3], 'asasd' ]: test_invalid(v)
+    for v in [[1,2], np.array([1,2,3,4]) ]: test_valid(v)
 
     type = gt.Array(int, min_length=3)
     for val, res in [
@@ -142,6 +181,8 @@ class GrammarTest(TestCase):
         ('{1,a}', Error)
         ]:
         test(val, res)
+    for v in [[1.,2,3], 'asasd', 3 ]: test_invalid(v)
+    for v in [[1,2,3], np.array([1,2,3,4]) ]: test_valid(v)
 
     type = gt.Sequence(int, str, float)
     for val, res in [
@@ -203,6 +244,7 @@ class GrammarTest(TestCase):
         ('{1.,2.,3.}', np.array([1.,2.,3.]))
         ]:
         test(val, res)
+    for v in [ 'asdasdsad', [1.,3.], 8. ]: test_valid(v)
 
     type = gt.Table(X=int, YY=str, ZZZ=float, numbering=True, format='>20', numbering_format='<4')
     data = """ X YY ZZZ
@@ -219,5 +261,15 @@ class GrammarTest(TestCase):
          ('40', 40.),
          ('{40,50,60}', Error),
          ('{40}', Error),
+         ]:
+         test(val, res)
+    for v in [[1.,2,3], 'asasd', 3 ]: test_invalid(v)
+    for v in [ [1.,3.], 8. ]: test_valid(v)
+
+    type = gt.Date()
+    for val, res in [
+         ('{40,50}', Error),
+         ('23.01.2020', datetime.date(2020,1,23) ),
+         ('40', Error),
          ]:
          test(val, res)

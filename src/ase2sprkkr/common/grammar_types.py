@@ -16,14 +16,16 @@ from collections import namedtuple
 from collections.abc import Hashable
 from .misc import OrderedDict
 from .decorators import cached_class_property, cached_property, cache, \
-                        add_to_signature
+                        add_to_signature, add_called_class_as_argument
 from .grammar import generate_grammar, separator as separator_grammar, \
                      delimitedList, line_end, optional_quote,\
                      replace_whitechars, White
+from .alternative_types import normalize_type, allowed_types
 
 from ase.units import Rydberg
 import copy
 import datetime
+import functools
 from typing import Union, Any, Callable, Optional, Type
 
 context =  generate_grammar()
@@ -377,12 +379,53 @@ class GrammarType:
       message describing the error.
 
     """
-    if isinstance(value, types): return False
+    if isinstance(value, types): return True
     if not typename:
        typename = types
     return f"An {typename} value is required, a value {value} of type {value.__class__} have been given"
 
-class Number(GrammarType):
+@add_called_class_as_argument
+def add_to_parent_validation(validation):
+
+    @functools.wraps(validation)
+    def wrapped(cls, self, value, parse_check=False):
+        out = super(cls, self)._validate(value, parse_check)
+        if out is not True:
+           return out
+        return validation(self, value, parse_check)
+
+    return wrapped
+
+
+class TypedGrammarType(GrammarType):
+
+  @cached_class_property
+  def datatype(cls):
+      """ The (primary) type of the value. Redefine it in the descendants, if it is needed. """
+      return cls.numpy_type
+
+  @cached_class_property
+  def allowed_types(cls):
+      """ Allowed alternative types, that will be converted to the 'primary' datatype. """
+      dt = cls.datatype
+      return allowed_types.get(dt, (dt, ))
+
+  def convert(self, value):
+      if isinstance(value, self.datatype):
+         return value
+      for i in self.allowed_types:
+          if isinstance(value, i):
+             return self.datatype(value)
+      return value
+
+  @cached_class_property
+  def datatype_name(cls):
+      return cls.__name__.lower()
+
+  def _validate(self, value, parse_check=False):
+      return self.type_validation(value, self.allowed_types, self.datatype_name)
+
+class Number(TypedGrammarType):
   """ Base class for a number - descendants of this class can have minimal and/or maximal possible value. """
 
   @add_to_signature(GrammarType.__init__)
@@ -400,37 +443,34 @@ class Number(GrammarType):
       self.max = max
       super().__init__(*args, **kwargs)
 
-  def min_max_validation(self, value):
+  @add_to_parent_validation
+  def _validate(self, value, parse_check=False):
       if self.min is not None and self.min > value:
          return f"A value greater that or equal to {self.min} is required, {value} have been given."
       if self.max is not None and self.max < value:
          return f"A value less than or equal to {self.max} is required, {value} have been given."
       return True
 
+
 class Unsigned(Number):
   """ Unsigned integer (zero is possible) """
 
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
+  @add_to_parent_validation
   def _validate(self, value, parse_check=False):
-    return self.type_validation(value,  (int, np.int64), 'integer') or \
-           self.min_max_validation(value) or \
-           ( True if value >= 0 else "A positive value required")
+      return value >= 0 or "A positive value required"
 
   def grammar_name(self):
     return '<+int>'
 
   numpy_type = int
-
+  datatype_name = 'unsigned integer'
 
 class Integer(Number):
   """ Signed integer """
 
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
-
-  def _validate(self, value, parse_check=False):
-    return self.type_validation(value,  (int, np.int64), 'integer') or \
-           self.min_max_validation(value) or True
 
   def grammar_name(self):
     return '<int>'
@@ -438,12 +478,9 @@ class Integer(Number):
   numpy_type = int
 
 
-class Bool(GrammarType):
+class Bool(TypedGrammarType):
   """ A bool type, whose value is represented by a letter (T or F) """
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
-
-  def _validate(self, value, parse_check=False):
-    return isinstance(value, bool) or "A bool value is required"
 
   def grammar_name(self):
     return '<T|F>'
@@ -452,15 +489,12 @@ class Bool(GrammarType):
     return 'T' if val else 'F'
 
   numpy_type = bool
+  type_name = 'boolean'
 
 
 class Real(Number):
   """ A real value """
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
-
-  def _validate(self, value, parse_check=False):
-    return self.type_validation(value, float, 'float') or \
-           self.min_max_validation(value) or True
 
   def grammar_name(self):
     return '<float>'
@@ -473,18 +507,16 @@ class Date(Number):
 
   _grammar = pp.Regex(r'(?P<d>\d{2}).(?P<m>\d{2}).(?P<y>\d{4})').setParseAction(lambda x: datetime.date(int(x['y']), int(x['m']), int(x['d'])))
 
-  def _validate(self, value, parse_check=False):
-    return self.type_validation(value, date_time.date, 'date (datetime.date)') or \
-           self.min_max_validation(value) or True
-
   def grammar_name(self):
     return '<dd.mm.yyyy>'
 
   def _string(self, val):
     return val.strftime("%d.%m.%Y")
 
+  numpy_type = datetime.date
+  type_name = 'date'
 
-class BaseRealWithUnits(GrammarType):
+class BaseRealWithUnits(Real):
   """ The base class for float value, which can have units append.
       The value is converted automatically to the base units.
   """
@@ -536,16 +568,19 @@ class Energy(BaseRealWithUnits):
   def __str__(self):
       return "Energy (<Real> [Ry|eV])"
 
-class BaseString(GrammarType):
+class BaseString(TypedGrammarType):
   """ Base type for string grammar types """
 
+  datatype = str
+  datatype_name = 'string'
+
+  @add_to_parent_validation
   def _validate(self, value, parse_check=False):
-    if not isinstance(value, str): return "A string value required"
     if not parse_check:
       try:
         self._grammar.parseString(value, True)
       except pp.ParseException as e:
-        return f"Forbidden character '{e.line[e.col]}' in the string"
+        return f"Forbidden character '{e.line[e.col-1]}' in the string"
     return True
 
 class String(BaseString):
@@ -618,13 +653,19 @@ def DefKeyword(default, *others, **kwargs):
   """
   A value, that can take values from the predefined set of strings, the first one is the default value.
   """
-  return Keyword(default, *others, default_value=default, **kwargs)
+  if isinstance(default, dict) and len(others) == 0:
+     def_val = next(iter(default))
+  else:
+     def_val = default
+  return Keyword(default, *others, default_value=def_val, **kwargs)
 
 
-class Flag(GrammarType):
+class Flag(TypedGrammarType):
   """
   A boolean value, which is True, if a name of the value appears in the input file.
   """
+
+  numpy_type = bool
 
   def grammar_name(self):
       return None
@@ -1269,26 +1310,6 @@ mixed = Mixed.I = Mixed()
 """ A standard grammar type instance for variant (mixed) in input files """
 pot_mixed = PotMixed.I = PotMixed()
 """ A standard grammar type instance for variant (mixed) values in potential files """
-
-# some mapping and other stuff used by the types
-normalize_type_map = {
-    np.int64 : int,
-    np.float64: float,
-    np.complex128 : complex,
-    np.bool_: bool
-}
-""" Mapping of alternative types to the 'canonical ones'. """
-
-def normalize_type(type):
-    """ Return the 'canonical type' for a given type.
-
-    I.e. it maps numpy internal types to standard python ones.
-
-    doctest:
-    >>> normalize_type(np.int64)
-    <class 'int'>
-    """
-    return normalize_type_map.get(type, type)
 
 type_from_type_map = OrderedDict([
     (float, Real.I),
