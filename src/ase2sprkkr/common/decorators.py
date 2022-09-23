@@ -232,3 +232,73 @@ def add_to_signature(func, prepend=False, self_name='self'):
 
   return modify
 
+def add_called_class_as_argument(decorator):
+    """ If a decorator is used on a method, the information about the defining class is lost.
+    As a consequence, the execution of ``super().... failed.
+
+    This decorator can be applied to another decorator: it will add the defining class as a first
+    argument of the resulting class.
+
+    The implementation is very tricky - function-style decorator is not able to handle this situation,
+    the __set_name__ special method (in class-style decorator) has to be utilized. Moreover, class
+    style decorator lose 'self' from decorated method, thus, the self has to be recovered using
+    descriptor protocol.
+    To speed up the whole thing, the first access replaces the class-style decorator class with
+    generated method (that already can know - and knows - everything needed)
+
+    Example
+
+    >>> @add_called_class_as_argument
+    ... def decorator(func):
+    ...
+    ...       def wrapped(cls, self):
+    ...            super(cls, self).call()
+    ...            func(self)
+    ...       return wrapped
+    ...
+    >>> class A:
+    ...    def call(self):
+    ...         print('A', end='')
+    ...
+    >>> class B(A):
+    ...      @decorator
+    ...      def call(self):
+    ...           print('B', end='')
+    ...
+    >>> B().call()
+    AB
+    """
+
+    class AddCalledClassAsArgument:
+
+        def __init__(self, function):
+            self.func = function
+
+        def __set_name__(self, owner, name):
+            """ Catch the defining class """
+            self.cls=owner
+            self.name=name
+
+        def __call__(self, instance, *args, **kwargs):
+             func = self.func
+             cls = self.cls
+
+             @functools.wraps(func)
+             def wrapped(self, *args, **kwargs):
+                 return func(cls, self, *args, **kwargs)
+
+             setattr(cls, self.name, wrapped)
+             return wrapped(instance, *args, **kwargs)
+
+        def __get__(self, instance, instancetype):
+           """ Descriptor method - via this method the actual calling instance
+           (self of the very resulting method) is obtained. """
+           out = functools.partial(self.__call__, instance)
+           return functools.update_wrapper(out, self.func)
+
+    #@functools.wraps(function)
+    def wrapper(function):
+        function = decorator(function)
+        return AddCalledClassAsArgument(function)
+
+    return wrapper
