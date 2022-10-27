@@ -103,5 +103,12 @@ class Potential(ConfigurationFile):
       if update_atoms:
           self.update_atoms()
 
+  def __repr__(self):
+      return "SPRKKR POTENTIAL"
+
+  def __str__(self):
+      return "SPRKKR POTENTIAL"
+
+
 #At last - to avoid circular import problem
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
