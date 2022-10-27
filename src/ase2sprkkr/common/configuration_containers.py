@@ -283,7 +283,9 @@ class ConfigurationContainer(Configuration):
       """
       from io import StringIO
       s = StringIO()
-      self.save_to_file(s, validate=validate)
+      if validate:
+         self.validate(validate)
+      self.save_to_file(s)
       return s.getvalue()
 
   def _find_value(self, name):
@@ -325,14 +327,13 @@ class ConfigurationContainer(Configuration):
           if not iname in self._interactive_members:
               self._interactive_members[iname] = member
 
-  def save_to_file(self, file, *, validate=True):
+  def save_to_file(self, file):
       """ Save the configuration to a file. The method is implemented in the descendants.
 
       TODO
       ----
       The implementations in the descendant could be probably merged.
       """
-
       raise NotImplemented()
 
   def __setattr__(self, name, value):
@@ -344,6 +345,21 @@ class ConfigurationContainer(Configuration):
       else:
         val = self._get_member(name)
         val.set(value)
+
+  def validate(self, why:str='save'):
+      """ Validate the configuration data. Raise an exception, if the validation fail.
+
+      Parameters
+      ----------
+      why
+        Type of the validation. Possible values
+        ``save`` - Full validation, during save.
+        ``set`` - Validation on user input. Allow required values not to be set.
+        ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
+      """
+      for o in self:
+          o.validate(why)
+
 
 class BaseSection(ConfigurationContainer):
   """ A section of SPRKKR configuration - i.e. part of the configuration file. """
@@ -362,25 +378,44 @@ class BaseSection(ConfigurationContainer):
            return True
       return False
 
-  def save_to_file(self, file, *, validate=True):
+  def validate(self, why:str='save'):
+      """ Validate the configuration data. Raise an exception, if the validation fail.
+
+      Parameters
+      ----------
+      why
+        Type of the validation. Possible values
+        ``save`` - Full validation, during save.
+        ``set`` - Validation on user input. Allow required values not to be set.
+        ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
+      """
+      if why == 'save' and not self._definition.is_optional and not self.has_any_value():
+          raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
+      super().validate(why)
+
+  def save_to_file(self, file)->bool:
       """ Save the content of the container to the file (according to the definition)
 
       Parameters
       ----------
       file: file
         File object (open for writing), where the data should be written
+
+      Returns
+      -------
+      something_have_been_written
+        If any value have been written return True, otherwise return False.
       """
       if not self.has_any_value():
-         if validate and not self._definition.is_optional:
-            raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
-         return
+         return False
       if self._definition.name_in_grammar:
          file.write(self._definition.name)
          file.write('\n')
       for o in self:
-          if o.save_to_file(file, validate=validate):
+         if o.save_to_file(file):
              file.write(self._definition.delimiter)
       file.flush()
+      return True
 
 class Section(BaseSection):
   """ A standard section of a task or potential (whose content is predefinded by SectionDefinition) """
@@ -435,7 +470,7 @@ class RootConfigurationContainer(ConfigurationContainer):
   In addition to container capabilities, it can read/write its data from/to file.
   """
 
-  def save_to_file(self, file, *, validate=True):
+  def save_to_file(self, file, *, validate:Union[str, bool]='save'):
       """ Save the configuration to a file in a format readable by SPR-KKR i
 
       Parameters
@@ -443,21 +478,24 @@ class RootConfigurationContainer(ConfigurationContainer):
       file: str or file
         File to read the data from
 
-      validate: bool
+      validate
         Validate the data in the container first and raise an exception,
-        if there is an error (e.g. the the data are not complete)
+        if there is an error (e.g. the the data are not complete).
+        The string value can be used to select the type of validation
+        ``save`` means the full check (same as the default value ``True``),
+        use ``set`` to allow some missing values.
       """
       if not hasattr(file, 'write'):
          with open(file, "w") as file:
-           return self.save_to_file(file, validate=validate)
+           return self.save_to_file(file)
 
       it = iter(self)
       i = next(it)
       if i:
-        i.save_to_file(file, validate=validate)
+        i.save_to_file(file)
         for i in it:
           file.write(self._definition.delimiter)
-          i.save_to_file(file, validate=validate)
+          i.save_to_file(file)
       file.flush()
 
   def read_from_file(self, file, clear_first=True):

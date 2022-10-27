@@ -94,7 +94,7 @@ class GrammarType:
 
       Output: string -> _string
 
-      Parsing: parse -> ( <_grammar parse actions>, validate(parse_check = True) )
+      Parsing: parse -> ( <_grammar parse actions>, validate(why='parse') )
 
   """
 
@@ -206,7 +206,7 @@ class GrammarType:
     if self.has_value:
        def validate(s, loc, x):
            try:
-             out = self.validate(x[0], parse_check=True, param_name=param_name)
+             out = self.validate(x[0], why='parse', param_name=param_name)
            except ValueError as e:
              raise pp.ParseException(s, loc, str(e) + '\nValidating of the parsed value failed') from e
            return x
@@ -253,7 +253,7 @@ class GrammarType:
     """
     return False, None, None
 
-  def validate(self, value, param_name='<Unknown>', parse_check=False):
+  def validate(self, value, param_name='<Unknown>', why:str='set'):
     """ Validate either the pyparsing result or a user given value.
 
     Do not override this method in subclasses for the validation implementation,
@@ -266,9 +266,16 @@ class GrammarType:
     param_name : str or callable
       Parameter name to be used in possible throwed exception (Optional)
       If it is callable, it should be a function that returns the param_name
+    why
+      Possible values are:
+      ``set`` - validation value setted by user (in rare cases, such value can be incomplete
+                and requires `completing` during ``set_from_atoms`` call before saving the output)
+      ``parse`` - validation during parsing input file, checks enforced
+                  by the grammar can be skipped
+      ``save`` - validation before saving the values
     """
     try:
-      err = self._validate(value, parse_check)
+      err = self._validate(value, why)
     except ValueError as err:
       self._valueError(value, err, param_name)
     if err is not True:
@@ -279,7 +286,7 @@ class GrammarType:
         self._valueError(value, err, param_name)
     return True
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
     """ Return error message if the value is not valid. """
     return True
 
@@ -388,11 +395,11 @@ class GrammarType:
 def add_to_parent_validation(validation):
 
     @functools.wraps(validation)
-    def wrapped(cls, self, value, parse_check=False):
-        out = super(cls, self)._validate(value, parse_check)
+    def wrapped(cls, self, value, why='set'):
+        out = super(cls, self)._validate(value, why)
         if out is not True:
            return out
-        return validation(self, value, parse_check)
+        return validation(self, value, why)
 
     return wrapped
 
@@ -422,7 +429,7 @@ class TypedGrammarType(GrammarType):
   def datatype_name(cls):
       return cls.__name__.lower()
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       return self.type_validation(value, self.allowed_types, self.datatype_name)
 
 class Number(TypedGrammarType):
@@ -444,7 +451,7 @@ class Number(TypedGrammarType):
       super().__init__(*args, **kwargs)
 
   @add_to_parent_validation
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       if self.min is not None and self.min > value:
          return f"A value greater that or equal to {self.min} is required, {value} have been given."
       if self.max is not None and self.max < value:
@@ -458,7 +465,7 @@ class Unsigned(Number):
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
 
   @add_to_parent_validation
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       return value >= 0 or "A positive value required"
 
   def grammar_name(self):
@@ -540,7 +547,7 @@ class BaseRealWithUnits(Real):
   def _grammar(self, param_name):
     return self._grammar_units(self.units)
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
     return isinstance(value, float) or "A float value required"
 
   def grammar_name(self):
@@ -575,8 +582,8 @@ class BaseString(TypedGrammarType):
   datatype_name = 'string'
 
   @add_to_parent_validation
-  def _validate(self, value, parse_check=False):
-    if not parse_check:
+  def _validate(self, value, why='set'):
+    if not why=='parse':
       try:
         self._grammar.parseString(value, True)
       except pp.ParseException as e:
@@ -624,7 +631,7 @@ class Keyword(GrammarType):
     with generate_grammar():
       self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
 
   def grammar_name(self):
@@ -676,7 +683,7 @@ class Flag(TypedGrammarType):
   def missing_value(self):
       return (True, True, False)
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
 
   _grammar = pp.Empty().setParseAction(lambda x: True)
@@ -772,7 +779,7 @@ class Array(GrammarType):
        out += self.type.string(i)
     return out
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
     if callable(self.as_list):
        cls = self.as_list
     elif self.as_list:
@@ -784,7 +791,7 @@ class Array(GrammarType):
 
     for i,v in enumerate(value):
         try:
-          self.type.validate(v, parse_check=False)
+          self.type.validate(v, why='set')
         except ValueError as e:
            raise ValueError("Value {} in the set is incorrect: {}".format(i, str(e))) from e
     if self.min_length is not None and len(value) < self.min_length:
@@ -835,7 +842,7 @@ class Complex(SetOf):
   def convert(self, value):
     return complex(value)
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
     return isinstance(value, (complex, np.complexfloating)) or 'A complex value required, {value} given.'
 
   def _grammar_name(self):
@@ -907,11 +914,11 @@ class BaseMixed(GrammarType):
       """
       return self.string_type if isinstance(value, str) else type_from_value(value)
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       type = self.get_type(value)
       if type is value:
          return 'Can not determine the type of value {}'.format(value)
-      return type.validate(value, parse_check)
+      return type.validate(value, why)
 
   def grammar_name(self):
       return '<mixed>'
@@ -995,7 +1002,7 @@ class Separator(GrammarType):
   _grammar = separator_grammar.copy().setParseAction(lambda x: [None])
   has_value = False
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       return 'Can not set a value to a separator'
 
   def _grammar_name(self):
@@ -1040,11 +1047,11 @@ class Sequence(GrammarType):
          grammar.addConditionEx(lambda x: x[0] in self.allowed_values, lambda x: f'{x[0]} is not in the list of allowed values')
       return grammar
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       if not isinstance(value, (self.value_type)) or len(value) != len(self.types):
           return f'A tuple of {len(self.types)} values is required'
       for i,j in zip(self.types, value):
-          out = i.validate(j, parse_check=parse_check)
+          out = i.validate(j, why=why)
       return True
 
   def convert(self, value):
@@ -1213,7 +1220,7 @@ class Table(GrammarType):
          out.append(self.sequence.string(i))
       return ''.join(out)
 
-  def _validate(self, value, parse_check=False):
+  def _validate(self, value, why='set'):
       if not isinstance(value, np.ndarray):
          return f"Numpy array as a value required {value.__class__} given"
       dtype = self.numpy_type

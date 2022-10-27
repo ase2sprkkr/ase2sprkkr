@@ -1,4 +1,4 @@
-""" In this module the base classes for SPR-KKR configuration sections and files are present. 
+""" In this module the base classes for SPR-KKR configuration sections and files are present.
 """
 
 
@@ -8,7 +8,7 @@ from ..common.options import Option, CustomOption
 
 from .io_data import WriteIoData
 from ase import Atoms
-from typing import Optional
+from typing import Optional, Union
 
 from .sprkkr_atoms import SPRKKRAtoms
 
@@ -27,6 +27,11 @@ class ConfigurationSectionTrait:
         that contains e.g. numbering of the sites, atomic types etc.
         If it is not set, it is created from the atoms.
 
+      validate: bool or str
+        If False, do not validate the values
+        String value: accepts any of values accepted by ``why`` argument of
+        :func:`GrammarType.validate<ase2sprkkr.common.grammar_types.GrammarType.validate>`
+        True (default) means full validation: i.e. the same as ``save``.
       """
       atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
       io_data = io_data or WriteIoData(atoms)
@@ -44,10 +49,12 @@ class ConfigurationSectionTrait:
 class ConfigurationFile(RootConfigurationContainer, ConfigurationSectionTrait):
   """ 'Root' configuration container for SPRKKR configuration file """
 
-  def save_to_file(self, file, atoms=None, *, validate=True):
+  def save_to_file(self, file, atoms=None, *, validate='save'):
       if atoms is not False:
          self.set_from_atoms(atoms)
-      super().save_to_file(file, validate=validate)
+      if validate:
+         self.validate(validate)
+      super().save_to_file(file)
 
 class ConfigurationSection(Section, ConfigurationSectionTrait):
   """ Configuration section to be used in SPRKKR configuration files """

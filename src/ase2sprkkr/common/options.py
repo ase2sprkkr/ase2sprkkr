@@ -83,20 +83,27 @@ class Option(Configuration):
       if self._hook:
         self._hook(self)
 
-  def save_to_file(self, file, *, validate=True):
+  def save_to_file(self, file):
       """ Write the name-value pair to the given file, if the value
       is set. """
       d = self._definition
       if not d.type.has_value:
-         return d.write(file, None)
+          return d.write(file, None)
       value = self()
-      if value is not None:
-        if d.is_expert and d.type.is_the_same_value(value, d.default_value):
-           return
-        return d.write(file, value)
-      elif validate and not self._definition.is_optional:
-        name = self._get_root_container()
-        raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
+      if value is None or (d.is_expert and d.type.is_the_same_value(value, d.default_value)):
+          return
+      return d.write(file, value)
+
+  def validate(self, why='save'):
+      d = self._definition
+      if d.type.has_value:
+        value = self()
+        if value is None:
+           if not d.is_optional:
+               name = self._get_root_container()
+               raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
+        else:
+           d.type.validate(value, why)
 
   @property
   def name(self):
