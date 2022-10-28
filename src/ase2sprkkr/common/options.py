@@ -66,12 +66,33 @@ class Option(Configuration):
       value = self._definition.type.convert(value)
       self._definition.validate(value)
       self._value = value
+      if hasattr(self,'_result'):
+        del self._result
       if self._hook:
         self._hook(self)
 
   def get(self):
       """ Return the value of self """
       return self()
+
+  @property
+  def result(self):
+      """ Return the result value.
+
+      In some cases, the value of an option have to be translated for the output.
+      E.g. the site can be given as site object, but the integer index is
+      required in the output.
+
+      In a such case, this property can be utilized: the value of the option is
+      retained as is and the transformed value is stored in the result.
+      """
+      if hasattr(self, '_result'):
+          return self._result
+      return self.get()
+
+  @result.setter
+  def result(self, value):
+      self._result = value
 
   def clear(self, do_not_check_required=False):
       """ Clear the value: set it to None """
@@ -80,6 +101,8 @@ class Option(Configuration):
       if self._definition.default_value is None and not do_not_check_required and self._definition.required:
          raise ValueError(f'Option {self._get_path()} must have a value')
       self._value = None
+      if hasattr(self, '_result'):
+          del self._result
       if self._hook:
         self._hook(self)
 
@@ -89,7 +112,7 @@ class Option(Configuration):
       d = self._definition
       if not d.type.has_value:
           return d.write(file, None)
-      value = self()
+      value = self.result
       if value is None or (d.is_expert and d.type.is_the_same_value(value, d.default_value)):
           return
       return d.write(file, value)
