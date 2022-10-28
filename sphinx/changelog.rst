@@ -3,18 +3,26 @@ Changelog
 
 Version 1.0.6
 -------------
+
 * Sites data moved to ASE arrays to allow merging two Atoms structures
 * Testing switched to pytest
 * ARPES task fixies
 
 Unpublished
 -----------
+
+User interface
+~~~~~~~~~~~~~~
 * Runtime documentation available.
 * Runtime documentation is added to the docstring and to the generated documentation.
   (so far for input parameters).
-* Allow Keywords arguments to accept the descirptions of keywords.
+* Class names refactored - abuse of 'BaseSomething' names solved.
+
+Architecture changes
+~~~~~~~~~~~~~~~~~~~~
+* Allow Keywords arguments to accept descirptions of keywords.
+* Complex GrammarType added.
+* Option has the result attribute, that can hold the processed value of user input
 * Possibility to add 'expert' values to configuration definition. Expert
   values are outputed only if they differ from the defaults.
-* Class names refactored - abuse of 'BaseSomething' names solved.
-* Complex GrammarType added.
 * ARPES task documented
