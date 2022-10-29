@@ -72,7 +72,7 @@ class ConfigurationValue(Option):
       (and/or :class:`io_data<WriteIoData>`) during save.
       """
       if hasattr(self._definition.type, 'set_from_atoms'):
-          self.definition.type.set_from_atoms(self, atoms, io_data)
+          self._definition.type.set_from_atoms(self, atoms, io_data)
 
 
 class CustomConfigurationValue(CustomOption):
