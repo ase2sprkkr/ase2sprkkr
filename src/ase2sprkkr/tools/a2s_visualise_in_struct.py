@@ -6,10 +6,13 @@ import numpy as np
 from collections import OrderedDict
 from ase.visualize import view
 import argparse
-import os
+from pathlib import Path
 
 if not __package__:
   __package__ = 'ase2sprkkr.tools'
+import sys
+sys.path.append(str(Path(__file__).resolve().parents[2]))
+
 
 from ..potentials.potentials import Potential
 from ..sprkkr.structure import structure_file_to_atoms
