@@ -474,6 +474,23 @@ class Unsigned(Number):
   numpy_type = int
   datatype_name = 'unsigned integer'
 
+class ObjectNumber(Unsigned):
+  """ An abstract class, that describe an unsigned integer, that reffers to an object.
+  User can give the object either using the object, or by the number. Descendant classes
+  should take care of transforming the object to the resulting integer (by setting
+  the result property of the described :class:`Option<ase2sprkkr.common.options.Option>`)
+
+  The type of te object should be given by the type class property.
+  """
+
+  def convert(self, value):
+      if isinstance(value, self.type):
+         return value
+      super().convert()
+
+  def _validate(self, value, why='set'):
+      return isinstance(value, self.type) or super.validate()
+
 class Integer(Number):
   """ Signed integer """
 

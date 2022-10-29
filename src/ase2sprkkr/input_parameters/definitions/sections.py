@@ -1,10 +1,12 @@
 """ Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks) """
 
-from ...common.grammar_types  import DefKeyword, SetOf, Flag, energy
+from ...common.grammar_types  import DefKeyword, SetOf, flag, energy, Integer
 from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
       InputValueDefinition as V
+from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
+
 
 def CONTROL(ADSI):
   """ Create the definition of the CONTROL section of the task input file.
@@ -22,13 +24,41 @@ def CONTROL(ADSI):
   return Section('CONTROL',[
       V('DATASET', str, 'case', required = True, info="The custom field for the description of the problem."),
       V('ADSI', DefKeyword(ADSI), required = True, info="Type of the computation."),
-      V('POTFIL', str, required=True, info="Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator."),
-      V('KRWS', int, required=False)
+      V('POTFIL', str, required=True, info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator."),
+      V('KRWS', int, required=False),
+      V('PRINT', Integer(min=0, max=5), default_value=0, info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.")
   ])
 
 TAU = Section('TAU',[
-      V('BZINT', DefKeyword('POINTS', 'ANOTHER_OPTION'), required=True),
-      V('NKTAB', 250)
+      V('BZINT', DefKeyword({'POINTS' : 'special points method',
+                             'WEYL' : 'Weyl method'},
+                             description=
+"""
+The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
+dom points. The number of k-points used for the integration varies quadratically be-
+tween 0.0 and ImE according to the imaginary part of the energy.
+
+The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
+points. It is the standard method and gives a good compromise concerning accuracy
+and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
+regular mesh.
+"""), required=True,
+                             info='The mode of BZ-integration used for calculation of the scattering '
+                                  ' path operator τ'),
+      V('NKTAB', 250, info='Number of points for the special points method'),
+      V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration'),
+      V('NKMIN', 500, info='Maximal number of k-points used for Weyl integration'),
+      #expert
+      V('CLUSTER', flag, expert=False, info="""Do cluster type calculation.""", description=
+        "Cluster type calculation calculate τ by inverting the real space KKR matrix. "
+        "Specify cluster center using IQCNTR or ITCNTR and its size using NSHLCLU or CLURAD."
+      ),
+      V('NSHLCLU', int, is_expert=True, is_optional=True, info="Number of atomic shells around the central atom of a cluster"),
+      V('CLURAD', int, is_expert=True, is_optional=True, info="Radius of the cluster in multiples of ALAT."),
+      V('IQCNTR', Site.I, is_expert=True, is_optional=True, info="The center of the cluster is set at the site position with number IQCNTR of the specified basis."),
+      V('ITCNTR', AtomicType.I, is_expert=True, is_optional=True, info="The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR."),
+      V('NLOUT', expert=3, is_optional=True, info="The calculated τ -matrix is printed up to lmax =NLOUT."),
+      V('MOL', expert=False, info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.")
   ])
 """The definition of the TAU section of the task input file """
 
@@ -51,7 +81,16 @@ SCF = Section('SCF', [
 """The definition of the SCF section of the task input file """
 
 SITES = Section('SITES', [
-      V('NL', [3])
+      V('NL', [3], info='Angula momentum cutoff (the first discarded l-space)', description=
+""" The KKR-method is a minimum basis set method. This means that the angular-momentum
+expansion can be chosen according to the atomic properties of the atomic types. For tran-
+sition metals it is therefore normally sufficient to have a maximum l-value of 2 (NL = 3).
+For systems with many atoms per unit cell it is in principle possible to set the l-expansion
+according to the atom types on the lattice sites. For US having the NaCl-structure one could
+choose NL = 4 for the U-site and NL = 2 for the S-site. At the moment this possibility, that
+would save storage and computer time, is not supported by all subroutines. For this rea-
+son a common l-expansion cutoff is used, that is fixed by the highest that occurs. For US
+this implies that NL = 4 is used for all sites.""")
   ])
 """The definition of the SITES section of the task input file """
 
