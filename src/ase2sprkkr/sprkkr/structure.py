@@ -75,7 +75,7 @@ def floatjm(inp):
 
 def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_height:float=10.0):
   """
-  Read in_structure.inp file (that contains informations about the structure of a surface) 
+  Read in_structure.inp file (that contains informations about the structure of a surface)
   and create the ASE atoms object according to the readed data.
 
   Parameters
@@ -111,8 +111,9 @@ def structure_file_to_atoms(filename, potential:Potential, n_bulk:int=2, vacuum_
       layer=LayerData()
       layer.nat=int(data[line])
       layer.id=ilayer+1
+      line+=1
       for iat in range(layer.nat):
-          line+=3
+          line+=2
           atom=AtomData.from_text(data[line-2:line])
           layer.atoms.append(atom)
       layers[ilayer]=layer
