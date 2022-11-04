@@ -7,6 +7,12 @@ Version 1.0.6
 * Testing switched to pytest
 * ARPES task fixies
 
+Version 1.0.7
+-------------
+* a2s_visualise_in_struct script fixed
+* a2s_visualise_in_struct accepts scale-radii argument to control the size of visualised atoms
+* make now by default install the ase2sprkkr even if the version number have not been changed
+
 Unpublished
 -----------
 * Runtime documentation available.
