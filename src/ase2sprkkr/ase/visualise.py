@@ -5,7 +5,7 @@ import sys
 import subprocess
 
 def view(atoms,
-         repeat:Union[int|Tuple[int,int,int]]=None,
+         repeat:Union[int,Tuple[int,int,int]]=None,
          scale_radii:float=0.5,
          rotations:str='',
          bonds=False,
