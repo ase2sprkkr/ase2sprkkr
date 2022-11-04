@@ -1,13 +1,14 @@
 #!/bin/bash
-CURRENT=
-FORCE=
+CURRENT=1
+FORCE=1
 
 while getopts "cf" opt; do
   case ${opt} in
-		f )  FORCE="--force-reinstall --no-deps";;
-    c )  CURRENT=1 ;;
-    \? ) echo "Install the ase2sprkkr package. Use -c to install the current version of the
-		           code (do not the git checkout release command)"
+		n )  FORCE= ;;
+    c )  CURRENT= ;;
+    \? ) echo "Install the ase2sprkkr package. Parameters:
+							 -c  check out the release version before installing
+							 -n  install, only if it is not already installed "
 				 exit
       ;;
   esac
@@ -50,7 +51,10 @@ echo "Building the wheel package"
 $PYTHON -m build
 
 echo "Installing the package"
-$PYTHON -m pip install $FORCE `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+$PYTHON -m pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+if [[ $FORCE ]] ; then
+	$PYTHON -m pip install --force-reinstall --no-deps `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+fi
 
 if [[ -z "$CURRENT" ]] ; then
 	 if [[ "`git rev-parse $COMMIT`" != "`git rev-parse HEAD`" ]] ; then

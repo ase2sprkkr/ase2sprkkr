@@ -37,7 +37,11 @@ class AtomData(object):
         :from a in_structure.inp file """
         atom = AtomData()
         atom.id, atom.type_id = map(int, lines[0].split()[:2])
-        atom.pos[:] = list(map(floatjm, lines[1].split()[:3]))
+        pos = list(map(floatjm, lines[1].split()[:3]))
+        #Beware! The indices are in the order Z,X,Y
+        atom.pos[0] = pos[1]
+        atom.pos[1] = pos[2]
+        atom.pos[2] = pos[0]
         return atom
 
     def __repr__(self):
