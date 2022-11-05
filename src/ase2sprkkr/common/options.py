@@ -39,13 +39,32 @@ class Option(Configuration):
       self._hook = None
       self._definition.type.enrich(self)
 
-  def __call__(self):
+  def __call__(self, all_values:bool=False):
+      """
+      Return the value of the option.
+
+      Parameters
+      ----------
+      all_values: For numbered_array (see :class:`ConfigurationDefinition.is_numbered_array <ConfigurationDefinition>`,
+      pass True as this argument to obtain array of all values. If False (the default) is given,
+      only the 'wildcard' value (i.e. the one without array index, which is used for the all values
+      not explicitly specified) is returned.
+      """
       if self._value is not None:
-         return self._value
+          if self._definition.is_numbered_array and not all_values:
+              return self._value.get('def', self.default_value)
+          return self._value
+      if self._definition.is_numbered_array and all_values and self.default_value is not None:
+          return { 'def' : self.default_value }
       return self.default_value
 
   @property
   def default_value(self):
+      """ Return default value for the option.
+      The function is here, and not in the definition, since the default value can be given
+      by callable, that accepts the Option as argument. This possibility is used in ase2sprkkr,
+      when the default values of some options are generated from the underlined Atoms object
+      """
       return self._definition.get_value(self)
 
   def set(self, value, *, unknown=None):
@@ -63,13 +82,50 @@ class Option(Configuration):
       """
       if value is None:
           return self.clear()
-      value = self._definition.type.convert(value)
-      self._definition.validate(value)
-      self._value = value
+      if self._definition.is_numbered_array:
+        if isinstance(value, dict):
+           self.clear(do_not_check_required=value, call_hooks=False)
+           for k,v in value.items():
+               self._set_item(k, v)
+        else:
+           self._set_item('def', v)
+      else:
+        self._value = self._definition.convert_and_validate(value)
+      self._post_set()
+
+  def _post_set(self):
+      """ Thus should be called after all modifications """
       if hasattr(self,'_result'):
         del self._result
       if self._hook:
         self._hook(self)
+
+  def _check_array_access(self):
+      """ Check, whether the option can be accessed as array using [] """
+      if not self._definition.is_numbered_array:
+          raise TypeException('It is not allowed to access {self._get_path()} as array')
+
+  def __setitem__(self, name, value):
+      self._check_array_access()
+      self._set_item(name, value)
+      self._post_set()
+
+  def _set_item(self, name, value):
+      if self._value is None:
+         self._value = {}
+      if value is None:
+         del self._value[name]
+         if not self._value:
+            self._value = None
+      else:
+         self._value[name] = self._definition.convert_and_validate(value)
+
+  def __getitem__(self, name):
+      self._check_array_access()
+      return None if self._value is None else self._value.get(name, None)
+
+  def __hasitem__(self, name):
+      return self._value is not None and name in self._value
 
   def get(self):
       """ Return the value of self """
@@ -88,36 +144,34 @@ class Option(Configuration):
       """
       if hasattr(self, '_result'):
           return self._result
-      return self.get()
+      return self(all_values=True)
 
   @result.setter
   def result(self, value):
       self._result = value
 
-  def clear(self, do_not_check_required=False):
+  def clear(self, do_not_check_required=False,call_hooks=True):
       """ Clear the value: set it to None """
       if not self._definition.type.has_value:
          return
       if self._definition.default_value is None and not do_not_check_required and self._definition.required:
          raise ValueError(f'Option {self._get_path()} must have a value')
       self._value = None
-      if hasattr(self, '_result'):
-          del self._result
-      if self._hook:
-        self._hook(self)
+      if call_hooks:
+        self._post_set()
 
   def is_changed(self) -> bool:
       """ True, if the value is set and the value differs from the default """
       return self.value_and_changed()[1]
 
-  def save_to_file(self, file):
+  def _save_to_file(self, file):
       """ Write the name-value pair to the given file, if the value
       is set. """
       d = self._definition
       if not d.type.has_value:
           return d.write(file, None)
       value = self.result
-      if value is None or (d.is_expert and d.type.is_the_same_value(value, d.default_value)):
+      if value is None or (d.is_expert and self.is_it_the_default_value(value)):
           return
       return d.write(file, value)
 
@@ -141,7 +195,7 @@ class Option(Configuration):
       if only_changed and (only_changed!='basic' or d.is_expert):
            v,c = self.value_and_changed()
            return v if c else None
-      return self()
+      return self(all_values=True)
 
   def value_and_changed(self):
       """ Return value and whether the value was changed
@@ -149,16 +203,31 @@ class Option(Configuration):
           Returns
           -------
           value:mixed
-            The value of the options
+            The value of the options (return all values for 'numbered array')
 
           changed:bool
             Whether the value is the same as the default value or not
       """
-      d = self._definition
-      default = self.default_value
       if self._value is not None:
-         return self._value, not d.type.is_the_same_value(self._value, default)
-      return default, False
+         return self._value, not self.is_it_the_default_value(self._value)
+      if self._definition.is_numbered_array:
+         return {'def' : self.default_value}, False
+      else:
+         return self.default_value, False
+
+  def is_it_the_default_value(self, value):
+      """ Return, whether the given value is the default value. For
+      numbered array, only the wildcard value can be set and this value
+      have to be the same as the default. """
+
+      default = self.default_value
+      d = self._definition
+      if d.is_numbered_array:
+          return 'def' in value and len(value) == 1 and \
+                  d.type.is_the_same_value(value['def'], default)
+      else:
+          return d.type.is_the_same_value(value, default)
+
 
   def _find_value(self, name):
       if self._definition.name == name:

@@ -30,11 +30,36 @@ _parse_all_name = 'parse_all' if \
 
 def unique_dict(values):
     """ Create a dictionary from the arguments. However, raise an exception,
-    if there is any duplicit key """
-    out = dict(values)
-    if len(values) != len(out):
-       seen = set()
-       duplicates = {x for x,y in values if x not in seen and seen.add(x)}
+    if there is any duplicit key.
+    Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
+
+    >>> unique_dict( [ ('x', 'y'), (('a','b'), 1 ), (('a', 'c'), 2) ] )
+    { 'x' : 'y', 'a' : { 'b' : 1, 'c': 2} }
+    """
+    out = {}
+    duplicates = []
+
+    for k, v in values:
+        if isinstance(k, tuple):
+           if not k[0] in out:
+              o = out[k[0]] = {}
+           elif not isinstance(out[k[0]], dict):
+              duplicates.append(k[0])
+              continue
+           else:
+              o = out[k[0]]
+           if k[1] in o:
+              duplicates.append(''.join(k))
+           else:
+              o[k[1]] = v
+        else:
+           if k in out:
+              duplicates.append(k)
+           else:
+              out[k] = v
+
+    if duplicates:
+       duplicates = ','.join(duplicates)
        raise pp.ParseException(f"There are non-unique keys: {duplicates}")
     return out
 
@@ -167,21 +192,42 @@ class BaseDefinition:
           out.append(prefix + self._description.replace('\n', '\n' + prefix))
        return '\n'.join(out)
 
-   def _tuple_with_my_name(self, expr, delimiter=None, has_value=True):
-        """ Create the grammar returning tuple (self.name, <result of the expr>) """
+   def _tuple_with_my_name(self, expr,
+                           delimiter=None,
+                           has_value:bool=True,
+                           is_numbered_array:bool=False):
+        """ Create the grammar returning tuple (self.name, <result of the expr>)
+
+            Parameters
+            ----------
+            expr
+              Pyparsing expresion for the value of the option/section
+            delimiter
+              Pyparsing expression for the name-value delimiter
+            has_value
+              If False, do not add the parsed value to the results.
+              This can be used e.g. for separators (see :class:`ase2sprkkr.common.grammar_types.Separator`) etc.
+            is_numbered_array
+              If True, the resulting grammar is in the form
+              NAME[index]=....
+        """
         if self.name_in_grammar:
-            name = pp.CaselessKeyword(self.name)
+            keyword = pp.CaselessLiteral if is_numbered_array else pp.CaselessKeyword
+            name = keyword(self.name)
             if self.do_not_skip_whitespaces_before_name:
                name.leaveWhitespace()
 
             if self.alternative_names:
-               alt_names = ( pp.CaselessKeyword(n) for n in self.alternative_names )
+               alt_names = ( keyword(n) for n in self.alternative_names )
                if self.do_not_skip_whitespaces_before_name:
                   alt_names = ( i.leaveWhitespace() for i in alt_names )
                name = name ^ pp.Or(alt_names)
                if self.do_not_skip_whitespaces_before_name:
                   name.leaveWhitespace()
             name.setParseAction(lambda x: self.name)
+            if is_numbered_array:
+               name += pp.Optional(pp.Word(pp.nums), default='def')
+               name.setParseAction(lambda x: (x[0], 'def' if x[1]=='def' else int(x[1])) )
             if delimiter:
               name += delimiter
             out = name - expr
@@ -213,6 +259,13 @@ class BaseDefinition:
 
    _copy_excluded_args = ['expert']
 
+   def can_be_repeated(self):
+       """ If True, the item can be repeated in the parsed file.
+       This behavior have currently the values with is_numbered_array property = True.
+       This function is to be redefined in descendants
+       """
+       return False
+
 class ValueDefinition(BaseDefinition):
 
   result_class = Option
@@ -221,7 +274,7 @@ class ValueDefinition(BaseDefinition):
 
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
                fixed_value=None, required=None, info=None, description=None,
-               is_hidden=False, is_optional=None, is_expert=False,
+               is_hidden=False, is_optional=None, is_expert=False, is_numbered_array:bool=False,
                name_in_grammar=None, name_format=None, expert=None):
     """
     Definition of a configuration value.
@@ -267,6 +320,11 @@ class ValueDefinition(BaseDefinition):
       Expert values are somewhat hidden (e.g. listed at end) from the user.
       Expert values are not exported to the result, if they are set to the
       default value.
+
+    is_numbered_array
+      Such values can contains (sparse) arrays. In the resulting ouput, the
+      members of the array are in the form NAME1=..., NAME2=..., ... The default
+      value for missing number can appear in the form NAME=...
 
     name_in_grammar: bool or None
       The value in the conf file is prefixed by <name><name_value_delimiter>
@@ -323,6 +381,10 @@ class ValueDefinition(BaseDefinition):
     if self.name_in_grammar is None:
         self.name_in_grammar = self.type.name_in_grammar
 
+    self.is_numbered_array = is_numbered_array
+    if is_numbered_array and not self.name_in_grammar:
+       raise ValueException('Numbered_array value type has to have its name in the grammar')
+
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = self.default_value is not None if required is None else required
     self.name_format = name_format
@@ -367,6 +429,8 @@ class ValueDefinition(BaseDefinition):
        flags.append('hidden')
     if self.is_hidden:
        flags.append('expert')
+    if self.is_numbered_array:
+       flags.append('array')
     if self.fixed_value is not None:
        flags.append('read_only')
     if flags:
@@ -411,6 +475,11 @@ class ValueDefinition(BaseDefinition):
     if self.fixed_value is not None and not np.array_equal(self.fixed_value, value):
        raise ValueError(f'The value of {self.name} is required to be {self.fixed_value}, cannot set it to {value}')
     self.type.validate(value, self.name)
+
+  def convert_and_validate(self, value):
+    value = self.type.convert(value)
+    self.validate(value)
+    return value
 
   @property
   def value_name_format(self):
@@ -458,12 +527,17 @@ class ValueDefinition(BaseDefinition):
       if self.name_in_grammar:
          nbody = str(god) + nbody
 
-    out = self._tuple_with_my_name(body, has_value=self.type.has_value)
+    out = self._tuple_with_my_name(body, has_value=self.type.has_value, is_numbered_array=self.is_numbered_array)
     out.setName(self.name + nbody)
     return out
 
   def get_value(self, option=None):
-     """ Return the default or fixed value of this option. """
+     """ Return the default or fixed value of this option.
+
+     The function can accept the Option (which of the definition is): if the default value is given by callable,
+     this argument is passed to it. (E.g. to set the default value using some properties obtained from the
+     configuration objects.
+     """
      if self.fixed_value is not None:
         return self.fixed_value
      if self.default_value is not None:
@@ -473,27 +547,41 @@ class ValueDefinition(BaseDefinition):
      return None
 
   def write(self, f, value):
+
      if self.type.has_value:
-        if value is None:
-           value = self.get_value()
-        if value is None:
-           return
         missing, df, np = self.type.missing_value()
-        if np.__class__ is value.__class__ and np == value:
-           return
-        write_value = not ( missing and df == value )
+
+     def write(name, value):
+         if self.type.has_value:
+             if value is None:
+               value = self.get_value()
+             if value is None:
+               return False
+             if np.__class__ is value.__class__ and np == value:
+               return False
+             write_value = not ( missing and df == value )
+         else:
+            value=None
+            write_value=True
+
+         f.write(self.prefix)
+         if self.name_in_grammar:
+            f.write(name)
+            if write_value:
+               f.write(self.name_value_delimiter)
+               self.type.write(f, value)
+         elif write_value:
+            self.type.write(f, value)
+         return True
+
+     name = self.formated_name
+     if self.is_numbered_array:
+        out = False
+        for i, val in value.items():
+            out = write(name + (str(i) if i!='def' else ''), val) or out
+        return out
      else:
-        value=None
-        write_value=True
-     f.write(self.prefix)
-     if self.name_in_grammar:
-        f.write(self.formated_name)
-        if write_value:
-           f.write(self.name_value_delimiter)
-           self.type.write(f, value)
-     elif write_value:
-        self.type.write(f, value)
-     return True
+        return write(name, value)
 
   def copy(self, **kwargs):
      default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
@@ -506,6 +594,9 @@ class ValueDefinition(BaseDefinition):
 
   def _generic_info(self):
       return f"Configuration value {self.name}"
+
+  def can_be_repeated(self):
+      return self.is_numbered_array
 
 def add_excluded_names_condition(element, names):
     """ Add the condition to the element, that
@@ -726,21 +817,30 @@ class ContainerDefinition(BaseDefinition):
 
        def grammars():
          """ This function iterates over the items of the container, joining all the without name_in_grammar with the previous ones. """
-         it = iter(self._members.values())
-         head = next(it)
-         curr = head._grammar()
 
-         for i in it:
-             if i.name_in_grammar:
-               yield head, curr
-               head = i
-               curr = i._grammar()
+         def repeated_grammars():
+             """ If the item can be repeated, do it here - we don't know, whether there is a fixed order in any way
+             (e.g. the item is followed by the items without name in grammar)
+             """
+             for i in self._members.values():
+                 g = i._grammar()
+                 if i.can_be_repeated():
+                    g = delimitedList(g, delimiter)
+                 yield i,g
+
+         it = iter(repeated_grammars())
+         head_item, grammar_chain = next(it)
+
+         for item, grammar in it:
+             if item.name_in_grammar:
+               yield head_item, grammar_chain
+               head_item, grammar_chain = item, grammar
              else:
-               add = delimiter + i._grammar()
-               if i.is_optional:
+               add = delimiter + grammar
+               if item.is_optional:
                   add = pp.Optional(add)
-               curr = curr + add
-         yield head, curr
+               grammar_chain = grammar_chain + add
+         yield head_item, grammar_chain
 
        if self.force_order:
            if custom_value:
@@ -753,9 +853,13 @@ class ContainerDefinition(BaseDefinition):
                first = False
                return x
 
-           inter = pp.Empty().addCondition(lambda x: first).setName('<is_first>') | \
-                   ((delimiter + cvs) if cvs else delimiter)
-           inter.setName('<is first>|[<custom section>...]<delimiter>')
+           inter = pp.Empty().addCondition(lambda x: first).setName('<is_first>')
+           if cvs:
+             inter = inter | (delimiter + cvs)
+             inter.setName('<is first>|[<custom section>...]<delimiter>')
+           else:
+             inter = inter | delimiter
+             inter.setName('<is first>|<delimiter>')
 
            def sequence():
                for head,g in grammars():

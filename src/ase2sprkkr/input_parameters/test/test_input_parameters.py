@@ -11,7 +11,7 @@ from .. import input_parameters_definitions as cd
 from .. import input_parameters as input_parameters
 from ...common.configuration_containers import Section, CustomSection
 from ...common.options import Option, CustomOption
-import io
+import io, re
 import numpy as np
 from ...common.grammar import generate_grammar
 
@@ -266,3 +266,31 @@ XSITES NR=3 FLAG
     output.seek(0)
     ips2 = input_parameters_def.read_from_file(output)
     self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
+
+    #numbered_arrays
+    input_parameters_def = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('GRID', gt.SetOf(int, length=1), fixed_value=3),
+        V('NE', gt.SetOf(int, min_length=1)),
+        V('Ime', float, 0.0),
+      ],
+      'SITES' : [
+        V('NL', int)
+      ]
+    })
+
+    assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0");
+    assertParse("ENERGY NE=1 Ime=0.5", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : 0.5}});
+    input_parameters_def.sections['ENERGY']['Ime'].is_numbered_array = True
+    with generate_grammar():
+      grammar = input_parameters_def._values_grammar()
+
+    assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0");
+    assertParse("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {'def': 0.5,  1:0.4, 5:0.8} }, });
+
+    ip=input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
+    self.assertEqual(0.5, ip.ENERGY.Ime())
+    self.assertEqual(0.8, ip.ENERGY.Ime[5])
+    ip.ENERGY.Ime[1] = 0.7
+    ip.ENERGY.Ime[9] = 0.9
+    self.assertEqual('ENERGY GRID={3} NE={1} Ime=0.5 Ime1=0.7 Ime5=0.8 Ime9=0.9', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )

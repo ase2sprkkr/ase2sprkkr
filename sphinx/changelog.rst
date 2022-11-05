@@ -33,3 +33,5 @@ Architecture changes
   values are outputed only if they differ from the defaults.
 * Expert sections were introduced. They are printed out only if there is any changed (from default)
 * ARPES task were documented
+* Default GrammarType for bool default values in InputParameters is now Flag
+* Numbered arrays introduced to allow options like MDIR, MDIR1, MDIR2 etc...
