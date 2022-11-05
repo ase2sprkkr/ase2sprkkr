@@ -291,10 +291,10 @@ class ValueDefinition(BaseDefinition):
        raise TypeError("The data-type of the configuration value is required.")
 
     if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
-       self.type = type_from_value(type)
+       self.type = type_from_value(type, type_map = self.type_from_type_map)
        self.default_value = self.type.convert(type)
     else:
-       self.type = type_from_type(type)
+       self.type = type_from_type(type, type_map = self.type_from_type_map)
        self.default_value = self.type.convert(default_value) if default_value is not None else None
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
 
@@ -326,6 +326,10 @@ class ValueDefinition(BaseDefinition):
     self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = self.default_value is not None if required is None else required
     self.name_format = name_format
+
+  type_from_type_map = {}
+  """ Redefine this in descendants, if you need to create different types that the defaults to be
+  'guessed' from the default values """
 
   @property
   def formated_name(self):

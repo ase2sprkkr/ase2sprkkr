@@ -31,6 +31,8 @@ class InputValueDefinition(ConfigurationValueDefinition):
   prefix = "\t"
   name_value_delimiter = '='
 
+  type_from_type_map = { bool : flag }
+
 class InputSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one
   value of a task section """

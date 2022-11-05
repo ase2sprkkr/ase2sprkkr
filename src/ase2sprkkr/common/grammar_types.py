@@ -26,7 +26,7 @@ from ase.units import Rydberg
 import copy
 import datetime
 import functools
-from typing import Union, Any, Callable, Optional, Type
+from typing import Union, Any, Callable, Optional, Type, Dict
 
 context =  generate_grammar()
 context.__enter__()
@@ -42,7 +42,7 @@ def compare_numpy_values(a,b):
 #will be initialized later
 type_from_type_map = {}
 
-def type_from_type(type, format='', format_all=False):
+def type_from_type(type, format:Union[str,Dict]='', format_all:bool=False, type_map:Dict={}):
   """ Guess and return the grammar element (GrammarType class descendatnt) from a python type. E.g. int => Integer.
 
       The given format can be optionally set to the returned grammar element.
@@ -52,25 +52,35 @@ def type_from_type(type, format='', format_all=False):
       type: A python type or GrammarType
         A type to be converted to a grammar type (GrammarType class descendant)
 
-      format: str or dict
-        The format to be applied to the resulting class. If dict is given, see 'format_for_type'
+      format
+        The format to be applied to the resulting class. If dict is given, see :func:`format_for_type`
         for the way how the format is determined
 
-      format_all: boolean
+      format_all
         If False (default), the format is not applied, if instance of GrammarType is given as
         the type parameter. Otherwise, a copy of the input type with the applied format is returned
+
+      type_map
   """
-  if isinstance(type, Hashable) and type in type_from_type_map:
+  if isinstance(type, GrammarType):
+     if format_all:
+        type = type.copy()
+        type.format = format_for_type(format, normalize_type(type.numpy_type))
+     return type
+
+  if isinstance(type, Hashable):
     type = normalize_type(type)
+    if type in type_map:
+       type = type_map[type]
+    elif type in type_from_type_map:
+       type = type_from_type_map[type]
+    else:
+       return type
+
     format = format_for_type(format, type)
-    type = type_from_type_map[type]
     if format:
         type = type.copy()
         type.format = format
-    return type
-  elif format_all:
-    type = type.copy()
-    type.format = format_for_type(format, normalize_type(type.numpy_type))
   return type
 
 
@@ -870,7 +880,7 @@ class Complex(SetOf):
 
   __str__ = GrammarType.__str__
 
-def type_from_value(value):
+def type_from_value(value, type_map={}):
   """ Gues the grammar type from a python value.
 
   ..doctest::
@@ -888,12 +898,12 @@ def type_from_value(value):
         return String.I
      except Exception:
         return QString.I
-  type = type_from_type(value.__class__)
+  type = type_from_type(value.__class__, type_map=type_map)
   if type is value.__class__:
      raise ValueError(f'Cannot determine grammar type from value {value}')
   return type.__class__(default_value = value)
 
-def type_from_default_value(value, format='', format_all=False):
+def type_from_default_value(value, format='', format_all=False, type_map={}):
    """ Guess the grammar type from a value, that will become the default value of the grammar type.
 
    It has to create a new object instance, as it has to set the default
@@ -903,9 +913,9 @@ def type_from_default_value(value, format='', format_all=False):
    Grammar types passed as types are left as is, unless format_all flag is set.
    """
    if inspect.isclass(value) or isinstance(value, GrammarType):
-      return type_from_type(value, format=format, format_all=format_all)
+      return type_from_type(value, format=format, format_all=format_all, type_map={})
    ptype = normalize_type(value.__class__)
-   gtype = type_from_type(value.__class__).__class__
+   gtype = type_from_type(value.__class__, type_map=type_map).__class__
    return gtype(default_value = value, format=format_for_type(format, ptype))
 
 class BaseMixed(GrammarType):
