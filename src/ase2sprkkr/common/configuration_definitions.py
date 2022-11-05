@@ -865,6 +865,14 @@ class ContainerDefinition(BaseDefinition):
            result = start + result
         return self.parse(result, whole_string)
 
+    def read_from_file(self, file, **kwargs):
+        """ Read a configuration file and return the parsed Configuration object """
+        out = self.result_class(definition = self, **kwargs)
+        out.read_from_file(file)
+        return out
+
+
+
 class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 
@@ -938,12 +946,6 @@ class ConfigurationRootDefinition(ContainerDefinition):
 
    custom_value_name = 'CUSTOM_SECTION'
    """ Just the name that appears in the grammar, when it is printed."""
-
-   def read_from_file(self, file, **kwargs):
-       """ Read a configuration file and return the parsed Configuration object """
-       out = self.result_class(definition = self, **kwargs)
-       out.read_from_file(file)
-       return out
 
    def _tuple_with_my_name(self, expr, delimiter=None):
        """ Do not create tuple (name, value) for the root class. """
