@@ -26,7 +26,7 @@ from ase.units import Rydberg
 import copy
 import datetime
 import functools
-from typing import Union, Any, Callable, Optional, Type, Dict
+from typing import Union, Any, Callable, Optional, Type, Dict, List
 
 context =  generate_grammar()
 context.__enter__()
@@ -378,7 +378,7 @@ class GrammarType:
        out = out.replace('\n', '\n' + prefix)
     return out
 
-  def type_validation(self, value, types:Union[list[Type], Type], typename:Optional[str]=None):
+  def type_validation(self, value, types:Union[List[Type], Type], typename:Optional[str]=None):
     """
     Parameters
     ----------
