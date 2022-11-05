@@ -123,9 +123,11 @@ CPA = Section('CPA', [
 
 MODE = Section('MODE', [
   V('SP-SREL', False, info="work in the spin-polarized scalar-relativistic mode"),
-  V('MDIR', [0,0,1], info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary."),
-  ], is_expert=True, is_optional=True,
-  info="""If not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
+  V('MDIR', [0,0,1], info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True),
+  V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True),
+  V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_numbered_array=True),
+  ], is_expert=True, is_optional=True, info=
+      """If not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
 )
 """MODE Section definition"""
 
