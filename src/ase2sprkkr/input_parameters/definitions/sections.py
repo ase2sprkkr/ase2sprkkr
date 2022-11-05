@@ -48,7 +48,7 @@ regular mesh.
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method'),
       V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration'),
-      V('NKMIN', 500, info='Maximal number of k-points used for Weyl integration'),
+      V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration'),
       #expert
       V('CLUSTER', flag, expert=False, info="""Do cluster type calculation.""", description=
         "Cluster type calculation calculate τ by inverting the real space KKR matrix. "
@@ -58,7 +58,7 @@ regular mesh.
       V('CLURAD', int, is_expert=True, is_optional=True, info="Radius of the cluster in multiples of ALAT."),
       V('IQCNTR', Site.I, is_expert=True, is_optional=True, info="The center of the cluster is set at the site position with number IQCNTR of the specified basis."),
       V('ITCNTR', AtomicType.I, is_expert=True, is_optional=True, info="The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR."),
-      V('NLOUT', expert=3, is_optional=True, info="The calculated τ -matrix is printed up to lmax =NLOUT."),
+      V('NLOUT', expert=3, info="The calculated τ -matrix is printed up to lmax=NLOUT."),
       V('MOL', expert=False, info="Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.")
   ])
 """The definition of the TAU section of the task input file """
