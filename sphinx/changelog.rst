@@ -31,7 +31,8 @@ Architecture changes
 * Option has the result attribute, that can hold the processed value of user input
 * Possibility to add 'expert' values to configuration definition. Expert
   values are outputed only if they differ from the defaults.
-* Expert sections were introduced. They are printed out only if there is any changed (from default)
-* ARPES task were documented
+* Expert sections have been introduced. They are printed out only if there is any changed (from default)
+* ARPES task have been documented and more options have been added
+* SCF task have been documented and more options have been added
 * Default GrammarType for bool default values in InputParameters is now Flag
-* Numbered arrays introduced to allow options like MDIR, MDIR1, MDIR2 etc...
+* Numbered arrays have been introduced to allow options like MDIR, MDIR1, MDIR2 etc...
