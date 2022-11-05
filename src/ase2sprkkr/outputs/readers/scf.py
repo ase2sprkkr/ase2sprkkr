@@ -234,4 +234,3 @@ class ScfOutputReader(OutputReader):
           raise Exception('The output ends unexpectedly')
 
   result_class = ScfResult
-

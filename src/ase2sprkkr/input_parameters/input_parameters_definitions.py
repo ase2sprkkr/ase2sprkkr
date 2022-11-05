@@ -17,7 +17,6 @@ from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
 from .input_parameters import InputParameters
 
-
 with generate_grammar():
   section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
 
