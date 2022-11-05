@@ -89,7 +89,9 @@ class CalculatorTest(TestCase):
      calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
      #use methods of atoms
      atoms.calc = calculator
+     calculator.input_parameters.find('NITER').set(2)
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
+     calculator.input_parameters.find('NITER').set(100)
 
      #calculator options
      out = calculator.calculate(options = {'NITER' : 2 }, print_output=print_output, mpi=4)
