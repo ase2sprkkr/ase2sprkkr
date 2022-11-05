@@ -106,6 +106,10 @@ class Option(Configuration):
       if self._hook:
         self._hook(self)
 
+  def is_changed(self) -> bool:
+      """ True, if the value is set and the value differs from the default """
+      return self.value_and_changed()[1]
+
   def save_to_file(self, file):
       """ Write the name-value pair to the given file, if the value
       is set. """

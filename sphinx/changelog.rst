@@ -27,8 +27,9 @@ User interface
 Architecture changes
 ~~~~~~~~~~~~~~~~~~~~
 * Allow Keywords arguments to accept descirptions of keywords.
-* Complex GrammarType added.
+* Complex GrammarType were added.
 * Option has the result attribute, that can hold the processed value of user input
 * Possibility to add 'expert' values to configuration definition. Expert
   values are outputed only if they differ from the defaults.
-* ARPES task documented
+* Expert sections were introduced. They are printed out only if there is any changed (from default)
+* ARPES task were documented

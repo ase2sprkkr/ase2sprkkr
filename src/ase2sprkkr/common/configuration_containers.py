@@ -325,6 +325,11 @@ class ConfigurationContainer(Configuration):
           if not iname in self._interactive_members:
               self._interactive_members[iname] = member
 
+  def is_changed(self):
+      for i in self:
+          if i.is_changed(): return True
+      return False
+
   def save_to_file(self, file):
       """ Save the configuration to a file. The method is implemented in the descendants.
 
@@ -404,8 +409,13 @@ class BaseSection(ConfigurationContainer):
       something_have_been_written
         If any value have been written return True, otherwise return False.
       """
-      if not self.has_any_value():
-         return False
+      d = self._definition
+      if d.is_expert:
+          if not self.is_changed():
+              return False
+      else:
+          if not self.has_any_value():
+              return False
       if self._definition.name_in_grammar:
          file.write(self._definition.name)
          file.write('\n')
