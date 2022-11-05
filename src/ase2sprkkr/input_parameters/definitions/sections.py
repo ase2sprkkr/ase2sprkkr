@@ -1,7 +1,7 @@
 """ Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks) """
 
-from ...common.grammar_types  import DefKeyword, SetOf, flag, energy, Integer
+from ...common.grammar_types  import DefKeyword, SetOf, flag, energy, Integer, Array
 from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
       InputValueDefinition as V
@@ -65,19 +65,32 @@ regular mesh.
 
 ENERGY = Section('ENERGY',[
       V('GRID', [5], required=True),
-      V('NE', [32], required=True, info='Number of energy points'),
+      V('NE', [32], required=True, info='Number of points in energy-mesh'),
       V('ImE', energy, 0.0),
-      V('EMIN', -0.2),
+      V('EMIN', -0.2, info='The real part of the lowest E-value'),
   ])
 """The definition of the ENERGY section of the task input file """
 
 SCF = Section('SCF', [
-      V('NITER', 200),
-      V('MIX', 0.2),
-      V('VXC', DefKeyword('VWN')),
+      V('NITER', 200, info='Maximal number of iterations of the SCF cycle'),
+      V('MIX', 0.2, info='Mixing parameter'),
+      V('VXC', DefKeyword({
+        'VWN' : 'Vosko, Wilk, Nusair',
+        'JWM' : 'Janak, Williams, Moruzzi',
+        'VBH' : 'von Barth, Hedin'
+        }), info='parametrisation of the exchange-correlation potential'),
+      V('ALG', DefKeyword({
+          'BROYDEN2': 'Broyden’s second method',
+          'TCHEBY': 'Tchebychev'
+        }), info='Mixing algorithm'),
       V('EFGUESS', 0.7),
-      V('TOL', 0.00001),
-      V('ISTBRY', 1)
+      V('TOL', 0.00001, info='Tolerance threshold for the mixing algorithm'),
+      V('ISTBRY', 1, info='Start Broyden after ISTBRY iterations'),
+      V('ITDEPT', 40, info='Iteration depth for Broyden algorithm (length of used history)'),
+      V('QION', Array(float), required=False, info='Guess for the ionic charges Qt for atomic types'),
+      V('MSPIN', Array(float), required=False, info='Guess for the magnetic moment μ_{spin,t} for atomic types'),
+      V('USEVMATT', False, info='Set up the starting potential using the original Mattheiss'
+                                 'construction for the potential V instead of the charge density')
   ])
 """The definition of the SCF section of the task input file """
 

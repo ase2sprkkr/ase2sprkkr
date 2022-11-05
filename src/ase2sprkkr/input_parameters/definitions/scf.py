@@ -19,7 +19,7 @@ input_parameters = InputParameters(
         MODE
       ],
       info = "SCF - calculate a self-consistent potential",
-      description = "<TODO: fill something meaningfull>",
+      description = "",
       executable = 'kkrscf',
       mpi = True
 )
