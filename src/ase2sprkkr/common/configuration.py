@@ -121,4 +121,36 @@ class Configuration:
       out = out + ' ' + d.name.upper()
       return out
 
+  def save_to_file(self, file, *, validate:Union[str, bool]='save'):
+      """ Save the configuration to a file in a given format.
+
+      This routine do some basic stuff and then call _save_to_file routine,
+      that contains the implementation specific for the type of the
+      configuration container/value.
+
+      Parameters
+      ----------
+      file: str or file
+        File to read the data from
+
+      validate
+        Validate the data in the container first and raise an exception,
+        if there is an error (e.g. the the data are not complete).
+        The string value can be used to select the type of validation
+        ``save`` means the full check (same as the default value ``True``),
+        use ``set`` to allow some missing values.
+      """
+      if validate:
+         self.validate(validate)
+
+      if not hasattr(file, 'write'):
+         with open(file, "w") as file:
+           out=self._save_to_file(file)
+           file.flush()
+      else:
+         out=self._save_to_file(file)
+         file.flush()
+      return out
+
+
 _help_warning_printed=False

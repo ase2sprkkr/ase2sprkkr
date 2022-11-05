@@ -272,7 +272,7 @@ class ConfigurationContainer(Configuration):
               out[i.name] = value
       return out or None
 
-  def to_string(self, *, validate=False):
+  def to_string(self):
       """
       Return the configuration (problem definition) in a string.
 
@@ -283,7 +283,7 @@ class ConfigurationContainer(Configuration):
       """
       from io import StringIO
       s = StringIO()
-      self.save_to_file(s, validate=validate)
+      self._save_to_file(s)
       return s.getvalue()
 
   def _find_value(self, name):
@@ -330,7 +330,7 @@ class ConfigurationContainer(Configuration):
           if i.is_changed(): return True
       return False
 
-  def save_to_file(self, file):
+  def _save_to_file(self, file)->bool:
       """ Save the configuration to a file. The method is implemented in the descendants.
 
       TODO
@@ -396,7 +396,7 @@ class BaseSection(ConfigurationContainer):
           raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
       super().validate(why)
 
-  def save_to_file(self, file)->bool:
+  def _save_to_file(self, file)->bool:
       """ Save the content of the container to the file (according to the definition)
 
       Parameters
@@ -420,9 +420,8 @@ class BaseSection(ConfigurationContainer):
          file.write(self._definition.name)
          file.write('\n')
       for o in self:
-         if o.save_to_file(file):
+          if o._save_to_file(file):
              file.write(self._definition.delimiter)
-      file.flush()
       return True
 
 class Section(BaseSection):
@@ -478,33 +477,15 @@ class RootConfigurationContainer(ConfigurationContainer):
   In addition to container capabilities, it can read/write its data from/to file.
   """
 
-  def save_to_file(self, file, *, validate:Union[str, bool]='save'):
-      """ Save the configuration to a file in a format readable by SPR-KKR i
-
-      Parameters
-      ----------
-      file: str or file
-        File to read the data from
-
-      validate
-        Validate the data in the container first and raise an exception,
-        if there is an error (e.g. the the data are not complete).
-        The string value can be used to select the type of validation
-        ``save`` means the full check (same as the default value ``True``),
-        use ``set`` to allow some missing values.
-      """
-      if not hasattr(file, 'write'):
-         with open(file, "w") as file:
-           return self.save_to_file(file)
-
+  def _save_to_file(self, file):
+      """ Implementation of the saving the configuration """
       it = iter(self)
       i = next(it)
       if i:
-        i.save_to_file(file)
+        i._save_to_file(file)
         for i in it:
           file.write(self._definition.delimiter)
-          i.save_to_file(file)
-      file.flush()
+          i._save_to_file(file)
 
   def read_from_file(self, file, clear_first=True):
       """ Read data from a file

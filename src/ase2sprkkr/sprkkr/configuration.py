@@ -52,9 +52,7 @@ class ConfigurationFile(RootConfigurationContainer, ConfigurationSectionTrait):
   def save_to_file(self, file, atoms=None, *, validate='save'):
       if atoms is not False:
          self.set_from_atoms(atoms)
-      if validate:
-         self.validate(validate)
-      super().save_to_file(file)
+      super().save_to_file(file, validate=validate)
 
 class ConfigurationSection(Section, ConfigurationSectionTrait):
   """ Configuration section to be used in SPRKKR configuration files """
