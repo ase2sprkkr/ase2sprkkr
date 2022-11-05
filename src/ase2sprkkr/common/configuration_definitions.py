@@ -60,7 +60,7 @@ class BaseDefinition:
    """
 
    def __init__(self, name, alternative_names=None,
-                is_optional=False, is_hidden=False,is_expert=False,
+                is_optional=False, is_hidden=False, is_expert=False,
                 name_in_grammar=None, info=None, description=None, write_alternative_name=False,
                 ):
        """
@@ -533,12 +533,15 @@ class ContainerDefinition(BaseDefinition):
            items[value.name] = value
         return items
 
-    def __init__(self, name, members=[], alternative_names=[], info=None, description=None, is_hidden=False, has_hidden_members=False, is_optional=False, name_in_grammar=None, force_order=None):
+    def __init__(self, name, members=[], alternative_names=[], info=None, description=None,
+                 is_optional=False, is_hidden=False, is_expert=False,
+                 has_hidden_members=False, name_in_grammar=None, force_order=None):
        super().__init__(
            name = name,
            alternative_names = alternative_names,
            is_optional = is_optional,
            is_hidden = is_hidden,
+           is_expert = is_expert,
            name_in_grammar = name_in_grammar,
            info = info,
            description = description
@@ -594,9 +597,9 @@ class ContainerDefinition(BaseDefinition):
         if self.is_optional:
            flags.append('optional')
         if self.is_expert:
-           flags.append('optional')
+           flags.append('expert')
         if flags:
-           flags = join(', ').join(flags)
+           flags = ', '.join(flags)
            out+=f" ({flags})"
 
         if verbose:
