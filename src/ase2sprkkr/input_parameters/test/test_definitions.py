@@ -34,6 +34,10 @@ class TestDefinitions(TestCase):
           check(t, name)
           t = InputParameters.from_file(filename)
           check(t, name)
+
+          if name == 'scf':
+             self.assertFalse('MODE' in t.to_string())
+
         except Exception as e:
           raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)
 

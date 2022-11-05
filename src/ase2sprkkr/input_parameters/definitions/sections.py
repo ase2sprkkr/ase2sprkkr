@@ -26,7 +26,8 @@ def CONTROL(ADSI):
       V('ADSI', DefKeyword(ADSI), required = True, info="Type of the computation."),
       V('POTFIL', str, required=True, info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator."),
       V('KRWS', int, required=False),
-      V('PRINT', Integer(min=0, max=5), default_value=0, info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.")
+      V('PRINT', Integer(min=0, max=5), default_value=0, info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output."),
+      V('NONMAG', False, info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ")
   ])
 
 TAU = Section('TAU',[
@@ -80,6 +81,22 @@ SCF = Section('SCF', [
   ])
 """The definition of the SCF section of the task input file """
 
+STRCONST = Section('STRCONST', [
+      V('ETA', float, is_optional=True, info='Ewald parameter'),
+      V('RMAX', float, is_optional=True, info='Convergency radius in real space'),
+      V('GMAX', float, is_optional=True, info='Convergency radius in reciprocal space'),
+      ], is_expert=True, is_optional=True, info=
+      """The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by
+three convergence parameters. ETA determines the relative weight of the real and reciprocal
+space lattice sums, that are determined by the convergence radii RMAX and GMAX, respec-
+tively. These convergence parameters have to be optimised anew if the lattice structure, the
+lattice parameter or the energy or ~k-range used is changed. This is done by the program if
+no values are applied via the input file. In some cases, in particular if one works at high
+energies, it might be necessery to set the convergence by hand. For this purpose one can start
+from the values set by kkrgen or kkrscf (see the output file)."""
+)
+"""The definition of the STRCONST section of the task input file """
+
 SITES = Section('SITES', [
       V('NL', [3], info='Angula momentum cutoff (the first discarded l-space)', description=
 """ The KKR-method is a minimum basis set method. This means that the angular-momentum
@@ -93,6 +110,25 @@ son a common l-expansion cutoff is used, that is fixed by the highest that occur
 this implies that NL = 4 is used for all sites.""")
   ])
 """The definition of the SITES section of the task input file """
+
+
+CPA = Section('CPA', [
+  V('NITER', 20, info="Maximum number of CPA iterations"),
+  V('TOL', 0.0001, info="Threshold for stopping CPA-cycle"),
+  ], is_expert=True, is_optional=True,
+  info="""For a system with substitutional disorder, the CPA is used. The listed variables control the CPA cycle """,
+)
+"""CPA section definition"""
+
+
+MODE = Section('MODE', [
+  V('SP-SREL', False, info="work in the spin-polarized scalar-relativistic mode"),
+  V('MDIR', [0,0,1], info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary."),
+  ], is_expert=True, is_optional=True,
+  info="""If not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
+)
+"""MODE Section definition"""
+
 
 def TASK(TASK):
   """ Create the definition of the CONTROL section of the task input file.
@@ -111,5 +147,5 @@ def TASK(TASK):
   ])
 
 __all__ = [
-    'CONTROL', 'TAU', 'ENERGY', 'SCF', 'SITES', 'TASK'
+    'CONTROL', 'TAU', 'ENERGY', 'SCF', 'SITES', 'TASK', 'STRCONST', 'CPA', 'MODE'
 ]

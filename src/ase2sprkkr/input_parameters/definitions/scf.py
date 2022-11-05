@@ -13,7 +13,10 @@ input_parameters = InputParameters(
         TAU,
         ENERGY,
         SCF,
-        SITES
+        SITES,
+        STRCONST,
+        CPA,
+        MODE
       ],
       info = "SCF - calculate a self-consistent potential",
       description = "<TODO: fill something meaningfull>",
