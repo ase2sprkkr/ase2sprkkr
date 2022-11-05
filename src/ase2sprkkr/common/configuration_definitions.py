@@ -34,7 +34,7 @@ def unique_dict(values):
     Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
 
     >>> unique_dict( [ ('x', 'y'), (('a','b'), 1 ), (('a', 'c'), 2) ] )
-    { 'x' : 'y', 'a' : { 'b' : 1, 'c': 2} }
+    {'x': 'y', 'a': {'b': 1, 'c': 2}}
     """
     out = {}
     duplicates = []
