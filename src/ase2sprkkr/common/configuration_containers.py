@@ -283,9 +283,7 @@ class ConfigurationContainer(Configuration):
       """
       from io import StringIO
       s = StringIO()
-      if validate:
-         self.validate(validate)
-      self.save_to_file(s)
+      self.save_to_file(s, validate=validate)
       return s.getvalue()
 
   def _find_value(self, name):
