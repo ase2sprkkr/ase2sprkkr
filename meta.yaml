@@ -1,7 +1,6 @@
 {% set data = load_setup_py_data(from_recipe_dir=True) %}
 {% set version = data.get('version') %}
 {% set rversion = version %}
-{% set rrrrrversion = '0.1.0' %}
 {% set name = data.get('name') %}
 
 package:
@@ -18,15 +17,17 @@ build:
   script: python -m pip install --no-deps --ignore-installed .
 
 requirements:
+
   host:
+    - python >=3.7
     - pip
-    - python
+
   run:
+    - python >=3.7
     - ase
     - spglib
     - pyparsing
     - mendeleev
-    - python
 
 test:
   source_files:
@@ -34,11 +35,11 @@ test:
   requires:
     - pytest
   files:
-    - src/ase2sprkkr/run_tests
+    - src/run_tests
   imports:
     - ase2sprkkr
   commands:
-    - DO_NOT_RUN_SPRKKR=1 ./src/ase2sprkkr/run_tests
+    - DO_NOT_RUN_SPRKKR=1 ./src/run_tests
 
 about:
   home: https://ase2sprkkr.github.io/ase2sprkkr/

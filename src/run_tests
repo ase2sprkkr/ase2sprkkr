@@ -5,4 +5,4 @@ if [[ $1 == '--no-kkr' ]] ; then
 fi
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-py.test  --doctest-modules . $@
+py.test  --doctest-modules ase2sprkkr $@

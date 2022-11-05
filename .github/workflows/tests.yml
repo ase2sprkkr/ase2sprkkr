@@ -17,4 +17,4 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - run: |
         ./install_dependencies.sh
-        DO_NOT_RUN_SPRKKR=1 ./src/ase2sprkkr/run_tests
+        DO_NOT_RUN_SPRKKR=1 ./src/run_tests
