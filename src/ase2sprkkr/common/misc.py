@@ -3,6 +3,7 @@
 import copy
 import numpy as np
 from collections import OrderedDict as _OrderedDict
+import operator
 
 
 def copy_list(src):
@@ -46,3 +47,16 @@ class OrderedDict(_OrderedDict):
 
     def first_item(self):
         return self[next(iter(self))]
+
+def as_integer(value):
+    """ Interpret the value as integer, or raise (even for float, complex etc.) TypeError.i
+    >>> as_integer(4)
+    4
+    >>> as_integer(np.int64(4))
+    4
+    >>> as_integer(4.0)
+    Traceback (most recent call last):
+    ...
+    TypeError: 'float' object cannot be interpreted as an integer
+    """
+    return operator.index(value)
