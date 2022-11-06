@@ -294,3 +294,17 @@ XSITES NR=3 FLAG
     ip.ENERGY.Ime[1] = 0.7
     ip.ENERGY.Ime[9] = 0.9
     self.assertEqual('ENERGY GRID={3} NE={1} Ime=0.5 Ime1=0.7 Ime5=0.8 Ime9=0.9', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
+    ip.ENERGY.Ime[[1,4,9]] = 0.2
+    self.assertEqual([0.2,0.8,0.2], ip.ENERGY.Ime[1,5,9])
+    ip.ENERGY.Ime[[1,4,9]] = 0.3
+    self.assertEqual([0.3,0.8,0.3], ip.ENERGY.Ime[[1,5,9]])
+    ip.ENERGY.Ime[5:9] = 0.2
+    self.assertEqual([0.2,0.2,0.2,0.2,0.3], ip.ENERGY.Ime[5:10])
+    self.assertRaises(KeyError, lambda: ip.ENERGY.Ime[5.0])
+    def e():
+       ip.ENERGY.Ime[5.0]=1
+    self.assertRaises(KeyError, e)
+    self.assertRaises(KeyError, lambda: ip.ENERGY.Ime['5'])
+    def e():
+       ip.ENERGY.Ime['5']=1
+    self.assertRaises(KeyError, e)
