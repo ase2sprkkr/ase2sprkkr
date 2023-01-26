@@ -76,8 +76,9 @@ SCF = Section('SCF', [
       V('MIX', 0.2, info='Mixing parameter'),
       V('VXC', DefKeyword({
         'VWN' : 'Vosko, Wilk, Nusair',
-        'JWM' : 'Janak, Williams, Moruzzi',
-        'VBH' : 'von Barth, Hedin'
+        'MJW' : 'Janak, Williams, Moruzzigit g',
+        'VBH' : 'von Barth, Hedin',
+        'PBE' : 'Perdew, Burke, Ernzendorfer GGA'
         }), info='parametrisation of the exchange-correlation potential'),
       V('ALG', DefKeyword({
           'BROYDEN2': 'Broyden’s second method',
