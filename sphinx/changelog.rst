@@ -14,8 +14,8 @@ Version 1.0.7
 * a2s_visualise_in_struct accepts scale-radii argument to control the size of visualised atoms
 * make now by default install the ase2sprkkr even if the version number have not been changed
 
-Unpublished
------------
+Version 2.0.0-beta1
+-------------------
 
 User interface
 ~~~~~~~~~~~~~~
@@ -23,16 +23,18 @@ User interface
 * Runtime documentation is added to the docstring and to the generated documentation.
   (so far for input parameters).
 * Class names refactored - abuse of 'BaseSomething' names solved.
+* Dangerous values (that do not pass the validity checks) are allowed.
 
 Architecture changes
 ~~~~~~~~~~~~~~~~~~~~
-* Allow Keywords arguments to accept descirptions of keywords.
+* Allow the Keywords arguments to accept descirptions of the keywords.
 * Complex GrammarType were added.
-* Option has the result attribute, that can hold the processed value of user input
-* Possibility to add 'expert' values to configuration definition. Expert
+* Option has the result attribute, that can hold the processed value of an user input
+* Possibility to add 'expert' values to a configuration definition. The expert
   values are outputed only if they differ from the defaults.
-* Expert sections have been introduced. They are printed out only if there is any changed (from default)
-* ARPES task have been documented and more options have been added
-* SCF task have been documented and more options have been added
-* Default GrammarType for bool default values in InputParameters is now Flag
+* Expert sections have been introduced. They are printed out only if there is any changes (from defaults).
+* The ARPES task have been documented and more options have been added.
+* The SCF task have been documented and more options have been added.
+* Default GrammarType for bool default values in InputParameters is now Flag.
 * Numbered arrays have been introduced to allow options like MDIR, MDIR1, MDIR2 etc...
+* Python 3.11 support added.

@@ -1,8 +1,53 @@
 """ The classes for storing one configuration value. """
+
+from __future__ import annotations
+
 from typing import Union
 from ..common.grammar_types import mixed
 from .configuration import Configuration
 from ..common.misc import as_integer
+
+class DangerousValue:
+  """ This class is used to store (encapsulate) a value, which should not be validated
+  - to  overcame sometimes too strict enforment of the options values.
+
+  """
+
+  def __init__(self, value, value_type:GrammarType|None=None, validate:bool=True):
+      """
+      Parameters
+      ----------
+      value
+        A value to be stored
+
+      value_type
+        A grammar type, that the value should satisfy (commonly a mixed type).
+        Can be None - when the only requirement to the value is that it can be
+        stringified.
+
+      validate
+        Should be the value validated or not (e.g. the value parsed by grammar
+        has been already validated, so there is no need to do it again)
+      """
+
+      if validate:
+          if value_type:
+              value = value_type.convert(value)
+              value_type.validate(value)
+          else:
+              value = str(value)
+      self.value = value
+      self.value_type = value_type
+
+  def __call__(self):
+      """ Return the actual value."""
+      return self.value
+
+  def write_value(self, file):
+      if self.value_type:
+         value_type.write(file, self.value)
+      else:
+         file.write(value)
 
 class Option(Configuration):
   """ Class for one option (a configuration value) of SPRKKR - either to
@@ -21,6 +66,9 @@ class Option(Configuration):
   Configuration value ImE
   <BLANKLINE>
   ImE : Energy (<Real> [Ry|eV]) ≝ 0.0  (optional)
+  >>> conf.ENERGY.ImE.set_dangerous('1J')
+  >>> conf.ENERGY.ImE()
+  '1J'
   """
   def __init__(self, definition, container=None, value=None):
       """"
@@ -36,9 +84,9 @@ class Option(Configuration):
           The value of the option.
       """
       super().__init__(definition, container)
-      self._value = value
       self._hook = None
       self._definition.type.enrich(self)
+      self._value = value
 
   def __call__(self, all_values:bool=False):
       """
@@ -51,13 +99,33 @@ class Option(Configuration):
       only the 'wildcard' value (i.e. the one without array index, which is used for the all values
       not explicitly specified) is returned.
       """
-      if self._value is not None:
+      value = self._unpack_value(self._value)
+      if value is not None:
           if self._definition.is_numbered_array and not all_values:
-              return self._value.get('def', self.default_value)
-          return self._value
+              return value.get('def', self.default_value)
+          return value
       if self._definition.is_numbered_array and all_values and self.default_value is not None:
           return { 'def' : self.default_value }
       return self.default_value
+
+  def is_dangerous(self):
+      """ Return, whether the option is set to a dangerous value, i.e. a value
+      that bypass the validation. """
+      return isinstance(self._value, DangerousValue)
+
+  def set_dangerous(self, value, index=None):
+      """ Set the option to a dangerous value - i.e. to a value that bypass the
+      type and value checks and enforcing.
+
+      However, the type of such value is still checked by the proper mixed type.
+      To completly bypass the check, set the value to an instance of DangerousValue
+      class directly.
+      """
+      value = DangerousValue(value, self._definition.type_of_dangerous)
+      if index is not None:
+          self[index] = value
+      else:
+          self.set(value)
 
   @property
   def default_value(self):
@@ -83,13 +151,15 @@ class Option(Configuration):
       """
       if value is None:
           return self.clear()
-      if self._definition.is_numbered_array:
+      elif self._definition.is_numbered_array:
         if isinstance(value, dict):
            self.clear(do_not_check_required=value, call_hooks=False)
            for k,v in value.items():
                self._set_item(k, v)
         else:
-           self._set_item('def', v)
+           self._set_item('def', value)
+      elif isinstance(value, DangerousValue):
+         self._value = value
       else:
         self._value = self._definition.convert_and_validate(value)
       self._post_set()
@@ -137,7 +207,7 @@ class Option(Configuration):
          if not self._value:
             self._value = None
       else:
-         self._value[name] = self._definition.convert_and_validate(value)
+         self._value[name] = self._pack_value(value)
 
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
@@ -157,12 +227,31 @@ class Option(Configuration):
             name = as_integer(name)
          except TypeError as e:
             raise KeyError('Numbered array indexes can be only integers, lists or slices') from e
-      return None if self._value is None else self._value.get(name, None)
+      return None if self._value is None else self._unpack_value(self._value.get(name, self.default_value))
 
+  def _unpack_value(self, value):
+      """ Unpack potentionally dangerous values. """
+      if isinstance(value, DangerousValue):
+         value = value()
+      if self._definition.is_numbered_array and isinstance(value, dict):
+         value = { i: v() if isinstance(v, DangerousValue) else v for i,v in value.items() }
+      return value
+
+  def _pack_value(self, value):
+      """ Validate the value, if it's to be. """
+      if isinstance(value, DangerousValue):
+         """ The dangerous value is immutable, checked during its creation """
+         pass
+      else:
+         value = self._definition.convert_and_validate(value)
+      return value
 
   def __hasitem__(self, name):
       self._check_array_access()
-      return self._value is not None and name in self._value
+      if self._value is None:
+         return False
+      value = self._unpack_value(self._value)
+      return name in value
 
   def get(self):
       """ Return the value of self """
@@ -205,14 +294,20 @@ class Option(Configuration):
       """ Write the name-value pair to the given file, if the value
       is set. """
       d = self._definition
+
       if not d.type.has_value:
-          return d.write(file, None)
-      value = self.result
-      if value is None or (d.is_expert and self.is_it_the_default_value(value)):
+         return d.write(file, None)
+      elif self.is_dangerous():
+         value = self._value
+      else:
+         value = self.result
+         if value is None or (d.is_expert and self.is_it_the_default_value(value)):
           return
       return d.write(file, value)
 
   def validate(self, why='save'):
+      if self.is_dangerous():
+          return True
       d = self._definition
       if d.type.has_value:
         value = self()
@@ -245,8 +340,9 @@ class Option(Configuration):
           changed:bool
             Whether the value is the same as the default value or not
       """
-      if self._value is not None:
-         return self._value, not self.is_it_the_default_value(self._value)
+      value = self._unpack_value(self._value)
+      if value is not None:
+         return value, not self.is_it_the_default_value(value)
       if self._definition.is_numbered_array:
          return {'def' : self.default_value}, False
       else:

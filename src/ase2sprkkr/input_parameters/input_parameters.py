@@ -312,18 +312,22 @@ class InputParameters(ConfigurationFile):
       return cls.create('SCF')
 
   @classmethod
-  def from_file(cls, filename):
+  def from_file(cls, filename, allow_dangerous:bool=False):
       """ Read an input file and create a new InputParameters object from the readed stuff
 
       Parameters
       ----------
       filename: str or file
         Input file (either its filename, or an open file)
+
+      allow_dangerous
+        Allow to read dangerous values of options: i.e. the values that do not fullfil the
+        required type of the given option or its other requirements.
       """
       definitions = cls.definitions
       for d in definitions.values():
           try:
-             out = d.read_from_file(filename)
+             out = d.read_from_file(filename, allow_dangerous=allow_dangerous)
              return out
           except Exception as e:
              last = e

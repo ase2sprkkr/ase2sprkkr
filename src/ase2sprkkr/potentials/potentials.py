@@ -17,8 +17,8 @@ class Potential(ConfigurationFile):
       self._complete = False
       super().__init__(definition)
 
-  def read_from_file(self, file, atoms=None):
-      super().read_from_file(file)
+  def read_from_file(self, file, atoms=None, allow_dangerous=False):
+      super().read_from_file(file, allow_dangerous=allow_dangerous)
       self.make_complete()
       if atoms is not False:
          self._atoms = self.update_atoms(atoms or self._atoms)
@@ -85,9 +85,9 @@ class Potential(ConfigurationFile):
       return definition.potential_definition
 
   @staticmethod
-  def from_file(filename, atoms=None):
+  def from_file(filename, atoms=None, allow_dangerous=False):
       pd = Potential.potential_definition
-      return pd.read_from_file(filename, atoms=atoms)
+      return pd.read_from_file(filename, atoms=atoms, allow_dangerous=allow_dangerous)
 
   @classmethod
   def from_atoms(cls, atoms):

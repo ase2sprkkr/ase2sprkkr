@@ -14,6 +14,7 @@ from ...common.options import Option, CustomOption
 import io, re
 import numpy as np
 from ...common.grammar import generate_grammar
+import pytest
 
 class TestInputParameters(TestCase):
 
@@ -46,7 +47,30 @@ class TestInputParameters(TestCase):
      assertParse("bbb=1a", ('bbb', 1)) #in this case, 'a' is in result[1]
      assertNotValid("bbb=1\na")
 
+  def test_dangerous_value(self):
+     with generate_grammar():
+       cv = cd.InputValueDefinition('aaa', int, required=True).grammar()
+     def assertParse(text,result):
+         assert cv.parseString(text, True)[0] == result
+     def assertParseDangerous(text,result):
+         out = cv.parseString(text, True)[0]
+         assert out[0] == result[0]
+         self.assertEqual(out[1].value, result[1])
+     def assertNotValid(text):
+         self.assertRaises(pp.ParseBaseException, lambda: cv.parseString(text, True))
 
+     assertParse("aaa=1", ('aaa', 1))
+     assertNotValid("aaa")
+     assertNotValid("aaa=sss")
+     assertNotValid("aaa=1.0")
+
+     with generate_grammar():
+       cv = cd.InputValueDefinition('aaa', int, required=True).grammar(allow_dangerous=True)
+
+     assertParse("aaa=1", ('aaa', 1))
+     assertParseDangerous("aaa=1.0", ('aaa', 1.0))
+     assertParseDangerous("aaa=sss", ('aaa', 'sss'))
+     assertParseDangerous("aaa={2,3}", ('aaa', np.array([2,3])))
 
   def test_input_parameters_definition(self):
     V = cd.InputValueDefinition
@@ -267,6 +291,19 @@ XSITES NR=3 FLAG
     ips2 = input_parameters_def.read_from_file(output)
     self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
 
+    with pytest.raises(ValueError):
+        ips.ENERGY.NE = 'sss'
+    ips.ENERGY.NE.set_dangerous('sss')
+    output = io.StringIO()
+    ips.save_to_file(output)
+    output.seek(0)
+    with pytest.raises(pp.ParseBaseException):
+        ips2 = input_parameters_def.read_from_file(output)
+    output.seek(0)
+    ips2 = input_parameters_def.read_from_file(output, allow_dangerous=True)
+    self.assertEqual('sss', ips.ENERGY.NE())
+    self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
+
     #numbered_arrays
     input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
@@ -308,3 +345,26 @@ XSITES NR=3 FLAG
     def e():
        ip.ENERGY.Ime['5']=1
     self.assertRaises(KeyError, e)
+
+    ip=input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
+    with pytest.raises(ValueError):
+      ip.ENERGY.Ime = 'ss'
+    ip.ENERGY.Ime.set_dangerous('uu')
+    self.assertEqual(ip.ENERGY.Ime(),'uu')
+    out=ip.ENERGY.to_string()
+    self.assertEqual('ENERGY GRID={3} NE={1} Ime=uu Ime1=0.4 Ime5=0.8', re.sub(r'\s+',' ', out).strip() )
+    with pytest.raises(pp.ParseBaseException):
+         input_parameters_def.read_from_file(io.StringIO(out))
+    ip=input_parameters_def.read_from_file(io.StringIO(out), allow_dangerous=True)
+    self.assertEqual(ip.ENERGY.Ime(all_values=True), {'def': 'uu', 1:0.4, 5:0.8 } )
+    ip.ENERGY.Ime = 1.0
+
+    with pytest.raises(ValueError):
+      ip.ENERGY.Ime[5] = 'ss'
+    ip.ENERGY.Ime.set_dangerous('yy', index=5)
+    out=ip.ENERGY.to_string()
+    self.assertEqual('ENERGY GRID={3} NE={1} Ime=1.0 Ime1=0.4 Ime5=yy', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
+    with pytest.raises(pp.ParseBaseException):
+         input_parameters_def.read_from_file(io.StringIO(out))
+    ip=input_parameters_def.read_from_file(io.StringIO(out), allow_dangerous=True)
+    self.assertEqual(ip.ENERGY.Ime(all_values=True), {'def': 1.0, 1:0.4, 5:'yy' } )

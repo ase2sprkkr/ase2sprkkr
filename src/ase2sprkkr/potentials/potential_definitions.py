@@ -34,6 +34,7 @@ class PotValueDefinition(ConfigurationValueDefinition):
   def __init__(self, *args, required=None, **kwargs):
       super().__init__(*args, required=required, **kwargs)
 
+  type_of_dangerous = pot_mixed
 
 class Separator(PotValueDefinition):
   """

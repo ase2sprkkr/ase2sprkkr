@@ -1,5 +1,4 @@
-ASE2SPRKKR
-==========
+# ASE2SPRKKR
 
 ASE2SPRKKR package provide an interface that allow use of the [SPR-KKR
 package](https://www.ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
@@ -8,8 +7,7 @@ Environment](https://wiki.fysik.dtu.dk/ase/) (abbreviated as ASE)
 \-\--Python tool that integrates the various tools for electronic
 structure calculation.
 
-Usefull links
--------------
+## Usefull links
 
 -   [SPR-KKR](https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr)
 -   [ASE - Atomic Simulation
@@ -21,19 +19,18 @@ Usefull links
 -   [SPR-KKR
     manual](https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/)
 
-Installation of the package using package managers
---------------------------------------------------
+## Installation of the package using package managers
 
 The simplest way how to install and use the package is to install them
 using package managers: either pip
 
-``` {.bash}
+``` bash
 pip install ase2sprkkr
 ```
 
 or conda
 
-``` {.bash}
+``` bash
 conda install -c ase2sprkkr ase2sprkkr
 ```
 
@@ -43,13 +40,13 @@ In some systems, the pip utility for python3 is called pip3. If it is
 not installed, you can install it using the linux distribution package
 manager, e.g. in Debian/Ubuntu
 
-``` {.bash}
+``` bash
 apt install pip3
 ```
 
 or
 
-``` {.bash}
+``` bash
 zypper install pip
 ```
 
@@ -59,8 +56,7 @@ For the conda installation instructions, see the Anaconda documentation
 <https://docs.anaconda.com/anaconda/install/linux/> however, for the
 users unexperienced with conda, the (simpler) pip way is recommended.
 
-Install the packages from GIT (and/or source codes)
----------------------------------------------------
+## Install the packages from GIT (and/or source codes)
 
 If you do not want to use public package managers as pip or conda, or
 you want to contribute to development, you can use GIT to obtain the
@@ -75,7 +71,7 @@ package sources.
 
 ### Obtaining the package using GIT
 
-``` {.bash}
+``` bash
 git clone https://github.com/ase2sprkkr/ase2sprkkr.git
 git checkout origin/release
 ```
@@ -86,14 +82,14 @@ out the recommended production version of the code.
 If you want to obtain the current version of the (earlier-downloaded)
 code, run
 
-``` {.bash}
+``` bash
 git fetch
 git checkout origin/release
 ```
 
 Alternatively, you can checkout master branch
 
-``` {.bash}
+``` bash
 git checkout origin/master
 ```
 
@@ -114,7 +110,7 @@ sources and install it
 If you do not have the wheel package built, you can do it with the
 following steps.
 
-``` {.bash}
+``` bash
 python3 -m pip install --upgrade build
 python3 -m build
 ```
@@ -127,7 +123,7 @@ that you have it already installed). The second one builds the package.
 To install the package (either system-wide or in an active virtual
 environment), you can run
 
-``` {.bash}
+``` bash
 pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
 ```
 
@@ -136,19 +132,18 @@ pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
 To do all the stuff (after cloning the GIT repository) in one step, you
 can run
 
-``` {.bash}
+``` bash
 make
 ```
 
 To clean up the source directory after installing the package, you can
 run
 
-``` {.bash}
+``` bash
 make clean
 ```
 
-Documentation of the package
-----------------------------
+## Documentation of the package
 
 The documentation is published online at
 <https://ase2sprkkr.github.io/ase2sprkkr/>
@@ -161,7 +156,7 @@ to see the (offline version of the) documentation. The documentation
 contains parts, that are generated from the docstrings in the source
 code. You can regenerate these by
 
-``` {.bash}
+``` bash
 make docs
 ```
 
@@ -174,8 +169,7 @@ the Sphinx behavior will be merged into Sphinx, please use the following
 fork for building the documentation.
 <https://github.com/lokik/sphinx.git>
 
-How to contribute or to report a bug
-------------------------------------
+## How to contribute or to report a bug
 
 Please feel free to make a pull-request or post an issue at:
 <https://github.com/ase2sprkkr/ase2sprkkr>

@@ -487,7 +487,7 @@ class RootConfigurationContainer(ConfigurationContainer):
           file.write(self._definition.delimiter)
           i._save_to_file(file)
 
-  def read_from_file(self, file, clear_first=True):
+  def read_from_file(self, file, clear_first:bool=True, allow_dangerous:bool=False):
       """ Read data from a file
 
       Parameters
@@ -495,12 +495,14 @@ class RootConfigurationContainer(ConfigurationContainer):
       file: str or file
         File to read the data from
 
-      clear_first: bool
+      clear_first
         Clear the container first.
         Otherwise, the data in the sections that are not present in the
         file are preserved.
+      allow_dangerous
+        Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)
       """
-      values = self._definition.parse_file(file)
+      values = self._definition.parse_file(file, allow_dangerous=allow_dangerous)
       #except Exception as e:
       #   print(e)
       #   breakpoint()

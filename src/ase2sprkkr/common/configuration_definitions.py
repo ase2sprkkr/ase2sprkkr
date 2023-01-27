@@ -15,7 +15,7 @@ from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 import pyparsing as pp
 from ..common.misc import OrderedDict
 from .configuration_containers import Section
-from .options import Option
+from .options import Option, DangerousValue
 import numpy as np
 import inspect
 from .decorators import cache
@@ -159,10 +159,17 @@ class BaseDefinition:
        """ Creates Section/Option/.... object (whose properties I define) """
        return self.result_class(self, container)
 
-   def grammar(self):
-       """ Generate grammar with the correct settings of pyparsing """
+   def grammar(self, allow_dangerous:bool=False):
+       """ Generate grammar with the correct settings of pyparsing global state
+
+       Parameters
+       ----------
+       allow_dangerous
+        Allow dangerous values - i.e. values that do not fulfill the requirements
+        for the given-option value (i.e. a type requirement or other constraints).
+       """
        with generate_grammar():
-         return self._grammar()
+         return self._grammar(allow_dangerous)
 
    _description_indentation = '    '
    """ Nested levels of description will be indented using this 'prefix' """
@@ -499,7 +506,7 @@ class ValueDefinition(BaseDefinition):
   def __repr__(self):
     return str(self)
 
-  def _grammar(self):
+  def _grammar(self, allow_dangerous=False):
     body = self.type.grammar(self.name)
 
     if self.fixed_value is not None:
@@ -513,6 +520,12 @@ class ValueDefinition(BaseDefinition):
           message="The value of {} is {} and it should be {}".format(self.name, x[0], self.fixed_value)
           raise pp.ParseException(s,loc,message, body)
       body=body.copy().addParseAction(check_fixed)
+
+    if allow_dangerous and hasattr(self, 'type_of_dangerous'):
+        danger = pp.Forward()
+        danger << self.type_of_dangerous.grammar(self.name + '_dangerous')
+        danger.addParseAction(lambda x: DangerousValue(x[0], self.type_of_dangerous, False))
+        body = body ^ danger
 
     if self.name_in_grammar:
        god = self.grammar_of_delimiter()
@@ -546,13 +559,31 @@ class ValueDefinition(BaseDefinition):
         return self.default_value
      return None
 
-  def write(self, f, value):
+  def write(self, file, value):
+     """
+     Write the option to the open file
+
+     Parameters
+     ----------
+     file
+      The file to write to.
+
+     value
+      The value to write. It can be instance of DangerousValue, in such case
+      It's own type is used to write the value.
+     """
 
      if self.type.has_value:
         missing, df, np = self.type.missing_value()
 
      def write(name, value):
-         if self.type.has_value:
+         if isinstance(value, DangerousValue):
+            type = value.value_type
+            value = value()
+         else:
+            type = self.type
+
+         if type.has_value:
              if value is None:
                value = self.get_value()
              if value is None:
@@ -564,14 +595,14 @@ class ValueDefinition(BaseDefinition):
             value=None
             write_value=True
 
-         f.write(self.prefix)
+         file.write(self.prefix)
          if self.name_in_grammar:
-            f.write(name)
+            file.write(name)
             if write_value:
-               f.write(self.name_value_delimiter)
-               self.type.write(f, value)
+               file.write(self.name_value_delimiter)
+               type.write(file, value)
          elif write_value:
-            self.type.write(f, value)
+            type.write(file, value)
          return True
 
      name = self.formated_name
@@ -808,7 +839,7 @@ class ContainerDefinition(BaseDefinition):
           ))
         )
 
-    def _values_grammar(self, delimiter=None):
+    def _values_grammar(self, allow_dangerous:bool=False, delimiter=None):
        if self.custom_class:
           custom_value = self.custom_member_grammar(self.all_member_names())
        else:
@@ -823,7 +854,7 @@ class ContainerDefinition(BaseDefinition):
              (e.g. the item is followed by the items without name in grammar)
              """
              for i in self._members.values():
-                 g = i._grammar()
+                 g = i._grammar(allow_dangerous)
                  if i.can_be_repeated():
                     g = delimitedList(g, delimiter)
                  yield i,g
@@ -899,9 +930,9 @@ class ContainerDefinition(BaseDefinition):
 
        return values
 
-    def _grammar(self):
+    def _grammar(self, allow_dangerous=False):
        delimiter = self.grammar_of_delimiter()
-       values = self._values_grammar(delimiter)
+       values = self._values_grammar(allow_dangerous, delimiter)
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
 
@@ -935,13 +966,17 @@ class ContainerDefinition(BaseDefinition):
        """ Has/ve the first child(s) in an unordered sequence fixed position? """
        return not self._members.first_item().name_in_grammar
 
-    def parse_file(self, file, return_value_only=True):
+    def parse_file(self, file, return_value_only=True, allow_dangerous=False):
        """ Parse the file, return the parsed data as dictionary """
-       return self.parse_return(self.grammar().parseFile(file, **{ _parse_all_name: True } ), return_value_only)
+       grammar = self.grammar(allow_dangerous)
+       out = grammar.parseFile(file, **{ _parse_all_name: True } )
+       return self.parse_return(out, return_value_only)
 
-    def parse(self, str, whole_string=True, return_value_only=True):
+    def parse(self, string, whole_string=True, return_value_only=True, allow_dangerous=False):
        """ Parse the string, return the parsed data as dictionary """
-       return self.parse_return(self.grammar().parseString(str, **{ _parse_all_name: whole_string} ), return_value_only)
+       grammar = self.grammar(allow_dangerous)
+       out = grammar.parseString(string, **{ _parse_all_name: whole_string } )
+       return self.parse_return(out, return_value_only)
 
     def parse_return(self, val, return_value_only:bool=True):
         """ Clean up the parsed values (unpack then from unnecessary containers)
@@ -957,7 +992,7 @@ class ContainerDefinition(BaseDefinition):
            val = val[1]
         return val
 
-    async def parse_from_stream(self, stream, up_to, start=None, whole_string=True, return_value_only=True):
+    async def parse_from_stream(self, stream, up_to, start=None, whole_string=True, return_value_only=True, allow_dangerous=False):
         """
         Parse string readed from asyncio stream.
         The stream is readed up to the given delimiter
@@ -969,10 +1004,10 @@ class ContainerDefinition(BaseDefinition):
            result = start + result
         return self.parse(result, whole_string)
 
-    def read_from_file(self, file, **kwargs):
+    def read_from_file(self, file, allow_dangerous=False, **kwargs):
         """ Read a configuration file and return the parsed Configuration object """
         out = self.result_class(definition = self, **kwargs)
-        out.read_from_file(file)
+        out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
 
 
@@ -1056,19 +1091,21 @@ class ConfigurationRootDefinition(ContainerDefinition):
        return expr
 
    def parse_return(self, val, return_value_only=True):
-        """ There is no name in the parsed results (see how
-            ConfigurationRootDefinition._tuple_with_my_name is redefined)
+        """ Clean up the parsed values (unpack then from unnecessary containers)
+
+            There is no name in the parsed results (see how
+            ConfigurationRootDefinition._tuple_with_my_name is redefined).
         """
         val = val[0]
         return val
 
-   def _grammar(self):
+   def _grammar(self, allow_dangerous=False):
        """Returns the grammar to parse the configuration file.
 
        This method just tweaks the grammar (generated by the common container implementation) to ignore comments,
        so the comments would be ignored just once.
        """
 
-       out=super()._grammar()
+       out=super()._grammar(allow_dangerous)
        out.ignore("#" + pp.restOfLine + pp.LineEnd())
        return out

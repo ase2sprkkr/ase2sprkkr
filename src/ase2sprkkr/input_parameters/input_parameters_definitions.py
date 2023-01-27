@@ -31,6 +31,7 @@ class InputValueDefinition(ConfigurationValueDefinition):
   name_value_delimiter = '='
 
   type_from_type_map = { bool : flag }
+  type_of_dangerous = mixed
 
 class InputSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one
