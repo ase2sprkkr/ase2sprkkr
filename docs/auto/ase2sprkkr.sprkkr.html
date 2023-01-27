@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -67,11 +69,14 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">sprkkr</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
@@ -127,6 +132,12 @@ computations</p>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html#module-ase2sprkkr.sprkkr.calculator" title="ase2sprkkr.sprkkr.calculator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.calculator</span></code></a></p></td>
 <td><p>Module calculator</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html#module-ase2sprkkr.sprkkr.configuration" title="ase2sprkkr.sprkkr.configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.configuration</span></code></a></p></td>
+<td><p>In this module the base classes for SPR-KKR configuration sections and files are present.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html#module-ase2sprkkr.sprkkr.io_data" title="ase2sprkkr.sprkkr.io_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.io_data</span></code></a></p></td>
+<td><p>IoData classes serves are intermediate object used as storage during reading or writing of potential/input_parameters files.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html#module-ase2sprkkr.sprkkr.occupations" title="ase2sprkkr.sprkkr.occupations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.occupations</span></code></a></p></td>
 <td><p>More atomic types can be on one site.</p></td>
 </tr>
@@ -142,13 +153,16 @@ computations</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html#module-ase2sprkkr.sprkkr.sprkkr_atoms" title="ase2sprkkr.sprkkr.sprkkr_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sprkkr_atoms</span></code></a></p></td>
 <td><p>This file contains SPRKKRAtoms - an enhanced version of Atoms to be used with SPRKKR</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html#module-ase2sprkkr.sprkkr.structure" title="ase2sprkkr.sprkkr.structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.structure</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html#module-ase2sprkkr.sprkkr.sprkkr_grammar_types" title="ase2sprkkr.sprkkr.sprkkr_grammar_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sprkkr_grammar_types</span></code></a></p></td>
+<td><p>In this module, the <a class="reference internal" href="ase2sprkkr.common.grammar_types.GrammarType.html#ase2sprkkr.common.grammar_types.GrammarType" title="ase2sprkkr.common.grammar_types.GrammarType"><code class="xref py py-class docutils literal notranslate"><span class="pre">GrammarTypes</span></code></a>, that are specific for SPR-KKR, are present.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html#module-ase2sprkkr.sprkkr.structure" title="ase2sprkkr.sprkkr.structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.structure</span></code></a></p></td>
 <td><p>Helper classes for a2s_visualise_in_struct utility.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html#module-ase2sprkkr.sprkkr.sysfile" title="ase2sprkkr.sprkkr.sysfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sysfile</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html#module-ase2sprkkr.sprkkr.sysfile" title="ase2sprkkr.sprkkr.sysfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sysfile</span></code></a></p></td>
 <td><p>Thys module contain functions to write xband sysfiles.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.test.html#module-ase2sprkkr.sprkkr.test" title="ase2sprkkr.sprkkr.test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.test</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.test.html#module-ase2sprkkr.sprkkr.test" title="ase2sprkkr.sprkkr.test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.test</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

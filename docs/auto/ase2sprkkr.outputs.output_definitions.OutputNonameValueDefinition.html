@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -118,12 +120,12 @@
 <dd><p>Value in an output file, that has no name, there is just the value
 (identified by its position after some other known stuff)</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-b35617581beceac94eb65459e37c386e6452cc2f.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" usemap="#inheritance9ab0aadb71" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-537a4344907ba4a40e896f468e8c34941e909bee.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" usemap="#inheritance9ab0aadb71" class="inheritance graphviz" /></div>
 <map id="inheritance9ab0aadb71" name="inheritance9ab0aadb71">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="4,4,208,22"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" target="_top" title="configuration_definitions.BaseValueDefinition" alt="" coords="229,4,459,22"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="480,4,688,22"/>
-<area shape="rect" id="node3" href="#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" target="_top" title="Value in an output file, that has no name, there is just the value" alt="" coords="709,4,956,22"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="4,4,213,23"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="configuration_definitions.ValueDefinition" alt="" coords="235,4,446,23"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="468,4,681,23"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" target="_top" title="Value in an output file, that has no name, there is just the value" alt="" coords="703,4,956,23"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -131,24 +133,45 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/output_definitions.html#OutputNonameValueDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Creates the object</p>
+<dd><p>Definition of a configuration value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the configuration value</p></li>
-<li><p><strong>type</strong> (<a class="reference internal" href="ase2sprkkr.common.grammar_types.BaseType.html#ase2sprkkr.common.grammar_types.BaseType" title="ase2sprkkr.common.grammar_types.BaseType"><em>BaseType</em></a>) – Configuration value type</p></li>
-<li><p><strong>default</strong> (<em>mixed</em>) – Default value for configuration</p></li>
+<li><p><strong>type</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.common.grammar_types.GrammarType.html#ase2sprkkr.common.grammar_types.GrammarType" title="ase2sprkkr.common.grammar_types.GrammarType"><em>GrammarType</em></a><em>|</em><em>mixed</em><em>]</em>) – Configuration value data type.
+If it is set to anyting what is not derived from GrammarType, the given value is used as the default value
+and the data type is derived from it.
+If it is None, the default value have to be set using <code class="docutils literal notranslate"><span class="pre">expert</span></code> parameter.</p></li>
+<li><p><strong>default</strong> (<em>mixed</em>) – Default value for the configuration option.</p></li>
 <li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Value can have an alternative name (that alternativelly denotes the value)</p></li>
-<li><p><strong>fixed</strong> (<em>mixed</em>) – If given, this option is not user given, but with fixed_value value (provided by this parameter)</p></li>
-<li><p><strong>required</strong> (<em>bool</em>) – Required option can not be set to None (however, a required one
+<li><p><strong>fixed</strong> (<em>mixed</em>) – If it is given, this option have a fixed_value value (provided by this parameter),
+that can not be changed by user.</p></li>
+<li><p><strong>required</strong> (<em>bool</em>) – <p>Required option can not be set to None (however, a required one
 can be still be optional, if it has a default values).
-If required = None, required = not is_optional and default_value is None</p></li>
+If required = None, it is set to True if both the conditions are met:</p>
+<blockquote>
+<div><ul>
+<li><p>the value is not expert</p></li>
+<li><p>the optional is not True and the option has not a default_value</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>is_optional</strong> (<em>bool</em><em> or </em><em>None</em>) – If True, the value can be omited, if the fixed order is required
+None means True just if required is False (or it is determined to be False),
+see the <code class="docutils literal notranslate"><span class="pre">required</span></code> parameter.</p></li>
+<li><p><strong>is_hidden</strong> (<em>bool</em>) – The value is hidden from the user (no container.name access to the value).</p></li>
+<li><p><strong>is_expert</strong> (<em>Union</em><em>[</em><em>bool</em><em>,</em><em>mixed</em><em>]</em>) – Expert values are somewhat hidden (e.g. listed at end) from the user.
+Expert values are not exported to the result, if they are set to the
+default value.</p></li>
+<li><p><strong>is_numbered_array</strong> – Such values can contains (sparse) arrays. In the resulting ouput, the
+members of the array are in the form NAME1=…, NAME2=…, … The default
+value for missing number can appear in the form NAME=…</p></li>
 <li><p><strong>name_in_grammar</strong> (<em>bool</em><em> or </em><em>None</em>) – The value in the conf file is prefixed by &lt;name&gt;&lt;name_value_delimiter&gt;
 If None, the default type value (type.name_in_grammar) is used</p></li>
-<li><p><strong>is_optional</strong> (<em>bool</em><em> or </em><em>None</em>) – If True, the value can be omited, if the fixed order is required
-None means True if required is False</p></li>
-<li><p><strong>is_hidden</strong> (<em>bool</em>) – The value is hidden from the user (no container.name access to the value)</p></li>
 <li><p><strong>name_format</strong> (<em>str</em><em> or </em><em>None</em>) – The way how the name is written</p></li>
+<li><p><strong>expert</strong> (<em>Optional</em><em>[</em><em>mixed</em><em>]</em>) – If not None, set <code class="docutils literal notranslate"><span class="pre">is_expert</span></code> to True, <code class="docutils literal notranslate"><span class="pre">default_value</span></code> to the given value and
+<code class="docutils literal notranslate"><span class="pre">required</span></code> to False. Note, that also <code class="docutils literal notranslate"><span class="pre">type</span></code> can be determined from such given
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code>.</p></li>
 </ul>
 </dd>
 </dl>

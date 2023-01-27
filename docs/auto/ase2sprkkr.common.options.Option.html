@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="process_output_reader" href="ase2sprkkr.common.process_output_reader.html" />
-    <link rel="prev" title="CustomOption" href="ase2sprkkr.common.options.CustomOption.html" /> 
+    <link rel="prev" title="DangerousValue" href="ase2sprkkr.common.options.DangerousValue.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,11 +59,15 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
@@ -71,6 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.CustomOption.html">CustomOption</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.DangerousValue.html">DangerousValue</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Option</a></li>
 </ul>
 </li>
@@ -122,11 +128,31 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.options.</span></span><span class="sig-name descname"><span class="pre">Option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option" title="Permalink to this definition"></a></dt>
-<dd><p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-8ba7d0f258a3e5d63aa3a78c1bb2a1ff2e5a5bec.png" alt="Inheritance diagram of ase2sprkkr.common.options.Option" usemap="#inheritance8f372ee86e" class="inheritance graphviz" /></div>
+<dd><p>Class for one option (a configuration value) of SPRKKR - either to
+be used as a part of InputParameters or Potential configuration.
+Usage:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ase2sprkkr.sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">calculator</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">input_parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span> <span class="o">=</span> <span class="mf">5.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="p">()</span>
+<span class="go">5.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="o">.</span><span class="n">info</span>
+<span class="go">&#39;Configuration value ImE&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="o">.</span><span class="n">help</span><span class="p">()</span>                     
+<span class="go">Configuration value ImE</span>
+
+<span class="go">ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.0  (optional)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="o">.</span><span class="n">set_dangerous</span><span class="p">(</span><span class="s1">&#39;1J&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conf</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">ImE</span><span class="p">()</span>
+<span class="go">&#39;1J&#39;</span>
+</pre></div>
+</div>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-0863fd099d608630dac2fafbf6a1969a94182060.png" alt="Inheritance diagram of ase2sprkkr.common.options.Option" usemap="#inheritance8f372ee86e" class="inheritance graphviz" /></div>
 <map id="inheritance8f372ee86e" name="inheritance8f372ee86e">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,273,31"/>
-<area shape="rect" id="node2" href="#ase2sprkkr.common.options.Option" target="_top" title="options.Option" alt="" coords="303,5,420,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="233,5,351,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -140,6 +166,32 @@
 :param container: The container, that owns the object
 :param value: The value of the option.
 :type value: mixed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.is_dangerous">
+<span class="sig-name descname"><span class="pre">is_dangerous</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.is_dangerous"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.is_dangerous" title="Permalink to this definition"></a></dt>
+<dd><p>Return, whether the option is set to a dangerous value, i.e. a value
+that bypass the validation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.set_dangerous">
+<span class="sig-name descname"><span class="pre">set_dangerous</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.set_dangerous"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.set_dangerous" title="Permalink to this definition"></a></dt>
+<dd><p>Set the option to a dangerous value - i.e. to a value that bypass the
+type and value checks and enforcing.</p>
+<p>However, the type of such value is still checked by the proper mixed type.
+To completly bypass the check, set the value to an instance of DangerousValue
+class directly.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.default_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_value</span></span><a class="headerlink" href="#ase2sprkkr.common.options.Option.default_value" title="Permalink to this definition"></a></dt>
+<dd><p>Return default value for the option.
+The function is here, and not in the definition, since the default value can be given
+by callable, that accepts the Option as argument. This possibility is used in ase2sprkkr,
+when the default values of some options are generated from the underlined Atoms object</p>
 </dd></dl>
 
 <dl class="py method">
@@ -158,28 +210,86 @@ ase2sprkkr.sprkkr.common.configuration_containers.ConfigurationContainer.set()</
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._post_set">
+<span class="sig-name descname"><span class="pre">_post_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._post_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._post_set" title="Permalink to this definition"></a></dt>
+<dd><p>Thus should be called after all modifications</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._check_array_access">
+<span class="sig-name descname"><span class="pre">_check_array_access</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._check_array_access"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._check_array_access" title="Permalink to this definition"></a></dt>
+<dd><p>Check, whether the option is numbered array and thus it can be accessed as array using []</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._set_item">
+<span class="sig-name descname"><span class="pre">_set_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._set_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._set_item" title="Permalink to this definition"></a></dt>
+<dd><p>Set a single item of a numbered array. For internal use - so no sanity checks</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._getitem">
+<span class="sig-name descname"><span class="pre">_getitem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._getitem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._getitem" title="Permalink to this definition"></a></dt>
+<dd><p>Get a single item from a numbered array. For internal use - so no sanity checks</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._unpack_value">
+<span class="sig-name descname"><span class="pre">_unpack_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._unpack_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._unpack_value" title="Permalink to this definition"></a></dt>
+<dd><p>Unpack potentionally dangerous values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._pack_value">
+<span class="sig-name descname"><span class="pre">_pack_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._pack_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._pack_value" title="Permalink to this definition"></a></dt>
+<dd><p>Validate the value, if it’s to be.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.get">
 <span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.get" title="Permalink to this definition"></a></dt>
 <dd><p>Return the value of self</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.help">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">help</span></span><a class="headerlink" href="#ase2sprkkr.common.options.Option.help" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.result">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result</span></span><a class="headerlink" href="#ase2sprkkr.common.options.Option.result" title="Permalink to this definition"></a></dt>
+<dd><p>Return the result value.</p>
+<p>In some cases, the value of an option have to be translated for the output.
+E.g. the site can be given as site object, but the integer index is
+required in the output.</p>
+<p>In a such case, this property can be utilized: the value of the option is
+retained as is and the transformed value is stored in the result.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">do_not_check_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.clear" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">do_not_check_required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_hooks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.clear" title="Permalink to this definition"></a></dt>
 <dd><p>Clear the value: set it to None</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.save_to_file">
-<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.save_to_file" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.is_changed">
+<span class="sig-name descname"><span class="pre">is_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.is_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.is_changed" title="Permalink to this definition"></a></dt>
+<dd><p>True, if the value is set and the value differs from the default</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option._save_to_file">
+<span class="sig-name descname"><span class="pre">_save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option._save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option._save_to_file" title="Permalink to this definition"></a></dt>
 <dd><p>Write the name-value pair to the given file, if the value
 is set.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.validate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.name">
@@ -199,8 +309,40 @@ of the object.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.as_dict">
-<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.as_dict" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">only_changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'basic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.as_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>only_changed</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>str</em><em>]</em>) – Return only changed values, or all of them?
+If True, return only the values, that differ from the defaults.
+If False, return all the values.
+The default value ‘basic’ means, return all non-expert values
+and all changed expert values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.value_and_changed">
+<span class="sig-name descname"><span class="pre">value_and_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.value_and_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.value_and_changed" title="Permalink to this definition"></a></dt>
+<dd><p>Return value and whether the value was changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>value</strong> (<em>mixed</em>) – The value of the options (return all values for ‘numbered array’)</p></li>
+<li><p><strong>changed</strong> (<em>bool</em>) – Whether the value is the same as the default value or not</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.options.Option.is_it_the_default_value">
+<span class="sig-name descname"><span class="pre">is_it_the_default_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#Option.is_it_the_default_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.Option.is_it_the_default_value" title="Permalink to this definition"></a></dt>
+<dd><p>Return, whether the given value is the default value. For
+numbered array, only the wildcard value can be set and this value
+have to be the same as the default.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -221,7 +363,7 @@ of the object.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.common.options.CustomOption.html" class="btn btn-neutral float-left" title="CustomOption" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.options.DangerousValue.html" class="btn btn-neutral float-left" title="DangerousValue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.common.process_output_reader.html" class="btn btn-neutral float-right" title="process_output_reader" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

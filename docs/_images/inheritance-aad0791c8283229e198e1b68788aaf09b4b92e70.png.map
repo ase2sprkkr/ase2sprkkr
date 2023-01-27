@@ -1,0 +1,7 @@
+<map id="inheritance2d4c2a3538" name="inheritance2d4c2a3538">
+<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.GrammarType.html#ase2sprkkr.common.grammar_types.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="4,4,181,24"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.TypedGrammarType.html#ase2sprkkr.common.grammar_types.TypedGrammarType" target="_top" title="grammar_types.TypedGrammarType" alt="" coords="204,4,411,24"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.Number.html#ase2sprkkr.common.grammar_types.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="434,4,579,24"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.Unsigned.html#ase2sprkkr.common.grammar_types.Unsigned" target="_top" title="Unsigned integer (zero is possible)" alt="" coords="602,4,755,24"/>
+<area shape="rect" id="node4" href="#ase2sprkkr.common.grammar_types.ObjectNumber" target="_top" title="An abstract class, that describe an unsigned integer, that reffers to an object." alt="" coords="778,4,956,24"/>
+</map>

@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="add_to_signature" href="ase2sprkkr.common.misc.add_to_signature.html" />
+    <link rel="next" title="as_integer" href="ase2sprkkr.common.misc.as_integer.html" />
     <link rel="prev" title="TestCase" href="ase2sprkkr.common.init_tests.TestCase.html" /> 
 </head>
 
@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,23 +59,25 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">misc</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.add_to_signature.html">add_to_signature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.as_integer.html">as_integer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.copy_list.html">copy_list</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.lazy_value.html">lazy_value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.njit.html">njit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.numpy_index.html">numpy_index</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.OrderedDict.html">OrderedDict</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.class_property.html">class_property</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
@@ -125,10 +128,9 @@
 <h1>misc<a class="headerlink" href="#misc" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.misc</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-b4aca3d10cf941c830f4ebf8efbd6b8017a093b2.png" alt="Inheritance diagram of ase2sprkkr.common.misc.OrderedDict, ase2sprkkr.common.misc.class_property" usemap="#inheritance74cebf3910" class="inheritance graphviz" /></div>
-<map id="inheritance74cebf3910" name="inheritance74cebf3910">
-<area shape="rect" id="node1" href="ase2sprkkr.common.misc.OrderedDict.html#ase2sprkkr.common.misc.OrderedDict" target="_top" title="Dictionary that remembers insertion order" alt="" coords="14,79,114,104"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.misc.class_property.html#ase2sprkkr.common.misc.class_property" target="_top" title="Decorator that converts a method with a single cls argument into a property" alt="" coords="5,5,123,31"/>
+<div class="graphviz"><img src="../_images/inheritance-6d308feaae3cf530cc16e99015a2a9633bfd550f.png" alt="Inheritance diagram of ase2sprkkr.common.misc.OrderedDict" usemap="#inheritancec055e12f09" class="inheritance graphviz" /></div>
+<map id="inheritancec055e12f09" name="inheritancec055e12f09">
+<area shape="rect" id="node1" href="ase2sprkkr.common.misc.OrderedDict.html#ase2sprkkr.common.misc.OrderedDict" target="_top" title="Dictionary that remembers insertion order" alt="" coords="5,29,105,55"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -141,19 +143,16 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.add_to_signature.html#ase2sprkkr.common.misc.add_to_signature" title="ase2sprkkr.common.misc.add_to_signature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_to_signature</span></code></a>(func[, prepend, self_name])</p></td>
-<td><p>Add the arguments in the &lt;func&gt; function to the list of arguments of the resulting function (as keyword_only arguments) The modified function has to have its arguments defined as in the following example:</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.as_integer.html#ase2sprkkr.common.misc.as_integer" title="ase2sprkkr.common.misc.as_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_integer</span></code></a>(value)</p></td>
+<td><p>Interpret the value as integer, or raise (even for float, complex etc.) TypeError.i &gt;&gt;&gt; as_integer(4) 4 &gt;&gt;&gt; as_integer(np.int64(4)) 4 &gt;&gt;&gt; as_integer(4.0) Traceback (most recent call last): .</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.copy_list.html#ase2sprkkr.common.misc.copy_list" title="ase2sprkkr.common.misc.copy_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_list</span></code></a>(src)</p></td>
 <td><p>Copy list of objects.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.lazy_value.html#ase2sprkkr.common.misc.lazy_value" title="ase2sprkkr.common.misc.lazy_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lazy_value</span></code></a>(fce)</p></td>
-<td><p>The decorator for only once computed value.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.njit.html#ase2sprkkr.common.misc.njit" title="ase2sprkkr.common.misc.njit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">njit</span></code></a>(fce)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.njit.html#ase2sprkkr.common.misc.njit" title="ase2sprkkr.common.misc.njit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">njit</span></code></a>(fce)</p></td>
 <td><p>Mock the numba JIT compiler, if it is not available</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.numpy_index.html#ase2sprkkr.common.misc.numpy_index" title="ase2sprkkr.common.misc.numpy_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy_index</span></code></a>(array, item)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.numpy_index.html#ase2sprkkr.common.misc.numpy_index" title="ase2sprkkr.common.misc.numpy_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy_index</span></code></a>(array, item)</p></td>
 <td><p>Returns index of the first occurence of the item in the array If numba is installed, the function is accelerated.</p></td>
 </tr>
 </tbody>
@@ -168,9 +167,6 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.OrderedDict.html#ase2sprkkr.common.misc.OrderedDict" title="ase2sprkkr.common.misc.OrderedDict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OrderedDict</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.misc.class_property.html#ase2sprkkr.common.misc.class_property" title="ase2sprkkr.common.misc.class_property"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_property</span></code></a>([method])</p></td>
-<td><p>Decorator that converts a method with a single cls argument into a property that can be accessed directly from the class.</p></td>
-</tr>
 </tbody>
 </table>
 </section>
@@ -180,7 +176,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.common.init_tests.TestCase.html" class="btn btn-neutral float-left" title="TestCase" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.common.misc.add_to_signature.html" class="btn btn-neutral float-right" title="add_to_signature" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.misc.as_integer.html" class="btn btn-neutral float-right" title="as_integer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

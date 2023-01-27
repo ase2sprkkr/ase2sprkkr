@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,9 +59,11 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.BaseSection.html">BaseSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html">ConfigurationContainer</a></li>
@@ -70,6 +73,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
@@ -128,11 +133,11 @@
 <dd><p>Base class for data of configuration/problem-definition files</p>
 <p>In addition to container capabilities, it can read/write its data from/to file.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-5f87cd1214c77b1654304a793a991472ce960558.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.RootConfigurationContainer" usemap="#inheritance557226c616" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-274a61bafeaa85afb4515e255da69c16efcd7ef0.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.RootConfigurationContainer" usemap="#inheritance557226c616" class="inheritance graphviz" /></div>
 <map id="inheritance557226c616" name="inheritance557226c616">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,252,28"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="279,5,590,28"/>
-<area shape="rect" id="node3" href="#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="617,5,955,28"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,202,30"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="231,5,563,30"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="592,5,955,30"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -144,23 +149,14 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.save_to_file">
-<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#RootConfigurationContainer.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.save_to_file" title="Permalink to this definition"></a></dt>
-<dd><p>Save the configuration to a file in a format readable by SPR-KKR i</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em><em> or </em><em>file</em>) – File to read the data from</p></li>
-<li><p><strong>validate</strong> (<em>bool</em>) – Validate the data in the container first and raise an exception,
-if there is an error (e.g. the the data are not complete)</p></li>
-</ul>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.RootConfigurationContainer._save_to_file">
+<span class="sig-name descname"><span class="pre">_save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#RootConfigurationContainer._save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.RootConfigurationContainer._save_to_file" title="Permalink to this definition"></a></dt>
+<dd><p>Implementation of the saving the configuration</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.read_from_file">
-<span class="sig-name descname"><span class="pre">read_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#RootConfigurationContainer.read_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.read_from_file" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">read_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#RootConfigurationContainer.read_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.read_from_file" title="Permalink to this definition"></a></dt>
 <dd><p>Read data from a file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -169,6 +165,7 @@ if there is an error (e.g. the the data are not complete)</p></li>
 <li><p><strong>clear_first</strong> (<em>bool</em>) – Clear the container first.
 Otherwise, the data in the sections that are not present in the
 file are preserved.</p></li>
+<li><p><strong>allow_dangerous</strong> (<em>bool</em>) – Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)</p></li>
 </ul>
 </dd>
 </dl>

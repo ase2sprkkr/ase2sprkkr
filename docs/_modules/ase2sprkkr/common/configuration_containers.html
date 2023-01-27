@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -94,12 +95,12 @@
 <span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">mixed</span>
 <span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">Option</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="kn">from</span> <span class="nn">.base_configuration</span> <span class="kn">import</span> <span class="n">BaseConfiguration</span>
+<span class="kn">from</span> <span class="nn">.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
 
-<div class="viewcode-block" id="ConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationContainer</span><span class="p">(</span><span class="n">BaseConfiguration</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationContainer</span><span class="p">(</span><span class="n">Configuration</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; A container for configuration (problem-definition) options and/or sections.</span>
 
 <span class="sd">  Options in the configuration (problem-definition) files are grouped to</span>
@@ -108,7 +109,7 @@
 
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Create the container and its members, according to the definition &quot;&quot;&quot;</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_members</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
@@ -125,7 +126,7 @@
       <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">definition</span><span class="o">.</span><span class="n">members</span><span class="p">():</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer.members"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.members">[docs]</a>  <span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.members"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.members">[docs]</a>  <span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Members of the container. I.e. the option of the section, or sections</span>
 <span class="sd">      of the configuration file e.t.c.</span>
 
@@ -137,7 +138,7 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer._get_member"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer._get_member">[docs]</a>  <span class="k">def</span> <span class="nf">_get_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._get_member"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._get_member">[docs]</a>  <span class="k">def</span> <span class="nf">_get_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the member of the container of a given name.</span>
 <span class="sd">      It search either the members and interactive_members containers</span>
@@ -181,7 +182,7 @@
       <span class="sd">&quot;&quot;&quot; The check for existence of a member with the given name.&quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Erase all values (or reset to default) from all options in the container</span>
 <span class="sd">      (ad subcontainers)</span>
@@ -197,7 +198,7 @@
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
           <span class="n">i</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">do_not_check_required</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer.get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Get the value, either of self or of a child of a given name.</span>
 
@@ -232,7 +233,7 @@
       <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="ConfigurationContainer.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">Any</span><span class="p">],</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="p">{},</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">Any</span><span class="p">],</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="p">{},</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Set the value(s) of parameter(s). Usage:</span>
 
@@ -283,13 +284,17 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="n">unknown</span><span class="p">)</span>
 
       <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+           <span class="n">items</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Only a dictionary can be assigned to a section.&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
            <span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
           <span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.add">[docs]</a>  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.add">[docs]</a>  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Add custom value to the container</span>
 
@@ -311,7 +316,7 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ConfigurationContainer.remove_member"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.remove_member">[docs]</a>  <span class="k">def</span> <span class="nf">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.remove_member"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.remove_member">[docs]</a>  <span class="k">def</span> <span class="nf">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Remove a (previously added) custom value from the container</span>
 <span class="sd">      &quot;&quot;&quot;</span>
@@ -331,20 +336,28 @@
       <span class="sd">&quot;&quot;&quot; Iterate over all members of the container &quot;&quot;&quot;</span>
       <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the content of the container as a dictionary.</span>
 <span class="sd">      Nested containers will be transformed to dictionaries as well.</span>
 
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      only_changed</span>
+<span class="sd">        Return only changed values, or all of them?</span>
+<span class="sd">        If True, return only the values, that differ from the defaults.</span>
+<span class="sd">        If False, return all the values.</span>
+<span class="sd">        The default value &#39;basic&#39; means, return all non-expert values</span>
+<span class="sd">        and all changed expert values.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="n">out</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-          <span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+          <span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(</span><span class="n">only_changed</span><span class="p">)</span>
           <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
               <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
       <span class="k">return</span> <span class="n">out</span> <span class="ow">or</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer.to_string"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.to_string">[docs]</a>  <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.to_string"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.to_string">[docs]</a>  <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the configuration (problem definition) in a string.</span>
 
@@ -355,10 +368,10 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
       <span class="n">s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Find a value of a given name in self or in any</span>
 <span class="sd">      of owned subcontainers.</span>
@@ -380,7 +393,7 @@
           <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
              <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer._interactive_member_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer._interactive_member_name">[docs]</a>  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ConfigurationContainer._interactive_member_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._interactive_member_name">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_interactive_member_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Create a sanitized name from a member-name.</span>
 
@@ -389,7 +402,7 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-\s.]&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer._add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer._add">[docs]</a>  <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._add">[docs]</a>  <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
       <span class="n">name</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_hidden</span><span class="p">:</span>
@@ -397,30 +410,49 @@
           <span class="k">if</span> <span class="ow">not</span> <span class="n">iname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">:</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">[</span><span class="n">iname</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span></div>
 
-<div class="viewcode-block" id="ConfigurationContainer.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.ConfigurationContainer.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.is_changed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.is_changed">[docs]</a>  <span class="k">def</span> <span class="nf">is_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_changed</span><span class="p">():</span> <span class="k">return</span> <span class="kc">True</span>
+      <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="ConfigurationContainer._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
       <span class="sd">&quot;&quot;&quot; Save the configuration to a file. The method is implemented in the descendants.</span>
 
 <span class="sd">      TODO</span>
 <span class="sd">      ----</span>
 <span class="sd">      The implementations in the descendant could be probably merged.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-
-      <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div></div>
-
-
-<div class="viewcode-block" id="BaseSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_definitions.BaseSection">[docs]</a><span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; A section of SPRKKR configuration - i.e. part of the configuration file. &quot;&quot;&quot;</span>
+      <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">()</span></div>
 
   <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Setting the (unknown) attribute of a section sets the value of the member</span>
 <span class="sd">      with a given name &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_&#39;</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_&#39;</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> \
+          <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span><span class="s1">&#39;__set__&#39;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">val</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BaseSection.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_definitions.BaseSection.has_any_value">[docs]</a>  <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfigurationContainer.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Validate the configuration data. Raise an exception, if the validation fail.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      why</span>
+<span class="sd">        Type of the validation. Possible values</span>
+<span class="sd">        ``save`` - Full validation, during save.</span>
+<span class="sd">        ``set`` - Validation on user input. Allow required values not to be set.</span>
+<span class="sd">        ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+          <span class="n">o</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BaseSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection">[docs]</a><span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A section of SPRKKR configuration - i.e. part of the configuration file. &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseSection.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection.has_any_value">[docs]</a>  <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return True if any member of the section has value.</span>
 
@@ -434,27 +466,50 @@
            <span class="k">return</span> <span class="kc">True</span>
       <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="BaseSection.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_definitions.BaseSection.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseSection.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Validate the configuration data. Raise an exception, if the validation fail.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      why</span>
+<span class="sd">        Type of the validation. Possible values</span>
+<span class="sd">        ``save`` - Full validation, during save.</span>
+<span class="sd">        ``set`` - Validation on user input. Allow required values not to be set.</span>
+<span class="sd">        ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="n">why</span> <span class="o">==</span> <span class="s1">&#39;save&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
+          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-optional section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has no value to save&quot;</span><span class="p">)</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseSection._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection._save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
       <span class="sd">&quot;&quot;&quot; Save the content of the container to the file (according to the definition)</span>
 
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
 <span class="sd">      file: file</span>
 <span class="sd">        File object (open for writing), where the data should be written</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      something_have_been_written</span>
+<span class="sd">        If any value have been written return True, otherwise return False.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
-         <span class="k">if</span> <span class="n">validate</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Non-optional section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has no value to save&quot;</span><span class="p">)</span>
-         <span class="k">return</span>
+      <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
+      <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_expert</span><span class="p">:</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_changed</span><span class="p">():</span>
+              <span class="k">return</span> <span class="kc">False</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
+              <span class="k">return</span> <span class="kc">False</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">:</span>
          <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
          <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-          <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
              <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">delimiter</span><span class="p">)</span>
-      <span class="n">file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div></div>
+      <span class="k">return</span> <span class="kc">True</span></div></div>
 
-<div class="viewcode-block" id="Section"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_definitions.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
+<div class="viewcode-block" id="Section"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; A standard section of a task or potential (whose content is predefinded by SectionDefinition) &quot;&quot;&quot;</span>
 
   <span class="nd">@property</span>
@@ -463,21 +518,21 @@
 
 <span class="sd">      Returns</span>
 <span class="sd">      -------</span>
-<span class="sd">      ase2sprkkr.common.configuration_definitions.BaseContainerDefinition</span>
+<span class="sd">      ase2sprkkr.common.configuration_definitions.ContainerDefinition</span>
 <span class="sd">      The definition of the section. I.e. the object that defines, which configuration values</span>
 <span class="sd">      are in the section, their default values etc.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span></div>
 
 
-<div class="viewcode-block" id="CustomSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_definitions.CustomSection">[docs]</a><span class="k">class</span> <span class="nc">CustomSection</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection">[docs]</a><span class="k">class</span> <span class="nc">CustomSection</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Custom task section. Section created by user with no definition &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CustomSection.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_definitions.CustomSection.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomSection.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Remove the custom section from the parent container &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CustomSection.factory"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_definitions.CustomSection.factory">[docs]</a>  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CustomSection.factory"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection.factory">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">factory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">definition_type</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Create a factory for custom values.</span>
 
@@ -501,38 +556,23 @@
       <span class="k">return</span> <span class="n">create</span></div></div>
 
 
-<div class="viewcode-block" id="RootConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.RootConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">RootConfigurationContainer</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">RootConfigurationContainer</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Base class for data of configuration/problem-definition files</span>
 
 <span class="sd">  In addition to container capabilities, it can read/write its data from/to file.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RootConfigurationContainer.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.RootConfigurationContainer.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot; Save the configuration to a file in a format readable by SPR-KKR i</span>
-
-<span class="sd">      Parameters</span>
-<span class="sd">      ----------</span>
-<span class="sd">      file: str or file</span>
-<span class="sd">        File to read the data from</span>
-
-<span class="sd">      validate: bool</span>
-<span class="sd">        Validate the data in the container first and raise an exception,</span>
-<span class="sd">        if there is an error (e.g. the the data are not complete)</span>
-<span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">):</span>
-         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
-
+<div class="viewcode-block" id="RootConfigurationContainer._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer._save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Implementation of the saving the configuration &quot;&quot;&quot;</span>
       <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
       <span class="n">i</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
-        <span class="n">i</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
           <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">delimiter</span><span class="p">)</span>
-          <span class="n">i</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
-      <span class="n">file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+          <span class="n">i</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RootConfigurationContainer.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.RootConfigurationContainer.read_from_file">[docs]</a>  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">clear_first</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfigurationContainer.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.read_from_file">[docs]</a>  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">clear_first</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Read data from a file</span>
 
 <span class="sd">      Parameters</span>
@@ -540,12 +580,14 @@
 <span class="sd">      file: str or file</span>
 <span class="sd">        File to read the data from</span>
 
-<span class="sd">      clear_first: bool</span>
+<span class="sd">      clear_first</span>
 <span class="sd">        Clear the container first.</span>
 <span class="sd">        Otherwise, the data in the sections that are not present in the</span>
 <span class="sd">        file are preserved.</span>
+<span class="sd">      allow_dangerous</span>
+<span class="sd">        Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+      <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
       <span class="c1">#except Exception as e:</span>
       <span class="c1">#   print(e)</span>
       <span class="c1">#   breakpoint()</span>
@@ -554,7 +596,7 @@
          <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RootConfigurationContainer.find"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_definitions.RootConfigurationContainer.find">[docs]</a>  <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfigurationContainer.find"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer.find">[docs]</a>  <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Find a configuration value of a given name in the owned sections &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_value</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div></div>
 </pre></div>

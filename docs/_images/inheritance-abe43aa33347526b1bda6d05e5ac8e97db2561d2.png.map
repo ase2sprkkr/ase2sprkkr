@@ -1,6 +1,0 @@
-<map id="inheritanced3bf9e61df" name="inheritanced3bf9e61df">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="4,4,230,25"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" target="_top" title="configuration_definitions.BaseValueDefinition" alt="" coords="253,4,507,25"/>
-<area shape="rect" id="node3" href="ase2sprkkr.potentials.potential_definitions.PotValueDefinition.html#ase2sprkkr.potentials.potential_definitions.PotValueDefinition" target="_top" title="Definition of a configuration option in a potential" alt="" coords="531,4,754,25"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.potentials.potential_definitions.Separator" target="_top" title="A special (hidden) value, that appears in a potential header section." alt="" coords="777,4,956,25"/>
-</map>

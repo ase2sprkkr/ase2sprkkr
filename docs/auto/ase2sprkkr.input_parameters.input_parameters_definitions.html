@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
@@ -65,8 +67,8 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">input_parameters_definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html">InputParametersDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html">SectionDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html">ValueDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html">InputSectionDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html">InputValueDefinition</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.test.html">test</a></li>
@@ -112,16 +114,19 @@
 <h1>input_parameters_definitions<a class="headerlink" href="#input-parameters-definitions" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.input_parameters_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-7fcd7f685920add02b134cec820ff24feee9eeb3.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition, ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition, ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition" usemap="#inheritancee3ed5f3ffd" class="inheritance graphviz" /></div>
-<map id="inheritancee3ed5f3ffd" name="inheritancee3ed5f3ffd">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" target="_top" title="Base class for a definition of the format of a container" alt="" coords="152,55,332,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="361,5,527,31"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="387,55,501,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="5,80,123,105"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" target="_top" title="BaseValueDefinition" alt="" coords="165,104,319,129"/>
-<area shape="rect" id="node7" href="ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="585,5,719,31"/>
-<area shape="rect" id="node8" href="ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition" target="_top" title="This class describes the format of one value of" alt="" coords="383,104,505,129"/>
-<area shape="rect" id="node6" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" target="_top" title="This class describes the format of a task file." alt="" coords="556,55,748,80"/>
+<div class="graphviz"><img src="../_images/inheritance-a6fb4f1c6afe202476ee81e312b4e8b837566811.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition, ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition, ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition" usemap="#inheritance728eb39cfa" class="inheritance graphviz" /></div>
+<map id="inheritance728eb39cfa" name="inheritance728eb39cfa">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="5,76,116,100"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="144,52,284,76"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="157,99,272,123"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="549,5,733,29"/>
+<area shape="rect" id="node9" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" target="_top" title="This class describes the format of a task file." alt="" coords="773,5,955,29"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="315,5,507,29"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="347,52,474,76"/>
+<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition" target="_top" title="Default class for definitions of SPRKKR configuration files&#39; sections" alt="" coords="537,52,745,76"/>
+<area shape="rect" id="node10" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="785,52,943,76"/>
+<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="312,99,509,123"/>
+<area shape="rect" id="node11" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition" target="_top" title="This class describes the format of one value of" alt="" coords="568,99,714,123"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -141,10 +146,10 @@ sprkkr.common.configuration_definitions</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputParametersDefinition</span></code></a>(name[, sections, ...])</p></td>
 <td><p>This class describes the format of a task file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.SectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SectionDefinition</span></code></a>(name[, members, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputSectionDefinition</span></code></a>(name[, members, ...])</p></td>
 <td><p>This class describes the format of one value of a task section</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.ValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueDefinition</span></code></a>(name, type[, default_value, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputValueDefinition</span></code></a>(name[, type, ...])</p></td>
 <td><p>This class describes the format of one value of a task configuration</p></td>
 </tr>
 </tbody>

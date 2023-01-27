@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -66,7 +68,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">potential_sections</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.ASEArraySection.html">ASEArraySection</a></li>
@@ -115,15 +116,17 @@
 <h1>potential_sections<a class="headerlink" href="#potential-sections" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.potentials.potential_sections</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-6f665114227514ca8ac1b9c6fc5c86394b0edcc8.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_sections.ASEArraySection, ase2sprkkr.potentials.potential_sections.PotentialSection, ase2sprkkr.potentials.potential_sections.UniqueListSection" usemap="#inheritance87877a6d15" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-678eb4206f160eddf07bd71c0c96aa0a249ee802.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_sections.ASEArraySection, ase2sprkkr.potentials.potential_sections.PotentialSection, ase2sprkkr.potentials.potential_sections.UniqueListSection" usemap="#inheritance87877a6d15" class="inheritance graphviz" /></div>
 <map id="inheritance87877a6d15" name="inheritance87877a6d15">
-<area shape="rect" id="node1" href="ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection" target="_top" title="A section, that get and set the given ASE array (see ASE documentation of the" alt="" coords="772,5,903,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A generic class for a section in a potential" alt="" coords="611,31,739,56"/>
-<area shape="rect" id="node7" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection" target="_top" title="The section, whose data is list of something," alt="" coords="768,55,907,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,31,147,56"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="176,31,348,56"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="377,31,480,56"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="509,31,581,56"/>
+<area shape="rect" id="node1" href="ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection" target="_top" title="A section, that get and set the given ASE array (see ASE documentation of the" alt="" coords="846,4,952,25"/>
+<area shape="rect" id="node2" href="ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A generic class for a section in a potential" alt="" coords="715,25,819,46"/>
+<area shape="rect" id="node9" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection" target="_top" title="The section, whose data is list of something," alt="" coords="843,44,956,65"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="281,4,364,25"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="434,4,493,25"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="117,4,257,25"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="4,4,93,25"/>
+<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="563,25,691,46"/>
+<area shape="rect" id="node8" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="388,44,539,65"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>

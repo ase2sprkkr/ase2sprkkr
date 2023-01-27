@@ -1,0 +1,51 @@
+sprkkr\_grammar\_types
+======================
+
+Full name: **ase2sprkkr.sprkkr.sprkkr\_grammar\_types**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType  ase2sprkkr.sprkkr.sprkkr_grammar_types.Site 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.sprkkr_grammar_types
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomicType
+      Site
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

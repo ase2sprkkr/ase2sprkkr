@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -66,7 +68,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html">io_data</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">ASEArraySectionDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html">PotSectionDefinition</a></li>
@@ -121,13 +122,14 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_definitions.</span></span><span class="sig-name descname"><span class="pre">ASEArraySectionDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mandatory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#ASEArraySectionDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" title="Permalink to this definition"></a></dt>
 <dd><p>A definition of a section, that contains an ASE datas (Atoms.setArray)</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-3aecb150780d91dd266296c712a85d964c90b6b4.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" usemap="#inheritanceeede970c3f" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-308c35326177fdda3d51a702057145b2ee17d79b.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" usemap="#inheritanceeede970c3f" class="inheritance graphviz" /></div>
 <map id="inheritanceeede970c3f" name="inheritanceeede970c3f">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" target="_top" title="Base class for a definition of the format of a container" alt="" coords="178,3,372,17"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="388,3,574,17"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="3,3,162,17"/>
-<area shape="rect" id="node5" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="590,3,754,17"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" target="_top" title="A definition of a section, that contains an ASE datas (Atoms.setArray)" alt="" coords="771,3,957,17"/>
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition" target="_top" title="Default class for definitions of SPRKKR configuration files&#39; sections" alt="" coords="477,3,627,15"/>
+<area shape="rect" id="node6" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="642,3,783,15"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="319,3,463,15"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="3,3,139,15"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="153,3,305,15"/>
+<area shape="rect" id="node5" href="#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" target="_top" title="A definition of a section, that contains an ASE datas (Atoms.setArray)" alt="" coords="797,3,957,15"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -143,7 +145,7 @@
 <dd><p>For the documentation of the other parameters, see
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.potential_definitions.PotSectionDefinition()</span></code>
 and its predecessor
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.common.BaseSectionDefinition()</span></code></p>
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">ase2sprkkr.common.SectionDefinition()</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

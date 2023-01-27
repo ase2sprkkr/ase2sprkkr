@@ -1,0 +1,52 @@
+alternative\_types
+==================
+
+Full name: **ase2sprkkr.common.alternative\_types**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.alternative_types
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      types_alternatives
+      normalize_type_map
+      allowed_types
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      normalize_type
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

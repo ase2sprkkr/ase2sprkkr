@@ -1,9 +1,0 @@
-<map id="inheritance6762424935" name="inheritance6762424935">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="2,2,124,14"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="138,2,291,14"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="304,2,425,14"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="439,2,546,14"/>
-<area shape="rect" id="node7" href="ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A generic class for a section in a potential" alt="" coords="559,2,673,14"/>
-<area shape="rect" id="node5" href="#ase2sprkkr.potentials.definitions.sections.mesh_information.MeshInformationSection" target="_top" title="mesh_information.MeshInformationSection" alt="" coords="819,2,958,14"/>
-<area shape="rect" id="node6" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection" target="_top" title="The section, whose data is list of something," alt="" coords="686,2,806,14"/>
-</map>

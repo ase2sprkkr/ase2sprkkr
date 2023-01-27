@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -92,27 +93,51 @@
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">grammar_types</span> <span class="k">as</span> <span class="n">gt</span>
 <span class="kn">from</span> <span class="nn">..grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 
 <div class="viewcode-block" id="GrammarTest"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest">[docs]</a><span class="k">class</span> <span class="nc">GrammarTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GrammarTest.test_is_the_same_value"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest.test_is_the_same_value">[docs]</a>  <span class="k">def</span> <span class="nf">test_is_the_same_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Real</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Real</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">0.</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="s2">&quot;1111&quot;</span><span class="p">,</span><span class="s2">&quot;1111&quot;</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="s2">&quot;1112&quot;</span><span class="p">,</span><span class="s2">&quot;1111&quot;</span><span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span></div>
+      <span class="c1">#TODO this is not working. However, it should not be needed, so i let it as it for now</span>
+      <span class="c1">#self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,np.array([1,2])]),np.array([1,2,np.array([1,2])])))</span>
+      <span class="c1">#self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,np.array([1,2])]),np.array([1,2,np.array([1,3])])))</span>
+      <span class="c1">#self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,(np.array([1,2]),1)]),np.array([1,2,(np.array([1,2]),1)])))</span>
+      <span class="c1">#self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,(np.array([1,2]),1)]),np.array([1,2,(np.array([1,3]),1)])))</span>
 
 <div class="viewcode-block" id="GrammarTest.test_types"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest.test_types">[docs]</a>  <span class="k">def</span> <span class="nf">test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_test_types</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="GrammarTest._test_types"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest._test_types">[docs]</a>  <span class="k">def</span> <span class="nf">_test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">Error</span> <span class="o">=</span> <span class="s2">&quot;ERROR&quot;</span>
+    <span class="n">Error</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+    <span class="k">class</span> <span class="nc">Invalid</span><span class="p">:</span>
+
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">v</span>
 
     <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
       <span class="c1">#try:</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-          <span class="n">g</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
-          <span class="n">out</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+          <span class="n">out</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
           <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
           <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> should be </span><span class="si">{}</span><span class="s2"> and is </span><span class="si">{}</span><span class="s2"> for type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">pyparsing</span><span class="o">.</span><span class="n">ParseException</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-          <span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">Error</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> should be validated as </span><span class="si">{}</span><span class="s2"> for type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+          <span class="k">assert</span> <span class="n">res</span> <span class="ow">is</span> <span class="n">Error</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> should be validated as </span><span class="si">{}</span><span class="s2"> for type </span><span class="si">{}</span><span class="s2">, an error </span><span class="si">{}</span><span class="s2"> have been given&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+          <span class="n">test_invalid</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
           <span class="k">return</span>
         <span class="k">assert</span> <span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
@@ -124,25 +149,82 @@
       <span class="c1">#    raise</span>
       <span class="c1">#  raise AssertionError(f&quot;Error &#39;{val}&#39; should be validated to &#39;{res}&#39;, {str(e)} occurs&quot;)</span>
 
+    <span class="k">def</span> <span class="nf">test_invalid</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">pass</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_valid</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+      <span class="n">val</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="o">-</span><span class="mi">101</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+    <span class="p">]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;1.1&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;1.1 a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-111&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">111</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;999&#39;</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;1.1 a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;15&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-5&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+        <span class="p">]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Real</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;1.1&#39;</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-1.1&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;1.1 a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
         <span class="p">(</span><span class="s1">&#39;-1e-2&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-2</span><span class="p">)</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Real</span><span class="p">(</span><span class="nb">min</span><span class="o">=-</span><span class="mf">5.</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;10.0001&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-5.1&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-5&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;1.1 a&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;-1e-2&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-2</span><span class="p">)</span>
+        <span class="p">]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">15.</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">String</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -151,6 +233,7 @@
          <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
          <span class="p">]:</span>
          <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">15.</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Energy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -160,7 +243,7 @@
          <span class="p">(</span><span class="s1">&#39;1 eV&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">Rydberg</span><span class="p">),</span>
          <span class="p">]:</span>
          <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
-
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -171,6 +254,8 @@
         <span class="p">(</span><span class="s1">&#39;{1,a}&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">)</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;asasd&#39;</span> <span class="p">]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="p">]:</span> <span class="n">test_valid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -181,6 +266,8 @@
         <span class="p">(</span><span class="s1">&#39;{1,a}&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">)</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;asasd&#39;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> <span class="p">]:</span> <span class="n">test_valid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Sequence</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -242,6 +329,7 @@
         <span class="p">(</span><span class="s1">&#39;{1.,2.,3.}&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">]))</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;asdasdsad&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">3.</span><span class="p">],</span> <span class="mf">8.</span> <span class="p">]:</span> <span class="n">test_valid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">YY</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">ZZZ</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">numbering</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;&gt;20&#39;</span><span class="p">,</span> <span class="n">numbering_format</span><span class="o">=</span><span class="s1">&#39;&lt;4&#39;</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot; X YY ZZZ</span>
@@ -258,6 +346,16 @@
          <span class="p">(</span><span class="s1">&#39;40&#39;</span><span class="p">,</span> <span class="mf">40.</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;{40,50,60}&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;</span><span class="si">{40}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+         <span class="p">]:</span>
+         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;asasd&#39;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">3.</span><span class="p">],</span> <span class="mf">8.</span> <span class="p">]:</span> <span class="n">test_valid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Date</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
+         <span class="p">(</span><span class="s1">&#39;{40,50}&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;23.01.2020&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">23</span><span class="p">)</span> <span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;40&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
          <span class="p">]:</span>
          <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span></div></div>
 </pre></div>

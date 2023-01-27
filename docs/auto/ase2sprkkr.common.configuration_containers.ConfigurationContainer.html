@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,9 +59,11 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.BaseSection.html">BaseSection</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">ConfigurationContainer</a></li>
@@ -70,6 +73,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
@@ -130,10 +135,10 @@
 sections, sections are then grouped in a configuration file object.
 This is a base class for these containers.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-a4a72252519836cb96822c68e9957b326cc47a41.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.ConfigurationContainer" usemap="#inheritance8e42dd6b20" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-4c1d7e275d98c26287c5984f3ffb0ed63db062a4.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.ConfigurationContainer" usemap="#inheritance8e42dd6b20" class="inheritance graphviz" /></div>
 <map id="inheritance8e42dd6b20" name="inheritance8e42dd6b20">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,273,31"/>
-<area shape="rect" id="node2" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="303,5,639,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="233,5,569,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -275,14 +280,23 @@ Keyword only argument.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.as_dict">
-<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.as_dict" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">only_changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'basic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.as_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Return the content of the container as a dictionary.
 Nested containers will be transformed to dictionaries as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>only_changed</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>str</em><em>]</em>) – Return only changed values, or all of them?
+If True, return only the values, that differ from the defaults.
+If False, return all the values.
+The default value ‘basic’ means, return all non-expert values
+and all changed expert values.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.to_string">
-<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.to_string" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Return the configuration (problem definition) in a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -331,9 +345,33 @@ the members are accesible by <code class="docutils literal notranslate"><span cl
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file">
-<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.is_changed">
+<span class="sig-name descname"><span class="pre">is_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.is_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.is_changed" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer._save_to_file">
+<span class="sig-name descname"><span class="pre">_save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer._save_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer._save_to_file" title="Permalink to this definition"></a></dt>
 <dd><p>Save the configuration to a file. The method is implemented in the descendants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_containers.ConfigurationContainer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">why</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'save'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_containers.html#ConfigurationContainer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_containers.ConfigurationContainer.validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate the configuration data. Raise an exception, if the validation fail.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>why</strong> (<em>str</em>) – Type of the validation. Possible values
+<code class="docutils literal notranslate"><span class="pre">save</span></code> - Full validation, during save.
+<code class="docutils literal notranslate"><span class="pre">set</span></code> - Validation on user input. Allow required values not to be set.
+<code class="docutils literal notranslate"><span class="pre">parse</span></code> - Validation during parsing - some check, that are enforced by the parser, can be skipped.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

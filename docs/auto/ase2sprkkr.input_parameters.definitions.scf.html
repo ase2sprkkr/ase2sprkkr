@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
@@ -116,6 +118,116 @@
 <p>Full name: <strong>ase2sprkkr.input_parameters.definitions.scf</strong></p>
 <p class="rubric">Description</p>
 <span class="target" id="module-ase2sprkkr.input_parameters.definitions.scf"></span><p>SCF task input parameters definition</p>
+<p><strong>Description of the sections and parameters</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SCF - calculate a self-consistent potential
+
+INPUT PARAMETERS scf contains:
+------------------------------
+    SECTION CONTROL contains:
+    -------------------------
+        DATASET : String ≝ case           The custom field for the description of the problem.
+        ADSI : FixedValue(SCF) ≝ SCF      Type of the computation.
+        POTFIL : String                   The potential file (see SPRKKR documentation for its format). It isn&#39;t necessary to set it, it will be set by the calculator.
+        KRWS : Integer ≝ 1
+        PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
+        NONMAG : Flag ≝ False             Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
+
+    SECTION TAU contains:
+    ---------------------
+        BZINT : AnyOf(POINTS,WEYL) ≝ POINTS
+
+            Possible values:
+              POINTS    special points method
+              WEYL      Weyl method
+
+
+            The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-
+            dom points. The number of k-points used for the integration varies quadratically be-
+            tween 0.0 and ImE according to the imaginary part of the energy.
+
+            The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB
+            points. It is the standard method and gives a good compromise concerning accuracy
+            and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a
+            regular mesh.
+
+
+        NKTAB : Integer ≝ 250             Number of points for the special points method
+        NKMIN : Integer ≝ 300             Minimal number of k-points used for Weyl integration
+        NKMAX : Integer ≝ 500             Maximal number of k-points used for Weyl integration
+
+        Expert options:
+        --------------
+            CLUSTER : Flag ≝ False  (optional)  Do cluster type calculation.
+            NSHLCLU : Integer  (optional)  Number of atomic shells around the central atom of a cluster
+            CLURAD : Integer  (optional)  Radius of the cluster in multiples of ALAT.
+            IQCNTR : Site  (optional)     The center of the cluster is set at the site position with number IQCNTR of the specified basis.
+            ITCNTR : AtomicType  (optional)  The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.
+            NLOUT : Integer ≝ 3  (optional)  The calculated τ -matrix is printed up to lmax=NLOUT.
+            MOL : Flag ≝ False  (optional)  Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.
+
+    SECTION ENERGY contains:
+    ------------------------
+        GRID : Array(of Integer) ≝ [5]
+        NE : Array(of Integer) ≝ [32]     Number of points in energy-mesh
+        ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.0  (optional)
+        EMIN : Real ≝ -0.2                The real part of the lowest E-value
+
+    SECTION SCF contains:
+    ---------------------
+        NITER : Integer ≝ 200             Maximal number of iterations of the SCF cycle
+        MIX : Real ≝ 0.2                  Mixing parameter
+        VXC : AnyOf(VWN,MJW,VBH,PBE) ≝ VWN
+
+            Possible values:
+              VWN       Vosko, Wilk, Nusair
+              MJW       Janak, Williams, Moruzzigit g
+              VBH       von Barth, Hedin
+              PBE       Perdew, Burke, Ernzendorfer GGA
+
+        ALG : AnyOf(BROYDEN2,TCHEBY) ≝ BROYDEN2
+
+            Possible values:
+              BROYDEN2  Broyden’s second method
+              TCHEBY    Tchebychev
+
+        EFGUESS : Real ≝ 0.7
+        TOL : Real ≝ 1e-05                Tolerance threshold for the mixing algorithm
+        ISTBRY : Integer ≝ 1              Start Broyden after ISTBRY iterations
+        ITDEPT : Integer ≝ 40             Iteration depth for Broyden algorithm (length of used history)
+        QION : Array(of Real)  (optional)  Guess for the ionic charges Qt for atomic types
+        MSPIN : Array(of Real)  (optional)  Guess for the magnetic moment μ_{spin,t} for atomic types
+        USEVMATT : Flag ≝ False           Set up the starting potential using the original Mattheissconstruction for the potential V instead of the charge density
+
+    SECTION SITES contains:
+    -----------------------
+        NL : Array(of Integer) ≝ [3]      Angula momentum cutoff (the first discarded l-space)
+
+    SECTION TASK contains:
+    ----------------------
+        TASK : FixedValue(SCF) ≝ SCF
+
+
+    Expert options:
+    --------------
+        SECTION STRCONST (optional, expert) contains:
+        ---------------------------------------------
+            ETA : Real  (optional)        Ewald parameter
+            RMAX : Real  (optional)       Convergency radius in real space
+            GMAX : Real  (optional)       Convergency radius in reciprocal space
+
+        SECTION CPA (optional, expert) contains:
+        ----------------------------------------
+            NITER : Integer ≝ 20          Maximum number of CPA iterations
+            TOL : Real ≝ 0.0001           Threshold for stopping CPA-cycle
+
+        SECTION MODE (optional, expert) contains:
+        -----------------------------------------
+            SP-SREL : Flag ≝ False        work in the spin-polarized scalar-relativistic mode
+            MDIR : Array(of Integer) ≝ [0 0 1]  (array)  Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.
+            C : Real ≝ 1.0  (array)       Scale the speed of light for a given atom type.
+            SOC : Real ≝ 1.0  (array)     Scale the strength of the spin-orbit coupling for atom type.
+</pre></div>
+</div>
 <p class="rubric">Module Attributes</p>
 <table class="autosummary longtable docutils align-default">
 <colgroup>

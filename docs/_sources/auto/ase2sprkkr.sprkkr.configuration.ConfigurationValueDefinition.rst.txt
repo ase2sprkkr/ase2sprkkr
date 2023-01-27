@@ -1,0 +1,36 @@
+ConfigurationValueDefinition
+============================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.configuration
+
+.. autoclass:: ConfigurationValueDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

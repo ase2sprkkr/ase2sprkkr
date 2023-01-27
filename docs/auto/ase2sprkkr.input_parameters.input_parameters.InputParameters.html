@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
@@ -119,12 +121,14 @@ for the task. Moreover, according to its definition, it can run the task -
 execute the executable with proper parameters - and instantiate the result class,
 which then parse the output of the task.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-f02ada773fbf82dbd1b3ffed7fcd805076e90de6.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters.InputParameters" usemap="#inheritancedb8879ab1c" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-9ae20bd8bce99fb093980cf5b2e554fbd286167c.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters.InputParameters" usemap="#inheritancedb8879ab1c" class="inheritance graphviz" /></div>
 <map id="inheritancedb8879ab1c" name="inheritancedb8879ab1c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="4,4,199,22"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="221,4,465,22"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="487,4,754,22"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters" target="_top" title="It holds the configuration values for a SPR&#45;KKR task and run the task" alt="" coords="775,4,956,22"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="3,3,131,20"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="149,3,365,20"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="637,20,779,36"/>
+<area shape="rect" id="node6" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters" target="_top" title="It holds the configuration values for a SPR&#45;KKR task and run the task" alt="" coords="798,20,957,36"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="383,3,618,20"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="413,35,589,51"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -240,9 +244,19 @@ parsed output of the runned task.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.result_reader">
-<span class="sig-name descname"><span class="pre">result_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.result_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.result_reader" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">result_reader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calculator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.result_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.result_reader" title="Permalink to this definition"></a></dt>
 <dd><p>Return the result readed: the class that parse the output
 of the runned task</p>
+<dl class="simple">
+<dt>calculator</dt><dd><p>Calculator, which will be attached to the resulting class
+for ruther processing the results</p>
+</dd>
+<dt>directory</dt><dd><p>Directory, to which will be related the relative paths
+in the result.
+If none, get the directory from the calculator, or the current
+directory</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -250,6 +264,13 @@ of the runned task</p>
 <span class="sig-name descname"><span class="pre">read_output_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.read_output_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.read_output_from_file" title="Permalink to this definition"></a></dt>
 <dd><p>Read output of a previously runned task from a file and parse it in a same
 way, as the process would be runned again.</p>
+<dl class="simple">
+<dt>filename</dt><dd><p>Filename, from which the result will be read</p>
+</dd>
+<dt>directory</dt><dd><p>A directory, to which are related the paths in the output
+Default None means the directory, where the file is</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -267,9 +288,9 @@ way, as the process would be runned again.</p>
 <span class="sig-name descname"><span class="pre">set_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.set_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.set_option" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.definitions">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">definitions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.definitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.definitions" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">definitions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ARPES':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'DOS':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'PHAGEN':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'SCF':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.definitions" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -321,11 +342,15 @@ which the default parameters are used</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.from_file">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.from_file" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.from_file" title="Permalink to this definition"></a></dt>
 <dd><p>Read an input file and create a new InputParameters object from the readed stuff</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em><em> or </em><em>file</em>) – Input file (either its filename, or an open file)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>file</em>) – Input file (either its filename, or an open file)</p></li>
+<li><p><strong>allow_dangerous</strong> (<em>bool</em>) – Allow to read dangerous values of options: i.e. the values that do not fullfil the
+required type of the given option or its other requirements.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

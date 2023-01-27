@@ -1,0 +1,5 @@
+<map id="inheritancedc905fd0b4" name="inheritancedc905fd0b4">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="5,5,267,29"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="295,5,586,29"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="613,5,955,29"/>
+</map>

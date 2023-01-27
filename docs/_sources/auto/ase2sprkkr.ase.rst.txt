@@ -1,0 +1,43 @@
+ase
+===
+
+Full name: **ase2sprkkr.ase**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.ase.visualise
+  
+  

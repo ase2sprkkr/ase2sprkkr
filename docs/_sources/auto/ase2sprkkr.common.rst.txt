@@ -38,9 +38,12 @@ Full name: **ase2sprkkr.common**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.common.base_configuration
+     ase2sprkkr.common.alternative_types
+     ase2sprkkr.common.configuration
      ase2sprkkr.common.configuration_containers
      ase2sprkkr.common.configuration_definitions
+     ase2sprkkr.common.decorators
+     ase2sprkkr.common.doc
      ase2sprkkr.common.formats
      ase2sprkkr.common.grammar
      ase2sprkkr.common.grammar_types

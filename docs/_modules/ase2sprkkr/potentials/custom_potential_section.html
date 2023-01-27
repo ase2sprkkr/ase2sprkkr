@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -87,24 +88,25 @@
 <span class="sd">I.e. these sections can has any content (they are readed up to the section separator).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
-<span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">BaseType</span>
-<span class="kn">from</span> <span class="nn">..common.options</span> <span class="kn">import</span> <span class="n">CustomOption</span>
-<span class="kn">from</span> <span class="nn">..common.configuration_definitions</span> <span class="kn">import</span> <span class="n">BaseValueDefinition</span>
-<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">class_property</span><span class="p">,</span> <span class="n">cache</span>
-<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">GrammarType</span>
+<span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationValueDefinition</span><span class="p">,</span> <span class="n">CustomConfigurationValue</span>
 <span class="kn">from</span> <span class="nn">..common.grammar</span> <span class="kn">import</span> <span class="n">separator</span><span class="p">,</span> <span class="n">line_end</span>
-<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">lazy_value</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">pyparsing</span>
+<span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span><span class="p">,</span> <span class="n">class_property</span><span class="p">,</span> <span class="n">cache</span>
 
-<div class="viewcode-block" id="CustomPotentialSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">CustomPotentialSectionDefinition</span><span class="p">(</span><span class="n">BaseValueDefinition</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; There is no grammar in a custom potential section -</span>
-<span class="sd">  custom sections are readed by Potential class</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+
+<div class="viewcode-block" id="CustomPotentialSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">CustomPotentialSectionDefinition</span><span class="p">(</span><span class="n">ConfigurationValueDefinition</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; The custom sections are in fact values - their content can be</span>
+<span class="sd">  readed or writed as one value (in the most cases string).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+
   <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">False</span>
   <span class="sd">&quot;&quot;&quot; Obviously, the custom sections are not required &quot;&quot;&quot;</span>
+
   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+
   <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
   <span class="sd">&quot;&quot;&quot; The content of the section is delimited from the name by a newline &quot;&quot;&quot;</span></div>
 
@@ -112,7 +114,7 @@
    <span class="sd">&quot;&quot;&quot; The grammar for a custom section - i.e. for unknown section, whose</span>
 <span class="sd">   content is let as is.</span>
 
-<span class="sd">   The grammar just reads all up to the section separator.</span>
+<span class="sd">   The grammar just reads all  up to the section separator.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
 
    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">separator</span><span class="o">.</span><span class="n">pattern</span> <span class="o">+</span> <span class="s1">&#39;[ </span><span class="se">\r\t</span><span class="s1">]*</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>  <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
@@ -128,7 +130,7 @@
           <span class="n">loc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">instr</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseResults</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div></div>
 
-<div class="viewcode-block" id="SectionString"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString">[docs]</a><span class="k">class</span> <span class="nc">SectionString</span><span class="p">(</span><span class="n">BaseType</span><span class="p">):</span>
+<div class="viewcode-block" id="SectionString"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString">[docs]</a><span class="k">class</span> <span class="nc">SectionString</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      The grammar_type of a custom section - i.e. string, that</span>
 <span class="sd">      ends with a section separator.</span>
@@ -138,14 +140,12 @@
 
       <span class="n">delimiter_pattern</span> <span class="o">=</span> <span class="s1">&#39;(?:[ </span><span class="se">\t\r</span><span class="s1">]*(?:</span><span class="se">\n</span><span class="s1">[ </span><span class="se">\t\r</span><span class="s1">]*)*)*</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span><span class="n">separator</span><span class="o">.</span><span class="n">pattern</span> <span class="o">+</span> <span class="s1">&#39;(?:[ </span><span class="se">\t\r</span><span class="s1">]*(?:</span><span class="se">\n</span><span class="s1">[ </span><span class="se">\t\r</span><span class="s1">]*))*</span><span class="se">\n</span><span class="s1">&#39;</span>
 
-<div class="viewcode-block" id="SectionString.grammar_of_delimiter"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString.grammar_of_delimiter">[docs]</a>      <span class="nd">@staticmethod</span>
-      <span class="nd">@lazy_value</span>
+      <span class="nd">@cached_class_property</span>
       <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
-          <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="n">SectionString</span><span class="o">.</span><span class="n">delimiter_pattern</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">79</span> <span class="o">+</span> <span class="s1">&#39;&lt;newline&gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span></div>
+          <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="n">SectionString</span><span class="o">.</span><span class="n">delimiter_pattern</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">79</span> <span class="o">+</span> <span class="s1">&#39;&lt;newline&gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SectionString._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString._grammar">[docs]</a>      <span class="nd">@class_property</span>
-      <span class="nd">@cache</span>
-      <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="SectionString._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString._grammar">[docs]</a>      <span class="nd">@cached_class_property</span>
+      <span class="k">def</span> <span class="nf">_grammar</span><span class="p">():</span>
           <span class="k">return</span> <span class="n">CustomSectionToken</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SectionString.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString.grammar_name">[docs]</a>      <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -157,7 +157,7 @@
 
 <span class="n">SectionString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">SectionString</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CustomPotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection">[docs]</a><span class="k">class</span> <span class="nc">CustomPotentialSection</span><span class="p">(</span><span class="n">CustomOption</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomPotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection">[docs]</a><span class="k">class</span> <span class="nc">CustomPotentialSection</span><span class="p">(</span><span class="n">CustomConfigurationValue</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Unknown sections of the potential file are mapped to a &quot;section&quot;</span>
 <span class="sd">      of this type.</span>

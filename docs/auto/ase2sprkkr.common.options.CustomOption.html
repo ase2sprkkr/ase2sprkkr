@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Option" href="ase2sprkkr.common.options.Option.html" />
+    <link rel="next" title="DangerousValue" href="ase2sprkkr.common.options.DangerousValue.html" />
     <link rel="prev" title="options" href="ase2sprkkr.common.options.html" /> 
 </head>
 
@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,11 +59,15 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
@@ -71,6 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.options.html">options</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">CustomOption</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.DangerousValue.html">DangerousValue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.options.Option.html">Option</a></li>
 </ul>
 </li>
@@ -124,11 +130,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.options.</span></span><span class="sig-name descname"><span class="pre">CustomOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/options.html#CustomOption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.options.CustomOption" title="Permalink to this definition"></a></dt>
 <dd><p>An user-added option (configuration value). It can be removed from the section.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-4c13b30fdc4141580c6f0406548ee58bd4727f5f.png" alt="Inheritance diagram of ase2sprkkr.common.options.CustomOption" usemap="#inheritance1cec03460c" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-21423dfeb83ac22ba71535717ec8785869cc4bd2.png" alt="Inheritance diagram of ase2sprkkr.common.options.CustomOption" usemap="#inheritance1cec03460c" class="inheritance graphviz" /></div>
 <map id="inheritance1cec03460c" name="inheritance1cec03460c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,273,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="options.Option" alt="" coords="303,5,420,31"/>
-<area shape="rect" id="node2" href="#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="449,5,616,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="233,5,351,31"/>
+<area shape="rect" id="node2" href="#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="380,5,547,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -165,7 +171,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.common.options.html" class="btn btn-neutral float-left" title="options" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.common.options.Option.html" class="btn btn-neutral float-right" title="Option" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.options.DangerousValue.html" class="btn btn-neutral float-right" title="DangerousValue" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

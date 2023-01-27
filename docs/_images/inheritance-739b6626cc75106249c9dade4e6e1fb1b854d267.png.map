@@ -1,7 +1,0 @@
-<map id="inheritance8a53d0bb75" name="inheritance8a53d0bb75">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" target="_top" title="Base class for a definition of the format of a container" alt="" coords="152,29,332,55"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="361,5,527,31"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="387,55,501,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="5,55,123,80"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html#ase2sprkkr.common.configuration_definitions.BaseValueDefinition" target="_top" title="BaseValueDefinition" alt="" coords="165,79,319,104"/>
-</map>

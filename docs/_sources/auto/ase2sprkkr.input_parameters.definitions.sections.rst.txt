@@ -20,7 +20,10 @@ Full name: **ase2sprkkr.input\_parameters.definitions.sections**
       TAU
       ENERGY
       SCF
+      STRCONST
       SITES
+      CPA
+      MODE
    
    
 

@@ -1,0 +1,36 @@
+ConfigurationSectionTrait
+=========================
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.configuration
+
+.. autoclass:: ConfigurationSectionTrait
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -38,6 +38,7 @@ Full name: **ase2sprkkr**
      :template: custom-module-template.rst
      :recursive:
   
+     ase2sprkkr.ase
      ase2sprkkr.bindings
      ase2sprkkr.common
      ase2sprkkr.input_parameters

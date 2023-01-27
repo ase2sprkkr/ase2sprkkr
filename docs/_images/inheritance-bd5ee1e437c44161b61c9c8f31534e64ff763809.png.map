@@ -1,0 +1,5 @@
+<map id="inheritancef2e98d7ec6" name="inheritancef2e98d7ec6">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.io_data.BaseIoData.html#ase2sprkkr.sprkkr.io_data.BaseIoData" target="_top" title="Base class for object used during reading/writing." alt="" coords="5,31,103,56"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData" target="_top" title="Object to store data during reading of a potential file." alt="" coords="133,5,231,31"/>
+<area shape="rect" id="node3" href="ase2sprkkr.sprkkr.io_data.WriteIoData.html#ase2sprkkr.sprkkr.io_data.WriteIoData" target="_top" title="During writing of potential file, some lists are needed in more sections," alt="" coords="132,55,232,80"/>
+</map>

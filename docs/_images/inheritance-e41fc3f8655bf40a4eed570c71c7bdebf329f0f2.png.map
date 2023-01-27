@@ -1,7 +1,0 @@
-<map id="inheritance263752d937" name="inheritance263752d937">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" target="_top" title="Base class for a definition of the format of a container" alt="" coords="190,3,397,18"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html#ase2sprkkr.common.configuration_definitions.BaseSectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="415,3,613,18"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="3,3,172,18"/>
-<area shape="rect" id="node5" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="630,3,805,18"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.potentials.definitions.sections.lattice.LatticeSectionDefinition" target="_top" title="lattice.LatticeSectionDefinition" alt="" coords="823,3,957,18"/>
-</map>

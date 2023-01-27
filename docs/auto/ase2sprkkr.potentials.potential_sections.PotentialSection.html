@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,6 +59,7 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -66,7 +68,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.ASEArraySection.html">ASEArraySection</a></li>
@@ -119,13 +120,15 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_sections.</span></span><span class="sig-name descname"><span class="pre">PotentialSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_sections.html#PotentialSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" title="Permalink to this definition"></a></dt>
 <dd><p>A generic class for a section in a potential</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-b63b751802bb237c5d351c044943cadc328f8d69.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_sections.PotentialSection" usemap="#inheritance1ae9150b2e" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-c5ecfea2ed07160943f79cb06e6c46ed6e0ade5a.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_sections.PotentialSection" usemap="#inheritance1ae9150b2e" class="inheritance graphviz" /></div>
 <map id="inheritance1ae9150b2e" name="inheritance1ae9150b2e">
-<area shape="rect" id="node1" href="ase2sprkkr.common.base_configuration.BaseConfiguration.html#ase2sprkkr.common.base_configuration.BaseConfiguration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="3,3,177,20"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="196,3,413,20"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="432,3,605,20"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="624,3,775,20"/>
-<area shape="rect" id="node5" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A generic class for a section in a potential" alt="" coords="794,3,957,20"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="3,3,113,17"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="129,3,316,17"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="665,17,802,31"/>
+<area shape="rect" id="node7" href="#ase2sprkkr.potentials.potential_sections.PotentialSection" target="_top" title="A generic class for a section in a potential" alt="" coords="818,17,957,31"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="507,3,638,17"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="496,30,649,44"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="332,3,480,17"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -144,7 +147,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>atoms</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><em>SPRKKRAtoms</em></a>) – Atoms that will be used to create</p></li>
-<li><p><strong>write_io_data</strong> (<a class="reference internal" href="ase2sprkkr.potentials.io_data.WriteIoData.html#ase2sprkkr.potentials.io_data.WriteIoData" title="ase2sprkkr.potentials.io_data.WriteIoData"><em>WriteIoData</em></a>) – Object for storing values generated by one section to be (reused in another) - e.g. scaling constants or numbering of meshes etc…</p></li>
+<li><p><strong>write_io_data</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.io_data.WriteIoData.html#ase2sprkkr.sprkkr.io_data.WriteIoData" title="ase2sprkkr.sprkkr.io_data.WriteIoData"><em>WriteIoData</em></a>) – Object for storing values generated by one section to be (reused in another) - e.g. scaling constants or numbering of meshes etc…</p></li>
 </ul>
 </dd>
 </dl>
@@ -158,7 +161,7 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>atoms</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><em>SPRKKRAtoms</em></a>) – Atoms, whose properties should be set to the values from readed file. Can be None in some sections, then the object will be created</p></li>
-<li><p><strong>read_io_data</strong> (<a class="reference internal" href="ase2sprkkr.potentials.io_data.ReadIoData.html#ase2sprkkr.potentials.io_data.ReadIoData" title="ase2sprkkr.potentials.io_data.ReadIoData"><em>ReadIoData</em></a>) – Object for storing values from one section to be used in another one. This mechanism is used to be the sections as independent (and independently testable) as they can be.</p></li>
+<li><p><strong>read_io_data</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.io_data.ReadIoData.html#ase2sprkkr.sprkkr.io_data.ReadIoData" title="ase2sprkkr.sprkkr.io_data.ReadIoData"><em>ReadIoData</em></a>) – Object for storing values from one section to be used in another one. This mechanism is used to be the sections as independent (and independently testable) as they can be.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

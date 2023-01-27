@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -84,10 +85,10 @@
   <h1>Source code for ase2sprkkr.sprkkr.atomic_types</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Atomic could be placed at the atomic site. &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
-<div class="viewcode-block" id="AtomicType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.potentials.definitions.sections.types.AtomicType">[docs]</a><span class="k">class</span> <span class="nc">AtomicType</span><span class="p">:</span>
+<div class="viewcode-block" id="AtomicType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType">[docs]</a><span class="k">class</span> <span class="nc">AtomicType</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Atomic type represent a type of atom, that could be placed at the atomic site.</span>
 
 <span class="sd">    It can be either a real chemical element, or vacuum pseudoelement.</span>
@@ -108,7 +109,7 @@
           <span class="n">AtomicType</span><span class="o">.</span><span class="n">_mendeleev_module</span> <span class="o">=</span> <span class="n">mendeleev</span>
         <span class="k">return</span> <span class="n">AtomicType</span><span class="o">.</span><span class="n">_mendeleev_module</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AtomicType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.potentials.definitions.sections.types.AtomicType.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">atomic_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_core</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_semicore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_electrons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">atomic_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_core</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_semicore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_electrons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -162,7 +163,7 @@
           <span class="bp">self</span><span class="o">.</span><span class="n">n_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_electrons</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_valence</span> <span class="k">if</span> <span class="n">n_core</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n_core</span><span class="p">;</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">n_semicore</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_electrons</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_core</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_valence</span>  <span class="k">if</span> <span class="n">n_semicore</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n_semicore</span></div>
 
-<div class="viewcode-block" id="AtomicType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.potentials.definitions.sections.types.AtomicType.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -171,16 +172,16 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AtomicType.to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.potentials.definitions.sections.types.AtomicType.to_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.to_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_electrons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_core</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_valence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_semicore</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomicType.to_atomic_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.potentials.definitions.sections.types.AtomicType.to_atomic_type">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="AtomicType.to_atomic_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.to_atomic_type">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">to_atomic_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
            <span class="k">return</span> <span class="n">value</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomicType.is_vacuum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.potentials.definitions.sections.types.AtomicType.is_vacuum">[docs]</a>    <span class="k">def</span> <span class="nf">is_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.is_vacuum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.is_vacuum">[docs]</a>    <span class="k">def</span> <span class="nf">is_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span> <span class="o">==</span> <span class="mi">0</span></div></div>
 </pre></div>
 

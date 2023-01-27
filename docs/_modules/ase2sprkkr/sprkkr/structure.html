@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -121,7 +122,11 @@
 <span class="sd">        :from a in_structure.inp file &quot;&quot;&quot;</span>
         <span class="n">atom</span> <span class="o">=</span> <span class="n">AtomData</span><span class="p">()</span>
         <span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">type_id</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">2</span><span class="p">])</span>
-        <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[:]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">floatjm</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">floatjm</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="c1">#Beware! The indices are in the order Z,X,Y</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">atom</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -159,7 +164,7 @@
 
 <div class="viewcode-block" id="structure_file_to_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.structure.structure_file_to_atoms.html#ase2sprkkr.sprkkr.structure.structure_file_to_atoms">[docs]</a><span class="k">def</span> <span class="nf">structure_file_to_atoms</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span><span class="n">Potential</span><span class="p">,</span> <span class="n">n_bulk</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">vacuum_height</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">  Read in_structure.inp file (that contains informations about the structure of a surface) </span>
+<span class="sd">  Read in_structure.inp file (that contains informations about the structure of a surface)</span>
 <span class="sd">  and create the ASE atoms object according to the readed data.</span>
 
 <span class="sd">  Parameters</span>
@@ -195,8 +200,9 @@
       <span class="n">layer</span><span class="o">=</span><span class="n">LayerData</span><span class="p">()</span>
       <span class="n">layer</span><span class="o">.</span><span class="n">nat</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">])</span>
       <span class="n">layer</span><span class="o">.</span><span class="n">id</span><span class="o">=</span><span class="n">ilayer</span><span class="o">+</span><span class="mi">1</span>
+      <span class="n">line</span><span class="o">+=</span><span class="mi">1</span>
       <span class="k">for</span> <span class="n">iat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layer</span><span class="o">.</span><span class="n">nat</span><span class="p">):</span>
-          <span class="n">line</span><span class="o">+=</span><span class="mi">3</span>
+          <span class="n">line</span><span class="o">+=</span><span class="mi">2</span>
           <span class="n">atom</span><span class="o">=</span><span class="n">AtomData</span><span class="o">.</span><span class="n">from_text</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="n">line</span><span class="p">])</span>
           <span class="n">layer</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
       <span class="n">layers</span><span class="p">[</span><span class="n">ilayer</span><span class="p">]</span><span class="o">=</span><span class="n">layer</span>

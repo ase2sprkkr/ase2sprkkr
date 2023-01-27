@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.misc**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.misc.OrderedDict  ase2sprkkr.common.misc.class_property 
+.. inheritance-diagram::  ase2sprkkr.common.misc.OrderedDict 
       :parts: 1
 
 |
@@ -30,9 +30,8 @@ Full name: **ase2sprkkr.common.misc**
       :toctree:
       :template: custom-base-template.rst
    
-      add_to_signature
+      as_integer
       copy_list
-      lazy_value
       njit
       numpy_index
    
@@ -48,7 +47,6 @@ Full name: **ase2sprkkr.common.misc**
       :template: custom-class-template.rst
    
       OrderedDict
-      class_property
    
    
 

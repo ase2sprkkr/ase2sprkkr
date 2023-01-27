@@ -1,6 +1,0 @@
-<map id="inheritance40c7756f4a" name="inheritance40c7756f4a">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html#ase2sprkkr.common.configuration_definitions.BaseContainerDefinition" target="_top" title="Base class for a definition of the format of a container" alt="" coords="218,4,456,21"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ConfDefinition.html#ase2sprkkr.common.configuration_definitions.ConfDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="476,4,669,21"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="4,4,198,21"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" target="_top" title="This class describes the format of a task file." alt="" coords="689,4,956,21"/>
-</map>

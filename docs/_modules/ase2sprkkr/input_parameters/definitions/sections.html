@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -85,10 +86,12 @@
 <span></span><span class="sd">&quot;&quot;&quot; Definitions of sections to be used in definitions of input parameters</span>
 <span class="sd">(input files for SPR-KKR tasks) &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">...common.grammar_types</span>  <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">Flag</span><span class="p">,</span> <span class="n">energy</span>
+<span class="kn">from</span> <span class="nn">...common.grammar_types</span>  <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">SetOf</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Array</span>
 <span class="kn">from</span> <span class="nn">..input_parameters_definitions</span> <span class="kn">import</span> \
-      <span class="n">SectionDefinition</span> <span class="k">as</span> <span class="n">Section</span><span class="p">,</span> \
-      <span class="n">ValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+      <span class="n">InputSectionDefinition</span> <span class="k">as</span> <span class="n">Section</span><span class="p">,</span> \
+      <span class="n">InputValueDefinition</span> <span class="k">as</span> <span class="n">V</span>
+<span class="kn">from</span> <span class="nn">...sprkkr.sprkkr_grammar_types</span> <span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">AtomicType</span>
+
 
 <div class="viewcode-block" id="CONTROL"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.CONTROL.html#ase2sprkkr.input_parameters.definitions.sections.CONTROL">[docs]</a><span class="k">def</span> <span class="nf">CONTROL</span><span class="p">(</span><span class="n">ADSI</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Create the definition of the CONTROL section of the task input file.</span>
@@ -98,46 +101,135 @@
 <span class="sd">  ADSI: string</span>
 <span class="sd">    the default value for the ADSI parameter of the resulting section</span>
 
-
 <span class="sd">  Return</span>
 <span class="sd">  ------</span>
-<span class="sd">  CONTROL: SectionDefinition</span>
+<span class="sd">  CONTROL: InputSectionDefinition</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+
   <span class="k">return</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;CONTROL&#39;</span><span class="p">,[</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DATASET&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;case&#39;</span><span class="p">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Meaning of the parameter&quot;</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ADSI&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="n">ADSI</span><span class="p">),</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Type of the computation -- do DFT selfconsistent cycle&quot;</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;POTFIL&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Potential file (see SPRKKR documentation for its format). It is not necessary to set it, it will be set by the calculator.&quot;</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;KRWS&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DATASET&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;case&#39;</span><span class="p">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;The custom field for the description of the problem.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ADSI&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="n">ADSI</span><span class="p">),</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Type of the computation.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;POTFIL&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;The potential file (see SPRKKR documentation for its format). It isn&#39;t necessary to set it, it will be set by the calculator.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;KRWS&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;PRINT&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NONMAG&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. &quot;</span><span class="p">)</span>
   <span class="p">])</span></div>
 
 <span class="n">TAU</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;TAU&#39;</span><span class="p">,[</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BZINT&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s1">&#39;POINTS&#39;</span><span class="p">,</span> <span class="s1">&#39;ANOTHER_OPTION&#39;</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BZINT&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">({</span><span class="s1">&#39;POINTS&#39;</span> <span class="p">:</span> <span class="s1">&#39;special points method&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;WEYL&#39;</span> <span class="p">:</span> <span class="s1">&#39;Weyl method&#39;</span><span class="p">},</span>
+                             <span class="n">description</span><span class="o">=</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The Weyl method (BZINT=WEYL) is a point sampling method using more or less ran-</span>
+<span class="sd">dom points. The number of k-points used for the integration varies quadratically be-</span>
+<span class="sd">tween 0.0 and ImE according to the imaginary part of the energy.</span>
+
+<span class="sd">The special point method (BZINT=POINTS) uses a regular k-point grid with NKTAB</span>
+<span class="sd">points. It is the standard method and gives a good compromise concerning accuracy</span>
+<span class="sd">and efficiency. For BZINT=POINTS the parameter NKTAB will be adjusted to allow a</span>
+<span class="sd">regular mesh.</span>
+<span class="sd">&quot;&quot;&quot;</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">info</span><span class="o">=</span><span class="s1">&#39;The mode of BZ-integration used for calculation of the scattering &#39;</span>
+                                  <span class="s1">&#39; path operator τ&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of points for the special points method&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKMIN&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Minimal number of k-points used for Weyl integration&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKMAX&#39;</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Maximal number of k-points used for Weyl integration&#39;</span><span class="p">),</span>
+      <span class="c1">#expert</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;CLUSTER&#39;</span><span class="p">,</span> <span class="n">flag</span><span class="p">,</span> <span class="n">expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Do cluster type calculation.&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span>
+        <span class="s2">&quot;Cluster type calculation calculate τ by inverting the real space KKR matrix. &quot;</span>
+        <span class="s2">&quot;Specify cluster center using IQCNTR or ITCNTR and its size using NSHLCLU or CLURAD.&quot;</span>
+      <span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NSHLCLU&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of atomic shells around the central atom of a cluster&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;CLURAD&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Radius of the cluster in multiples of ALAT.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;IQCNTR&#39;</span><span class="p">,</span> <span class="n">Site</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;The center of the cluster is set at the site position with number IQCNTR of the specified basis.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ITCNTR&#39;</span><span class="p">,</span> <span class="n">AtomicType</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;The center of the cluster is set at one of the site positions that is occupied by the atomic type ITCNTR.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NLOUT&#39;</span><span class="p">,</span> <span class="n">expert</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;The calculated τ -matrix is printed up to lmax=NLOUT.&quot;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MOL&#39;</span><span class="p">,</span> <span class="n">expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.&quot;</span><span class="p">)</span>
   <span class="p">])</span>
 <span class="sd">&quot;&quot;&quot;The definition of the TAU section of the task input file &quot;&quot;&quot;</span>
 
 <span class="n">ENERGY</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">,[</span>
       <span class="n">V</span><span class="p">(</span><span class="s1">&#39;GRID&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">32</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">32</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of points in energy-mesh&#39;</span><span class="p">),</span>
       <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ImE&#39;</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EMIN&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EMIN&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;The real part of the lowest E-value&#39;</span><span class="p">),</span>
   <span class="p">])</span>
 <span class="sd">&quot;&quot;&quot;The definition of the ENERGY section of the task input file &quot;&quot;&quot;</span>
 
 <span class="n">SCF</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">,</span> <span class="p">[</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NITER&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MIX&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;VXC&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="s1">&#39;VWN&#39;</span><span class="p">)),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NITER&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Maximal number of iterations of the SCF cycle&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MIX&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Mixing parameter&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;VXC&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">({</span>
+        <span class="s1">&#39;VWN&#39;</span> <span class="p">:</span> <span class="s1">&#39;Vosko, Wilk, Nusair&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MJW&#39;</span> <span class="p">:</span> <span class="s1">&#39;Janak, Williams, Moruzzigit g&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;VBH&#39;</span> <span class="p">:</span> <span class="s1">&#39;von Barth, Hedin&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PBE&#39;</span> <span class="p">:</span> <span class="s1">&#39;Perdew, Burke, Ernzendorfer GGA&#39;</span>
+        <span class="p">}),</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;parametrisation of the exchange-correlation potential&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ALG&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">({</span>
+          <span class="s1">&#39;BROYDEN2&#39;</span><span class="p">:</span> <span class="s1">&#39;Broyden’s second method&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;TCHEBY&#39;</span><span class="p">:</span> <span class="s1">&#39;Tchebychev&#39;</span>
+        <span class="p">}),</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Mixing algorithm&#39;</span><span class="p">),</span>
       <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EFGUESS&#39;</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TOL&#39;</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">),</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ISTBRY&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TOL&#39;</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Tolerance threshold for the mixing algorithm&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ISTBRY&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Start Broyden after ISTBRY iterations&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ITDEPT&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Iteration depth for Broyden algorithm (length of used history)&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;QION&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Guess for the ionic charges Qt for atomic types&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MSPIN&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Guess for the magnetic moment μ_{spin,t} for atomic types&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;USEVMATT&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Set up the starting potential using the original Mattheiss&#39;</span>
+                                 <span class="s1">&#39;construction for the potential V instead of the charge density&#39;</span><span class="p">)</span>
   <span class="p">])</span>
 <span class="sd">&quot;&quot;&quot;The definition of the SCF section of the task input file &quot;&quot;&quot;</span>
 
+<span class="n">STRCONST</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;STRCONST&#39;</span><span class="p">,</span> <span class="p">[</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ETA&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Ewald parameter&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;RMAX&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Convergency radius in real space&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;GMAX&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Convergency radius in reciprocal space&#39;</span><span class="p">),</span>
+      <span class="p">],</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span>
+      <span class="sd">&quot;&quot;&quot;The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by</span>
+<span class="sd">three convergence parameters. ETA determines the relative weight of the real and reciprocal</span>
+<span class="sd">space lattice sums, that are determined by the convergence radii RMAX and GMAX, respec-</span>
+<span class="sd">tively. These convergence parameters have to be optimised anew if the lattice structure, the</span>
+<span class="sd">lattice parameter or the energy or ~k-range used is changed. This is done by the program if</span>
+<span class="sd">no values are applied via the input file. In some cases, in particular if one works at high</span>
+<span class="sd">energies, it might be necessery to set the convergence by hand. For this purpose one can start</span>
+<span class="sd">from the values set by kkrgen or kkrscf (see the output file).&quot;&quot;&quot;</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;The definition of the STRCONST section of the task input file &quot;&quot;&quot;</span>
+
 <span class="n">SITES</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;SITES&#39;</span><span class="p">,</span> <span class="p">[</span>
-      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Angula momentum cutoff (the first discarded l-space)&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span>
+<span class="sd">&quot;&quot;&quot; The KKR-method is a minimum basis set method. This means that the angular-momentum</span>
+<span class="sd">expansion can be chosen according to the atomic properties of the atomic types. For tran-</span>
+<span class="sd">sition metals it is therefore normally sufficient to have a maximum l-value of 2 (NL = 3).</span>
+<span class="sd">For systems with many atoms per unit cell it is in principle possible to set the l-expansion</span>
+<span class="sd">according to the atom types on the lattice sites. For US having the NaCl-structure one could</span>
+<span class="sd">choose NL = 4 for the U-site and NL = 2 for the S-site. At the moment this possibility, that</span>
+<span class="sd">would save storage and computer time, is not supported by all subroutines. For this rea-</span>
+<span class="sd">son a common l-expansion cutoff is used, that is fixed by the highest that occurs. For US</span>
+<span class="sd">this implies that NL = 4 is used for all sites.&quot;&quot;&quot;</span><span class="p">)</span>
   <span class="p">])</span>
 <span class="sd">&quot;&quot;&quot;The definition of the SITES section of the task input file &quot;&quot;&quot;</span>
+
+
+<span class="n">CPA</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;CPA&#39;</span><span class="p">,</span> <span class="p">[</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NITER&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Maximum number of CPA iterations&quot;</span><span class="p">),</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TOL&#39;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Threshold for stopping CPA-cycle&quot;</span><span class="p">),</span>
+  <span class="p">],</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="n">info</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;For a system with substitutional disorder, the CPA is used. The listed variables control the CPA cycle &quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;CPA section definition&quot;&quot;&quot;</span>
+
+
+<span class="n">MODE</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;MODE&#39;</span><span class="p">,</span> <span class="p">[</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SP-SREL&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;work in the spin-polarized scalar-relativistic mode&quot;</span><span class="p">),</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MDIR&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.&quot;</span><span class="p">,</span> <span class="n">is_numbered_array</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Scale the speed of light for a given atom type.&#39;</span><span class="p">,</span> <span class="n">is_numbered_array</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+  <span class="n">V</span><span class="p">(</span><span class="s1">&#39;SOC&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Scale the strength of the spin-orbit coupling for atom type.&#39;</span><span class="p">,</span> <span class="n">is_numbered_array</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+  <span class="p">],</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span>
+      <span class="sd">&quot;&quot;&quot;If not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;MODE Section definition&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="TASK"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TASK.html#ase2sprkkr.input_parameters.definitions.sections.TASK">[docs]</a><span class="k">def</span> <span class="nf">TASK</span><span class="p">(</span><span class="n">TASK</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Create the definition of the CONTROL section of the task input file.</span>
@@ -149,14 +241,14 @@
 
 <span class="sd">  Return</span>
 <span class="sd">  ------</span>
-<span class="sd">  TASK: SectionDefinition</span>
+<span class="sd">  TASK: InputSectionDefinition</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;TASK&#39;</span><span class="p">,</span> <span class="p">[</span>
     <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TASK&#39;</span><span class="p">,</span> <span class="n">DefKeyword</span><span class="p">(</span><span class="n">TASK</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
   <span class="p">])</span></div>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;CONTROL&#39;</span><span class="p">,</span> <span class="s1">&#39;TAU&#39;</span><span class="p">,</span> <span class="s1">&#39;ENERGY&#39;</span><span class="p">,</span> <span class="s1">&#39;SCF&#39;</span><span class="p">,</span> <span class="s1">&#39;SITES&#39;</span><span class="p">,</span> <span class="s1">&#39;TASK&#39;</span>
+    <span class="s1">&#39;CONTROL&#39;</span><span class="p">,</span> <span class="s1">&#39;TAU&#39;</span><span class="p">,</span> <span class="s1">&#39;ENERGY&#39;</span><span class="p">,</span> <span class="s1">&#39;SCF&#39;</span><span class="p">,</span> <span class="s1">&#39;SITES&#39;</span><span class="p">,</span> <span class="s1">&#39;TASK&#39;</span><span class="p">,</span> <span class="s1">&#39;STRCONST&#39;</span><span class="p">,</span> <span class="s1">&#39;CPA&#39;</span><span class="p">,</span> <span class="s1">&#39;MODE&#39;</span>
 <span class="p">]</span>
 </pre></div>
 

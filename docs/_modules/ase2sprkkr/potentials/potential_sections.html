@@ -42,6 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -86,14 +87,14 @@
 <span class="sd">there are a generic classes for these sections.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..common.configuration_containers</span> <span class="kn">import</span> <span class="n">Section</span>
-<span class="kn">from</span> <span class="nn">.io_data</span> <span class="kn">import</span> <span class="n">ReadIoData</span><span class="p">,</span> <span class="n">WriteIoData</span>
+<span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationSection</span>
+<span class="kn">from</span> <span class="nn">..sprkkr.io_data</span> <span class="kn">import</span> <span class="n">ReadIoData</span><span class="p">,</span> <span class="n">WriteIoData</span>
 <span class="kn">from</span> <span class="nn">..sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 
-<div class="viewcode-block" id="PotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection">[docs]</a><span class="k">class</span> <span class="nc">PotentialSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection">[docs]</a><span class="k">class</span> <span class="nc">PotentialSection</span><span class="p">(</span><span class="n">ConfigurationSection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A generic class for a section in a potential &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="PotentialSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This function should be called before potential file writing to set the propper values to the section.</span>
 
 <span class="sd">        Parameters</span>
@@ -106,7 +107,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="PotentialSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span><span class="n">ReadIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span><span class="n">ReadIoData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function should be called after potential file reading to set the values of Atoms object to the ones from the readed file.</span>
 
@@ -125,7 +126,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="PotentialSection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialSection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.</span>
 
 <span class="sd">        Return</span>
@@ -135,10 +136,10 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">depends_on</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PotentialSection.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_sections.PotentialSection.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PotentialSection.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.PotentialSection.html#ase2sprkkr.potentials.potential_definitions.PotentialSection.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="UniqueListSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection">[docs]</a><span class="k">class</span> <span class="nc">UniqueListSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueListSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection">[docs]</a><span class="k">class</span> <span class="nc">UniqueListSection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; The section, whose data is list of something,</span>
 <span class="sd">        e.g. of meshes, reference systems etc. The properties</span>
 <span class="sd">        _value_name and _value_class has to be redefined in the descendants.</span>
@@ -159,7 +160,7 @@
     <span class="sd">&quot;&quot;&quot; The class, that should be created from the list of data &quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="UniqueListSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span> <span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueListSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">write_io_data</span><span class="p">:</span> <span class="n">WriteIoData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the values of the section from the write_io_data.</span>
 
@@ -169,7 +170,7 @@
         <span class="n">ul</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">write_io_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">([</span> <span class="n">i</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ul</span><span class="o">.</span><span class="n">iter_unique</span><span class="p">()])</span></div>
 
-<div class="viewcode-block" id="UniqueListSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_sections.UniqueListSection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span> <span class="n">ReadIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueListSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.UniqueListSection.html#ase2sprkkr.potentials.potential_definitions.UniqueListSection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">read_io_data</span><span class="p">:</span> <span class="n">ReadIoData</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update a ReadIoData object accordingly the data in the section:</span>
 <span class="sd">        set its _value_name to list of self_value_class.from_tuple(&lt;data&gt;)</span>
@@ -181,17 +182,17 @@
         <span class="n">read_io_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">creator</span><span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]()]</span></div></div>
 
 
-<div class="viewcode-block" id="ASEArraySection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection">[docs]</a><span class="k">class</span> <span class="nc">ASEArraySection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection">[docs]</a><span class="k">class</span> <span class="nc">ASEArraySection</span><span class="p">(</span><span class="n">PotentialSection</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A section, that get and set the given ASE array (see ASE documentation of the</span>
 <span class="sd">        Atoms class), e.g. magnetization direction.</span>
 <span class="sd">        The name of the array is given by the section definition in the property array_name</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ASEArraySection.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection.has_any_value">[docs]</a>    <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySection.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection.has_any_value">[docs]</a>    <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Are there data in the section?&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;DATA&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ASEArraySection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._depends_on">[docs]</a>    <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; These sections can be processed after that the Atoms object</span>
 <span class="sd">            is created.</span>
 
@@ -200,7 +201,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_depends_on</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;SITES&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="ASEArraySection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Just set the values in the section from the Atoms object.</span>
 <span class="sd">        If the array not exists and the value is mandatory, set it to zero.</span>
@@ -217,7 +218,7 @@
              <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">zero_data</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">))</span>
         <span class="n">data</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ASEArraySection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_sections.ASEArraySection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEArraySection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.potential_sections.ASEArraySection.html#ase2sprkkr.potentials.potential_definitions.ASEArraySection._update_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the array accordingly to the readed data</span>
 

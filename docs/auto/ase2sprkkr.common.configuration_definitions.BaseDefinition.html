@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="BaseSectionDefinition" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html" />
-    <link rel="prev" title="BaseContainerDefinition" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html" /> 
+    <link rel="next" title="ConfigurationRootDefinition" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html" />
+    <link rel="prev" title="unique_dict" href="ase2sprkkr.common.configuration_definitions.unique_dict.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -58,20 +59,24 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.base_configuration.html">base_configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.html">configuration_containers</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.add_excluded_names_condition.html">add_excluded_names_condition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.unique_dict.html">unique_dict</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html">BaseContainerDefinition</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">BaseDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html">BaseSectionDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseValueDefinition.html">BaseValueDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ConfDefinition.html">ConfDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html">ConfigurationRootDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html">ContainerDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html">SectionDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html">ValueDefinition</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
@@ -126,7 +131,7 @@
 <h1>BaseDefinition<a class="headerlink" href="#basedefinition" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_definitions.</span></span><span class="sig-name descname"><span class="pre">BaseDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration_definitions.</span></span><span class="sig-name descname"><span class="pre">BaseDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="Permalink to this definition"></a></dt>
 <dd><p>A base class for a configuration definition, either of an option, or of a container.
 The definition determine the type of value(s) in the configuration/problem-definition file,
 the format of the values, the way how it/they is/are read etc…</p>
@@ -140,20 +145,22 @@ the format of the values, the way how it/they is/are read etc…</p>
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.__init__" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the value/section</p></li>
 <li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value</p></li>
+<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
 <li><p><strong>is_hidden</strong> (<em>boolean</em>) – Hidden values are not offered to a user, usually they are
 set by another object (and so a direct setting of their values
 has no sense)</p></li>
+<li><p><strong>is_expert</strong> (<em>boolean</em>) – Expert values/sections are not required and they are somewhat hidden
+from the user</p></li>
 <li><p><strong>name_in_grammar</strong> (<em>boolean</em><em> or </em><em>None</em>) – If False, there the name of the variable is not printed in the
 configuration file. The variable is recognized by its position.
 If None, the default class value is used</p></li>
-<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
-<li><p><strong>help</strong> (<em>str</em>) – A short help message for the value/section. It will be the perex for description.</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – A short help message for the value/section. It will be the perex for description.</p></li>
 <li><p><strong>description</strong> (<em>str</em>) – The additional informations for the users.</p></li>
 </ul>
 </dd>
@@ -181,8 +188,8 @@ of the alternative names.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.is_optional">
-<span class="sig-name descname"><span class="pre">is_optional</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.is_optional" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.is_hidden">
+<span class="sig-name descname"><span class="pre">is_hidden</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.is_hidden" title="Permalink to this definition"></a></dt>
 <dd><p>Is it required part of configuration (or can it be ommited)?</p>
 </dd></dl>
 
@@ -199,15 +206,29 @@ the behavior.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.help">
-<span class="sig-name descname"><span class="pre">help</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.help" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._info">
+<span class="sig-name descname"><span class="pre">_info</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._info" title="Permalink to this definition"></a></dt>
 <dd><p>A short help text describing the content for the users.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.description">
-<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.description" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._description">
+<span class="sig-name descname"><span class="pre">_description</span></span><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._description" title="Permalink to this definition"></a></dt>
 <dd><p>A longer help text describing the content for the users.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.info" title="Permalink to this definition"></a></dt>
+<dd><p>Return short help string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>generic</strong> (<em>bool</em>) – If the definition has no help specified and generic is True, return a (not saying much) generic help string</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -218,20 +239,86 @@ the behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.grammar">
-<span class="sig-name descname"><span class="pre">grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.grammar" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grammar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_dangerous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.grammar" title="Permalink to this definition"></a></dt>
 <dd><p>Generate grammar with the correct settings of pyparsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>allow_dangerous</strong> (<em>bool</em>) – Allow dangerous values - i.e. values that do not fulfill the requirements
+for the given-option value (i.e. a type requirement or other constraints).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._description_indentation">
+<span class="sig-name descname"><span class="pre">_description_indentation</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span>&#160;&#160;&#160; <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._description_indentation" title="Permalink to this definition"></a></dt>
+<dd><p>Nested levels of description will be indented using this ‘prefix’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.description">
+<span class="sig-name descname"><span class="pre">description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.description" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>verbose</strong> (<em>bool</em>) – If true, add also detailed documentation of all included items (e.g. members of a container)</p></li>
+<li><p><strong>show_hidden</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code> (default), do not show descriptions of hidden members.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – The string, with with each line will begin (commonly the spaces for the indentation).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._tuple_with_my_name">
-<span class="sig-name descname"><span class="pre">_tuple_with_my_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition._tuple_with_my_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._tuple_with_my_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_tuple_with_my_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delimiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_numbered_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition._tuple_with_my_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._tuple_with_my_name" title="Permalink to this definition"></a></dt>
 <dd><p>Create the grammar returning tuple (self.name, &lt;result of the expr&gt;)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> – Pyparsing expresion for the value of the option/section</p></li>
+<li><p><strong>delimiter</strong> – Pyparsing expression for the name-value delimiter</p></li>
+<li><p><strong>has_value</strong> (<em>bool</em>) – If False, do not add the parsed value to the results.
+This can be used e.g. for separators (see <a class="reference internal" href="ase2sprkkr.common.grammar_types.Separator.html#ase2sprkkr.common.grammar_types.Separator" title="ase2sprkkr.common.grammar_types.Separator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.common.grammar_types.Separator</span></code></a>) etc.</p></li>
+<li><p><strong>is_numbered_array</strong> (<em>bool</em>) – If True, the resulting grammar is in the form
+NAME[index]=….</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.do_not_skip_whitespaces_before_name">
 <span class="sig-name descname"><span class="pre">do_not_skip_whitespaces_before_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.do_not_skip_whitespaces_before_name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._get_copy_args">
+<span class="sig-name descname"><span class="pre">_get_copy_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition._get_copy_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._get_copy_args" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the dictionary that defines the attributes to create a copy of this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>copy</strong> – The returning dictionary has this structure:
+{ name of the argument of the __init__ function : name of the object attribute }</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition._copy_excluded_args">
+<span class="sig-name descname"><span class="pre">_copy_excluded_args</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['expert']</span></em><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition._copy_excluded_args" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.common.configuration_definitions.BaseDefinition.can_be_repeated">
+<span class="sig-name descname"><span class="pre">can_be_repeated</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration_definitions.html#BaseDefinition.can_be_repeated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration_definitions.BaseDefinition.can_be_repeated" title="Permalink to this definition"></a></dt>
+<dd><p>If True, the item can be repeated in the parsed file.
+This behavior have currently the values with is_numbered_array property = True.
+This function is to be redefined in descendants</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -241,8 +328,8 @@ the behavior.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.common.configuration_definitions.BaseContainerDefinition.html" class="btn btn-neutral float-left" title="BaseContainerDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.common.configuration_definitions.BaseSectionDefinition.html" class="btn btn-neutral float-right" title="BaseSectionDefinition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.common.configuration_definitions.unique_dict.html" class="btn btn-neutral float-left" title="unique_dict" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html" class="btn btn-neutral float-right" title="ConfigurationRootDefinition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

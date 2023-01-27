@@ -1,0 +1,36 @@
+class\_property
+===============
+
+
+.. currentmodule:: ase2sprkkr.common.decorators
+
+.. autoclass:: class_property
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.decorators.class_property
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
