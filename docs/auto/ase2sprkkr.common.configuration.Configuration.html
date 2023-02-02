@@ -126,12 +126,12 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.configuration.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration" title="Permalink to this definition"></a></dt>
-<dd><p>Common base class for all configurations values and containers. I.e.
+<dd><p>The common base class for all configurations values and containers. I.e.
 for <a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">Options</span></code></a> and <a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sections</span></code></a>.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-2fcaf376790cc51e7c16092a9703c0eaa4b07e60.png" alt="Inheritance diagram of ase2sprkkr.common.configuration.Configuration" usemap="#inheritancebd00defe67" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-6f30af7d7e3ab130f2db2aa8a11535db7c291ef7.png" alt="Inheritance diagram of ase2sprkkr.common.configuration.Configuration" usemap="#inheritancebd00defe67" class="inheritance graphviz" /></div>
 <map id="inheritancebd00defe67" name="inheritancebd00defe67">
-<area shape="rect" id="node1" href="#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="5,5,204,31"/>
+<area shape="rect" id="node1" href="#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,5,204,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -139,15 +139,12 @@ for <a class="reference internal" href="ase2sprkkr.common.options.Option.html#as
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.common.configuration.Configuration.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/configuration.html#Configuration.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.configuration.Configuration.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Create the object. Just sets</p>
+<dd><p>Create the object. Just sets the two properties from the parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>definition</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="ase2sprkkr.common.configuration_definitions.BaseDefinition"><em>ase2sprkkr.common.configuration_definitions.BaseDefinition</em></a>) – </p></li>
-<li><p><strong>definition.</strong> (<em>This configuration object</em>) – </p></li>
-<li><p><strong>container</strong> (<em>The</em>) – </p></li>
-<li><p><strong>container</strong> – </p></li>
-<li><p><strong>item.</strong> (<em>that will own the configuration</em>) – </p></li>
+<li><p><strong>definition</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" title="ase2sprkkr.common.configuration_definitions.BaseDefinition"><em>ase2sprkkr.common.configuration_definitions.BaseDefinition</em></a>) – Definition of this configuration object.</p></li>
+<li><p><strong>container</strong> (<a class="reference internal" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" title="ase2sprkkr.common.configuration_containers.ConfigurationContainer"><em>ase2sprkkr.common.configuration_containers.ConfigurationContainer</em></a>) – The container, that owns this configuration object.</p></li>
 </ul>
 </dd>
 </dl>

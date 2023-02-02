@@ -6,11 +6,25 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 from ase import Atoms
 from ase.build import bulk
-from .. sprkkr_atoms import SPRKKRAtoms
+from ..sprkkr_atoms import SPRKKRAtoms
 
 class SPRKKRAtomsTest(TestCase):
 
- def xtest_atoms(self):
+ def test_extend(self):
+     a = SPRKKRAtoms('NaCl')
+     a.set_positions([[0,0,0],[0,1,0]])
+
+     b = SPRKKRAtoms('Na')
+     b.set_positions([[1,0,0]])
+
+     id1 = id(a.sites[0])
+     id2 = id(b.sites[0])
+     a.extend(b)
+     #Test, that the sites property is retained
+     self.assertEqual(id1, id(a.sites[0]))
+     self.assertEqual(id2, id(a.sites[2]))
+
+ def test_atoms(self):
      a = Atoms('NaCl')
      a.set_positions([[0,0,0],[0,1,0]])
      a.info['occupancy'] = { 1: {'Cl' : 0.4, 'I' : 0.6 } }

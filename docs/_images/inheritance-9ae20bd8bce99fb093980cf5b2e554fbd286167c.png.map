@@ -1,8 +1,0 @@
-<map id="inheritancedb8879ab1c" name="inheritancedb8879ab1c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="Common base class for all configurations values and containers. I.e." alt="" coords="3,3,131,20"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="149,3,365,20"/>
-<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="637,20,779,36"/>
-<area shape="rect" id="node6" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters" target="_top" title="It holds the configuration values for a SPR&#45;KKR task and run the task" alt="" coords="798,20,957,36"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="383,3,618,20"/>
-<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="413,35,589,51"/>
-</map>

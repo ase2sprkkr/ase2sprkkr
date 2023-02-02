@@ -5,21 +5,21 @@ and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_
 from typing import Union
 
 class Configuration:
-  """ Common base class for all configurations values and containers. I.e.
+  """ The common base class for all configurations values and containers. I.e.
   for :class:`Options<ase2sprkkr.common.options.Option>` and :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
   """
 
   def __init__(self, definition, container=None):
       """
-      Create the object. Just sets
+      Create the object. Just sets the two properties from the parameters.
 
       Parameters
       ----------
       definition: ase2sprkkr.common.configuration_definitions.BaseDefinition
-      This configuration object definition.
+        Definition of this configuration object.
 
       container: ase2sprkkr.common.configuration_containers.ConfigurationContainer
-      The container, that will own the configuration item.
+        The container, that owns this configuration object.
       """
 
       self._definition = definition

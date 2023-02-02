@@ -86,50 +86,168 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Wrapper for spglib for computing symmetry of a primitive cell</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
 <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">spglib</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
 <span class="kn">from</span> <span class="nn">ase.spacegroup</span> <span class="kn">import</span> <span class="n">Spacegroup</span>
 <span class="kn">from</span> <span class="nn">..common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
+<span class="kn">from</span> <span class="nn">..sprkkr</span> <span class="kn">import</span> <span class="n">sprkkr_atoms</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="possibly_equivalent_sites"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites">[docs]</a><span class="k">def</span> <span class="nf">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
-                       <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UniqueValuesMapping</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; Return the object that describe equivalence classes of the atoms</span>
-<span class="sd">    from the given Atoms object (i.e. in one equivalence class will be the</span>
-<span class="sd">    atoms with the same atomic number, occupation, etc.)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">atomic_numbers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mapping</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">atomic_numbers</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mapping</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">())</span>
-    <span class="k">if</span> <span class="n">consider_old</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-           <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-           <span class="k">pass</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">occupation</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;occupancy&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="k">if</span> <span class="n">occupation</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">gen_occ</span><span class="p">():</span>
-              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">)):</span>
-                  <span class="n">val</span> <span class="o">=</span> <span class="n">occupation</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                  <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                      <span class="k">yield</span> <span class="n">val</span>
-                  <span class="k">else</span><span class="p">:</span>
-                      <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">val</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">val</span><span class="p">)</span>
-            <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gen_occ</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">mapping</span></div>
+<div class="viewcode-block" id="SpacegroupInfo"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo">[docs]</a><span class="k">class</span> <span class="nc">SpacegroupInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Class, that carry information about spacegroup and symmetry of a structure &quot;&quot;&quot;</span>
 
+<div class="viewcode-block" id="SpacegroupInfo.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="p">,</span>
+                       <span class="n">spacegroup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Spacegroup</span><span class="p">],</span>
+                       <span class="n">dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">equivalent_sites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms</span>
+<span class="sd">          ASE atoms object desribed by the SpacegroupInfo</span>
 
-<div class="viewcode-block" id="compute_spacegroup"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.compute_spacegroup.html#ase2sprkkr.bindings.spglib.compute_spacegroup">[docs]</a><span class="k">def</span> <span class="nf">compute_spacegroup</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span>
+<span class="sd">        spacegroup</span>
+<span class="sd">          ASE spacegroup object. If None, there is no symmetry in the crystal.</span>
+
+<span class="sd">        dataset</span>
+<span class="sd">          SPGLib dataset - a dictionary, containing many informations about the symmetry and</span>
+<span class="sd">          spacegroup of the structure. If it is not provided, and ``spacegroup`` is not ``None``</span>
+<span class="sd">          the spacegroup is recomputed to obtain the dataset, if the dataset is requested.</span>
+
+<span class="sd">        equivalent_sites</span>
+<span class="sd">          Object, that provides equivalence classes for the atoms. If it is not provided,</span>
+<span class="sd">          and ``spacegroup`` is not ``None``, the spacegroup is recomputed to obtain the equivalence</span>
+<span class="sd">          equivalent_sites, if the equivalent_sites is requested.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span> <span class="o">=</span> <span class="n">spacegroup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Spacegroup </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">0</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SpacegroupInfo.number"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.number">[docs]</a>    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spacegroup</span>
+<span class="sd">          Spacegroup number or None, if there is no spacegroup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="o">.</span><span class="n">no</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">allow_change</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">equivalent_sites</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">UniqueValuesMapping</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          Object, that provide equivalence classes for the atoms. If it is not provided,</span>
+<span class="sd">          and ``spacegroup`` is not ``None``, the spacegroup is recomputed to obtain the equivalent_sites,</span>
+<span class="sd">          if the equivalent_sites is requested.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">:</span>
+              <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">[</span><span class="s1">&#39;equivalent_atoms&#39;</span><span class="p">])</span>
+           <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">recompute</span><span class="p">(</span><span class="n">allow_change</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+           <span class="k">else</span><span class="p">:</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span>
+
+<div class="viewcode-block" id="SpacegroupInfo.recompute"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.recompute">[docs]</a>    <span class="k">def</span> <span class="nf">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_change</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Recompute spacegroup, dataset and equivalent_sites.</span>
+
+<span class="sd">        allow_change</span>
+<span class="sd">          If False, the resulting spacegroup have to be the same as the old one.</span>
+<span class="sd">          Used, if the spacegroup info have been constructed using a spacegroup</span>
+<span class="sd">          without providing spglib dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symmetry</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span> <span class="o">=</span> <span class="kc">None</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)))</span>
+
+        <span class="n">sg</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_spacegroup_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_change</span> <span class="ow">and</span> <span class="p">(</span>
+             <span class="nb">bool</span><span class="p">(</span><span class="n">sg</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">)</span> <span class="ow">or</span>
+             <span class="p">(</span><span class="n">sg</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="o">.</span><span class="n">no</span> <span class="o">!=</span> <span class="n">sg</span><span class="o">.</span><span class="n">no</span><span class="p">)):</span>
+                 <span class="k">raise</span> <span class="s2">&quot;The stored spacegroup do not correspond to the actual one&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span> <span class="o">=</span> <span class="n">sg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span></div>
+
+<div class="viewcode-block" id="SpacegroupInfo.compute_spacegroup_info"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.compute_spacegroup_info">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_spacegroup_info</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span>
                        <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                        <span class="n">precision</span>      <span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
-                       <span class="n">angular_precision</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Spacegroup</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+                       <span class="n">angular_precision</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Spacegroup</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">UniqueValuesMapping</span><span class="p">]:</span>
 
-       <span class="sd">&quot;&quot;&quot; Return the spacegroup that suits to the atoms&#39; cell structure.</span>
+       <span class="sd">&quot;&quot;&quot; Return the values needed to create (or update) :class:`Spacegroup`</span>
+<span class="sd">           that suits to the atoms&#39; cell structure.</span>
+
+<span class="sd">           For the parameters description, see the &#39;:meth:`from_atoms` method.</span>
+
+<span class="sd">           Returns</span>
+<span class="sd">           -------</span>
+<span class="sd">           spacegroup</span>
+<span class="sd">              ASE Spacegroup object, describing the spacegroup</span>
+
+<span class="sd">           dataset</span>
+<span class="sd">              Dataset, describing symmetry- and spacegroup-related information</span>
+<span class="sd">              about the structure, see the `Spglib documentation &lt;https://spglib.github.io/spglib/dataset.html#spglib-dataset&gt;`</span>
+<span class="sd">              for the documentation of the members of the `dataset and the `documentation of the C-to-python Spglib binding</span>
+<span class="sd">              &lt;https://spglib.github.io/spglib/python-spglib.html&gt;` for the names of the members (which slightly differ from</span>
+<span class="sd">              the names in the C structure)</span>
+
+<span class="sd">           equivalent_sites</span>
+<span class="sd">              The map of equivalent atoms.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+
+       <span class="n">sg_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+       <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">symmetry</span><span class="p">:</span>
+           <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="p">,</span> <span class="n">consider_old</span><span class="p">)</span>
+           <span class="n">spositions</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()</span>
+           <span class="n">sg_dataset</span> <span class="o">=</span> <span class="n">spglib</span><span class="o">.</span><span class="n">get_symmetry_dataset</span><span class="p">((</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">(),</span>
+                             <span class="n">spositions</span><span class="p">,</span>
+                             <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span>
+                             <span class="n">symprec</span> <span class="o">=</span> <span class="n">precision</span><span class="p">,</span>
+                             <span class="n">angle_tolerance</span> <span class="o">=</span> <span class="n">angular_precision</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">sg_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)))</span>
+
+       <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+       <span class="n">tags</span> <span class="o">=</span> <span class="n">spacegroup</span><span class="o">.</span><span class="n">tag_sites</span><span class="p">(</span><span class="n">spositions</span><span class="p">)</span>
+       <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">spacegroup</span><span class="p">,</span> <span class="n">sg_dataset</span><span class="p">,</span> <span class="n">equivalent_sites</span></div>
+
+<div class="viewcode-block" id="SpacegroupInfo.from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span>
+                       <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                       <span class="n">precision</span>      <span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span>
+                       <span class="n">angular_precision</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpacegroupInfo</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Create :class:`SpacegroupInfo` for given ASE :class:`Atoms` object.</span>
 
 <span class="sd">           Parameters</span>
 <span class="sd">           ----------</span>
@@ -138,7 +256,7 @@
 
 <span class="sd">           atomic_numbers</span>
 <span class="sd">            The atomic numbers can be overriden, e.g. to force (partialy) break the symmetry.</span>
-<span class="sd">            The atomic numbers have not to be the real ones, they can be (and are treated) just </span>
+<span class="sd">            The atomic numbers have not to be the real ones, they can be (and are treated) just</span>
 <span class="sd">            the labels of equivalence classes.</span>
 
 <span class="sd">           consider_old</span>
@@ -149,61 +267,43 @@
 <span class="sd">           angular_precision</span>
 <span class="sd">            The tolerated unprecision in angular coordinate</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            spacegroup</span>
-<span class="sd">              ASE spacegroup object</span>
 
-<span class="sd">            dataset</span>
-<span class="sd">              Spglib symmetry dataset</span>
-<span class="sd">       &quot;&quot;&quot;</span>
+<span class="sd">           Returns</span>
+<span class="sd">           -------</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-       <span class="n">mapping</span> <span class="o">=</span> <span class="n">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="p">,</span> <span class="n">consider_old</span><span class="p">)</span>
-       <span class="n">spositions</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()</span>
-       <span class="n">sg_dataset</span> <span class="o">=</span> <span class="n">spglib</span><span class="o">.</span><span class="n">get_symmetry_dataset</span><span class="p">((</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">(),</span>
-                             <span class="n">spositions</span><span class="p">,</span>
-                             <span class="n">mapping</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span>
-                             <span class="n">symprec</span> <span class="o">=</span> <span class="n">precision</span><span class="p">,</span>
-                             <span class="n">angle_tolerance</span> <span class="o">=</span> <span class="n">angular_precision</span><span class="p">)</span>
-       <span class="k">if</span> <span class="n">sg_dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-           <span class="k">return</span> <span class="kc">None</span>
-       <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
-       <span class="n">spacegroup</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">sg_dataset</span>
-       <span class="n">tags</span> <span class="o">=</span> <span class="n">spacegroup</span><span class="o">.</span><span class="n">tag_sites</span><span class="p">(</span><span class="n">spositions</span><span class="p">)</span>
-       <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
-       <span class="n">spacegroup</span><span class="o">.</span><span class="n">sites_equivalence_mapping</span> <span class="o">=</span> <span class="n">mapping</span>
-       <span class="k">return</span> <span class="n">spacegroup</span></div>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="o">.</span><span class="n">compute_spacegroup_info</span><span class="p">(</span><span class="o">**</span><span class="nb">locals</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="n">out</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="equivalent_sites_for_spacegroup"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.equivalent_sites_for_spacegroup.html#ase2sprkkr.bindings.spglib.equivalent_sites_for_spacegroup">[docs]</a><span class="k">def</span> <span class="nf">equivalent_sites_for_spacegroup</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">spacegroup</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return class that describe equivalent classes for a given spacegroup. If the spacegroup is not</span>
-<span class="sd">    created by :func:`compute_spacegroup`, the precomputed equivalent classes are taken from it.</span>
-<span class="sd">    Otherwise, the additional parameters are used to determine the  equivalent atoms.</span>
+<div class="viewcode-block" id="possibly_equivalent_sites"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites">[docs]</a><span class="k">def</span> <span class="nf">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+                       <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UniqueValuesMapping</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Return the object that describe equivalence classes of the atoms</span>
+<span class="sd">    from the given Atoms object (i.e. in one equivalence class will be the</span>
+<span class="sd">    atoms with the same atomic number, occupation, etc.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-      <span class="n">mapping</span> <span class="o">=</span> <span class="n">spacegroup</span><span class="o">.</span><span class="n">sites_equivalence_mapping</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-      <span class="n">mapping</span> <span class="o">=</span> <span class="n">possible_equivalent_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atomic_numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consider_old</span><span class="o">=</span><span class="n">consider_old</span><span class="p">)</span>
-    <span class="n">spositions</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">mapping</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">spacegroup</span><span class="o">.</span><span class="n">tag_sites</span><span class="p">(</span><span class="n">spositions</span><span class="p">))</span></div>
-
-<div class="viewcode-block" id="spacegroup_dataset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.spacegroup_dataset.html#ase2sprkkr.bindings.spglib.spacegroup_dataset">[docs]</a><span class="k">def</span> <span class="nf">spacegroup_dataset</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">symmetry</span><span class="p">:</span>
-       <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">sg</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spacegroup&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">sg</span><span class="p">:</span>
-       <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sg</span><span class="p">,</span> <span class="s1">&#39;dataset&#39;</span><span class="p">):</span>
-          <span class="c1">#spacegroup has not been created by ASE2SPRKKR, recompute it to obtain the dataset</span>
-          <span class="n">sg_new</span> <span class="o">=</span> <span class="n">compute_spacegroup</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-          <span class="k">if</span> <span class="n">sg</span><span class="o">.</span><span class="n">no</span> <span class="o">!=</span> <span class="n">sg_new</span><span class="o">.</span><span class="n">no</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="s2">&quot;The stored spacegroup do not correspond to the actual one&quot;</span>
-          <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;spacegroup&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sg</span> <span class="o">=</span> <span class="n">sg_new</span>
+    <span class="k">if</span> <span class="n">atomic_numbers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">atomic_numbers</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-       <span class="n">atoms</span><span class="o">.</span><span class="n">compute_sites_symmetry</span><span class="p">()</span>
-       <span class="k">if</span> <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">symmetry</span><span class="p">:</span>
-          <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="k">return</span> <span class="n">sg</span><span class="o">.</span><span class="n">dataset</span></div>
+        <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">consider_old</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+           <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+           <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">occupation</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;occupancy&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="n">occupation</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">gen_occ</span><span class="p">():</span>
+              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">equivalent_sites</span><span class="p">)):</span>
+                  <span class="n">val</span> <span class="o">=</span> <span class="n">occupation</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                  <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                      <span class="k">yield</span> <span class="n">val</span>
+                  <span class="k">else</span><span class="p">:</span>
+                      <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">val</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">val</span><span class="p">)</span>
+            <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gen_occ</span><span class="p">())</span>
+    <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">equivalent_sites</span></div>
 </pre></div>
 
            </div>

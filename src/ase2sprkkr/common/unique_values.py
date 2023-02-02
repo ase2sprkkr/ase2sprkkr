@@ -1,7 +1,11 @@
 """ UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. """
+from __future__ import annotations
 
 from collections import namedtuple, defaultdict
+from collections.abc import Iterable
 import numpy as np
+from typing import Union, Dict
+
 
 class UniqueValuesMapping:
   """ A class, that can map a collection of (possible non-unique) values to a set
@@ -23,7 +27,7 @@ class UniqueValuesMapping:
         array([1, 2, 3, 1])
   """
 
-  def __init__(self, mapping, value_to_class_id=None):
+  def __init__(self, mapping:List, value_to_class_id:Dict=None):
       """
       Parameters
       ----------
@@ -53,8 +57,10 @@ class UniqueValuesMapping:
         the given number (typically with 1).
 
       ..doctest::
-        >>> UniqueValuesMapping.from_values([1,4,1]).indexes(start_from = 1)
-        {1: [1, 3], 2: [2]}
+        >>> UniqueValuesMapping([1,4,1]).indexes()
+        {1: [0, 2], 4: [1]}
+        >>> UniqueValuesMapping([1,4,1]).indexes(start_from = 1)
+        {1: [1, 3], 4: [2]}
       """
 
       indexes = {}
@@ -71,39 +77,126 @@ class UniqueValuesMapping:
   def __len__(self):
       return len(self.mapping)
 
+  def __iter__(self):
+      return iter(self.mapping)
+
   @staticmethod
-  def from_values(values, length=None, none_tuples=False):
+  def from_values(values, length:Optional[int]=None):
       """
+      Create equivalence-classes mapping. Unlike the constructor,
+      this method tags the values by integers and also compute the reverse
+      (value to equivalence class) mapping.
+
       values: iterable
         Values to find the equivalence classes
 
       length: int
         Length of values - provide it, if len(values) is not available
 
-      none_tuples: bool
-        If True, the items of the values are 2-items tuples. Then, None in the second one
-        means "any class". Such one will be assigned to the first available class of
-        the first tuple's value.
+      .. doctest::
+        >>> UniqueValuesMapping.from_values([1.,4.,1.]).mapping
+        array([1, 2, 1])
+        >>> UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id
+        {1.0: 1, 4.0: 2}
       """
+      mapping, reverse = UniqueValuesMapping._create_mapping(values, length)
+      return UniqueValuesMapping(mapping, reverse)
 
+  @staticmethod
+  def _create_mapping(values, length=None, start_from=1):
       mapping = np.empty(length or len(values), int)
       reverse = {}
 
       for i,v in enumerate(values):
           if v in reverse:
              tag = reverse[v]
-          elif none_tuples and (v[0], None) in reverse:
-             tag = reverse[(v[0], None)]
-             if v[1] is not None:
-                del reverse[(v[0], None)]
-                reverse[v] = tag
           else:
-             tag = len(reverse) + 1
+             tag = len(reverse) + start_from
              reverse[v] = tag
           mapping[i] = tag
+      return mapping, reverse
 
-      return UniqueValuesMapping(mapping, reverse)
 
   def merge(self, other):
       """ Merge two sets. Resulting UniqueValues uses integers as keys"""
-      return self.from_values(zip(self.mapping, other), length = len(self.mapping), none_tuples=True)
+      return self.from_values(zip(self.mapping, other), length = len(self.mapping))
+
+  def is_equivalent_to(self, mapping:Union[UniqueValuesMapping,Iterable]) -> bool:
+      """
+      Return, whether the mapping is equal to given another mapping, regardless the actual "names" of the equivalence classes.
+
+      Parameters
+      ----------
+      mapping
+        The other mapping can be given either by instance of this class, or just by any iterable (that returns equivalence class names for the items)
+
+      .. doctest::
+
+        >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,0])
+        True
+        >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([0,0,0])
+        False
+        >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,1])
+        False
+        >>> UniqueValuesMapping([1,4,1]).is_equivalent_to([5,3,5])
+        True
+        >>> UniqueValuesMapping([1,4,1]).is_equivalent_to(UniqueValuesMapping.from_values([2,5,2]))
+        True
+      """
+      return self.are_equivalent(self, mapping)
+
+  @staticmethod
+  def are_equivalent(a:Union[UniqueValuesMapping,Iterable],b:Union[UniqueValuesMapping,Iterable]) -> bool:
+      """
+      Return, whether the two mappings are equal, regardless the actual "names" of the equivalence classes.
+
+      See :meth:`is_equivalent<ase2sprkkr.common.unique_values_mapping.UniqueValuesMapping.is_equivalent_to>`
+      """
+
+      mp = {}
+      js = set()
+      for i,j in zip(a,b):
+          if i in mp:
+             if mp[i] != j:
+                return False
+          else:
+             if j in js:
+                return False
+             js.add(j)
+             mp[i]=j
+      return True
+
+  def normalize(self, start_from=1, strict:bool=False):
+      """ Replace the names of equivalent classes by the integers.
+
+      Parameters
+      ----------
+      strict
+         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),
+         where n is the number of equivalence classes.
+         If False and the names are already integers in a numpy array, do nothing.
+
+      start_from
+         Number the equivalent classes starting from.
+
+      Returns
+      -------
+      unique_values_mapping
+         Return self.
+
+      .. doctest::
+
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
+        array([1, 2, 1])
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]
+        2
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
+        array([0, 1, 0])
+      """
+      if not strict and isinstance(self.mapping, np.ndarray) and np.issubdtype(np.integer, self.mapping.dtype):
+           return
+      mapping, reverse = self._create_mapping(self.mapping, start_from=start_from)
+      if self.value_to_class_id is not None:
+         self.value_to_class_id = { k: reverse[v] for k,v in self.value_to_class_id.items() }
+      self.mapping = mapping
+      return self

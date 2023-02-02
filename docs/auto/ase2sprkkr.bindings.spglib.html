@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="compute_spacegroup" href="ase2sprkkr.bindings.spglib.compute_spacegroup.html" />
-    <link rel="prev" title="bindings" href="ase2sprkkr.bindings.html" /> 
+    <link rel="next" title="possibly_equivalent_sites" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html" />
+    <link rel="prev" title="EmptySpheresResult" href="ase2sprkkr.bindings.es_finder.EmptySpheresResult.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -61,11 +61,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.html">es_finder</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spglib</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.compute_spacegroup.html">compute_spacegroup</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.equivalent_sites_for_spacegroup.html">equivalent_sites_for_spacegroup</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html">possibly_equivalent_sites</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.spacegroup_dataset.html">spacegroup_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html">SpacegroupInfo</a></li>
 </ul>
 </li>
 </ul>
@@ -111,6 +110,13 @@
   <section id="spglib">
 <h1>spglib<a class="headerlink" href="#spglib" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.bindings.spglib</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-52b691b2d441460fad3b2880639e6bd8a9448f50.png" alt="Inheritance diagram of ase2sprkkr.bindings.spglib.SpacegroupInfo" usemap="#inheritancea85ca806f1" class="inheritance graphviz" /></div>
+<map id="inheritancea85ca806f1" name="inheritancea85ca806f1">
+<area shape="rect" id="node1" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" target="_top" title="Class, that carry information about spacegroup and symmetry of a structure" alt="" coords="5,5,128,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p class="rubric">Description</p>
 <span class="target" id="module-ase2sprkkr.bindings.spglib"></span><p>Wrapper for spglib for computing symmetry of a primitive cell</p>
 <p class="rubric">Functions</p>
@@ -120,17 +126,20 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.compute_spacegroup.html#ase2sprkkr.bindings.spglib.compute_spacegroup" title="ase2sprkkr.bindings.spglib.compute_spacegroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_spacegroup</span></code></a>(atoms[, atomic_numbers, ...])</p></td>
-<td><p>Return the spacegroup that suits to the atoms' cell structure.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.equivalent_sites_for_spacegroup.html#ase2sprkkr.bindings.spglib.equivalent_sites_for_spacegroup" title="ase2sprkkr.bindings.spglib.equivalent_sites_for_spacegroup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">equivalent_sites_for_spacegroup</span></code></a>(atoms, ...)</p></td>
-<td><p>Return class that describe equivalent classes for a given spacegroup.</p></td>
-</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites" title="ase2sprkkr.bindings.spglib.possibly_equivalent_sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">possibly_equivalent_sites</span></code></a>(atoms[, ...])</p></td>
 <td><p>Return the object that describe equivalence classes of the atoms from the given Atoms object (i.e.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.spacegroup_dataset.html#ase2sprkkr.bindings.spglib.spacegroup_dataset" title="ase2sprkkr.bindings.spglib.spacegroup_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spacegroup_dataset</span></code></a>(atoms)</p></td>
-<td><p></p></td>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpacegroupInfo</span></code></a>(atoms, spacegroup[, dataset, ...])</p></td>
+<td><p>Class, that carry information about spacegroup and symmetry of a structure</p></td>
 </tr>
 </tbody>
 </table>
@@ -140,8 +149,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.bindings.html" class="btn btn-neutral float-left" title="bindings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.bindings.spglib.compute_spacegroup.html" class="btn btn-neutral float-right" title="compute_spacegroup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.bindings.es_finder.EmptySpheresResult.html" class="btn btn-neutral float-left" title="EmptySpheresResult" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html" class="btn btn-neutral float-right" title="possibly_equivalent_sites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

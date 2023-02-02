@@ -89,6 +89,7 @@
 <span class="sd">The containers are also the objects, that take care about executing the SPR-KKR</span>
 <span class="sd">executables.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">io</span>
@@ -406,7 +407,7 @@
 <span class="sd">        Input file (either its filename, or an open file)</span>
 
 <span class="sd">      allow_dangerous</span>
-<span class="sd">        Allow to read dangerous values of options: i.e. the values that do not fullfil the </span>
+<span class="sd">        Allow to read dangerous values of options: i.e. the values that do not fullfil the</span>
 <span class="sd">        required type of the given option or its other requirements.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="n">definitions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span>

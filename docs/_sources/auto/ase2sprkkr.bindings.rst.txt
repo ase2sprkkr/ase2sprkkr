@@ -38,6 +38,7 @@ Full name: **ase2sprkkr.bindings**
      :template: custom-module-template.rst
      :recursive:
   
+     ase2sprkkr.bindings.es_finder
      ase2sprkkr.bindings.spglib
   
   

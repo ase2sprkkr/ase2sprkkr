@@ -122,7 +122,7 @@
 <h1>Occupation<a class="headerlink" href="#occupation" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.occupations.</span></span><span class="sig-name descname"><span class="pre">Occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.occupations.</span></span><span class="sig-name descname"><span class="pre">Occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation" title="Permalink to this definition"></a></dt>
 <dd><p>Occupation of the atomic site, given by AtomicType : value</p>
 <p>The value determine the probability, that a given atomic type will
 be found on a given place (which can be used e.g. for computing
@@ -135,20 +135,56 @@ alloys).</p>
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dct</strong> (<em>Dict</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" title="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType"><em>AtomicType</em></a><em> | </em><em>str</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>site</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><em>Site</em></a><em> | </em><em>None</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.__init__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dct</strong> (<em>Dict</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>ase2sprkkr.sprkkr.atomic_types.AtomicType</em></a><em> | </em><em>str</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>site</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><em>Site</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.copy" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Create a copy of the object, associated with a given site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>site</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><em>Site</em></a><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#ase2sprkkr.sprkkr.occupations.Occupation" title="ase2sprkkr.sprkkr.occupations.Occupation"><em>Occupation</em></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.set" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.set" title="Permalink to this definition"></a></dt>
+<dd><p>Set (replace) the occupation data.</p>
+<p>The method automatically updates the symbols, atomic numbers and the occupancy property (if exists)
+of the underlying Atoms object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dct</strong> (<em>Dict</em><em>[</em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>ase2sprkkr.sprkkr.atomic_types.AtomicType</em></a><em> | </em><em>str</em><em>, </em><em>float</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.items">
@@ -165,6 +201,45 @@ alloys).</p>
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation._find_key">
 <span class="sig-name descname"><span class="pre">_find_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation._find_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation._find_key" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.atomic_type">
+<span class="sig-name descname"><span class="pre">atomic_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.atomic_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.atomic_type" title="Permalink to this definition"></a></dt>
+<dd><p>Find the corresponding atomic type according to the provided argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>int</em><em> | </em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>ase2sprkkr.sprkkr.atomic_types.AtomicType</em></a>) – The identification of the atomic type.
+If it is integer, returns the n-th atomic type (according to the orderd supplied
+when the occupation is set).
+If it is a string, the first atomic type of given chemical element is returned
+If it is AtomicType, it is returned “as is”</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType">ase2sprkkr.sprkkr.atomic_types.AtomicType</a> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.replace_type">
+<span class="sig-name descname"><span class="pre">replace_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.replace_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.replace_type" title="Permalink to this definition"></a></dt>
+<dd><p>Replace the given atomic type (see <a class="reference internal" href="#ase2sprkkr.sprkkr.occupations.Occupation.atomic_type" title="ase2sprkkr.sprkkr.occupations.Occupation.atomic_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">atomic_type</span></code></a>, how
+it can be identified) by the new one (given either by AtomicType or by its chemical symbol)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em> | </em><em>int</em><em> | </em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>ase2sprkkr.sprkkr.atomic_types.AtomicType</em></a>) – </p></li>
+<li><p><strong>to</strong> (<em>str</em><em> | </em><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.atomic_types.AtomicType" title="ase2sprkkr.sprkkr.atomic_types.AtomicType"><em>ase2sprkkr.sprkkr.atomic_types.AtomicType</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.clean">
+<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.clean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.clean" title="Permalink to this definition"></a></dt>
+<dd><p>Remove all items with zero probability.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.primary_atomic_type">
@@ -197,12 +272,15 @@ If there are more atoms on the site, return the “main one”.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation._normalize">
 <span class="sig-name descname"><span class="pre">_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">except_from</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation._normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation._normalize" title="Permalink to this definition"></a></dt>
-<dd><p>Normalizes occupation so the sum will be equal to value</p>
+<dd><p>Normalizes occupation so the sum will be equal to the value ‘to’ (by default to 1.).
+If there are no None values, all the values are multiplied by the same number to make
+their sum equal to to.
+If there are None values, the remainder to the ‘to’ value is equally divided among them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>value</strong> (<em>float</em>) – Desired value</p></li>
-<li><p><strong>except_from</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" title="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType"><em>AtomicType</em></a>) – Skip given atom during normalizing</p></li>
+<li><p><strong>except_from</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" title="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType"><em>AtomicType</em></a>) – Skip the given atom during normalizing</p></li>
 </ul>
 </dd>
 </dl>
@@ -220,8 +298,9 @@ If there are more atoms on the site, return the “main one”.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.to_occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_occupation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">occupation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/occupations.html#Occupation.to_occupation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation" title="Permalink to this definition"></a></dt>
+<dd><p>Create an occupation object associated with the given sites object</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.occupations.Occupation.check">

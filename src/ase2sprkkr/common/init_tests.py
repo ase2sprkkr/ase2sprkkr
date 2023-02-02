@@ -53,6 +53,9 @@ class TestCase(unittest.TestCase):
   def assertAsyncRaises(self, a,b):
       return self.assertRaises(a, self.runAsync(b))
 
+  def assertAlmostEqual(self, a,b):
+      np.testing.assert_almost_equal(a,b)
+
   @staticmethod
   def runAsync(corr):
       return asyncio.run(corr)

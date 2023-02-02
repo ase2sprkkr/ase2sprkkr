@@ -84,11 +84,14 @@
              
   <h1>Source code for ase2sprkkr.sprkkr.occupations</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; More atomic types can be on one site. &quot;&quot;&quot;</span>
-
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">.atomic_types</span> <span class="kn">import</span> <span class="n">AtomicType</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">.sites</span> <span class="kn">import</span> <span class="n">Site</span>
 
 
 <div class="viewcode-block" id="Occupation"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation">[docs]</a><span class="k">class</span> <span class="nc">Occupation</span><span class="p">:</span>
@@ -99,14 +102,20 @@
 <span class="sd">   alloys).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Occupation.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="n">AtomicType</span><span class="o">|</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">site</span><span class="p">:</span><span class="n">Site</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_atoms</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_site</span> <span class="o">=</span> <span class="n">site</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">update_atoms</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Occupation.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="n">Occupation</span><span class="p">({</span> <span class="n">a</span><span class="o">.</span><span class="n">copy</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">})</span></div>
+<div class="viewcode-block" id="Occupation.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site</span><span class="p">:</span><span class="n">Site</span><span class="o">|</span><span class="kc">None</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Occupation</span><span class="p">:</span>
+      <span class="sd">&quot;&quot;&quot; Create a copy of the object, associated with a given site. &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="n">Occupation</span><span class="p">({</span> <span class="n">a</span><span class="o">.</span><span class="n">copy</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">},</span> <span class="n">site</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Occupation.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+<div class="viewcode-block" id="Occupation.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AtomicType</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="p">],</span> <span class="n">update_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="sd">&quot;&quot;&quot; Set (replace) the occupation data.</span>
+
+<span class="sd">      The method automatically updates the symbols, atomic numbers and the occupancy property (if exists)</span>
+<span class="sd">      of the underlying Atoms object.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">AtomicType</span><span class="p">)):</span>
          <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="n">dct</span> <span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
       <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="s1">&#39;items&#39;</span><span class="p">):</span>
@@ -115,7 +124,8 @@
          <span class="n">iterator</span> <span class="o">=</span> <span class="n">dct</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span> <span class="p">(</span><span class="n">AtomicType</span><span class="o">.</span><span class="n">to_atomic_type</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="n">iterator</span> <span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_normalize</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_update_atoms</span><span class="p">()</span></div>
+      <span class="k">if</span> <span class="n">update_atoms</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_update_atoms</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Occupation.items"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.items">[docs]</a>  <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; dict.items() like enumeration &quot;&quot;&quot;</span>
@@ -128,7 +138,7 @@
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Occupation </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="si">}</span><span class="s2">&quot;</span>
 
   <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oc</span><span class="o">/</span><span class="n">cupation</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Occupation._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._update_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_site</span><span class="p">:</span>
@@ -138,25 +148,63 @@
       <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Occupation._find_key"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._find_key">[docs]</a>  <span class="k">def</span> <span class="nf">_find_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+          <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">name</span><span class="p">]</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">AtomicType</span><span class="p">):</span>
           <span class="k">return</span> <span class="n">name</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
           <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span> <span class="k">return</span> <span class="n">i</span>
       <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in the occupation&quot;</span><span class="p">)</span></div>
 
+  <span class="k">def</span> <span class="nf">atomic_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AtomicType</span><span class="p">]:</span>
+      <span class="sd">&quot;&quot;&quot; Returns the atomic types that can be present on the site. &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Occupation.atomic_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.atomic_type">[docs]</a>  <span class="k">def</span> <span class="nf">atomic_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="o">|</span><span class="nb">int</span><span class="o">|</span><span class="n">AtomicType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AtomicType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="sd">&quot;&quot;&quot; Find the corresponding atomic type according to the provided argument.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      name</span>
+<span class="sd">          The identification of the atomic type.</span>
+<span class="sd">          If it is integer, returns the n-th atomic type (according to the orderd supplied</span>
+<span class="sd">          when the occupation is set).</span>
+<span class="sd">          If it is a string, the first atomic type of given chemical element is returned</span>
+<span class="sd">          If it is AtomicType, it is returned &quot;as is&quot;</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_key</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
   <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_key</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
+<div class="viewcode-block" id="Occupation.replace_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.replace_type">[docs]</a>  <span class="k">def</span> <span class="nf">replace_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="o">|</span><span class="nb">int</span><span class="o">|</span><span class="n">AtomicType</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span><span class="nb">str</span><span class="o">|</span><span class="n">AtomicType</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Replace the given atomic type (see :meth:`atomic_type&lt;ase2sprkkr.sprkkr.occupations.Occupation.atomic_type&gt;`, how</span>
+<span class="sd">      it can be identified) by the new one (given either by AtomicType or by its chemical symbol)</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_key</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+      <span class="n">to</span> <span class="o">=</span> <span class="n">AtomicType</span><span class="o">.</span><span class="n">to_atomic_type</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+          <span class="p">(</span><span class="n">k</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">key</span> <span class="k">else</span> <span class="n">to</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Occupation.clean"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.clean">[docs]</a>  <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Remove all items with zero probability. &quot;&quot;&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span>
+          <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="p">)</span></div>
+
   <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-      <span class="k">try</span><span class="p">:</span>
-          <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_key</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_normalize</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-      <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-          <span class="k">return</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_update_atoms</span><span class="p">()</span>
+       <span class="k">try</span><span class="p">:</span>
+           <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_key</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">_normalize</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+       <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+           <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+              <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot add an atomic type using integer key. Please use a string (chemical symbol).&quot;</span><span class="p">)</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">_update_atoms</span><span class="p">()</span>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">primary_atomic_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -203,7 +251,10 @@
 
 <div class="viewcode-block" id="Occupation._normalize"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation._normalize">[docs]</a>  <span class="k">def</span> <span class="nf">_normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">except_from</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Normalizes occupation so the sum will be equal to value</span>
+<span class="sd">      Normalizes occupation so the sum will be equal to the value &#39;to&#39; (by default to 1.).</span>
+<span class="sd">      If there are no None values, all the values are multiplied by the same number to make</span>
+<span class="sd">      their sum equal to to.</span>
+<span class="sd">      If there are None values, the remainder to the &#39;to&#39; value is equally divided among them.</span>
 
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
@@ -211,17 +262,35 @@
 <span class="sd">        Desired value</span>
 
 <span class="sd">      except_from: AtomicType</span>
-<span class="sd">        Skip given atom during normalizing</span>
+<span class="sd">        Skip the given atom during normalizing</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">suma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_occupation</span>
-      <span class="k">if</span> <span class="n">except_from</span><span class="p">:</span>
-         <span class="n">suma</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">except_from</span><span class="p">]</span>
+      <span class="n">suma</span> <span class="o">=</span> <span class="mf">0.</span>
+      <span class="n">none</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">:</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="n">except_from</span><span class="p">:</span>
+             <span class="k">continue</span>
+          <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+          <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+             <span class="n">none</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">suma</span><span class="o">+=</span><span class="n">v</span>
+
+      <span class="k">if</span> <span class="n">suma</span> <span class="o">&gt;=</span> <span class="n">to</span> <span class="ow">and</span> <span class="n">none</span><span class="p">:</span>
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">none</span><span class="p">:</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+         <span class="n">none</span> <span class="o">=</span> <span class="p">[]</span>
       <span class="k">if</span> <span class="n">suma</span> <span class="o">==</span> <span class="n">to</span><span class="p">:</span>
          <span class="k">return</span>
-      <span class="n">ratio</span> <span class="o">=</span> <span class="n">to</span> <span class="o">/</span> <span class="n">suma</span>
-      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">:</span>
-         <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">except_from</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">ratio</span></div>
+      <span class="k">if</span> <span class="n">none</span><span class="p">:</span>
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">none</span><span class="p">:</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">to</span> <span class="o">-</span> <span class="n">suma</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">none</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="n">ratio</span> <span class="o">=</span> <span class="n">to</span> <span class="o">/</span> <span class="n">suma</span>
+
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">except_from</span><span class="p">:</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="n">ratio</span></div>
+
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -241,9 +310,12 @@
       <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_occupation</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="Occupation.to_occupation"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.to_occupation">[docs]</a>  <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">to_occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">to_occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">site</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Create an occupation object associated with the given sites object &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">Occupation</span><span class="p">):</span>
-         <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">)</span>
+         <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">site</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="n">occupation</span> <span class="o">=</span> <span class="n">Occupation</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">occupation</span><span class="p">,</span> <span class="n">site</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">occupation</span></div>
 
 <div class="viewcode-block" id="Occupation.check"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.occupations.Occupation.html#ase2sprkkr.sprkkr.occupations.Occupation.check">[docs]</a>  <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

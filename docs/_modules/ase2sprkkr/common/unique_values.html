@@ -84,9 +84,13 @@
              
   <h1>Source code for ase2sprkkr.common.unique_values</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. &quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+
 
 <div class="viewcode-block" id="UniqueValuesMapping"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping">[docs]</a><span class="k">class</span> <span class="nc">UniqueValuesMapping</span><span class="p">:</span>
   <span class="sd">&quot;&quot;&quot; A class, that can map a collection of (possible non-unique) values to a set</span>
@@ -108,7 +112,7 @@
 <span class="sd">        array([1, 2, 3, 1])</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UniqueValuesMapping.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">value_to_class_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="UniqueValuesMapping.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span><span class="n">List</span><span class="p">,</span> <span class="n">value_to_class_id</span><span class="p">:</span><span class="n">Dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
@@ -138,8 +142,10 @@
 <span class="sd">        the given number (typically with 1).</span>
 
 <span class="sd">      ..doctest::</span>
-<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).indexes(start_from = 1)</span>
-<span class="sd">        {1: [1, 3], 2: [2]}</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).indexes()</span>
+<span class="sd">        {1: [0, 2], 4: [1]}</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).indexes(start_from = 1)</span>
+<span class="sd">        {1: [1, 3], 4: [2]}</span>
 <span class="sd">      &quot;&quot;&quot;</span>
 
       <span class="n">indexes</span> <span class="o">=</span> <span class="p">{}</span>
@@ -156,42 +162,129 @@
   <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
 
+  <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">)</span>
+
 <div class="viewcode-block" id="UniqueValuesMapping.from_values"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.from_values">[docs]</a>  <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">from_values</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">from_values</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Create equivalence-classes mapping. Unlike the constructor,</span>
+<span class="sd">      this method tags the values by integers and also compute the reverse</span>
+<span class="sd">      (value to equivalence class) mapping.</span>
+
 <span class="sd">      values: iterable</span>
 <span class="sd">        Values to find the equivalence classes</span>
 
 <span class="sd">      length: int</span>
 <span class="sd">        Length of values - provide it, if len(values) is not available</span>
 
-<span class="sd">      none_tuples: bool</span>
-<span class="sd">        If True, the items of the values are 2-items tuples. Then, None in the second one</span>
-<span class="sd">        means &quot;any class&quot;. Such one will be assigned to the first available class of</span>
-<span class="sd">        the first tuple&#39;s value.</span>
+<span class="sd">      .. doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1.,4.,1.]).mapping</span>
+<span class="sd">        array([1, 2, 1])</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id</span>
+<span class="sd">        {1.0: 1, 4.0: 2}</span>
 <span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="o">.</span><span class="n">_create_mapping</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="UniqueValuesMapping._create_mapping"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping._create_mapping">[docs]</a>  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">_create_mapping</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
       <span class="n">mapping</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
       <span class="n">reverse</span> <span class="o">=</span> <span class="p">{}</span>
 
       <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
           <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">reverse</span><span class="p">:</span>
              <span class="n">tag</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
-          <span class="k">elif</span> <span class="n">none_tuples</span> <span class="ow">and</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="n">reverse</span><span class="p">:</span>
-             <span class="n">tag</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">[(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">)]</span>
-             <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">del</span> <span class="n">reverse</span><span class="p">[(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span><span class="p">)]</span>
-                <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
           <span class="k">else</span><span class="p">:</span>
-             <span class="n">tag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+             <span class="n">tag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reverse</span><span class="p">)</span> <span class="o">+</span> <span class="n">start_from</span>
              <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
           <span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
+      <span class="k">return</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span></div>
 
-      <span class="k">return</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UniqueValuesMapping.merge"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.merge">[docs]</a>  <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Merge two sets. Resulting UniqueValues uses integers as keys&quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">),</span> <span class="n">none_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_values</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">other</span><span class="p">),</span> <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UniqueValuesMapping.is_equivalent_to"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.is_equivalent_to">[docs]</a>  <span class="k">def</span> <span class="nf">is_equivalent_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">,</span><span class="n">Iterable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+      <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Return, whether the mapping is equal to given another mapping, regardless the actual &quot;names&quot; of the equivalence classes.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      mapping</span>
+<span class="sd">        The other mapping can be given either by instance of this class, or just by any iterable (that returns equivalence class names for the items)</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,0])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([0,0,0])</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([0,1,1])</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to([5,3,5])</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,4,1]).is_equivalent_to(UniqueValuesMapping.from_values([2,5,2]))</span>
+<span class="sd">        True</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">are_equivalent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UniqueValuesMapping.are_equivalent"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.are_equivalent">[docs]</a>  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">are_equivalent</span><span class="p">(</span><span class="n">a</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">,</span><span class="n">Iterable</span><span class="p">],</span><span class="n">b</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">,</span><span class="n">Iterable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+      <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Return, whether the two mappings are equal, regardless the actual &quot;names&quot; of the equivalence classes.</span>
+
+<span class="sd">      See :meth:`is_equivalent&lt;ase2sprkkr.common.unique_values_mapping.UniqueValuesMapping.is_equivalent_to&gt;`</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="n">mp</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="n">js</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mp</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+          <span class="k">else</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">js</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+             <span class="n">js</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+             <span class="n">mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">j</span>
+      <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="UniqueValuesMapping.normalize"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.normalize">[docs]</a>  <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Replace the names of equivalent classes by the integers.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      strict</span>
+<span class="sd">         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),</span>
+<span class="sd">         where n is the number of equivalence classes.</span>
+<span class="sd">         If False and the names are already integers in a numpy array, do nothing.</span>
+
+<span class="sd">      start_from</span>
+<span class="sd">         Number the equivalent classes starting from.</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      unique_values_mapping</span>
+<span class="sd">         Return self.</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping</span>
+<span class="sd">        array([1, 2, 1])</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]</span>
+<span class="sd">        2</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping</span>
+<span class="sd">        array([0, 1, 0])</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">strict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
+           <span class="k">return</span>
+      <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_mapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="n">start_from</span><span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span>
+      <span class="k">return</span> <span class="bp">self</span></div></div>
 </pre></div>
 
            </div>

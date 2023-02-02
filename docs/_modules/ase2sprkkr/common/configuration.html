@@ -90,21 +90,21 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <div class="viewcode-block" id="Configuration"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration">[docs]</a><span class="k">class</span> <span class="nc">Configuration</span><span class="p">:</span>
-  <span class="sd">&quot;&quot;&quot; Common base class for all configurations values and containers. I.e.</span>
+  <span class="sd">&quot;&quot;&quot; The common base class for all configurations values and containers. I.e.</span>
 <span class="sd">  for :class:`Options&lt;ase2sprkkr.common.options.Option&gt;` and :class:`Sections&lt;ase2sprkkr.common.configuration_containers.Section&gt;`.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Configuration.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Create the object. Just sets</span>
+<span class="sd">      Create the object. Just sets the two properties from the parameters.</span>
 
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
 <span class="sd">      definition: ase2sprkkr.common.configuration_definitions.BaseDefinition</span>
-<span class="sd">      This configuration object definition.</span>
+<span class="sd">        Definition of this configuration object.</span>
 
 <span class="sd">      container: ase2sprkkr.common.configuration_containers.ConfigurationContainer</span>
-<span class="sd">      The container, that will own the configuration item.</span>
+<span class="sd">        The container, that owns this configuration object.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
 
       <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="n">definition</span>

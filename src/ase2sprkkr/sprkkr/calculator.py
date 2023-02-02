@@ -10,6 +10,8 @@ For more informations about SPR-KKR, follow this
 view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`
 
 """
+from __future__ import annotations
+
 import os, sys
 from ase.calculators.calculator import Calculator, all_changes
 
@@ -19,7 +21,7 @@ from ..common.decorators import add_to_signature
 import shutil
 import copy
 import subprocess
-from typing import Union, Any, Dict
+from typing import Union, Any, Dict, Optional
 
 class SPRKKR(Calculator):
     """
@@ -42,6 +44,7 @@ class SPRKKR(Calculator):
                  mpi=False,
                  input_parameters=None, options={}, potential=True,
                  executable_postfix=True,
+                 empty_spheres : str|bool = 'auto',
                  **kwargs):
         """
         Parameters
@@ -100,11 +103,15 @@ class SPRKKR(Calculator):
           None means that the potential is required to be supplied, when calculate or save_input
           methods are called.
 
-        executable_postfix: str or boolean
+        executable_postfix: str or bool
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
           True: use SPRKKR_EXECUTABLE_SUFFIX environment variable
           False: do not append anything (the same as '')
+
+        empty_spheres
+          Whether to add empty spheres to the structure or not.
+          Default 'auto' means add if no empty sphere is present.
        """
         if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
@@ -139,6 +146,7 @@ class SPRKKR(Calculator):
         if options:
           self.input_parameters.set(options, unknown = 'find')
         self.print_output = print_output
+        self.empty_spheres = empty_spheres
         """ The default parameter for the print_output arguments of
         :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the
         runned SPR-KKR should be written to the standard ouput (in addition to the output file). """
@@ -325,7 +333,11 @@ class SPRKKR(Calculator):
     def save_input(self, atoms=None, input_parameters=None,
                   potential=None, input_file=None, potential_file=None, output_file=False,
                   create_subdirs=False,
-                  options={},return_files=False,mpi=None):
+                  empty_spheres: Optional[str|bool] = None,
+                  mpi=None,
+                  options={},
+                  return_files=False
+                  ):
         """
         Save input and potential files for a calculation.
 
@@ -370,6 +382,16 @@ class SPRKKR(Calculator):
         create_subdirs: boolean
             If true, create directories if they don't exists.
 
+        mpi: bool or None
+            Save input for a mpi calculation. None means to use the mpi value specified in the
+            constructor. Actually, the only difference is that the temporary input file has
+            to have filename.
+
+        empty_spheres
+            Whether to add empty spheres to the structure or not.
+            Default 'auto' means add if no empty sphere is present.
+            None means use for this parameter the default value from the calculator.
+
         options: dict
             Options to set to the input_parameters. If input_parameters are given by a filename,
             they are readed from the file, altered by the options and then the modified input file
@@ -378,10 +400,6 @@ class SPRKKR(Calculator):
         return_files: boolean
             Return open files object instead of just string filenames.
 
-        mpi: bool or None
-            Save input for a mpi calculation. None means to use the mpi value specified in the
-            constructor. Actually, the only difference is that the temporary input file has
-            to have filename.
 
         Returns
         -------
@@ -456,7 +474,22 @@ class SPRKKR(Calculator):
         # potential - potential object (to be updated by atoms)
 
         potential = potential if potential is not None else self.potential
-        atoms = atoms or self._atoms
+        if atoms:
+          atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+        else:
+          atoms = self._atoms
+
+        if empty_spheres is None:
+           empty_spheres = self.empty_spheres
+        if empty_spheres == 'auto':
+           empty_spheres = True
+           for site in atoms.sites:
+               if site.is_vacuum():
+                  empty_spheres = False
+        if empty_spheres:
+           from ..bindings.es_finder import add_empty_spheres
+           add_empty_spheres(atoms)
+
         if isinstance(potential, str):
               if potential_file:
                  potential = Potential.from_file(potential)
@@ -532,8 +565,10 @@ class SPRKKR(Calculator):
     def run(self, atoms=None, input_parameters=None,
                   potential=None, input_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
+                  empty_spheres : Optional[str|bool] = None,
+                  mpi : bool=None,
                   options={},
-                  print_output=None, executable_postfix=None, mpi=None):
+                  print_output=None, executable_postfix=None):
         """
         Do the calculation, return various results.
 
@@ -568,8 +603,11 @@ class SPRKKR(Calculator):
 
         input_parameters, input_file, _, output_file = self.save_input(
                             atoms=atoms, input_parameters=input_parameters,
-                            potential=potential, output_file=output_file, options=options,
-                            return_files=True, mpi=mpi)
+                            potential=potential, output_file=output_file,
+                            empty_spheres=empty_spheres,
+                            mpi=mpi,
+                            options=options,
+                            return_files=True)
 
         return input_parameters.run_process(self, input_file, output_file, print_output if print_output is not None else self.print_output,
                                      executable_postfix = executable_postfix,
@@ -580,8 +618,10 @@ class SPRKKR(Calculator):
                   input_parameters=None, potential=None,
                   input_file=None, potential_file=None, output_file=None,
                   create_subdirs=False,
+                  empty_spheres : Optional[str|bool] = None,
+                  mpi : bool=None,
                   options={},
-                  print_output=None, executable_postfix=None, mpi=None):
+                  print_output=None, executable_postfix=None):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
         for the requested properties (currently always the SCF one) and updates the
@@ -625,8 +665,10 @@ class SPRKKR(Calculator):
                   atoms, input_parameters,
                   potential, input_file, potential_file, output_file,
                   create_subdirs,
+                  empty_spheres,
+                  mpi,
                   options,
-                  print_output, executable_postfix, mpi=mpi
+                  print_output, executable_postfix
         )
         if hasattr(out, 'energy'):
             self.results.update({

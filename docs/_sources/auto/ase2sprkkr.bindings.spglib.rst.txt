@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.bindings.spglib**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.spglib.SpacegroupInfo 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.bindings.spglib
@@ -22,15 +30,20 @@ Full name: **ase2sprkkr.bindings.spglib**
       :toctree:
       :template: custom-base-template.rst
    
-      compute_spacegroup
-      equivalent_sites_for_spacegroup
       possibly_equivalent_sites
-      spacegroup_dataset
    
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SpacegroupInfo
    
    
 

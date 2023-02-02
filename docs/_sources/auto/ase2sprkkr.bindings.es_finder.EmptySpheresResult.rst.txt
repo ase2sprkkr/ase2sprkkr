@@ -1,0 +1,36 @@
+EmptySpheresResult
+==================
+
+
+.. currentmodule:: ase2sprkkr.bindings.es_finder
+
+.. autoclass:: EmptySpheresResult
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.es_finder.EmptySpheresResult
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

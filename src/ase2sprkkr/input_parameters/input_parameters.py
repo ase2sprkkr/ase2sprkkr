@@ -4,6 +4,7 @@ These configuration parameters are supplied to SPR-KKR executables as input file
 The containers are also the objects, that take care about executing the SPR-KKR
 executables.
 """
+from __future__ import annotations
 
 import os
 import io
