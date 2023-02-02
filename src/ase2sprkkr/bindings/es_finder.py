@@ -92,9 +92,6 @@ def empty_spheres(atoms: Atoms,
 
   if radii_ratios_map is None:
     radii_ratios_map = {}
-  for s in atoms.symbols:
-    if not s in radii_ratios_map:
-      radii_ratios_map[s] = 1.0
 
   atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
   sym_dataset = atoms.spacegroup_info.dataset
@@ -115,6 +112,9 @@ def empty_spheres(atoms: Atoms,
   )
 
   pmg_structure = AseAtomsAdaptor.get_structure(atoms)
+  for s in map(str, pmg_structure.species):
+    if not s in radii_ratios_map:
+      radii_ratios_map[s] = 1.0
   structure = StructureAdapter(pmg_structure, radii_ratios_map, overlap_matrix)
 
   params = Parameters(**params)
