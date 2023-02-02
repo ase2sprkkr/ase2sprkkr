@@ -125,7 +125,7 @@ def empty_spheres(atoms: Atoms,
      return None
 
   empty = SPRKKRAtoms(symbols='X'*len(res.es_radii), symmetry = False)
-  empty.set_positions(res.es_positions)
+  empty.set_positions(res.es_positions @ atoms.cell)
   for i,radius in zip(empty.sites, res.es_radii):
       next(iter(i.occupation)).radius=radius
   if extend:
