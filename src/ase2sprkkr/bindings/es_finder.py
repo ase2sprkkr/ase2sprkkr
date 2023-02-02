@@ -86,7 +86,7 @@ def empty_spheres(atoms: Atoms,
      raise ImportError('Cannot import es_finder or pymatgen. Please install it, or set empty_spheres parameter to False') \
          from import_error
 
-  params = locals()
+  params = dict(locals())
   for i in ('atoms', 'overlap_matrix', 'radii_ratios_map', 'extend'):
       del params[i]
 
