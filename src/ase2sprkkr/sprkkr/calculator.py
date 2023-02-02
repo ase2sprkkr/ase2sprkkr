@@ -487,8 +487,8 @@ class SPRKKR(Calculator):
                if site.is_vacuum():
                   empty_spheres = False
         if empty_spheres:
-           from ..bindings.es_finder import empty_spheres
-           empty_spheres(atoms, extend=True)
+           from ..bindings.es_finder import add_empty_spheres
+           add_empty_spheres(atoms)
 
         if isinstance(potential, str):
               if potential_file:
