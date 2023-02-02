@@ -333,7 +333,7 @@ class SPRKKR(Calculator):
     def save_input(self, atoms=None, input_parameters=None,
                   potential=None, input_file=None, potential_file=None, output_file=False,
                   create_subdirs=False,
-                  empty_spheres : Optional[str|bool] = None,
+                  empty_spheres: Optional[str|bool] = None,
                   mpi=None,
                   options={},
                   return_files=False
