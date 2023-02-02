@@ -130,7 +130,9 @@ def empty_spheres(atoms: Atoms, *,
 
   params = Parameters(**params)
 
-  res = run_finder(params, structure, symmetry)
+  from ..common.no_output import NoOutput
+  with NoOutput(suppress=verbosity<=0):
+    res = run_finder(params, structure, symmetry)
 
   return EmptySpheresResult(res.es_positions, res.es_radii)
 
