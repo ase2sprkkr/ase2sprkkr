@@ -8,8 +8,18 @@ import os
 from ..input_parameters import InputParameters
 import tempfile
 import re
+import pytest
 
 class TestDefinitions(TestCase):
+
+  def change_task(self):
+      ip=InputParameters.create_task('DOS')
+      ip.ENERGY.EMIN=2
+      ip.ENERGY.EMAX=5
+      ip.change_task('SCF')
+      assert ip.ENERGY.EMIN == 2
+      with pytest.raises(AttributeError):
+        ip.ENERGY.EMIN
 
   def test_definitions(self):
       path = os.path.join(os.path.dirname(__file__), '../examples')

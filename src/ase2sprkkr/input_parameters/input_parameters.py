@@ -305,7 +305,11 @@ class InputParameters(ConfigurationFile):
       input_parameters: InputParameters
         Input parameters with the default values for the given task.
       """
-      return InputParameters(cls.definitions[name.upper()])
+      return InputParameters(cls.task_definition(name))
+
+  @classmethod
+  def task_definition(cls, task_name):
+      return cls.definitions[name.upper()]
 
   @classmethod
   def default_parameters(cls):
@@ -344,6 +348,15 @@ class InputParameters(ConfigurationFile):
       out = d.configuration_type_name
       out = out + ' for task ' + d.name.upper()
       return out
+
+  def change_task(self, task):
+      """ Change the task to the given task. Retain the value of the options,
+      that are present in the new task.
+      """
+      vals = self.to_dict()
+      self._definition = self.task_definition(task)
+      self._init_members_from_the_definition()
+      self.set(vals, unknown = 'ignore')
 
 #at least, to avoid a circular import
 from ..sprkkr import calculator

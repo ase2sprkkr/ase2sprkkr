@@ -27,18 +27,21 @@ class ConfigurationContainer(Configuration):
   def __init__(self, definition, container=None):
       """ Create the container and its members, according to the definition """
       super().__init__(definition, container)
-      self._members = OrderedDict()
       """
       The members of the container, in a form of ``{obj.name : obj}``
       """
-      self._interactive_members = OrderedDict()
+      self._init_members_from_the_definition()
+
+  def _init_members_from_the_definition(self):
+      self._members = OrderedDict()
       """
       Non-hidden members of the containers, accesible via sanitized names.
       I.e. via names with whitespaces and other special characters replaced by underscore.
       These sanitized names are then used as names for "attributes" of this container, to
       make the members accesible via ``<container>.<member>`` notation.
       """
-      for v in definition.members():
+      self._interactive_members = OrderedDict()
+      for v in self._definition.members():
           self._add(v.create_object(self))
 
   def members(self):
