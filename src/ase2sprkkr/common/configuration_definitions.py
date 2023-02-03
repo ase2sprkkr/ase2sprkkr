@@ -1010,7 +1010,8 @@ class ContainerDefinition(BaseDefinition):
         out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
 
-
+    def validate(self, container, why:str='save'):
+        pass
 
 class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.

@@ -363,6 +363,7 @@ class ConfigurationContainer(Configuration):
         ``set`` - Validation on user input. Allow required values not to be set.
         ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
       """
+      self._definition.validate(self, why)
       for o in self:
           o.validate(why)
 
