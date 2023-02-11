@@ -309,7 +309,7 @@ class InputParameters(ConfigurationFile):
 
   @classmethod
   def task_definition(cls, task_name):
-      return cls.definitions[name.upper()]
+      return cls.definitions[task_name.upper()]
 
   @classmethod
   def default_parameters(cls):
