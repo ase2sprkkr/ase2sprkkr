@@ -146,4 +146,13 @@ class Site:
 
       return AtomicTypesLookup()
 
+  @staticmethod
+  def copy_sites(sites):
+      cache = {}
+      def site(x):
+          if not x in cache:
+             cache[x] = x.copy()
+          return cache[x]
+      return np.fromiter((site(i) for i in sites), like=sites, dtype=object)
+
 from .occupations import Occupation
