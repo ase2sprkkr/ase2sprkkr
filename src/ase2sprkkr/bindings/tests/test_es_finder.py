@@ -8,6 +8,7 @@ import unittest
 from .. import es_finder
 from ase.build import bulk
 from ...sprkkr.sprkkr_atoms import SPRKKRAtoms
+import numpy as np
 
 class TestEsFinder(TestCase):
 
@@ -17,9 +18,8 @@ class TestEsFinder(TestCase):
          raise unittest.SkipTest("ES finder cannot be imported, skipping the test")
 
        atoms = bulk('Co')
-       self.assertIsNone(es_finder.empty_spheres(atoms))
+       self.assertEqual(0, len(es_finder.empty_spheres(atoms).positions))
 
        atoms = bulk('NaCl',  "rocksalt", a=5.64)
        out=es_finder.empty_spheres(atoms)
-       self.assertEqual(SPRKKRAtoms, out.__class__)
-       self.assertEqual(2, len(out))
+       self.assertEqual(12, len(out.positions))
