@@ -318,7 +318,7 @@ class ConfigurationContainer(Configuration):
       The sanitized names are keys in ``interactive_members`` array, and thus
       the members are accesible by ``<container>.<member>`` notation.
       """
-      return re.sub(r'[-\s.]','_',name)
+      return re.sub(r'[()]','', re.sub(r'[-\s.]','_',name))
 
   def _add(self, member):
       name = member.name
