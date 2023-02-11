@@ -1011,7 +1011,7 @@ class ContainerDefinition(BaseDefinition):
         return out
 
     def validate(self, container, why:str='save'):
-        pass
+        return True
 
 class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
