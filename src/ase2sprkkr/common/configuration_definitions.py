@@ -474,18 +474,18 @@ class ValueDefinition(BaseDefinition):
     """
     return self.type.additional_description(prefix)
 
-  def validate(self, value):
+  def validate(self, value, why='set'):
     if value is None:
        if self.required:
           raise ValueError(f"The value is required for {self.name}, cannot set it to None")
        return True
     if self.fixed_value is not None and not np.array_equal(self.fixed_value, value):
        raise ValueError(f'The value of {self.name} is required to be {self.fixed_value}, cannot set it to {value}')
-    self.type.validate(value, self.name)
+    self.type.validate(value, self.name, why='set')
 
-  def convert_and_validate(self, value):
+  def convert_and_validate(self, value, why='set'):
     value = self.type.convert(value)
-    self.validate(value)
+    self.validate(value, why)
     return value
 
   @property
@@ -922,8 +922,10 @@ class ContainerDefinition(BaseDefinition):
        if self.validate:
           def _validate(s, loc, value):
               #just pass the dict to the validate function
-              is_ok = self.validate(value[0])
+              is_ok = self.validate(MergeDictAdaptor(value[0], self), 'parse')
               if is_ok is not True:
+                if is_ok is None:
+                   is_ok = f'Validation of parsed data of {self.name} section failed'
                 raise pp.ParseException(s, loc, is_ok)
               return value
           values.addParseAction(_validate)
@@ -1110,3 +1112,25 @@ class ConfigurationRootDefinition(ContainerDefinition):
        out=super()._grammar(allow_dangerous)
        out.ignore("#" + pp.restOfLine + pp.LineEnd())
        return out
+
+class MergeDictAdaptor:
+    """ This class returns a read-only dict-like class
+    that merge values from a container and from the
+    definition of a section """
+
+    def __init__(self, values, definition):
+        self.values = values
+        self.definition = definition
+
+    def __hasitem__(self, name):
+        return self.values.__hasitem__(name) or \
+               self.definition.__hasitem__(name)
+
+    def __getitem__(self, name):
+        try:
+            return self.values[name]
+        except KeyError:
+            return self.definition[name].get_value()
+
+    def __repr__(self):
+        return f'Section {self.definition.name} with values {self.values}'

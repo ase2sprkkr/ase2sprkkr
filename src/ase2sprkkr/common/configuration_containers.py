@@ -363,10 +363,22 @@ class ConfigurationContainer(Configuration):
         ``set`` - Validation on user input. Allow required values not to be set.
         ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
       """
-      self._definition.validate(self, why)
+      self._definition.validate(DictAdaptor(self), why)
       for o in self:
           o.validate(why)
 
+
+class DictAdaptor:
+  """ This class wraps a container to behave as a read-only dict """
+
+  def __init__(self, container):
+      self.container=container
+
+  def __hasitem__(self, name):
+      return self.container__hasitem__(name)
+
+  def __getitem__(self, name):
+      return self.container.__getitem__(name)()
 
 class BaseSection(ConfigurationContainer):
   """ A section of SPRKKR configuration - i.e. part of the configuration file. """
