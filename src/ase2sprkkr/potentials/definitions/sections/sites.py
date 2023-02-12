@@ -12,7 +12,7 @@ class SitesSection(PotentialSection):
 
   def _set_from_atoms(self, atoms, write_io_data):
       self['SCALED_ATOMIC_POSITIONS'].set(
-          atoms.positions / ( write_io_data['lattice.alat'] * self['BASSCALE']())
+          atoms.positions[write_io_data['sites_order']] / ( write_io_data['lattice.alat'] * self['BASSCALE']())
       )
 
   def _update_atoms(self, atoms, read_io_data):

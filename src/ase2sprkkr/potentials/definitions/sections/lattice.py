@@ -21,6 +21,10 @@ class LatticeSection(PotentialSection):
       self['ALAT'].set(alat / Bohr)
       self['SCALED_PRIMITIVE_CELL'].set(atoms.cell / alat)
       write_io_data['lattice.alat'] = alat
+      if self.SYSDIM() == '3D':
+         write_io_data['sites_order'] = slice(None)
+      else:
+         raise ValueError(f'{self.SISDIM()} problem periodicity type not implemented')
 
   def _update_atoms(self, atoms, read_io_data):
       alat = self['ALAT']() * Bohr

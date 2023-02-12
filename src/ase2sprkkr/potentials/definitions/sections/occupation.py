@@ -28,7 +28,7 @@ class OccupationSection(PotentialSection):
           )
 
       self['DATA'].set([
-        onesite(i) for i in atoms.sites
+        onesite(i) for i in atoms.sites[write_io_data['sites_order']]
       ])
 
   def _update_atoms(self, atoms, read_io_data):
