@@ -950,7 +950,7 @@ class ContainerDefinition(BaseDefinition):
 
         return cls.child_class.grammar_of_delimiter() + cls.custom_value_grammar()
 
-    custom_name_characters = pp.alphanums + '_-'
+    custom_name_characters = pp.alphanums + '_-()'
     """ Which characters can appears in an unknown child (value/section) name """
 
     @classmethod
