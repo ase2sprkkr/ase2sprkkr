@@ -314,5 +314,21 @@ class SPRKKRAtoms(Atoms):
           self._init_sites(consider_old=True)
        return out
 
+   def copy(self):
+       out = super().copy()
+       SPRKKRAtoms.promote_ase_atoms(out)
+       out.set_sites(Site.copy_sites(out.sites), True)
+       return out
+
+   def __add__(self, other):
+       out=super().__add__(other)
+       out.set_sites(Site.copy_sites(out.sites), True)
+       return out
+
+   def __iadd__(self, other):
+       SPRKKRAtoms.promote_ase_atoms(other)
+       return super().__iadd__(other)
+
+
 #at the last - to avoid circular imports
 from ..potentials import potentials
