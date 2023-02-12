@@ -26,7 +26,7 @@ class ReferenceSystemSectionDefinition(PotSectionDefinition):
       ]
       super().__init__(name, members, has_hidden_members=True, alternative_names = alternative_names)
 
-  def validate(self, values):
+  def validate(self, values, why='set'):
       return values['NREF'] == len(values['DATA']) or \
              'Number of reference systems differs from NREF'
 
