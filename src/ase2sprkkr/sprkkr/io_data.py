@@ -48,5 +48,21 @@ class WriteIoData(BaseIoData):
 
 
 class ReadIoData(BaseIoData):
-    """ Object to store data during reading of a potential file.
-        Nothing special is here yet, it is just a dict """
+    """ Object to store data during reading of a potential file. """
+
+    def __init__(self):
+        self._postponed = []
+
+    def apply_on_atoms(self, handler, atoms):
+        """ Apply the given function on the atoms object, if not-None is given.
+        However, the store the handler, to be executed (or repeated) on a newly
+        given atoms - for the case, that a new atoms object will be created later
+        """
+        if atoms:
+           handler(atoms)
+        self._postponed.append(handler)
+
+    def update_atoms(self, atoms):
+        """ Replay are the stored handlers on the given atoms object """
+        for handler in self._postponed:
+             handler(atoms)

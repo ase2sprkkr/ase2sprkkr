@@ -14,7 +14,12 @@ class LatticeSection(PotentialSection):
       it creates (during reading) the ASE Cell object """
 
   def _set_from_atoms(self, atoms, write_io_data):
-      bravais_lattice = atoms.cell.get_bravais_lattice()
+      if atoms.pbc.sum() == 3:
+          self.SYSDIM = '3D'
+      else:
+          raise ValueError("I don't know which calculation I should run with the periodicity of type: {atoms.pbc}.")
+
+      bravais_lattice = bcell.get_bravais_lattice()
       pearson_symbol = bravais_lattice.pearson_symbol
       self['BRAVAIS'].set(LatticeData.cell_symmetries[pearson_symbol])
       alat = bravais_lattice.a
@@ -31,8 +36,20 @@ class LatticeSection(PotentialSection):
       cell = Cell(self['SCALED_PRIMITIVE_CELL']() * alat)
       read_io_data['lattice.cell'] = cell
       read_io_data['lattice.alat'] = alat
+      if self.SYSDIM() == '3D':
+          regions = []
+          pbc = [True, True, True]
       if atoms:
          atoms.cell = cell
+      else:
+          raise ValueError(f'Unknown problem periodicity type {self.SYSDIM()}')
+
+      def update(atoms):
+          atoms.cell = cell
+          atoms.pbc = pbc
+          atoms.set_regions(regions)
+
+      read_io_data.apply_on_atoms(update, atoms)
 
 class LatticeSectionDefinition(PotSectionDefinition):
 

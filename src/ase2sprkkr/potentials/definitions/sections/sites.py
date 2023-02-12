@@ -18,16 +18,15 @@ class SitesSection(PotentialSection):
   def _update_atoms(self, atoms, read_io_data):
       positions = self['SCALED_ATOMIC_POSITIONS']() * \
             (read_io_data['lattice.alat'] * self['BASSCALE']())
-      new = True
       try:
          if atoms:
             atoms.set_positions(positions)
-            new = False
+            return
       except ValueError:
-            pass
-      if new:
-         atoms = SPRKKRAtoms(positions = positions, cell = read_io_data['lattice.cell'], potential = self._container)
-         return atoms
+         pass
+      atoms = SPRKKRAtoms(positions = positions, potential = self._container)
+      read_io_data.update_atoms(atoms)
+      return atoms
 
 class SitesSectionDefinition(PotSectionDefinition):
 
