@@ -72,6 +72,27 @@ class SPRKKRAtoms(Atoms):
        by constructor and by promote_ase_atoms"""
        self._symmetry = symmetry
        self._potential = potential
+       self._regions = {}
+
+   @property
+   def regions(self):
+       return self._regions
+
+   def add_region(self, region):
+       return self._regions[region]
+       """
+       Add a region of a given name
+       """
+       self.regions[name] = region.name
+       region.set_atoms(self)
+
+   def remove_region(self, name):
+       del self._regions[name]
+
+   def set_regions(self, regions:List):
+       self._regions = { r.name : r for r in regions }
+       for region in self._regions.values():
+           region.set_atoms(self)
 
    @property
    def symmetry(self):
