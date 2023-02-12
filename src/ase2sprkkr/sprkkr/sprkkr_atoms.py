@@ -8,7 +8,7 @@ from ..bindings.spglib import SpacegroupInfo
 import numpy as np
 from ..sprkkr.sites import Site
 from ..common.misc import numpy_index
-from typing import Optional
+from typing import Optional, Dict, List, Union
 
 class SPRKKRAtoms(Atoms):
    """ ASE Atoms object extended by the data necessary for SPR-KKR calculations """
@@ -246,12 +246,23 @@ class SPRKKRAtoms(Atoms):
        properties (symbols, occupancy, spacegroup_info) according to the sites. """
        self.set_sites(v)
 
-   def set_sites(self, sites:np.ndarray, spacegroup_info:Optional[SpacegroupInfo]=None):
+   def set_sites(self, sites:np.ndarray, spacegroup_info:Union[SpacegroupInfo, bool, None]=None):
        """ Set the sites property and update all other dependent
        properties (symbols, occupancy) according to the sites.
 
        Unlike ``sites`` setter, this method  allow also set the spacegoup_info
        containing the computed informations about the symmetry.
+
+       Parameters
+       ----------
+       sites
+        The array of the :class:`ase2sprkkr.sprkkr.sites.Site` objects.
+
+       sg_info
+        Information, about the symmetry.
+        If None is given, no info is available, the symmetry will be determined if needed.
+        If False, there is no symmetry.
+        If True, retain the current symmetry.
        """
 
        an = np.zeros(len(sites), dtype= int)
@@ -262,9 +273,15 @@ class SPRKKRAtoms(Atoms):
        self.set_atomic_numbers(an)
        self.info['occupancy'] = occ
 
-       if spacegroup_info:
+       if spacegroup_info is True:
+          #retain the current symmetry
+          pass
+       elif spacegroup_info is False:
+          self.info['spacegroup_info'] = SpacegroupInfo(None)
+       elif spacegroup_info:
           self.info['spacegroup_info'] = spacegroup_info
        elif 'spacegroup_info' in self.info:
+          #None have been given as spacegroup_info argument, delete any information about the symmetry
           del self.info['spacegroup_info']
        self.set_array(SPRKKRAtoms.sites_array_name, sites)
 
