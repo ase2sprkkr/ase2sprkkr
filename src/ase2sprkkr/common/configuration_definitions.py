@@ -497,7 +497,7 @@ class ValueDefinition(BaseDefinition):
       self.name_format = value
 
   def __str__(self):
-    out="SPRKKR({} of {})".format(self.name, str(self.type))
+    out="<{}: {}>".format(self.name, str(self.type))
     val = self.get_value()
     if val is not None:
       out+= "={}".format(val)
@@ -874,37 +874,36 @@ class ContainerDefinition(BaseDefinition):
          yield head_item, grammar_chain
 
        if self.force_order:
-           if custom_value:
-              cvs = pp.ZeroOrMore(custom_value + delimiter)
-           else:
-              cvs = None
-           first = True
-           def not_first(x):
-               nonlocal first
-               first = False
-               return x
 
-           inter = pp.Empty().addCondition(lambda x: first).setName('<is_first>')
-           if cvs:
-             inter = inter | (delimiter + cvs)
-             inter.setName('<is first>|[<custom section>...]<delimiter>')
+           init = pp.Empty()
+           def set_loc(loc, toks):
+               init.location = loc
+           init.setParseAction(set_loc)
+
+           first = pp.Empty().addCondition(lambda loc, toks: loc == init.location)
+           if custom_value:
+              cvs = pp.ZeroOrMore(custom_value + delimiter).setName('<custom...>')
+              after = delimiter + cvs
            else:
-             inter = inter | delimiter
-             inter.setName('<is first>|<delimiter>')
+              after = pp.Forward() << delimiter
+           after.addCondition(lambda loc, toks: loc != init.location)
+           inter = first | after
 
            def sequence():
                for head,g in grammars():
-                   g.addParseAction(not_first)
                    g = inter + g
                    if head.is_optional:
                       g = pp.Optional(g)
                    yield g
 
            values  = pp.And([ i for i in sequence()])
+
            if custom_value:
               if not self._first_section_is_fixed():
                   values = cvs + values
               values += pp.ZeroOrMore(delimiter + custom_value)
+           values = init + values
+
        else:
            it = grammars()
            #store the first fixed "chain of sections"
