@@ -38,3 +38,19 @@ Architecture changes
 * Default GrammarType for bool default values in InputParameters is now Flag.
 * Numbered arrays have been introduced to allow options like MDIR, MDIR1, MDIR2 etc...
 * Python 3.11 support added.
+
+Unpublished
+-------------------
+
+User interface
+~~~~~~~~~~~~~~
+* es_finder integration for empty spheres finding
+* Support for 2D problems
+* Routines for building 2D problem
+* change_task method for InputParameters
+
+Internals
+~~~~~~~~~
+* Sections validation
+* LatticeData class refactored
+* Brackets in value names are allowed
