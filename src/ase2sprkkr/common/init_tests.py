@@ -8,6 +8,7 @@ import numpy as np
 import inspect
 import sys
 import asyncio
+from ase.cell import Cell
 
 def patch_package(package, name):
     """ Set the package name for the tests, to make the relative imports working.
@@ -47,13 +48,13 @@ class TestCase(unittest.TestCase):
   """ A testcase class with some usefull assertions and a better numpy
   arrays comparison """
 
-  def assertAsyncEqual(self, a,b):
+  def assertAsyncEqual(self, a, b):
       return self.assertEqual(a, self.runAsync(b))
 
-  def assertAsyncRaises(self, a,b):
+  def assertAsyncRaises(self, a, b):
       return self.assertRaises(a, self.runAsync(b))
 
-  def assertAlmostEqual(self, a,b):
+  def assertAlmostEqual(self, a, b):
       np.testing.assert_almost_equal(a,b)
 
   @staticmethod
@@ -92,6 +93,11 @@ class TestCase(unittest.TestCase):
          np.ndarray,
          arr_testfce
       )
+      self.addTypeEqualityFunc(
+         Cell,
+         lambda a,b,msg: arr_testfce(np.array(a), np.array(b), msg)
+      )
+
 
       self.addTypeEqualityFunc(
          OrderedDict,
