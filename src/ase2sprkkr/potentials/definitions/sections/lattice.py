@@ -10,7 +10,7 @@ from ...potential_sections import PotentialSection
 
 from ....ase.pbc import check_symmetry
 from ....common.grammar_types import DefKeyword, Sequence, Table, Integer, Array
-from ....physics.lattice_data import LatticeData
+from ....physics.lattice_data import Pearson
 from ....sprkkr.atoms_region import AtomsRegion
 
 
@@ -37,9 +37,9 @@ class LatticeSection(PotentialSection):
           raise ValueError("I don't know which calculation I should run with the periodicity of type: {atoms.pbc}.")
 
       bravais_lattice = bcell.get_bravais_lattice()
-      self['BRAVAIS'].set(LatticeData.cell_symmetries[pearson_symbol])
       alat = bravais_lattice.a
       pearson_symbol = bravais_lattice.pearson_symbol
+      self['BRAVAIS'].set(Pearson.from_symbol(pearson_symbol).xband_data())
       if self.SYSDIM() == '3D':
          write_io_data['sites_order'] = slice(None)
          self.A_L3.clear()
@@ -114,7 +114,7 @@ class LatticeSectionDefinition(PotSectionDefinition):
       members = [
           V('SYSDIM', DefKeyword('3D', '2D')),
           V('SYSTYPE', DefKeyword('BULK', 'LIV', 'LIR')),
-          V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = LatticeData.cell_symmetries.values())),
+          V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = (i.xband_data() for i in Pearson.pearsons.values()))),
           V('ALAT', float),
           #Keywords and thus the numbering has just (or at least) 10 char long
           V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', format='<10'),length=3)),
