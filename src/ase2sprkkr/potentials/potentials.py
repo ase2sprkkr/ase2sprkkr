@@ -3,6 +3,7 @@
 from ..sprkkr.configuration import ConfigurationFile
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
+from io import StringIO
 
 class Potential(ConfigurationFile):
   """ It holds data form SPR-KKR potential file
@@ -86,11 +87,18 @@ class Potential(ConfigurationFile):
 
   @staticmethod
   def from_file(filename, atoms=None, allow_dangerous=False):
+      """ Create a potential from a given potential file. """
       pd = Potential.potential_definition
       return pd.read_from_file(filename, atoms=atoms, allow_dangerous=allow_dangerous)
 
   @classmethod
+  def from_string(cls, string:str, atoms=None, allow_dangerous=False):
+      """ Create a potential from a string containing a content of a potential file. """
+      return cls.from_file(StringIO(string), atoms, allow_dangerous)
+
+  @classmethod
   def from_atoms(cls, atoms):
+      """ Create a potential, that describes the given atoms object. """
       pd = Potential.potential_definition
       return cls(atoms = atoms, definition = pd)
 
