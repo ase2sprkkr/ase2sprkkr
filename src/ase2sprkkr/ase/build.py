@@ -1,6 +1,11 @@
+""" This module contains routines for building materials.
+Unlike ``ase.sprkkr.build``, this module contains generic routines,
+possible usable with plain ASE (with any calculator).
+"""
+
 import numpy as np
 import ase
-from ase.build import stack as ase_stack
+from ase.build import stack as _stack
 
 from typing import List, Union, Optional
 def aperiodic_times(atoms:ase.Atoms,
@@ -77,11 +82,23 @@ def aperiodic_times(atoms:ase.Atoms,
     return atoms
 
 def stack(atomses:List[ase.Atoms],
-          axis:int=None,
+          axis:int,
           at:Optional[List[Optional[List[int]]]]=None,
-          relative:bool=False):
+          relative:bool=False,
+          scale='pbc',
+          check_strain='auto',
+          max_strain=1e-10,
+          check_pbc=True,
+          periodic=False):
     """
     Stack (concatenate) the atoms objects along given axis
+
+    This function is very similiar to ase.build.stack, but it
+    support more than two atoms object to be stacked on themselves,
+    and the arguments are a bit different.
+
+    #TODO - could be this and ASE stack function merged together?
+
 
     Parameters
     ----------
@@ -92,70 +109,146 @@ def stack(atomses:List[ase.Atoms],
       Along which axis should be the atoms concatenated.
       The atoms are then stacked so the [0,0,0] relative coordinates
       of the (n+1)th atoms are located at [1,0,0], [0,1,0] or [0,0,1]
-      respepectively (according to the axis argument) relative coordinates
-      of the nth atoms object.
-      If axis is not given, the at have to be supplied.
+      respepectively (according to the axis argument) relative cell
+      coordinates of the nth atoms object.
+      The at can shift these distances.
 
     at
       Determines the positions of the origins of coordinates of the atoms
       objects in the resulting objects. If it is None or [0,0,0] for the
-      (n+1)th atoms, then the coordinates are determined as coordinates
-      of the nth atoms plus axis-th cell vector.
+      (n+1)th atoms, then the coordinates are determined as the coordinates
+      of the nth atoms plus the axis-th cell vector.
       There can be n+1 items in the stack, then the last one determine the
       axis-th cell vector of the resulting atoms object.
+      If the given item is just one scalar r, it is considered as r*unitary
+      vector along the axis.
 
     relative
-      If True, the coordinates in at are considered as relative (to the coordinates of
-      the previous atoms object).
+      If True, the coordinates in at are considered as relative to the
+      cell corner (see the axis argument).
+
+    scale
+      If True, the stacked atoms are scaled in the two dimensions (not
+      in the axis one) so the corresponding two cell vectors
+      are the same as these of the first atoms.
+
+      The default value ``'pbc'`` means, that scaling is done only if the
+      given axis is periodic.
+
+    check_strain
+      Check the compatibility of the cells along the other two
+      axes (not the one along which the atoms are stacked).
+
+      If True, the maximal strain cannot exceeded the max_strain argument.
+      The default value ``'auto'`` means the same value as scale.
+      The value ``'pbc'`` means check the strain only along the axes that
+      are periodic.
+
+      If the strain is exceeded, a ValueError is raised.
+
+    max_strain
+      The limit for a maximal (relative to the norm of the corresponding
+      first atoms cell vector) displacement of the cell vectors.
+
+    check_pbc
+      If True, all the atoms objects have to have the same pbc along the other two axes.
+
+    periodic
+      The pbc of the resulting object along the axis.
     """
-    out = atomses[0].copy()
+    try:
+      atoms0 = atomses[0]
+      remains = atomses[1:]
+    except TypeError:
+      iterator = iter(atomses)
+      atoms0 = next(iterator)
+      remains = [i for i in iterator]
+
+    out = atoms0.copy()
+
+    #first, define a function to retrieve the shifts
     if at is None:
        valid_at = lambda n: False
     else:
        atlen = len(at)
        valid_at = lambda n: n<atlen and at[n] is not None and not np.equal(at[n],[0,0,0]).all()
 
-    ax = axis or 0
-    if valid_at(0):
-       out.positions+=at[0]
-       origin = at[0]
-    else:
-       origin = np.array([0.,0.,0.])
-
-    shift = out.cell[ax]
+    def get_at(i):
+        if not valid_at(i):
+            return None
+        a = at[i]
+        if isinstance(a, (int, float)):
+           out = out.cell[axis]
+           out *= a / np.linalg.norm(out)
+        else:
+           out = a
+        return out
 
     def update_origin(i):
        nonlocal origin
-       if valid_at(i):
-          if relative:
-              origin+=at[i]
-          else:
-              origin=at[i]
-       else:
+       a = get_at(i)
+       if a is None:
           origin+=shift
+       elif relative:
+          origin+=a
+       else:
+          origin=a
 
-    latoms = len(atomses)
-    for i,a in zip(range(1,latoms), atomses[1:]):
-       a = a.copy()
-       out.pbc *= a.pbc
-       update_origin(i)
-       a.positions += origin
-       out+=a
-       shift=a.cell[ax]
-
-    if axis:
-      update_origin(latoms)
-      out.cell[axis] = origin
-
-    return out
-
-def stack(atoms, atoms2=None, *args, **kwargs):
-
-    if atoms2 is not None:
-       return stack(atoms, atoms2, *args, **kwargs)
+    #set the initial origin and shift
+    at0 = get_at(0)
+    if at0 is None:
+       origin = np.array([0.,0.,0.])
     else:
-       out = atoms[0]
-       for i in atoms[1:]:
-           out = ase_stack(out, i, *args, **kwargs)
-       return out
+       out.positions+=at0
+       origin = at0
+    shift = out.cell[axis]
 
+
+    #resolve resulting pbc
+    cell_index = [ i for i in range(3) if i!=axis ]
+    if check_strain == 'auto':
+       check_strain = scale
+
+    if not check_pbc:
+        for a in remains:
+            out.pbc *= a.pbc
+    else:
+        for a in remains:
+            if (out.pbc != a.pbc)[cell_index].any():
+                 raise ValueError("The stacked atoms has incompatibile pbc. Check the check_pbc argument.")
+    out.pbc[axis] = periodic
+
+    #and finally, stack the atoms
+    a0cell = atoms0.cell.complete()
+    for i,a in enumerate(remains, start=1):
+       update_origin(i)
+       out+=a
+       out.pbc *= a.pbc
+       positions = out.positions[-len(a):]
+
+       #scaling of the incompatibile cells
+       do_scale = []
+       for c in cell_index:
+          if (a.cell[c] != atoms0.cell[c]).any():
+             if out.pbc[c] if check_strain == 'pbc' else check_strain:
+                strain = np.linalg.norm(a.cell[c] - a0cell[c]) / np.linalg.norm(a0cell[c])
+                if strain > max_strain:
+                   raise ValueError("The {i}th stacked Atoms object {a.symbols} has incompatibile cell, check the max_strain argument.")
+             if out.pbc[c] if scale == 'pbc' else scale:
+                do_scale.append(c)
+       if do_scale:
+          cell = a.cell.complete()
+          ncell = cell.copy()
+          for c in do_scale:
+              #copied from atoms.set_cell(scale_atoms=True)
+              ncell[c] = a0cell[c]
+          m = np.linalg.solve(cell, ncell)
+          positions[:] = np.dot(positions, m)
+
+       positions += origin
+       shift=a.cell[axis]
+
+    #update the cell of the resulting atoms
+    update_origin(len(atomses))
+    out.cell[axis] = origin
+    return out
