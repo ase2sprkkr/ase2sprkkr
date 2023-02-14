@@ -41,6 +41,7 @@ class LatticeSection(PotentialSection):
       pearson_symbol = bravais_lattice.pearson_symbol
       self['BRAVAIS'].set(Pearson.from_symbol(pearson_symbol).xband_data())
       if self.SYSDIM() == '3D':
+         self.SYSTYPE = 'BULK'
          write_io_data['sites_order'] = slice(None)
          self.A_L3.clear()
          self.A_R3.clear()
@@ -48,6 +49,10 @@ class LatticeSection(PotentialSection):
          self.NQ_R.clear()
          cell = atoms.cell
       elif self.SYSDIM() == '2D':
+         for i in 'left', 'right', 'central':
+             if not i in atoms.regions:
+                  raise ValueError("For a 2D problem, the 'left', 'right' and 'central' regions have to be defined")
+         self.SYSTYPE = 'LIV' if atoms.regions['right'].only_vacuum_atoms() else 'LIR'
          cell = atoms.cell.copy()
          cell[2] -=  (atoms.regions['left'].cell[2] + atoms.regions['right'].cell[2])
          self.A_L3 = atoms.regions['left'].cell[2] / alat

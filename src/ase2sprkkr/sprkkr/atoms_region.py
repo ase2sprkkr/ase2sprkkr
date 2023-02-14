@@ -170,3 +170,10 @@ class AtomsRegion:
   @property
   def positions(self):
       return self.atoms.positions[self.slice]
+
+  def only_vacuum_atoms(self):
+      for site in self.atoms.sites[self.ids]:
+          for at in site.occupation:
+              if not at.is_vacuum():
+                  return False
+      return True
