@@ -55,15 +55,14 @@ class AtomsRegion:
       self._slice = slice
       if inherit_cell is not False:
          cell = cell.copy()
-         pbc = [ i for i in pbc ]
          if inherit_cell is True:
              cell[:] = 0
-             pbc = None
+             pbc = [ None, None, None ]
          else:
+             pbc = np.array( pbc, dtype=object )
              cell[inherit_cell] = 0
-             pbc = None
-      else:
-         self.incomplete_cell = Cell(cell)
+             pbc[inherit_cell] = None
+      self.incomplete_cell = Cell(cell)
       self.incomplete_pbc = pbc
       if atoms:
          self.set_atoms(atoms)
@@ -85,7 +84,7 @@ class AtomsRegion:
       if self.atoms is not None:
           for i,v in enumerate(cell):
               if not v.any():     #no nonzero
-                  v[i] = self.atoms.cell[i]
+                  v[:] = self.atoms.cell[i]
       return cell
 
   @cell.setter
@@ -106,7 +105,7 @@ class AtomsRegion:
       if self.atoms is not None:
           for i,v in enumerate(pbc):
               if v is None:
-                  pbc[i] = atoms.pbc[i]
+                  pbc[i] = self.atoms.pbc[i]
       return pbc
 
   @pbc.setter
