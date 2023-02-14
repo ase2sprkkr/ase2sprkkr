@@ -45,6 +45,15 @@ class SPRKKRAtoms(Atoms):
              obj.__class__ = SprKKrAtomsEx
 
           obj._init(True if symmetry is None else symmetry)
+          if obj.are_sites_inited():
+             """ The sites array can be corrupted, since + and += operators of ase.Atoms
+             do not handle it correctly. So: check it
+             """
+             for i in obj.sites:
+                 if not i:
+                      obj._init_sites(consider_old=True)
+                      break
+
        else:
           if symmetry is not None:
              obj.symmetry = symmetry
@@ -172,12 +181,12 @@ class SPRKKRAtoms(Atoms):
                index = umap == i
                if old_sites is not None:
                   #first non-none of the given index
-                  possible =  (i for i in old_sites[index])
+                  possible =  (i for i in old_sites[index] if i)
                   try:
                      site = next(filter(None, possible), None)
                      if site in used:
                         site = site.copy()
-                     else:
+                     elif site:
                         used.add(site)
                   except StopIteration:
                      site = None
@@ -193,7 +202,7 @@ class SPRKKRAtoms(Atoms):
           self.sites = sites
         else:
           for i in range(len(self)):
-              if old_sites is not None:
+              if old_sites is not None and old_sites[i]:
                   site=old_sites[i]
                   if site in used:
                      site = site.copy()
@@ -324,12 +333,17 @@ class SPRKKRAtoms(Atoms):
        return out
 
    def __add__(self, other):
+       if self.are_sites_inited():
+           SPRKKRAtoms.promote_ase_atoms(other)
+           other.sites
        out=super().__add__(other)
        out.set_sites(Site.copy_sites(out.sites), True)
        return out
 
    def __iadd__(self, other):
-       SPRKKRAtoms.promote_ase_atoms(other)
+       if self.are_sites_inited():
+           SPRKKRAtoms.promote_ase_atoms(other)
+           other.sites
        return super().__iadd__(other)
 
 
