@@ -519,10 +519,6 @@ class RootConfigurationContainer(ConfigurationContainer):
         Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)
       """
       values = self._definition.parse_file(file, allow_dangerous=allow_dangerous)
-      #except Exception as e:
-      #   print(e)
-      #   breakpoint()
-      #   print(e)
       if clear_first:
          self.clear(True)
       self.set(values, unknown='add')
