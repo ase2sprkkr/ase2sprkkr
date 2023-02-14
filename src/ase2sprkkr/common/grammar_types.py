@@ -724,7 +724,7 @@ class Array(GrammarType):
 
   def __init__(self, type, default_value=None,
                length=None, max_length=None, min_length=None,
-               as_list=False,
+               as_list=False, format=None,
                **kwargs):
     """
     Parameters
@@ -754,6 +754,9 @@ class Array(GrammarType):
         default_value = type
         type = type[0].__class__
     self.type = type_from_type(type)
+    if format is not None:
+       self.type = self.type.copy()
+       self.type.format = format
     self.as_list = as_list
     super().__init__(default_value=default_value, **kwargs)
     self.min_length = min_length or length
