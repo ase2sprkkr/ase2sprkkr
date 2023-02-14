@@ -13,6 +13,11 @@ import os
 import copy
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
+from ...common.grammar import replace_whitechars
+
+class RealOrStars(Real):
+  """ A real value, where **** means NaN """
+  _grammar = Real._grammar | replace_whitechars(pp.Word('*')).setParseAction(lambda x: float('NaN'))
 
 class ScfResult(TaskResult):
   """ Objects of this class holds the results of computed SCF class """
@@ -58,10 +63,10 @@ class ScfResult(TaskResult):
       return self.last_iteration['converged']
 
   def iteration_values(self, name):
-      """ Return the array of values of given name from the 
-      iterations (i.e. "the column of the table of the values") 
+      """ Return the array of values of given name from the
+      iterations (i.e. "the column of the table of the values")
 
-      E.g. result.iteration_values('ETOT') return list of 
+      E.g. result.iteration_values('ETOT') return list of
       floats - the total energies computed in each iteration.
 
       Parameters
@@ -138,7 +143,7 @@ class ScfOutputReader(OutputReader):
 
   atoms_conf_type = Section('atoms', [
     VN('IECURR', integer),
-    VE('E', float),
+    VE('E', RealOrStars()),
     VN('L', float),
     VE('IT', integer),
     VN('atom', string),
