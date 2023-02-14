@@ -153,6 +153,6 @@ class Site:
           if not x in cache:
              cache[x] = x.copy()
           return cache[x]
-      return np.fromiter((site(i) for i in sites), like=sites, dtype=object)
+      return np.array([site(i) for i in sites], dtype=object)
 
 from .occupations import Occupation
