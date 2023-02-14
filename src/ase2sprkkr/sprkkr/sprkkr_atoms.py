@@ -79,12 +79,11 @@ class SPRKKRAtoms(Atoms):
        return self._regions
 
    def add_region(self, region):
-       return self._regions[region]
        """
        Add a region of a given name
        """
-       self.regions[name] = region.name
-       region.set_atoms(self)
+       self._regions[region.name] = region
+       region.set_atoms(self, False)
 
    def remove_region(self, name):
        del self._regions[name]
