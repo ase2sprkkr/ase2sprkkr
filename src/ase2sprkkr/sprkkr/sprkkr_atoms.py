@@ -245,6 +245,9 @@ class SPRKKRAtoms(Atoms):
        properties (symbols, occupancy, spacegroup_info) according to the sites. """
        self.set_sites(v)
 
+   def are_sites_inited(self):
+       return SPRKKRAtoms.sites_array_name in self.arrays
+
    def set_sites(self, sites:np.ndarray, spacegroup_info:Union[SpacegroupInfo, bool, None]=None):
        """ Set the sites property and update all other dependent
        properties (symbols, occupancy) according to the sites.
@@ -316,7 +319,8 @@ class SPRKKRAtoms(Atoms):
    def copy(self):
        out = super().copy()
        SPRKKRAtoms.promote_ase_atoms(out)
-       out.set_sites(Site.copy_sites(out.sites), True)
+       if self.are_sites_inited():
+           out.set_sites(Site.copy_sites(out.sites), True)
        return out
 
    def __add__(self, other):
