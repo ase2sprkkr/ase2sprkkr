@@ -20,10 +20,11 @@ class LatticeSection(PotentialSection):
       it creates (during reading) the ASE Cell object """
 
   def _set_from_atoms(self, atoms, write_io_data):
-      if atoms.pbc.sum() == 3:
+      pbc = atoms.pbc.sum()
+      if pbc == 3:
           self.SYSDIM = '3D'
           bcell = atoms.cell
-      elif atoms.pbc.sum() == 2:
+      elif pbc == 2:
           if not('left' in atoms.regions and 'right' in atoms.regions and 'central' in atoms.regions):
               raise ValueError("To run a 2D calculation, an atoms object have to have defined "
               "'left', 'right' and 'central' region.")
