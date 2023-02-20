@@ -474,8 +474,17 @@ class SPRKKR(Calculator):
         # potential - potential object (to be updated by atoms)
 
         potential = potential if potential is not None else self.potential
+        if isinstance(potential, str):
+              if potential_file:
+                 potential = Potential.from_file(potential)
+              else:
+                 potential_file = makepath(potential, "'{path}' is not a potential file")
+                 potential = None
+
         if atoms:
           atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+        elif isinstance(potential, Potential):
+          atoms = potential.atoms
         else:
           atoms = self._atoms
 
@@ -490,13 +499,7 @@ class SPRKKR(Calculator):
            from ..bindings.es_finder import add_empty_spheres
            add_empty_spheres(atoms)
 
-        if isinstance(potential, str):
-              if potential_file:
-                 potential = Potential.from_file(potential)
-              else:
-                 potential_file = makepath(potential, "'{path}' is not a potential file")
-                 potential = None
-        elif potential is True:
+        if potential is True:
              if not atoms:
                  raise ValueError("Potential set to <True> which means to generate the potential from the ASE-atoms object."
                                   "However, this object has not been supplied")
