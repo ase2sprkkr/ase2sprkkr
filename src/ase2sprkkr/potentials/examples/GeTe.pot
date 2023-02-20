@@ -15,7 +15,7 @@ NSPIN              1
 *******************************************************************************
 SCF-INFO  
 INFO      'SPR-KKR-ASA'
-SCFSTATUS 'CONVERGED '
+SCFSTATUS 'START'
 FULLPOT   F
 BREITINT  F
 NONMAG    F
