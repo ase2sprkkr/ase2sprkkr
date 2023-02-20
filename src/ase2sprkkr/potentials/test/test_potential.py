@@ -12,6 +12,7 @@ from ase.spacegroup import crystal
 import io
 from ...common.grammar import generate_grammar
 from datetime import datetime
+from ...sprkkr.calculator import SPRKKR
 
 class TestPotential(TestCase):
 
@@ -47,8 +48,15 @@ class TestPotential(TestCase):
     self.assertEqual(a2.positions, a1.positions)
     self.assertEqual(str(a2.symbols), str(a1.symbols))
 
+  def test_2D(self):
+    if os.environ.get('DO_NOT_RUN_SPRKKR', '') != '':
+        return
+    path = os.path.join(os.path.dirname(__file__), '..','examples','GeTe.pot')
+    p=Potential.from_file(path)
+    SPRKKR().calculate(potential=p, options={'NITER':1}, directory=False)
+
   def test_examples(self):
-    path = os.path.join(os.path.dirname(__file__), '../examples')
+    path = os.path.join(os.path.dirname(__file__), '..','examples')
     i = 0
 
     #import cProfile, pstats, io
