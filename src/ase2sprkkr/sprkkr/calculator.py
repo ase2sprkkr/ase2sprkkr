@@ -668,7 +668,8 @@ class SPRKKR(Calculator):
                             'magmoms': np.zeros(len(atoms))}
 
         """
-        super().calculate(atoms, properties, system_changes)
+        #There is no need to call this
+        #super().calculate(atoms, properties, system_changes)
         out = self.run(
                   atoms, input_parameters,
                   potential, input_file, potential_file, output_file,
