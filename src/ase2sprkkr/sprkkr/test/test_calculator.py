@@ -14,9 +14,9 @@ from pathlib import Path
 class CalculatorTest(TestCase):
 
  def test_2D(self):
+     if not self.run_sprkkr(): return
      print_output = '-v' in sys.argv or '--verbose' in sys.argv
      dirname = os.path.dirname(__file__)
-     here = lambda x: os.path.join(dirname, x)
 
      from ase import Atoms
      a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
@@ -31,7 +31,7 @@ class CalculatorTest(TestCase):
      here = lambda x: os.path.join(dirname, x)
 
      atoms = bulk('Li')
-     calculator = SPRKKR(atoms = atoms, empty_spheres=False, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
+     calculator = SPRKKR(atoms = atoms, **self.calc_args())
      calculator.input_parameters.set(NE=21111)
      self.assertEqual(calculator.input_parameters.get('NE'),21111)
      calculator.set(NE=31111)
@@ -53,7 +53,8 @@ class CalculatorTest(TestCase):
      self.assertEqual(calculator.input_parameters.TASK.TASK(), 'PHAGEN')
      self.assertNotEqual(calculator.input_parameters.get('NE'), 111111)
 
-     calculator = SPRKKR(atoms = atoms, empty_spheres=False, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
+     calculator = SPRKKR(atoms = atoms, **self.calc_args())
+
 
      inp_file=here('output_test_calc.inp')
      pot_file=here('output_test_calc.pot')
@@ -101,10 +102,11 @@ class CalculatorTest(TestCase):
      kwargs.update(cls._calc_args)
      return kwargs
 
+ def run_sprkkr(self):
+     return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
+
  def test_run(self):
-     ignore = os.environ.get('DO_NOT_RUN_SPRKKR', '') != ''
-     if ignore:
-        return
+     if not self.run_sprkkr(): return
 
      here = lambda x: os.path.join(self.dirname, x)
 
@@ -147,6 +149,8 @@ class CalculatorTest(TestCase):
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 
+ def test_phagen(self):
+     if not self.run_sprkkr(): return
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
      ips = SPRKKR.InputParameters.create('scf')
