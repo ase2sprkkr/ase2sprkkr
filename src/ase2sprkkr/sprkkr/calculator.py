@@ -540,7 +540,7 @@ class SPRKKR(Calculator):
             input_parameters.CONTROL.POTFIL = os.path.relpath( potential_file, dirr )
           else:
             potential_file = input_parameters.CONTROL.POTFIL()
-          input_parameters.save_to_file(input_file)
+          input_parameters.save_to_file(input_file, atoms)
           input_file.seek(0)
         #This branch can occur if the potential have been explicitly set to False,
         #which means not to create the potential (and take it from the input_parameters)
