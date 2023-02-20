@@ -310,13 +310,16 @@ class ValueDefinition(BaseDefinition):
 
     default: mixed
       Default value for the configuration option.
+      Can accept callable (with option instance as an argument) - then the value will be determined
+      at 'runtime' (possibly according to the other values of the section)
 
     alternative_names: str or [str]
       Value can have an alternative name (that alternativelly denotes the value)
 
-    fixed: mixed
+    fixed_value: mixed
       If it is given, this option have a fixed_value value (provided by this parameter),
-      that can not be changed by user.
+      that can not be changed by an user.
+      #TODO - currently, callback (as in default_value) is not supported
 
     required: bool
       Required option can not be set to None (however, a required one
@@ -327,7 +330,7 @@ class ValueDefinition(BaseDefinition):
        * the optional is not True and the option has not a default_value
 
     is_optional: bool or None
-      If True, the value can be omited, if the fixed order is required
+      If True, the value can be omited, if fixed order in the section is required
       None means True just if required is False (or it is determined to be False),
       see the ``required`` parameter.
 
@@ -372,6 +375,12 @@ class ValueDefinition(BaseDefinition):
     elif type is None:
        raise TypeError("The data-type of the configuration value is required.")
 
+    if fixed_value is None:
+       self.is_fixed = False
+    else:
+       default_value = fixed_value
+       self.is_fixed = True
+
     if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
        self.type = type_from_value(type, type_map = self.type_from_type_map)
        self.default_value = self.type.convert(type)
@@ -411,7 +420,6 @@ class ValueDefinition(BaseDefinition):
     if is_numbered_array and not self.name_in_grammar:
        raise ValueException('Numbered_array value type has to have its name in the grammar')
 
-    self.fixed_value = self.type.convert(fixed_value) if fixed_value is not None else None
     self.required = self.default_value is not None if required is None else required
     self.name_format = name_format
 
@@ -444,7 +452,10 @@ class ValueDefinition(BaseDefinition):
       The string, with with each line will begin (commonly the spaces for the indentation).
     """
     out = f"{prefix}{self.name} : {self.type}"
-    value = self.get_value()
+    if callable(self.default_value):
+        value = getattr(self.default_value,'__doc__', '<function>')
+    else:
+        value = self.get_value()
     if value is not None:
        out+=f" ≝ {value}"
 
@@ -457,7 +468,7 @@ class ValueDefinition(BaseDefinition):
        flags.append('expert')
     if self.is_numbered_array:
        flags.append('array')
-    if self.fixed_value is not None:
+    if self.is_fixed:
        flags.append('read_only')
     if flags:
        flags = ', '.join(flags)
@@ -498,8 +509,8 @@ class ValueDefinition(BaseDefinition):
        if self.required:
           raise ValueError(f"The value is required for {self.name}, cannot set it to None")
        return True
-    if self.fixed_value is not None and not np.array_equal(self.fixed_value, value):
-       raise ValueError(f'The value of {self.name} is required to be {self.fixed_value}, cannot set it to {value}')
+    if self.is_fixed and not np.array_equal(self.default_value, value):
+       raise ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
     self.type.validate(value, self.name, why='set')
 
   def convert_and_validate(self, value, why='set'):
@@ -528,15 +539,15 @@ class ValueDefinition(BaseDefinition):
   def _grammar(self, allow_dangerous=False):
     body = self.type.grammar(self.name)
 
-    if self.fixed_value is not None:
+    if self.is_fixed:
       def check_fixed(s, loc, x, body=body):
-          if self.fixed_value.__class__ is np.ndarray:
-             eq = np.array_equal(x[0], self.fixed_value)
+          if self.default_value.__class__ is np.ndarray:
+             eq = np.array_equal(x[0], self.default_value)
           else:
-             eq = x[0]==self.fixed_value
+             eq = x[0]==self.default_value
           if eq:
              return x
-          message="The value of {} is {} and it should be {}".format(self.name, x[0], self.fixed_value)
+          message="The value of {} is {} and it should be {}".format(self.name, x[0], self.default_value)
           raise pp.ParseException(s,loc,message, body)
       body=body.copy().addParseAction(check_fixed)
 
@@ -570,8 +581,6 @@ class ValueDefinition(BaseDefinition):
      this argument is passed to it. (E.g. to set the default value using some properties obtained from the
      configuration objects.
      """
-     if self.fixed_value is not None:
-        return self.fixed_value
      if self.default_value is not None:
         if callable(self.default_value):
            return self.default_value(option)
@@ -647,6 +656,24 @@ class ValueDefinition(BaseDefinition):
 
   def can_be_repeated(self):
       return self.is_numbered_array
+
+  def _get_copy_args(self)->Dict[str, str]:
+       """
+       Compute the dictionary that defines the attributes to create a copy of this object.
+
+       Returns
+       -------
+       copy: Dict
+          The returning dictionary has this structure:
+          { name of the argument of the __init__ function : name of the object attribute }
+       """
+       out = super()._get_copy_args()
+       if self.is_fixed:
+           out['fixed_value'] = out['default_value']
+       return out
+
+  _copy_excluded_args = BaseDefinition._copy_excluded_args + ['fixed_value']
+
 
 def add_excluded_names_condition(element, names):
     """ Add the condition to the element, that
@@ -921,7 +948,7 @@ class ContainerDefinition(BaseDefinition):
            values  = pp.And([ i for i in sequence()])
 
            if custom_value:
-              if not self._first_section_is_fixed():
+              if not self._first_section_has_to_be_first():
                   values = cvs + values
               values += pp.ZeroOrMore(delimiter + custom_value)
            values = init + values
@@ -929,7 +956,7 @@ class ContainerDefinition(BaseDefinition):
        else:
            it = grammars()
            #store the first fixed "chain of sections"
-           first = self._first_section_is_fixed() and next(it)[1]
+           first = self._first_section_has_to_be_first() and next(it)[1]
            #the rest has any order
            values = pp.MatchFirst([i for head,i in it])
            if custom_value:
@@ -985,7 +1012,7 @@ class ContainerDefinition(BaseDefinition):
        return out
 
 
-    def _first_section_is_fixed(self):
+    def _first_section_has_to_be_first(self):
        """ Has/ve the first child(s) in an unordered sequence fixed position? """
        return not self._members.first_item().name_in_grammar
 
