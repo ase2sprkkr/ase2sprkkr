@@ -48,6 +48,7 @@ User interface
 * Support for 2D problems
 * Routines for building 2D problem
 * change_task method for InputParameters
+* calculate(..., directory=False) runs the calculation in the temporary directory
 
 Internals
 ~~~~~~~~~
