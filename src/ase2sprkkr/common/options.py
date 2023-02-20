@@ -276,6 +276,10 @@ class Option(Configuration):
   def result(self, value):
       self._result = value
 
+  def clear_result(self):
+      if hasattr(self, '_result'):
+          del self._result
+
   def clear(self, do_not_check_required=False,call_hooks=True):
       """ Clear the value: set it to None """
       if not self._definition.type.has_value:
@@ -283,6 +287,7 @@ class Option(Configuration):
       if self._definition.default_value is None and not do_not_check_required and self._definition.required:
          raise ValueError(f'Option {self._get_path()} must have a value')
       self._value = None
+      self.clear_result()
       if call_hooks:
         self._post_set()
 
