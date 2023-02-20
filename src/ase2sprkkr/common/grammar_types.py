@@ -945,15 +945,19 @@ class BaseMixed(GrammarType):
       return self.string_type if isinstance(value, str) else type_from_value(value)
 
   def _validate(self, value, why='set'):
+      if value is None:
+          return True
       type = self.get_type(value)
       if type is value:
-         return 'Can not determine the type of value {}'.format(value)
+          return 'Can not determine the type of value {}'.format(value)
       return type.validate(value, why)
 
   def grammar_name(self):
       return '<mixed>'
 
   def convert(self, value):
+      if value is None:
+          return None
       return self.get_type(value).convert(value)
 
 class Range(BaseMixed):
