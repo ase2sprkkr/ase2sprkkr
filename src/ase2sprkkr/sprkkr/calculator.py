@@ -116,6 +116,9 @@ class SPRKKR(Calculator):
         if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
                potential = Potential.from_file(potential, atoms = atoms)
+           if atoms:
+               raise ValueError('You can not specify both atoms and potential. '
+                                'If you specify one of them, the other will be generated from it.')
            atoms = potential.atoms
         elif atoms:
            atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
@@ -466,27 +469,43 @@ class SPRKKR(Calculator):
                                     )
 
 
-        if potential and potential is not True and atoms:
-            raise ValueError("You can not provide both a potential and atoms object to the SPRKKR calculate method")
-
         """ Get the potential file """
         # potential_file - the file containing the potential (possibly a template)
         # potential - potential object (to be updated by atoms)
 
         potential = potential if potential is not None else self.potential
-        if isinstance(potential, str):
+
+        #this is a bit tricky - both of them must not be defined - however, there is a mess with default values
+        if ((potential and potential is not True) == bool(atoms)) and (atoms or not self._atoms):
+            raise ValueError("You can not provide both a potential and atoms object to the SPRKKR calculate method, "
+                             "just one from them is generated from the another.")
+
+        atoms = atoms or self._atoms
+
+        if potential is True:
+             if not atoms:
+                 raise ValueError("Potential set to <True> which means to generate the potential from the ASE-atoms object. "
+                                  "However, this object has not been supplied")
+             potential=Potential.from_atoms(atoms)
+        elif potential is False:
+              if potential_file is not None:
+                  raise ValueError("When potential is True, the value of POTENTIAL option from the input (parameters) file will be used "
+                                   " as the potential file. Thus, specifing the <potential_file> argument is not allowed.")
+              potential = None
+        elif potential is None:
+           raise ValueError("The potential can not be <None>. However, consider supplying either <True> as the potential to generate"
+                             " it from the atoms object, or False to use the POTENTIAL option from the input (parameters) file")
+        elif isinstance(potential, str):
               if potential_file:
                  potential = Potential.from_file(potential)
               else:
                  potential_file = makepath(potential, "'{path}' is not a potential file")
                  potential = None
 
-        if atoms:
-          atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
-        elif isinstance(potential, Potential):
+        if isinstance(potential, Potential):
           atoms = potential.atoms
         else:
-          atoms = self._atoms
+          atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
         if empty_spheres is None:
            empty_spheres = self.empty_spheres
@@ -498,20 +517,6 @@ class SPRKKR(Calculator):
         if empty_spheres:
            from ..bindings.es_finder import add_empty_spheres
            add_empty_spheres(atoms)
-
-        if potential is True:
-             if not atoms:
-                 raise ValueError("Potential set to <True> which means to generate the potential from the ASE-atoms object."
-                                  "However, this object has not been supplied")
-             potential=Potential.from_atoms(atoms)
-        elif potential is False:
-              if potential_file is not None:
-                  raise ValueError("When potential is True, the value of POTENTIAL option from the input (parameters) file will be used "
-                                   " as the potential file. Thus, specifing the <potential_file> argument is not allowed.")
-              potential = None
-        elif potential is None:
-           raise ValueError("The potential can not be <None>. However, consider supplying either <True> as the potential to generate"
-                             " it from the atoms object, or False to use the POTENTIAL option from the input (parameters) file")
 
         if potential:
            if potential_file is None:
