@@ -15,7 +15,7 @@ from ..sprkkr.configuration import \
 from ..common.grammar_types import mixed, flag, DefKeyword
 from ..common.grammar import generate_grammar, delimitedList
 from ..common.decorators import cached_class_property, cache
-from .input_parameters import InputParameters
+from .input_parameters import InputParameters, InputSection
 
 with generate_grammar():
   section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
@@ -39,6 +39,9 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
 
   child_class = InputValueDefinition
   """ standard child class """
+
+  result_class = InputSection
+  """ The standard class for InputParameters section """
 
   custom_class = staticmethod(CustomConfigurationValue.factory(InputValueDefinition, mixed))
   """ Factory for custom values in the input sections. """

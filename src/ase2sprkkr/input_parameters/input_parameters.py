@@ -14,11 +14,14 @@ import importlib
 from . import definitions
 from ..outputs import readers
 from ..outputs.readers.default import DefaultOutputReader
-from ..sprkkr.configuration import ConfigurationFile
+from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.misc import OrderedDict
 from ..common.decorators import cached_class_property
 import shutil
 from typing import Union
+
+class InputSection(ConfigurationSection):
+    """ Input parameters sections has nothing special, yet. """
 
 def resolve_executable_postfix(postfix:Union[str,bool]):
     """" Return the postfix, that is appended after the name of SPR-KKR executable.
