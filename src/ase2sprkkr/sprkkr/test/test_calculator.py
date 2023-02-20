@@ -13,6 +13,18 @@ from pathlib import Path
 
 class CalculatorTest(TestCase):
 
+ def test_2D(self):
+     print_output = '-v' in sys.argv or '--verbose' in sys.argv
+     dirname = os.path.dirname(__file__)
+     here = lambda x: os.path.join(dirname, x)
+
+     from ase import Atoms
+     a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
+     from ase2sprkkr.sprkkr.build import semiinfinite_system
+     b=semiinfinite_system(a, repeat=3)
+     from ase2sprkkr import SPRKKR
+     SPRKKR().calculate(b, print_output=True, options={'NITER':2})
+
  def test_calculator(self):
      print_output = '-v' in sys.argv or '--verbose' in sys.argv
      dirname = os.path.dirname(__file__)
@@ -76,25 +88,37 @@ class CalculatorTest(TestCase):
      calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
+ print_output = '-v' in sys.argv or '--verbose' in sys.argv
+ dirname = os.path.dirname(__file__)
+ _calc_args = dict(
+     directory = dirname, input_file = 'output_test_calc.inp', empty_spheres=False,
+     output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
+     mpi = 'auto'
+ )
+
+ @classmethod
+ def calc_args(cls, **kwargs):
+     kwargs.update(cls._calc_args)
+     return kwargs
+
  def test_run(self):
      ignore = os.environ.get('DO_NOT_RUN_SPRKKR', '') != ''
      if ignore:
         return
 
-     print_output = '-v' in sys.argv or '--verbose' in sys.argv
-     dirname = os.path.dirname(__file__)
-     here = lambda x: os.path.join(dirname, x)
+     here = lambda x: os.path.join(self.dirname, x)
 
      atoms = bulk('Li')
-     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', empty_spheres=False, output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output)
+     calculator = SPRKKR(atoms = atoms, **self.calc_args(mpi=False))
      #use methods of atoms
      atoms.calc = calculator
      calculator.input_parameters.find('NITER').set(2)
+     calculator.input_parameters.find('NKTAB').set(50)
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
      calculator.input_parameters.find('NITER').set(100)
 
      #calculator options
-     out = calculator.calculate(options = {'NITER' : 2 }, print_output=print_output, mpi=4)
+     out = calculator.calculate(options = {'NITER' : 2 }, mpi=4)
      self.assertEqual(2, len(out.iterations))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
@@ -111,8 +135,8 @@ class CalculatorTest(TestCase):
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
-     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', empty_spheres=False, output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
-     out = calculator.calculate(options = {'NITER' : 1, 'NE' : 12 }, print_output=print_output)
+     calculator = SPRKKR(atoms = atoms, **self.calc_args())
+     out = calculator.calculate(options = {'NITER' : 1, 'NE' : 12 })
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(3, len(out.iterations[-1]['atoms']))
      for i in out.iterations[-1]['atoms']:
@@ -124,19 +148,20 @@ class CalculatorTest(TestCase):
      self.assertEqual(1, len(out.iterations))
 
      atoms = bulk('Li')
-     calculator = SPRKKR(atoms = atoms, mpi=False, directory = dirname, input_file = 'output_test_calc.inp', empty_spheres=False, output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot')
+     calculator = SPRKKR(atoms = atoms, **self.calc_args())
      ips = SPRKKR.InputParameters.create('scf')
      ips.SCF.NITER = 1
-     out = calculator.calculate(input_parameters=ips, print_output=print_output)
+     ips.TAU.NKTAB=50
+     out = calculator.calculate(input_parameters=ips)
      self.assertEqual(out.atoms, out.potential.atoms)
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
 
-     calculator = SPRKKR(mpi=False, directory = dirname, input_file = 'output_test_calc.inp', output_file = 'output_test_calc.out', empty_spheres=False, potential_file ='output_test_calc.pot')
-     out = calculator.calculate(potential=out.potential,input_parameters=ips,print_output=print_output)
+     calculator = SPRKKR(**self.calc_args())
+     out = calculator.calculate(potential=out.potential,input_parameters=ips)
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 
-     calculator.calculate(input_parameters='PHAGEN', potential=out.potential_filename)
-     out.calculator.calculate(input_parameters='PHAGEN')
+     calculator.calculate(input_parameters='PHAGEN', potential=out.potential_filename, options={'NKTAB' : 50})
+     out.calculator.calculate(input_parameters='PHAGEN', options={'NKTAB' : 50})

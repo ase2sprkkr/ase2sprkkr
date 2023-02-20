@@ -7,7 +7,6 @@ from ..input_parameters_definitions import \
       InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
 
-
 def CONTROL(ADSI):
   """ Create the definition of the CONTROL section of the task input file.
 
@@ -30,7 +29,28 @@ def CONTROL(ADSI):
       V('NONMAG', False, info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ")
   ])
 
-TAU = Section('TAU',[
+
+class TauSection(Section):
+    """ TAU Section of input parameters. """
+
+    def set_from_atoms(self, section, atoms, io_data):
+        """ NKTAB[xD] values has to be set according to the type of the problem."""
+        for i in (section.NKTAB, section.NKTAB2D, section.NKTAB3D):
+            i.clear_result()
+        if atoms is not None:
+           pbc = atoms.pbc.sum()
+           #setting the dangerous value to the non-used options
+           #prevents them to use its default values and so to be
+           #writed to the output file
+           if pbc == 3:
+               section.NKTAB2D.result = section.NKTAB2D._create_dangerous_value(None)
+               section.NKTAB3D.result = section.NKTAB3D._create_dangerous_value(None)
+           else:
+               section.NKTAB.result = section.NKTAB._create_dangerous_value(None)
+
+_nktab_value = lambda option: option._container.NKTAB()
+
+TAU = TauSection('TAU',[
       V('BZINT', DefKeyword({'POINTS' : 'special points method',
                              'WEYL' : 'Weyl method'},
                              description=
@@ -46,7 +66,12 @@ regular mesh.
 """), required=True,
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
-      V('NKTAB', 250, info='Number of points for the special points method'),
+      V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
+        description='For 2D problem, it severs only as default value for NKTABxD.'),
+      V('NKTAB2D', int, _nktab_value, info='Number of points for the special points method for 2D region of 2D problem', is_optional=True,
+        description='If it is not specified, NKTAB is used.'),
+      V('NKTAB3D', int, _nktab_value, info='Number of points for the special points method for 3D region of 2D problem', is_optional=True,
+        description='If it is not specified, NKTAB is used'),
       V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration'),
       V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration'),
       #expert
