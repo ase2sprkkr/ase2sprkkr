@@ -62,9 +62,16 @@ class InputParameters(ConfigurationFile):
   _default_mpi_runner = None
 
   @classmethod
-  def default_mpi_runner(cls):
+  def default_mpi_runner(cls, auto:bool=False):
       """ Return the executable and its params to run a mpi task.
           The runner is determined by autodetection.
+
+      Parameters
+      ----------
+      auto:bool
+          If true,
+             - do not warn if no mpi is found
+             - check the number of available cpus, do not return a runner, if there is only one
 
       Return
       ------
@@ -78,8 +85,11 @@ class InputParameters(ConfigurationFile):
              if shutil.which(r):
                 cls._default_mpi_runner = [ r ]
                 return cls._default_mpi_runner
-         print("No MPI runner found. Disabling MPI!!!")
+         if not auto:
+             print("No MPI runner found. Disabling MPI!!!")
          cls._default_mpi_runner=False
+      if auto and hasattr(os, 'sched_getaffinity') and len(os.sched_getaffinity(0))==1:
+          return None
       return cls._default_mpi_runner
 
   def mpi_runner(self, mpi):
@@ -92,6 +102,9 @@ class InputParameters(ConfigurationFile):
 
         - If True is given, return the default mpi-runner
         - If False is given, no mpi-runner is returned.
+        - If 'auto' is given, it is the same as True, however
+             * no warning is given if no mpi is found
+             * MPI is not used, if only one CPU is available
         - If a string is given, it is interpreted as a list of one item
         - If a list (of strings) is given, the user specified its own runner, use it as is
           as the parameters for subprocess.run.
@@ -113,6 +126,8 @@ class InputParameters(ConfigurationFile):
       if isinstance(mpi, list):
           return mpi
       if isinstance(mpi, str):
+          if mpi == 'auto':
+              return self.default_mpi_runner(auto=True) or None
           return [ mpi ]
       runner = self.default_mpi_runner()
       if not runner:
