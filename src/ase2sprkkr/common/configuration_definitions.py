@@ -86,7 +86,9 @@ class BaseDefinition:
 
    def __init__(self, name, alternative_names=None,
                 is_optional=False, is_hidden=False, is_expert=False,
-                name_in_grammar=None, info=None, description=None, write_alternative_name=False,
+                name_in_grammar=None, info=None, description=None,
+                write_alternative_name:bool=False,
+                result_class=None
                 ):
        """
        Parameters
@@ -119,6 +121,12 @@ class BaseDefinition:
 
         description: str
            The additional informations for the users.
+
+        write_alternative_name
+           Wheter use the name or the (first) alternative name in the output.
+
+        result_class
+           Redefine the class that holds data for this option/section
        """
        self.name = name
        """ The name of the option/section """
@@ -140,6 +148,8 @@ class BaseDefinition:
        """ A short help text describing the content for the users. """
        self._description = description
        """ A longer help text describing the content for the users. """
+       if result_class:
+           self.result_class = result_class
 
    def info(self, generic:bool=True) -> str:
        """ Return short help string.
@@ -282,7 +292,8 @@ class ValueDefinition(BaseDefinition):
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
                fixed_value=None, required=None, info=None, description=None,
                is_hidden=False, is_optional=None, is_expert=False, is_numbered_array:bool=False,
-               name_in_grammar=None, name_format=None, expert=None):
+               name_in_grammar=None, name_format=None, expert=None,
+               write_alternative_name:bool=False, result_class=None):
     """
     Definition of a configuration value.
 
@@ -344,6 +355,12 @@ class ValueDefinition(BaseDefinition):
       If not None, set ``is_expert`` to True, ``default_value`` to the given value and
       ``required`` to False. Note, that also ``type`` can be determined from such given
       ``default_value``.
+
+    write_alternative_name
+       Wheter use the name or the (first) alternative name in the output.
+
+    result_class
+       Redefine the class that holds data for this option/section
     """
     if expert is not None:
        if type is None:
@@ -382,7 +399,9 @@ class ValueDefinition(BaseDefinition):
          is_expert = is_expert,
          name_in_grammar = name_in_grammar,
          info=info,
-         description = description
+         description = description,
+         write_alternative_name = write_alternative_name,
+         result_class = result_class
     )
 
     if self.name_in_grammar is None:
@@ -661,7 +680,8 @@ class ContainerDefinition(BaseDefinition):
 
     def __init__(self, name, members=[], alternative_names=[], info=None, description=None,
                  is_optional=False, is_hidden=False, is_expert=False,
-                 has_hidden_members=False, name_in_grammar=None, force_order=None):
+                 has_hidden_members=False, name_in_grammar=None, force_order=None,
+                 write_alternative_name:bool=False, result_class=None):
        super().__init__(
            name = name,
            alternative_names = alternative_names,
@@ -670,7 +690,9 @@ class ContainerDefinition(BaseDefinition):
            is_expert = is_expert,
            name_in_grammar = name_in_grammar,
            info = info,
-           description = description
+           description = description,
+           write_alternative_name = write_alternative_name,
+           result_class = result_class
        )
 
        self.is_hidden = is_hidden
