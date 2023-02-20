@@ -121,11 +121,14 @@ class Option(Configuration):
       To completly bypass the check, set the value to an instance of DangerousValue
       class directly.
       """
-      value = DangerousValue(value, self._definition.type_of_dangerous)
+      value = self._create_dangerous_value(value)
       if index is not None:
           self[index] = value
       else:
           self.set(value)
+
+  def _create_dangerous_value(self, value):
+      return DangerousValue(value, self._definition.type_of_dangerous)
 
   @property
   def default_value(self):
