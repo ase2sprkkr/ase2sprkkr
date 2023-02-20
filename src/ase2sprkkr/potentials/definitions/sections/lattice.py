@@ -54,8 +54,12 @@ class LatticeSection(PotentialSection):
              if not i in atoms.regions:
                   raise ValueError("For a 2D problem, the 'left', 'right' and 'central' regions have to be defined")
          self.SYSTYPE = 'LIV' if atoms.regions['right'].only_vacuum_atoms() else 'LIR'
-         cell = atoms.cell.copy()
-         cell[2] -=  (atoms.regions['left'].cell[2] + atoms.regions['right'].cell[2])
+         cell = atoms.cell
+         if (cell[2] == [0,0,0]).all():
+             if (atoms.regions['central'] == [0,0,0]).all():
+                  raise ValueError("For a 2D problem, the third (the z-) cell vector has to be specified either for "
+                                   " atoms object, or for its central region")
+             cell[2] = atoms.regions['left'].cell[2] + atoms.regions['right'].cell[2] + atoms.regions['central'].cell[2]
          self.A_L3 = atoms.regions['left'].cell[2] / alat
          self.A_R3 = atoms.regions['right'].cell[2] / alat
          self.NQ_L = len(atoms.regions['left'])
@@ -96,9 +100,11 @@ class LatticeSection(PotentialSection):
           lc[2] = self.A_L3() * alat
           rc = cell.copy()
           rc[2] = self.A_R3() * alat
+          cc = cell.copy()
+          cc[2] -= lc[2] + rc[2]
           regions = [
               AtomsRegion('left',   slice(None,self.NQ_L()),            lc, [True, True, True]),
-              AtomsRegion('central',slice(self.NQ_L(), -self.NQ_R()), cell.copy(), [True, True, False]),
+              AtomsRegion('central',slice(self.NQ_L(), -self.NQ_R()),   cc, [True, True, False]),
               AtomsRegion('right',  slice(-self.NQ_R(), None),          rc, [True, True, True])
           ]
           pbc = [True, True, False]
