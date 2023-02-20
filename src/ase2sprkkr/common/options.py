@@ -272,6 +272,8 @@ class Option(Configuration):
       retained as is and the transformed value is stored in the result.
       """
       if hasattr(self, '_result'):
+          if isinstance(self._result, DangerousValue):
+              return self._result.value
           return self._result
       return self(all_values=True)
 
