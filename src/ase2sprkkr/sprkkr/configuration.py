@@ -14,7 +14,7 @@ from .sprkkr_atoms import SPRKKRAtoms
 
 class ConfigurationSectionTrait:
 
-  def set_from_atoms(self, atoms:Atoms, io_data:Optional[WriteIoData]=None):
+  def set_from_atoms(self, atoms:Union[Optional[Atoms]], io_data:Optional[WriteIoData]=None):
       """ Set the sections' values of the potential according to the given ASE atoms object.
 
       Parameters
@@ -33,16 +33,21 @@ class ConfigurationSectionTrait:
         :func:`GrammarType.validate<ase2sprkkr.common.grammar_types.GrammarType.validate>`
         True (default) means full validation: i.e. the same as ``save``.
       """
-      atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+      if atoms:
+          atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
       io_data = io_data or WriteIoData(atoms)
       self._set_from_atoms(atoms, io_data)
+      return io_data
 
-  def _set_from_atoms(self, atoms:SPRKKRAtoms, io_data:WriteIoData):
+  def _set_from_atoms(self, atoms:Optional[SPRKKRAtoms], io_data:WriteIoData):
       """ Set the sections' values of the potential according to the given ASE atoms object.
           Unlike the non_underscored routine, this one requires the io_data to be set.
       """
       for i in self:
           i._set_from_atoms(atoms, io_data)
+
+      if hasattr(self._definition, 'set_from_atoms'):
+          self._definition.set_from_atoms(self, atoms, io_data)
 
 # Containers and values
 
@@ -51,8 +56,11 @@ class ConfigurationFile(RootConfigurationContainer, ConfigurationSectionTrait):
 
   def save_to_file(self, file, atoms=None, *, validate='save'):
       if atoms is not False:
-         self.set_from_atoms(atoms)
+         out = self.set_from_atoms(atoms)
+      else:
+         out = None
       super().save_to_file(file, validate=validate)
+      return out
 
 class ConfigurationSection(Section, ConfigurationSectionTrait):
   """ Configuration section to be used in SPRKKR configuration files """
@@ -65,18 +73,19 @@ class CustomConfigurationSection(CustomSection, ConfigurationSectionTrait):
 class ConfigurationValue(Option):
   """ Value (option) in a SPRKKR configuration file. """
 
-  def _set_from_atoms(self, atoms:Atoms, io_data:WriteIoData):
+  def _set_from_atoms(self, atoms:Optional[SPRKKRAtoms], io_data:WriteIoData):
       """ Some types can/should be updated by the data in :class:`atoms<Atoms>` object
       (and/or :class:`io_data<WriteIoData>`) during save.
       """
-      if hasattr(self._definition.type, 'set_from_atoms'):
-          self._definition.type.set_from_atoms(self, atoms, io_data)
+      sfa = getattr(self._definition, 'set_from_atoms', None)
+      if sfa:
+          sfa(self, atoms, io_data)
 
 
 class CustomConfigurationValue(CustomOption):
   """ Custom value (option) in a SPRKKR configuration file. """
 
-  def _set_from_atoms(self, atoms:Atoms, io_data:WriteIoData):
+  def _set_from_atoms(self, atoms:Optional[SPRKKRAtoms], io_data:WriteIoData):
       pass
 
 
@@ -88,6 +97,17 @@ class ConfigurationValueDefinition(ValueDefinition):
 
   result_class = ConfigurationValue
   """ The values (or more precisely the objects holding the values) of SPR-KKR configuration should be of this class. """
+
+  @property
+  def _set_from_atoms(self):
+       """
+       Allow to modify the result output value according to the
+       computed atoms object.
+
+       The standard implementation of set_from_atoms relies
+       on the underlying grammar type
+       """
+       return getattr(self.type, 'set_from_atoms', None)
 
 
 class ConfigurationSectionDefinition(SectionDefinition):
