@@ -39,7 +39,8 @@ Architecture changes
 * Numbered arrays have been introduced to allow options like MDIR, MDIR1, MDIR2 etc...
 * Python 3.11 support added.
 
-Unpublished
+
+Version 2.0.0-beta2
 -------------------
 
 User interface
@@ -48,7 +49,7 @@ User interface
 * Support for 2D problems
 * Routines for building 2D problem
 * change_task method for InputParameters
-* calculate(..., directory=False) runs the calculation in the temporary directory
+* calculate(..., directory=False) runs the calculation in a temporary directory
 
 Internals
 ~~~~~~~~~
