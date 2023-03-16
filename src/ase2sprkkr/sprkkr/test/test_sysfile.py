@@ -26,7 +26,8 @@ xband-version
 dimension
 3D
 Bravais lattice
-8 tetragonal primitive 4/mmm D_4hspace group number (ITXC and AP)
+8 tetragonal primitive 4/mmm D_4h
+space group number (ITXC and AP)
   136  384
 structure type
 UNKNOWN
