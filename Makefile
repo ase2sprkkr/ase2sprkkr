@@ -29,15 +29,15 @@ doc-build:
 doc-readme:
 	cd sphinx; pandoc README.rst -o ../README.md
 
-build: | build_clean
-	python3 -m build
+package: | package_clean
+	python -m build
 
-build_clean:
+package_clean:
 	rm -rf dist/*
 
 publish: build_clean build pip
 
-pip: | build
+pip: | package
 	twine upload dist/*
 
 anaconda:
