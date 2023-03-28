@@ -53,6 +53,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#architecture-changes">Architecture changes</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#version-2-0-0-beta2">Version 2.0.0-beta2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#internals">Internals</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -138,6 +143,27 @@ values are outputed only if they differ from the defaults.</p></li>
 <li><p>Default GrammarType for bool default values in InputParameters is now Flag.</p></li>
 <li><p>Numbered arrays have been introduced to allow options like MDIR, MDIR1, MDIR2 etc…</p></li>
 <li><p>Python 3.11 support added.</p></li>
+</ul>
+</section>
+</section>
+<section id="version-2-0-0-beta2">
+<h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Permalink to this heading"></a></h2>
+<section id="id1">
+<h3>User interface<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>es_finder integration for empty spheres finding</p></li>
+<li><p>Support for 2D problems</p></li>
+<li><p>Routines for building 2D problem</p></li>
+<li><p>change_task method for InputParameters</p></li>
+<li><p>calculate(…, directory=False) runs the calculation in a temporary directory</p></li>
+</ul>
+</section>
+<section id="internals">
+<h3>Internals<a class="headerlink" href="#internals" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Sections validation</p></li>
+<li><p>LatticeData class refactored</p></li>
+<li><p>Brackets in value names are allowed</p></li>
 </ul>
 </section>
 </section>

@@ -78,6 +78,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.t.html">t</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.test.html">test</a></li>
 </ul>
 </li>
@@ -152,6 +153,8 @@ configuration file. The variable is recognized by its position.
 If None, the default class value is used</p></li>
 <li><p><strong>info</strong> (<em>str</em>) – A short help message for the value/section. It will be the perex for description.</p></li>
 <li><p><strong>description</strong> (<em>str</em>) – The additional informations for the users.</p></li>
+<li><p><strong>write_alternative_name</strong> – Wheter use the name or the (first) alternative name in the output.</p></li>
+<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section</p></li>
 </ul>
 </dd>
 </dl>
@@ -222,7 +225,7 @@ If None, the default class value is used</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters">
-<span class="sig-name descname"><span class="pre">custom_name_characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">custom_name_characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-()</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters" title="Permalink to this definition"></a></dt>
 <dd><p>There can be space in a potential-section name</p>
 </dd></dl>
 

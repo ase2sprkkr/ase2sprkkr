@@ -1,0 +1,44 @@
+build
+=====
+
+Full name: **ase2sprkkr.sprkkr.build**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.build
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      semiinfinite_system
+      stack
+      vacuum_like
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

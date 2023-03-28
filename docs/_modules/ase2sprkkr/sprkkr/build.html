@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.sprkkr.build &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>ase2sprkkr.sprkkr.build</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.sprkkr.build</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; This module contains routines for building systems, which can be used for SPR-KKR calculations</span>
+<span class="sd">- e.g. system with vacuum pseudoatoms, or 2D semiinfinite systems</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">..ase.build</span> <span class="kn">import</span> <span class="n">aperiodic_times</span><span class="p">,</span> <span class="n">stack</span> <span class="k">as</span> <span class="n">_stack</span>
+<span class="kn">from</span> <span class="nn">.atoms_region</span> <span class="kn">import</span> <span class="n">AtomsRegion</span>
+<span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">surface</span>
+
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Real</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span><span class="n">Dict</span>
+
+<div class="viewcode-block" id="semiinfinite_system"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.build.semiinfinite_system.html#ase2sprkkr.sprkkr.build.semiinfinite_system">[docs]</a><span class="k">def</span> <span class="nf">semiinfinite_system</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span> <span class="n">repeat</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Real</span><span class="p">,</span><span class="n">Real</span><span class="p">],</span><span class="n">Real</span><span class="p">],</span> <span class="n">atoms2</span><span class="p">:</span><span class="n">Atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">hkl</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Real</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hkl2</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Real</span><span class="p">]]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">axis</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Build a semiinfinite system from one or two 3D periodic systems.</span>
+
+<span class="sd">    If two systems are given, they have to have identical the first two</span>
+<span class="sd">    lattice vectors. If one system is given, the second system is created</span>
+<span class="sd">    as a copy of the first system, but with vacuum (pseudo)atoms on its sites.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms</span>
+<span class="sd">      The left bulk region of the result.</span>
+
+<span class="sd">    repeat</span>
+<span class="sd">      How many times should be the outer regions repeated in the central (non-bulk)</span>
+<span class="sd">      region. If only one number is given, it is considered as the number of repeating</span>
+<span class="sd">      of the left bulk region in the central region. The number of repeating of the right</span>
+<span class="sd">      region then will be determined such that it will have the same integer part as the of</span>
+<span class="sd">      the given number and the decimal part will be complement (to one).</span>
+
+<span class="sd">    atoms2</span>
+<span class="sd">      The right bulk region of the result. If it is None,</span>
+<span class="sd">      it is created from the left one by replacing the atoms for vacuum pseudoatoms</span>
+
+<span class="sd">    hkl</span>
+<span class="sd">      If not None, rotate the left atoms according the given Miller coordinates, first.</span>
+
+<span class="sd">    hkl2</span>
+<span class="sd">      If not None, rotate the right atoms according the given Miller coordinates, first.</span>
+<span class="sd">      If it is None, and the atoms2 are None too, the hkl argument is used for rotating</span>
+<span class="sd">      the atoms2 object.</span>
+
+<span class="sd">    axis</span>
+<span class="sd">      Along which axis build the system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">repeat</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+       <span class="n">repeat</span><span class="o">=</span><span class="p">(</span><span class="n">repeat</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">repeat</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">repeat</span><span class="p">)</span> <span class="o">-</span> <span class="n">repeat</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">hkl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">atoms1</span> <span class="o">=</span> <span class="n">surface</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">hkl</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="n">atoms1</span> <span class="o">=</span> <span class="n">atoms</span>
+
+    <span class="k">if</span> <span class="n">atoms2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">atoms2</span> <span class="o">=</span> <span class="n">vacuum_like</span><span class="p">(</span><span class="n">atoms1</span> <span class="k">if</span> <span class="n">hkl2</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">atoms</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hkl2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="n">atoms</span> <span class="o">=</span> <span class="n">surface</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">hkl</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">catoms2</span> <span class="o">=</span> <span class="n">aperiodic_times</span><span class="p">(</span><span class="n">atoms2</span><span class="p">,</span> <span class="n">repeat</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">direction</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">catoms</span> <span class="o">=</span> <span class="n">aperiodic_times</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">repeat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="n">catoms</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">([</span><span class="n">catoms</span><span class="p">,</span> <span class="n">catoms2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">stack</span><span class="p">(</span> <span class="p">{</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">atoms1</span><span class="p">,</span>
+                  <span class="s1">&#39;central&#39;</span><span class="p">:</span> <span class="n">catoms</span><span class="p">,</span>
+                  <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">atoms2</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="stack"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.build.stack.html#ase2sprkkr.sprkkr.build.stack">[docs]</a><span class="k">def</span> <span class="nf">stack</span><span class="p">(</span><span class="n">atomses</span><span class="p">:</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">Atoms</span><span class="p">],</span> <span class="n">axis</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">inherit_cell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Stack the atoms along given axis to a one object, creating the regions in the atoms.</span>
+
+<span class="sd">    The function accepts list of the names, the list of the Atoms objects, and all the other parameters</span>
+<span class="sd">    of the function :func:`ase2sprkkr.ase.build.stack`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">_stack</span><span class="p">(</span><span class="n">atomses</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">atomses</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">inherit_cell</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+       <span class="n">inherit_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+       <span class="n">inherit_cell</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">atomses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="n">last</span><span class="p">:</span>
+            <span class="n">upto</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">upto</span> <span class="o">=</span> <span class="p">(</span><span class="n">cnt</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="n">AtomsRegion</span><span class="o">.</span><span class="n">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span> <span class="n">upto</span><span class="p">),</span> <span class="n">inherit_cell</span><span class="o">=</span><span class="n">inherit_cell</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">cnt</span><span class="o">=</span><span class="n">upto</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="vacuum_like"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.build.vacuum_like.html#ase2sprkkr.sprkkr.build.vacuum_like">[docs]</a><span class="k">def</span> <span class="nf">vacuum_like</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a copy of atoms, filled with vacuum pseudoatoms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
+        <span class="n">site</span><span class="o">.</span><span class="n">occupation</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;Vc&#39;</span> <span class="p">:</span> <span class="mf">1.0</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

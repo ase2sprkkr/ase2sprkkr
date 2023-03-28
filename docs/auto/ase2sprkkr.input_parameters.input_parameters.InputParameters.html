@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="input_parameters_definitions" href="ase2sprkkr.input_parameters.input_parameters_definitions.html" />
+    <link rel="next" title="InputSection" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html" />
     <link rel="prev" title="resolve_executable_postfix" href="ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html" /> 
 </head>
 
@@ -67,6 +67,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html">resolve_executable_postfix</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">InputParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html">InputSection</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
@@ -153,19 +154,29 @@ which then parse the output of the task.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.default_mpi_runner">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_mpi_runner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.default_mpi_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_mpi_runner" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_mpi_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.default_mpi_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_mpi_runner" title="Permalink to this definition"></a></dt>
 <dd><dl class="simple">
 <dt>Return the executable and its params to run a mpi task.</dt><dd><p>The runner is determined by autodetection.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>mpi_runner</strong> – List of strings with executable and its parameters to run a mpi task.
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>auto</strong> (<em>bool</em>) – <dl class="simple">
+<dt>If true,</dt><dd><ul class="simple">
+<li><p>do not warn if no mpi is found</p></li>
+<li><p>check the number of available cpus, do not return a runner, if there is only one</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mpi_runner</strong> – List of strings with executable and its parameters to run a mpi task.
 E.g. [ ‘mpirun’ ]
 If no suitable runner is found, return False.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list or False</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list or False</p>
 </dd>
 </dl>
 </dd></dl>
@@ -335,6 +346,11 @@ which the default parameters are used</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.task_definition">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">task_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.task_definition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.task_definition" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.default_parameters">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.default_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_parameters" title="Permalink to this definition"></a></dt>
 <dd><p>Create default input parameters</p>
@@ -361,6 +377,13 @@ required type of the given option or its other requirements.</p></li>
 <dd><p>Create a calculator and run the input_parameters. See SPRKKR.calculate for the arguments</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.change_task">
+<span class="sig-name descname"><span class="pre">change_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.change_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.change_task" title="Permalink to this definition"></a></dt>
+<dd><p>Change the task to the given task. Retain the value of the options,
+that are present in the new task.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -370,7 +393,7 @@ required type of the given option or its other requirements.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html" class="btn btn-neutral float-left" title="resolve_executable_postfix" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.input_parameters.input_parameters_definitions.html" class="btn btn-neutral float-right" title="input_parameters_definitions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.input_parameters.input_parameters.InputSection.html" class="btn btn-neutral float-right" title="InputSection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,0 +1,50 @@
+directory
+=========
+
+Full name: **ase2sprkkr.common.directory**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.directory.Directory 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.directory
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Directory
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

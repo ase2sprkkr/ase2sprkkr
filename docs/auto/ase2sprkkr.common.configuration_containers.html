@@ -68,12 +68,14 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.BaseSection.html">BaseSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html">ConfigurationContainer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.CustomSection.html">CustomSection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.DictAdaptor.html">DictAdaptor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html">RootConfigurationContainer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html">Section</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.directory.html">directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
@@ -128,14 +130,15 @@
 <h1>configuration_containers<a class="headerlink" href="#configuration-containers" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.configuration_containers</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-f4dbfa3a0d86b4d9a2bcbd25e52c920bfe5729c4.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.BaseSection, ase2sprkkr.common.configuration_containers.ConfigurationContainer, ase2sprkkr.common.configuration_containers.CustomSection, ase2sprkkr.common.configuration_containers.RootConfigurationContainer, ase2sprkkr.common.configuration_containers.Section" usemap="#inheritance05f00e9c05" class="inheritance graphviz" /></div>
-<map id="inheritance05f00e9c05" name="inheritance05f00e9c05">
+<div class="graphviz"><img src="../_images/inheritance-b5bd151b2f79691dfb8731c144c3c039b63c3a69.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.BaseSection, ase2sprkkr.common.configuration_containers.ConfigurationContainer, ase2sprkkr.common.configuration_containers.CustomSection, ase2sprkkr.common.configuration_containers.DictAdaptor, ase2sprkkr.common.configuration_containers.RootConfigurationContainer, ase2sprkkr.common.configuration_containers.Section" usemap="#inheritanceabe5976331" class="inheritance graphviz" /></div>
+<map id="inheritanceabe5976331" name="inheritanceabe5976331">
 <area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="395,29,498,55"/>
 <area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection" target="_top" title="Custom task section. Section created by user with no definition" alt="" coords="577,5,697,31"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="601,55,673,80"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="601,55,673,80"/>
 <area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="144,55,316,80"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="345,79,548,104"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="345,79,548,104"/>
 <area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,55,115,80"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.common.configuration_containers.DictAdaptor" target="_top" title="This class wraps a container to behave as a read&#45;only dict" alt="" coords="11,5,109,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -161,10 +164,13 @@ and that are results of parsing of a configuration file.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.common.configuration_containers.CustomSection" title="ase2sprkkr.common.configuration_containers.CustomSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomSection</span></code></a>(definition[, container])</p></td>
 <td><p>Custom task section.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" title="ase2sprkkr.common.configuration_containers.RootConfigurationContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RootConfigurationContainer</span></code></a>(definition[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.common.configuration_containers.DictAdaptor" title="ase2sprkkr.common.configuration_containers.DictAdaptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DictAdaptor</span></code></a>(container)</p></td>
+<td><p>This class wraps a container to behave as a read-only dict</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" title="ase2sprkkr.common.configuration_containers.RootConfigurationContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RootConfigurationContainer</span></code></a>(definition[, ...])</p></td>
 <td><p>Base class for data of configuration/problem-definition files</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a>(definition[, container])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a>(definition[, container])</p></td>
 <td><p>A standard section of a task or potential (whose content is predefinded by SectionDefinition)</p></td>
 </tr>
 </tbody>

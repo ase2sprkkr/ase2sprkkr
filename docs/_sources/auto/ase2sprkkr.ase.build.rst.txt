@@ -1,0 +1,43 @@
+build
+=====
+
+Full name: **ase2sprkkr.ase.build**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.ase.build
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      aperiodic_times
+      stack
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

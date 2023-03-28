@@ -99,7 +99,7 @@
 
 <div class="viewcode-block" id="ConfigurationSectionTrait"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationSectionTrait</span><span class="p">:</span>
 
-<div class="viewcode-block" id="ConfigurationSectionTrait.set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">WriteIoData</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationSectionTrait.set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Atoms</span><span class="p">]],</span> <span class="n">io_data</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">WriteIoData</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Set the sections&#39; values of the potential according to the given ASE atoms object.</span>
 
 <span class="sd">      Parameters</span>
@@ -118,16 +118,21 @@
 <span class="sd">        :func:`GrammarType.validate&lt;ase2sprkkr.common.grammar_types.GrammarType.validate&gt;`</span>
 <span class="sd">        True (default) means full validation: i.e. the same as ``save``.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">atoms</span><span class="p">:</span>
+          <span class="n">atoms</span> <span class="o">=</span> <span class="n">SPRKKRAtoms</span><span class="o">.</span><span class="n">promote_ase_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
       <span class="n">io_data</span> <span class="o">=</span> <span class="n">io_data</span> <span class="ow">or</span> <span class="n">WriteIoData</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">io_data</span></div>
 
-<div class="viewcode-block" id="ConfigurationSectionTrait._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">SPRKKRAtoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationSectionTrait._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">SPRKKRAtoms</span><span class="p">],</span> <span class="n">io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Set the sections&#39; values of the potential according to the given ASE atoms object.</span>
 <span class="sd">          Unlike the non_underscored routine, this one requires the io_data to be set.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
-          <span class="n">i</span><span class="o">.</span><span class="n">_set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span></div></div>
+          <span class="n">i</span><span class="o">.</span><span class="n">_set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s1">&#39;set_from_atoms&#39;</span><span class="p">):</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span></div></div>
 
 <span class="c1"># Containers and values</span>
 
@@ -136,8 +141,11 @@
 
 <div class="viewcode-block" id="ConfigurationFile.save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile.save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
       <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span></div></div>
+         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="n">out</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">out</span></div></div>
 
 <div class="viewcode-block" id="ConfigurationSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationSection</span><span class="p">(</span><span class="n">Section</span><span class="p">,</span> <span class="n">ConfigurationSectionTrait</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Configuration section to be used in SPRKKR configuration files &quot;&quot;&quot;</span></div>
@@ -150,18 +158,19 @@
 <div class="viewcode-block" id="ConfigurationValue"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationValue.html#ase2sprkkr.sprkkr.configuration.ConfigurationValue">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationValue</span><span class="p">(</span><span class="n">Option</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Value (option) in a SPRKKR configuration file. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ConfigurationValue._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationValue.html#ase2sprkkr.sprkkr.configuration.ConfigurationValue._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationValue._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationValue.html#ase2sprkkr.sprkkr.configuration.ConfigurationValue._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">SPRKKRAtoms</span><span class="p">],</span> <span class="n">io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Some types can/should be updated by the data in :class:`atoms&lt;Atoms&gt;` object</span>
 <span class="sd">      (and/or :class:`io_data&lt;WriteIoData&gt;`) during save.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="s1">&#39;set_from_atoms&#39;</span><span class="p">):</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span></div></div>
+      <span class="n">sfa</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="p">,</span> <span class="s1">&#39;set_from_atoms&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">sfa</span><span class="p">:</span>
+          <span class="n">sfa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="CustomConfigurationValue"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue">[docs]</a><span class="k">class</span> <span class="nc">CustomConfigurationValue</span><span class="p">(</span><span class="n">CustomOption</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Custom value (option) in a SPRKKR configuration file. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CustomConfigurationValue._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomConfigurationValue._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue._set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="n">SPRKKRAtoms</span><span class="p">],</span> <span class="n">io_data</span><span class="p">:</span><span class="n">WriteIoData</span><span class="p">):</span>
       <span class="k">pass</span></div></div>
 
 
@@ -172,7 +181,18 @@
   <span class="sd">&quot;&quot;&quot; Definition o a configuration value, used in SPRKKR configuration file.&quot;&quot;&quot;</span>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">ConfigurationValue</span>
-  <span class="sd">&quot;&quot;&quot; The values (or more precisely the objects holding the values) of SPR-KKR configuration should be of this class. &quot;&quot;&quot;</span></div>
+  <span class="sd">&quot;&quot;&quot; The values (or more precisely the objects holding the values) of SPR-KKR configuration should be of this class. &quot;&quot;&quot;</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Allow to modify the result output value according to the</span>
+<span class="sd">       computed atoms object.</span>
+
+<span class="sd">       The standard implementation of set_from_atoms relies</span>
+<span class="sd">       on the underlying grammar type</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="s1">&#39;set_from_atoms&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationSectionDefinition</span><span class="p">(</span><span class="n">SectionDefinition</span><span class="p">):</span>

@@ -1,0 +1,36 @@
+TauSection
+==========
+
+
+.. currentmodule:: ase2sprkkr.input_parameters.definitions.sections
+
+.. autoclass:: TauSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.input_parameters.definitions.sections.TauSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.input_parameters.input_parameters.InputParameters 
+.. inheritance-diagram::  ase2sprkkr.input_parameters.input_parameters.InputParameters  ase2sprkkr.input_parameters.input_parameters.InputSection 
       :parts: 1
 
 |
@@ -44,6 +44,7 @@ Full name: **ase2sprkkr.input\_parameters.input\_parameters**
       :template: custom-class-template.rst
    
       InputParameters
+      InputSection
    
    
 

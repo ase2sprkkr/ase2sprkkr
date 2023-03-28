@@ -93,8 +93,18 @@
 <span class="kn">from</span> <span class="nn">..input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
 <span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
 
 <div class="viewcode-block" id="TestDefinitions"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions">[docs]</a><span class="k">class</span> <span class="nc">TestDefinitions</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestDefinitions.change_task"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.change_task">[docs]</a>  <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">ip</span><span class="o">=</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="s1">&#39;DOS&#39;</span><span class="p">)</span>
+      <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span><span class="o">=</span><span class="mi">2</span>
+      <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMAX</span><span class="o">=</span><span class="mi">5</span>
+      <span class="n">ip</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
+      <span class="k">assert</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span> <span class="o">==</span> <span class="mi">2</span>
+      <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
+        <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span></div>
 
 <div class="viewcode-block" id="TestDefinitions.test_definitions"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.test_definitions">[docs]</a>  <span class="k">def</span> <span class="nf">test_definitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;../examples&#39;</span><span class="p">)</span>

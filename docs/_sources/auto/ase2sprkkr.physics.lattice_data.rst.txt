@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.physics.lattice\_data**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.physics.lattice_data.LatticeData 
+.. inheritance-diagram::  ase2sprkkr.physics.lattice_data.LatticeData  ase2sprkkr.physics.lattice_data.Pearson 
       :parts: 1
 
 |
@@ -18,6 +18,14 @@ Full name: **ase2sprkkr.physics.lattice\_data**
 .. automodule:: ase2sprkkr.physics.lattice_data
 
    
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      international_numbers_to_AP
    
    
 
@@ -36,6 +44,7 @@ Full name: **ase2sprkkr.physics.lattice\_data**
       :template: custom-class-template.rst
    
       LatticeData
+      Pearson
    
    
 

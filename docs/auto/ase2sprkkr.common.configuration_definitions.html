@@ -71,11 +71,13 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html">BaseDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html">ConfigurationRootDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html">ContainerDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.MergeDictAdaptor.html">MergeDictAdaptor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html">SectionDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html">ValueDefinition</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.decorators.html">decorators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.directory.html">directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.formats.html">formats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
@@ -130,13 +132,14 @@
 <h1>configuration_definitions<a class="headerlink" href="#configuration-definitions" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.configuration_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-9fd5b2db917b486acaa251219ef28dd7b8ffbd5d.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.BaseDefinition, ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition, ase2sprkkr.common.configuration_definitions.ContainerDefinition, ase2sprkkr.common.configuration_definitions.SectionDefinition, ase2sprkkr.common.configuration_definitions.ValueDefinition" usemap="#inheritance5f433b4f5e" class="inheritance graphviz" /></div>
-<map id="inheritance5f433b4f5e" name="inheritance5f433b4f5e">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="5,55,123,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="152,29,300,55"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="165,79,287,104"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="329,5,532,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="364,55,497,80"/>
+<div class="graphviz"><img src="../_images/inheritance-262b987dfeea48549d93c92f7214c3142d8f36ef.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_definitions.BaseDefinition, ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition, ase2sprkkr.common.configuration_definitions.ContainerDefinition, ase2sprkkr.common.configuration_definitions.MergeDictAdaptor, ase2sprkkr.common.configuration_definitions.SectionDefinition, ase2sprkkr.common.configuration_definitions.ValueDefinition" usemap="#inheritance072d30fd16" class="inheritance graphviz" /></div>
+<map id="inheritance072d30fd16" name="inheritance072d30fd16">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="17,55,134,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="175,29,323,55"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="188,79,309,104"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="352,5,555,31"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="387,55,520,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.MergeDictAdaptor.html#ase2sprkkr.common.configuration_definitions.MergeDictAdaptor" target="_top" title="This class returns a read&#45;only dict&#45;like class" alt="" coords="5,5,145,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -180,10 +183,13 @@ e.g. an <a class="reference internal" href="ase2sprkkr.common.options.Option.htm
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" title="ase2sprkkr.common.configuration_definitions.ContainerDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ContainerDefinition</span></code></a>(name[, members, ...])</p></td>
 <td><p>Base class for a definition (of contained data, format, etc) of either a whole configuration file (e.g.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" title="ase2sprkkr.common.configuration_definitions.SectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SectionDefinition</span></code></a>(name[, members, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.MergeDictAdaptor.html#ase2sprkkr.common.configuration_definitions.MergeDictAdaptor" title="ase2sprkkr.common.configuration_definitions.MergeDictAdaptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MergeDictAdaptor</span></code></a>(values, definition)</p></td>
+<td><p>This class returns a read-only dict-like class that merge values from a container and from the definition of a section</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" title="ase2sprkkr.common.configuration_definitions.SectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SectionDefinition</span></code></a>(name[, members, ...])</p></td>
 <td><p>Base class for definition of the sections in Pot or InputParameters files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" title="ase2sprkkr.common.configuration_definitions.ValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueDefinition</span></code></a>(name[, type, default_value, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" title="ase2sprkkr.common.configuration_definitions.ValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueDefinition</span></code></a>(name[, type, default_value, ...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

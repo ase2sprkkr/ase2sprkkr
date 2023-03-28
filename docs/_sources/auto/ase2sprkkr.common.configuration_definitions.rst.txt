@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.configuration_definitions.BaseDefinition  ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition  ase2sprkkr.common.configuration_definitions.ContainerDefinition  ase2sprkkr.common.configuration_definitions.SectionDefinition  ase2sprkkr.common.configuration_definitions.ValueDefinition 
+.. inheritance-diagram::  ase2sprkkr.common.configuration_definitions.BaseDefinition  ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition  ase2sprkkr.common.configuration_definitions.ContainerDefinition  ase2sprkkr.common.configuration_definitions.MergeDictAdaptor  ase2sprkkr.common.configuration_definitions.SectionDefinition  ase2sprkkr.common.configuration_definitions.ValueDefinition 
       :parts: 1
 
 |
@@ -47,6 +47,7 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
       BaseDefinition
       ConfigurationRootDefinition
       ContainerDefinition
+      MergeDictAdaptor
       SectionDefinition
       ValueDefinition
    

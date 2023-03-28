@@ -68,6 +68,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.build.html">build</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
@@ -181,6 +183,32 @@ by constructor and by promote_ase_atoms</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.regions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regions</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.regions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.add_region">
+<span class="sig-name descname"><span class="pre">add_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.add_region"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.add_region" title="Permalink to this definition"></a></dt>
+<dd><p>Add a region of a given name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.remove_region">
+<span class="sig-name descname"><span class="pre">remove_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.remove_region"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.remove_region" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_regions">
+<span class="sig-name descname"><span class="pre">set_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">regions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.set_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_regions" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>regions</strong> (<em>List</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.symmetry">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symmetry</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.symmetry" title="Permalink to this definition"></a></dt>
 <dd><p>Whether the sites property is/will be generated using symmetry, i.e.
@@ -255,6 +283,11 @@ in these properties please create a new Atoms object with given properties.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.are_sites_inited">
+<span class="sig-name descname"><span class="pre">are_sites_inited</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.are_sites_inited"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.are_sites_inited" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_sites">
 <span class="sig-name descname"><span class="pre">set_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sites</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacegroup_info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.set_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.set_sites" title="Permalink to this definition"></a></dt>
 <dd><p>Set the sites property and update all other dependent
@@ -264,8 +297,12 @@ containing the computed informations about the symmetry.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sites</strong> (<em>ndarray</em>) – </p></li>
-<li><p><strong>spacegroup_info</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><em>SpacegroupInfo</em></a><em>]</em>) – </p></li>
+<li><p><strong>sites</strong> (<em>ndarray</em>) – The array of the <a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><code class="xref py py-class docutils literal notranslate"><span class="pre">ase2sprkkr.sprkkr.sites.Site</span></code></a> objects.</p></li>
+<li><p><strong>sg_info</strong> – Information, about the symmetry.
+If None is given, no info is available, the symmetry will be determined if needed.
+If False, there is no symmetry.
+If True, retain the current symmetry.</p></li>
+<li><p><strong>spacegroup_info</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><em>SpacegroupInfo</em></a><em>, </em><em>bool</em><em>]</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -290,6 +327,12 @@ containing the computed informations about the symmetry.</p>
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.extend">
 <span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.extend" title="Permalink to this definition"></a></dt>
 <dd><p>Extend atoms object by appending atoms from <em>other</em>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/sprkkr_atoms.html#SPRKKRAtoms.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Return a copy.</p>
 </dd></dl>
 
 </dd></dl>

@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="resolve_executable_postfix" href="ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html" />
-    <link rel="prev" title="TASK" href="ase2sprkkr.input_parameters.definitions.sections.TASK.html" /> 
+    <link rel="prev" title="TauSection" href="ase2sprkkr.input_parameters.definitions.sections.TauSection.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -67,6 +67,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">input_parameters</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html">resolve_executable_postfix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html">InputParameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html">InputSection</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
@@ -113,14 +114,18 @@
 <h1>input_parameters<a class="headerlink" href="#input-parameters" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.input_parameters</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-59f0bdbba3b2158759d9ca5413561f04d660306b.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters.InputParameters" usemap="#inheritance1d8c94e80c" class="inheritance graphviz" /></div>
-<map id="inheritance1d8c94e80c" name="inheritance1d8c94e80c">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,5,115,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="144,5,316,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="345,5,548,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="577,31,709,56"/>
-<area shape="rect" id="node6" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" target="_top" title="It holds the configuration values for a SPR&#45;KKR task and run the task" alt="" coords="739,31,868,56"/>
-<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="354,55,539,80"/>
+<div class="graphviz"><img src="../_images/inheritance-f8d7c907a206d474993f8742dfc276432b387a9b.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters.InputParameters, ase2sprkkr.input_parameters.input_parameters.InputSection" usemap="#inheritance3ca2e97862" class="inheritance graphviz" /></div>
+<map id="inheritance3ca2e97862" name="inheritance3ca2e97862">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="367,98,463,121"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" target="_top" title="A standard section of a task or potential (whose content is predefinded by SectionDefinition)" alt="" coords="564,99,631,123"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="134,52,294,76"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="321,6,509,30"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,52,107,76"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="536,5,659,28"/>
+<area shape="rect" id="node9" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" target="_top" title="It holds the configuration values for a SPR&#45;KKR task and run the task" alt="" coords="699,5,819,28"/>
+<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="329,52,501,76"/>
+<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="686,76,832,99"/>
+<area shape="rect" id="node10" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection" target="_top" title="Input parameters sections has nothing special, yet." alt="" coords="860,76,955,99"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -151,6 +156,9 @@ executables.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputParameters</span></code></a>(definition[, inputfile, ...])</p></td>
 <td><p>It holds the configuration values for a SPR-KKR task and run the task</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection" title="ase2sprkkr.input_parameters.input_parameters.InputSection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InputSection</span></code></a>(definition[, container])</p></td>
+<td><p>Input parameters sections has nothing special, yet.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -159,7 +167,7 @@ executables.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.input_parameters.definitions.sections.TASK.html" class="btn btn-neutral float-left" title="TASK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.definitions.sections.TauSection.html" class="btn btn-neutral float-left" title="TauSection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html" class="btn btn-neutral float-right" title="resolve_executable_postfix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -99,11 +99,14 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">definitions</span>
 <span class="kn">from</span> <span class="nn">..outputs</span> <span class="kn">import</span> <span class="n">readers</span>
 <span class="kn">from</span> <span class="nn">..outputs.readers.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
-<span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationFile</span>
+<span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationFile</span><span class="p">,</span> <span class="n">ConfigurationSection</span>
 <span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<div class="viewcode-block" id="InputSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection">[docs]</a><span class="k">class</span> <span class="nc">InputSection</span><span class="p">(</span><span class="n">ConfigurationSection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Input parameters sections has nothing special, yet. &quot;&quot;&quot;</span></div>
 
 <div class="viewcode-block" id="resolve_executable_postfix"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix.html#ase2sprkkr.input_parameters.input_parameters.resolve_executable_postfix">[docs]</a><span class="k">def</span> <span class="nf">resolve_executable_postfix</span><span class="p">(</span><span class="n">postfix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;&quot; Return the postfix, that is appended after the name of SPR-KKR executable.</span>
@@ -144,9 +147,16 @@
   <span class="n">_default_mpi_runner</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="InputParameters.default_mpi_runner"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_mpi_runner">[docs]</a>  <span class="nd">@classmethod</span>
-  <span class="k">def</span> <span class="nf">default_mpi_runner</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">default_mpi_runner</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">auto</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Return the executable and its params to run a mpi task.</span>
 <span class="sd">          The runner is determined by autodetection.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      auto:bool</span>
+<span class="sd">          If true,</span>
+<span class="sd">             - do not warn if no mpi is found</span>
+<span class="sd">             - check the number of available cpus, do not return a runner, if there is only one</span>
 
 <span class="sd">      Return</span>
 <span class="sd">      ------</span>
@@ -160,8 +170,11 @@
              <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
                 <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span> <span class="o">=</span> <span class="p">[</span> <span class="n">r</span> <span class="p">]</span>
                 <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span>
-         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span>
+         <span class="k">if</span> <span class="ow">not</span> <span class="n">auto</span><span class="p">:</span>
+             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span>
          <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span><span class="o">=</span><span class="kc">False</span>
+      <span class="k">if</span> <span class="n">auto</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s1">&#39;sched_getaffinity&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">None</span>
       <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span></div>
 
 <div class="viewcode-block" id="InputParameters.mpi_runner"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.mpi_runner">[docs]</a>  <span class="k">def</span> <span class="nf">mpi_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpi</span><span class="p">):</span>
@@ -174,6 +187,9 @@
 
 <span class="sd">        - If True is given, return the default mpi-runner</span>
 <span class="sd">        - If False is given, no mpi-runner is returned.</span>
+<span class="sd">        - If &#39;auto&#39; is given, it is the same as True, however</span>
+<span class="sd">             * no warning is given if no mpi is found</span>
+<span class="sd">             * MPI is not used, if only one CPU is available</span>
 <span class="sd">        - If a string is given, it is interpreted as a list of one item</span>
 <span class="sd">        - If a list (of strings) is given, the user specified its own runner, use it as is</span>
 <span class="sd">          as the parameters for subprocess.run.</span>
@@ -195,6 +211,8 @@
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
           <span class="k">return</span> <span class="n">mpi</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">mpi</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_mpi_runner</span><span class="p">(</span><span class="n">auto</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span>
           <span class="k">return</span> <span class="p">[</span> <span class="n">mpi</span> <span class="p">]</span>
       <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_mpi_runner</span><span class="p">()</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">runner</span><span class="p">:</span>
@@ -390,7 +408,11 @@
 <span class="sd">      input_parameters: InputParameters</span>
 <span class="sd">        Input parameters with the default values for the given task.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()])</span></div>
+      <span class="k">return</span> <span class="n">InputParameters</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">task_definition</span><span class="p">(</span><span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="InputParameters.task_definition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.task_definition">[docs]</a>  <span class="nd">@classmethod</span>
+  <span class="k">def</span> <span class="nf">task_definition</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">task_name</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="p">[</span><span class="n">task_name</span><span class="o">.</span><span class="n">upper</span><span class="p">()]</span></div>
 
 <div class="viewcode-block" id="InputParameters.default_parameters"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_parameters">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">default_parameters</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -428,7 +450,16 @@
       <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
       <span class="n">out</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">configuration_type_name</span>
       <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="s1">&#39; for task &#39;</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-      <span class="k">return</span> <span class="n">out</span></div>
+      <span class="k">return</span> <span class="n">out</span>
+
+<div class="viewcode-block" id="InputParameters.change_task"><a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.change_task">[docs]</a>  <span class="k">def</span> <span class="nf">change_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+      <span class="sd">&quot;&quot;&quot; Change the task to the given task. Retain the value of the options,</span>
+<span class="sd">      that are present in the new task.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_definition</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span></div></div>
 
 <span class="c1">#at least, to avoid a circular import</span>
 <span class="kn">from</span> <span class="nn">..sprkkr</span> <span class="kn">import</span> <span class="n">calculator</span>

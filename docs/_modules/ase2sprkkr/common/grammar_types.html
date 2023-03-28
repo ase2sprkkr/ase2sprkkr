@@ -809,7 +809,7 @@
 
 <div class="viewcode-block" id="Array.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Array.html#ase2sprkkr.common.grammar_types.Array.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">as_list</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">as_list</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
@@ -839,6 +839,9 @@
         <span class="n">default_value</span> <span class="o">=</span> <span class="nb">type</span>
         <span class="nb">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">type_from_type</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">format</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="nb">format</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">as_list</span> <span class="o">=</span> <span class="n">as_list</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">default_value</span><span class="o">=</span><span class="n">default_value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="n">min_length</span> <span class="ow">or</span> <span class="n">length</span>
@@ -1027,15 +1030,19 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_type</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseMixed._validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed._validate">[docs]</a>  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">True</span>
       <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
       <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">value</span><span class="p">:</span>
-         <span class="k">return</span> <span class="s1">&#39;Can not determine the type of value </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+          <span class="k">return</span> <span class="s1">&#39;Can not determine the type of value </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
       <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseMixed.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed.grammar_name">[docs]</a>  <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="s1">&#39;&lt;mixed&gt;&#39;</span></div>
 
 <div class="viewcode-block" id="BaseMixed.convert"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.BaseMixed.html#ase2sprkkr.common.grammar_types.BaseMixed.convert">[docs]</a>  <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">None</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="Range"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar_types.Range.html#ase2sprkkr.common.grammar_types.Range">[docs]</a><span class="k">class</span> <span class="nc">Range</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>

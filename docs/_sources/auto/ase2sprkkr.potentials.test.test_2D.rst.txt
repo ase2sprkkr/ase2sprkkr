@@ -1,0 +1,50 @@
+test\_2D
+========
+
+Full name: **ase2sprkkr.potentials.test.test\_2D**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.test.test_2D.Test2DPotential 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.test.test_2D
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Test2DPotential
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

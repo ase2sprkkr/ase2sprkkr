@@ -1,0 +1,36 @@
+DictAdaptor
+===========
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoclass:: DictAdaptor
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_containers.DictAdaptor
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

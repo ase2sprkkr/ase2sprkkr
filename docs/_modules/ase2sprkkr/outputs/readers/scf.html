@@ -98,6 +98,11 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">...sprkkr.calculator</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
 <span class="kn">from</span> <span class="nn">...common.formats</span> <span class="kn">import</span> <span class="n">fortran_format</span>
+<span class="kn">from</span> <span class="nn">...common.grammar</span> <span class="kn">import</span> <span class="n">replace_whitechars</span>
+
+<div class="viewcode-block" id="RealOrStars"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars">[docs]</a><span class="k">class</span> <span class="nc">RealOrStars</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; A real value, where **** means NaN &quot;&quot;&quot;</span>
+  <span class="n">_grammar</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">|</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ScfResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult">[docs]</a><span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; Objects of this class holds the results of computed SCF class &quot;&quot;&quot;</span>
@@ -143,10 +148,10 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="ScfResult.iteration_values"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.iteration_values">[docs]</a>  <span class="k">def</span> <span class="nf">iteration_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot; Return the array of values of given name from the </span>
-<span class="sd">      iterations (i.e. &quot;the column of the table of the values&quot;) </span>
+      <span class="sd">&quot;&quot;&quot; Return the array of values of given name from the</span>
+<span class="sd">      iterations (i.e. &quot;the column of the table of the values&quot;)</span>
 
-<span class="sd">      E.g. result.iteration_values(&#39;ETOT&#39;) return list of </span>
+<span class="sd">      E.g. result.iteration_values(&#39;ETOT&#39;) return list of</span>
 <span class="sd">      floats - the total energies computed in each iteration.</span>
 
 <span class="sd">      Parameters</span>
@@ -223,7 +228,7 @@
 
   <span class="n">atoms_conf_type</span> <span class="o">=</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">,</span> <span class="p">[</span>
     <span class="n">VN</span><span class="p">(</span><span class="s1">&#39;IECURR&#39;</span><span class="p">,</span> <span class="n">integer</span><span class="p">),</span>
-    <span class="n">VE</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+    <span class="n">VE</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">RealOrStars</span><span class="p">()),</span>
     <span class="n">VN</span><span class="p">(</span><span class="s1">&#39;L&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
     <span class="n">VE</span><span class="p">(</span><span class="s1">&#39;IT&#39;</span><span class="p">,</span> <span class="n">integer</span><span class="p">),</span>
     <span class="n">VN</span><span class="p">(</span><span class="s1">&#39;atom&#39;</span><span class="p">,</span> <span class="n">string</span><span class="p">),</span>

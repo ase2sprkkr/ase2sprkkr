@@ -112,18 +112,21 @@
 <div class="viewcode-block" id="ConfigurationContainer.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Create the container and its members, according to the definition &quot;&quot;&quot;</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_members</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      The members of the container, in a form of ``{obj.name : obj}``</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ConfigurationContainer._init_members_from_the_definition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._init_members_from_the_definition">[docs]</a>  <span class="k">def</span> <span class="nf">_init_members_from_the_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_members</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
       <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Non-hidden members of the containers, accesible via sanitized names.</span>
 <span class="sd">      I.e. via names with whitespaces and other special characters replaced by underscore.</span>
 <span class="sd">      These sanitized names are then used as names for &quot;attributes&quot; of this container, to</span>
 <span class="sd">      make the members accesible via ``&lt;container&gt;.&lt;member&gt;`` notation.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">definition</span><span class="o">.</span><span class="n">members</span><span class="p">():</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">members</span><span class="p">():</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ConfigurationContainer.members"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer.members">[docs]</a>  <span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -400,7 +403,7 @@
 <span class="sd">      The sanitized names are keys in ``interactive_members`` array, and thus</span>
 <span class="sd">      the members are accesible by ``&lt;container&gt;.&lt;member&gt;`` notation.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-\s.]&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">)</span></div>
+      <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[()]&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-\s.]&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ConfigurationContainer._add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer._add">[docs]</a>  <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
       <span class="n">name</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span>
@@ -445,9 +448,22 @@
 <span class="sd">        ``set`` - Validation on user input. Allow required values not to be set.</span>
 <span class="sd">        ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">DictAdaptor</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">why</span><span class="p">)</span>
       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
           <span class="n">o</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span></div></div>
 
+
+<div class="viewcode-block" id="DictAdaptor"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.common.configuration_containers.DictAdaptor">[docs]</a><span class="k">class</span> <span class="nc">DictAdaptor</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot; This class wraps a container to behave as a read-only dict &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DictAdaptor.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.common.configuration_containers.DictAdaptor.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">=</span><span class="n">container</span></div>
+
+  <span class="k">def</span> <span class="nf">__hasitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">container__hasitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)()</span></div>
 
 <div class="viewcode-block" id="BaseSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection">[docs]</a><span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot; A section of SPRKKR configuration - i.e. part of the configuration file. &quot;&quot;&quot;</span>
@@ -588,10 +604,6 @@
 <span class="sd">        Allow to load dangerous_values, i.e. the values that do not pass the requirements for the input values (e.g. of a different type or constraint-violating)</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
-      <span class="c1">#except Exception as e:</span>
-      <span class="c1">#   print(e)</span>
-      <span class="c1">#   breakpoint()</span>
-      <span class="c1">#   print(e)</span>
       <span class="k">if</span> <span class="n">clear_first</span><span class="p">:</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span></div>

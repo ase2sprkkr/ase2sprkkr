@@ -39,6 +39,8 @@ Full name: **ase2sprkkr.sprkkr**
      :recursive:
   
      ase2sprkkr.sprkkr.atomic_types
+     ase2sprkkr.sprkkr.atoms_region
+     ase2sprkkr.sprkkr.build
      ase2sprkkr.sprkkr.calculator
      ase2sprkkr.sprkkr.configuration
      ase2sprkkr.sprkkr.io_data

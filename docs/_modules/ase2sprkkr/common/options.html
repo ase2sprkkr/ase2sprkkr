@@ -206,11 +206,14 @@
 <span class="sd">      To completly bypass the check, set the value to an instance of DangerousValue</span>
 <span class="sd">      class directly.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="n">value</span> <span class="o">=</span> <span class="n">DangerousValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type_of_dangerous</span><span class="p">)</span>
+      <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dangerous_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
           <span class="bp">self</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
       <span class="k">else</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Option._create_dangerous_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option._create_dangerous_value">[docs]</a>  <span class="k">def</span> <span class="nf">_create_dangerous_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">DangerousValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">type_of_dangerous</span><span class="p">)</span></div>
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -354,12 +357,18 @@
 <span class="sd">      retained as is and the transformed value is stored in the result.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_result&#39;</span><span class="p">):</span>
+          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="p">,</span> <span class="n">DangerousValue</span><span class="p">):</span>
+              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span><span class="o">.</span><span class="n">value</span>
           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span>
       <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
   <span class="nd">@result</span><span class="o">.</span><span class="n">setter</span>
   <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_result</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="Option.clear_result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.clear_result">[docs]</a>  <span class="k">def</span> <span class="nf">clear_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_result&#39;</span><span class="p">):</span>
+          <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result</span></div>
 
 <div class="viewcode-block" id="Option.clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">call_hooks</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
       <span class="sd">&quot;&quot;&quot; Clear the value: set it to None &quot;&quot;&quot;</span>
@@ -368,6 +377,7 @@
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">default_value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">do_not_check_required</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Option </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span><span class="si">}</span><span class="s1"> must have a value&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">clear_result</span><span class="p">()</span>
       <span class="k">if</span> <span class="n">call_hooks</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_post_set</span><span class="p">()</span></div>
 

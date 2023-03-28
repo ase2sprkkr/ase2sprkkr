@@ -5,6 +5,14 @@ Full name: **ase2sprkkr.input\_parameters.definitions.sections**
 
 
 
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.input_parameters.definitions.sections.TauSection 
+      :parts: 1
+
+|
+
+
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.input_parameters.definitions.sections
@@ -38,11 +46,20 @@ Full name: **ase2sprkkr.input\_parameters.definitions.sections**
    
       CONTROL
       TASK
+      _nktab_value
    
    
 
 
    
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TauSection
    
    
 

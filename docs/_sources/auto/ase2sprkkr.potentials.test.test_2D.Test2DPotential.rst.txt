@@ -1,0 +1,36 @@
+Test2DPotential
+===============
+
+
+.. currentmodule:: ase2sprkkr.potentials.test.test_2D
+
+.. autoclass:: Test2DPotential
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.test.test_2D.Test2DPotential
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
