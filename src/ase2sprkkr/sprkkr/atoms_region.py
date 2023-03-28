@@ -12,11 +12,11 @@ class AtomsRegion:
   """ AtomsRegion define a region of Atoms object,
   that can have its own cell and pbc.
 
-  E.g. this system
+  E.g. this system::
 
-  |^^T^^^^^^^^^^^^^^^^^^^T^^|
-  |  |                   |  |
-  |__|___________________|__|
+    |^^T^^^^^^^^^^^^^^^^^^^T^^|
+    |  |                   |  |
+    |__|___________________|__|
 
   has two semiinfinite 3D periodic regions and
   a central 2D-symmetric region. """

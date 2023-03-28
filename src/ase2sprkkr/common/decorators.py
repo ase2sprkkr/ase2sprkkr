@@ -120,7 +120,7 @@ class class_property:
 
 def add_to_signature(func, prepend=False, self_name='self'):
   """
-  Add the arguments in the <func> function to the list of arguments
+  Add the arguments in the ``func`` function to the list of arguments
   of the resulting function (as keyword_only arguments)
   The modified function has to have its arguments defined as
   in the following example:
@@ -234,17 +234,17 @@ def add_to_signature(func, prepend=False, self_name='self'):
 
 def add_called_class_as_argument(decorator):
     """ If a decorator is used on a method, the information about the defining class is lost.
-    As a consequence, the execution of ``super().... failed.
+    As a consequence, the execution of ``super()....`` failed.
 
     This decorator can be applied to another decorator: it will add the defining class as a first
-    argument of the resulting class.
+    argument of the resulting function.
 
     The implementation is very tricky - function-style decorator is not able to handle this situation,
     the __set_name__ special method (in class-style decorator) has to be utilized. Moreover, class
     style decorator lose 'self' from decorated method, thus, the self has to be recovered using
     descriptor protocol.
     To speed up the whole thing, the first access replaces the class-style decorator class with
-    generated method (that already can know - and knows - everything needed)
+    generated method (that can already know - and knows - everything needed)
 
     Example
 

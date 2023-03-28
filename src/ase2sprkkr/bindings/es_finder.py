@@ -62,7 +62,7 @@ def empty_spheres(atoms: Atoms, *,
     Dict, that defines the ratios of radii of used chemical elements.
     It is dimensionless value (it is not the sizes, only
     the ratios of the given values, that matter).
-    The default walues are :module:`Winger-Seitz radii<ase2sprkkr.physics.winger_seitz_radii>`.
+    The default walues are :mod:`Winger-Seitz radii<ase2sprkkr.physics.winger_seitz_radii>`.
     If only some of the elements are provided, they are supplemented with the default values.
 
   max_es_overlap

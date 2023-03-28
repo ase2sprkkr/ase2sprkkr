@@ -16,7 +16,7 @@ from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
 
 class RealOrStars(Real):
-  """ A real value, where **** means NaN """
+  """ A real value, where ``****`` means ``NaN`` """
   _grammar = Real._grammar | replace_whitechars(pp.Word('*')).setParseAction(lambda x: float('NaN'))
 
 class ScfResult(TaskResult):

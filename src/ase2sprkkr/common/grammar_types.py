@@ -100,11 +100,13 @@ class GrammarType:
 
       **The functions called during...**
 
-      User input:  convert, validate
+      ::
 
-      Output: string -> _string
+        User input:  convert, validate
 
-      Parsing: parse -> ( <_grammar parse actions>, validate(why='parse') )
+        Output: string -> _string
+
+        Parsing: parse -> ( <_grammar parse actions>, validate(why='parse') )
 
   """
 
@@ -272,17 +274,23 @@ class GrammarType:
     Parameters
     ---------
     value : mixed
-      Value to be validated
+      Value to be validated.
+
     param_name : str or callable
-      Parameter name to be used in possible throwed exception (Optional)
-      If it is callable, it should be a function that returns the param_name
+      Parameter name to be used in possible throwed exception (Optional).
+      If it is callable, it should be a function that returns the param_name.
+
     why
       Possible values are:
-      ``set`` - validation value setted by user (in rare cases, such value can be incomplete
-                and requires `completing` during ``set_from_atoms`` call before saving the output)
-      ``parse`` - validation during parsing input file, checks enforced
-                  by the grammar can be skipped
-      ``save`` - validation before saving the values
+
+      ``set``
+         validation value setted by user (in rare cases, such value can be incomplete
+         and requires `completing` during ``set_from_atoms`` call before saving the output)
+      ``parse``
+         validation during parsing input file, checks enforced
+         by the grammar can be skipped
+      ``save``
+         validation before saving the values
     """
     try:
       err = self._validate(value, why)

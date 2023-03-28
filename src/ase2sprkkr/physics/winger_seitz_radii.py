@@ -105,9 +105,10 @@ winger_seitz_radii = {
 }
 
 """
-`Winger-Seitz radii<https://en.wikipedia.org/wiki/Wigner%E2%80%93Seitz_radius>` 
-as dictionary with chemical symbols as keys.
+  Winger-Seitz radii as dictionary with chemical symbols as keys.
 
-Winger-Seitz radius is a radius of sphere with its volume equal to the volume
-per a free electron in a bulk material. 
+
+  `Winger-Seitz radius <https://en.wikipedia.org/wiki/Wigner%E2%80%93Seitz_radius>`_
+  is a radius of sphere with its volume equal to the volume
+  per a free electron in a bulk material.
 """
