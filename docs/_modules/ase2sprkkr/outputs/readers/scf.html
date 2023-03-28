@@ -43,6 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -101,7 +102,7 @@
 <span class="kn">from</span> <span class="nn">...common.grammar</span> <span class="kn">import</span> <span class="n">replace_whitechars</span>
 
 <div class="viewcode-block" id="RealOrStars"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars">[docs]</a><span class="k">class</span> <span class="nc">RealOrStars</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; A real value, where **** means NaN &quot;&quot;&quot;</span>
+  <span class="sd">&quot;&quot;&quot; A real value, where ``****`` means ``NaN`` &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">|</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ScfResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult">[docs]</a><span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>

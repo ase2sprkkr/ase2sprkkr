@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -190,9 +191,13 @@ the Flag is False), but the name-value tuple of such Type is present
 in the parse result. On the other hand, has_value = False is in the file, but
 not in the result.</p>
 <p><strong>The functions called during…</strong></p>
-<p>User input:  convert, validate</p>
-<p>Output: string -&gt; _string</p>
-<p>Parsing: parse -&gt; ( &lt;_grammar parse actions&gt;, validate(why=’parse’) )</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">User</span> <span class="nb">input</span><span class="p">:</span>  <span class="n">convert</span><span class="p">,</span> <span class="n">validate</span>
+
+<span class="n">Output</span><span class="p">:</span> <span class="n">string</span> <span class="o">-&gt;</span> <span class="n">_string</span>
+
+<span class="n">Parsing</span><span class="p">:</span> <span class="n">parse</span> <span class="o">-&gt;</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">_grammar</span> <span class="n">parse</span> <span class="n">actions</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="o">=</span><span class="s1">&#39;parse&#39;</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
 <p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-681d6b954b30b78f41b287003c6088508e2755b4.png" alt="Inheritance diagram of ase2sprkkr.common.grammar_types.GrammarType" usemap="#inheritanceac90079bf2" class="inheritance graphviz" /></div>
 <map id="inheritanceac90079bf2" name="inheritanceac90079bf2">
@@ -354,19 +359,20 @@ this method calls <a class="reference internal" href="#ase2sprkkr.common.grammar
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<em>mixed</em>) – Value to be validated</p></li>
-<li><p><strong>param_name</strong> (<em>str</em><em> or </em><em>callable</em>) – Parameter name to be used in possible throwed exception (Optional)
-If it is callable, it should be a function that returns the param_name</p></li>
-<li><p><strong>why</strong> (<em>str</em>) – <p>Possible values are:
-<code class="docutils literal notranslate"><span class="pre">set</span></code> - validation value setted by user (in rare cases, such value can be incomplete</p>
-<blockquote>
-<div><p>and requires <cite>completing</cite> during <code class="docutils literal notranslate"><span class="pre">set_from_atoms</span></code> call before saving the output)</p>
-</div></blockquote>
+<li><p><strong>value</strong> (<em>mixed</em>) – Value to be validated.</p></li>
+<li><p><strong>param_name</strong> (<em>str</em><em> or </em><em>callable</em>) – Parameter name to be used in possible throwed exception (Optional).
+If it is callable, it should be a function that returns the param_name.</p></li>
+<li><p><strong>why</strong> (<em>str</em>) – <p>Possible values are:</p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">parse</span></code> - validation during parsing input file, checks enforced</dt><dd><p>by the grammar can be skipped</p>
+<dt><code class="docutils literal notranslate"><span class="pre">set</span></code></dt><dd><p>validation value setted by user (in rare cases, such value can be incomplete
+and requires <cite>completing</cite> during <code class="docutils literal notranslate"><span class="pre">set_from_atoms</span></code> call before saving the output)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">parse</span></code></dt><dd><p>validation during parsing input file, checks enforced
+by the grammar can be skipped</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">save</span></code></dt><dd><p>validation before saving the values</p>
 </dd>
 </dl>
-<p><code class="docutils literal notranslate"><span class="pre">save</span></code> - validation before saving the values</p>
 </p></li>
 </ul>
 </dd>

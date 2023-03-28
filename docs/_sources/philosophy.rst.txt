@@ -16,10 +16,10 @@ The leaves of the configuration object are options
 (:class:`ase2sprkkr.common.options.Option`)
 - single value containers. They are described by
 configuration definitions
-(see :class:`ase2sprkkr.common.configuration_definitions.BaseValueDefinition`),
+(see :class:`ase2sprkkr.common.configuration_definitions.ValueDefinition`),
 which hold the required type of the value (see :mod:`ase2sprkkr.common.grammar_types`) and its few other properties, such as the default value or parameters that determine the format of the value in the parsed/writed configuration file.
 
-The non-leaves nodes of a configuration trees are containers (:class:`ase2sprkkr.common.configuration_containers.ConfigurationContainer`). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (:class:`ase2sprkkr.common.configuration_definitions.BaseContainerDefinition`), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each "definition tree" can be instantiated many containers for various contents of a configuration file).
+The non-leaves nodes of a configuration trees are containers (:class:`ase2sprkkr.common.configuration_containers.ConfigurationContainer`). Their content and the way how they are parsed from file and written to file is again determined by the corresponding definitions (:class:`ase2sprkkr.common.configuration_definitions.ContainerDefinition`), thus, the definition form a tree with the same structure as the configuration object (so, there is many to one relationship between configuration (tree) object ad its definition, as for each "definition tree" can be instantiated many containers for various contents of a configuration file).
 
 Structure of the package
 --------------------------------------
@@ -32,26 +32,26 @@ There are the common shared modules: the options, containers, their definitions 
 :mod:`input_parameters <ase2sprkkr.input_parameters>`
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 There are the specializations of the configuration objects and definitions for the input files.
-In the (:mod: `ase2sprkkr.input_parameters.definitions`) subpackage are the definitions of the
+In the (:mod:`ase2sprkkr.input_parameters.definitions`) subpackage are the definitions of the
 possible tasks, that can be run by SPR-KKR.
 
 :mod:`potentials<ase2sprkkr.potentials>`
 """"""""""""""""""""""""""""""""""""""""""""""""""""
 There are specializations for the potential file definition.
 There is currently just one definition of a potential
-in (:mod: `ase2sprkkr.potentials.definitions.potential`)
+in (:mod:`ase2sprkkr.potentials.definitions.potential`)
 (there is just
 one format of the potential file, there is no support for creating
 different versions of potential in the 1.0 version of the package).
 The definitions of the potential sections are in
-(:mod: `ase2sprkkr.potentials.definitions.sections`).
+(:mod:`ase2sprkkr.potentials.definitions.sections`).
 
 :mod:`outputs<ase2sprkkr.outputs>`
 """"""""""""""""""""""""""""""""""""
-Each input file also prescribe the type of the reader: object, that
-read and possibly parse the output of the SPR-KKR. These readers
+Each input file also prescribes the type of the reader: object, that
+reads and possibly parses the output of the SPR-KKR. These readers
 (located at :mod:`ase2sprkkr.outputs.readers`) are
-just simply objects, that reads the output line by line, searching
+just simply objects, that read the output line by line, searching
 for a regex pattern and parsing selected lines of the file (skipping
 the rest) to obtain some values (e.g. convergence results from iterations).
 The parsed values are then returned as the result of the calculations.
@@ -85,7 +85,7 @@ Scripts for postprocessing of the SPRKRR results.
 
 Reading the configuration files
 -------------------------------------------
-Configuration definition utilizes `pyparsing <https://pyparsing-docs.readthedocs.io/en/latest/>`
+Configuration definition utilizes `pyparsing<https://pyparsing-docs.readthedocs.io/en/latest/>`
 for creating the grammar, that parses the configuration file.
 
 Thus, the reading of a file has two phases. First, the definition parses the content of the file and created the tree of the python values (dictionaries,
@@ -98,7 +98,7 @@ The grammar is defined accordingly to the constants and/or class methods of the 
 
 Writing the configuration files
 --------------------------------------------
-The writing to the file is performed by save_to_file :func:`ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file`, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods :func:`ase2sprkkr.common.configuration_definitions.BaseValueDefinition.write` and :func:`ase2sprkkr.common.grammar_types.BaseType.write`.
+The writing to the file is performed by save_to_file :func:`ase2sprkkr.common.configuration_containers.ConfigurationContainer.save_to_file`, which is actually implemented in its descendants. The Options are written accordingly to their definitions and types, see the methods :func:`ase2sprkkr.common.configuration_definitions.ValueDefinition.write` and :func:`ase2sprkkr.common.grammar_types.GrammarType.write`.
 
 Again, the exact way how to write the file - i.e. how to separate name-value pairs, how to separate values each from others etc. is given in the configuration_definition descendants.
 

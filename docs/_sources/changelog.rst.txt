@@ -56,3 +56,8 @@ Internals
 * Sections validation
 * LatticeData class refactored
 * Brackets in value names are allowed
+
+Version 2.0.1
+-------------
+* Fix of sys-file generation
+* Hastily written ASE2SPRKKR slides include

@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -134,15 +135,15 @@
 <dt class="sig sig-object py" id="ase2sprkkr.common.decorators.add_called_class_as_argument">
 <span class="sig-prename descclassname"><span class="pre">ase2sprkkr.common.decorators.</span></span><span class="sig-name descname"><span class="pre">add_called_class_as_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decorator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/common/decorators.html#add_called_class_as_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.common.decorators.add_called_class_as_argument" title="Permalink to this definition"></a></dt>
 <dd><p>If a decorator is used on a method, the information about the defining class is lost.
-As a consequence, the execution of <a href="#id1"><span class="problematic" id="id2">``</span></a>super()…. failed.</p>
+As a consequence, the execution of <code class="docutils literal notranslate"><span class="pre">super()....</span></code> failed.</p>
 <p>This decorator can be applied to another decorator: it will add the defining class as a first
-argument of the resulting class.</p>
+argument of the resulting function.</p>
 <p>The implementation is very tricky - function-style decorator is not able to handle this situation,
 the __set_name__ special method (in class-style decorator) has to be utilized. Moreover, class
 style decorator lose ‘self’ from decorated method, thus, the self has to be recovered using
 descriptor protocol.
 To speed up the whole thing, the first access replaces the class-style decorator class with
-generated method (that already can know - and knows - everything needed)</p>
+generated method (that can already know - and knows - everything needed)</p>
 <p>Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@add_called_class_as_argument</span>
 <span class="gp">... </span><span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
