@@ -45,7 +45,7 @@ class SPRKKR(Calculator):
                  mpi=False,
                  input_parameters=None, options={}, potential=True,
                  executable_postfix=True,
-                 empty_spheres : str|bool = 'auto',
+                 empty_spheres : str|bool = False,
                  **kwargs):
         """
         Parameters

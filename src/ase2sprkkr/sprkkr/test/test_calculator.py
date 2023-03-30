@@ -92,7 +92,7 @@ class CalculatorTest(TestCase):
  print_output = '-v' in sys.argv or '--verbose' in sys.argv
  dirname = os.path.dirname(__file__)
  _calc_args = dict(
-     directory = dirname, input_file = 'output_test_calc.inp', empty_spheres=False,
+     directory = dirname, input_file = 'output_test_calc.inp', #empty_spheres=False,
      output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
      mpi = 'auto'
  )
