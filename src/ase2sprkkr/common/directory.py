@@ -44,7 +44,9 @@ class Directory:
 
     @contextlib.contextmanager
     def chdir(self):
-        cwd=os.getcwd()
-        os.chdir(self.path)
-        yield self.path
-        os.chdir(cwd)
+        try:
+          cwd=os.getcwd()
+          os.chdir(self.path)
+          yield self.path
+        finally:
+          os.chdir(cwd)
