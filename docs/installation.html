@@ -97,8 +97,8 @@ using package managers: either pip</p>
 </div>
 <section id="further-notes">
 <h2>Further notes<a class="headerlink" href="#further-notes" title="Permalink to this heading"></a></h2>
-<p>In some systems, the pip utility for python3 is called pip3. If it is
-not installed, you can install it using the linux distribution package
+<p>In some systems, the <code class="docutils literal notranslate"><span class="pre">pip</span></code> utility for <code class="docutils literal notranslate"><span class="pre">python3</span></code> is called <code class="docutils literal notranslate"><span class="pre">pip3</span></code>.
+If it is not installed, you can install it using the linux distribution package
 manager, e.g. in Debian/Ubuntu</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apt install pip3
 </pre></div>
@@ -130,7 +130,7 @@ package sources.</p>
 <section id="obtaining-the-package-using-git">
 <h2>Obtaining the package using GIT<a class="headerlink" href="#obtaining-the-package-using-git" title="Permalink to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/ase2sprkkr/ase2sprkkr.git
-git checkout origin/release
+git checkout release
 </pre></div>
 </div>
 <p>The first line fetches the code of the package. The second one checks
@@ -138,14 +138,19 @@ out the recommended production version of the code.</p>
 <p>If you want to obtain the current version of the (earlier-downloaded)
 code, run</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git fetch
-git checkout origin/release
+git checkout release
 </pre></div>
 </div>
-<p>Alternatively, you can checkout master branch</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout origin/master
+<p>Alternatively, you can checkout <code class="docutils literal notranslate"><span class="pre">master</span></code> or <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout master
 </pre></div>
 </div>
-<p>to obtain the bleeding edge version.</p>
+<p>to obtain a newer (not thorougly tested yet) version or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git checkout develop
+</pre></div>
+</div>
+<p>to obtain the bleeding edge version (feel free to try it, test it
+and report the bugs).</p>
 </section>
 <section id="using-the-package-without-installing-the-pip-conda-packages">
 <h2>Using the package (without installing the pip/conda packages)<a class="headerlink" href="#using-the-package-without-installing-the-pip-conda-packages" title="Permalink to this heading"></a></h2>
@@ -154,40 +159,19 @@ build and install the package, as it is described below.</p>
 </section>
 <section id="installation-of-the-package-from-the-sources">
 <h2>Installation of the package from the sources<a class="headerlink" href="#installation-of-the-package-from-the-sources" title="Permalink to this heading"></a></h2>
-<p>To install the package, you have to build the “wheel package” from the
-sources and install it</p>
-<section id="building-the-wheel-installation-package">
-<h3>Building the wheel (installation) package<a class="headerlink" href="#building-the-wheel-installation-package" title="Permalink to this heading"></a></h3>
-<p>If you do not have the wheel package built, you can do it with the
-following steps.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m pip install --upgrade build
-python3 -m build
+<p>To install the package, the simplest way is to use pip</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m pip install .
 </pre></div>
 </div>
-<p>The first line installs the tool to build the package (it is possible
-that you have it already installed). The second one builds the package.</p>
-</section>
-<section id="installing-the-package">
-<h3>Installing the package<a class="headerlink" href="#installing-the-package" title="Permalink to this heading"></a></h3>
-<p>To install the package (either system-wide or in an active virtual
-environment), you can run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install <span class="sb">`</span>ls ./dist/ase2sprkkr-*.whl <span class="p">|</span> sort <span class="p">|</span> tail -n <span class="m">1</span><span class="sb">`</span>
+<p>Maybe, you will have to replace <code class="docutils literal notranslate"><span class="pre">python3</span></code> with <code class="docutils literal notranslate"><span class="pre">python</span></code>.
+For an editable install, please run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 setup.py develop --user
 </pre></div>
 </div>
-</section>
-</section>
-<section id="one-step-install-from-the-sources">
-<h2>One step install from the sources<a class="headerlink" href="#one-step-install-from-the-sources" title="Permalink to this heading"></a></h2>
-<p>To do all the stuff (after cloning the GIT repository) in one step, you
-can run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make
-</pre></div>
-</div>
-<p>To clean up the source directory after installing the package, you can
-run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make clean
-</pre></div>
-</div>
+<p>and ignore some deprecation warning. Editable install is aimed for developers:
+in this type of install, only link to the current directory will be added to
+your local <code class="docutils literal notranslate"><span class="pre">site-packages</span></code>, which allows you to use the changesyou make to
+the source code.</p>
 </section>
 </section>
 <section id="documentation-of-the-package">

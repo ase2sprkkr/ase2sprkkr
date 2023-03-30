@@ -1,7 +1,10 @@
 all: install
 
 install:
-	./install.sh
+	pip install .
+
+editable_install:
+	python3 setup.py develop --user
 
 clean:
 	rm -rf ./dist

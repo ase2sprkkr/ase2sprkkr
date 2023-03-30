@@ -17,8 +17,8 @@ or conda
 Further notes
 --------------
 
-In some systems, the pip utility for python3 is called pip3. If it is
-not installed, you can install it using the linux distribution package
+In some systems, the ``pip`` utility for ``python3`` is called ``pip3``.
+If it is not installed, you can install it using the linux distribution package
 manager, e.g. in Debian/Ubuntu
 
 .. code:: bash
@@ -58,7 +58,7 @@ Obtaining the package using GIT
 .. code:: bash
 
    git clone https://github.com/ase2sprkkr/ase2sprkkr.git
-   git checkout origin/release
+   git checkout release
 
 The first line fetches the code of the package. The second one checks
 out the recommended production version of the code.
@@ -69,15 +69,22 @@ code, run
 .. code:: bash
 
    git fetch
-   git checkout origin/release
+   git checkout release
 
-Alternatively, you can checkout master branch
+Alternatively, you can checkout ``master`` or ``develop`` branch
 
 .. code:: bash
 
-   git checkout origin/master
+   git checkout master
 
-to obtain the bleeding edge version.
+to obtain a newer (not thorougly tested yet) version or
+
+.. code:: bash
+
+   git checkout develop
+
+to obtain the bleeding edge version (feel free to try it, test it
+and report the bugs).
 
 Using the package (without installing the pip/conda packages)
 -------------------------------------------------------------
@@ -88,49 +95,24 @@ build and install the package, as it is described below.
 Installation of the package from the sources
 --------------------------------------------
 
-To install the package, you have to build the “wheel package” from the
-sources and install it
-
-Building the wheel (installation) package
-"""""""""""""""""""""""""""""""""""""""""
-
-If you do not have the wheel package built, you can do it with the
-following steps.
+To install the package, the simplest way is to use pip
 
 .. code:: bash
 
-   python3 -m pip install --upgrade build
-   python3 -m build
+   python3 -m pip install .
 
-The first line installs the tool to build the package (it is possible
-that you have it already installed). The second one builds the package.
-
-Installing the package
-""""""""""""""""""""""
-
-To install the package (either system-wide or in an active virtual
-environment), you can run
+Maybe, you will have to replace ``python3`` with ``python``.
+For an editable install, please run
 
 .. code:: bash
 
-   pip install `ls ./dist/ase2sprkkr-*.whl | sort | tail -n 1`
+   python3 setup.py develop --user
 
-One step install from the sources
----------------------------------
+and ignore some deprecation warning. Editable install is aimed for developers:
+in this type of install, only link to the current directory will be added to
+your local ``site-packages``, which allows you to use the changesyou make to
+the source code.
 
-To do all the stuff (after cloning the GIT repository) in one step, you
-can run
-
-.. code:: bash
-
-   make
-
-To clean up the source directory after installing the package, you can
-run
-
-.. code:: bash
-
-   make clean
 
 Documentation of the package
 ============================
