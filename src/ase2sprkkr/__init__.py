@@ -18,3 +18,11 @@ from .sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 """ Version of the package """
 from .version import __version__
+
+def _init():
+   import ase
+   from ase.calculators.calculator import register_calculator_class
+   register_calculator_class('sprkkr', SPRKKR)
+
+_init()
+del _init
