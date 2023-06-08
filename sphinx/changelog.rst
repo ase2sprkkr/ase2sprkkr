@@ -61,3 +61,8 @@ Version 2.0.1
 -------------
 * Fix of sys-file generation
 * Hastily written ASE2SPRKKR slides included
+
+Version 2.0.4
+-------------
+* Some fixies
+* ASR repcipies available as ase2sprkkr.asr subpackage
