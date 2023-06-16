@@ -34,7 +34,6 @@ class CommonTest(TestCase):
 
     self.assertEqual( ('c',('a',2, {'d':'d', 'e':'e'})),
                        ff('c', 'a', d='d', e='e'))
-
     def f(c=1, d=5):
         return c,d
 
@@ -42,9 +41,18 @@ class CommonTest(TestCase):
     def ff(a=2, d='d', *args, **kwargs):
         return a,  f(d=d, *args, **kwargs)
 
+    self.assertEqual( ('a', (1, 'c')),
+                      ff('a', 'c')
+                    )
+
+    @add_to_signature(f, prepend=True)
+    def ff(a=2, *args, d='d', **kwargs):
+        return a,  f(d=d, *args, **kwargs)
+
     self.assertEqual( ('a', ('c', 'd')),
                       ff('a', 'c')
                     )
+
 
     def f(*args):
        return args

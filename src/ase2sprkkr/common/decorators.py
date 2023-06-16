@@ -118,7 +118,7 @@ class class_property:
         return self.fget(cls)
 
 
-def add_to_signature(func, prepend=False, self_name='self'):
+def add_to_signature(func, prepend=False):
   """
   Add the arguments in the ``func`` function to the list of arguments
   of the resulting function (as keyword_only arguments)
@@ -142,17 +142,12 @@ def add_to_signature(func, prepend=False, self_name='self'):
     A function, whose parameters will be added to the resulting function signature.
 
   prepend
-    If true, the new positional arguments will be the first.
-    If false, they will be after the parents positional arguments.
-    The same-named arguments just alter the properties of the "old"
-    arguments, retaining their position.
+    If True, the new positional arguments will be the first.
+    If False, they will be after the parents positional arguments.
 
-  self_name
-    Name of the self-parameter (for object method), that should be the first, even
-    if ``prepend`` is True.
-    Default self, set to None if you do not want special handling of self parameter
-    (i.e. if your function has the first argument named *self* and it is not a method).
-
+    The same-named arguments can be given as keyword-only - then
+    they just alter the properties of the "old" arguments, retaining their position.
+    If they are given as regular ones, they takes their new position, too.
   """
 
   signature = inspect.signature(func)
@@ -179,8 +174,25 @@ def add_to_signature(func, prepend=False, self_name='self'):
           used.add(i.name)
           return i
 
-      old_pars = [ use(new_pars[i.name]) if i.name in new_pars else i for i in pars ]
-      add_pars = [ i for i in new_pars.values() if i.name not in used ]
+      if prepend:
+        old_names = set((i.name for i in pars))
+        old_pars = [ use(i) for i in new_pars.values() \
+                     if i.kind != P.KEYWORD_ONLY or i.name not in old_names ]
+        def add_pars():
+            for i in pars:
+                if i.name not in new_pars:
+                   yield i
+                else:
+                   n=new_pars[i.name]
+                   if n.kind != P.KEYWORD_ONLY:
+                       continue
+                   #keyword only parameters retain the old position, taken new default and annotation
+                   P(i.name, i.kind, default=n.default, annotation=n.annotation)
+                   yield n
+        add_pars = [ i for i in add_pars() ]
+      else:
+        old_pars = [ use(new_pars[i.name]) if i.name in new_pars else i for i in pars ]
+        add_pars = [ i for i in new_pars.values() if i.name not in used ]
 
       #the easy and fast way - only keyword arguments are present, the function can be called as is,
       #just make its signature pretty
@@ -193,22 +205,10 @@ def add_to_signature(func, prepend=False, self_name='self'):
         mod_func.__signature__ = result
         return mod_func
 
-      #the hard way, the arguments have to be rearranged
-      if prepend:
-         if old_pars and old_pars[0].name == self_name:
-            self = old_pars[0]
-            del old_pars[0]
-         else:
-            self = None
-         result = heapq.merge(add_pars, old_pars, key = lambda x: x.kind)
-         if self:
-            result = itertools.chain((self,), result)
-      else:
-         result = heapq.merge(old_pars, add_pars, key = lambda x: x.kind)
-         self = None
-
+      result = heapq.merge(old_pars, add_pars, key = lambda x: x.kind)
       result = list(result)
       result=new_sig.replace(parameters = result)
+
 
       @functools.wraps(mod_func)
       def wrapper(*args, **kwargs):
