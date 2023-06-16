@@ -99,6 +99,9 @@ class Option(Configuration):
       only the 'wildcard' value (i.e. the one without array index, which is used for the all values
       not explicitly specified) is returned.
       """
+      if self._definition.is_generated:
+         return self._definition.getter(self)
+
       value = self._unpack_value(self._value)
       if value is not None:
           if self._definition.is_numbered_array and not all_values:
@@ -152,6 +155,9 @@ class Option(Configuration):
         A dummy argument to make the method compatibile with
         ase2sprkkr.sprkkr.common.configuration_containers.ConfigurationContainer.set()
       """
+      if self._definition.is_generated:
+          return self._definition.setter(self, value)
+
       if value is None:
           return self.clear()
       elif self._definition.is_numbered_array:
@@ -181,6 +187,10 @@ class Option(Configuration):
 
   def __setitem__(self, name, value):
       """ Set an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
+      if self._definition.is_generated:
+          self._definition.setter(self, value, name)
+          return
+
       self._check_array_access()
 
       if isinstance(name, (list, tuple)):
@@ -214,6 +224,9 @@ class Option(Configuration):
 
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
+      if self._definition.is_generated:
+          self._definition.getter(self, name)
+          return
       self._check_array_access()
       if isinstance(name, (list, tuple)):
           return [ self._getitem(n) for n in name ]
@@ -285,14 +298,19 @@ class Option(Configuration):
       if hasattr(self, '_result'):
           del self._result
 
-  def clear(self, do_not_check_required=False,call_hooks=True):
+  def clear(self, do_not_check_required=False, call_hooks=True, generated=True):
       """ Clear the value: set it to None """
-      if not self._definition.type.has_value:
-         return
-      if self._definition.default_value is None and not do_not_check_required and self._definition.required:
-         raise ValueError(f'Option {self._get_path()} must have a value')
-      self._value = None
-      self.clear_result()
+      if self._definition.is_generated:
+          if not generated:
+             return
+          self._definition.setter(self, None)
+      else:
+          if not self._definition.type.has_value:
+             return
+          if self._definition.default_value is None and not do_not_check_required and self._definition.required:
+             raise ValueError(f'Option {self._get_path()} must have a value')
+          self._value = None
+          self.clear_result()
       if call_hooks:
         self._post_set()
 
@@ -304,6 +322,8 @@ class Option(Configuration):
       """ Write the name-value pair to the given file, if the value
       is set. """
       d = self._definition
+      if d.is_generated:
+         return
 
       if not d.type.has_value:
          return d.write(file, None)
@@ -316,9 +336,10 @@ class Option(Configuration):
       return d.write(file, value)
 
   def validate(self, why='save'):
-      if self.is_dangerous():
-          return True
       d = self._definition
+      if d.is_generated or self.is_dangerous():
+         return
+
       if d.type.has_value:
         value = self()
         if value is None:
@@ -332,8 +353,10 @@ class Option(Configuration):
   def name(self):
       return self._definition.name
 
-  def as_dict(self, only_changed: Union[bool,str]='basic'):
+  def as_dict(self, only_changed: Union[bool,str]='basic', generated:bool=False):
       d = self._definition
+      if d.is_generated and not generated:
+           return None
       if only_changed and (only_changed!='basic' or d.is_expert):
            v,c = self.value_and_changed()
            return v if c else None
@@ -350,6 +373,9 @@ class Option(Configuration):
           changed:bool
             Whether the value is the same as the default value or not
       """
+      if self._definition.is_generated:
+          return self(), False
+
       value = self._unpack_value(self._value)
       if value is not None:
          return value, not self.is_it_the_default_value(value)
@@ -362,6 +388,8 @@ class Option(Configuration):
       """ Return, whether the given value is the default value. For
       numbered array, only the wildcard value can be set and this value
       have to be the same as the default. """
+      if self._definition.is_generated:
+          return True
 
       default = self.default_value
       d = self._definition
@@ -380,18 +408,26 @@ class Option(Configuration):
       return self._get_path()
 
   def __repr__(self):
-      v = self._value
-      if v is None:
-         v = self.default_value
-         if v:
-            o=' (default)'
-            v=' = '+str(v)
-         else:
-            o='out'
-            v=''
+      if self._definition.is_generated:
+         v = self()
+         o = ' (generated)'
       else:
-          v=' = ' + str(v)
-          o=''
+         v = self._value
+         o = None
+
+      if o is None and v is None:
+         v = self.default_value
+         if v is not None:
+            o=' (default)'
+
+      if v is None:
+        if o:
+           o='out' + o
+        else:
+           o='out'
+        v=''
+      else:
+         v=' = '+str(v)
 
       return f"<Option {self._get_path()} of type {self._definition.type} with{o} value{v}>"
 

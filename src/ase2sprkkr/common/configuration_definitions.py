@@ -89,7 +89,7 @@ class BaseDefinition:
                 is_optional=False, is_hidden=False, is_expert=False,
                 name_in_grammar=None, info=None, description=None,
                 write_alternative_name:bool=False,
-                result_class=None
+                result_class=None,
                 ):
        """
        Parameters
@@ -283,6 +283,9 @@ class BaseDefinition:
        This function is to be redefined in descendants
        """
        return False
+
+   is_generated = False
+   """ Generated values are computed on the fly from the other data """
 
 class ValueDefinition(BaseDefinition):
 
@@ -908,9 +911,11 @@ class ContainerDefinition(BaseDefinition):
              (e.g. the item is followed by the items without name in grammar)
              """
              for i in self._members.values():
+                 if i.is_generated:
+                     continue
                  g = i._grammar(allow_dangerous)
                  if i.can_be_repeated():
-                    g = delimitedList(g, delimiter)
+                     g = delimitedList(g, delimiter)
                  yield i,g
 
          it = iter(repeated_grammars())
@@ -941,7 +946,7 @@ class ContainerDefinition(BaseDefinition):
            else:
               after = pp.Forward() << delimiter
            after.addCondition(lambda loc, toks: loc != init.location)
-           inter = first | after
+           inter = (first | after).setName('?')
 
            def sequence():
                for head,g in grammars():

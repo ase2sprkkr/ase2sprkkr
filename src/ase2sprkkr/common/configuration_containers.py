@@ -100,7 +100,7 @@ class ConfigurationContainer(Configuration):
       """ The check for existence of a member with the given name."""
       return name in self._members
 
-  def clear(self, do_not_check_required=False):
+  def clear(self, do_not_check_required=False, call_hooks=True, generated=None):
       """
       Erase all values (or reset to default) from all options in the container
       (ad subcontainers)
@@ -108,13 +108,19 @@ class ConfigurationContainer(Configuration):
       Parameters
       ----------
       do_not_check_required: bool
-      Do not check validity of the values after clearing. If ``False`` (default)
-      is passed as this argument, the required option without a default value
-      (or a section containing such value) throw an exception, which prevents the
-      clearing (neverthenless, previous values in the section will be cleared anyway).
+        Do not check validity of the values after clearing. If ``False`` (default)
+        is passed as this argument, the required option without a default value
+        (or a section containing such value) throw an exception, which prevents the
+        clearing (neverthenless, previous values in the section will be cleared anyway).
+
+      call_hooks: bool
+        If False, the cleared values do not raise theirs hooks
+
+      generated: bool
+        If True
       """
       for i in self._members.values():
-          i.clear(do_not_check_required)
+          i.clear(do_not_check_required, call_hooks=call_hooks, generated=False if generated is None else generated)
 
   def get(self, name=None, unknown='find'):
       """
@@ -254,7 +260,7 @@ class ConfigurationContainer(Configuration):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def as_dict(self, only_changed:Union[bool,str]='basic'):
+  def as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
@@ -267,10 +273,13 @@ class ConfigurationContainer(Configuration):
         If False, return all the values.
         The default value 'basic' means, return all non-expert values
         and all changed expert values.
+
+      generated: bool
+        Add generated values
       """
       out = OrderedDict()
       for i in self:
-          value = i.as_dict(only_changed)
+          value = i.as_dict(only_changed, generated)
           if value is not None:
               out[i.name] = value
       return out or None
