@@ -12,13 +12,14 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 from ..common.grammar_types  import type_from_type, type_from_value, GrammarType
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
-import pyparsing as pp
 from ..common.misc import OrderedDict
 from .configuration_containers import Section
 from .options import Option, DangerousValue
-import numpy as np
-import inspect
 from .decorators import cache
+
+import numpy as np
+import pyparsing as pp
+import inspect
 import itertools
 import builtins
 from typing import Dict, Union
