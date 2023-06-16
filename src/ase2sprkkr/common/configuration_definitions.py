@@ -428,6 +428,10 @@ class ValueDefinition(BaseDefinition):
   """ Redefine this in descendants, if you need to create different types that the defaults to be
   'guessed' from the default values """
 
+  def enrich(self, option):
+      """ The Option can be enriched by the definition, e.g. the docsting can be extended. """
+      self.type.enrich(option)
+
   @property
   def formated_name(self):
     name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name

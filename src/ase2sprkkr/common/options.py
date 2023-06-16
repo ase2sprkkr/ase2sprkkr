@@ -85,7 +85,7 @@ class Option(Configuration):
       """
       super().__init__(definition, container)
       self._hook = None
-      self._definition.type.enrich(self)
+      self._definition.enrich(self)
       self._value = value
 
   def __call__(self, all_values:bool=False):
