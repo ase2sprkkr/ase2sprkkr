@@ -212,7 +212,7 @@ class Option(Configuration):
          self._set_item(name, value)
       self._post_set()
 
-  def _set_item(self, name, value, error='ignore'):
+  def _set_item(self, name, value, error=None):
       """ Set a single item of a numbered array. For internal use - so no sanity checks """
       if self._value is None:
          self._value = {}
