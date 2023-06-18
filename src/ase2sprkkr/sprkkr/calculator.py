@@ -453,11 +453,13 @@ class SPRKKR(Calculator):
         def from_input_name(template, replacement, default):
             if template is not True:
                return template
-            if input_file.name:
-               if input_file.name.endswith('.inp'):
-                  return input_file.name[:-4] + replacement
+            if not save_input and input_file.name:
+               name = os.path.basename(input_file.name)
+               if name.endswith('.inp'):
+                  return name[:-4] + replacement
                if input_file.name.endswith('.in'):
-                  return input_file.name[:-3] + replacement
+                  return name[:-3] + replacement
+               return name + replacement
             return default
 
         def resolve_potential_and_atoms(potential, atoms, potential_file):
@@ -583,7 +585,7 @@ class SPRKKR(Calculator):
               input_parameters.CONTROL.POTFIL = os.path.abspath(potential_file)
               input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
             if not input_parameters.CONTROL.DATASET.is_set():
-              input_parameters.CONTROL.DATASET = Path(input_file.name).stem
+              input_parameters.CONTROL.DATASET.result = Path(input_file.name).stem
             input_parameters.save_to_file(input_file, atoms)
             input_file.seek(0)
 
