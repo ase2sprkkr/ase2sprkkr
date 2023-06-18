@@ -485,7 +485,7 @@ class ValueDefinition(BaseDefinition):
        flags.append('hidden')
     if self.is_expert:
        flags.append('expert')
-    if self.is_expert != self.is_always_added:
+    if self.is_expert == self.is_always_added:
        flags.append('always add' if self.is_expert else 'add non-default')
     if self.is_numbered_array:
        flags.append('array')
