@@ -19,10 +19,13 @@ from .sprkkr_atoms import SPRKKRAtoms
 from ..potentials.potentials import Potential
 from ..common.decorators import add_to_signature
 from ..common.directory import Directory
+from ..ase.symbols import filename_from_symbols
 import shutil
 import copy
 import subprocess
 from typing import Union, Any, Dict, Optional
+from pathlib import Path
+import re
 
 class SPRKKR(Calculator):
     """
@@ -43,7 +46,7 @@ class SPRKKR(Calculator):
                  input_file=True, output_file=True, potential_file=True,
                  print_output='info',
                  mpi=False,
-                 input_parameters=None, options={}, potential=True,
+                 input_parameters=None, options={}, potential=None,
                  executable_postfix=True,
                  empty_spheres : str|bool = False,
                  **kwargs):
@@ -100,10 +103,11 @@ class SPRKKR(Calculator):
         potential: sprkkr.potential.Potential or str or bool or None
           The (default) potential to be used in calculations.
           If a string is given, the potential will be read from the given filename.
-          True means to generate the potential from atoms (the default value).
+          True means to generate the potential from atoms.
           False means that the potential will be given by the input_parameters.
-          None means that the potential is required to be supplied, when calculate or save_input
-          methods are called.
+          None (the default value) means that the potential is required to be supplied,
+          when calculate or save_input
+          methods are called (either directly, or via atoms, input_parameters etc.)
 
         executable_postfix: str or bool
           String to be added to the runned executable. In some environments, the version
@@ -114,7 +118,11 @@ class SPRKKR(Calculator):
         empty_spheres
           Whether to add empty spheres to the structure or not.
           Default 'auto' means add if no empty sphere is present.
-       """
+        """
+
+        if kwargs:
+            print(f"Warning - unknown arguments in the SPRKKR calculator: {kwargs}")
+
         if potential and not isinstance(potential, bool):
            if isinstance(potential, str):
                potential = Potential.from_file(potential, atoms = atoms)
@@ -342,7 +350,7 @@ class SPRKKR(Calculator):
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
                   empty_spheres: Optional[str|bool] = None,
                   mpi=None,
-                  options={},
+                  options={}, task=None,
                   return_files=False,
                   ):
         """
@@ -369,7 +377,8 @@ class SPRKKR(Calculator):
             If False, the potential filename is specified in the input_parameters.
             If True,  create the potential according to the atoms and write to the resulting <potential_file> file.
             If str, then it is the filename of the potential, that is left unchanged on input
-            If None, use the potential value of the calcualtor.
+            If it is None, use the potential value of the calcualtor. If this is None too,
+            the potential is set to True if atoms are set, to False otherwise.
 
         input_file: str or bool or None
             Filename or template (see FilenameTemplator class) where to save the input file,
@@ -409,6 +418,11 @@ class SPRKKR(Calculator):
             they are readed from the file, altered by the options and then the modified input file
             (in a temporary file) will be used.
 
+        task: None
+            Change the task (ARPES, DOS, etc...) before the calculation.
+            Instead of setting input_parameters, this way retain the compatible settings in the
+            input parameters.
+
         return_files: boolean
             Return open files object instead of just string filenames.
 
@@ -446,128 +460,182 @@ class SPRKKR(Calculator):
                   return input_file.name[:-3] + replacement
             return default
 
-        templator = FilenameTemplator(self)
+        def resolve_potential_and_atoms(potential, atoms, potential_file):
+            """ Get the potential file and the atoms object.
+            potential_file - the file containing the potential (possibly a template)
+            potential - potential object (to be updated by atoms)
+            """
+            potential = potential if potential is not None else self.potential
+            if potential is None:
+               potential = bool(atoms or self._atoms)
+            #this is a bit tricky - both of them must not be defined - however, there is a mess with default values
+            pot_specified = False
+            if potential.__class__ is bool:
+               pot_specified = not potential
+            else:
+               pot_specified = potential
+            if (pot_specified == bool(atoms)) and (atoms or not self._atoms):
+                raise ValueError("You can not provide both a potential and atoms object to the SPRKKR calculate method, "
+                                 "just one from them is generated from the another.")
 
-        with Directory.new(directory, default=self._directory) as directory:
-          directory = directory.path
+            atoms = atoms or self._atoms
 
-          """ Resolve potential argument - whether is in fact given or not"""
-          if potential is None:
-             potential = self.potential
-
-          """ Get the input file """
-          save_input = True
-          if input_parameters:
-             if isinstance(input_parameters, str):
-                if InputParameters.is_it_a_input_parameters_name(input_parameters):
-                   input_parameters = InputParameters.create_input_parameters(input_parameters)
-                else:
-                   if not options and not potential and not input_file:
-                     save_input = False
-                     input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
-                   input_parameters = InputParameters.from_file(input_parameters)
-          else:
-             input_parameters = self.input_parameters
-          templator.input_parameters = input_parameters
-
-          input_file = input_file or self.input_file
-          if input_file is True:
-              input_file = (self.label or '') + '%a_%t.inp'
-
-          input_file = self._open_file(input_file, directory,
-                                       templator, input_parameters.is_mpi(self.mpi if mpi is None else mpi),
-                                      allow_temporary=return_files,
-                                      create_subdirs=create_subdirs,
-                                      mode = 'w+' if save_input else 'r'
-                                      )
-
-
-          """ Get the potential file """
-          # potential_file - the file containing the potential (possibly a template)
-          # potential - potential object (to be updated by atoms)
-
-          potential = potential if potential is not None else self.potential
-
-          #this is a bit tricky - both of them must not be defined - however, there is a mess with default values
-          if ((potential and potential is not True) == bool(atoms)) and (atoms or not self._atoms):
-              raise ValueError("You can not provide both a potential and atoms object to the SPRKKR calculate method, "
-                               "just one from them is generated from the another.")
-
-          atoms = atoms or self._atoms
-
-          if potential is True:
-               if not atoms:
-                   raise ValueError("Potential set to <True> which means to generate the potential from the ASE-atoms object. "
-                                    "However, this object has not been supplied")
-               potential=Potential.from_atoms(atoms)
-          elif potential is False:
-                if potential_file is not None:
-                    raise ValueError("When potential is True, the value of POTENTIAL option from the input (parameters) file will be used "
-                                     " as the potential file. Thus, specifing the <potential_file> argument is not allowed.")
-                potential = None
-          elif potential is None:
-             raise ValueError("The potential can not be <None>. However, consider supplying either <True> as the potential to generate"
-                               " it from the atoms object, or False to use the POTENTIAL option from the input (parameters) file")
-          elif isinstance(potential, str):
-                if potential_file:
+            if potential is True:
+                 if not atoms:
+                     raise ValueError("Potential set to <True> which means to generate the potential from the ASE-atoms object. "
+                                      "However, this object has not been supplied")
+                 potential=Potential.from_atoms(atoms)
+            elif potential is False:
+                  if potential_file is not None:
+                      raise ValueError("When potential is False, the value of POTENTIAL option from the input (parameters) file will be used "
+                                       " as the potential file. Thus, specifing the <potential_file> argument is not allowed.")
+                  potential = None
+            elif potential is None:
+               raise ValueError("The potential can not be <None>. However, consider supplying either <True> as the potential to generate"
+                                 " it from the atoms object, or <False> to use the POTENTIAL option from the input (parameters) file")
+            elif isinstance(potential, str):
+               if potential_file:
                    potential = Potential.from_file(potential)
-                else:
-                   potential_file = makepath(potential, "'{path}' is not a potential file")
-                   potential = None
+               else:
+                   #Set the potential file and clear the potential. Thus,
+                   #the potential will not be saved
+                   potential_file = potential
+                   potential = False
 
-          if isinstance(potential, Potential):
-            atoms = potential.atoms
-          else:
-            atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
+            if isinstance(potential, Potential):
+              atoms = potential.atoms
+            elif atoms:
+              atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
-          if empty_spheres is None:
-             empty_spheres = self.empty_spheres
-          if empty_spheres == 'auto':
-             empty_spheres = True
-             for site in atoms.sites:
-                 if site.is_vacuum():
-                    empty_spheres = False
-          if empty_spheres:
-             from ..bindings.es_finder import add_empty_spheres
-             add_empty_spheres(atoms)
+            return potential, atoms, potential_file
 
-          if potential:
-             if potential_file is None:
-                 potential_file = self.potential_file
-             pf = from_input_name(potential_file, '.pot', '%a.pot')
+
+        def resolve_input_parameters(input_parameters, input_file):
+            save_input = True
+            if input_parameters is None:
+                input_parameters=self.input_parameters
+            if input_parameters:
+               if isinstance(input_parameters, str):
+                  if InputParameters.is_it_a_input_parameters_name(input_parameters):
+                     input_parameters = InputParameters.create_input_parameters(input_parameters)
+                  else:
+                     if not options and not task and not potential and not input_file:
+                       save_input = False
+                       input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
+                     input_parameters = InputParameters.from_file(input_parameters)
+            else:
+               input_parameters = self.input_parameters
+
+            if not input_parameters.CONTROL.POTFIL() and not potential and not potential_file:
+                raise ValueError("Potential in the input parameters is not set and no Atoms nor Potential object have been given.")
+            return input_parameters, input_file, save_input
+
+
+        def resolve_empty_spheres(empty_spheres):
+            if empty_spheres is None:
+               empty_spheres = self.empty_spheres
+            if empty_spheres == 'auto':
+               empty_spheres = True
+               for site in atoms.sites:
+                   if site.is_vacuum():
+                      empty_spheres = False
+            if empty_spheres:
+               from ..bindings.es_finder import add_empty_spheres
+               add_empty_spheres(atoms)
+
+
+        def save_potential_file():
+             pf = from_input_name(potential_file or self.potential_file, '.pot', '%a.pot')
              pf = self._open_file(pf, directory, templator, True,
                                               allow_temporary=return_files,
                                               create_subdirs=create_subdirs)
              potential.save_to_file(pf, atoms)
              pf.close()
-             potential_file = pf.name
+             return pf.name
 
-          """ update input_parameters by the potential """
-          if save_input:
+
+        def open_input_file():
+            ifile = input_file or self.input_file
+            if ifile is True:
+                ifile = '%l%_%a_%t.inp'
+
+            return self._open_file(ifile, directory,
+                                         templator,
+                                        input_parameters.is_mpi(self.mpi if mpi is None else mpi),
+                                        allow_temporary=return_files,
+                                        create_subdirs=create_subdirs,
+                                        mode = 'w+' if save_input else 'r'
+                                        )
+
+        def save_input_file():
+            """ update input_parameters by the potential """
+            if task:
+              input_parameters.change_task(task)
             if options:
               input_parameters.set(options, unknown = 'find')
             if potential_file:
               #use the relative potential file name to avoid too-long-
               #-potential-file-name problem
-              dirr = os.path.dirname( input_file.name ) if input_file.name else directory
-              input_parameters.CONTROL.POTFIL = os.path.relpath( potential_file, dirr )
-            else:
-              potential_file = input_parameters.CONTROL.POTFIL()
+              #dirr = os.path.dirname( input_file.name ) if input_file.name else directory
+              input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
+            if not input_parameters.CONTROL.DATASET.is_set():
+              input_parameters.CONTROL.DATASET = Path(input_file.name).stem
             input_parameters.save_to_file(input_file, atoms)
             input_file.seek(0)
-          #This branch can occur if the potential have been explicitly set to False,
-          #which means not to create the potential (and take it from the input_parameters)
-          else:
-              potential_file = input_parameters.CONTROL.POTFIL
 
-          if output_file is not False:
-            """ Get the output file """
-            output_file = output_file or self.output_file
-            output_file = from_input_name(output_file, '.out', '%a_%t.out')
-            output_file = self._open_file(output_file, directory, templator, False, mode='wb',
+
+        def open_output_file():
+            """ Get and open the output file """
+            ofile = output_file or self.output_file
+            ofile = from_input_name(ofile, '.out', '%a_%t.out')
+            return self._open_file(ofile, directory, templator, False, mode='wb',
                                               allow_temporary=return_files,
                                               create_subdirs=create_subdirs)
 
+        def symbols():
+            """ Return a best guess for the names of the output file """
+            if atoms:
+                return filename_from_symbols(atoms.symbols)
+            for i in 'POTFIL', 'DATASET':
+                i=input_parameters.CONTROL[i]
+                if i.is_set():
+                   return Path(i()).stem
+            for i in (input_file, potential_file, self.input_file, self.potential_file):
+                if isinstance(i, str):
+                   i=Path(i).stem
+                   if not '%' in i: #thus i is not template
+                       return i
+            return 'sprkkr'
+
+        def taskname():
+            if task: return task
+            if input_parameters: return input_parameters.task_name
+            return 'SPRKKR'
+
+        #ALL auxiliary procedures defined
+        #HERE starts the execution
+
+        potential, atoms, potential_file = resolve_potential_and_atoms(potential, atoms, potential_file)
+        input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file)
+        resolve_empty_spheres(empty_spheres)
+
+        templator = FilenameTemplator(self, taskname, symbols)
+        with Directory.new(directory, default=self._directory) as directory:
+          directory = directory.path
+          input_file=open_input_file()
+          if potential:
+              potential_file = save_potential_file()
+          if save_input:
+              save_input_file()
+          else:
+              #This branch can occur if the potential have been explicitly set to False,
+              #which means not to create the potential (and take it from the input_parameters)
+              dirr = os.path.dirname( input_file.name ) if input_file.name else directory
+              potential_file = os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
+          if output_file is not False:
+              output_file = open_output_file()
+
+          #All is saved and opened - return the values
           if not return_files:
             for f in input_file, output_file:
                 if hasattr(f,'close'):
@@ -586,7 +654,7 @@ class SPRKKR(Calculator):
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
                   empty_spheres : Optional[str|bool] = None,
                   mpi : bool=None,
-                  options={},
+                  options={}, task=None,
                   print_output=None, executable_postfix=None):
         """
         Do the calculation, return various results.
@@ -627,7 +695,7 @@ class SPRKKR(Calculator):
                               potential=potential, output_file=output_file,
                               empty_spheres=empty_spheres,
                               mpi=mpi,
-                              options=options,
+                              options=options, task=task,
                               return_files=True,
                               directory=directory)
 
@@ -643,7 +711,7 @@ class SPRKKR(Calculator):
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
                   empty_spheres : Optional[str|bool] = None,
                   mpi : bool=None,
-                  options={},
+                  options={}, task=None,
                   print_output=None, executable_postfix=None):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
@@ -691,7 +759,7 @@ class SPRKKR(Calculator):
                   directory, create_subdirs,
                   empty_spheres,
                   mpi,
-                  options,
+                  options, task,
                   print_output, executable_postfix
         )
         if hasattr(out, 'energy'):
@@ -740,6 +808,10 @@ class SPRKKR(Calculator):
           self.potential = Potential.from_file(self.potential)
         return self.potential
 
+    def change_task(self, task):
+        """ Just a shortcut to ``input_parameters.change_task`` """
+        self.input_parameters.change_task(task)
+
 
 class FilenameTemplator:
     """ Class that replaces the placeholders in filenames with propper values,
@@ -748,27 +820,32 @@ class FilenameTemplator:
         the same value (e.g. counter, datetime etc...)
     """
 
-    def __init__(self, calculator):
+    def __init__(self, calculator, task, symbols):
         self.data = {}
         self.calculator = calculator
-        self.input_parameters = None
+        self.task = task
+        self.symbols = symbols
 
-    def _get(self, name, default, calculator):
+    def _get(self, name, default):
         if not name in self.data:
-            self.data[name] = default(self, calculator)
+            self.data[name] = default(self)
         return self.data[name]
 
     replacements = {
-          "%d" : lambda self, calc: datetime.today().strftime('%Y-%m-%d_%H:%M'),
-          "%t" : lambda self, calc: self.input_parameters.task_name if self.input_parameters else 'SPRKKR',
-          "%a" : lambda self, calc: str(calc.atoms.symbols) if calc.atoms else 'custom',
-          "%c" : lambda self, calc: calc._advance_counter()
+          "%d" : lambda self: datetime.today().strftime('%Y-%m-%d_%H:%M'),
+          "%t" : lambda self: self.task(),
+          "%a" : lambda self: self.symbols(),
+          "%l" : lambda self: self.calculator.label or '',
+          "%c" : lambda self: self.calculator._advance_counter()
         }
 
     def __call__(self, template):
         for i,v in self.replacements.items():
           if i in template:
-             template = template.replace(i, self._get(i, v, self.calculator))
+             template = template.replace(i, self._get(i, v))
+        template = re.sub('^%_','',template)
+        template = re.sub('%_(%_)*','_',template)
+        template = template.replace('%_', '_')
         return template
 
 #at least, to avoid a circular import
