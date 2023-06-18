@@ -445,7 +445,7 @@ class SPRKKR(Calculator):
 
         def makepath(path, must_exist):
            if '/' not in path and directory:
-              path = os.path.join(directory, path)
+              path = os.path.join(str(directory), path)
            if must_exist and not os.path.isfile(path):
               raise ValueError(must_exist.format(path=path))
            return path
