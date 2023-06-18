@@ -1,17 +1,33 @@
 from ..output_files_definitions import OutputFileValueDefinition as V, create_output_file_definition, OutputFileDefinition
+from ..output_files import OutputFile
 from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
-from ...visualise.plot import PlotInfo, combined_colormap
+from ...visualise.plot import PlotInfo, combined_colormap, Multiplot
+from typing import Optional
+
+class ARPESOutputFile(OutputFile):
+
+    def plot(self, layout=(2,2), figsize=(6,4), latex=True,
+             filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
+             **kwargs
+             ):
+        mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
+        mp.plot(self.TOTAL, **kwargs)
+        mp.plot(self.UP, **kwargs)
+        mp.plot(self.DOWN, **kwargs)
+        mp.plot(self.POLARIZATION, **kwargs)
+        mp.finish(filename, show, dpi)
+
 
 class ARPESDefinition(OutputFileDefinition):
 
-  def plot():
-      pass
+    result_class = ARPESOutputFile
+
 
 def create_definition():
 
     pi = PlotInfo(
-        axes = (('K', r'$k_{\parallel}$ ({\rm \AA}$^{-1}$)'),
+        axes = (('K', r'$k_{\parallel} $(${\rm \AA}^{-1}$)'),
                 ('ENERGY', r'$E-E_{\rm F}$ (eV)')),
         #axes = ('K', 'ENERGY' ),
         show_zero_line = True,
