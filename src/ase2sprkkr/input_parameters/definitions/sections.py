@@ -21,7 +21,7 @@ def CONTROL(ADSI):
   """
 
   return Section('CONTROL',[
-      V('DATASET', str, 'case', required = True, info="The custom field for the description of the problem."),
+      V('DATASET', str, 'case', required = True, info="The custom field for the description of the problem - the output files will have called 'DATASET.<ext>'."),
       V('ADSI', DefKeyword(ADSI), required = True, info="Type of the computation."),
       V('POTFIL', str, required=True, info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator."),
       V('KRWS', int, required=False),
