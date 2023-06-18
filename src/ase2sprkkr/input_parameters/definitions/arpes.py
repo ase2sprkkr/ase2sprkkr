@@ -5,6 +5,7 @@ from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V, \
     InputSectionDefinition as Section
+from ...sprkkr.sprkkr_grammar_types import Site
 
 input_parameters = InputParameters(
     'arpes', [
@@ -24,15 +25,12 @@ input_parameters = InputParameters(
     SITES.copy(defaults = {'NL' : 4 }),
 
     TASK('ARPES').copy([
-      V('STRVER', 0),
-      V('IQ_AT_SURF', 2),
+      V('IQ_AT_SURF', Site.I, 1),
       V('MILLER_HKL', SetOf(int, length=3), [0,0,1]),
-      V('NTMP', 1),
-      V('TMPMIN', 11.),
-      V('CTMPMAX', 11.),
-      V('CTMPMAX', 11.),
-      V('VIBRA', flag, True),
-      V('CNVIBRA', 14),
+      V('CRYS_VEC', True, info='Miller indices with respect to crystalographic primitive vectors'),
+
+      V('STRVER', 1, is_expert=True, is_always_added=True, info="Set to 0 to supply the ARPES input file 'struc.inp' manually (and do not generate it)."),
+      V('INPVER', 1, is_expert=True, is_always_added=True, info='Set to 0 to use an old input.inp from old rslab'),
     ]),
 
     Section('SPEC_PH', [
@@ -68,7 +66,7 @@ input_parameters = InputParameters(
 
     Section('SPEC_EL', [
       V('THETA', Range(float), 45., info='Scattering angle'),
-      V('PHI', Range(float), 0, info='Scattering angle'),
+      V('PHI', Range(float), 0., info='Scattering angle'),
       V('NT', 1, info='Number of angular values for a rotation in polar coordinate.'),
       V('NP', 1, info='Number of angular values for a rotation in azimuth coordinate.'),
       V('POL_E', DefKeyword('PZ')),
