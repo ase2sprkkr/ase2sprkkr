@@ -16,6 +16,7 @@ class Array(GrammarType):
 
   delimiter=White(' \t').suppress()
   delimiter_str = ' '
+  array_access = True
 
   def __init__(self, type, default_value=None,
                length=None, max_length=None, min_length=None,
@@ -162,6 +163,7 @@ class SetOf(Array):
       return copy.deepcopy(value)
 
 class Complex(SetOf):
+  array_access = False
 
   @add_to_signature(SetOf.__init__)
   def __init__(self, *args, **kwargs):
@@ -172,7 +174,6 @@ class Complex(SetOf):
 
   def _validate(self, value, why='set'):
     return isinstance(value, (complex, np.complexfloating)) or 'A complex value required, {value} given.'
-
   def _grammar_name(self):
     return '{complex (as 2 reals)}'
 
@@ -282,7 +283,7 @@ class Table(GrammarType):
        2         2         2         1     2 1.000
 
   """
-
+  array_access = True
   name_in_grammar = False
 
   def __init__(self, columns=None,

@@ -189,7 +189,7 @@ class Option(Configuration):
 
   def _check_array_access(self):
       """ Check, whether the option is numbered array and thus it can be accessed as array using [] """
-      if not self._definition.is_numbered_array:
+      if not self._definition.is_numbered_array and not self._definition.type.array_access:
           raise TypeException('It is not allowed to access {self._get_path()} as array')
 
   def __setitem__(self, name, value):
@@ -200,16 +200,20 @@ class Option(Configuration):
 
       self._check_array_access()
 
-      if isinstance(name, (list, tuple)):
-          for n in name:
-            self._set_item(n, value)
-      elif isinstance(name, slice):
-         if slice.stop is None:
-             raise KeyError("To get/set values in a numbered array using slice, you have to specify the end index of the slice")
-         for n in range(name.stop)[name]:
-             self._set_item(n, value)
+      if not self._definition.is_numbered_array:
+          self()[name]=value
+          self.validate(why='set')
       else:
-         self._set_item(name, value)
+        if isinstance(name, (list, tuple)):
+            for n in name:
+              self._set_item(n, value)
+        elif isinstance(name, slice):
+           if slice.stop is None:
+               raise KeyError("To get/set values in a numbered array using slice, you have to specify the end index of the slice")
+           for n in range(name.stop)[name]:
+               self._set_item(n, value)
+        else:
+           self._set_item(name, value)
       self._post_set()
 
   def _set_item(self, name, value, error=None):
@@ -238,6 +242,9 @@ class Option(Configuration):
           self._definition.getter(self, name)
           return
       self._check_array_access()
+      if not self._definition.is_numbered_array:
+          return self()[name]
+
       if isinstance(name, (list, tuple)):
           return [ self._getitem(n) for n in name ]
       elif isinstance(name, slice):
@@ -274,6 +281,9 @@ class Option(Configuration):
 
   def __hasitem__(self, name):
       self._check_array_access()
+      if not self._definition.is_numbered_array:
+          return name in self()
+
       if self._value is None:
          return False
       value = self._unpack_value(self._value)

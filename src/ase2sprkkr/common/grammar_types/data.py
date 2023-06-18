@@ -22,6 +22,8 @@ class RestOfTheFile(GrammarType):
 class NumpyArray(GrammarType):
     """ Match anything up to the end of the file, as numpy array """
 
+    array_access = True
+
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, written_shape=None, **kwargs):
         self.delimiter=delimiter

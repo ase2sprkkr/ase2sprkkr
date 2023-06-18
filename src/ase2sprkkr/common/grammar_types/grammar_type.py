@@ -55,6 +55,9 @@ class GrammarType:
   """ The numpy dtype of the array, that contains values of this type (see e.g. :class:`Array`).
       The default type ``object`` can and should be redefined in the descendatns. """
 
+  array_access = False
+  """ The value of this type can be accessed as array """
+
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
                      format:str='', default_value:Any=None,
                      condition:Union[Callable[[Any], Union[bool,str]],None]=None,
