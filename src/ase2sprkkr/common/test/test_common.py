@@ -92,10 +92,10 @@ class CommonTest(TestCase):
 
     @add_to_signature(f, excluding='b')
     def ff(c=1, *args, **kwargs):
-        return c,*f(b=5, *args, **kwargs)
-    self.assertEqual((7,3,5), ff(3,7))
-    self.assertEqual((7,3,5), ff(3,c=7))
-    self.assertEqual((7,3,5), ff(a=3,c=7))
+        return c,f(b=5, *args, **kwargs)
+    self.assertEqual((7,(3,5)), ff(3,7))
+    self.assertEqual((7,(3,5)), ff(3,c=7))
+    self.assertEqual((7,(3,5)), ff(a=3,c=7))
 
 
   def test_asyncio_file_reader(self):
