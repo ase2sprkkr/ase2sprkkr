@@ -374,7 +374,7 @@ class InputParameters(ConfigurationFile):
       vals = self.to_dict()
       self._definition = self.task_definition(task)
       self._init_members_from_the_definition()
-      self.set(vals, unknown = 'ignore')
+      self.set(vals, unknown = 'ignore', error='ignore')
 
 #at least, to avoid a circular import
 from ..sprkkr import calculator
