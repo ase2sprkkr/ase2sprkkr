@@ -16,6 +16,9 @@ from .potentials.potentials import Potential
 """ An extension of ASE atoms object """
 from .sprkkr.sprkkr_atoms import SPRKKRAtoms
 
+""" SPRKKR Output File """
+from .outputs.output_files import OutputFile
+
 """ Version of the package """
 from .version import __version__
 
