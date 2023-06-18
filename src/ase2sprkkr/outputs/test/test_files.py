@@ -21,3 +21,8 @@ class TestOutput(TestCase):
             if ext=='spc':
                self.assertEqual('ARPES', out.KEYWORD())
                self.assertEqual((200,160), out.ENERGY().shape)
+               o2 = out + out
+               for i in 'ENERGY', 'THETA', 'K', 'DETERMINANT':
+                   self.assertEqual(out[i](), o2[i]())
+               for i in 'TOTAL', 'POLARIZATION', 'UP', 'DOWN':
+                   self.assertEqual(2*out[i](), o2[i]())
