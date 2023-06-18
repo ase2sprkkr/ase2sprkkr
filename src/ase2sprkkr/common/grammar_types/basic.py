@@ -64,10 +64,10 @@ class ObjectNumber(Unsigned):
   def convert(self, value):
       if isinstance(value, self.type):
          return value
-      super().convert()
+      return super().convert(value)
 
   def _validate(self, value, why='set'):
-      return isinstance(value, self.type) or super.validate()
+      return isinstance(value, self.type) or super()._validate(value, why=why)
 
 class Integer(Number):
   """ Signed integer """
