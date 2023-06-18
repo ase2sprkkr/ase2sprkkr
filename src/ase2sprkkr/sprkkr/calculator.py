@@ -577,7 +577,10 @@ class SPRKKR(Calculator):
               #use the relative potential file name to avoid too-long-
               #-potential-file-name problem
               #dirr = os.path.dirname( input_file.name ) if input_file.name else directory
-              input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
+              rpath = os.path.relpath(potential_file)
+              input_parameters.CONTROL.POTFIL = os.path.abspath(rpath)
+              os.path.relpath(potential_file, directory)
+              input_parameters.CONTROL.POTFIL.result = rpath
             if not input_parameters.CONTROL.DATASET.is_set():
               input_parameters.CONTROL.DATASET = Path(input_file.name).stem
             input_parameters.save_to_file(input_file, atoms)
