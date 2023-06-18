@@ -94,6 +94,26 @@ class Bool(TypedGrammarType):
   type_name = 'boolean'
 
 
+class IntBool(TypedGrammarType):
+  """ A bool type, whose value is represented by a letter (1 or 0) """
+  _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).setParseAction( lambda x: x[0] == '1' )
+  _rev_grammar =  _grammar.copy().setParseAction( lambda x: x[0] == '0' )
+
+  @add_to_signature(TypedGrammarType.__init__)
+  def __init__(self, reversed=True, *args, **kwargs):
+      self.reversed = bool(reversed)
+      super().__init__(*args, **kwargs)
+
+  def grammar_name(self):
+      return '<1|0>'
+
+  def _string(self, val):
+      return '1' if val != self.reversed else '0'
+
+  numpy_type = bool
+  type_name = 'boolean'
+
+
 class Real(Number):
   """ A real value """
   _grammar = replace_whitechars(ppc.fnumber).setParseAction(lambda x: float(x[0]))
@@ -328,5 +348,6 @@ energy = Energy.I = Energy()
 """ A standard grammar type instance for energy values (float) for potential files """
 separator = Separator.I = Separator()
 """ A standard grammar type instance for separators in potential files """
-
+int_bool = IntBool.I = IntBool()
+""" A standard grammar type instance for bool expressed as integer """
 
