@@ -25,7 +25,7 @@ def filename_from_symbols(symbols, max_len=10):
     if len(out) <= max_len:
        return out
     out = pretty_symbols(symbols)
-    out = re.sub("^\{([^}]*)\}[0-9]+$", r"\1", out)
+    out = re.sub(r"^\{([^}]*)\}[0-9]+$", r"\1", out)
     if len(out) <= max_len:
        return out
     out = symbols.get_chemical_formula()
