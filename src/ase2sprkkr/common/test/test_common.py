@@ -87,6 +87,16 @@ class CommonTest(TestCase):
     self.assertEqual((2,1), ff(2,c=1) )
 
 
+    def f(a=1, b=2):
+        return a,b
+
+    @add_to_signature(f, excluding='b')
+    def ff(c=1, *args, **kwargs):
+        return c,*f(b=5, *args, **kwargs)
+    self.assertEqual((7,3,5), ff(3,7))
+    self.assertEqual((7,3,5), ff(3,c=7))
+    self.assertEqual((7,3,5), ff(a=3,c=7))
+
 
   def test_asyncio_file_reader(self):
     with tempfile.TemporaryFile(mode='w+b') as tfile:

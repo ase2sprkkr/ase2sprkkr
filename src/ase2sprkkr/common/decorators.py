@@ -118,7 +118,7 @@ class class_property:
         return self.fget(cls)
 
 
-def add_to_signature(func, prepend=False):
+def add_to_signature(func, prepend=False, excluding=None):
   """
   Add the arguments in the ``func`` function to the list of arguments
   of the resulting function (as keyword_only arguments)
@@ -148,7 +148,14 @@ def add_to_signature(func, prepend=False):
     The same-named arguments can be given as keyword-only - then
     they just alter the properties of the "old" arguments, retaining their position.
     If they are given as regular ones, they takes their new position, too.
+
+  excluding
+    Do not add this arguments
   """
+  if not excluding:
+     excluding=[]
+  elif isinstance(excluding, str):
+     excluding=[ excluding ]
 
   signature = inspect.signature(func)
   pars = list( signature.parameters.values())
@@ -175,11 +182,13 @@ def add_to_signature(func, prepend=False):
           return i
 
       if prepend:
-        old_names = set((i.name for i in pars))
+        old_names = set((i.name for i in pars if i.name not in excluding))
         old_pars = [ use(i) for i in new_pars.values() \
                      if i.kind != P.KEYWORD_ONLY or i.name not in old_names ]
         def add_pars():
             for i in pars:
+                if i in excluding:
+                   continue
                 if i.name not in new_pars:
                    yield i
                 else:
@@ -191,7 +200,7 @@ def add_to_signature(func, prepend=False):
                    yield n
         add_pars = [ i for i in add_pars() ]
       else:
-        old_pars = [ use(new_pars[i.name]) if i.name in new_pars else i for i in pars ]
+        old_pars = [ use(new_pars[i.name]) if i.name in new_pars else i for i in pars if i.name not in excluding ]
         add_pars = [ i for i in new_pars.values() if i.name not in used ]
 
       #the easy and fast way - only keyword arguments are present, the function can be called as is,
