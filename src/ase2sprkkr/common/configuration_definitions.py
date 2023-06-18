@@ -296,8 +296,10 @@ class ValueDefinition(BaseDefinition):
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
                fixed_value=None, required=None, info=None, description=None,
                is_hidden=False, is_optional=None, is_expert=False, is_numbered_array:bool=False,
+               is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
-               write_alternative_name:bool=False, result_class=None):
+               write_alternative_name:bool=False, result_class=None,
+               ):
     """
     Definition of a configuration value.
 
@@ -351,6 +353,10 @@ class ValueDefinition(BaseDefinition):
       members of the array are in the form NAME1=..., NAME2=..., ... The default
       value for missing number can appear in the form NAME=...
 
+    is_always_added
+      If False, add the value, only if its value is not the default value.
+      Default None means False for expert values, True for the others.
+
     name_in_grammar: bool or None
       The value in the conf file is prefixed by <name><name_value_delimiter>
       If None, the default type value (type.name_in_grammar) is used
@@ -378,6 +384,11 @@ class ValueDefinition(BaseDefinition):
        required = False
     elif type is None:
        raise TypeError("The data-type of the configuration value is required.")
+
+    if is_always_added is None:
+       self.is_always_added = not is_expert
+    else:
+       self.is_always_added = is_always_added
 
     if fixed_value is None:
        self.is_fixed = False
@@ -472,8 +483,10 @@ class ValueDefinition(BaseDefinition):
        flags.append('optional')
     if self.is_hidden:
        flags.append('hidden')
-    if self.is_hidden:
+    if self.is_expert:
        flags.append('expert')
+    if self.is_expert != self.is_always_added:
+       flags.append('always add' if self.is_expert else 'add non-default')
     if self.is_numbered_array:
        flags.append('array')
     if self.is_fixed:

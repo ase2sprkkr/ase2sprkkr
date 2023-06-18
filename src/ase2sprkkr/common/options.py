@@ -341,7 +341,7 @@ class Option(Configuration):
          value = self._value
       else:
          value = self.result
-         if value is None or (d.is_expert and self.is_it_the_default_value(value)):
+         if value is None or (not d.is_always_added and self.is_it_the_default_value(value)):
           return
       return d.write(file, value)
 
@@ -367,7 +367,7 @@ class Option(Configuration):
       d = self._definition
       if d.is_generated and not generated:
            return None
-      if only_changed and (only_changed!='basic' or d.is_expert):
+      if only_changed and (only_changed!='basic' or d.is_always_added):
            v,c = self.value_and_changed()
            return v if c else None
       return self(all_values=True)
