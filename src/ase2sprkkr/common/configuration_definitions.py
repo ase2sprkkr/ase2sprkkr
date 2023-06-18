@@ -532,7 +532,7 @@ class ValueDefinition(BaseDefinition):
        return True
     if self.is_fixed and not np.array_equal(self.default_value, value):
        raise ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
-    self.type.validate(value, self.name, why='set')
+    self.type.validate(value, self.name, why=why)
 
   def convert_and_validate(self, value, why='set'):
     value = self.type.convert(value)
