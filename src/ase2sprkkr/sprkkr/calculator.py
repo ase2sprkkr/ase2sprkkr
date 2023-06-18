@@ -465,6 +465,7 @@ class SPRKKR(Calculator):
             potential_file - the file containing the potential (possibly a template)
             potential - potential object (to be updated by atoms)
             """
+            save_input = None
             potential = potential if potential is not None else self.potential
             if potential is None:
                potential = bool(atoms or self._atoms)
@@ -501,17 +502,17 @@ class SPRKKR(Calculator):
                    #the potential will not be saved
                    potential_file = potential
                    potential = False
+                   save_input = True
 
             if isinstance(potential, Potential):
               atoms = potential.atoms
             elif atoms:
               atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
-            return potential, atoms, potential_file
+            return potential, atoms, potential_file, save_input
 
 
-        def resolve_input_parameters(input_parameters, input_file):
-            save_input = True
+        def resolve_input_parameters(input_parameters, input_file, save_input):
             if input_parameters is None:
                 input_parameters=self.input_parameters
             if input_parameters:
@@ -519,7 +520,7 @@ class SPRKKR(Calculator):
                   if InputParameters.is_it_a_input_parameters_name(input_parameters):
                      input_parameters = InputParameters.create_input_parameters(input_parameters)
                   else:
-                     if not options and not task and not potential and not input_file:
+                     if not save_input and not options and not task and not potential and not input_file:
                        save_input = False
                        input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
                      input_parameters = InputParameters.from_file(input_parameters)
@@ -528,6 +529,8 @@ class SPRKKR(Calculator):
 
             if not input_parameters.CONTROL.POTFIL() and not potential and not potential_file:
                 raise ValueError("Potential in the input parameters is not set and no Atoms nor Potential object have been given.")
+            if save_input is None:
+                save_input = True
             return input_parameters, input_file, save_input
 
 
@@ -618,8 +621,10 @@ class SPRKKR(Calculator):
         #ALL auxiliary procedures defined
         #HERE starts the execution
 
-        potential, atoms, potential_file = resolve_potential_and_atoms(potential, atoms, potential_file)
-        input_parameters, input_file, save_input = resolve_input_parameters(input_parameters, input_file)
+        potential, atoms, potential_file, save_input = \
+                    resolve_potential_and_atoms(potential, atoms, potential_file)
+        input_parameters, input_file, save_input = \
+                    resolve_input_parameters(input_parameters, input_file, save_input)
         resolve_empty_spheres(empty_spheres)
 
         templator = FilenameTemplator(self, taskname, symbols)
