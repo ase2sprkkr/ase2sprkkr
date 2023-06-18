@@ -1,7 +1,7 @@
 from ..sprkkr.configuration import ConfigurationValueDefinition, ConfigurationFileDefinition, \
                                    CustomConfigurationValue
 
-from ..common.decorators import cached_class_property
+from ..common.decorators import cached_class_property, cache
 from ..common.grammar_types  import unsigned, Array, Table, RestOfTheFile, Keyword, GrammarType, \
                                      pot_mixed, line_string, line_end, Separator as GTSeparator
 from ..common.grammar import generate_grammar
@@ -9,7 +9,6 @@ import pyparsing as pp
 from ..common.decorators import cached_class_property
 import sys
 from .output_files import OutputFile
-from functools import cache
 
 class OutputFileValueDefinition(ConfigurationValueDefinition):
   """ This class describes the format of one value of
