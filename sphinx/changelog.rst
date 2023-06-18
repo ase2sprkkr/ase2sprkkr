@@ -66,3 +66,21 @@ Version 2.0.4
 -------------
 * Some fixies
 * ASR repcipies available as ase2sprkkr.asr subpackage
+
+Version 2.1.0
+-------------
+
+User interface
+~~~~~~~~~~~~~~
+* ARPES task definition and SPC results and plotting
+* AIPES, SPLEED and BAND available for ARPES
+* a2s_plot_output script to plot SPC results
+* Better naming of input and potential files
+* Gilbert TASK added (experimental, not tested)
+* input_parameters.change_task method fixed
+
+Internals
+~~~~~~~~~
+* GrammmarTypes refactored to more files
+* Generated grammar types for easy access to output files
+* Calculator.save_input refactored

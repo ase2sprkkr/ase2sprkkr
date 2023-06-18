@@ -6,4 +6,4 @@ Just the version of the ASE2SPRKKR package.
 """
 
 #: Version number of the ASE2SPRKKR package
-__version__ = "2.0.4"
+__version__ = "2.1.0"
