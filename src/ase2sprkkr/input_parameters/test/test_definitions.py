@@ -47,6 +47,9 @@ class TestDefinitions(TestCase):
 
           if name == 'scf':
              self.assertFalse('MODE' in t.to_string())
+          if name == 'arpes':
+             for i in [ 'AIPES', 'SPLEED', 'BAND' ]:
+                 t.TASK.TASK = i
 
         except Exception as e:
           raise Exception(f'Parsing of "{i}" failed with the reason: \n {e}').with_traceback(e.__traceback__)

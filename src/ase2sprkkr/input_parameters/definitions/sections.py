@@ -171,7 +171,7 @@ MODE = Section('MODE', [
 """MODE Section definition"""
 
 
-def TASK(TASK):
+def TASK(task, add = []):
   """ Create the definition of the CONTROL section of the task input file.
 
   Parameters
@@ -183,9 +183,12 @@ def TASK(TASK):
   ------
   TASK: InputSectionDefinition
   """
+  if isinstance(task, str):
+     task = DefKeyword(task)
+
   return Section('TASK', [
-    V('TASK', DefKeyword(TASK), name_in_grammar=False)
-  ])
+    V('TASK', task, name_in_grammar=False)
+  ] + add)
 
 __all__ = [
     'CONTROL', 'TAU', 'ENERGY', 'SCF', 'SITES', 'TASK', 'STRCONST', 'CPA', 'MODE'

@@ -24,7 +24,13 @@ input_parameters = InputParameters(
 
     SITES.copy(defaults = {'NL' : 4 }),
 
-    TASK('ARPES').copy([
+    Section('TASK', [
+      V('TASK', DefKeyword({
+        'ARPES' : 'Angle resolved photoemission spectroscopy',
+        'AIPES' : 'Angle integrated photoemission spectroscopy',
+        'SPLEED' : 'Spin polarized LEED (experimental feature)',
+        'BAND'  : 'band structure calculations (experimental feature)'
+      }), name_in_grammar=False, info='Type of the calculation'),
       V('IQ_AT_SURF', Site.I, 1),
       V('MILLER_HKL', SetOf(int, length=3), [0,0,1]),
       V('CRYS_VEC', True, info='Miller indices with respect to crystalographic primitive vectors'),
