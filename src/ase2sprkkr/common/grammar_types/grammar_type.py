@@ -336,7 +336,9 @@ class GrammarType:
     if isinstance(value, types): return True
     if not typename:
        typename = types
-    return f"An {typename} value is required, a value {value} of type {value.__class__} have been given"
+    typename=str(typename)
+    n = 'n' if typename[0] in ['a','e','i','o','u'] else ''
+    return f"A{n} <{typename}> value is required, a value {value} of type {value.__class__} have been given"
 
 @add_called_class_as_argument
 def add_to_parent_validation(validation):
