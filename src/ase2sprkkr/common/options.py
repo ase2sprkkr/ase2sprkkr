@@ -455,7 +455,8 @@ class Option(Configuration):
       else:
          v=' = '+str(v)
 
-      return f"<Option {self._get_path()} of type {self._definition.type} with{o} value{v}>"
+      type = '(generated)' if self._definition.is_generated else f'of type {self._definition.type}'
+      return f"<Option {self._get_path()} {type} with{o} value{v}>"
 
 class CustomOption(Option):
   """ An user-added option (configuration value). It can be removed from the section. """
