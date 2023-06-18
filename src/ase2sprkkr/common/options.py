@@ -355,13 +355,25 @@ class Option(Configuration):
          return
 
       if d.type.has_value:
-        value = self()
-        if value is None:
-           if not d.is_optional:
-               name = self._get_root_container()
-               raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
+
+        def vali(value):
+          if value is None:
+             if not d.is_optional:
+                 name = self._get_root_container()
+                 raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
+          else:
+             d.validate(value, why)
+
+        if why == 'set':
+           vali(self())
         else:
-           d.type.validate(value, why)
+           value = self.result
+           if d.is_numbered_array:
+              for i in value.values():
+                  vali(i)
+           else:
+              vali(value)
+
 
   @property
   def name(self):
