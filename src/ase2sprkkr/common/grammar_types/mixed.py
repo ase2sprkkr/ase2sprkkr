@@ -2,6 +2,7 @@
 Variant type that can accepts either number or two-item array) """
 
 import pyparsing as pp
+import copy
 
 from .grammar_type import GrammarType, compare_numpy_values, recognized_set_types, type_from_type, type_from_value
 from ..decorators import cached_property, add_to_signature
@@ -48,6 +49,9 @@ class BaseMixed(GrammarType):
       if value is None:
           return None
       return self.get_type(value).convert(value)
+
+  def copy_value(self, value):
+      return copy.deepcopy(value)
 
 class Range(BaseMixed):
   """ A range type - it accepts either one value or range of two values of a given type."""

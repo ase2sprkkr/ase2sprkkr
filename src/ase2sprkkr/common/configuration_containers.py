@@ -32,6 +32,21 @@ class ConfigurationContainer(Configuration):
       """
       self._init_members_from_the_definition()
 
+  def copy(self, copy_values:bool=False):
+      """ Create a copy of the container
+
+      Parameters
+      ----------
+      copy_values
+        If true, the copy of values is done, so their modifications do not affects the container.
+        (e.g. for numpy arrays)
+      """
+      d=self._definition
+      vals=self.as_dict(copy=copy_values)
+      out =d.result_class(definition=d)
+      out.set(vals, unknown='add')
+      return out
+
   def _init_members_from_the_definition(self):
       self._members = OrderedDict()
       """
@@ -262,7 +277,7 @@ class ConfigurationContainer(Configuration):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False):
+  def as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
@@ -281,7 +296,7 @@ class ConfigurationContainer(Configuration):
       """
       out = OrderedDict()
       for i in self:
-          value = i.as_dict(only_changed, generated)
+          value = i.as_dict(only_changed, generated, copy)
           if value is not None:
               out[i.name] = value
       return out or None

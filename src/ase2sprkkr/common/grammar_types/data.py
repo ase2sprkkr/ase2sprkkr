@@ -6,6 +6,7 @@ import pyparsing as pp
 import re
 import io
 import numpy as np
+import copy
 
 class RestOfTheFile(GrammarType):
     """ Match anything up to the end of the file """
@@ -51,3 +52,6 @@ class NumpyArray(GrammarType):
                 lambda v: np.genfromtxt( io.StringIO(v[0]), delimiter=self.delimiter )
          )
          return out
+
+    def copy_value(self, value):
+        return copy.deepcopy(value)

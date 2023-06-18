@@ -279,6 +279,15 @@ XSITES NR=3 FLAG
     self.assertFalse(hasattr(ips.ENERGY, 'NXXX'))
 
     self.assertEqual(ips['ENERGY'].NE(), np.array((300,200)))
+    cps = ips.copy(copy_values=True)
+    cps.ENERGY.NE[0]=100
+    self.assertEqual(ips['ENERGY'].NE(), np.array((300,200)))
+    dps = cps.copy()
+    dps.ENERGY.NE[0]=150
+    self.assertEqual(cps['ENERGY'].NE(), np.array((150,200)))
+    cps.ENERGY.NE[0]=180
+    self.assertEqual(dps['ENERGY'].NE(), np.array((180,200)))
+
     self.assertEqual(ips['SITES'].NL(), 2)
     self.assertEqual(ips.find('NL').get_path(), 'SITES.NL')
     ips.find('NL').set(3)

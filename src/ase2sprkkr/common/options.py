@@ -379,14 +379,19 @@ class Option(Configuration):
   def name(self):
       return self._definition.name
 
-  def as_dict(self, only_changed: Union[bool,str]='basic', generated:bool=False):
+  def as_dict(self, only_changed: Union[bool,str]='basic', generated:bool=False, copy:bool=False):
       d = self._definition
       if d.is_generated and not generated:
            return None
       if only_changed and (only_changed!='basic' or d.is_always_added):
            v,c = self.value_and_changed()
-           return v if c else None
-      return self(all_values=True)
+           if not c:
+                return None
+      else:
+           v = self(all_values=True)
+      if copy:
+           v = self._definition.copy_value(v, all_values=True)
+      return v
 
   def value_and_changed(self):
       """ Return value and whether the value was changed

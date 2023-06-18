@@ -695,6 +695,20 @@ class ValueDefinition(BaseDefinition):
 
   _copy_excluded_args = BaseDefinition._copy_excluded_args + ['fixed_value']
 
+  def copy_value(self, value, all_values=False):
+      """ Creates copy of the value
+
+      Parameters
+      ----------
+      values
+        The value to copy
+
+      all_values
+        Wheter, for a numbered array, a whole dict is supplied
+      """
+      if not all_values or not self.is_numbered_array:
+          return self.type.copy_value(value)
+      return { k:self.type.copy_value(v) for v in values }
 
 def add_excluded_names_condition(element, names):
     """ Add the condition to the element, that

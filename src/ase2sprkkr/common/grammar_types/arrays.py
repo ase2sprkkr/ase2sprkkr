@@ -3,7 +3,7 @@ from collections import namedtuple
 import numpy as np
 import pyparsing as pp
 import itertools
-
+import copy
 
 from ..grammar import generate_grammar, delimitedList, \
                       line_end, White
@@ -157,6 +157,9 @@ class SetOf(Array):
 
   def transform_grammar(self, grammar, param_name=False):
     return grammar | self.type.grammar(param_name).copy().addParseAction(lambda x: np.atleast_1d(x.asList()))
+
+  def copy_value(self, value):
+      return copy.deepcopy(value)
 
 class Complex(SetOf):
 

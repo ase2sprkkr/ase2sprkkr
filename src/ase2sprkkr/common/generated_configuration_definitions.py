@@ -5,6 +5,7 @@ from .configuration_definitions import BaseDefinition
 from .decorators import add_to_signature
 from functools import partial
 from .options import Option
+import copy
 
 class BaseGeneratedValueDefinition(BaseDefinition):
   """ Base class for all generated values. It just set
@@ -89,3 +90,6 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
        if self.plot:
          option.plot = lambda **kwargs: self.plot(option, **kwargs)
          option.plot.__doc__ = " Plot the data."
+
+   def copy_value(self, value, all_values=False):
+       return copy.copy(value)
