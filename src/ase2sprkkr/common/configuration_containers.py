@@ -157,7 +157,7 @@ class ConfigurationContainer(Configuration):
       return val.get()
 
 
-  def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', **kwargs):
+  def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
       """
       Set the value(s) of parameter(s). Usage:
 
@@ -192,20 +192,22 @@ class ConfigurationContainer(Configuration):
 
       def set_value(name, value):
         if '.' in name:
-          section, name = name.split('.')
-          self._members[section].set({name:value})
+          section, name = name.split('.', 1)
+          self._members[section].set({name:value}, unknown=unknown, error=error)
         if name not in self._members:
            if unknown == 'find':
               option = self._find_value(name)
               if option:
-                 option.set(value)
+                 option.set(value, error=error)
                  return
+           if unknown == 'ignore':
+               return
            if not unknown == 'add':
               raise KeyError("No option with name {} in {}".format(name, str(self)))
               return
            self.add(name, value)
         else:
-           self._members[name].set(value, unknown=unknown)
+           self._members[name].set(value, unknown=unknown, error=error)
 
       if values:
         try:

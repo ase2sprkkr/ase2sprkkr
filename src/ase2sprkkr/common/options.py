@@ -142,7 +142,7 @@ class Option(Configuration):
       """
       return self._definition.get_value(self)
 
-  def set(self, value, *, unknown=None):
+  def set(self, value, *, unknown=None, error=None):
       """
       Set the value of the option.
 
@@ -154,23 +154,30 @@ class Option(Configuration):
       unknown: str or None
         A dummy argument to make the method compatibile with
         ase2sprkkr.sprkkr.common.configuration_containers.ConfigurationContainer.set()
+
+      error:
       """
       if self._definition.is_generated:
           return self._definition.setter(self, value)
 
       if value is None:
-          return self.clear()
+          try:
+              return self.clear()
+          except ValueError:
+              if not error=='ignore': raise
+              return
       elif self._definition.is_numbered_array:
         if isinstance(value, dict):
            self.clear(do_not_check_required=value, call_hooks=False)
            for k,v in value.items():
-               self._set_item(k, v)
+               self._set_item(k, v, error)
         else:
-           self._set_item('def', value)
-      elif isinstance(value, DangerousValue):
-         self._value = value
+           self._set_item('def', value, error)
       else:
-        self._value = self._definition.convert_and_validate(value)
+         try:
+             self._value = self._pack_value(value)
+         except ValueError:
+             if not error=='ignore': raise
       self._post_set()
 
   def _post_set(self):
@@ -205,7 +212,7 @@ class Option(Configuration):
          self._set_item(name, value)
       self._post_set()
 
-  def _set_item(self, name, value):
+  def _set_item(self, name, value, error='ignore'):
       """ Set a single item of a numbered array. For internal use - so no sanity checks """
       if self._value is None:
          self._value = {}
@@ -220,7 +227,10 @@ class Option(Configuration):
          if not self._value:
             self._value = None
       else:
-         self._value[name] = self._pack_value(value)
+         try:
+            self._value[name] = self._pack_value(value)
+         except ValueError:
+            if error!='ignore': raise
 
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
