@@ -107,6 +107,8 @@ class Option(Configuration):
           if self._definition.is_numbered_array and not all_values:
               return value.get('def', self.default_value)
           return value
+      if hasattr(self, '_result'):
+          return self._result
       if self._definition.is_numbered_array and all_values and self.default_value is not None:
           return { 'def' : self.default_value }
       return self.default_value
