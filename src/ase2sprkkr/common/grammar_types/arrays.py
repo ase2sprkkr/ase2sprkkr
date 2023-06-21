@@ -291,7 +291,7 @@ class Table(GrammarType):
                      format = {float: '>21.17', None: '>16'}, format_all=True,
                      numbering=None, numbering_label=None, numbering_format=True,
                      prefix=None, postfix=None, length=None,
-                     row_condition=None,
+                     row_condition=None, flatten=False,
                      default_values=False,
                      named_result = False, **kwargs):
       super().__init__(prefix=None, postfix=None)
@@ -306,6 +306,7 @@ class Table(GrammarType):
          header = self.names
       self.sequence = Sequence( *columns, format=format, format_all=format_all, condition = row_condition, default_values=default_values )
       self.header = header
+      self.flatten = flatten
       self.free_header = free_header
       if numbering.__class__ is str:
          numbering_label=numbering
@@ -357,6 +358,8 @@ class Table(GrammarType):
          grammar.addParseAction(ensure_numbering)
 
       grammar.addParseActionEx( lambda x: np.array(x.asList(), self.numpy_type), "Cannot retype to numpy array")
+      if self.flatten:
+          grammar.addParseAction(lambda x: x[0].ravel())
       return grammar
 
   def _string(self, data):
@@ -394,7 +397,7 @@ class Table(GrammarType):
       if not isinstance(value, np.ndarray):
          return f"Numpy array as a value required {value.__class__} given"
       dtype = self.numpy_type
-      dim = 1 if isinstance(dtype, list) else 2
+      dim = 1 if isinstance(dtype, list) or self.flatten else 2
       if len(value.shape) != dim:
          return f"The array should have dimension={dim}, it has dimension {len(value.shape)}"
       if value.dtype != self.numpy_type:

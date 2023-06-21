@@ -218,6 +218,24 @@ class GrammarTest(TestCase):
         )]:
         test(val, res)
 
+    type = gt.Table(X=int, numbering='Y')
+    for val, res in [(
+        """ Y X
+        1 1
+        2 3""", np.array([[1], [3]])
+        )]:
+        test(val, res)
+
+    type = gt.Table(X=int, numbering='Y', flatten=True)
+    for val, res in [(
+        """ Y X
+        1 1
+        2 3""", np.array([1, 3])
+        )]:
+        test(val, res)
+
+
+
     type = gt.PotMixed.I
     for val, res in [
         ('1', 1),
