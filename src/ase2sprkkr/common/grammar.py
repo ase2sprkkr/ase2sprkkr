@@ -11,14 +11,19 @@ def generate_grammar():
         and then restore to the original state """
     try:
       old = None
+      kchars = None
       pe = pp.ParserElement
       if hasattr(pe, "DEFAULT_WHITE_CHARS"):
           old = pe.DEFAULT_WHITE_CHARS
+      if hasattr(pp.Keyword, "DEFAULT_KEYWORD_CHARS"):
+          kchars = pp.Keyword.DEFAULT_KEYWORD_CHARS + '-'
       pe.setDefaultWhitespaceChars(' \t\r')
       yield
     finally:
       if old is not None:
         pe.setDefaultWhitespaceChars(old)
+      if kchars is not None:
+        pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars
 
 def replace_whitechars(expr):
     expr = expr.copy()
