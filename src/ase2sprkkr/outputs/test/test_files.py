@@ -26,3 +26,8 @@ class TestOutput(TestCase):
                    self.assertEqual(out[i](), o2[i]())
                for i in 'TOTAL', 'POLARIZATION', 'UP', 'DOWN':
                    self.assertEqual(2*out[i](), o2[i]())
+            if ext=='dos':
+               self.assertEqual(out.n_orbitals(1), 3)
+               self.assertEqual(out.n_spins(), 2)
+               self.assertEqual((3,2,1200), out.dos_for_site_type('Ta').shape)
+               self.assertEqual(out.DOS['Ta'][5], out.dos_for_site_type('Ta',1,2))
