@@ -109,8 +109,8 @@ def auto_range(rng, data):
     if rng is None:
        return ( np.min(data), np.max(data) )
     return (
-        data[0] if data[0] is not None else np.min(data),
-        data[1] if data[1] is not None else np.max(data),
+        rng[0] if rng[0] is not None else np.min(data),
+        rng[1] if rng[1] is not None else np.max(data),
         )
 def plotting_function(func):
     """ Decorator, that 'completes' the given function that just draw into a
