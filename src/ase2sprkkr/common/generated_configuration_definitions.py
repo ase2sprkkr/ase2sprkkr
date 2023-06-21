@@ -26,10 +26,14 @@ class GeneratedValueDefinition(BaseGeneratedValueDefinition):
    @add_to_signature(BaseDefinition.__init__, prepend=True)
    def __init__(self, name, getter, setter=None, **kwargs):
        super().__init__(name, **kwargs)
-       if getter is not None:
-           self.getter = getter
-       if setter is not None:
-           self.setter = setter
+       self.getter = getter
+       self._setter = setter
+
+   @property
+   def setter(self):
+       if not self._setter:
+           raise ValueError("Setting the value(s) of {self.name} is not allowed")
+       return self._setter
 
 class NumpyViewDefinition(BaseGeneratedValueDefinition):
    """
