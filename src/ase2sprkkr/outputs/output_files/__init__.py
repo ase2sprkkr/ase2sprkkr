@@ -43,19 +43,111 @@ class OutputFile(ConfigurationFile):
       return out
 
   @classmethod
-  def from_file(cls, filename):
-      for i in cls.definitions.values():
-          #try:
+  def from_file(cls, filename, first_try=None, try_only=None):
+      if first_try is None and not try_only:
+         fname = filename
+         if hasattr(filename, 'name'):
+             fname = filename.name
+         if isinstance(filename, str):
+             first_try = filename.rsplit('.',1)[1].lower()
+         else:
+             first_try = ''
+      if isinstance(first_try,str):
+          first_try=[ first_try ]
+
+      if first_try:
+         out = cls.from_file(filename, first_try=False, try_only=first_try)
+         if out: return out
+
+      for ext, i in cls.definitions.items():
+          if try_only and ext not in try_only:
+             continue
+          if first_try and ext in first_try:
+             continue
+          try:
              out = i.definition.read_from_file(filename)
              return out
-          #except Exception as e:
-             print(e)
-             breakpoint()
+          except Exception as e:
              pass
       try:
           return cls.unknown_output_file_definition.read_from_file(filename)
       except pp.ParseBaseException as e:
           raise Exception(f'Can not parse file: {filename}') from e
+
+class CommonOutputFile(ConfigurationFile):
+
+    def n_atoms(self):
+        return len(self.ORBITALS)
+
+    def n_types(self):
+        return len(self.TYPES)
+
+    def site_type_index(self, type):
+        if isinstance(type, int):
+            return type
+        for i,t in enumerate(self.TYPES):
+            if t[0] == type:
+               return i
+        raise ValueError(f'There is no {type} atom in the output file')
+
+    def n_orbitals(self, type):
+        type = self.site_type_index(type)
+        return self.ORBITALS[self.TYPES[type]['IQAT'][0]]
+
+class Arithmetic(ConfigurationFile):
+
+    def _check_arithmetic(self, other):
+        pass
+
+    def __add__(self, other):
+        out = self.copy(copy_values=True)
+        out+=other
+        return out
+
+    def __sub__(self, other):
+        out = self.copy(copy_values=True)
+        out+=other
+        return out
+
+    def __mul__(self, other):
+        out = self.copy(copy_values=True)
+        out*=other
+        return out
+
+    def __div__(self, other):
+        out = self.copy(copy_values=True)
+        out/=other
+        return out
+
+    def __rmul__(self, other):
+        self._check_arithmetic(other)
+        out = self.copy()
+        out*=other
+        return out
+
+    def _do_arithmetic(self, func, other):
+        """ Run given function for all "summable/subtractable/etc... data"""
+        for val, selector in self._arithmetic_values:
+            getattr(self[val]()[selector],func)(other[val]()[selector])
+
+    def __iadd__(self, other):
+        self._check_arithmetic(other)
+        self._do_arithmetic('__iadd__', other)
+        return self
+
+    def __isub__(self, other):
+        self._check_arithmetic(other)
+        self._do_arithmetic('__isub__', other)
+        return self
+
+    def __imul__(self, other):
+        self._do_arithmetic('__imul__', other)
+        return self
+
+    def __idiv__(self, other):
+        self._do_arithmetic('__idiv__', other)
+        return self
+
 
 #at last, import this file that need this module
 from .. import output_files_definitions

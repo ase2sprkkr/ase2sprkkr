@@ -2,12 +2,12 @@ from ..output_files_definitions import OutputFileValueDefinition as V, create_ou
 from typing import Optional
 import numpy as np
 
-from ..output_files import OutputFile
+from ..output_files import Arithmetic, CommonOutputFile
 from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
-from ...visualise.plot import PlotInfo, combined_colormap, Multiplot
+from ...visualise.plot import PlotInfo, combined_colormap, Multiplot, PlotValue
 
-class ARPESOutputFile(OutputFile):
+class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
     def plot(self, layout=(2,2), figsize=(6,4), latex=True,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
@@ -19,6 +19,9 @@ class ARPESOutputFile(OutputFile):
         mp.plot(self.DOWN, **kwargs)
         mp.plot(self.POLARIZATION, **kwargs)
         mp.finish(filename, show, dpi)
+        breakpoint()
+
+    _arithmetic_values = [('RAW_DATA', (slice(None), slice(2,6)))]
 
     def _check_arithmetic(self, other):
         try:
@@ -26,50 +29,6 @@ class ARPESOutputFile(OutputFile):
             assert np.allclose(other.THETA(), self.THETA())
         except AssertionError:
             raise ValueError("The outputs are not compatibile to summed/subtracted.");
-
-    def __add__(self, other):
-        out = self.copy(copy_values=True)
-        out+=other
-        return out
-
-    def __sub__(self, other):
-        out = self.copy(copy_values=True)
-        out+=other
-        return out
-
-    def __mul__(self, other):
-        out = self.copy(copy_values=True)
-        out*=other
-        return out
-
-    def __div__(self, other):
-        out = self.copy(copy_values=True)
-        out/=other
-        return out
-
-    def __rmul__(self, other):
-        self._check_arithmetic(other)
-        out = self.copy()
-        out*=other
-        return out
-
-    def __iadd__(self, other):
-        self._check_arithmetic(other)
-        self.RAW_DATA()[:,2:6] += other.RAW_DATA()[:, 2:6]
-        return self
-
-    def __isub__(self, other):
-        self._check_arithmetic(other)
-        self.RAW_DATA()[:,2:6] -= other.RAW_DATA()[:, 2:6]
-        return self
-
-    def __imul__(self, other):
-        self.RAW_DATA()[:,2:6] *= other
-        return self
-
-    def __idiv__(self, other):
-        self.RAW_DATA()[:,2:6] /= other
-        return self
 
 
 class ARPESDefinition(OutputFileDefinition):

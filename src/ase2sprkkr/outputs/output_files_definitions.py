@@ -80,10 +80,8 @@ def output_file_header():
       V('EFERMI', float),
       V('INFO', str),
       Separator(),
-      V('ORBITALS', Table({'NLQ' : unsigned}, numbering='IQ'), name_in_grammar = False),
+      V('ORBITALS', Table({'NLQ' : unsigned}, numbering='IQ', flatten=True), name_in_grammar = False),
       V('TYPES', Table({'TXT_T': str, 'CONC': float, 'NAT': int, 'IQAT': Array(int)}, numbering='IT'), name_in_grammar=False),
-      V('NT', int),
-      V('NP', int),
     ]
 
 def create_output_file_definition(keyword, add, name=None,
