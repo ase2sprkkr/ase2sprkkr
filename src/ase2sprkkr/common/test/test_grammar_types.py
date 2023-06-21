@@ -4,6 +4,7 @@ else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
+import warnings
 import pyparsing
 from .. import grammar_types as gt
 from ..grammar import generate_grammar
@@ -73,6 +74,13 @@ class GrammarTest(TestCase):
       else:
         self.assertTrue(False)
 
+    def test_warning(val, res):
+        with warnings.catch_warnings(record = True) as warning_list:
+            val = type.convert(val)
+            self.assertEqual(val, res)
+            self.assertTrue(type.validate(val))
+        self.assertEqual(True, bool(warning_list))
+
     def test_valid(val):
       val = type.convert(val)
       self.assertTrue(type.validate(val) is True)
@@ -126,7 +134,7 @@ class GrammarTest(TestCase):
         ('-1e-2', -1e-2)
         ]:
         test(val, res)
-    for v in [1, 'aaaa', (1,2,3)]: test_invalid(v)
+    for v in ['aaaa', (1,2,3)]: test_invalid(v)
 
     type = gt.Real(min=-5., max=10.)
     for val, res in [
@@ -139,7 +147,8 @@ class GrammarTest(TestCase):
         ('-1e-2', -1e-2)
         ]:
         test(val, res)
-    for v in [1, 15., 'aaaa', (1,2,3)]: test_invalid(v)
+    for v in [15., 'aaaa', (1,2,3)]: test_invalid(v)
+    for v,r in [(1, 1.0)]: test_warning(v,r)
 
     type = gt.String()
     for val, res in [
@@ -158,7 +167,8 @@ class GrammarTest(TestCase):
          ('1 eV', 1.0/Rydberg),
          ]:
          test(val, res)
-    for v in [1, 15, 'aaaa', (1,2,3)]: test_invalid(v)
+    for v in ['aaaa', (1,2,3)]: test_invalid(v)
+    for v,r in [(1, 1.0),(15, 15.0)]: test_warning(v,r)
 
 
     type = gt.SetOf(int)
@@ -281,7 +291,9 @@ class GrammarTest(TestCase):
          ('{40}', Error),
          ]:
          test(val, res)
-    for v in [[1.,2,3], 'asasd', 3 ]: test_invalid(v)
+    for v in [[1.,2,3], 'asasd' ]: test_invalid(v)
+    a = lambda *args: np.asarray(args)
+    for v,r in [ (3,3.), ((5,1.),a(5.,1.)), ((7.,3),a(7.,3.)) ]: test_warning(v,r)
     for v in [ [1.,3.], 8. ]: test_valid(v)
 
     type = gt.Date()
