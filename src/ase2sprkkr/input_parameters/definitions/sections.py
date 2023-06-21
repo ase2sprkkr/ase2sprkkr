@@ -1,7 +1,7 @@
 """ Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks) """
 
-from ...common.grammar_types  import DefKeyword, SetOf, flag, energy, Integer, Array
+from ...common.grammar_types  import DefKeyword, SetOf, flag, energy, Integer, Array, Keyword
 from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
       InputValueDefinition as V
@@ -112,6 +112,7 @@ SCF = Section('SCF', [
       V('EFGUESS', 0.7),
       V('TOL', 0.00001, info='Tolerance threshold for the mixing algorithm'),
       V('ISTBRY', 1, info='Start Broyden after ISTBRY iterations'),
+      V('FULLPOT', False, info='Non-spherical callculation (full-potential) instead of ASA'),
       V('ITDEPT', 40, info='Iteration depth for Broyden algorithm (length of used history)'),
       V('QION', Array(float), required=False, info='Guess for the ionic charges Qt for atomic types'),
       V('MSPIN', Array(float), required=False, info='Guess for the magnetic moment μ_{spin,t} for atomic types'),
@@ -161,7 +162,12 @@ CPA = Section('CPA', [
 
 
 MODE = Section('MODE', [
-  V('SP-SREL', False, info="work in the spin-polarized scalar-relativistic mode"),
+  V('MODE',
+    Keyword({
+    'SREL' : "work in the spin-polarized scalar-relativistic mode",
+    'SP-SREL' : "work in the scalar-relativistic mode"}), None,
+            required=False, name_in_grammar=False,
+            info='Using this option you can switch on spin the polarization and relativistic mode'),
   V('MDIR', [0,0,1], info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True),
   V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True),
   V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_numbered_array=True),

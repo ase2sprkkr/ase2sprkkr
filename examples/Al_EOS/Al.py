@@ -17,9 +17,8 @@ calc.input_parameters.set(NE=32)
 calc.input_parameters.SCF.MIX=0.20
 calc.input_parameters.ENERGY.ImE=0.0
 calc.input_parameters.ENERGY.GRID=5
-calc.input_parameters.SCF.add('FULLPOT',True)
-calc.input_parameters.add('MODE')
-calc.input_parameters.MODE.add('SREL',True)
+calc.input_parameters.SCF.FULLPOT = True
+calc.input_parameters.MODE.MODE='SREL'
 
 al.set_calculator(calc)
 
