@@ -59,36 +59,47 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
    """
 
    @add_to_signature(BaseDefinition.__init__, prepend=True)
-   def __init__(self, name, data, selector=slice(None), shape=None, plot=None, *args, **kwargs):
+   def __init__(self, name, data, selector=slice(None),
+                shape=None, transpose=False, transform_key=None,
+                plot=None,
+                *args, **kwargs):
        super().__init__(name, *args, **kwargs)
        self.selector = selector
        self.shape = shape
        self.data = data
        self.plot = plot
+       self.transform_key=transform_key
+       self.transpose = transpose
 
-   def determine_shape(self, option):
+   def determine_shape(self, container):
        """ Return the shape of the resulting array, possibly computed using
        properties of the other values in the container"""
        def get(i):
            if isinstance(i, str):
-              return option._container[i]()
+              return container[i]()
            return i
        return tuple([get(i) for i in self.shape])
 
-   def source(self, option):
-       out=option._container[self.data]()[self.selector]
+   def source(self, container):
+       out=container[self.data]()[self.selector]
        if self.shape:
-          out.shape = self.determine_shape(option)
+          out.shape = self.determine_shape(container)
+       if self.transpose:
+          out = out.T
        return out
 
-   def getter(self, option, key=None):
-       out=self.source(option)
+   def getter(self, container, key=None):
+       out=self.source(container)
        if key is not None:
-          return out[key]
+          if self.transform_key:
+             key=self.transform_key(key, container)
+          out=out[key]
        return out
 
-   def setter(self, option, value, key=slice(None)):
-       self.source(option)[key]=value
+   def setter(self, container, value, key=slice(None)):
+       if self.transform_key:
+          key=self.transform_key(key, container)
+       self.source(container)[key]=value
 
    def enrich(self, option):
        if self.plot:
