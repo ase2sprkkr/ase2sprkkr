@@ -205,6 +205,7 @@ class PlotInfo:
       kwargs = tmp
       if 'args' in kwargs and option.name in kwargs['args']:
          kwargs.update(kwargs['args'][option.name])
+      kwargs = { k: v(option) if isinstance(v, PlotValue) else v for k,v in kwargs.items() }
 
       axes = kwargs.get('axes', self.axes)
       method = kwargs.get('method', self.method)
@@ -232,3 +233,11 @@ class PlotInfo:
          kwargs['title'] = option.info if option.info else option.name
 
       method(*xdata, values, **kwargs)
+
+class PlotValue:
+
+  def __init__(self, func):
+      self.func = func
+
+  def __call__(self, option):
+      return self.func(option)
