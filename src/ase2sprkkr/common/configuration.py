@@ -152,5 +152,4 @@ class Configuration:
          file.flush()
       return out
 
-
 _help_warning_printed=False

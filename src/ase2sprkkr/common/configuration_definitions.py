@@ -631,7 +631,6 @@ class ValueDefinition(BaseDefinition):
       The value to write. It can be instance of DangerousValue, in such case
       It's own type is used to write the value.
      """
-
      if self.type.has_value:
         missing, df, np = self.type.missing_value()
 
