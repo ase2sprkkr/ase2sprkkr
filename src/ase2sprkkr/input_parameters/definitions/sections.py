@@ -67,13 +67,13 @@ regular mesh.
                              info='The mode of BZ-integration used for calculation of the scattering '
                                   ' path operator τ'),
       V('NKTAB', 250, info='Number of points for the special points method', is_optional=True,
-        description='For 2D problem, it severs only as default value for NKTABxD.'),
-      V('NKTAB2D', int, _nktab_value, info='Number of points for the special points method for 2D region of 2D problem', is_optional=True,
-        description='If it is not specified, NKTAB is used.'),
-      V('NKTAB3D', int, _nktab_value, info='Number of points for the special points method for 3D region of 2D problem', is_optional=True,
-        description='If it is not specified, NKTAB is used'),
-      V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration'),
-      V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration'),
+        description='For 2D problem, it serves only as default value for NKTABxD.'),
+      V('NKTAB2D', int, _nktab_value, info='Number of points for the special points method for 2D region of 2D problem',
+        is_optional=True, description='If it is not specified, NKTAB is used.'),
+      V('NKTAB3D', int, _nktab_value, info='Number of points for the special points method for 3D region of 2D problem',
+        is_optional=True, description='If it is not specified, NKTAB is used'),
+      V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration', write_condition= lambda o: o._container.BZINT() == 'WEYL'),
+      V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration', write_condition= lambda o: o._container.BZINT() == 'WEYL'),
       #expert
       V('CLUSTER', flag, expert=False, info="""Do cluster type calculation.""", description=
         "Cluster type calculation calculate τ by inverting the real space KKR matrix. "
@@ -99,17 +99,23 @@ ENERGY = Section('ENERGY',[
 SCF = Section('SCF', [
       V('NITER', 200, info='Maximal number of iterations of the SCF cycle'),
       V('MIX', 0.2, info='Mixing parameter'),
+      V('MIXOP', float, info='Mixing parameter'),
       V('VXC', DefKeyword({
         'VWN' : 'Vosko, Wilk, Nusair',
         'MJW' : 'Janak, Williams, Moruzzigit g',
         'VBH' : 'von Barth, Hedin',
-        'PBE' : 'Perdew, Burke, Ernzendorfer GGA'
+        'PBE' : 'Perdew, Burke, Ernzendorfer GGA',
+        'PW92' : 'Perdew Wang',
+        'EV-GGA' : 'Engel and Vosko GGA',
+        'BJ' : 'Becke-Johnson',
+        'MBJ' : 'modified Becke-Johnson'
+
         }), info='parametrisation of the exchange-correlation potential'),
       V('ALG', DefKeyword({
           'BROYDEN2': 'Broyden’s second method',
           'TCHEBY': 'Tchebychev'
         }), info='Mixing algorithm'),
-      V('EFGUESS', 0.7),
+      V('EFGUESS', float, required=False, info='Skip the Fermi energy search in the beginning.'),
       V('TOL', 0.00001, info='Tolerance threshold for the mixing algorithm'),
       V('ISTBRY', 1, info='Start Broyden after ISTBRY iterations'),
       V('FULLPOT', False, info='Non-spherical callculation (full-potential) instead of ASA'),
@@ -164,10 +170,12 @@ CPA = Section('CPA', [
 MODE = Section('MODE', [
   V('MODE',
     Keyword({
+    'NREL' : "work in the nonrelativistic mode",
     'SREL' : "work in the spin-polarized scalar-relativistic mode",
     'SP-SREL' : "work in the scalar-relativistic mode"}), None,
             required=False, name_in_grammar=False,
             info='Using this option you can switch on spin the polarization and relativistic mode'),
+  V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
   V('MDIR', [0,0,1], info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True),
   V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True),
   V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_numbered_array=True),

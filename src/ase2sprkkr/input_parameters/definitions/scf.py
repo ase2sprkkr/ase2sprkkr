@@ -8,7 +8,8 @@ from ..input_parameters_definitions import \
 input_parameters = InputParameters(
       'scf', [
         CONTROL('SCF').copy([
-          V('KRWS', 1)
+          V('KRWS', Integer(min=0, max=1), 1),
+          V('KRMT', Integer(min=0, max=6))
         ]),
         TAU,
         ENERGY,
