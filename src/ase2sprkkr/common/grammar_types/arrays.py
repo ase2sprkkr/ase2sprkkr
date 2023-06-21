@@ -423,7 +423,7 @@ class Table(GrammarType):
       names = self.names or itertools.repeat('')
       return list(zip(names, (i.numpy_type for i in types)))
 
-  def number_of_collumns(self):
+  def number_of_columns(self):
       return len(self.sequence.types)
 
   def zero_data(self, length):
@@ -434,7 +434,7 @@ class Table(GrammarType):
       if isinstance(dtype, list):
          return np.zeros(length, dtype)
       else:
-         return np.zeros((length, self.number_of_collumns()), dtype)
+         return np.zeros((length, self.number_of_columns()), dtype)
 
   def grammar_name(self):
       if self.names:
