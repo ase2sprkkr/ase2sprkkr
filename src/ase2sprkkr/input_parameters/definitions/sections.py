@@ -99,7 +99,7 @@ ENERGY = Section('ENERGY',[
 SCF = Section('SCF', [
       V('NITER', 200, info='Maximal number of iterations of the SCF cycle'),
       V('MIX', 0.2, info='Mixing parameter'),
-      V('MIXOP', float, info='Mixing parameter'),
+      V('MIXOP', float, required=False),
       V('VXC', DefKeyword({
         'VWN' : 'Vosko, Wilk, Nusair',
         'MJW' : 'Janak, Williams, Moruzzigit g',
