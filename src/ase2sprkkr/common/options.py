@@ -453,6 +453,15 @@ class Option(Configuration):
   def get_path(self):
       return self._get_path()
 
+  def __len__(self):
+      return len(self())
+
+  def __iter__(self):
+      return iter(self())
+
+  def __bool__(self):
+      return True
+
   def __repr__(self):
       if self._definition.is_generated:
          v = self()
