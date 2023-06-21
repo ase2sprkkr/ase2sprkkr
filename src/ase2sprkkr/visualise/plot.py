@@ -1,4 +1,5 @@
 """ In this file the general plotting routines are present. """
+import copy
 
 from matplotlib import rc_context
 import matplotlib.pyplot as plt
@@ -175,8 +176,15 @@ class PlotInfo:
       self.axes = axes
       self.method = method
 
-  def __call__(self, option, **kwargs):
+  def __add__(self, others):
+      if not isinstance(others, dict):
+          raise NotImplementedError("Only dict can be added to the PlotInfo")
+      out = copy.copy(self)
+      out.kwargs = copy.copy(out.kwargs)
+      out.kwargs.update(others)
+      return out
 
+  def __call__(self, option, **kwargs):
       values = option()
       tmp = self.kwargs.copy()
       tmp.update(kwargs)
