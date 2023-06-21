@@ -3,6 +3,7 @@ import copy
 
 from matplotlib import rc_context
 import matplotlib.pyplot as plt
+from matplotlib.colors import SymLogNorm, CenteredNorm, LogNorm, Normalize
 from typing import Optional, Callable
 import numpy as np
 import functools
@@ -117,17 +118,30 @@ def common_plot(title=None, xlabel=None, ylabel=None, xticklabels=None, yticklab
 
 
 @plotting_function
-@add_to_signature(common_plot, prepend=True)
-def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=False, axis=None, **kwargs):
+@add_to_signature(set_up_common_plot, prepend=True)
+def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=False, axis=None, mode=False, norm=None, vmax=None, **kwargs):
    """
    Plot 3D data by assigning colors to 2D grid. See matplotlib.pyplot.pcolormesh
    """
-   common_plot(**kwargs, axis=axis)
-   colormap = colormap or 'Blues'
+   set_up_common_plot(axis, **kwargs)
+   autonorm = False
+   if mode == 'centered':
+       if norm == 'log':
+           colormap = colormap or 'RdBu_r'
+           norm = SymLogNorm(linthresh=1e-12,vmax=vmax) #, vmin=c.min(), vmax=c.max())
+       elif norm =='lin':
+           colormap = colormap or 'seismic'
+           norm = CenteredNorm(vmax=vmax)
+   else:
+       colormap = colormap or 'BuPu'
+       if norm == 'log':
+           norm=LogNorm(vmin=1e-8, vmax=vmax)
+       elif norm=='lin':
+           norm=Normalize(vmin=0. if mode == 'from_zero' else None, vmax=vmax)
+
    axis.set_xlim(auto_range(xrange, x))
    axis.set_ylim(auto_range(yrange, y))
-   axis.pcolormesh(x,y,c,cmap=colormap,shading='gouraud',
-                 vmin=c.min(), vmax=c.max())
+   axis.pcolormesh(x,y,c,cmap=colormap,shading='gouraud', norm=norm)
    if show_zero_line:
        axis.plot(axis.get_xlim(),[0,0],color='black',lw=1)
 
