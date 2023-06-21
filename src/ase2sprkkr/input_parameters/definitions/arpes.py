@@ -40,8 +40,8 @@ input_parameters = InputParameters(
     ]),
 
     Section('SPEC_PH', [
-      V('THETA', 45.),
-      V('PHI', 0.),
+      V('THETA', Range(float), 45.),
+      V('PHI', Range(float), 0.),
       V('POL_P', DefKeyword('P', 'S', 'C+', 'C-'), info='Polarization of the light'),
       V('EPHOT', 6675., info='Photon energy in eV'),
       #Expert
