@@ -21,6 +21,8 @@ def plot():
   parser.add_argument('-o','--output_filename', dest='filename', type=str, help='The plot will be saved to a file with given name, instead of showing it on the screen', default=None, required=False)
   parser.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', default=True, help='Do not use LaTex for captions generating', required=False)
   parser.add_argument('-s','--plot_size', dest='figsize', default=(6,4), type=parse_tuple_function(float,2),   help='The plot size', required=False)
+  parser.add_argument('-c','--colormap', dest='colormap', type=str, help='Matplotlib colormap', required=False)
+  parser.add_argument('-n','--norm', dest='norm', choices=['lin', 'log'], help='Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)', required=False)
 
   args = parser.parse_args()
   kwargs = vars(args)
