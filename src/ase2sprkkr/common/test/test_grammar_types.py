@@ -67,8 +67,10 @@ class GrammarTest(TestCase):
 
     def test_invalid(val):
       try:
-        val = type.convert(val)
-        self.assertTrue(type.validate(val) is not True)
+        with warnings.catch_warnings():
+          warnings.simplefilter("ignore")
+          val = type.convert(val)
+          self.assertTrue(type.validate(val) is not True)
       except ValueError:
         pass
       else:

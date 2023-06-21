@@ -133,13 +133,15 @@ class Array(GrammarType):
        else:
           return list(value) if isinstance(value, tuple) else value
     if not isinstance(value, np.ndarray):
-       if self.type.numpy_type == object:
-          #https://stackoverflow.com/questions/60939396/forcing-a-creation-of-1d-numpy-array-from-a-list-array-of-possibly-iterable-obje
-          out = np.empty(len(value), object)
-          out[:] = value
-          return out
+       if not hasattr(value, '__iter__'):
+           value = [ value ]
+           ln=1
        else:
-          return np.atleast_1d(value)
+           ln=len(value)
+       value = [ self.type.convert(i) for i in value ]
+       out = np.asarray(value)
+       return out
+
     return value
 
   is_the_same_value = staticmethod(compare_numpy_values)
