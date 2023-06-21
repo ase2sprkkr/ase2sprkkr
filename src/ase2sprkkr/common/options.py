@@ -482,6 +482,7 @@ class Option(Configuration):
            o='out'
         v=''
       else:
+         o=''
          v=' = '+str(v)
 
       type = '(generated)' if self._definition.is_generated else f'of type {self._definition.type}'
