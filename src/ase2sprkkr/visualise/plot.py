@@ -7,6 +7,7 @@ from matplotlib.colors import SymLogNorm, CenteredNorm, LogNorm, Normalize
 from typing import Optional, Callable
 import numpy as np
 import functools
+
 from ..common.decorators import add_to_signature
 
 def normalize_rc_params(params):
@@ -48,6 +49,7 @@ def combined_colormap(range1=(0.5, 0), range2=(0.15, 1), n1=8000, n2=15000, cmap
     # Create the new colormap
     return combine_colormaps(cmap1, cmap2, n1, n2, range1, range2)
 
+
 def create_rc_context(latex:bool=True):
     """
     Create the context that sets defaults for plotting
@@ -82,6 +84,9 @@ def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[b
       finish_plot(filename, show, dpi)
 
 def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
+     """
+     Show the plot and/or save it to the given file
+     """
      if show is None:
         show=filename is None
      if show:
@@ -91,6 +96,16 @@ def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
 
 
 def auto_range(rng, data):
+    """
+    Fill the missing value in the given range by the data.
+
+    >>> auto_range( (None, None), [2,5,-3,7] )
+    (-3, 7)
+    >>> auto_range( (None, 4), [2,5,-3,7] )
+    (-3, 4)
+    >>> auto_range( (2, 4), [2,5,-3,7] )
+    (2, 4)
+    """
     if rng is None:
        return ( np.min(data), np.max(data) )
     return (
@@ -98,6 +113,15 @@ def auto_range(rng, data):
         data[1] if data[1] is not None else np.max(data),
         )
 def plotting_function(func):
+    """ Decorator, that 'completes' the given function that just draw into a
+    matplolib axis.
+    The completed function will have a few more arguments. One of them is
+    ``axis``. If it is given, the plot is just drawn to the axis. If not,
+    a plot is created, the function is called to draw into the plot, and
+    then the plot is either showed or saved, according to the rest of the added
+    arguments
+    """
+
     @add_to_signature(func)
     @functools.wraps(func)
     def plot_function(*args, filename=None, show=None, dpi=600, latex=True, axis=None, **kwargs):
@@ -107,8 +131,11 @@ def plotting_function(func):
            single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, *args, **kwargs)
     return plot_function
 
-def common_plot(title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, axis=None):
+def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None):
    l = locals()
+   """
+   This functions just set the properties of an matplotlib axis, that are common across various plots.
+   """
    args = { n: l[n]
             for n in ('xlabel', 'ylabel', 'xticklabels', 'yticklabels', 'title')
             if l[n] is not None }
@@ -147,6 +174,7 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
 
 
 class Multiplot:
+  """ This class can be used for plotting more plots into one resulting image/window. """
 
   def __init__(self, layout, figsize=(6,4), latex=True, updown_layout=False):
       self.fig, self.axes = plt.subplots(figsize=(6,4), nrows=layout[0], ncols=layout[1])
