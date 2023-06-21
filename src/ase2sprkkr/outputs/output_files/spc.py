@@ -43,7 +43,9 @@ def create_definition():
                 ('ENERGY', r'$E-E_{\rm F}$ (eV)')),
         #axes = ('K', 'ENERGY' ),
         show_zero_line = True,
-        colormap = combined_colormap()
+        mode = 'from_zero',
+        norm='log',
+        vmax = PlotValue( lambda o: o._container.TOTAL().max() )
     )
     def i(j):
         return slice(None),j
@@ -58,8 +60,14 @@ def create_definition():
       NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=pi),
       NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=pi),
       NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=pi),
-      NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization', plot=pi),
-      NV('K', 'RAW_DATA', i(6), ('NE', 'NT'), 'K_parallel (pi/A)'),
+      NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization',
+         plot=pi + {
+           'mode' : 'zero_centered',
+           'norm' : 'lin',
+           'vmax' : None
+         },
+        ),
+      NV('K', 'RAW_DATA', i(6), ('NE', 'NT'), info='K_parallel (pi/A)'),
       NV('DETERMINANT', 'RAW_DATA', i(7), ('NE', 'NT')),
     ], cls=ARPESDefinition)
     return definition
