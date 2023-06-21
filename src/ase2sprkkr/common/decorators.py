@@ -4,6 +4,7 @@ import itertools
 import inspect
 import heapq
 import asyncio
+import warnings
 
 if hasattr(functools,'cache'):
    cache = functools.cache
@@ -309,5 +310,22 @@ def add_called_class_as_argument(decorator):
     def wrapper(function):
         function = decorator(function)
         return AddCalledClassAsArgument(function)
+
+    return wrapper
+
+def warnings_from_here(stacklevel=1):
+    stacklevel+=1
+
+    def wrapper(func):
+
+       @functools.wraps(func)
+       def wrapped(*args, **kwargs):
+           with warnings.catch_warnings(record = True) as warning_list:
+               result = func(*args, **kwargs)
+           for warning in warning_list:
+               warnings.warn(warning.message, warning.category, stacklevel =stacklevel)
+           return result
+
+       return wrapped
 
     return wrapper

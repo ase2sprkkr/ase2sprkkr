@@ -6,6 +6,7 @@ from typing import Union
 from ..common.grammar_types import mixed
 from .configuration import Configuration
 from ..common.misc import as_integer
+from .decorators import warnings_from_here
 
 class DangerousValue:
   """ This class is used to store (encapsulate) a value, which should not be validated
@@ -144,6 +145,7 @@ class Option(Configuration):
       """
       return self._definition.get_value(self)
 
+  @warnings_from_here(stacklevel=2)
   def set(self, value, *, unknown=None, error=None):
       """
       Set the value of the option.

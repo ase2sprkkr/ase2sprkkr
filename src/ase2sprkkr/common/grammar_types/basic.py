@@ -5,6 +5,7 @@ import datetime
 import pyparsing as pp
 ppc = pp.pyparsing_common
 from typing import  Optional
+import numpy as np
 
 from ..decorators import add_to_signature
 from ..grammar import generate_grammar, separator as separator_grammar, \
@@ -37,6 +38,7 @@ class Number(TypedGrammarType):
       if self.max is not None and self.max < value:
          return f"A value less than or equal to {self.max} is required, {value} have been given."
       return True
+
 class Unsigned(Number):
   """ Unsigned integer (zero is possible) """
 
@@ -123,6 +125,15 @@ class Real(Number):
 
   numpy_type = float
 
+  def convert(self, value):
+      if isinstance(value, (int, np.integer)):
+          from .warnings import SuspiciousValueWarning
+          SuspiciousValueWarning(value, 'An attemtp to set <float> value using an <integer>. I will do a conversion for you.').warn(
+              stacklevel=6
+              )
+          value=float(value)
+
+      return super().convert(value)
 
 class Date(Number):
   """ A date value of the form 'DD.MM.YYYY' """
