@@ -101,7 +101,7 @@ class Option(Configuration):
       not explicitly specified) is returned.
       """
       if self._definition.is_generated:
-         return self._definition.getter(self)
+         return self._definition.getter(self._container)
 
       value = self._unpack_value(self._value)
       if value is not None:
@@ -162,7 +162,7 @@ class Option(Configuration):
       error:
       """
       if self._definition.is_generated:
-          return self._definition.setter(self, value)
+          return self._definition.setter(self._container, value)
 
       if value is None:
           try:
@@ -199,7 +199,7 @@ class Option(Configuration):
   def __setitem__(self, name, value):
       """ Set an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
       if self._definition.is_generated:
-          self._definition.setter(self, value, name)
+          self._definition.setter(self._container, value, name)
           return
 
       self._check_array_access()
@@ -243,8 +243,7 @@ class Option(Configuration):
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
       if self._definition.is_generated:
-          self._definition.getter(self, name)
-          return
+          return self._definition.getter(self._container, name)
       self._check_array_access()
       if not self._definition.is_numbered_array:
           return self()[name]
@@ -327,7 +326,7 @@ class Option(Configuration):
       if self._definition.is_generated:
           if not generated:
              return
-          self._definition.setter(self, None)
+          self._definition.setter(self._container, None)
       else:
           if not self._definition.type.has_value:
              return
