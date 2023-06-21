@@ -72,6 +72,25 @@ class TestInputParameters(TestCase):
      assertParseDangerous("aaa=sss", ('aaa', 'sss'))
      assertParseDangerous("aaa={2,3}", ('aaa', np.array([2,3])))
 
+  def test_write_condition(self):
+    V = cd.InputValueDefinition
+
+    input_parameters_def = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('E', 1)
+      ]})
+    del input_parameters_def._members['TASK']
+    id=input_parameters_def.read_from_file(io.StringIO('ENERGY E=1'))
+    self.assertEqual(id.to_string(), "ENERGY\n\tE=1\n")
+    input_parameters_def['ENERGY']['E'].write_condition = lambda o: True
+    self.assertEqual(id.to_string(), "ENERGY\n\tE=1\n")
+    input_parameters_def['ENERGY']['E'].write_condition = lambda o: False
+    self.assertEqual(id.to_string(), "ENERGY\n")
+    input_parameters_def['ENERGY'].write_condition = lambda o: True
+    self.assertEqual(id.to_string(), "ENERGY\n")
+    input_parameters_def['ENERGY'].write_condition = lambda o: False
+    self.assertEqual(id.to_string(), "")
+
   def test_input_parameters_definition(self):
     V = cd.InputValueDefinition
 

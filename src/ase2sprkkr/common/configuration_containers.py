@@ -452,6 +452,9 @@ class BaseSection(ConfigurationContainer):
         If any value have been written return True, otherwise return False.
       """
       d = self._definition
+      if d.write_condition and not d.write_condition(self):
+         return
+
       if d.is_expert:
           if not self.is_changed():
               return False
@@ -521,12 +524,16 @@ class RootConfigurationContainer(ConfigurationContainer):
 
   def _save_to_file(self, file):
       """ Implementation of the saving the configuration """
+      d = self._definition
+      if d.write_condition and not d.write_condition(self):
+         return
+
       it = iter(self)
       i = next(it)
       if i:
         i._save_to_file(file)
         for i in it:
-          file.write(self._definition.delimiter)
+          file.write(d.delimiter)
           i._save_to_file(file)
 
   def read_from_file(self, file, clear_first:bool=True, allow_dangerous:bool=False):

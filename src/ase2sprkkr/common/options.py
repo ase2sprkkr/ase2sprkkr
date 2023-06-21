@@ -351,6 +351,8 @@ class Option(Configuration):
       d = self._definition
       if d.is_generated:
          return
+      if d.write_condition and not d.write_condition(self):
+         return
 
       if not d.type.has_value:
          return d.write(file, None)
