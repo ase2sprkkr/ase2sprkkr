@@ -201,7 +201,7 @@ class PlotInfo:
   def __call__(self, option, **kwargs):
       values = option()
       tmp = self.kwargs.copy()
-      tmp.update(kwargs)
+      tmp.update( (k,v) for k,v in kwargs.items() if v is not None )
       kwargs = tmp
       if 'args' in kwargs and option.name in kwargs['args']:
          kwargs.update(kwargs['args'][option.name])
