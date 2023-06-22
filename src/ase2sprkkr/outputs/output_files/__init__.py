@@ -94,7 +94,7 @@ class CommonOutputFile(ConfigurationFile):
         type = self.site_type_index(type)
         return self.ORBITALS[self.TYPES[type]['IQAT'][0]]
 
-class Arithmetic(ConfigurationFile):
+class Arithmetic:
 
     def _check_arithmetic(self, other):
         pass
