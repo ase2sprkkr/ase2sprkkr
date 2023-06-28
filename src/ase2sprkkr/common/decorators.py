@@ -84,7 +84,7 @@ else:
             value = obj.__dict__[self.func.__name__] = self.func(obj)
             return value
 
-        def __set_name__(self, name):
+        def __set_name__(self, owner, name):
             self.attrname = name
 
         def _wrap_in_coroutine(self, obj):
