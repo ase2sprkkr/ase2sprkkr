@@ -111,3 +111,52 @@ class CommonTest(TestCase):
       self.assertAsyncEqual(b" 12345123456", ar.readuntil(b'123456'))
       with self.assertRaises(asyncio.IncompleteReadError):
         self.runAsync(ar.readuntil(b'123456'))
+
+  def test_cached_property(self):
+      from ..decorators import cached_property
+      class A():
+        u = 1
+        @cached_property
+        def a(self):
+            self.__class__.u+=1
+            return self.__class__.u
+      a=A()
+      self.assertEqual(2, a.a)
+      self.assertEqual(2, a.a)
+      a.a=5
+      self.assertEqual(5, a.a)
+      self.assertEqual(5, a.a)
+      del a.a
+      self.assertEqual(3, a.a)
+      self.assertEqual(3, a.a)
+      a=A()
+      self.assertEqual(4, a.a)
+      self.assertEqual(4, a.a)
+
+      class A():
+        u = 1
+        @cached_property
+        def a(self):
+            self.__class__.u+=1
+            return self.__class__.u
+
+        @a.setter
+        def a(self, value):
+            self.__dict__['a'] = value + 10
+
+        @a.deleter
+        def a(self):
+            self.__dict__['a'] = 25
+
+      a=A()
+      self.assertEqual(2, a.a)
+      self.assertEqual(2, a.a)
+      a.a=5
+      self.assertEqual(15, a.a)
+      self.assertEqual(15, a.a)
+      del a.a
+      self.assertEqual(25, a.a)
+      self.assertEqual(25, a.a)
+      a=A()
+      self.assertEqual(3, a.a)
+      self.assertEqual(3, a.a)

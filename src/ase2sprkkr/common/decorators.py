@@ -55,7 +55,7 @@ class cached_class_property:
 
 
 if hasattr(functools, 'cached_property'):
-    cached_property = functools.cached_property
+    std_cached_property = functools.cached_property
     """ Functools.cached_property decorator - the value is computed only once and then stored as an (same-name) instance attribute.
     You can delete the attribute to invalidate the cache.
 
@@ -63,7 +63,7 @@ if hasattr(functools, 'cached_property'):
     """
 else:
     #https://github.com/pydanny/cached-property/blob/master/cached_property.py
-    class cached_property(object):
+    class std_cached_property(object):
         """
         A property that is only computed once per instance and then replaces itself
         with an ordinary attribute. Deleting the attribute resets the property.
@@ -84,6 +84,9 @@ else:
             value = obj.__dict__[self.func.__name__] = self.func(obj)
             return value
 
+        def __set_name__(self, name):
+            self.attrname = name
+
         def _wrap_in_coroutine(self, obj):
             @wraps(obj)
             @asyncio.coroutine
@@ -93,6 +96,34 @@ else:
                 return future
 
             return wrapper()
+
+class cached_property(std_cached_property):
+   """ Cached property, that allows setter and deleter """
+
+   def __init__(self, func, fset=None, fdel=None):
+        super().__init__(func)
+        self.fset = fset
+        self.fdel = fdel
+
+   def __set__(self, obj, value):
+        if self.fset:
+           self.fset(obj, value)
+        else:
+           obj.__dict__[self.attrname] = value
+
+   def __delete__(self, obj):
+        if self.fdel:
+           self.fdel(obj)
+        else:
+           del obj.__dict__[self.attrname]
+
+   def setter(self, fset):
+        return type(self)(self.func, fset, self.fdel)
+
+   def deleter(self, fdel):
+        return type(self)(self.func, self.fset, fdel)
+
+
 
 class class_property:
     """
