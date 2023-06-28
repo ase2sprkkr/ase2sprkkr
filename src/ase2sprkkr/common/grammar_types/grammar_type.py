@@ -503,6 +503,8 @@ def type_from_value(value, type_map={}):
         return String.I
      except Exception:
         return QString.I
+  if isinstance(value, dict):
+      return grammar_types.Keyword(value)
   type = type_from_type(value.__class__, type_map=type_map)
   if type is value.__class__:
      raise ValueError(f'Cannot determine grammar type from value {value}')

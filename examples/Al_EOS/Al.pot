@@ -1,0 +1,72 @@
+*******************************************************************************
+HEADER      	SPR-KKR potential file, created at 2023-06-18 23:13:30.375437
+*******************************************************************************
+TITLE       	Created by ASE-SPR-KKR wrapper
+SYSTEM      	System: Al
+PACKAGE     	SPR-KKR
+FORMAT      	 7 (21.05.2007)
+*******************************************************************************
+GLOBAL SYSTEM PARAMETER
+NQ          	1
+NT          	1
+NM          	1
+IREL        	3
+*******************************************************************************
+SCF-INFO
+INFO        	NONE
+SCFSTATUS   	START
+FULLPOT     	F
+BREITINT    	F
+NONMAG      	F
+ORBPOL      	NONE
+EXTFIELD    	F
+BLCOUPL     	F
+BEXT        	0.0
+SEMICORE    	F
+LLOYD       	F
+SCF-ITER    	0
+SCF-MIX     	0.2
+SCF-TOL     	1e-05
+RMSAVV      	999999.0
+RMSAVB      	999999.0
+EF          	999999.0
+VMTZ        	0.7
+*******************************************************************************
+LATTICE
+SYSDIM      	3D
+SYSTYPE     	BULK
+BRAVAIS     	 13 cubic face-centered m3m O_h
+ALAT        	6.047123602678171
+A(1)                    0.0 0.49999999999999994 0.49999999999999994
+A(2)       0.49999999999999994              0.0 0.49999999999999994
+A(3)       0.49999999999999994 0.49999999999999994              0.0
+*******************************************************************************
+SITES
+CARTESIAN   	T
+BASSCALE    	1.0 1.0 1.0
+IQ            QBAS(X)          QBAS(Y)          QBAS(Z)
+1                 0.0              0.0              0.0
+*******************************************************************************
+OCCUPATION
+IQ              IREFQ              IMQ              NOQ        ITOQ CONC
+1                   1                1                1            1 1.0
+*******************************************************************************
+REFERENCE SYSTEM
+NREF        	1
+IREF             VREF           RMTREF
+1                 4.0              0.0
+*******************************************************************************
+MAGNETISATION DIRECTION
+KMROT       	0
+QMVEC       	0.0 0.0 0.0
+IQ             MTET_Q           MPHI_Q
+1                 0.0              0.0
+*******************************************************************************
+MESH INFORMATION
+MESH-TYPE   	EXPONENTIAL
+   IM                  R(1)                    DX             JRMT                   RMT             JRWS                   RWS
+    1 9.9999999999999995e-07                  0.02                0                   0.0              721                   0.0
+*******************************************************************************
+TYPES
+IT                TXT               ZT            NCORT            NVALT      NSEMCORSHLT
+1                  Al               13               10                3                0
