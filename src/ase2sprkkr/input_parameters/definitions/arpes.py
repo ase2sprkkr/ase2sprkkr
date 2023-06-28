@@ -40,8 +40,8 @@ input_parameters = InputParameters(
     ]),
 
     Section('SPEC_PH', [
-      V('THETA', Range(float), 45.),
-      V('PHI', Range(float), 0.),
+      V('THETA', 45., info='Direction of the photon (the polar coordinate)'),
+      V('PHI', 0., info='Direction of the photon (the azimuth coordinate)'),
       V('POL_P', DefKeyword('P', 'S', 'C+', 'C-'), info='Polarization of the light'),
       V('EPHOT', 6675., info='Photon energy in eV'),
       #Expert
@@ -68,13 +68,13 @@ input_parameters = InputParameters(
           1: 'variable'
           }), is_expert=True, required=False, info='Photon azimuth angle type'),
       V('THETA_FIX', float, is_expert=True, info='Light and electrons are at fixed polarization angle')
-    ]),
+    ], info=''),
 
     Section('SPEC_EL', [
-      V('THETA', Range(float), 45., info='Scattering angle'),
-      V('PHI', Range(float), 0., info='Scattering angle'),
-      V('NT', 1, info='Number of angular values for a rotation in polar coordinate.'),
-      V('NP', 1, info='Number of angular values for a rotation in azimuth coordinate.'),
+      V('THETA', Range(float), 45., info='(A range of) scattering angle(s) (the azimuth coordinate)'),
+      V('PHI', Range(float), 0., info='(A range of) scattering angle(s) (the polar coordinate)'),
+      V('NT', 1, info='Number of angular values for a rotation in the polar coordinate.'),
+      V('NP', 1, info='Number of angular values for a rotation in the azimuth coordinate.'),
       V('POL_E', DefKeyword('PZ')),
       V('SPOL', int, required=False),
       V('PSPIN', SetOf(float, length=3), required=False),
