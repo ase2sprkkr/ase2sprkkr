@@ -182,6 +182,11 @@ class Multiplot:
       self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
       self.free_axes = [ i for i in self.free_axes[::-1] ]
 
+  def __iter__(self):
+      axis = self.free_axes.pop()
+      while axis:
+          yield axis
+          axis = self.free_axes.pop()
 
   def plot(self, option, plot_info=None, **kwargs):
       if not plot_info:
