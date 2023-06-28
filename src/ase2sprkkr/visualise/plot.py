@@ -205,6 +205,8 @@ class Multiplot:
       dpi
         Dpi for generated plot
       """
+      for i in self.free_axes:
+          i.set_visible(False)
       finish_plot(filename, show, dpi)
 
 class PlotInfo:
