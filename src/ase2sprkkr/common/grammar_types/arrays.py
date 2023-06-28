@@ -298,9 +298,10 @@ class Table(GrammarType):
                      row_condition=None, flatten=False,
                      default_values=False,
                      named_result = False, **kwargs):
-      super().__init__(prefix=None, postfix=None)
       if columns is None:
          columns = kwargs
+         kwargs = {}
+      super().__init__(prefix=None, postfix=None, **kwargs)
       if isinstance(columns, dict):
          self.names = list(columns.keys())
          columns = columns.values()
