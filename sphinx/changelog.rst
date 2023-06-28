@@ -81,6 +81,9 @@ User interface
 * Gilbert TASK added (experimental, not tested)
 * input_parameters.change_task method fixed
 * [] access to array options/values (no need for VARIABLE()[] notation)
+* Numbered arrays (e.g. CONTROL.MDIR) can be set using arrays
+* Better formating of input parameters
+* Some minor tweaks and corrections of input parameters
 
 Internals
 ~~~~~~~~~
