@@ -129,7 +129,7 @@ class LatticeSectionDefinition(PotSectionDefinition):
           V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = (i.xband_data() for i in Pearson.pearsons.values()))),
           V('ALAT', float),
           #Keywords and thus the numbering has just (or at least) 10 char long
-          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', after_format='<10'),length=3)),
+          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', after_format='<10'),length=3, format='>22.14f')),
           V('NQ_L', int, is_optional=True),
           V('A_L(3)', Array(float, length=3, format='<10'), is_optional=True),
           V('NQ_R', int, is_optional=True),

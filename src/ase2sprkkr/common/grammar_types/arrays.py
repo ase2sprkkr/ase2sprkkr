@@ -292,7 +292,7 @@ class Table(GrammarType):
 
   def __init__(self, columns=None,
                      header=None, free_header=False,
-                     format = {float: '>21.17', None: '>16'}, format_all=True,
+                     format = {float: '>22.14', None: '>16'}, format_all=True,
                      numbering=None, numbering_label=None, numbering_format=True,
                      prefix=None, postfix=None, length=None,
                      row_condition=None, flatten=False,
