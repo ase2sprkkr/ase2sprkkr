@@ -356,6 +356,9 @@ XSITES NR=3 FLAG
     ip=input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
     self.assertEqual(0.5, ip.ENERGY.Ime())
     self.assertEqual(0.8, ip.ENERGY.Ime[5])
+    self.assertEqual([0.4,0.5,0.5,0.5,0.8], ip.ENERGY.Ime[:])
+    self.assertEqual({1: 0.4, 5: 0.8, 'def': 0.5}, ip.ENERGY.Ime.as_dict());
+    self.assertEqual({1: 0.4, 5: 0.8, 'def': 0.5}, ip.ENERGY.Ime(all_values=True))
     ip.ENERGY.Ime[1] = 0.7
     ip.ENERGY.Ime[9] = 0.9
     self.assertEqual('ENERGY GRID={3} NE={1} Ime=0.5 Ime1=0.7 Ime5=0.8 Ime9=0.9', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
@@ -373,6 +376,13 @@ XSITES NR=3 FLAG
     def e():
        ip.ENERGY.Ime['5']=1
     self.assertRaises(KeyError, e)
+    self.assertEqual([0.3,0.2,0.3], ip.ENERGY.Ime[[1,5,9]])
+    ip.ENERGY.Ime = { 3: 5., 'def': 3.}
+    self.assertEqual([3.,3.,5.], ip.ENERGY.Ime[:])
+    ip.ENERGY.Ime[2:5] = [ 2., 3., 8.]
+    self.assertEqual([3.,2.,3.,8.], ip.ENERGY.Ime[:])
+    ip.ENERGY.Ime[1:3] = 7.
+    self.assertEqual([7.,7.,3.,8.], ip.ENERGY.Ime[:])
 
     ip=input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
     with pytest.raises(ValueError):

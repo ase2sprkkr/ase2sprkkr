@@ -176,7 +176,11 @@ class Option(Configuration):
            for k,v in value.items():
                self._set_item(k, v, error)
         else:
-           self._set_item('def', value, error)
+           try:
+               self._set_item('def', value, error)
+           except ValueError:
+               for i,v in enumerate(value):
+                  self._set_item(i+1, v)
       else:
          try:
              self._value = self._pack_value(value)
@@ -212,10 +216,18 @@ class Option(Configuration):
             for n in name:
               self._set_item(n, value)
         elif isinstance(name, slice):
-           if slice.stop is None:
-               raise KeyError("To get/set values in a numbered array using slice, you have to specify the end index of the slice")
-           for n in range(name.stop)[name]:
-               self._set_item(n, value)
+           try:
+              cnt = len(value)
+              step = name.step or 1
+              start = name.start or 1
+              stop = name.stop or start + step * cnt
+              for i,v in zip(range(start,stop,step), value):
+                  self._set_item(i, v)
+           except (TypeError, ValueError):
+              if slice.stop is None:
+                 raise KeyError("To get/set values in a numbered array using slice with one value, you have to specify the end index of the slice")
+              for n in range(name.start or 1, name.stop, name.step or 1):
+                 self._set_item(n, value)
         else:
            self._set_item(name, value)
       self._post_set()
@@ -229,6 +241,8 @@ class Option(Configuration):
             name = as_integer(name)
          except TypeError as e:
             raise KeyError('Numbered array indexes can be only integers, lists or slices') from e
+         if name < 1:
+            raise KeyError('Numbered array indexes has to be greater than zero')
 
       if value is None:
          del self._value[name]
@@ -251,9 +265,16 @@ class Option(Configuration):
       if isinstance(name, (list, tuple)):
           return [ self._getitem(n) for n in name ]
       elif isinstance(name, slice):
-         if slice.stop is None:
-             raise KeyError("To get/set values in a numbered array using slice, you have to specify the end index of the slice")
-         return [ self._getitem(n) for n in range(name.stop)[name] ]
+         if name.stop is None:
+            if self._value is None:
+               stop = 2
+            else:
+               try:
+                  stop = max( i for i in self._value if i != 'def' ) + 1
+               except ValueError:
+                  stop = 2
+            name = slice(max(1, name.start or 1), stop, name.step)
+         return [ self._getitem(n) for n in range(name.start, name.stop, name.step or 1) ]
       return self._getitem(name)
 
   def _getitem(self, name):
@@ -263,7 +284,15 @@ class Option(Configuration):
             name = as_integer(name)
          except TypeError as e:
             raise KeyError('Numbered array indexes can be only integers, lists or slices') from e
-      return None if self._value is None else self._unpack_value(self._value.get(name, self.default_value))
+      if self._value is None:
+          return self.default_value
+      if name in self._value:
+          out = self._value[name]
+      elif 'def' in self._value:
+          out = self._value['def']
+      else:
+          return self.default_value
+      return self._unpack_value(out)
 
   def _unpack_value(self, value):
       """ Unpack potentionally dangerous values. """
