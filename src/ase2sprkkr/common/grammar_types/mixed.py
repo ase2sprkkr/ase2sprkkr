@@ -42,6 +42,13 @@ class BaseMixed(GrammarType):
           return 'Can not determine the type of value {}'.format(value)
       return type.validate(value, why)
 
+  def write(self, f, val):
+      """ Output the value to the stream (in the propper format). """
+      type = self.get_type(val)
+      if type is val:
+          return super().write(f, val)
+      type.write(f, val)
+
   def grammar_name(self):
       return '<mixed>'
 
@@ -70,6 +77,7 @@ class Range(BaseMixed):
 
   def get_type(self, value):
       return self.types[1 if isinstance(value, recognized_set_types) else 0]
+
 
 
 class Mixed(BaseMixed):
