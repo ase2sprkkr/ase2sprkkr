@@ -301,20 +301,6 @@ class ConfigurationContainer(Configuration):
               out[i.name] = value
       return out or None
 
-  def to_string(self):
-      """
-      Return the configuration (problem definition) in a string.
-
-      Returns
-      -------
-      configuration:str
-      The configuration, as it should be saved in a configuration/problem definition file.
-      """
-      from io import StringIO
-      s = StringIO()
-      self._save_to_file(s)
-      return s.getvalue()
-
   def _find_value(self, name):
       """
       Find a value of a given name in self or in any

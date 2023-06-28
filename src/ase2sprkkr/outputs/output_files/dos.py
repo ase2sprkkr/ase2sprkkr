@@ -1,44 +1,144 @@
 from ..output_files_definitions import OutputFileValueDefinition as V, create_output_file_definition, OutputFileDefinition
 from typing import Optional
 import numpy as np
+import matplotlib.pyplot as plt
 
-from ..output_files import CommonOutputFile
+from ..output_files import CommonOutputFile, Arithmetic
 from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray
 from ...common.generated_configuration_definitions import \
     NumpyViewDefinition as NV, \
     GeneratedValueDefinition as GV
 from ...visualise.plot import PlotInfo, combined_colormap, Multiplot
 
+import scipy.constants
+Ry = 0.5*scipy.constants.value('Hartree energy in eV')
 
-class DOS:
-    def __init__(self, id, type, spin, l, dos):
-        """ Object, that holds DOS for one atom 
+class DOS(Arithmetic):
+
+    def __init__(self, energy, dos, type=None, id=None, spin=None, l=None):
+        """ Object, that holds DOS for one atom
         (given type and corresponding id id DOS file)
         spin, l (s,p,d,f...) """
         self.id = id
         self.type = type
+        self.energy = energy
+
         self.spin = spin
         self.l = l
         self.dos = dos
 
+    @property
+    def shape(self):
+        return self.dos.shape
+
+    def __getitem__(self, key):
+        return self.dos[key]
+
+    def plot(self, axis=None, legend_ncols=1, legend_height=0.3, legend_fontsize=10, **kwargs):
+        axis.set_xlabel(r'$E-E_{\rm F}$ (eV)')
+        axis.set_ylabel(r'DOS')
+
+        title = []
+        if self.type:
+           title=[ self.type ]
+        if self.spin is not None:
+           title.append('spin {}'.format({0:'up', 1:'down'}.get(self.spin, self.spin)))
+        if self.l is not None:
+           orbital = {0:'s',1:'p', 2:'d', 3: 'f'}.get(self.l, None)
+           title.append(orbital + 'orbitals' if orbital else self.l)
+        if title:
+           axis.title.set_text(', '.join(title))
+
+        params = {
+            's': { 'color': 'blue' },
+            'p': { 'color': 'green' },
+            'd': { 'color': 'orange' },
+            'f': { 'color': 'cyan' },
+            'total' : {'color': 'black' }
+        }
+
+        def plot_l(data, spin, l):
+            i = l if l in params else 'total'
+            args =  params[i]
+            line, = axis.plot(self.energy, data, label=l, **args)
+            return line
+
+        def plot_spin(data, spin, legend):
+            if spin == -1:
+               data = data * spin
+            if self.l is not None:
+               handles = [ plot_l(data, spin, self.l) ]
+            else:
+               handles = [
+                   plot_l(d, spin, l)
+                          for d,l in zip(data, ('s','p','d','f'))
+                   ]
+               if len(handles):
+                 handles.append(
+                   plot_l(np.sum(data, axis=0), spin, 'total')
+                 )
+            if legend and not self.l:
+               axis.legend(handles=handles,loc='best',fontsize=legend_fontsize, ncols=legend_ncols, handleheight=legend_height)
+
+        if self.spin is not None:
+           plot_spin(self.dos, self.spin or 1, True)
+        else:
+           legend=True
+           for d,s in zip(self.dos, (1,-1)):
+               plot_spin(d,s, legend=legend)
+               legend=False
+
+    def _do_arithmetic(self, func, other):
+        getattr(self.dos, func)(other.dos)
+        self.id = None
+        self.type = None
+
+    def _check_arithmetic(self, other):
+        assert np.allclose(self.energy, other.energy)
+
+
+    def __repr__(self):
+        if self.type:
+           return f'<DOS of {self.type}>'
+        else:
+           return '<DOS>'
+
+
 class DOSOutputFile(CommonOutputFile):
 
-    def plot(self, layout=(2,None), figsize=(6,4), latex=True,
+    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=True,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
+        if isinstance(layout, int):
+          layout = ( (self.n_types()-1) // layout +1, layout)
         mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
-        mp.plot(self.TOTAL, **kwargs)
-        mp.plot(self.UP, **kwargs)
-        mp.plot(self.DOWN, **kwargs)
-        mp.plot(self.POLARIZATION, **kwargs)
+        plt.subplots_adjust(left=0.12,right=0.95,bottom=0.1,top=0.9, hspace=0.6, wspace=0.4)
+        for dos, axis in zip(self.iterate_site_types(spin, l), mp):
+            dos.plot(axis)
         mp.finish(filename, show, dpi)
 
-    def iterate_dos(self):
-        for id, t in self.TYPES():
-            id =1
+    def __iter__(self):
+        return self.iterate_site_types()
 
-    def dos_for_site_type_index(self, atom):
+    @staticmethod
+    def _resolve_spin(spin):
+        if isinstance(spin, str):
+            return {'up': 0, 'down':1}[spin.lower()]
+        return spin
+
+    def iterate_site_types(self, spin=None, l=None):
+        spin = self._resolve_spin(spin)
+        spins = self.n_spins()
+        c=0
+
+        for i,t in enumerate(self.TYPES()):
+            s=c
+            orbitals=self.ORBITALS[t['IQAT'][0]]
+            c+=orbitals*spins
+            yield self._create_dos( slice(s,c), i, spin, l)
+
+    def index_of_dos_for_site_type(self, atom):
         """ Return slice to the DOS array selecting the datas for a given site type """
         if isinstance(atom, str):
             atom=self.site_type_index(atom)
@@ -46,35 +146,34 @@ class DOSOutputFile(CommonOutputFile):
         c=0
         for i,t in enumerate(self.TYPES()):
             s=c
-            c+=self.ORBITALS[t['IQAT'][0]]*spins
+            orbitals=self.ORBITALS[t['IQAT'][0]]
+            c+=orbitals*spins
             if i==atom:
                return slice(s,c)
 
     def dos_for_site_type(self, atom, spin=None, l=None):
         """ Return density of states for a given atom,
         indexed either by integer index, or a string type.
-        
-        The resulting array is indexed by: [spin, l, energy], however,
+
+        The resulting array is indexed by: [l, spin, energy], however,
         it can be restricted to given spin and/or l by arguments.
         """
+        spin = self._resolve_spin(spin)
         if isinstance(atom, str):
             atom=self.site_type_index(atom)
-        key = self.dos_for_site_type_index(atom)
-        out = self.DOS[key]
-        out = out.reshape((-1, self.ORBITALS[self.TYPES[atom]['IQAT'][0]], out.shape[1]))
-        out = np.moveaxis(out, 1, 0)
-        if spin is not None:
-           out=out[:,spin]
-        if l is not None:
-           out=out[l] 
-        return out
+        key = self.index_of_dos_for_site_type(atom)
+        return self._create_dos(key, atom, spin, l)
 
-    def _check_arithmetic(self, other):
-        try:
-            assert np.allclose(other.ENERGY(), self.ENERGY())
-            assert np.allclose(other.THETA(), self.THETA())
-        except AssertionError:
-            raise ValueError("The outputs are not compatible to summed/subtracted.");
+    def _create_dos(self, key, id, spin=None, l=None):
+        type = self.TYPES[id]['TXT_T']
+        out = self.DOS[key]
+        out = out.reshape((-1, self.ORBITALS[self.TYPES[id]['IQAT'][0]], out.shape[1]))
+        #out = np.moveaxis(out, 1, 0)
+        if l is not None:
+           out=out[:,l]
+        if spin is not None:
+           out=out[spin]
+        return DOS( (self.ENERGY() - self.EFERMI())*Ry, out / Ry, type, id, spin, l)
 
     def n_spins(self):
         return len(self.DOS()) // sum( (t['IQAT'][0] for t in self.TYPES()) )
@@ -110,7 +209,7 @@ def create_definition():
       NV('Y', 'RAW_DATA', i(1), info='Y'),
       NV('DOS', 'RAW_DATA', i(slice(2,None)), ('NE', -1),
                 transpose=True,
-                transform_key= lambda k,dos: dos.dos_for_site_type_index(k)\
+                transform_key= lambda k,dos: dos.index_of_dos_for_site_type(k)\
                                              if isinstance(k, str) else k,
                 info='Desntity of states', description=
                 "Density of states, the leading dimension iterates: "

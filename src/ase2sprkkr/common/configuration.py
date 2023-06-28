@@ -152,4 +152,20 @@ class Configuration:
          file.flush()
       return out
 
+  def to_string(self):
+      """
+      Return the configuration (problem definition) in a string.
+
+      Returns
+      -------
+      configuration:str
+      The configuration, as it should be saved in a configuration/problem definition file.
+      """
+      from io import StringIO
+      s = StringIO()
+      self._save_to_file(s)
+      return s.getvalue()
+
+
+
 _help_warning_printed=False
