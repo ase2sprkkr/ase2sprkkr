@@ -9,6 +9,9 @@ from os.path import dirname, join as path_join, isfile
 import os.path
 from ..output_files import OutputFile
 
+import scipy.constants
+Ry = 0.5*scipy.constants.value('Hartree energy in eV')
+
 class TestOutput(TestCase):
 
   def test_output(self):
@@ -29,5 +32,5 @@ class TestOutput(TestCase):
             if ext=='dos':
                self.assertEqual(out.n_orbitals(1), 3)
                self.assertEqual(out.n_spins(), 2)
-               self.assertEqual((3,2,1200), out.dos_for_site_type('Ta').shape)
-               self.assertEqual(out.DOS['Ta'][5], out.dos_for_site_type('Ta',1,2))
+               self.assertEqual((2,3,1200), out.dos_for_site_type('Ta').shape)
+               self.assertEqual(out.DOS['Ta'][5] / Ry, out.dos_for_site_type('Ta',1,2)[:])

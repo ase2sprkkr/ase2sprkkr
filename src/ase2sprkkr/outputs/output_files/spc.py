@@ -6,6 +6,7 @@ from ..output_files import Arithmetic, CommonOutputFile
 from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
 from ...visualise.plot import PlotInfo, combined_colormap, Multiplot, PlotValue
+import matplotlib.pyplot as plt
 
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
@@ -14,6 +15,7 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
              **kwargs
              ):
         mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
+        plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
         mp.plot(self.TOTAL, **kwargs)
         mp.plot(self.UP, **kwargs)
         mp.plot(self.DOWN, **kwargs)
