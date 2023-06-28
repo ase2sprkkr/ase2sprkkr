@@ -39,7 +39,7 @@ class SitesSectionDefinition(PotSectionDefinition):
                   after_convert = lambda s,v: np.ones((3)) if np.all(v==0.) else v,
                   condition = lambda v: True if np.all(v!=0.) else "BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"
           )),
-          V('SCALED_ATOMIC_POSITIONS', Table({'QBAS(X)': float, 'QBAS(Y)' : float, 'QBAS(Z)': float}, numbering='IQ',free_header=True)),
+          V('SCALED_ATOMIC_POSITIONS', Table({'QBAS(X)': float, 'QBAS(Y)' : float, 'QBAS(Z)': float}, numbering='IQ',free_header=True, format='>22.14f', numbering_format='>5')),
       ]
       super().__init__(name, members, has_hidden_members=True)
 
