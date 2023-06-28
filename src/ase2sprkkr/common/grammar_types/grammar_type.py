@@ -9,9 +9,10 @@ import inspect
 from .. import grammar_types
 
 from ..decorators import cached_class_property, cache, \
-                        add_to_signature, add_called_class_as_argument
+                        add_to_signature, add_called_class_as_argument, cached_property
 from ..alternative_types import normalize_type, allowed_types
 from ..grammar import generate_grammar
+from ..formats import full_format_for_string
 
 class GrammarType:
   """ Base class for definition of configuration option types
@@ -59,7 +60,8 @@ class GrammarType:
   """ The value of this type can be accessed as array """
 
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
-                     format:str='', default_value:Any=None,
+                     format:str='', after_format:Optional[str]=None,
+                     default_value:Any=None,
                      condition:Union[Callable[[Any], Union[bool,str]],None]=None,
                      after_convert:Union[Callable[[Any], Any],None]=None,
                      description=''):
@@ -75,8 +77,12 @@ class GrammarType:
         The string, that will be printed after the value
 
       format
-        The (python) format string, that will be used for printing the value.
+        The (python) format string, that will be used for outputing the value.
         The format is passed as format argument to ``str.format`` routine.
+
+      after_format
+        In some cases, the additional formating is required after converting to the string
+        and adding postfix/prefix.
 
       default_value
         The default value of the options of this type. ``None`` means no default value.
@@ -96,7 +102,9 @@ class GrammarType:
       """ The string, that will be printed before the value """
       self.postfix = postfix
       """ The string, that will be printed after the value """
-      self.format = format
+      self._format = format
+      self.after_format = after_format if not after_format or '{' in after_format else \
+                         f'{{:{after_format}}}'
       """ The (python) format string, that will be used for printing the value.
         The format is passed as format argument to ``str.format`` routine.  """
       self.condition = condition
@@ -111,6 +119,27 @@ class GrammarType:
 
   def __str__(self):
       return self.__class__.__name__
+
+  @cached_property
+  def format(self):
+      """ Return the resulting format string, applying the prefix and postfix """
+      if not self._format and not self.prefix and not self.postfix:
+          return None
+      out = self._format or ''
+      if '{' not in out:
+            out=f'{{:{out}}}'
+      escape = lambda x: x.replace('{','{{').replace('}', '}}')
+      if self.prefix:
+        out=escape(self.prefix) + out
+      if self.postfix:
+        out+=escape(self.postfix)
+      return out
+
+  @format.setter
+  def format(self, v):
+      self._format = v
+      if 'format' in self.__dict__:
+          del self.__dict__['format']
 
   @staticmethod
   def is_the_same_value(a,b):
@@ -265,24 +294,48 @@ class GrammarType:
     return value
 
   def _string(self, val):
-    """ The string method do some additional transformation (add prefix, postfix etc.),
+    """
+    Convert the value to the ouput.
+
+    The :meth:`string` apply format and do some additional transformation (add prefix, postfix etc.),
     so the actual way how to convert the value for the output should be here. """
     return val
 
   def string(self, val):
     """ Convert the value to the string according to the class definition.
-    Do not redefine this function, redefine the :meth:`_string` method instead,
+
+    Before redefining this method, you should consider, whether :meth:`_string` method could be
+    redefined instead. Otherwise, you should call :meth:`apply_format` in the redefined method.
     to retain the common functionality (as adding prefix or postfix to the resulting
     string).
     """
     val = self._string(val)
-    if self.prefix:
-       val = self.prefix + str(val)
-    if self.postfix:
-       val = str(val) + self.postfix
+    val = self.apply_format(val)
+    return val
+
+  def apply_format(self, val):
+    """ Apply format to the outputed value. """
     if self.format:
-       val = "{:{}}".format(val, self.format)
-    return str(val)
+       val = self.format.format(val)
+    else:
+       val = str(val)
+    if self.after_format:
+      val = self.after_format.format(val)
+    return val
+
+  def format_string(self, val):
+    """ Format string in a similiar manner as a value.
+        It is usefull for simple types, where header of a table
+        should be formatted in the same way.
+        For complex types it may not give a reasonable results.
+    """
+    if self.format:
+       out=full_format_for_string(self.format).format(val)
+    else:
+       out=str(val)
+    if self.after_format:
+       out = self.after_format.format(out)
+    return out
 
   def write(self, f, val):
     """ Output the value to the stream (in the propper format). """

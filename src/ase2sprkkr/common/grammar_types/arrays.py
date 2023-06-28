@@ -198,6 +198,8 @@ class Sequence(GrammarType):
          self.names = None
          self.value_type = tuple
          self.value_constructor = lambda *x: tuple(x)
+      if isinstance(format, dict):
+         format = { type_from_type(k):v for k,v in format.items() }
       if isinstance(format, (str, dict)):
         format = itertools.repeat(format)
       self.types = [ type_from_default_value(i, dfs, format_all=format_all) for i,dfs in zip(types, format) ]
@@ -367,19 +369,15 @@ class Table(GrammarType):
   def _string(self, data):
       out = []
       if self.header:
-         def gen():
-             names = ((i[1] if isinstance(i, tuple) else i) for i in self.names)
-
-             for n,t in zip(self.names, self.sequence.types):
-                 yield n
-                 yield t.format
-         fstr = (" {:{}}"*len(self.names))
-
+         names = ((i[1] if isinstance(i, tuple) else i) for i in self.names)
+         formated = (
+                 t.format_string(n) \
+                 for n,t in zip(self.names, self.sequence.types)
+                 )
+         header = ' '.join(formated)
          if self.numbering:
-            fstr = self.numbering.string(self.numbering_label or '') + fstr
-         else:
-             fstr = fstr[1:]
-         out.append(fstr.format(*gen()))
+            header = self.numbering.format_string(self.numbering_label or '') + ' ' + header
+         out.append(header)
          newline = True
       else:
          newline = False
