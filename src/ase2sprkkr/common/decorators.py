@@ -82,16 +82,21 @@ else:
             if asyncio and asyncio.iscoroutinefunction(self.func):
                 return self._wrap_in_coroutine(obj)
 
-            value = obj.__dict__[self.func.__name__] = self.func(obj)
+            value = obj.__dict__[self.attrname] = self.func(obj)
             return value
 
+        def __set_name__(self, owner, name):
+            #for Py3.7, we need to use attrname and not self.func.__name__
+            #since in complex cases when nested decorators are used,
+            #this information can be lost
+            self.attrname = name
 
         def _wrap_in_coroutine(self, obj):
             @wraps(obj)
             @asyncio.coroutine
             def wrapper():
                 future = asyncio.ensure_future(self.func(obj))
-                obj.__dict__[self.func.__name__] = future
+                obj.__dict__[self.attrname] = future
                 return future
 
             return wrapper()
@@ -108,13 +113,13 @@ class cached_property(std_cached_property):
         if self.fset:
            self.fset(obj, value)
         else:
-           obj.__dict__[self.func.__name__] = value
+           obj.__dict__[self.attrname] = value
 
    def __delete__(self, obj):
         if self.fdel:
            self.fdel(obj)
         else:
-           del obj.__dict__[self.func.__name__]
+           del obj.__dict__[self.attrname]
 
    def setter(self, fset):
         return type(self)(self.func, fset, self.fdel)
@@ -126,8 +131,8 @@ class cached_property(std_cached_property):
    #in subclasses
    if sys.version_info < (3,8):
       def __get__(self, obj, cls):
-          if self.func.__name__ in obj.__dict__:
-               return obj.__dict__[self.func.__name__]
+          if self.attrname in obj.__dict__:
+               return obj.__dict__[self.attrname]
           return super().__get__(obj, cls)
 
 

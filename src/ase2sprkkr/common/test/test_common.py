@@ -148,6 +148,7 @@ class CommonTest(TestCase):
         def a(self):
             self.__dict__['a'] = 25
 
+
       a=A()
       self.assertEqual(2, a.a)
       self.assertEqual(2, a.a)
@@ -160,3 +161,31 @@ class CommonTest(TestCase):
       a=A()
       self.assertEqual(3, a.a)
       self.assertEqual(3, a.a)
+
+      #test, that indirect decorator works
+      def modifier(fce):
+          def wrap(self):
+              return fce(self)
+          return cached_property(wrap)
+
+      class A():
+        u = 1
+        @modifier
+        def a(self):
+            self.__class__.u+=1
+            return self.__class__.u
+        @modifier
+        def b(self):
+            self.__class__.u+=1
+            return self.__class__.u
+
+      a=A()
+      self.assertEqual(2, a.a)
+      self.assertEqual(2, a.a)
+      self.assertEqual(3, a.b)
+      self.assertEqual(3, a.b)
+      self.assertEqual(2, a.a)
+
+
+
+
