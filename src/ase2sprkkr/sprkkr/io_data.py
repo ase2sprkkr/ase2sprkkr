@@ -3,12 +3,13 @@ reading or writing of potential/input_parameters files."""
 
 from ..common.decorators import cached_property
 from ..common.unique_values import UniqueValuesMapping
-
+from functools import wraps
 
 def unique_mapping(fce):
     """
     Create function (with a cached result), that returns UniqueValuesMapping from a given iterator
     """
+    @wraps(fce)
     def get_unique_mapping(self):
         lst = [ i for i in fce(self) ]
         return UniqueValuesMapping.from_values(lst)
