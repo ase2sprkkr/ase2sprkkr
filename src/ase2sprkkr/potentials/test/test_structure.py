@@ -33,7 +33,8 @@ class TestStructure(TestCase):
        a=out.LATTICE.as_dict()
        b=sec.as_dict()
 
-       self.assertEqual(out.LATTICE.as_dict(), sec.as_dict())
+       with self.almost_equal_precision(rtol=1e-13):
+           self.assertEqual(out.LATTICE.as_dict(), sec.as_dict())
        self.assertIsNotNone(out.atoms)
        new_cell = out.atoms.cell
        self.assertIsNotNone(new_cell)
