@@ -459,6 +459,9 @@ def type_from_type(type, format:Union[str,Dict]='', format_all:bool=False, type_
 
       type_map
   """
+  if isinstance(type, dict):
+      return grammar_types.Keyword(type)
+
   type_from_type_map = grammar_types.type_from_type_map
 
   if isinstance(type, GrammarType):

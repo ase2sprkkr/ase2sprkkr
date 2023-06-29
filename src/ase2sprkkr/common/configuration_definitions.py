@@ -407,7 +407,7 @@ class ValueDefinition(BaseDefinition):
 
     if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
        self.type = type_from_value(type, type_map = self.type_from_type_map)
-       self.default_value = self.type.convert(type)
+       self.default_value = None if isinstance(type,dict) else self.type.convert(type)
     else:
        self.type = type_from_type(type, type_map = self.type_from_type_map)
        self.default_value = self.type.convert(default_value) if default_value is not None else None
