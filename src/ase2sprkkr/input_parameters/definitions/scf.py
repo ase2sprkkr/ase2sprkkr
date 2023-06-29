@@ -17,7 +17,7 @@ input_parameters = InputParameters(
             '4' : 'RMT from atomic Hartree potential (=> KRWS=1)',
             '5' : 'RMT from total atomic potential (=> KRWS=1)',
             '6' : 'take average of 3 and 4 (=> KRWS=1)',
-          }, info='It controls how the muffin-tin radii are calculated.',required=False)
+          }, default_value=None, info='It controls how the muffin-tin radii are calculated.',required=False)
         ]),
         TAU,
         ENERGY,
