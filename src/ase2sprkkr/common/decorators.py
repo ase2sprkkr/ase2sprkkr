@@ -5,6 +5,7 @@ import inspect
 import heapq
 import asyncio
 import warnings
+import sys
 
 if hasattr(functools,'cache'):
    cache = functools.cache
@@ -84,8 +85,6 @@ else:
             value = obj.__dict__[self.func.__name__] = self.func(obj)
             return value
 
-        def __set_name__(self, owner, name):
-            self.attrname = name
 
         def _wrap_in_coroutine(self, obj):
             @wraps(obj)
@@ -109,13 +108,13 @@ class cached_property(std_cached_property):
         if self.fset:
            self.fset(obj, value)
         else:
-           obj.__dict__[self.attrname] = value
+           obj.__dict__[self.func.__name__] = value
 
    def __delete__(self, obj):
         if self.fdel:
            self.fdel(obj)
         else:
-           del obj.__dict__[self.attrname]
+           del obj.__dict__[self.func.__name__]
 
    def setter(self, fset):
         return type(self)(self.func, fset, self.fdel)
@@ -123,6 +122,13 @@ class cached_property(std_cached_property):
    def deleter(self, fdel):
         return type(self)(self.func, self.fset, fdel)
 
+   #for some reason, in 3.7 and lower the attribute in the dict do not override the __get__
+   #in subclasses
+   if sys.version_info < (3,8):
+      def __get__(self, obj, cls):
+          if self.attrname in obj.__dict__:
+               return obj.__dict__[self.attrname]
+          return super().__get__(obj, cls)
 
 
 class class_property:
