@@ -126,8 +126,8 @@ class cached_property(std_cached_property):
    #in subclasses
    if sys.version_info < (3,8):
       def __get__(self, obj, cls):
-          if self.attrname in obj.__dict__:
-               return obj.__dict__[self.attrname]
+          if self.func.__name__ in obj.__dict__:
+               return obj.__dict__[self.func.__name__]
           return super().__get__(obj, cls)
 
 
