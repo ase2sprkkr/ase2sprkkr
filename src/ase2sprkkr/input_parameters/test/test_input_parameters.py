@@ -158,7 +158,7 @@ NE={5}""")
                      GRID={3}
 
 
-SITES NL=2""", {'ENERGY': {'GRID':3, 'NE':300}, 'SITES':{'NL':2}} )
+SITES NL=2""", {'ENERGY': {'NE':300, 'GRID':3}, 'SITES':{'NL':2}} )
 
     #custom values
     with generate_grammar():
@@ -262,8 +262,8 @@ XSITES NR=3 NF=1
     #custom section with a flag
     assertParse("""ENERGY GRID={3}
                      NXXX
-                     NZZZ=4
                      NE={300}
+                     NZZZ=4
 
 
 SITES NL=2
@@ -272,7 +272,7 @@ XSITES NR=3 FLAG
                      FLOAT=3.5
               """,
 
-         {'ENERGY': {'GRID':ar(3), 'NE':ar(300), 'NXXX': True, 'NZZZ':4},
+     {'ENERGY': {'GRID':ar(3), 'NXXX':True, 'NE':ar(300), 'NZZZ':4},
                               'SITES':{'NL':2},
                               'XSITES':{'NR':3, 'FLAG' : True, 'FLOAT': 3.5}
       })
@@ -357,8 +357,8 @@ XSITES NR=3 FLAG
     self.assertEqual(0.5, ip.ENERGY.Ime())
     self.assertEqual(0.8, ip.ENERGY.Ime[5])
     self.assertEqual([0.4,0.5,0.5,0.5,0.8], ip.ENERGY.Ime[:])
-    self.assertEqual({1: 0.4, 5: 0.8, 'def': 0.5}, ip.ENERGY.Ime.as_dict());
-    self.assertEqual({1: 0.4, 5: 0.8, 'def': 0.5}, ip.ENERGY.Ime(all_values=True))
+    self.assertEqual({'def': 0.5, 1: 0.4, 5: 0.8}, ip.ENERGY.Ime.as_dict());
+    self.assertEqual({'def': 0.5, 1: 0.4, 5: 0.8}, ip.ENERGY.Ime(all_values=True))
     ip.ENERGY.Ime[1] = 0.7
     ip.ENERGY.Ime[9] = 0.9
     self.assertEqual('ENERGY GRID={3} NE={1} Ime=0.5 Ime1=0.7 Ime5=0.8 Ime9=0.9', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
