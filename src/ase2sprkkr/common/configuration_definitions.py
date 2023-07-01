@@ -22,6 +22,7 @@ import pyparsing as pp
 import inspect
 import itertools
 import builtins
+from io import StringIO
 from typing import Dict, Union
 
 #:This serves just for dealing with various pyparsing versions
@@ -1105,6 +1106,9 @@ class ContainerDefinition(BaseDefinition):
         out = self.result_class(definition = self, **kwargs)
         out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
+
+    def read_from_string(self, string, allow_dangerous=False, **kwargs):
+        return self.read_from_file(StringIO(string), allow_dangerous, **kwargs)
 
     def validate(self, container, why:str='save'):
         return True
