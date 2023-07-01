@@ -11,7 +11,6 @@ from .decorators import warnings_from_here
 class DangerousValue:
   """ This class is used to store (encapsulate) a value, which should not be validated
   - to  overcame sometimes too strict enforment of the options values.
-
   """
 
   def __init__(self, value, value_type:GrammarType|None=None, validate:bool=True):
