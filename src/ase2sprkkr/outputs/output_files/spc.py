@@ -21,7 +21,6 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
         mp.plot(self.DOWN, **kwargs)
         mp.plot(self.POLARIZATION, **kwargs)
         mp.finish(filename, show, dpi)
-        breakpoint()
 
     _arithmetic_values = [('RAW_DATA', (slice(None), slice(2,6)))]
 
