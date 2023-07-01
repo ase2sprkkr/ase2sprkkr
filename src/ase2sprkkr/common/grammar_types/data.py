@@ -25,7 +25,8 @@ class NumpyArray(GrammarType):
     array_access = True
 
     @add_to_signature(GrammarType.__init__)
-    def __init__(self, *args, delimiter=None, written_shape=None, item_format=None, indented=False, **kwargs):
+    def __init__(self, *args, delimiter=None, written_shape=None, lines=None,
+                              item_format=None, indented=False, **kwargs):
         """
         Parameters
         ----------
@@ -62,6 +63,8 @@ class NumpyArray(GrammarType):
         self.written_shape=written_shape
         self.item_format=item_format
         self.indented=indented
+        self.lines=lines
+        self.remove_forward=None
         super().__init__(*args, **kwargs)
 
     def _validate(self, value, why='set'):
@@ -99,18 +102,58 @@ class NumpyArray(GrammarType):
 
     is_the_same_value = staticmethod(compare_numpy_values)
 
-    def _grammar(self, param_name=False):
-         out = RestOfTheFile._grammar.copy()
+    def _n_lines_grammar(self, lines):
+         """ return a grammar for n lines of text """
+         out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(\n|$)", re.S).setParseAction(lambda x: x[0])
+         #out.addParseAction(lambda x: breakpoint() or x)
+         out=self._parse_numpy_array_grammar(out)
+         return out
+
+    def _parse_numpy_array_grammar(self, grammar):
+         """ Change a parse action of given grammar such that it returns
+         numpy array """
          def parse(v):
              if self.indented:
                 v=v.replace('\n'+' '*self.indented[1], '')
              v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter )
              return v
 
-         out.setParseAction(
+         grammar.setParseAction(
                 lambda v: parse(v[0])
          )
-         return out
+         return grammar
+
+    def _grammar(self, param_name=False):
+         if self.lines:
+             if isinstance(self.lines, int):
+                return self._n_lines_grammar(self.lines)
+             else:
+                return self.forward
+         else:
+             out = RestOfTheFile._grammar.copy()
+             return self._parse_numpy_array_grammar(out)
 
     def copy_value(self, value):
-        return copy.deepcopy(value)
+         return copy.deepcopy(value)
+
+    def added_to_container(self, container):
+        if not self.lines or isinstance(self.lines, int):
+            return
+        if self.remove_forward:
+           self.remove_forward
+        if container:
+           self.forward=pp.Forward()
+           obj = container[self.lines]
+           def paction(parsed):
+               self.forward << self._n_lines_grammar(parsed[0][1])
+               return parsed
+           hook = lambda grammar: grammar.addParseAction(paction)
+           obj.add_grammar_hook(hook)
+           self.remove_forward = lambda: obj.remove_grammar_hook(hook)
+        else:
+           self.remove_forward=None
+
+    def __del__(self):
+        if self.remove_forward:
+           self.remove_forward
+        self.remove_forward=None

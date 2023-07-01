@@ -399,6 +399,12 @@ class GrammarType:
   def copy_value(self, value):
     return value
 
+  def used_in_definition(self, definition):
+      pass
+
+  def added_to_container(self, definition):
+      pass
+
 @add_called_class_as_argument
 def add_to_parent_validation(validation):
 

@@ -11,6 +11,7 @@ from .. import input_parameters_definitions as cd
 from .. import input_parameters as input_parameters
 from ...common.configuration_containers import Section, CustomSection
 from ...common.options import Option, CustomOption
+from ...common.configuration_definitions import gather
 import io, re
 import numpy as np
 from ...common.grammar import generate_grammar
@@ -406,3 +407,63 @@ XSITES NR=3 FLAG
          input_parameters_def.read_from_file(io.StringIO(out))
     ip=input_parameters_def.read_from_file(io.StringIO(out), allow_dangerous=True)
     self.assertEqual(ip.ENERGY.Ime(all_values=True), {'def': 1.0, 1:0.4, 5:'yy' } )
+
+    #gather
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('GRID', gt.SetOf(int, length=1), fixed_value=3),
+        *gather( V('A', 1),
+                V('B', 2) ),
+        V('C', 3)
+      ]
+    })
+    assertParse("ENERGY GRID={3} A B=1 2 C=3", {'ENERGY': { 'GRID': ar(3), 'A' : 1, 'B' : 2, 'C' : 3 }}, ipd.grammar());
+    out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
+    self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
+
+    #NumpyArray of given len
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('C', gt.NumpyArray(lines=3), name_in_grammar=False ),
+      ]
+    })
+    assertParse("""ENERGY
+    1 1
+    2 2
+    3 3
+    """,{'ENERGY': {'C': ar([1,1,2,2,3,3]).reshape(3,2)}}, ipd.grammar());
+
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('B', 2),
+        V('C', gt.NumpyArray(lines=3), name_in_grammar=False ),
+        V('D', gt.NumpyArray(lines=2), name_in_grammar=False),
+        V('E', 3),
+      ]
+    })
+    assertParse("""ENERGY A=3 B=2
+    1 1
+    2 2
+    3 3
+    4 5 6
+    5 9 8
+    E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, ipd.grammar());
+
+
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('B', 2),
+        V('C', gt.NumpyArray(lines='A'), name_in_grammar=False ),
+        V('D', gt.NumpyArray(lines='B'), name_in_grammar=False),
+        V('E', 3),
+      ]
+    })
+    assertParse("""ENERGY A=3 B=2 
+    1 1
+    2 2
+    3 3
+    4 5 6
+    5 9 8
+    E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar());

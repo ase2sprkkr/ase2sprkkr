@@ -15,7 +15,7 @@ from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 from ..common.misc import OrderedDict
 from .configuration_containers import Section
 from .options import Option, DangerousValue
-from .decorators import cache
+from .decorators import cache, cached_class_property
 
 import numpy as np
 import pyparsing as pp
@@ -158,6 +158,24 @@ class BaseDefinition:
        if result_class:
            self.result_class = result_class
 
+       self.grammar_hooks = []
+
+   def add_grammar_hook(self, hook):
+       """ Added hooks process the grammar of the option/container.
+       E.g. it is used when the number of readed lines should depend
+       on the value of the option.
+       """
+       self.grammar_hooks.append(hook)
+
+   def remove_grammar_hook(self, hook):
+       """ Remove a grammar hook """
+       self.grammar_hooks.remove(hook)
+
+   def added_to_container(self, container):
+       """ Hook called, when the object is assigned to the container (currently from the container
+       constructor) """
+       self.container=container
+
    def info(self, generic:bool=True) -> str:
        """ Return short help string.
 
@@ -177,7 +195,7 @@ class BaseDefinition:
        return self.result_class(self, container)
 
    def grammar(self, allow_dangerous:bool=False):
-       """ Generate grammar with the correct settings of pyparsing global state
+       """ Generate grammar with the correct settings of pyparsing global state.
 
        Parameters
        ----------
@@ -186,7 +204,21 @@ class BaseDefinition:
         for the given-option value (i.e. a type requirement or other constraints).
        """
        with generate_grammar():
-         return self._grammar(allow_dangerous)
+         return self._create_grammar(allow_dangerous)
+
+   def _grammar(self, allow_dangerous:bool=False):
+       """ Generates grammar. Unlike :meth:`grammar`, it does not change the
+       global pyparsing state to ensure that the generated grammar will handle
+       whitespaces in a propper way. Unlike the :meth:`_create_grammar` method,
+       which should contain implementation of the grammar creation, this function
+       add the common functionality of the generated grammar (currently,
+       just the grammar hooks)
+       """
+       out = self._create_grammar(allow_dangerous)
+       if self.grammar_hooks:
+           for i in self.grammar_hooks:
+               out=i(out)
+       return out
 
    _description_indentation = '    '
    """ Nested levels of description will be indented using this 'prefix' """
@@ -299,7 +331,7 @@ class BaseDefinition:
           self.__class__._copy_args = { v: '_'+v if '_'+v in self.__dict__ else v for v in args if v not in self._copy_excluded_args }
        return self.__class__._copy_args
 
-   _copy_excluded_args = ['expert']
+   _copy_excluded_args = ['expert', 'container', 'grammar_hooks']
 
    def can_be_repeated(self):
        """ If True, the item can be repeated in the parsed file.
@@ -431,6 +463,7 @@ class ValueDefinition(BaseDefinition):
        self.type = type_from_type(type, type_map = self.type_from_type_map)
        self.default_value = self.type.convert(default_value) if default_value is not None else None
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
+    self.type.used_in_definition(self)
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
@@ -563,6 +596,12 @@ class ValueDefinition(BaseDefinition):
     """
     return self.type.additional_description(prefix)
 
+  def added_to_container(self, container):
+       """ Hook called, when the object is assigned to the container (currently from the container
+       constructor) """
+       self.container = container
+       self.type.added_to_container(container)
+
   def validate(self, value, why='set'):
     if value is None:
        if self.required:
@@ -627,7 +666,7 @@ class ValueDefinition(BaseDefinition):
       body = pp.Optional(body).setParseAction( lambda x: x or df )
     return body
 
-  def _grammar(self, allow_dangerous=False):
+  def _create_grammar(self, allow_dangerous=False):
     """ Return grammar for the name-value pair """
     if self.output_definition is not self:
         return self.output_definition._grammar(allow_dangerous)
@@ -826,6 +865,8 @@ class ContainerDefinition(BaseDefinition):
           for i in members.values():
               i.value_name_format = self.value_name_format
        self._members = members
+       for i in self._members.values():
+           i.added_to_container(self)
 
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
@@ -1080,7 +1121,7 @@ class ContainerDefinition(BaseDefinition):
 
        return values
 
-    def _grammar(self, allow_dangerous=False):
+    def _create_grammar(self, allow_dangerous=False):
        delimiter = self.grammar_of_delimiter
        values = self._values_grammar(allow_dangerous, delimiter)
        out = self._tuple_with_my_name(values, delimiter)
@@ -1253,14 +1294,14 @@ class ConfigurationRootDefinition(ContainerDefinition):
         val = val[0]
         return val
 
-   def _grammar(self, allow_dangerous=False):
+   def _create_grammar(self, allow_dangerous=False):
        """Returns the grammar to parse the configuration file.
 
        This method just tweaks the grammar (generated by the common container implementation) to ignore comments,
        so the comments would be ignored just once.
        """
 
-       out=super()._grammar(allow_dangerous)
+       out=super()._create_grammar(allow_dangerous)
        out.ignore("#" + pp.restOfLine + pp.LineEnd())
        return out
 
@@ -1285,3 +1326,101 @@ class MergeDictAdaptor:
 
     def __repr__(self):
         return f'Section {self.definition.name} with values {self.values}'
+
+
+class Ignored:
+    """ Output definition for an ignored option.
+        Output definition can override the standard definition and
+        set a special way how the item is read/writen:
+        such option is not readed/writed at all... or is readed/writed
+        by an another option, see :meth:`gather`
+    """
+
+    @cached_class_property
+    def singleton(cls):
+        return cls()
+
+    def _grammar(self, allow_dangerous=False):
+        return
+
+    def _save_to_file(self, file, value):
+        return
+
+class Gather:
+    """
+    Output definition for the element of grammar, that reads besides himself
+    other grammar elements, such that their names goes first and then the
+    values go. See gather."""
+
+    def __init__(self, first, *others, name_delimiter=' ', value_delimiter='\t', value_delimiter_grammar=''):
+        self.first = first
+        self.others = others
+        self.name_delimiter = name_delimiter
+        self.value_delimiter = value_delimiter
+        self.value_delimiter_grammar = value_delimiter_grammar
+
+    def _grammar(self, allow_dangerous=False):
+        out = self.first._grammar_of_name()
+        for i in self.others:
+            out += i._grammar_of_name()
+        delimiter = self.first.name_in_grammar
+        if not delimiter:
+            for i in self.others:
+                 if i.name_in_grammar:
+                     delimiter=True
+                     break
+        out += self.first._grammar_of_value(delimiter, allow_dangerous)
+        for i in self.others:
+            out += i._grammar_of_value(self.value_delimiter_grammar, allow_dangerous)
+        def split(x):
+            x = x.asList()
+            ln = len(x) // 2
+            return [ (i,j) for i,j in zip(x[:ln], x[ln:]) ]
+
+        out.setParseAction(split)
+        return out
+
+    def _save_to_file(self, file, value):
+        names = self.name_delimiter.join(i.name for i in self.others if i.name_in_grammar)
+        if self.first.name_in_grammar:
+           if names:
+                names = self.first.name + self.name_delimiter + names
+           else:
+                names = self.first_name
+        if names:
+            value._definition.write_name(file, names)
+            delimiter = self.first.name_value_delimiter
+        else:
+            delimiter = ''
+
+        def write(i, delimiter):
+            val,write = i._written_value()
+            if write:
+                if not i._definition.write_value(file, val, delimiter):
+                    raise NotImplemented('Gathered values have to be always written')
+            else:
+                raise NotImplemented('Gathered value names have to be always written')
+            delimiter = self.value_delimiter
+
+        write(value, delimiter)
+        for i in self.others:
+          write(value._container[i.name], self.value_delimiter)
+        return True
+
+    def copy_for_value(self, new_value):
+        out = copy.copy()
+        parent = new_value._container
+        self.values = [ parent[i.name] for i in self.values ]
+
+def gather(first, *members):
+    """ Modify the given option definitions, that they appears
+    in the output file in the form::
+
+        <NAME> <NAME 2> <NAME 3> ... = <VALUE 1> <VALUE 2> <VALUE 3> ...
+    """
+
+    first.output_definition = Gather(first, *members)
+    for i in members:
+        i.output_definition = Ignored.singleton
+
+    return first, *members
