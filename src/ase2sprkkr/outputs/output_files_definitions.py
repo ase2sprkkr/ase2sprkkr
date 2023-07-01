@@ -56,9 +56,8 @@ class OutputFileDefinition(ConfigurationFileDefinition):
   delimiter = '\n'
   """ options are delimited by newline in ouptut. """
 
-  @staticmethod
-  def grammar_of_delimiter():
-    return line_end
+  grammar_of_delimiter = line_end
+  """ section are delimited by newlines """
 
   result_class = OutputFile
 

@@ -67,9 +67,8 @@ class PotSectionDefinition(ConfigurationSectionDefinition):
   delimiter = '\n'
   """ options are delimited by newline in ouptut. """
 
-  @staticmethod
-  def grammar_of_delimiter():
-    return line_end
+  grammar_of_delimiter = line_end
+  """ items are separated by newline """
 
   def depends_on(self):
       """ The order of processing of sections during reading can be different than the order during a write. So, if the function should not be processed before given named sections, name then.

@@ -374,24 +374,39 @@ class Option(Configuration):
       """ True, if the value is set (even equal to the default value) """
       return self._value is not None
 
-  def _save_to_file(self, file):
-      """ Write the name-value pair to the given file, if the value
-      is set. """
+  def _written_value(self):
+      """
+      Returns
+      -------
+      write value: Any
+        The value to be written
+      write: bool
+        Whether to write the value or not
+      """
       d = self._definition
       if d.is_generated:
-         return
+         return None, False
       if d.write_condition and not d.write_condition(self):
-         return
+         return None, False
 
       if not d.type.has_value:
-         return d.write(file, None)
-      elif self.is_dangerous():
+         return None, True
+
+      if self.is_dangerous():
          value = self._value
       else:
          value = self.result
+         missing,_, np = d.type.missing_value()
+         if np.__class__ is value.__class__ and np == value:
+           return value, False
          if value is None or (not d.is_always_added and self.is_it_the_default_value(value)):
-          return
-      return d.write(file, value)
+          return value, False
+      return value, True
+
+  def _save_to_file(self, file):
+      """ Write the name-value pair to the given file, if the value
+      is set. """
+      return self._definition.output_definition._save_to_file(file, self)
 
   def validate(self, why='save'):
       d = self._definition

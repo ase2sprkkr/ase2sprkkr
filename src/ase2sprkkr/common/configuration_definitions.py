@@ -216,6 +216,39 @@ class BaseDefinition:
           out.append(prefix + self._description.replace('\n', '\n' + prefix))
        return '\n'.join(out)
 
+   def _grammar_of_name(self, is_numbered_array:bool=False):
+        """
+        Return grammar for the name (and possible alternative names etc.)
+
+          Parameters
+          ----------
+
+          is_numbered_array
+             If True, the resulting grammar is in the form
+             NAME[index]
+        """
+        name = self.name
+        if self.name_in_grammar:
+            keyword = pp.CaselessLiteral if is_numbered_array else pp.CaselessKeyword
+            name = keyword(name or self.name)
+            if self.do_not_skip_whitespaces_before_name:
+               name.leaveWhitespace()
+
+            if self.alternative_names:
+               alt_names = ( keyword(n) for n in self.alternative_names )
+               if self.do_not_skip_whitespaces_before_name:
+                  alt_names = ( i.leaveWhitespace() for i in alt_names )
+               name = name ^ pp.Or(alt_names)
+               if self.do_not_skip_whitespaces_before_name:
+                  name.leaveWhitespace()
+            name.setParseAction(lambda x: self.name)
+            if is_numbered_array:
+               name += pp.Optional(pp.Word(pp.nums), default='def')
+               name.setParseAction(lambda x: (x[0], 'def' if x[1]=='def' else int(x[1])) )
+        else:
+            name = pp.Empty().setParseAction(lambda x: self.name)
+        return name
+
    def _tuple_with_my_name(self, expr,
                            delimiter=None,
                            has_value:bool=True,
@@ -236,28 +269,13 @@ class BaseDefinition:
               NAME[index]=....
         """
         if self.name_in_grammar:
-            keyword = pp.CaselessLiteral if is_numbered_array else pp.CaselessKeyword
-            name = keyword(self.name)
-            if self.do_not_skip_whitespaces_before_name:
-               name.leaveWhitespace()
-
-            if self.alternative_names:
-               alt_names = ( keyword(n) for n in self.alternative_names )
-               if self.do_not_skip_whitespaces_before_name:
-                  alt_names = ( i.leaveWhitespace() for i in alt_names )
-               name = name ^ pp.Or(alt_names)
-               if self.do_not_skip_whitespaces_before_name:
-                  name.leaveWhitespace()
-            name.setParseAction(lambda x: self.name)
-            if is_numbered_array:
-               name += pp.Optional(pp.Word(pp.nums), default='def')
-               name.setParseAction(lambda x: (x[0], 'def' if x[1]=='def' else int(x[1])) )
-            if delimiter:
+           name = self._grammar_of_name(is_numbered_array)
+           if delimiter:
               name += delimiter
-            out = name - expr
+           out = name - expr
         else:
-            name = pp.Empty().setParseAction(lambda x: self.name)
-            out = name + expr
+           name = pp.Empty().setParseAction(lambda x: self.name)
+           out = name + expr
         if has_value:
             return out.setParseAction(lambda x: tuple(x))
         else:
@@ -453,6 +471,15 @@ class ValueDefinition(BaseDefinition):
   """ Redefine this in descendants, if you need to create different types that the defaults to be
   'guessed' from the default values """
 
+  @property
+  def output_definition(self):
+      return self.__dict__.get('_output_definition', self)
+
+  @output_definition.setter
+  def output_definition(self, od):
+      """ Set a special object for writing """
+      self.__dict__['_output_definition'] = od
+
   def enrich(self, option):
       """ The Option can be enriched by the definition, e.g. the docsting can be extended. """
       self.type.enrich(option)
@@ -568,7 +595,8 @@ class ValueDefinition(BaseDefinition):
   def __repr__(self):
     return str(self)
 
-  def _grammar(self, allow_dangerous=False):
+  def _grammar_of_value(self, delimiter, allow_dangerous=False):
+    """ Return grammar for the (possible optional) value pair """
     body = self.type.grammar(self.name)
 
     if self.is_fixed:
@@ -589,18 +617,28 @@ class ValueDefinition(BaseDefinition):
         danger.addParseAction(lambda x: DangerousValue(x[0], self.type_of_dangerous, False))
         body = body ^ danger
 
-    if self.name_in_grammar:
-       god = self.grammar_of_delimiter()
-       body = god + body
+    if delimiter is True:
+       delimiter = self.grammar_of_delimiter
+    if delimiter:
+       body = delimiter + body
 
     optional, df, _ = self.type.missing_value()
     if optional:
       body = pp.Optional(body).setParseAction( lambda x: x or df )
+    return body
+
+  def _grammar(self, allow_dangerous=False):
+    """ Return grammar for the name-value pair """
+    if self.output_definition is not self:
+        return self.output_definition._grammar(allow_dangerous)
+    body = self._grammar_of_value(self.name_in_grammar, allow_dangerous)
+
+    if self.type.missing_value()[0]:
       nbody=''
     else:
       nbody=self.type.grammar_name()
       if self.name_in_grammar:
-         nbody = str(god) + nbody
+         nbody = (str(self.grammar_of_delimiter) + nbody).strip()
 
     out = self._tuple_with_my_name(body, has_value=self.type.has_value, is_numbered_array=self.is_numbered_array)
     out.setName(self.name + nbody)
@@ -619,6 +657,13 @@ class ValueDefinition(BaseDefinition):
         return self.default_value
      return None
 
+  def _save_to_file(self, file, option):
+      value, write = option._written_value()
+      if write:
+          return self.write(file, value)
+      else:
+          return
+
   def write(self, file, value):
      """
      Write the option to the open file
@@ -632,37 +677,12 @@ class ValueDefinition(BaseDefinition):
       The value to write. It can be instance of DangerousValue, in such case
       It's own type is used to write the value.
      """
-     if self.type.has_value:
-        missing, df, np = self.type.missing_value()
-
      def write(name, value):
-         if isinstance(value, DangerousValue):
-            type = value.value_type
-            value = value()
-         else:
-            type = self.type
-
-         if type.has_value:
-             if value is None:
-               value = self.get_value()
-             if value is None:
-               return False
-             if np.__class__ is value.__class__ and np == value:
-               return False
-             write_value = not ( missing and df == value )
-         else:
-            value=None
-            write_value=True
-
-         file.write(self.prefix)
          if self.name_in_grammar:
-            file.write(name)
-            if write_value:
-               file.write(self.name_value_delimiter)
-               type.write(file, value)
-         elif write_value:
-            type.write(file, value)
-         return True
+            self.write_name(file, name)
+            return self.write_value(file, value, self.name_value_delimiter)
+         else:
+            return self.write_value(file, value, self.prefix)
 
      name = self.formated_name
      if self.is_numbered_array:
@@ -672,6 +692,37 @@ class ValueDefinition(BaseDefinition):
         return out
      else:
         return write(name, value)
+
+  def write_value(self, file, value, delimiter=''):
+     """ Write given value and a given delimiter before the value to a file """
+     if isinstance(value, DangerousValue):
+        type = value.value_type
+        value = value()
+     else:
+        type = self.type
+
+     if type.has_value:
+         if value is None:
+           value = self.get_value()
+         if value is None:
+           return False
+         missing, df, _ = self.type.missing_value()
+         write_value = not ( missing and df == value )
+     else:
+        value=None
+        write_value=True
+
+     if write_value:
+         file.write(delimiter)
+         type.write(file, value)
+         return True
+     else:
+         return False
+
+
+  def write_name(self, file, name):
+      file.write(self.prefix)
+      file.write(name)
 
   def copy(self, **kwargs):
      default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
@@ -938,7 +989,7 @@ class ContainerDefinition(BaseDefinition):
           custom_value = self.custom_member_grammar(self.all_member_names())
        else:
           custom_value = None
-       delimiter = delimiter or self.grammar_of_delimiter()
+       delimiter = delimiter or self.grammar_of_delimiter
 
        def grammars():
          """ This function iterates over the items of the container, joining all the without name_in_grammar with the previous ones. """
@@ -951,6 +1002,8 @@ class ContainerDefinition(BaseDefinition):
                  if i.is_generated:
                      continue
                  g = i._grammar(allow_dangerous)
+                 if not g:
+                     continue
                  if i.can_be_repeated():
                      g = delimitedList(g, delimiter)
                  yield i,g
@@ -1028,7 +1081,7 @@ class ContainerDefinition(BaseDefinition):
        return values
 
     def _grammar(self, allow_dangerous=False):
-       delimiter = self.grammar_of_delimiter()
+       delimiter = self.grammar_of_delimiter
        values = self._values_grammar(allow_dangerous, delimiter)
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
@@ -1044,7 +1097,7 @@ class ContainerDefinition(BaseDefinition):
         """ Return the grammar for the custom child with delimiter.
         The delimiter can delimite it either from the previous child or from the section name."""
 
-        return cls.child_class.grammar_of_delimiter() + cls.custom_value_grammar()
+        return cls.child_class.grammar_of_delimiter + cls.custom_value_grammar()
 
     custom_name_characters = pp.alphanums + '_-()'
     """ Which characters can appears in an unknown child (value/section) name """
@@ -1133,7 +1186,7 @@ class SectionDefinition(ContainerDefinition):
    def delimited_custom_value_grammar(cls):
         gt = cls.custom_class.grammar_type
         #here the child (Value) class delimiter should be used
-        out = cls.child_class.grammar_of_delimiter() + gt.grammar()
+        out = cls.child_class.grammar_of_delimiter + gt.grammar()
         optional, df, _ = gt.missing_value()
         if optional:
            out = out | pp.Empty().setParseAction(lambda x: df)
