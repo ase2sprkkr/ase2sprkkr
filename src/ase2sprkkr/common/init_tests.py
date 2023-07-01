@@ -76,7 +76,7 @@ class TestCase(unittest.TestCase):
          if msg: msg+='\n'
          raise ValueError(msg + f'Classes {a.__class__} and {b.__class__} are not equal')
       if len(a) != len(b):
-         super().__assertDictEqual__(dict(a), dict(b), msg)
+         super().assertDictEqual(dict(a), dict(b), msg)
       for (ai, av),(bi, bv) in zip(a.items(), b.items()):
          self.assertEqual(ai, bi, 'Dict keys are not equal')
          self.assertEqual(av, bv, 'Dict values are not equal')
