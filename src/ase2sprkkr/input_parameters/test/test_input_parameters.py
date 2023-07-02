@@ -467,3 +467,32 @@ XSITES NR=3 FLAG
     4 5 6
     5 9 8
     E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar());
+
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('B', 2, is_repeated = True),
+        V('C', 3) ]})
+
+    data="""ENERGY A=3
+    B=2
+    B=5
+    B=8
+    C=77""";
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ipd.grammar());
+    ip=ipd.read_from_string(data)
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict());
+    self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
+    ipd['ENERGY'].force_order=True
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ipd.grammar());
+    ip=ipd.read_from_string(data)
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict());
+    self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
+
+    data="""ENERGY A=3
+    B=2
+    C=77""";
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C':77}}, ipd.grammar());
+    ip=ipd.read_from_string(data)
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2]), 'C':77}}, ip.to_dict());
+    self.assertEqual('ENERGY A=3 B=2 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )

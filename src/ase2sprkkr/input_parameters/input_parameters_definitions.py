@@ -8,7 +8,7 @@ sprkkr.common.configuration_definitions
 
 import functools
 import pyparsing as pp
-from ..common.configuration_definitions import unique_dict
+from ..common.configuration_definitions import dict_from_parsed
 from ..sprkkr.configuration import \
          ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
          CustomConfigurationValue, CustomConfigurationSection
@@ -85,9 +85,13 @@ class InputParametersDefinition(ConfigurationFileDefinition):
   @classmethod
   @cache
   def custom_value_grammar(cls):
+      class Anything:
+         def __contains__(self, what):
+             return True
       value  = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
-      return delimitedList(value, delim).setParseAction(lambda x: unique_dict(x.asList()))
+      return delimitedList(value, delim).\
+              setParseAction(lambda x: dict_from_parsed(x.asList(), Anything()))
 
   def _generic_info(self):
       return f"Input parameters for task {self.name}"

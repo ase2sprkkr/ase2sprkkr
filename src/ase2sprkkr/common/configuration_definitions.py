@@ -10,7 +10,8 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 ), or write such object to a file.
 """
 
-from ..common.grammar_types  import type_from_type, type_from_value, GrammarType
+from ..common.misc import dict_first_item
+from ..common.grammar_types  import type_from_type, type_from_value, GrammarType, Array
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 from .configuration_containers import Section
 from .options import Option, DangerousValue
@@ -29,39 +30,61 @@ _parse_all_name = 'parse_all' if \
   'parse_all' in inspect.getfullargspec(pp.Or.parseString).args \
   else 'parseAll'
 
-def unique_dict(values):
-    """ Create a dictionary from the arguments. However, raise an exception,
-    if there is any duplicit key.
+def dict_from_parsed(values, allowed_duplicates):
+    """ Create a dictionary from the arguments.
+    From duplicate arguments create numpy arrays.
     Moreover, if there is key of type (a,b), it will be transformed to subdictionary.
+    Such a keys do not allow duplicates.
 
-    >>> unique_dict( [ ('x', 'y'), (('a','b'), 1 ), (('a', 'c'), 2) ] )
+    >>> dict_from_parsed( [ ('x', 'y'), (('a','b'), 1 ), (('a', 'c'), 2) ], [] )
     {'x': 'y', 'a': {'b': 1, 'c': 2}}
+    >>> dict_from_parsed( [ ('x', 1), ('x', '2') ], [] ) # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    pyparsing.exceptions.ParseException: There are non-unique keys: x
+    >>> dict_from_parsed( [ ('x', 1), ('x', 2) ], ['x'] )
+    {'x': array([1, 2])}
     """
     out = {}
     duplicates = []
+    errors = []
+
+    def add(out, k, key, check):
+         if k in out:
+            if key in duplicates:
+               out[k].append(v)
+            else:
+               if not check in allowed_duplicates:
+                   return errors.append(check)
+               out[k] = [ out[k], v ]
+               duplicates.append(k)
+         else:
+            out[k] = v
 
     for k, v in values:
         if isinstance(k, tuple):
            if not k[0] in out:
               o = out[k[0]] = {}
            elif not isinstance(out[k[0]], dict):
-              duplicates.append(k[0])
-              continue
+              raise pp.ParseException(f"There is duplicate key {k[0]}, however, I should created "
+                                "both arrays and dict from the data, which is not possible")
            else:
               o = out[k[0]]
-           if k[1] in o:
-              duplicates.append(''.join(k))
-           else:
-              o[k[1]] = v
+           add(o, k[1], k, k[0])
         else:
-           if k in out:
-              duplicates.append(k)
-           else:
-              out[k] = v
+           add(out, k, k, k)
+    for k in duplicates:
+        if isinstance(k, tuple):
+            o=out[k[0]]
+            k=k[1]
+        else:
+            o=out
+        o[k] = np.array(out[k])
+    if errors:
+       errors = ','.join(errors)
+       raise pp.ParseException(f"There are non-unique keys: {errors}")
+    return out
 
-    if duplicates:
-       duplicates = ','.join(duplicates)
-       raise pp.ParseException(f"There are non-unique keys: {duplicates}")
+
     return out
 
 class BaseDefinition:
@@ -159,6 +182,10 @@ class BaseDefinition:
 
        self.grammar_hooks = []
 
+   def allow_duplication(self):
+       """ Can be the item repeated in the output file """
+       return False
+
    @property
    def is_independent_on_the_predecessor(self):
        """ Some value have to be positioned just after their predecessor
@@ -210,7 +237,7 @@ class BaseDefinition:
         for the given-option value (i.e. a type requirement or other constraints).
        """
        with generate_grammar():
-         return self._create_grammar(allow_dangerous)
+         return self._grammar(allow_dangerous)
 
    def _grammar(self, allow_dangerous:bool=False):
        """ Generates grammar. Unlike :meth:`grammar`, it does not change the
@@ -357,7 +384,8 @@ class ValueDefinition(BaseDefinition):
 
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
                fixed_value=None, required=None, info=None, description=None,
-               is_hidden=False, is_optional=None, is_expert=False, is_numbered_array:bool=False,
+               is_hidden=False, is_optional=None, is_expert=False,
+               is_numbered_array:bool=False, is_repeated=False,
                is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
                write_alternative_name:bool=False, write_condition=None,
@@ -416,6 +444,10 @@ class ValueDefinition(BaseDefinition):
       members of the array are in the form NAME1=..., NAME2=..., ... The default
       value for missing number can appear in the form NAME=...
 
+    is_repeated
+      If True, the real type of the Value is array of values of given type.
+      The name-value pair is repeated for each value of the array.
+
     is_always_added
       If False, add the value, only if its value is not the default value.
       Default None means False for expert values, True for the others.
@@ -471,6 +503,12 @@ class ValueDefinition(BaseDefinition):
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
     self.type.used_in_definition(self)
 
+    if is_repeated is True:
+        self.is_repeated = self.type
+        self.type = Array(self.type)
+    else:
+        self.is_repeated = is_repeated
+
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
 
@@ -514,6 +552,10 @@ class ValueDefinition(BaseDefinition):
   def output_definition(self):
       return self.__dict__.get('_output_definition', self)
 
+
+  def allow_duplication(self):
+       """ Can be the item repeated in the output file """
+       return self.is_repeated
 
   @property
   def is_independent_on_the_predecessor(self):
@@ -650,7 +692,8 @@ class ValueDefinition(BaseDefinition):
 
   def _grammar_of_value(self, delimiter, allow_dangerous=False):
     """ Return grammar for the (possible optional) value pair """
-    body = self.type.grammar(self.name)
+    type = self.is_repeated or self.type
+    body = type.grammar(self.name)
 
     if self.is_fixed:
       def check_fixed(s, loc, x, body=body):
@@ -675,7 +718,7 @@ class ValueDefinition(BaseDefinition):
     if delimiter:
        body = delimiter + body
 
-    optional, df, _ = self.type.missing_value()
+    optional, df, _ = type.missing_value()
     if optional:
       body = pp.Optional(body).setParseAction( lambda x: x or df )
     return body
@@ -695,6 +738,8 @@ class ValueDefinition(BaseDefinition):
 
     out = self._tuple_with_my_name(body, has_value=self.type.has_value, is_numbered_array=self.is_numbered_array)
     out.setName(self.name + nbody)
+    if self.is_repeated:
+        out = out + pp.ZeroOrMore(self.container.grammar_of_delimiter + out)
     return out
 
   def get_value(self, option=None):
@@ -738,11 +783,20 @@ class ValueDefinition(BaseDefinition):
             return self.write_value(file, value, self.prefix)
 
      name = self.formated_name
-     if self.is_numbered_array:
+     if self.is_numbered_array or self.is_repeated:
+
+        if self.is_numbered_array:
+            written = ( (name + (str(i) if i!='def' else ''), v) for i, v in value.items() )
+        else:
+            written = ( (name, v) for v in value )
         out = False
-        for i, val in value.items():
-            out = write(name + (str(i) if i!='def' else ''), val) or out
+        for mname, val in written:
+            if out:
+               file.write(self.container.delimiter)
+            out = write(mname, val) or out
         return out
+
+        out = False
      else:
         return write(name, value)
 
@@ -752,7 +806,7 @@ class ValueDefinition(BaseDefinition):
         type = value.value_type
         value = value()
      else:
-        type = self.type
+        type = self.is_repeated or self.type
 
      if type.has_value:
          if value is None:
@@ -1124,7 +1178,7 @@ class ContainerDefinition(BaseDefinition):
            if first:
               values = first + pp.Optional(delimiter + values)
 
-       values.setParseAction(lambda x: unique_dict(x.asList()))
+       values.setParseAction(lambda x: dict_from_parsed(x.asList(), self._allowed_duplicates()))
 
        if self.validate:
           def _validate(s, loc, value):
@@ -1138,6 +1192,13 @@ class ContainerDefinition(BaseDefinition):
           values.addParseAction(_validate)
 
        return values
+
+    def _allowed_duplicates(self):
+       out = []
+       for i in self:
+           if i.allow_duplication():
+              out.append(i.name)
+       return out
 
     def _create_grammar(self, allow_dangerous=False):
        delimiter = self.grammar_of_delimiter
@@ -1173,7 +1234,7 @@ class ContainerDefinition(BaseDefinition):
 
     def _first_section_has_to_be_first(self):
        """ Has/ve the first child(s) in an unordered sequence fixed position? """
-       return not self._members.first_item().is_independent_on_the_predecessor
+       return not dict_first_item(self._members).is_independent_on_the_predecessor
 
     def parse_file(self, file, return_value_only=True, allow_dangerous=False):
        """ Parse the file, return the parsed data as dictionary """
