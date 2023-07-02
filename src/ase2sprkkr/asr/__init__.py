@@ -5,7 +5,12 @@ Thus, it allows to call them in the same way as the original ASR::
 
 However, the SPRKKR calculator is available for them.
 """
-
-import asr
-__path__ = asr.__path__
-del asr
+try:
+    import asr
+    __path__ = asr.__path__
+    del asr
+except ImportError:
+    import warnings
+    warnings.warn("I am not able to import asr module, asr recipes will not be available",
+                  category=RuntimeWarning)
+    del warnings
