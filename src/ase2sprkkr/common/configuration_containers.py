@@ -6,7 +6,6 @@ and other containers, and are able to write them to a configuration file,
 and that are results of parsing of a configuration file.
 """
 
-from ..common.misc import OrderedDict
 from ..common.grammar_types import mixed
 from .options import Option
 import pyparsing as pp
@@ -48,14 +47,14 @@ class ConfigurationContainer(Configuration):
       return out
 
   def _init_members_from_the_definition(self):
-      self._members = OrderedDict()
+      self._members = {}
       """
       Non-hidden members of the containers, accesible via sanitized names.
       I.e. via names with whitespaces and other special characters replaced by underscore.
       These sanitized names are then used as names for "attributes" of this container, to
       make the members accesible via ``<container>.<member>`` notation.
       """
-      self._interactive_members = OrderedDict()
+      self._interactive_members = {}
       for v in self._definition.members():
           self._add(v.create_object(self))
 
@@ -294,7 +293,7 @@ class ConfigurationContainer(Configuration):
       generated: bool
         Add generated values
       """
-      out = OrderedDict()
+      out = {}
       for i in self:
           value = i.as_dict(only_changed, generated, copy)
           if value is not None:

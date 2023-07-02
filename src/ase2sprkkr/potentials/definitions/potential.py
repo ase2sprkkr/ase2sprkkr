@@ -3,7 +3,6 @@
 from .sections import *
 
 def fce():
-  from ...common.misc import OrderedDict
   from  ...common.grammar_types import \
         Keyword, DefKeyword, Table, Array, Sequence, \
         integer, Date, boolean, line_string

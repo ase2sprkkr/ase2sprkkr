@@ -2,7 +2,6 @@
 
 import copy
 import numpy as np
-from collections import OrderedDict as _OrderedDict
 import operator
 
 
@@ -38,16 +37,6 @@ def numpy_index(array, item):
     # If no item was found return None, other return types might be a problem due to
     # numbas type inference.
 
-class OrderedDict(_OrderedDict):
-
-    def index(self, key):
-        for i,k in enumerate(self.keys()):
-            if k == key: return i
-        raise KeyError(f"No suych key {key}");
-
-    def first_item(self):
-        return self[next(iter(self))]
-
 def as_integer(value):
     """ Interpret the value as integer, or raise (even for float, complex etc.) TypeError.i
     >>> as_integer(4)
@@ -60,3 +49,11 @@ def as_integer(value):
     TypeError: 'float' object cannot be interpreted as an integer
     """
     return operator.index(value)
+
+def dict_first_item(self):
+    """
+    Return the first item of the given dict.
+    >>> dict_first_item({'a':4, 'c':2, 'h':8})
+    4
+    """
+    return self[next(iter(self))]

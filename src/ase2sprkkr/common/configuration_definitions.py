@@ -12,7 +12,6 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 from ..common.grammar_types  import type_from_type, type_from_value, GrammarType
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
-from ..common.misc import OrderedDict
 from .configuration_containers import Section
 from .options import Option, DangerousValue
 from .decorators import cache, cached_class_property
@@ -854,7 +853,7 @@ class ContainerDefinition(BaseDefinition):
     @staticmethod
     def _dict_from_named_values(args, items=None):
         """auxiliary method that creates dictionary from the arguments"""
-        items = items or OrderedDict()
+        items = items or {}
         for value in args:
            items[value.name] = value
         return items
@@ -877,7 +876,7 @@ class ContainerDefinition(BaseDefinition):
        )
 
        self.is_hidden = is_hidden
-       if not isinstance(members, OrderedDict):
+       if not isinstance(members, dict):
           members = self._dict_from_named_values(members)
 
        if self.value_name_format:
@@ -1021,7 +1020,7 @@ class ContainerDefinition(BaseDefinition):
 
     def copy(self, args=[], items=[], remove=[], defaults={}, **kwargs):
         """ Copy the section with the contained values modified by the arguments."""
-        members = OrderedDict( ( (k,i.copy()) for k,i in self._members.items() ) )
+        members = dict( ( (k,i.copy()) for k,i in self._members.items() ) )
         for i in remove:
             del members[i]
         members.update(self._dict_from_named_values(args, items))

@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import numpy as np
 from .atomic_types import AtomicType
-from ..common.misc import OrderedDict
 from typing import Dict
 from collections.abc import Iterable
 from .sites import Site
@@ -37,7 +36,7 @@ class Occupation:
          iterator = dct.items() #dict
       else:
          iterator = dct
-      self._occupation = OrderedDict( (AtomicType.to_atomic_type(i), j) for i,j in iterator )
+      self._occupation = dict( (AtomicType.to_atomic_type(i), j) for i,j in iterator )
       self._normalize()
       if update_atoms:
           self._update_atoms()
@@ -100,13 +99,13 @@ class Occupation:
       """
       key = self._find_key(name)
       to = AtomicType.to_atomic_type(to)
-      self._occupation = OrderedDict(
+      self._occupation = dict(
           (k if k is not key else to, v) for k,v in self._occupation.items()
         )
 
   def clean(self):
       """ Remove all items with zero probability. """
-      self._occupation = OrderedDict(
+      self._occupation = dict(
           (k, v) for k,v in self._occupation.items() if v > 0
       )
 

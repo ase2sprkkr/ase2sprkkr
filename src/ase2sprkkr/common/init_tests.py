@@ -39,11 +39,6 @@ def patch_package(package, name):
 
 __package__, __name__ = patch_package(__package__,__name__)
 
-try:
-  from ..common.misc import OrderedDict
-except ModuleNotFoundError:
-  from ...common.misc import OrderedDict
-
 class TestCase(unittest.TestCase):
   """ A testcase class with some usefull assertions and a better numpy
   arrays comparison """
@@ -85,9 +80,9 @@ class TestCase(unittest.TestCase):
       """ Register numpy array for the equality """
 
       def testfce(fce, msg='', **kwargs):
-        def np_array_equal(a, b, msg=msg):
+        def np_array_equal(a, b, msg=msg, **kwar):
           try:
-            fce(a,b, **kwargs)
+            fce(a,b, **kwargs, **kwar)
           except AssertionError as e:
             if msg:
                msg = msg + '\n' + str(e)
@@ -116,11 +111,12 @@ class TestCase(unittest.TestCase):
       )
 
       self.addTypeEqualityFunc(
-         Cell,
-         lambda a,b,msg: arr_testfce(np.array(a), np.array(b), msg)
+         dict,
+         self.assertDictEqual
       )
 
+
       self.addTypeEqualityFunc(
-         OrderedDict,
-         lambda a,b, msg='': self.assertDictEqual
+         Cell,
+         lambda a,b,msg: arr_testfce(np.array(a), np.array(b), msg)
       )
