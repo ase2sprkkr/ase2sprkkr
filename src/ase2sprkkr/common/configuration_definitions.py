@@ -24,6 +24,7 @@ import itertools
 import builtins
 from io import StringIO
 from typing import Dict, Union
+import sys
 
 #:This serves just for dealing with various pyparsing versions
 _parse_all_name = 'parse_all' if \
@@ -1497,9 +1498,8 @@ def gather(first, *members):
 
         <NAME> <NAME 2> <NAME 3> ... = <VALUE 1> <VALUE 2> <VALUE 3> ...
     """
-
     first.output_definition = Gather(first, *members)
     for i in members:
         i.output_definition = Ignored.singleton
 
-    return first, *members
+    return (first, ) + members
