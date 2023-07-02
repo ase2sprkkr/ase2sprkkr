@@ -160,6 +160,13 @@ class BaseDefinition:
 
        self.grammar_hooks = []
 
+   @property
+   def is_independent_on_the_predecessor(self):
+       """ Some value have to be positioned just after their predecessor
+       in the output.
+       """
+       return self.name_in_grammar
+
    def add_grammar_hook(self, hook):
        """ Added hooks process the grammar of the option/container.
        E.g. it is used when the number of readed lines should depend
@@ -508,6 +515,14 @@ class ValueDefinition(BaseDefinition):
   def output_definition(self):
       return self.__dict__.get('_output_definition', self)
 
+
+  @property
+  def is_independent_on_the_predecessor(self):
+      """ Some value have to be positioned just after their predecessor
+      in the output.
+      """
+      return self.name_in_grammar or self.type.is_independent_on_the_predecessor
+
   @output_definition.setter
   def output_definition(self, od):
       """ Set a special object for writing """
@@ -810,6 +825,10 @@ class ValueDefinition(BaseDefinition):
           return self.type.copy_value(value)
       return { k:self.type.copy_value(v) for v in values }
 
+  @property
+  def is_independent_on_the_predecessor(self):
+      return self.name_in_grammar or self.type.is_independent_on_the_predecessor
+
 def add_excluded_names_condition(element, names):
     """ Add the condition to the element, that
     its value is not any of given names """
@@ -1053,7 +1072,7 @@ class ContainerDefinition(BaseDefinition):
          head_item, grammar_chain = next(it)
 
          for item, grammar in it:
-             if item.name_in_grammar:
+             if item.is_independent_on_the_predecessor:
                yield head_item, grammar_chain
                head_item, grammar_chain = item, grammar
              else:
@@ -1155,7 +1174,7 @@ class ContainerDefinition(BaseDefinition):
 
     def _first_section_has_to_be_first(self):
        """ Has/ve the first child(s) in an unordered sequence fixed position? """
-       return not self._members.first_item().name_in_grammar
+       return not self._members.first_item().is_independent_on_the_predecessor
 
     def parse_file(self, file, return_value_only=True, allow_dangerous=False):
        """ Parse the file, return the parsed data as dictionary """

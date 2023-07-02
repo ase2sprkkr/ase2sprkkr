@@ -281,6 +281,7 @@ class Keyword(GrammarType):
          out += f'\n\n{prefix}' + ad
       return out
 
+  is_independent_on_the_predecessor = True
 
 def DefKeyword(default, *others, **kwargs):
   """

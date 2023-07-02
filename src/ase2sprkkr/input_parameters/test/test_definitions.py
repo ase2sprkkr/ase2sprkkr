@@ -21,6 +21,18 @@ class TestDefinitions(TestCase):
       with pytest.raises(AttributeError):
         ip.ENERGY.EMIN
 
+  def test_defaults(self):
+      for i in InputParameters.definitions:
+          ip=InputParameters.create_input_parameters(i)
+          df= ip._definition
+          ip2 = df.read_from_string(ip.to_string())
+          self.assertEqual(ip.to_dict(), ip2.to_dict())
+          if i == 'SCF':
+              ip.MODE.MDIR[1]=1.,1.,1.
+              ip.MODE.MDIR[4]=1.,1.,1.
+              ip2 = df.read_from_string(ip.to_string())
+              self.assertEqual(ip.to_dict(), ip2.to_dict())
+
   def test_definitions(self):
       path = os.path.join(os.path.dirname(__file__), '../examples')
 

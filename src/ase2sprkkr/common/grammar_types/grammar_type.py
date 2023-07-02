@@ -59,6 +59,9 @@ class GrammarType:
   array_access = False
   """ The value of this type can be accessed as array """
 
+  is_independent_on_the_predecessor = False
+  """ Options of most grammar types do not identify themselves, so they have to be either identified by their names, or if name is not given, by their predecessors. Hoewever, e.g. keyword arguments can be identified just by their value."""
+
   def __init__(self, prefix:Union[str,None]=None, postfix:Union[str,None]=None,
                      format:str='', after_format:Optional[str]=None,
                      default_value:Any=None,
