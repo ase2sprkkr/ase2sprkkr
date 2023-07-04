@@ -1160,7 +1160,7 @@ class ContainerDefinition(BaseDefinition):
            else:
               after = pp.Forward() << delimiter
            after.addCondition(lambda loc, toks: loc != init.location)
-           inter = (first | after).setName('?')
+           inter = (first | after).setName(f'<?DELIM>')
 
            def sequence():
                for head,g in grammars():
