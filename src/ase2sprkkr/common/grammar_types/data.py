@@ -37,12 +37,22 @@ class NumpyArray(GrammarType):
           None - default behavior.
           int  - the number will take given fixed number of chars
 
-        written_shape
-          resize to given shape before writing
-
         shape
-          resize to given shape after read
+          Resize to given shape after read
+
+        written_shape
+          Resize to given shape before writing
+
+        lines
+          Number of lines to read. Can be given as string - then
+          the value of given option determine the number of lines.
+
+        item_format
+          Output format of the array (just for writing).
+
         indented
+          If there are <n> spaces before data, pass n to this arg.
+
           If the file has the following structure::
 
              .......................................
@@ -61,9 +71,9 @@ class NumpyArray(GrammarType):
 
         dtype
           Type of the resulting data. Pass ``'lines'`` to get array of whole lines
-        format
-          Format string used to write, e.g.`%.4e`
 
+        **kwargs
+          Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
         """
         self.delimiter=delimiter
         self.written_shape=written_shape
@@ -116,7 +126,7 @@ class NumpyArray(GrammarType):
 
     def _n_lines_grammar(self, lines):
          """ return a grammar for n lines of text """
-         out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(\n|$)", re.S).setParseAction(lambda x: x[0])
+         out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S).setParseAction(lambda x: x[0])
          #out.addParseAction(lambda x: breakpoint() or x)
          out=self._parse_numpy_array_grammar(out)
          return out
@@ -172,6 +182,7 @@ class NumpyArray(GrammarType):
            self.remove_forward = lambda: obj.remove_grammar_hook(hook)
         else:
            self.remove_forward=None
+        super().added_to_container(container)
 
     def __del__(self):
         if self.remove_forward:
