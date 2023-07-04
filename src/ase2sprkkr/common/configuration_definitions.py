@@ -91,7 +91,8 @@ def dict_from_parsed(values, allowed_duplicates):
     return out
 
 
-    return out
+
+
 
 class BaseDefinition:
    """ A base class for a configuration definition, either of an option, or of a container.
@@ -1182,7 +1183,7 @@ class ContainerDefinition(BaseDefinition):
                    if head.is_optional:
                       g = pp.Optional(g)
                    if head.condition:
-                      yield head.condition.prepare_grammar(self, g)
+                      yield head.condition.prepare_grammar(head, g)
                    else:
                       yield g
 
