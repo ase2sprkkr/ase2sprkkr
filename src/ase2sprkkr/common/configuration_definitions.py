@@ -374,17 +374,16 @@ class BaseDefinition:
        """
        return False
 
-   is_generated = False
-   """ Generated values are computed on the fly from the other data """
-
 class ValueDefinition(BaseDefinition):
 
   result_class = Option
 
   name_in_grammar = None
+  is_generated = False
 
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
                fixed_value=None, required=None, init_by_default=False,
+               is_stored=None,
                info=None, description=None,
                is_hidden=False, is_optional=None, is_expert=False,
                is_numbered_array:bool=False, is_repeated=False,
@@ -430,6 +429,10 @@ class ValueDefinition(BaseDefinition):
 
     init_by_default: bool
       If the value is not set, init it by default
+
+    is_stored: bool
+      If True, the value is readed/writed from the output file.
+      If None, set to False if the value is Generated.
 
     is_optional: bool or None
       If True, the value can be omited, if fixed order in the section is required
@@ -494,6 +497,8 @@ class ValueDefinition(BaseDefinition):
        self.is_always_added = is_always_added
 
     self.init_by_default = init_by_default
+    self.is_stored = not self.is_generated if is_stored is None else is_stored
+
     if fixed_value is None:
        self.is_fixed = False
     else:
@@ -731,6 +736,8 @@ class ValueDefinition(BaseDefinition):
 
   def _create_grammar(self, allow_dangerous=False):
     """ Return grammar for the name-value pair """
+    if not self.is_stored:
+        return None
     if self.output_definition is not self:
         return self.output_definition._grammar(allow_dangerous)
     body = self._grammar_of_value(self.name_in_grammar, allow_dangerous)
@@ -1118,8 +1125,6 @@ class ContainerDefinition(BaseDefinition):
              (e.g. the item is followed by the items without name in grammar)
              """
              for i in self._members.values():
-                 if i.is_generated:
-                     continue
                  g = i._grammar(allow_dangerous)
                  if not g:
                      continue

@@ -12,6 +12,8 @@ class BaseGeneratedValueDefinition(BaseDefinition):
   that it is generated. """
 
   is_generated = True
+  """ Generated value - the value is computed from other values """
+  is_stored = False
   """ This property sets, that this Value/Option is generated. """
 
   result_class = Option
@@ -20,6 +22,9 @@ class BaseGeneratedValueDefinition(BaseDefinition):
       """ By default, generated values recieve no enhancement from
       its definition """
       pass
+
+  def _create_grammar(*args, **kwargs):
+      return None
 
 class GeneratedValueDefinition(BaseGeneratedValueDefinition):
 

@@ -387,9 +387,9 @@ class Option(Configuration):
         Whether to write the value or not
       """
       d = self._definition
-      if d.is_generated:
+      if not d.is_stored:
          return None, False
-      if d.write_condition and not d.write_condition(self):
+      if not d.write_condition(self):
          return None, False
 
       if not d.type.has_value:
