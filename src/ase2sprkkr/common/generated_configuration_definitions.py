@@ -86,7 +86,11 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
        return tuple([get(i) for i in self.shape])
 
    def source(self, container):
-       out=container[self.data]()[self.selector]
+       if callable(self.selector):
+          selector=self.selector(container)
+       else:
+          selector=self.selector
+       out=container[self.data]()[selector]
        if self.shape:
           out.shape = self.determine_shape(container)
        if self.transpose:
