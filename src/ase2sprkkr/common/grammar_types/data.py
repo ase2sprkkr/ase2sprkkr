@@ -70,7 +70,7 @@ class NumpyArray(GrammarType):
           new lines created by splitting the old.
 
         dtype
-          Type of the resulting data. Pass ``'lines'`` to get array of whole lines
+          Type of the resulting data. Pass ``'line'`` to get array of whole lines
 
         **kwargs
           Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
