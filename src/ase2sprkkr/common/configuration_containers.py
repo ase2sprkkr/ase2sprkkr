@@ -437,7 +437,7 @@ class BaseSection(ConfigurationContainer):
         If any value have been written return True, otherwise return False.
       """
       d = self._definition
-      if d.write_condition and not d.write_condition(self):
+      if not d.write_condition(self) or (d.condition and not d.condition(self)):
          return
 
       if d.is_expert:

@@ -113,7 +113,7 @@ class BaseDefinition:
                 is_optional=False, is_hidden=False, is_expert=False,
                 name_in_grammar=None, info=None, description=None,
                 write_alternative_name:bool=False,
-                write_condition=None,
+                condition=None, write_condition=None,
                 result_class=None
                 ):
        """
@@ -171,7 +171,8 @@ class BaseDefinition:
        self.is_hidden = is_hidden
        """ Is it required part of configuration (or can it be ommited)? """
        self.write_alternative_name = write_alternative_name
-       self.write_condition = write_condition
+       self.write_condition = write_condition or (lambda x: True)
+       self.condition = condition
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
        self._info = info
@@ -389,7 +390,8 @@ class ValueDefinition(BaseDefinition):
                is_numbered_array:bool=False, is_repeated=False,
                is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
-               write_alternative_name:bool=False, write_condition=None,
+               write_alternative_name:bool=False,
+               write_condition=None, condition=None,
                result_class=None,
                ):
     """
@@ -542,7 +544,8 @@ class ValueDefinition(BaseDefinition):
          description = description,
          write_alternative_name = write_alternative_name,
          write_condition = write_condition,
-         result_class = result_class
+         condition = condition,
+         result_class = result_class,
     )
 
     if self.name_in_grammar is None:
@@ -1143,6 +1146,8 @@ class ContainerDefinition(BaseDefinition):
                add = delimiter + grammar
                if item.is_optional:
                   add = pp.Optional(add)
+               if item.condition and self.force_order:
+                  add = head.condition.prepare_grammar(self, add)
                grammar_chain = grammar_chain + add
          yield head_item, grammar_chain
 
@@ -1167,7 +1172,10 @@ class ContainerDefinition(BaseDefinition):
                    g = inter + g
                    if head.is_optional:
                       g = pp.Optional(g)
-                   yield g
+                   if head.condition:
+                      yield head.condition.prepare_grammar(self, g)
+                   else:
+                      yield g
 
            values  = pp.And([ i for i in sequence()])
 

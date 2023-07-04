@@ -389,6 +389,8 @@ class Option(Configuration):
       d = self._definition
       if not d.is_stored:
          return None, False
+      if d.condition and not d.codition(self):
+         return None, False
       if not d.write_condition(self):
          return None, False
 
