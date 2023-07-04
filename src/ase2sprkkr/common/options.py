@@ -99,18 +99,20 @@ class Option(Configuration):
       only the 'wildcard' value (i.e. the one without array index, which is used for the all values
       not explicitly specified) is returned.
       """
-      if self._definition.is_generated:
-         return self._definition.getter(self._container)
+      d = self._definition
+      if d.is_generated:
+         return d.getter(self._container)
 
       value = self._unpack_value(self._value)
       if value is not None:
-          if self._definition.is_numbered_array and not all_values:
+          if d.is_numbered_array and not all_values:
               return value.get('def', self.default_value)
           return value
       if hasattr(self, '_result'):
           return self.result
-      if self._definition.is_numbered_array and all_values and self.default_value is not None:
-          return { 'def' : self.default_value }
+      dv = self.default_value
+      if d.is_numbered_array and all_values and dv is not None:
+          return { 'def' : dv }
       return self.default_value
 
   def is_dangerous(self):
