@@ -25,8 +25,9 @@ class NumpyArray(GrammarType):
     array_access = True
 
     @add_to_signature(GrammarType.__init__)
-    def __init__(self, *args, delimiter=None, written_shape=None, lines=None,
-                              item_format=None, indented=False, **kwargs):
+    def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
+                              lines=None, item_format=None, indented=False,
+                              **kwargs):
         """
         Parameters
         ----------
@@ -38,6 +39,8 @@ class NumpyArray(GrammarType):
         written_shape
           resize to given shape before writing
 
+        shape
+          resize to given shape after read
         indented
           If the file has the following structure::
 
@@ -64,6 +67,7 @@ class NumpyArray(GrammarType):
         self.item_format=item_format
         self.indented=indented
         self.lines=lines
+        self.shape=shape
         self.remove_forward=None
         super().__init__(*args, **kwargs)
 
@@ -116,6 +120,8 @@ class NumpyArray(GrammarType):
              if self.indented:
                 v=v.replace('\n'+' '*self.indented[1], '')
              v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter )
+             if self.shape:
+                v.shape=self.shape
              return v
 
          grammar.setParseAction(
