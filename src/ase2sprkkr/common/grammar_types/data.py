@@ -27,6 +27,7 @@ class NumpyArray(GrammarType):
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
                               lines=None, item_format=None, indented=False,
+                              dtype=None,
                               **kwargs):
         """
         Parameters
@@ -58,6 +59,8 @@ class NumpyArray(GrammarType):
           The second number is the number of spaces placed on the begining of the
           new lines created by splitting the old.
 
+        dtype
+          Type of the resulting data. Pass ``'lines'`` to get array of whole lines
         format
           Format string used to write, e.g.`%.4e`
 
@@ -68,6 +71,7 @@ class NumpyArray(GrammarType):
         self.indented=indented
         self.lines=lines
         self.shape=shape
+        self.dtype=dtype
         self.remove_forward=None
         super().__init__(*args, **kwargs)
 
@@ -119,7 +123,10 @@ class NumpyArray(GrammarType):
          def parse(v):
              if self.indented:
                 v=v.replace('\n'+' '*self.indented[1], '')
-             v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter )
+             if self.dtype=='line':
+                v=np.array([ i.rstrip() for i in v.split('\n')], dtype=object)
+             else:
+                v=np.genfromtxt( io.StringIO(v), delimiter=self.delimiter, dtype=self.dtype )
              if self.shape:
                 v.shape=self.shape
              return v
