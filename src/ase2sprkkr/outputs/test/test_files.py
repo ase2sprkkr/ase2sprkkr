@@ -19,8 +19,8 @@ class TestOutput(TestCase):
     for i in listdir(dire):
         fname = path_join(dire, i)
         if isfile(fname):
-            out=OutputFile.from_file(fname)
             ext=fname.rsplit('.',1)[1]
+            out=OutputFile.from_file(fname, unknown=False)
             if ext=='spc':
                self.assertEqual('ARPES', out.KEYWORD())
                self.assertEqual((200,160), out.ENERGY().shape)

@@ -43,7 +43,33 @@ class OutputFile(ConfigurationFile):
       return out
 
   @classmethod
-  def from_file(cls, filename, first_try=None, try_only=None):
+  def from_file(cls, filename, first_try=None, try_only=None, unknown=None):
+      """
+      Read SPRKKR output file (DOS, BSF....). The type of content of the
+      output file is guessed from the content, however you can get hint what
+      to try first or force to read only certain file type(s).
+
+      Parameters
+      ----------
+      filename
+        The file to read
+
+      first_try
+        List of output file types to be tried first. If it is None, it is guessed
+        from the file extension.
+
+      try_only
+        List of the output file types, that can be read.
+        None mean read any known file type.
+
+      unknown
+        If True, at last, an unknown output file is readed: such file has just
+        parsed header and then one property that holds the rest of the file as
+        text.
+        If False, raise an exception if no known (and allowed) file type is
+        recognized.
+        None means True if try_only is None, False otherwise.
+      """
       if first_try is None and not try_only:
          fname = filename
          if hasattr(filename, 'name'):
@@ -56,9 +82,14 @@ class OutputFile(ConfigurationFile):
           first_try=[ first_try ]
 
       if first_try:
-         out = cls.from_file(filename, first_try=False, try_only=first_try)
+         out=None
+         try:
+             out = cls.from_file(filename, first_try=False, try_only=first_try)
+         except Exception as e:
+             last = e
          if out: return out
-
+      else:
+         last = None
       for ext, i in cls.definitions.items():
           if try_only and ext not in try_only:
              continue
@@ -68,11 +99,15 @@ class OutputFile(ConfigurationFile):
              out = i.definition.read_from_file(filename)
              return out
           except Exception as e:
-             pass
-      try:
-          return cls.unknown_output_file_definition.read_from_file(filename)
-      except pp.ParseBaseException as e:
-          raise Exception(f'Can not parse file: {filename}') from e
+             last = e
+      if unknown is None:
+         unknown = try_only is None
+      if unknown:
+          try:
+              return cls.unknown_output_file_definition.read_from_file(filename)
+          except pp.ParseBaseException as e:
+              raise Exception(f'Can not parse file: {filename}') from e
+      raise last
 
 class CommonOutputFile(ConfigurationFile):
 
