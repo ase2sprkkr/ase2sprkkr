@@ -113,6 +113,8 @@ class Option(Configuration):
       dv = self.default_value
       if d.is_numbered_array and all_values and dv is not None:
           return { 'def' : dv }
+      if d.init_by_default:
+          self._value = self._pack_value( dv )
       return self.default_value
 
   def is_dangerous(self):

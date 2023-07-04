@@ -384,7 +384,8 @@ class ValueDefinition(BaseDefinition):
   name_in_grammar = None
 
   def __init__(self, name, type=None, default_value=None, alternative_names=None,
-               fixed_value=None, required=None, info=None, description=None,
+               fixed_value=None, required=None, init_by_default=False,
+               info=None, description=None,
                is_hidden=False, is_optional=None, is_expert=False,
                is_numbered_array:bool=False, is_repeated=False,
                is_always_added:bool=None,
@@ -426,6 +427,9 @@ class ValueDefinition(BaseDefinition):
 
        * the value is not expert
        * the optional is not True and the option has not a default_value
+
+    init_by_default: bool
+      If the value is not set, init it by default
 
     is_optional: bool or None
       If True, the value can be omited, if fixed order in the section is required
@@ -489,6 +493,7 @@ class ValueDefinition(BaseDefinition):
     else:
        self.is_always_added = is_always_added
 
+    self.init_by_default = init_by_default
     if fixed_value is None:
        self.is_fixed = False
     else:
