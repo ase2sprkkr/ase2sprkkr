@@ -1110,7 +1110,7 @@ class ContainerDefinition(BaseDefinition):
           ))
         )
 
-    def _values_grammar(self, allow_dangerous:bool=False, delimiter=None):
+    def _grammar_of_values(self, allow_dangerous:bool=False, delimiter=None):
        if self.custom_class:
           custom_value = self.custom_member_grammar(self.all_member_names())
        else:
@@ -1213,7 +1213,7 @@ class ContainerDefinition(BaseDefinition):
 
     def _create_grammar(self, allow_dangerous=False):
        delimiter = self.grammar_of_delimiter
-       values = self._values_grammar(allow_dangerous, delimiter)
+       values = self._grammar_of_values(allow_dangerous, delimiter)
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
 

@@ -349,7 +349,7 @@ XSITES NR=3 FLAG
     assertParse("ENERGY NE=1 Ime=0.5", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : 0.5}});
     input_parameters_def.sections['ENERGY']['Ime'].is_numbered_array = True
     with generate_grammar():
-      grammar = input_parameters_def._values_grammar()
+      grammar = input_parameters_def._grammar_of_values()
 
     assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0");
     assertParse("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {'def': 0.5,  1:0.4, 5:0.8} }, });
