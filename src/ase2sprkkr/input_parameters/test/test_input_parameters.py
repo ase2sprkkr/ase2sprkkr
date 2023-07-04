@@ -11,7 +11,7 @@ from .. import input_parameters_definitions as cd
 from .. import input_parameters as input_parameters
 from ...common.configuration_containers import Section, CustomSection
 from ...common.options import Option, CustomOption
-from ...common.configuration_definitions import gather
+from ...common.configuration_definitions import gather, switch
 import io, re
 import numpy as np
 from ...common.grammar import generate_grammar
@@ -514,3 +514,30 @@ XSITES NR=3 FLAG
     ip=ipd.read_from_string(data)
     self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2]), 'C':77}}, ip.to_dict());
     self.assertEqual('ENERGY A=3 B=2 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
+
+  def test_switch(self):
+    assertParse = self.assertParse
+    assertNotValid = self.assertNotValid
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        *switch('A', {
+          1: [ V('B', 2) ],
+          2: V('C', 3) })
+       ]})
+
+    ipd.custom_class=None
+    ipd['ENERGY'].custom_class=None
+    ipd['ENERGY'].force_order=True
+    #ipd['ENERGY']['C'].add_grammar_hook(lambda x:x.addParseAction(lambda x: breakpoint() or x))
+    #ipd['ENERGY']['B'].add_grammar_hook(lambda x:x.addParseAction(lambda x: breakpoint() or x))
+    grammar = ipd.grammar()
+    assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar);
+    assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar);
+    #grammar.set_debug(True, True)
+    assertParse('ENERGY A=1 B=2', {'ENERGY': {'A' : 1, 'B' : 2}}, grammar);
+    assertNotValid('ENERGY A=2 B=2', grammar)
+    assertNotValid('ENERGY A=1 C=1', grammar)
+    assertNotValid('ENERGY A=1 B=2 C=1', grammar)
+    assertNotValid('ENERGY A=2 B=2 C=1', grammar)
+    assertNotValid('ENERGY A=3 C=3', grammar)
