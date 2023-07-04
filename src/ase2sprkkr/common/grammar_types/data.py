@@ -126,7 +126,7 @@ class NumpyArray(GrammarType):
 
     def _n_lines_grammar(self, lines):
          """ return a grammar for n lines of text """
-         out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S).setParseAction(lambda x: x[0])
+         out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S)
          #out.addParseAction(lambda x: breakpoint() or x)
          out=self._parse_numpy_array_grammar(out)
          return out
