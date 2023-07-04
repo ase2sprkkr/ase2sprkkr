@@ -49,12 +49,17 @@ def dict_from_parsed(values, allowed_duplicates):
     duplicates = []
     errors = []
 
+    if isinstance(allowed_duplicates, list):
+       _allowed_duplicates = lambda x: x in allowed_duplicates
+    else:
+       _allowed_duplicates = allowed_duplicates
+
     def add(out, k, key, check):
          if k in out:
             if key in duplicates:
                out[k].append(v)
             else:
-               if not check in allowed_duplicates:
+               if not _allowed_duplicates(check):
                    return errors.append(check)
                out[k] = [ out[k], v ]
                duplicates.append(k)
@@ -1197,7 +1202,7 @@ class ContainerDefinition(BaseDefinition):
            if first:
               values = first + pp.Optional(delimiter + values)
 
-       values.setParseAction(lambda x: dict_from_parsed(x.asList(), self._allowed_duplicates()))
+       values.setParseAction(lambda x: dict_from_parsed(x.asList(), self._allow_duplicates_of))
 
        if self.validate:
           def _validate(s, loc, value):
@@ -1212,12 +1217,12 @@ class ContainerDefinition(BaseDefinition):
 
        return values
 
-    def _allowed_duplicates(self):
-       out = []
-       for i in self:
-           if i.allow_duplication():
-              out.append(i.name)
-       return out
+    def _allow_duplicates_of(self, name):
+        """ Can a given element (identified by name) have more values in the parsed results?
+            (However, not all definitions have to specify allow_duplicates, just the ones
+            that have a value). For the others, this function raises an error.
+        """
+        return self[name].allow_duplication()
 
     def _create_grammar(self, allow_dangerous=False):
        delimiter = self.grammar_of_delimiter

@@ -85,13 +85,10 @@ class InputParametersDefinition(ConfigurationFileDefinition):
   @classmethod
   @cache
   def custom_value_grammar(cls):
-      class Anything:
-         def __contains__(self, what):
-             return True
       value  = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).\
-              setParseAction(lambda x: dict_from_parsed(x.asList(), Anything()))
+            setParseAction(lambda x: dict_from_parsed(x.asList(), lambda x: True))
 
   def _generic_info(self):
       return f"Input parameters for task {self.name}"
