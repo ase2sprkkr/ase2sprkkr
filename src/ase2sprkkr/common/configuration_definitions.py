@@ -189,6 +189,13 @@ class BaseDefinition:
 
        self.grammar_hooks = []
 
+   def all_names_in_grammar(self):
+       if self.name_in_grammar:
+           yield self.name
+       if self.alternative_names:
+           for i in self.alternative_names:
+               yield i
+
    def allow_duplication(self):
        """ Can be the item repeated in the output file """
        return False
@@ -1111,11 +1118,8 @@ class ContainerDefinition(BaseDefinition):
         return self.result_class(self, container)
 
     def all_member_names(self):
-        return itertools.chain(
-          (i.name for i in self),
-          itertools.chain.from_iterable((
-            i.alternative_names for i in self if i.alternative_names
-          ))
+        return itertools.chain.from_iterable(
+            i.all_names_in_grammar() for i in self
         )
 
     def _grammar_of_values(self, allow_dangerous:bool=False, delimiter=None):
