@@ -68,7 +68,7 @@ class NumpyArray(GrammarType):
         self.delimiter=delimiter
         self.written_shape=written_shape
         self.item_format=item_format
-        self.indented=indented
+        self.indented=' '*indented if isinstance(indented, int) else indented
         self.lines=lines
         self.shape=shape
         self.dtype=dtype
@@ -91,20 +91,24 @@ class NumpyArray(GrammarType):
        np.savetxt(out, value, delimiter=delimiter, format=self.item_format)
        np.savetxt(io)
        out=io.getvalue()
+       indented = self.indented
        if indented:
-          first = indented[0]
-          nexts = first - indented[1]
-          prefix = ' '*indented[1]
-          def g():
-              for i in '\n'.split(''):
-                  yield i[:first]
-                  s=firsts
-                  l=len(i)
-                  while s<l:
-                    e=firsts+nexts
-                    yield prefix+i[s:e]
-                    s=e
-          out = '\n'.join(g)
+          if isinstance(indented, tuple):
+            first = indented[0]
+            nexts = first - indented[1]
+            prefix = ' '*indented[1]
+            def g():
+                for i in '\n'.split(''):
+                    yield i[:first]
+                    s=firsts
+                    l=len(i)
+                    while s<l:
+                      e=firsts+nexts
+                      yield prefix+i[s:e]
+                      s=e
+            out = '\n'.join(g)
+          else:
+            out=re.sub('(^|\n)',r'\1' + indented, out)
        return out
 
 
@@ -122,7 +126,10 @@ class NumpyArray(GrammarType):
          numpy array """
          def parse(v):
              if self.indented:
-                v=v.replace('\n'+' '*self.indented[1], '')
+                if isinstance(self.indented, tuple):
+                  v=v.replace('\n'+' '*self.indented[1], '')
+                else:
+                  v=re.sub(f'(^|\n){self.indented}',r'\1', v)
              if self.dtype=='line':
                 v=np.array([ i.rstrip() for i in v.split('\n')], dtype=object)
              else:
