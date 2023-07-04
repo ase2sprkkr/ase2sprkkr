@@ -31,8 +31,7 @@ class TestInputParameters(TestCase):
       self.assertEqual(out[0], value)
 
   def parse(self, text, grammar):
-        if not grammar: breakpoint()
-        if callable(grammar):
+        if not isinstance(grammar, pp.ParserElement):
            grammar = grammar()
         return grammar.parseString(text, True)
 
@@ -455,14 +454,19 @@ XSITES NR=3 FLAG
         V('E', 3),
       ]
     })
-    assertParse("""ENERGY A=3 B=2
+    data = """ENERGY A=3 B=2
     1 1
     2 2
     3 3
     4 5 6
     5 9 8
-    E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, ipd.grammar());
+    E=77"""
 
+    g = ipd.grammar()
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g);
+    ipd['ENERGY'].force_order=True
+    g = ipd.grammar()
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g);
 
     ipd = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
