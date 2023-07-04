@@ -16,8 +16,29 @@ import io, re
 import numpy as np
 from ...common.grammar import generate_grammar
 import pytest
+from functools import partial
+
+V = cd.InputValueDefinition
+def ar(x):
+   return np.atleast_1d(x)
+
 
 class TestInputParameters(TestCase):
+
+  def assertParse(self, text, value, grammar):
+      out = self.parse(text, grammar).asList()
+      self.assertEqual(len(out),1)
+      self.assertEqual(out[0], value)
+
+  def parse(self, text, grammar):
+        if not grammar: breakpoint()
+        if callable(grammar):
+           grammar = grammar()
+        return grammar.parseString(text, True)
+
+  def assertNotValid(self, text, grammar=None):
+      self.assertRaises(pp.ParseBaseException, lambda: self.parse(text, grammar))
+
 
   def test_section_delimiter_value(self):
      grammar = cd.InputParametersDefinition.grammar_of_delimiter()
@@ -32,11 +53,9 @@ class TestInputParameters(TestCase):
      with generate_grammar():
        cv = cd.InputSectionDefinition.custom_member_grammar(['aaa'])
      self.assertTrue('\n' not in cv.whiteChars)
-     def assertParse(text,result):
-         assert cv.parseString(text, True)[0] == result
 
-     def assertNotValid(text):
-         self.assertRaises(pp.ParseException, lambda: cv.parseString(text, True))
+     assertParse = partial(self.assertParse, grammar=lambda: cv)
+     assertNotValid = partial(self.assertNotValid, grammar=lambda: cv)
 
      assertParse("bbb=1", ('bbb', 1))
      assertParse("bbb=1.3", ('bbb', 1.3))
@@ -45,20 +64,20 @@ class TestInputParameters(TestCase):
      assertNotValid("aaa=1")
      with generate_grammar():
         cv = cv + 'a'
-     assertParse("bbb=1a", ('bbb', 1)) #in this case, 'a' is in result[1]
+     out = self.parse("bbb=1a", cv)
+     self.assertEqual(list(out), [('bbb', 1), 'a'])
      assertNotValid("bbb=1\na")
 
   def test_dangerous_value(self):
      with generate_grammar():
        cv = cd.InputValueDefinition('aaa', int, required=True).grammar()
-     def assertParse(text,result):
-         assert cv.parseString(text, True)[0] == result
+
+     assertParse = partial(self.assertParse, grammar=lambda: cv)
+     assertNotValid = partial(self.assertNotValid, grammar=lambda: cv)
      def assertParseDangerous(text,result):
          out = cv.parseString(text, True)[0]
          assert out[0] == result[0]
          self.assertEqual(out[1].value, result[1])
-     def assertNotValid(text):
-         self.assertRaises(pp.ParseBaseException, lambda: cv.parseString(text, True))
 
      assertParse("aaa=1", ('aaa', 1))
      assertNotValid("aaa")
@@ -74,8 +93,6 @@ class TestInputParameters(TestCase):
      assertParseDangerous("aaa={2,3}", ('aaa', np.array([2,3])))
 
   def test_write_condition(self):
-    V = cd.InputValueDefinition
-
     input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
         V('E', 1)
@@ -92,9 +109,8 @@ class TestInputParameters(TestCase):
     input_parameters_def['ENERGY'].write_condition = lambda o: False
     self.assertEqual(id.to_string(), "")
 
-  def test_input_parameters_definition(self):
-    V = cd.InputValueDefinition
 
+  def test_input_parameters_definition(self):
     input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
@@ -105,23 +121,10 @@ class TestInputParameters(TestCase):
         V('NL', int)
       ]
     })
-
-    def parse(text, _grammar=None):
-        _grammar = _grammar or grammar
-        return _grammar.parseString(text, True)
-
-    def assertNotValid(text, grammar=None):
-      self.assertRaises(pp.ParseBaseException, lambda: parse(text, grammar))
-
-    def assertParse(text, value, _grammar=None):
-      out = parse(text, _grammar).asList()
-      self.assertEqual(len(out),1)
-      self.assertEqual(out[0], value)
-
-    def ar(x):
-      return np.atleast_1d(x)
-
     grammar = input_parameters_def.sections['SITES'].values['NL'].grammar()
+    assertParse = partial(self.assertParse, grammar=lambda: grammar)
+    assertNotValid = partial(self.assertNotValid, grammar=lambda: grammar)
+
     assertParse("NL=3", ('NL', 3))
     grammar = input_parameters_def.sections['ENERGY'].values['NE'].grammar()
     assertParse("NE={3}", ('NE', ar(3)))
@@ -163,7 +166,7 @@ SITES NL=2""", {'ENERGY': {'NE':300, 'GRID':3}, 'SITES':{'NL':2}} )
 
     #custom values
     with generate_grammar():
-      grammar = input_parameters_def['ENERGY']._values_grammar()
+      grammar = input_parameters_def['ENERGY']._grammar_of_values()
     assertParse("""GRID={3}
                      NE={300}
                      """, {'GRID':ar(3), 'NE':ar(300)})
@@ -232,6 +235,7 @@ SITES NL=3
                      NE={300}
                      NXXX
 
+    #numbered_arrays
 
 SITES NL=2
 
@@ -333,7 +337,7 @@ XSITES NR=3 FLAG
     self.assertEqual('sss', ips.ENERGY.NE())
     self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
 
-    #numbered_arrays
+  def test_numbered_array(self):
     input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
@@ -344,6 +348,11 @@ XSITES NR=3 FLAG
         V('NL', int)
       ]
     })
+    with generate_grammar():
+      grammar = input_parameters_def._grammar_of_values()
+
+    assertParse = partial(self.assertParse, grammar=lambda: grammar)
+    assertNotValid = partial(self.assertNotValid, grammar=lambda: grammar)
 
     assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0");
     assertParse("ENERGY NE=1 Ime=0.5", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : 0.5}});
@@ -408,7 +417,8 @@ XSITES NR=3 FLAG
     ip=input_parameters_def.read_from_file(io.StringIO(out), allow_dangerous=True)
     self.assertEqual(ip.ENERGY.Ime(all_values=True), {'def': 1.0, 1:0.4, 5:'yy' } )
 
-    #gather
+  def test_gather(self):
+    assertParse = self.assertParse
     ipd = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
@@ -421,7 +431,10 @@ XSITES NR=3 FLAG
     out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
     self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
 
-    #NumpyArray of given len
+
+  def test_given_len_array(self):
+    assertParse = self.assertParse
+
     ipd = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
         V('C', gt.NumpyArray(lines=3), name_in_grammar=False ),
@@ -479,12 +492,13 @@ XSITES NR=3 FLAG
     B=5
     B=8
     C=77""";
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ipd.grammar());
+    grammar = ipd.grammar()
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar);
     ip=ipd.read_from_string(data)
     self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict());
     self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
     ipd['ENERGY'].force_order=True
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ipd.grammar());
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar);
     ip=ipd.read_from_string(data)
     self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict());
     self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
