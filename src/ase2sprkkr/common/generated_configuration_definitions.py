@@ -20,6 +20,8 @@ class BaseGeneratedValueDefinition(BaseDefinition):
   result_class = Option
   """ The generated Values creates :class:`Option` """
 
+  _grammar = None
+  """ Do not generated grammar, since this item is not readed, but computed from other values. """
 
   def enrich(self, option):
       """ By default, generated values recieve no enhancement from
@@ -29,8 +31,6 @@ class BaseGeneratedValueDefinition(BaseDefinition):
 
   def __repr__(self):
        return f"<{self.name} (generated)>"
-  def _create_grammar(*args, **kwargs):
-      return None
 
 class GeneratedValueDefinition(BaseGeneratedValueDefinition):
 
