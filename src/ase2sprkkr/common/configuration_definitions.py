@@ -446,9 +446,8 @@ class ValueDefinition(BaseDefinition):
   def __init__(self, name, type=None, default_value=None,
                written_name=None, alternative_names=None,
                fixed_value=None, required=None, init_by_default=False,
-               is_stored=None,
-               info=None, description=None,
-               is_hidden=False, is_optional=None, is_expert=False,
+               result_is_visible=False, info=None, description=None,
+               is_stored=None, is_hidden=False, is_optional=None, is_expert=False,
                is_numbered_array:bool=False, is_repeated=False,
                is_always_added:bool=None,
                name_in_grammar=None, name_format=None, expert=None,
@@ -496,6 +495,15 @@ class ValueDefinition(BaseDefinition):
 
     init_by_default: bool
       If the value is not set, init it by default
+
+    result_is_visible: bool
+      If True, the result (see the result property of :class:`Option`) assigned to the
+      option is visible if the value is get as its default value - in this mode the result
+      can be used as a kind of default value, specific for given configuration object.
+
+      If False, the result is visible to the user just using the result property
+      and it should be some transformation of the value of the object (e.g.
+      relative path of the given absolute path, id of assigned object etc.)
 
     is_stored: bool
       If True, the value is readed/writed from the output file.
@@ -596,6 +604,9 @@ class ValueDefinition(BaseDefinition):
 
     if self.default_value is None and self.type.default_value is not None:
        self.default_value = self.type.default_value
+
+    if result_is_visible:
+       self.default_value = lambda o: o._result if hasattr(o, '_result') else default_value
 
     if required is None:
        required = not is_expert and (not is_optional and default_value is None)
@@ -957,7 +968,7 @@ class ValueDefinition(BaseDefinition):
            out['fixed_value'] = out['default_value']
        return out
 
-  _copy_excluded_args = BaseDefinition._copy_excluded_args + ['fixed_value']
+  _copy_excluded_args = BaseDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible']
 
   def copy_value(self, value, all_values=False):
       """ Creates copy of the value

@@ -108,8 +108,6 @@ class Option(Configuration):
           if d.is_numbered_array and not all_values:
               return value.get('def', self.default_value)
           return value
-      if hasattr(self, '_result'):
-          return self.result
       dv = self.default_value
       if d.is_numbered_array and all_values and dv is not None:
           return { 'def' : dv }
