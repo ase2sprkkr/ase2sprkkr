@@ -197,6 +197,14 @@ class BaseDefinition:
 
        self.grammar_hooks = []
 
+   @property
+   def output_definition(self):
+        return self.__dict__.get('_output_definition', self)
+
+   @output_definition.setter
+   def output_definition(self, od):
+        """ Set a special object for writing """
+        self.__dict__['_output_definition'] = od
 
 
    def all_names_in_grammar(self):
@@ -592,11 +600,6 @@ class ValueDefinition(BaseDefinition):
   """ Redefine this in descendants, if you need to create different types that the defaults to be
   'guessed' from the default values """
 
-  @property
-  def output_definition(self):
-      return self.__dict__.get('_output_definition', self)
-
-
   def allow_duplication(self):
        """ Can be the item repeated in the output file """
        return self.is_repeated
@@ -607,11 +610,6 @@ class ValueDefinition(BaseDefinition):
       in the output.
       """
       return self.name_in_grammar or self.type.is_independent_on_the_predecessor
-
-  @output_definition.setter
-  def output_definition(self, od):
-      """ Set a special object for writing """
-      self.__dict__['_output_definition'] = od
 
   def enrich(self, option):
       """ The Option can be enriched by the definition, e.g. the docsting can be extended. """
