@@ -6,6 +6,7 @@ from .decorators import add_to_signature
 from functools import partial
 from .options import Option
 import copy
+import numpy as np
 
 class BaseGeneratedValueDefinition(BaseDefinition):
   """ Base class for all generated values. It just set
@@ -66,11 +67,27 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
      The data will be reshaped to given shape. The dimension can be given
      either by number, or by names of other container variables. E.g.
      ``('NE', 5)``
+
+   transpose
+    Transpose the source data before returning or indexing.
+    If reorder is given, this settings has no effect.
+
+   reorder
+    Reorder the axes after reshaping. Argument is the array
+    of axes order, e.g. (2,0,1) shifts the last axis to be the first.
+
+   transform_key
+    Transform function for the keys idnexing the array
+    (e.g. the string name can be transformed to a propper numerical index)
+
+   plot
+    PlotInfo object that defines how the results are plotted
    """
 
    @add_to_signature(BaseDefinition.__init__, prepend=True)
    def __init__(self, name, data, selector=slice(None),
-                shape=None, transpose=False, transform_key=None,
+                shape=None, transpose=False, reorder=None,
+                transform_key=None,
                 plot=None,
                 *args, **kwargs):
        super().__init__(name, *args, **kwargs)
@@ -79,7 +96,10 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
        self.data = data
        self.plot = plot
        self.transform_key=transform_key
-       self.transpose = transpose
+       if reorder:
+           self.reorder=reorder
+       else:
+           self.reorder=transpose
 
    def determine_shape(self, container):
        """ Return the shape of the resulting array, possibly computed using
@@ -98,8 +118,8 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
        out=container[self.data]()[selector]
        if self.shape:
           out.shape = self.determine_shape(container)
-       if self.transpose:
-          out = out.T
+       if self.reorder:
+          out = np.transpose(out, axes=self.reorder if self.reorder is not True else None)
        return out
 
    def getter(self, container, key=None):
