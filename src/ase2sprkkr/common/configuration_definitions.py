@@ -166,6 +166,13 @@ class BaseDefinition:
         write_condition
            If defined, write the value, only if write_condition(the option) is True.
 
+        condition
+           If defined, the condition
+            - the condition.parse_condition() is invoked, when given grammar element
+              should be parsed. If it is False, the element is skipped
+            - the condition() is invoked, when the elements of the container is listed
+              to hide the inactive members
+
         result_class
            Redefine the class that holds data for this option/section.
        """
@@ -516,6 +523,13 @@ class ValueDefinition(BaseDefinition):
 
     write_condition
        If defined, write the value, only if write_condition(the option) is True.
+
+    condition
+       If defined, the condition
+        - the condition.parse_condition() is invoked, when given grammar element
+          should be parsed. If it is False, the element is skipped
+        - the condition() is invoked, when the elements of the container is listed
+          to hide the inactive members
 
     result_class
        Redefine the class that holds data for this option/section
