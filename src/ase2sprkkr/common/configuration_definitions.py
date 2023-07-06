@@ -1693,12 +1693,8 @@ class Switch(ControlDefinition):
    def __call__(self, option):
        return option.name in self.values[option._container[self.name]()]
 
-   @cache
    def all_values(self):
-       out = set()
-       for i in self.values.values():
-           out.update(i)
-       return out
+       return itertools.chain.from_iterable( self.values.values() )
 
    def item_hook(self, grammar):
        def item_value(value):
