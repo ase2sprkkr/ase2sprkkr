@@ -17,6 +17,8 @@ class BaseGeneratedValueDefinition(BaseDefinition):
   """ This property sets, that this Value/Option is generated. """
 
   result_class = Option
+  """ The generated Values creates :class:`Option` """
+
 
   def enrich(self, option):
       """ By default, generated values recieve no enhancement from
