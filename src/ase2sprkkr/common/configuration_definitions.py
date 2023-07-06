@@ -1705,15 +1705,18 @@ class Switch(ControlDefinition):
                if tpl:
                   tpl[1] << tpl[0]
                   tpl[1].setName(f"<IF True THEN {str(tpl[0])}>")
-               else:
-                  raise KeyError(f"In Switch, item {value} was not prepared")
+               elif i.output_definition.has_grammar():
+                  raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
+
            no = pp.Empty()
            #no.setParseAction(lambda x: breakpoint() or x)
-           for i in self.all_values().difference(ok):
+           for i in set(self.all_values()).difference(ok):
                tpl = self.prepared.get(i.name, None)
                if tpl:
                   tpl[1].setName(f"<IF False THEN {str(tpl[0])}>")
                   tpl[1] << no
+               elif i.output_definition.has_grammar():
+                  raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
        return grammar.addParseAction(lambda x: item_value(x[0][1]) and x)
 
    def prepare_grammar(self, definition, grammar):
