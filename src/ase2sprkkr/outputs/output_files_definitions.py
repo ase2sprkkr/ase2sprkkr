@@ -63,6 +63,10 @@ class OutputFileDefinition(ConfigurationFileDefinition):
 
   configuration_type_name = 'OUTPUT FILE'
 
+  def add_ignored(self, out):
+      """ In the output files, do not ignore doublecrossed lines """
+      return out
+
 @cache
 def output_file_header():
     """ Return the members of the common output file header, up to
