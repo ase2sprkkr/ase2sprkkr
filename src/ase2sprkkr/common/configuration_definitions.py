@@ -1645,6 +1645,9 @@ def switch(item, values, name=None):
 class Switch(ControlDefinition):
    """ Items of this class can control, which elements of grammar will be active and which not """
 
+   with generate_grammar():
+       empty = pp.Empty()
+
    def __init__(self, item, values, name=None):
        """
        Parameters
@@ -1708,13 +1711,12 @@ class Switch(ControlDefinition):
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
-           no = pp.Empty()
            #no.setParseAction(lambda x: breakpoint() or x)
            for i in set(self.all_values()).difference(ok):
                tpl = self.prepared.get(i.name, None)
                if tpl:
                   tpl[1].setName(f"<IF False THEN {str(tpl[0])}>")
-                  tpl[1] << no
+                  tpl[1] << self.empty
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
        return grammar.addParseAction(lambda x: item_value(x[0][1]) and x)
