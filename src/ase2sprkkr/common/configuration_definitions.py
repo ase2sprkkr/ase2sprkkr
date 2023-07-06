@@ -1543,44 +1543,43 @@ class Gather:
     other grammar elements, such that their names goes first and then the
     values go. See gather."""
 
-    def __init__(self, first, *others, name_delimiter=' ', value_delimiter='\t', value_delimiter_grammar=''):
-        self.first = first
-        self.others = others
+    def __init__(self, *items, name_delimiter=' ', value_delimiter='\t', value_delimiter_grammar=''):
+        if len(items) == 0:
+           raise ValueError('Gather requires at least one value')
+        self.items = items
         self.name_delimiter = name_delimiter
         self.value_delimiter = value_delimiter
         self.value_delimiter_grammar = value_delimiter_grammar
 
     def _grammar(self, allow_dangerous=False):
-        out = self.first._grammar_of_name()
-        for i in self.others:
-            out += i._grammar_of_name()
-        delimiter = self.first.name_in_grammar
-        if not delimiter:
-            for i in self.others:
-                 if i.name_in_grammar:
-                     delimiter=True
-                     break
-        out += self.first._grammar_of_value(delimiter, allow_dangerous)
-        for i in self.others:
-            out += i._grammar_of_value(self.value_delimiter_grammar, allow_dangerous)
-        def split(x):
-            x = x.asList()
-            ln = len(x) // 2
-            return [ (i,j) for i,j in zip(x[:ln], x[ln:]) ]
+        names = [ i._grammar_of_name() for i in self.items if i.name_in_grammar ]
+        ln = len(names)
+        delimiter = bool(names)
 
-        out.setParseAction(split)
+        def values():
+            nonlocal delimiter
+            for i in self.items:
+                #if i.name == 'EMAX': breakpoint()
+                yield i._grammar(allow_dangerous,
+                                 name_value_delimiter=delimiter,
+                                 name_in_grammar=False,
+                                 original=True)
+                delimiter=self.value_delimiter_grammar
+        names.extend(values())
+        out=pp.And(names)
+
+        def discard_names(x):
+            x = x.asList()
+            return x[ln:]
+
+        out.setParseAction(discard_names)
         return out
 
     def _save_to_file(self, file, value):
-        names = self.name_delimiter.join(i.name for i in self.others if i.name_in_grammar)
-        if self.first.name_in_grammar:
-           if names:
-                names = self.first.name + self.name_delimiter + names
-           else:
-                names = self.first_name
+        names = self.name_delimiter.join(i.formated_name for i in self.items if i.name_in_grammar)
         if names:
             value._definition.write_name(file, names)
-            delimiter = self.first.name_value_delimiter
+            delimiter = self.items[0].name_value_delimiter
         else:
             delimiter = ''
 
@@ -1594,7 +1593,7 @@ class Gather:
             delimiter = self.value_delimiter
 
         write(value, delimiter)
-        for i in self.others:
+        for i in self.items[1:]:
           write(value._container[i.name], self.value_delimiter)
         return True
 
