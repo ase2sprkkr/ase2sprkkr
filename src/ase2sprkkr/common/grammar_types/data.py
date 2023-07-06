@@ -1,7 +1,7 @@
 """ This module contains special GrammarTypes used for large data in output files """
 
 from .grammar_type import GrammarType, compare_numpy_values
-from ..decorators import add_to_signature
+from ..decorators import add_to_signature, cached_property
 import pyparsing as pp
 import re
 import io
@@ -18,6 +18,27 @@ class RestOfTheFile(GrammarType):
 
     def grammar_name(self):
       return '<the rest of the file>'
+
+class Prefixed(GrammarType):
+    """ This value consists from a few lines, each prefixed with a given prefix """
+
+    @add_to_signature(GrammarType.__init__, prepend=True)
+    def __init__(self, data_prefix, allow_empty=True, *args, **kwargs):
+        self.data_prefix = data_prefix
+        self.allow_empty=allow_empty
+        super().__init__(*args, **kwargs)
+
+    @cached_property
+    def _grammar(self):
+        pref = re.escape(self.data_prefix)
+        out = f'({pref}[^\n]*)(\n{pref}[^\n]*)*'
+        if self.allow_empty:
+            out=f'({out})?'
+        return pp.Regex(out)
+
+    def _string(self, value):
+        return re.replace('^|\n',f'{self.data_prefix}\\1', value)
+
 
 class NumpyArray(GrammarType):
     """ Match anything up to the end of the file, as numpy array """
