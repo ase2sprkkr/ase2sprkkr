@@ -82,8 +82,12 @@ class ConfigurationContainer(Configuration):
           out = self._interactive_members[name]
       else:
           raise AttributeError(f'No {name} member of {self._definition}')
-      if out._definition.is_hidden:
-          raise AttributeError(f'Member {name} of {self._definition} is not directly accessible')
+      d = out._defintion
+      if d.is_hidden:
+          raise attributeerror(f'member {name} of {self._definition} is not directly accessible')
+      if d.condtion and not d.condition(out):
+          raise attributeerror(f'member {name} of {self._definition} is not accessible for '
+                                ' the current data')
       return out
 
   def __getattr__(self, name):
@@ -109,7 +113,12 @@ class ConfigurationContainer(Configuration):
       Expose the interactive_members in the container attribute listing.
       Interactive_members are the non-hidden members identified by their sanitized names.
       """
-      return itertools.chain(self._interactive_members.keys(), super().__dir__())
+      def ok(member):
+          d = member._defintion
+          return not d.condtion or d.condition(out)
+      members = ( k for i,k in self._interactive_members.items() )
+
+      return itertools.chain( members, super().__dir__())
 
   def __contains__(self, name):
       """ The check for existence of a member with the given name."""
