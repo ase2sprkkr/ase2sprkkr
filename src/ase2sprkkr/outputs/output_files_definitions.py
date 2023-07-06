@@ -1,9 +1,10 @@
 from ..sprkkr.configuration import ConfigurationValueDefinition, ConfigurationFileDefinition, \
                                    CustomConfigurationValue
 
+from ..common.configuration_definitions import SeparatorDefinition
 from ..common.decorators import cached_class_property, cache
 from ..common.grammar_types  import unsigned, Array, Table, RestOfTheFile, Keyword, GrammarType, \
-                                     pot_mixed, line_string, line_end, Separator as GTSeparator
+                                     pot_mixed, line_string, line_end, Separator as SeparatorType, BlankSeparator as BlankSeparatorType
 from ..common.grammar import generate_grammar
 import pyparsing as pp
 from ..common.decorators import cached_class_property
@@ -23,19 +24,21 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
   type_from_type_map = { str: line_string }
   type_of_dangerous = pot_mixed
 
-class Separator(OutputFileValueDefinition):
+class BlankSeparator(SeparatorDefinition, OutputFileValueDefinition):
   """
   A special (hidden) value, that appears in a output file header
 
   The separator is a blank line
   """
-  _counter = 0
-  def __init__(self, name = None):
-      if not name:
-         Separator._counter += 1
-         name = f'_Separator_{Separator._counter}'
-      with generate_grammar():
-        super().__init__(name, GTSeparator(pp.Empty()), is_hidden=True, name_in_grammar=False)
+  separator_type = BlankSeparatorType()
+
+class Separator(SeparatorDefinition, OutputFileValueDefinition):
+  """
+  A special (hidden) value, that appears in a output file header
+
+  The separator is a blank line
+  """
+  separator_type = SeparatorType(char='#', length=80)
 
 
 class OutputFileDefinition(ConfigurationFileDefinition):
@@ -77,12 +80,12 @@ def output_file_header():
       V('SYSTEM', str),
       V('NQ_EFF', int),
       V('NT_EFF', int),
-      Separator(),
+      BlankSeparator(),
       V('NE', int),
       V('IREL', int),
       V('EFERMI', float),
       V('INFO', str),
-      Separator(),
+      BlankSeparator(),
       V('ORBITALS', Table({'NLQ' : unsigned}, numbering='IQ', flatten=True), name_in_grammar = False),
       V('TYPES', Table({'TXT_T': str, 'CONC': float, 'NAT': int, 'IQAT': Array(int)}, numbering='IT'), name_in_grammar=False),
     ]

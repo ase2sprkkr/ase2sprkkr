@@ -3,14 +3,14 @@ from typing import Optional
 import numpy as np
 
 from ..output_files import Arithmetic, CommonOutputFile
-from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray
+from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
 from ...visualise.plot import PlotInfo, combined_colormap, Multiplot, PlotValue
 import matplotlib.pyplot as plt
 
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
-    def plot(self, layout=(2,2), figsize=(6,4), latex=True,
+    def plot(self, layout=(2,2), figsize=(10,6), latex=True,
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
@@ -54,6 +54,7 @@ def create_definition():
     definition = create_output_file_definition('ARPES', [
       V('NT', int),
       V('NP', int),
+      V('COMMENT', Prefixed('#'), name_in_grammar=False),
       V('RAW_DATA', NumpyArray(written_shape=(-1,8)), name_in_grammar=False),
 
       NV('THETA', 'RAW_DATA', i(0), ('NE', 'NT')),
