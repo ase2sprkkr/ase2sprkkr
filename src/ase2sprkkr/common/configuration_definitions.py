@@ -1683,6 +1683,9 @@ class Switch(ControlDefinition):
        self.prepared = {}
        self.container = None
        self.copied = False
+       if name is None:
+          name = f'_SWITCH_{item}_{ControlDefinition.counter}'
+          ControlDefinition.counter+=1
        super().__init__(name)
 
    def copy(self):
