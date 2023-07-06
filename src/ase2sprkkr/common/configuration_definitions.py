@@ -280,21 +280,41 @@ class BaseDefinition:
         for the given-option value (i.e. a type requirement or other constraints).
        """
        with generate_grammar():
-         return self._grammar(allow_dangerous)
+         return self._grammar and self._grammar(allow_dangerous)
 
-   def _grammar(self, allow_dangerous:bool=False):
+   @property
+   def _grammar(self):
+       """ Return the grammar. Descendants can redefine this method e.g. to allow
+       not to generate the grammar at all
+
+       Returns
+          func: callable
+          Function to generate grammar or None if no grammar is returned
+       """
+       return self._hooked_grammar
+
+   def has_grammar(self):
+       """ Returns, whether the definition generates a grammar or not. By default,
+       it just check the self._grammar """
+       return self._grammar
+
+   def _hooked_grammar(self, allow_dangerous:bool=False, **kwargs):
        """ Generates grammar. Unlike :meth:`grammar`, it does not change the
        global pyparsing state to ensure that the generated grammar will handle
        whitespaces in a propper way. Unlike the :meth:`_create_grammar` method,
        which should contain implementation of the grammar creation, this function
-       add the common functionality of the generated grammar (currently,
+       add the common functionality to the generated grammar (currently,
        just the grammar hooks)
        """
-       out = self._create_grammar(allow_dangerous)
+       out = self._create_grammar(allow_dangerous, **kwargs)
+       return self._add_hooks_to_grammar(out)
+
+   def _add_hooks_to_grammar(self, grammar):
+       """ Add registered grammar hooks to a grammar """
        if self.grammar_hooks:
            for i in self.grammar_hooks:
-               out=i(out)
-       return out
+               grammar=i(grammar)
+       return grammar
 
    _description_indentation = '    '
    """ Nested levels of description will be indented using this 'prefix' """
