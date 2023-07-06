@@ -265,7 +265,6 @@ class BaseDefinition:
           out = self._generic_info()
        return out
 
-
    def create_object(self, container=None):
        """ Creates Section/Option/.... object (whose properties I define) """
        return self.result_class(self, container)
@@ -593,6 +592,7 @@ class ValueDefinition(BaseDefinition):
     else:
        self.type = type_from_type(type, type_map = self.type_from_type_map)
        self.default_value = self.type.convert(default_value) if default_value is not None else None
+
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
     self.type.used_in_definition(self)
 
@@ -932,7 +932,6 @@ class ValueDefinition(BaseDefinition):
          return True
      else:
          return False
-
 
   def write_name(self, file, name):
       file.write(self.prefix)
@@ -1341,7 +1340,6 @@ class ContainerDefinition(BaseDefinition):
        out = (name + cls.delimited_custom_value_grammar()).setParseAction(lambda x: tuple(x))
        out.setName(cls.custom_value_name)
        return out
-
 
     def _first_section_has_to_be_first(self):
        """ Has/ve the first child(s) in an unordered sequence fixed position? """
