@@ -56,7 +56,8 @@ class ConfigurationContainer(Configuration):
       """
       self._interactive_members = {}
       for v in self._definition.members():
-          self._add(v.create_object(self))
+          if v.create_object:
+             self._add(v.create_object(self))
 
   def members(self):
       """ Members of the container. I.e. the option of the section, or sections
