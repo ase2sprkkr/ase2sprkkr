@@ -7,8 +7,8 @@ ppc = pp.pyparsing_common
 from typing import  Optional
 import numpy as np
 
-from ..decorators import add_to_signature
-from ..grammar import generate_grammar, separator as separator_grammar, \
+from ..decorators import add_to_signature, cached_property
+from ..grammar import generate_grammar, separator_grammar, \
                      replace_whitechars, optional_quote
 
 from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validation
@@ -315,27 +315,48 @@ class Flag(TypedGrammarType):
   def _validate(self, value, why='set'):
       return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
 
-class Separator(GrammarType):
-  """ Special class for a separator inside a section.
-      By default, it is a line of stars.
-  """
+class BasicSeparator(GrammarType):
+  """ Basic type for separators - fake items in
+  input/output file, which has no value """
 
-  _grammar = separator_grammar.copy().setParseAction(lambda x: [None])
   has_value = False
-
-  def __init__(self, grammar=None, *args, **kwargs):
-      if grammar:
-         self._grammar = grammar
-      super().__init__(*args, **kwargs)
 
   def _validate(self, value, why='set'):
       return 'You can not set a value to a separator'
 
+
+class Separator(BasicSeparator):
+  """ Special class for a separator inside a section.
+      By default, it is a line of stars.
+  """
+  @cached_property
+  def _grammar(self):
+      return separator_grammar(self.char)
+
+  def __init__(self, grammar=None, char='*', length=79, *args, **kwargs):
+      self.char = char
+      self.length = length
+      if grammar:
+         self._grammar = grammar
+      super().__init__(*args, **kwargs)
+
   def _grammar_name(self):
-      return '****...****\n'
+      return f'{self.char*4}...{self.char*4}\n'
 
   def _string(self, val=None):
-      return '*'*79
+      return self.char*self.length
+
+class BlankSeparator(BasicSeparator):
+  """ Special class for a blank separator. In fact (with a delimiter) it is a blank line.
+  """
+  _grammar = pp.Empty().setParseAction(lambda x: [None])
+
+  def _grammar_name(self):
+      return ''
+
+  def _string(self, val=None):
+      return ''
+
 
 #commonly used types
 integer = Integer.I = Integer()

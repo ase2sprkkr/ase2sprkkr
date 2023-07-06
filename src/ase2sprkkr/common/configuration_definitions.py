@@ -1659,3 +1659,14 @@ class Switch(ControlDefinition):
 
    def __del__(self):
        self.remove_from_container()
+
+
+class SeparatorDefinition(ValueDefinition):
+    """ Basic class for separators """
+    _counter = 0
+
+    def __init__(self, name = None):
+      if not name:
+         SeparatorDefinition._counter += 1
+         name = f'_Separator_{SeparatorDefinition._counter}'
+      super().__init__(name, self.separator_type, is_hidden=True, name_in_grammar=False)

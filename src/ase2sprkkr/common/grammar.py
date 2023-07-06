@@ -4,6 +4,7 @@ Various pyparsing grammar elements and a few useful routines.
 
 from contextlib import contextmanager
 import pyparsing as pp
+from functools import cache
 
 @contextmanager
 def generate_grammar():
@@ -39,14 +40,17 @@ with generate_grammar():
   end_of_file = (pp.Regex(r'[\s]*') + pp.StringEnd()).suppress().setName('<EOF>')
   """ Grammar for an end of file (ending whitespaces are allowed) """
 
-  separator_pattern = r'\*'*10+r'\**'
-  """ Pattern for separating sections in an input file """
-  separator = pp.Regex(separator_pattern).setName("**********[***....]").suppress()
-  """ Grammar for separating sections in an input file """
-  separator.pattern = separator_pattern
-
   optional_quote = pp.Optional("'").suppress()
   """ Grammar for an optional quote """
+
+def separator_pattern(char):
+  return f'[{char}]'*11+'*'
+
+@cache
+def separator_grammar(char):
+  """ Pattern for separating sections in an input file """
+  separator = pp.Regex(separator_pattern(char)).setName(f"{char*10}[{char*4}....]").suppress()
+  return separator
 
 def delimitedList(expr, delim):
   """ Delimited list with already suppressed delimiter (or with a in-results-wanted one) """

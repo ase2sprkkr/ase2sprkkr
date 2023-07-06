@@ -8,9 +8,10 @@ sprkkr.common.configuration_definitions
 
 import functools
 import pyparsing as pp
-from ..common.grammar import line_end, separator as separator_grammar
+from ..common.grammar import line_end
 from ..common.grammar_types import separator, pot_mixed
 from ..common.options import CustomOption
+from ..common.configuration_definitions import SeparatorDefinition
 from ..sprkkr.configuration import \
          ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
          CustomConfigurationValue
@@ -36,18 +37,13 @@ class PotValueDefinition(ConfigurationValueDefinition):
 
   type_of_dangerous = pot_mixed
 
-class Separator(PotValueDefinition):
+class Separator(SeparatorDefinition, PotValueDefinition):
   """
   A special (hidden) value, that appears in a potential header section.
 
-  The separator is a line of stars
+  The separator is a line of doublecross
   """
-  _counter = 0
-  def __init__(self, name = None):
-      if not name:
-         Separator._counter += 1
-         name = f'_Separator_{Separator._counter}'
-      super().__init__(name, separator, is_hidden=True, name_in_grammar=False)
+  separator_type =  separator
 
 class PotSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one

@@ -5,7 +5,7 @@ I.e. these sections can has any content (they are readed up to the section separ
 
 from ..common.grammar_types import GrammarType
 from ..sprkkr.configuration import ConfigurationValueDefinition, CustomConfigurationValue
-from ..common.grammar import separator, line_end
+from ..common.grammar import separator_pattern, line_end
 from ..common.decorators import cached_class_property, class_property, cache
 
 import re
@@ -32,7 +32,7 @@ class CustomSectionToken(pp.Token):
    The grammar just reads all  up to the section separator.
    """
 
-   pattern = re.compile('\n' + separator.pattern + '[ \r\t]*\n',  re.DOTALL)
+   pattern = re.compile('\n' + separator_pattern('*') + '[ \r\t]*\n',  re.DOTALL)
    name = 'CustomSection'
 
    def parseImpl(self, instr, loc, doActions = True):
@@ -53,7 +53,7 @@ class SectionString(GrammarType):
       This grammar_type as used as a value type for the custom section.
       """
 
-      delimiter_pattern = '(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n' +separator.pattern + '(?:[ \t\r]*(?:\n[ \t\r]*))*\n'
+      delimiter_pattern = '(?:[ \t\r]*(?:\n[ \t\r]*)*)*\n' +separator_pattern('*') + '(?:[ \t\r]*(?:\n[ \t\r]*))*\n'
 
       @cached_class_property
       def grammar_of_delimiter():
