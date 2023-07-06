@@ -115,7 +115,7 @@ class BaseDefinition:
    the behavior.
    """
 
-   def __init__(self, name, alternative_names=None,
+   def __init__(self, name, written_name=None, alternative_names=None,
                 is_optional=False, is_hidden=False, is_expert=False,
                 name_in_grammar=None, info=None, description=None,
                 write_alternative_name:bool=False,
@@ -128,8 +128,14 @@ class BaseDefinition:
         name: str
           Name of the value/section
 
+        written_name: str or None
+          Name to write to the input file. Default None means use the name.
+
         alternative_names: str or [str]
-          Alternative names that can denotes the value
+          Alternative names that can denotes the value. If no written_name is given,
+          the first alternative_names is used for the output. However, contrary to
+          written_name, such way still allow to parse the name during parsing as
+          the name of the value.
 
         is_optional: boolean
           If True, this section/value can be missing in the .pot/task file
@@ -164,6 +170,7 @@ class BaseDefinition:
            Redefine the class that holds data for this option/section.
        """
        self.name = name
+       self.written_name = written_name
        """ The name of the option/section """
        if isinstance(alternative_names, str):
           alternative_names = [ alternative_names ]
@@ -190,8 +197,14 @@ class BaseDefinition:
 
        self.grammar_hooks = []
 
+
+
    def all_names_in_grammar(self):
-       if self.name_in_grammar:
+       if not self.name_in_grammar:
+           return
+       if self.written_name:
+           yield self.written_name
+       else:
            yield self.name
        if self.alternative_names:
            for i in self.alternative_names:
@@ -307,20 +320,19 @@ class BaseDefinition:
              If True, the resulting grammar is in the form
              NAME[index]
         """
-        name = self.name
         if self.name_in_grammar:
+            names = self.all_names_in_grammar()
             keyword = pp.CaselessLiteral if is_numbered_array else pp.CaselessKeyword
-            name = keyword(name or self.name)
             if self.do_not_skip_whitespaces_before_name:
-               name.leaveWhitespace()
-
-            if self.alternative_names:
-               alt_names = ( keyword(n) for n in self.alternative_names )
-               if self.do_not_skip_whitespaces_before_name:
-                  alt_names = ( i.leaveWhitespace() for i in alt_names )
-               name = name ^ pp.Or(alt_names)
-               if self.do_not_skip_whitespaces_before_name:
-                  name.leaveWhitespace()
+               names = [ keyword(i).leaveWhitespace() for i in names ]
+            else:
+               names = [ keyword(i) for i in names ]
+            if len(names) > 1:
+                name = pp.Or(names)
+                if self.do_not_skip_whitespaces_before_name:
+                    names=names.leaveWhitespace()
+            else:
+                name = names[0]
             name.setParseAction(lambda x: self.name)
             if is_numbered_array:
                name += pp.Optional(pp.Word(pp.nums), default='def')
@@ -395,7 +407,8 @@ class ValueDefinition(BaseDefinition):
   name_in_grammar = None
   is_generated = False
 
-  def __init__(self, name, type=None, default_value=None, alternative_names=None,
+  def __init__(self, name, type=None, default_value=None,
+               written_name=None, alternative_names=None,
                fixed_value=None, required=None, init_by_default=False,
                is_stored=None,
                info=None, description=None,
@@ -425,6 +438,9 @@ class ValueDefinition(BaseDefinition):
       Default value for the configuration option.
       Can accept callable (with option instance as an argument) - then the value will be determined
       at 'runtime' (possibly according to the other values of the section)
+
+    written_name: str
+      Name of the configuration value in the input file
 
     alternative_names: str or [str]
       Value can have an alternative name (that alternativelly denotes the value)
@@ -548,6 +564,7 @@ class ValueDefinition(BaseDefinition):
 
     super().__init__(
          name = name,
+         written_name = written_name,
          alternative_names = alternative_names,
          is_optional = is_optional,
          is_hidden = is_hidden,
@@ -602,7 +619,10 @@ class ValueDefinition(BaseDefinition):
 
   @property
   def formated_name(self):
-    name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
+    if self.written_name:
+       name = self.written_name
+    else:
+       name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
     if self.name_format:
        return "{:{}}".format(name, self.name_format)
     return name
