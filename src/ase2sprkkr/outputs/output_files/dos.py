@@ -199,7 +199,7 @@ def create_definition():
 
 
     definition = create_output_file_definition('DOS', [
-      V('DOS-FMT', str),
+      V('DOS-FMT', str, written_name='DOS-FMT:'),
       V('RAW_DATA', NumpyArray(written_shape=(-1,8),
                                delimiter=10,indented=(80,10),
                                item_format='%8.4E'
