@@ -1519,7 +1519,30 @@ class MergeDictAdaptor:
         return f'Section {self.definition.name} with values {self.values}'
 
 
-class Ignored:
+class ControlDefinition:
+     """ Base class for a definition, that do not have value, just control
+     the flow of the parsing """
+     is_hidden = True
+     counter = 1
+     create_object = False
+
+     def __init__(self, name=None, template=None):
+         if not template:
+             template=self.__class__.__name__.upper()
+         if name:
+             self.name = name
+         else:
+             self.name = f"_{template}_{self.counter}"
+             ControlDefinition.counter+=1
+
+     def all_names_in_grammar():
+         return iter(())
+
+     _grammar = None
+     """ This object does not generate a grammar """
+
+     def has_grammar(self):
+         return None
     """ Output definition for an ignored option.
         Output definition can override the standard definition and
         set a special way how the item is read/writen:
@@ -1614,24 +1637,6 @@ def gather(first, *members):
 
     return (first, ) + members
 
-class ControlDefinition:
-     """ Base class for a definition, that do not have value, just control
-     the flow of the parsing """
-     is_hidden = True
-     counter = 1
-
-     def __init__(self, name=None):
-         if name:
-             self.name = name
-         else:
-             self.name = f"_{str(self.__class__).upper()}_{self.counter}"
-             self.counter+=1
-
-     def all_names_in_grammar():
-         return iter(())
-
-     def _grammar(self, allow_dangerous=False):
-         return
 
 def switch(item, values, name=None):
     switch = Switch(item, values, name)
