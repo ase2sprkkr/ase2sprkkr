@@ -208,6 +208,8 @@ class GrammarType:
     """ Human readable expression of the grammar. By default,
         this is what is set by grammar.setName, however, sometimes
         is desirable to set even shorter string """
+    if not isinstance(self.grammar, pp.ParserElement):
+       return self.__class__.__name__
     return str(self.grammar)
 
   def transform_grammar(self, grammar, param_name=False):
