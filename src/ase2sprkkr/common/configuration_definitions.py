@@ -1197,21 +1197,20 @@ class ContainerDefinition(BaseDefinition):
           custom_value = None
        delimiter = delimiter or self.grammar_of_delimiter
 
+       def repeated_grammars():
+           """ If the item can be repeated, do it here - we don't know, whether there is a fixed order in any way
+           (e.g. the item is followed by the items without name in grammar)
+           """
+           for i in self._members.values():
+               g = i._grammar and i._grammar(allow_dangerous)
+               if not g:
+                   continue
+               if i.can_be_repeated():
+                   g = delimitedList(g, delimiter)
+               yield i,g
+
        def grammars():
          """ This function iterates over the items of the container, joining all the without name_in_grammar with the previous ones. """
-
-         def repeated_grammars():
-             """ If the item can be repeated, do it here - we don't know, whether there is a fixed order in any way
-             (e.g. the item is followed by the items without name in grammar)
-             """
-             for i in self._members.values():
-                 g = i._grammar(allow_dangerous)
-                 if not g:
-                     continue
-                 if i.can_be_repeated():
-                     g = delimitedList(g, delimiter)
-                 yield i,g
-
          it = iter(repeated_grammars())
          head_item, grammar_chain = next(it)
 
@@ -1224,7 +1223,7 @@ class ContainerDefinition(BaseDefinition):
                if item.is_optional:
                   add = pp.Optional(add)
                if item.condition and self.force_order:
-                  add = head.condition.prepare_grammar(self, add)
+                  add = item.condition.prepare_grammar(item, add)
                grammar_chain = grammar_chain + add
          yield head_item, grammar_chain
 
@@ -1242,11 +1241,16 @@ class ContainerDefinition(BaseDefinition):
            else:
               after = pp.Forward() << delimiter
            after.addCondition(lambda loc, toks: loc != init.location)
-           inter = (first | after).setName(f'<?DELIM>')
+           inter_cvs = (first | after).setName(f'<?DELIM>')
+           inter = (first | delimiter.copy().addCondition(lambda loc, toks: loc != init.location))
 
            def sequence():
-               for head,g in grammars():
-                   g = inter + g
+               for head,g in repeated_grammars():
+                   if head.is_independent_on_the_predecessor:
+                      delim = inter_cvs
+                   else:
+                      delim = inter
+                   g = delim + g
                    if head.is_optional:
                       g = pp.Optional(g)
                    if head.condition:
