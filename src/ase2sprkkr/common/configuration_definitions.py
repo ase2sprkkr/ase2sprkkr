@@ -379,7 +379,8 @@ class BaseDefinition:
    def _tuple_with_my_name(self, expr,
                            delimiter=None,
                            has_value:bool=True,
-                           is_numbered_array:bool=False):
+                           is_numbered_array:bool=False,
+                           name_in_grammar=None):
         """ Create the grammar returning tuple (self.name, <result of the expr>)
 
             Parameters
@@ -395,7 +396,7 @@ class BaseDefinition:
               If True, the resulting grammar is in the form
               NAME[index]=....
         """
-        if self.name_in_grammar:
+        if self.name_in_grammar if name_in_grammar is None else name_in_grammar:
            name = self._grammar_of_name(is_numbered_array)
            if delimiter:
               name += delimiter
@@ -792,8 +793,6 @@ class ValueDefinition(BaseDefinition):
         danger.addParseAction(lambda x: DangerousValue(x[0], self.type_of_dangerous, False))
         body = body ^ danger
 
-    if delimiter is True:
-       delimiter = self.grammar_of_delimiter
     if delimiter:
        body = delimiter + body
 
@@ -802,23 +801,39 @@ class ValueDefinition(BaseDefinition):
       body = pp.Optional(body).setParseAction( lambda x: x or df )
     return body
 
-  def _create_grammar(self, allow_dangerous=False):
-    """ Return grammar for the name-value pair """
-    if not self.is_stored:
+  @property
+  def _grammar(self):
+     if not self.is_stored:
         return None
-    if self.output_definition is not self:
-        return self.output_definition._grammar(allow_dangerous)
-    body = self._grammar_of_value(self.name_in_grammar, allow_dangerous)
+     return self._hooked_grammar
 
-    if self.type.missing_value()[0]:
-      nbody=''
+  def _create_grammar(self, allow_dangerous=False, name_in_grammar=None, name_value_delimiter=None, original=False):
+    """ Return a grammar for the name-value pair """
+    if self.output_definition is not self and not original:
+        g = self.output_definition._grammar
+        return g and g(allow_dangerous)
+
+    name_in_grammar = name_in_grammar if name_in_grammar is not None else self.name_in_grammar
+    if (name_value_delimiter is None and name_in_grammar) or name_value_delimiter is True:
+       name_value_delimiter=self.grammar_of_delimiter
+
+    body = self._grammar_of_value(name_value_delimiter, allow_dangerous)
+
+
+    if name_in_grammar:
+       nbody = self.formated_name.strip()
     else:
-      nbody=self.type.grammar_name()
-      if self.name_in_grammar:
-         nbody = (str(self.grammar_of_delimiter) + nbody).strip()
+       nbody = ''
 
-    out = self._tuple_with_my_name(body, has_value=self.type.has_value, is_numbered_array=self.is_numbered_array)
-    out.setName(self.name + nbody)
+    if not self.type.missing_value()[0]:
+        if nbody:
+            nbody +=str(name_value_delimiter) or ' '
+        nbody+=self.type.grammar_name()
+
+    out = self._tuple_with_my_name(body, has_value=self.type.has_value,
+                                         is_numbered_array=self.is_numbered_array,
+                                         name_in_grammar=name_in_grammar)
+    out.setName(nbody)
     if self.is_repeated:
         out = out + pp.ZeroOrMore(self.container.grammar_of_delimiter + out)
     return out
