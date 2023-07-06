@@ -1543,6 +1543,7 @@ class ControlDefinition:
 
      def has_grammar(self):
          return None
+class Ignored(ControlDefinition):
     """ Output definition for an ignored option.
         Output definition can override the standard definition and
         set a special way how the item is read/writen:
@@ -1554,8 +1555,7 @@ class ControlDefinition:
     def singleton(cls):
         return cls()
 
-    def _grammar(self, allow_dangerous=False):
-        return
+    _grammar = None
 
     def _save_to_file(self, file, value):
         return
