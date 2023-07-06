@@ -25,6 +25,9 @@ class BaseGeneratedValueDefinition(BaseDefinition):
       its definition """
       pass
 
+
+  def __repr__(self):
+       return f"<{self.name} (generated)>"
   def _create_grammar(*args, **kwargs):
       return None
 
