@@ -610,6 +610,7 @@ class ValueDefinition(BaseDefinition):
 
     if required is None:
        required = not is_expert and (not is_optional and default_value is None)
+    self.required = required
 
     if is_optional is None:
        is_optional = required is False
@@ -639,7 +640,6 @@ class ValueDefinition(BaseDefinition):
     if is_numbered_array and not self.name_in_grammar:
        raise ValueException('Numbered_array value type has to have its name in the grammar')
 
-    self.required = self.default_value is not None if required is None else required
     self.name_format = name_format
 
   type_from_type_map = {}
