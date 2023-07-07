@@ -11,6 +11,7 @@ from ..output_files import OutputFile
 
 import scipy.constants
 Ry = 0.5*scipy.constants.value('Hartree energy in eV')
+from ...common.configuration_containers import DisabledAttributeError
 
 class TestOutput(TestCase):
 
@@ -29,8 +30,17 @@ class TestOutput(TestCase):
                    self.assertEqual(out[i](), o2[i]())
                for i in 'TOTAL', 'POLARIZATION', 'UP', 'DOWN':
                    self.assertEqual(2*out[i](), o2[i]())
-            if ext=='dos':
+            elif ext=='dos':
                self.assertEqual(out.n_orbitals(1), 3)
                self.assertEqual(out.n_spins(), 2)
                self.assertEqual((2,3,1200), out.dos_for_site_type('Ta').shape)
                self.assertEqual(out.DOS['Ta'][5] / Ry, out.dos_for_site_type('Ta',1,2)[:])
+            elif ext=='bsf':
+               self.assertEqual(out.I().shape, (out.NQ_EFF(), out.NE(), out.NK()))
+               if out.KEYWORD() == 'BSF':
+                  self.assertEqual(out.I_UP().shape, (out.NQ_EFF(), out.NE(), out.NK()))
+                  self.assertRaises(DisabledAttributeError, lambda: out.I_X)
+               else:
+                  self.assertEqual(out.I_X().shape, (out.NQ_EFF(), out.NE(), out.NK()))
+                  self.assertRaises(DisabledAttributeError, lambda: out.I_UP)
+               #breakpoint()
