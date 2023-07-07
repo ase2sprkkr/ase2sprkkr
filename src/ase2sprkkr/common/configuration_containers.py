@@ -82,11 +82,11 @@ class ConfigurationContainer(Configuration):
           out = self._interactive_members[name]
       else:
           raise AttributeError(f'No {name} member of {self._definition}')
-      d = out._defintion
+      d = out._definition
       if d.is_hidden:
-          raise attributeerror(f'member {name} of {self._definition} is not directly accessible')
-      if d.condtion and not d.condition(out):
-          raise attributeerror(f'member {name} of {self._definition} is not accessible for '
+          raise AttributeError(f'member {name} of {self._definition} is not directly accessible')
+      if d.condition and not d.condition(out):
+          raise AttributeError(f'member {name} of {self._definition} is not accessible for '
                                 ' the current data')
       return out
 
@@ -108,6 +108,9 @@ class ConfigurationContainer(Configuration):
       """
       return self._members[name]
 
+  def _get(self, name, default=None):
+      return self._members.get(name, default)
+
   def __dir__(self):
       """
       Expose the interactive_members in the container attribute listing.
@@ -116,7 +119,7 @@ class ConfigurationContainer(Configuration):
       def ok(member):
           d = member._defintion
           return not d.condtion or d.condition(out)
-      members = ( k for i,k in self._interactive_members.items() )
+      members = ( k.name for i,k in self._interactive_members.items() )
 
       return itertools.chain( members, super().__dir__())
 
@@ -354,14 +357,54 @@ class ConfigurationContainer(Configuration):
           if i.is_changed(): return True
       return False
 
-  def _save_to_file(self, file)->bool:
-      """ Save the configuration to a file. The method is implemented in the descendants.
+  def _save_to_file(self, file, always=False)->bool:
+      """ Save the content of the container to the file (according to the definition)
 
-      TODO
-      ----
-      The implementations in the descendant could be probably merged.
+      Parameters
+      ----------
+      file: file
+        File object (open for writing), where the data should be written
+
+      always:
+        Do not consider conditions
+
+      Returns
+      -------
+      something_have_been_written
+        If any value have been written return True, otherwise return False.
       """
-      raise NotImplemented()
+      d = self._definition
+      if not always:
+          if not d.write_condition(self) or (d.condition and not d.condition(self)):
+              return
+
+      if d.is_expert:
+          if not self.is_changed():
+              return False
+      else:
+          if not self.has_any_value():
+              return False
+      if d.name_in_grammar:
+         file.write(self.name)
+         file.write('\n')
+
+      members = iter(self)
+      if d.write_last_delimiter:
+         for o in members:
+             if o._save_to_file(file, always):
+                 file.write(d.delimiter)
+      else:
+         for o in members:
+             if o._save_to_file(file, always):
+                  break
+         write = True
+         for o in members:
+             if write:
+                 file.write(d.delimiter)
+             write=o._save_to_file(file, always)
+
+      return True
+
 
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member
@@ -385,9 +428,24 @@ class ConfigurationContainer(Configuration):
         ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
       """
       self._definition.validate(DictAdaptor(self), why)
+      if why == 'save' and not self._definition.is_optional and not self.has_any_value():
+          raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
       for o in self:
           o.validate(why)
 
+  def has_any_value(self) -> bool:
+      """
+      Return True if any member of the section has value.
+
+      Return
+      ------
+        has_any_value: bool
+            True, if no value in the container is set, False otherwise
+      """
+      for i in self:
+        if i.has_any_value():
+           return True
+      return False
 
 class DictAdaptor:
   """ This class wraps a container to behave as a read-only dict """
@@ -403,66 +461,6 @@ class DictAdaptor:
 
 class BaseSection(ConfigurationContainer):
   """ A section of SPRKKR configuration - i.e. part of the configuration file. """
-
-  def has_any_value(self) -> bool:
-      """
-      Return True if any member of the section has value.
-
-      Return
-      ------
-        has_any_value: bool
-            True, if no value in the container is set, False otherwise
-      """
-      for i in self:
-        if i() is not None:
-           return True
-      return False
-
-  def validate(self, why:str='save'):
-      """ Validate the configuration data. Raise an exception, if the validation fail.
-
-      Parameters
-      ----------
-      why
-        Type of the validation. Possible values
-        ``save`` - Full validation, during save.
-        ``set`` - Validation on user input. Allow required values not to be set.
-        ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
-      """
-      if why == 'save' and not self._definition.is_optional and not self.has_any_value():
-          raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
-      super().validate(why)
-
-  def _save_to_file(self, file)->bool:
-      """ Save the content of the container to the file (according to the definition)
-
-      Parameters
-      ----------
-      file: file
-        File object (open for writing), where the data should be written
-
-      Returns
-      -------
-      something_have_been_written
-        If any value have been written return True, otherwise return False.
-      """
-      d = self._definition
-      if not d.write_condition(self) or (d.condition and not d.condition(self)):
-         return
-
-      if d.is_expert:
-          if not self.is_changed():
-              return False
-      else:
-          if not self.has_any_value():
-              return False
-      if self._definition.name_in_grammar:
-         file.write(self._definition.name)
-         file.write('\n')
-      for o in self:
-          if o._save_to_file(file):
-             file.write(self._definition.delimiter)
-      return True
 
 class Section(BaseSection):
   """ A standard section of a task or potential (whose content is predefinded by SectionDefinition) """
@@ -510,26 +508,12 @@ class CustomSection(BaseSection):
           return cls(definition, container)
       return create
 
-
 class RootConfigurationContainer(ConfigurationContainer):
   """ Base class for data of configuration/problem-definition files
 
-  In addition to container capabilities, it can read/write its data from/to file.
+  In addition to container capabilities, it can read its data from/to file.
   """
-
-  def _save_to_file(self, file):
-      """ Implementation of the saving the configuration """
-      d = self._definition
-      if d.write_condition and not d.write_condition(self):
-         return
-
-      it = iter(self)
-      i = next(it)
-      if i:
-        i._save_to_file(file)
-        for i in it:
-          file.write(d.delimiter)
-          i._save_to_file(file)
+  name_in_grammar = False
 
   def read_from_file(self, file, clear_first:bool=True, allow_dangerous:bool=False):
       """ Read data from a file

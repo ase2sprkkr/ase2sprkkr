@@ -37,7 +37,7 @@ class PotValueDefinition(ConfigurationValueDefinition):
 
   type_of_dangerous = pot_mixed
 
-class Separator(SeparatorDefinition, PotValueDefinition):
+class Separator(SeparatorDefinition):
   """
   A special (hidden) value, that appears in a potential header section.
 

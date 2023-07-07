@@ -14,8 +14,8 @@ from ..common.misc import dict_first_item
 from ..common.grammar_types  import type_from_type, type_from_value, GrammarType, Array
 from ..common.grammar  import delimitedList, end_of_file, generate_grammar
 from .configuration_containers import Section
-from .options import Option, DangerousValue
-from .decorators import cache, cached_class_property
+from .options import Option, Dummy, DangerousValue
+from .decorators import cache, cached_class_property, cached_property
 
 import numpy as np
 import pyparsing as pp
@@ -91,10 +91,153 @@ def dict_from_parsed(values, allowed_duplicates):
     return out
 
 
-
-
-
 class BaseDefinition:
+  """ This class is a member of definition of configuration, that can be both
+  real (holds a value or values) or just virtual.
+  Virtual definitions do not store values, generates grammar e.g. using other members
+  of the container etc...
+
+  Parameters
+  ----------
+  name: str
+      Name of the value/section
+
+  is_optional: bool
+      This element can be omited in the parsed file
+
+  condition
+     If defined, the condition
+      - the condition.parse_condition() is invoked, when given grammar element
+        should be parsed. If it is False, the element is skipped
+      - the condition() is invoked, when the elements of the container is listed
+        to hide the inactive members
+  """
+
+  def __init__(self, name, is_optional=False, condition=None):
+       self.name = name
+       self.is_optional=is_optional
+       self.condition = condition
+       self.grammar_hooks = []
+       self.condition = condition
+
+  def add_grammar_hook(self, hook):
+       """ Added hooks process the grammar of the option/container.
+       E.g. it is used when the number of readed lines should depend
+       on the value of the option.
+       """
+       self.grammar_hooks.append(hook)
+
+  def remove_grammar_hook(self, hook):
+       """ Remove a grammar hook """
+       self.grammar_hooks.remove(hook)
+
+  def grammar(self, allow_dangerous:bool=False):
+       """ Generate grammar with the correct settings of pyparsing global state.
+
+       Parameters
+       ----------
+       allow_dangerous
+        Allow dangerous values - i.e. values that do not fulfill the requirements
+        for the given-option value (i.e. a type requirement or other constraints).
+       """
+       with generate_grammar():
+         return self._grammar and self._grammar(allow_dangerous)
+
+  @property
+  def _grammar(self):
+       """ Return the grammar. Descendants can redefine this method e.g. to allow
+       not to generate the grammar at all.
+       This method is implemented by property, that conditionaly returns the
+       real method.
+
+       Returns
+          func: callable
+          Function to generate grammar or None if no grammar is returned
+       """
+       return self._hooked_grammar
+
+  def has_grammar(self):
+       """ Returns, whether the definition generates a grammar or not. By default,
+       it just check the self._grammar """
+       return self._grammar
+
+  def _hooked_grammar(self, allow_dangerous:bool=False, **kwargs):
+       """ Generates grammar. Unlike :meth:`grammar`, it does not change the
+       global pyparsing state to ensure that the generated grammar will handle
+       whitespaces in a propper way. Unlike the :meth:`_create_grammar` method,
+       which should contain implementation of the grammar creation, this function
+       add the common functionality to the generated grammar (currently,
+       just the grammar hooks)
+       """
+       out = self._create_grammar(allow_dangerous, **kwargs)
+       return self._add_hooks_to_grammar(out)
+
+  def _add_hooks_to_grammar(self, grammar):
+       """ Add registered grammar hooks to a grammar """
+       if self.grammar_hooks:
+           for i in self.grammar_hooks:
+               grammar=i(grammar)
+       return grammar
+
+  def added_to_container(self, container):
+       """ Hook called, when the object is assigned to the container (currently from the container
+       constructor) """
+       self.container=container
+
+  def info(self, *args, **kwargs):
+       return "This object is not intended for a direct use."
+
+  def description(self, *args, **kwargs):
+       return "This object is not intended for a direct use."
+
+  def _get_copy_args(self)->Dict[str, str]:
+       """
+       Compute the dictionary that defines the attributes to create a copy of this object.
+
+       Returns
+       -------
+       copy: Dict
+          The returning dictionary has this structure:
+          { name of the argument of the __init__ function : name of the object attribute }
+       """
+
+       if not '_copy_args' in self.__class__.__dict__:
+          args = inspect.getfullargspec(self.__class__.__init__).args[1:]
+          self.__class__._copy_args = { v: '_'+v if '_'+v in self.__dict__ else v for v in args if v not in self._copy_excluded_args }
+       return self.__class__._copy_args
+
+  def copy(self, **kwargs):
+     default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
+     default.update(kwargs)
+     return self.__class__(**default)
+
+  def create_object(self, container=None):
+     """ Creates Section/Option/.... object (whose properties I define) """
+     return self.result_class(self, container)
+
+  can_be_repeated = False
+  """ If True, the item can be repeated in the parsed file.
+  This behavior have currently the values with is_numbered_array property = True.
+  This function is to be redefined in descendants
+  """
+  is_independent_on_the_predecessor = True
+
+  _copy_excluded_args = ['container', 'grammar_hooks']
+
+  def enrich(self, option):
+        return option
+
+  @property
+  def output_definition(self):
+        return self.__dict__.get('_output_definition', self)
+
+  @output_definition.setter
+  def output_definition(self, od):
+        """ Set a special object for writing """
+        self.__dict__['_output_definition'] = od
+
+
+class RealItemDefinition(BaseDefinition):
    """ A base class for a configuration definition, either of an option, or of a container.
    The definition determine the type of value(s) in the configuration/problem-definition file,
    the format of the values, the way how it/they is/are read etc...
@@ -176,7 +319,7 @@ class BaseDefinition:
         result_class
            Redefine the class that holds data for this option/section.
        """
-       self.name = name
+       super().__init__(name, is_optional, condition)
        self.written_name = written_name
        """ The name of the option/section """
        if isinstance(alternative_names, str):
@@ -186,13 +329,11 @@ class BaseDefinition:
        be "denoted" in the configuration file by either by its name or any
        of the alternative names.
        """
-       self.is_optional = is_optional
        self.is_expert = is_expert
        self.is_hidden = is_hidden
        """ Is it required part of configuration (or can it be ommited)? """
        self.write_alternative_name = write_alternative_name
        self.write_condition = write_condition or (lambda x: True)
-       self.condition = condition
        self.name_in_grammar = self.__class__.name_in_grammar \
                                if name_in_grammar is None else name_in_grammar
        self._info = info
@@ -201,18 +342,6 @@ class BaseDefinition:
        """ A longer help text describing the content for the users. """
        if result_class:
            self.result_class = result_class
-
-       self.grammar_hooks = []
-
-   @property
-   def output_definition(self):
-        return self.__dict__.get('_output_definition', self)
-
-   @output_definition.setter
-   def output_definition(self, od):
-        """ Set a special object for writing """
-        self.__dict__['_output_definition'] = od
-
 
    def all_names_in_grammar(self):
        if not self.name_in_grammar:
@@ -236,22 +365,6 @@ class BaseDefinition:
        """
        return self.name_in_grammar
 
-   def add_grammar_hook(self, hook):
-       """ Added hooks process the grammar of the option/container.
-       E.g. it is used when the number of readed lines should depend
-       on the value of the option.
-       """
-       self.grammar_hooks.append(hook)
-
-   def remove_grammar_hook(self, hook):
-       """ Remove a grammar hook """
-       self.grammar_hooks.remove(hook)
-
-   def added_to_container(self, container):
-       """ Hook called, when the object is assigned to the container (currently from the container
-       constructor) """
-       self.container=container
-
    def info(self, generic:bool=True) -> str:
        """ Return short help string.
 
@@ -264,56 +377,6 @@ class BaseDefinition:
        if not out and generic:
           out = self._generic_info()
        return out
-
-   def create_object(self, container=None):
-       """ Creates Section/Option/.... object (whose properties I define) """
-       return self.result_class(self, container)
-
-   def grammar(self, allow_dangerous:bool=False):
-       """ Generate grammar with the correct settings of pyparsing global state.
-
-       Parameters
-       ----------
-       allow_dangerous
-        Allow dangerous values - i.e. values that do not fulfill the requirements
-        for the given-option value (i.e. a type requirement or other constraints).
-       """
-       with generate_grammar():
-         return self._grammar and self._grammar(allow_dangerous)
-
-   @property
-   def _grammar(self):
-       """ Return the grammar. Descendants can redefine this method e.g. to allow
-       not to generate the grammar at all
-
-       Returns
-          func: callable
-          Function to generate grammar or None if no grammar is returned
-       """
-       return self._hooked_grammar
-
-   def has_grammar(self):
-       """ Returns, whether the definition generates a grammar or not. By default,
-       it just check the self._grammar """
-       return self._grammar
-
-   def _hooked_grammar(self, allow_dangerous:bool=False, **kwargs):
-       """ Generates grammar. Unlike :meth:`grammar`, it does not change the
-       global pyparsing state to ensure that the generated grammar will handle
-       whitespaces in a propper way. Unlike the :meth:`_create_grammar` method,
-       which should contain implementation of the grammar creation, this function
-       add the common functionality to the generated grammar (currently,
-       just the grammar hooks)
-       """
-       out = self._create_grammar(allow_dangerous, **kwargs)
-       return self._add_hooks_to_grammar(out)
-
-   def _add_hooks_to_grammar(self, grammar):
-       """ Add registered grammar hooks to a grammar """
-       if self.grammar_hooks:
-           for i in self.grammar_hooks:
-               grammar=i(grammar)
-       return grammar
 
    _description_indentation = '    '
    """ Nested levels of description will be indented using this 'prefix' """
@@ -410,32 +473,9 @@ class BaseDefinition:
 
    do_not_skip_whitespaces_before_name = False
 
-   def _get_copy_args(self)->Dict[str, str]:
-       """
-       Compute the dictionary that defines the attributes to create a copy of this object.
+   _copy_excluded_args = BaseDefinition._copy_excluded_args + ['expert']
 
-       Returns
-       -------
-       copy: Dict
-          The returning dictionary has this structure:
-          { name of the argument of the __init__ function : name of the object attribute }
-       """
-
-       if not '_copy_args' in self.__class__.__dict__:
-          args = inspect.getfullargspec(self.__class__.__init__).args[1:]
-          self.__class__._copy_args = { v: '_'+v if '_'+v in self.__dict__ else v for v in args if v not in self._copy_excluded_args }
-       return self.__class__._copy_args
-
-   _copy_excluded_args = ['expert', 'container', 'grammar_hooks']
-
-   def can_be_repeated(self):
-       """ If True, the item can be repeated in the parsed file.
-       This behavior have currently the values with is_numbered_array property = True.
-       This function is to be redefined in descendants
-       """
-       return False
-
-class ValueDefinition(BaseDefinition):
+class ValueDefinition(RealItemDefinition):
 
   result_class = Option
 
@@ -615,8 +655,6 @@ class ValueDefinition(BaseDefinition):
     if is_optional is None:
        is_optional = required is False
 
-    configuration_type_name = 'OPTION'
-
     super().__init__(
          name = name,
          written_name = written_name,
@@ -641,6 +679,8 @@ class ValueDefinition(BaseDefinition):
        raise ValueException('Numbered_array value type has to have its name in the grammar')
 
     self.name_format = name_format
+
+  configuration_type_name = 'OPTION'
 
   type_from_type_map = {}
   """ Redefine this in descendants, if you need to create different types that the defaults to be
@@ -727,10 +767,10 @@ class ValueDefinition(BaseDefinition):
         Parameters
         ----------
         verbose
-          This parameter has no effect here. See :meth:`BaseDefinition.data_description` for its explanation.
+          This parameter has no effect here. See :meth:`RealItemDefinition.data_description` for its explanation.
 
         show_hidden
-          This parameter has no effect here. See :meth:`BaseDefinition.data_description` for its explanation.
+          This parameter has no effect here. See :meth:`RealItemDefinition.data_description` for its explanation.
 
         prefix
           Prefix for the indentation of the description.
@@ -862,8 +902,8 @@ class ValueDefinition(BaseDefinition):
         return self.default_value
      return None
 
-  def _save_to_file(self, file, option):
-      value, write = option._written_value()
+  def _save_to_file(self, file, option, always=False):
+      value, write = option._written_value(always)
       if write:
           return self.write(file, value)
       else:
@@ -937,11 +977,6 @@ class ValueDefinition(BaseDefinition):
       file.write(self.prefix)
       file.write(name)
 
-  def copy(self, **kwargs):
-     default = { k: getattr(self, v) for k,v in self._get_copy_args().items() }
-     default.update(kwargs)
-     return self.__class__(**default)
-
   def remove(self, name):
      del self.section[name]
      return self
@@ -949,6 +984,7 @@ class ValueDefinition(BaseDefinition):
   def _generic_info(self):
       return f"Configuration value {self.name}"
 
+  @property
   def can_be_repeated(self):
       return self.is_numbered_array
 
@@ -967,7 +1003,7 @@ class ValueDefinition(BaseDefinition):
            out['fixed_value'] = out['default_value']
        return out
 
-  _copy_excluded_args = BaseDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible']
+  _copy_excluded_args = RealItemDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible']
 
   def copy_value(self, value, all_values=False):
       """ Creates copy of the value
@@ -996,7 +1032,7 @@ def add_excluded_names_condition(element, names):
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
 
-class ContainerDefinition(BaseDefinition):
+class ContainerDefinition(RealItemDefinition):
     """ Base class for a definition (of contained data, format, etc)
     of either a whole configuration file
     (e.g. :class:`InputParameters<ase2sprkkr.input_parameters.input_parameters.InputParameters>` or
@@ -1009,6 +1045,8 @@ class ContainerDefinition(BaseDefinition):
 
     value_name_format = None
     """ The (print) format, how the name is written """
+
+    write_last_delimiter = True
 
     @staticmethod
     def _dict_from_named_values(args, items=None):
@@ -1192,9 +1230,6 @@ class ContainerDefinition(BaseDefinition):
         default['members'] = members
         return self.__class__(**default)
 
-    def create_object(self, container=None):
-        return self.result_class(self, container)
-
     def all_member_names(self):
         return itertools.chain.from_iterable(
             i.all_names_in_grammar() for i in self
@@ -1215,7 +1250,7 @@ class ContainerDefinition(BaseDefinition):
                g = i._grammar and i._grammar(allow_dangerous)
                if not g:
                    continue
-               if i.can_be_repeated():
+               if i.can_be_repeated:
                    g = delimitedList(g, delimiter)
                yield i,g
 
@@ -1315,7 +1350,6 @@ class ContainerDefinition(BaseDefinition):
        values = self._grammar_of_values(allow_dangerous, delimiter)
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
-
        return out
 
     validate = None
@@ -1429,6 +1463,8 @@ class ConfigurationRootDefinition(ContainerDefinition):
    """ From this class, the definition of the format of a whole configuration file should be derived.
 
    """
+   write_last_delimiter = False
+   """ Do not print additional newline after the last section """
 
    name_in_grammar = False
    """ The configuration files has commonly no "name" of its content, they
@@ -1518,32 +1554,53 @@ class MergeDictAdaptor:
     def __repr__(self):
         return f'Section {self.definition.name} with values {self.values}'
 
-
-class ControlDefinition:
+class VirtualDefinition(BaseDefinition):
      """ Base class for a definition, that do not have value, just control
      the flow of the parsing """
      is_hidden = True
      counter = 1
-     create_object = False
 
-     def __init__(self, name=None, template=None):
-         if not template:
-             template=self.__class__.__name__.upper()
-         if name:
-             self.name = name
-         else:
-             self.name = f"_{template}_{self.counter}"
-             ControlDefinition.counter+=1
+     def create_object(self, container=None):
+         return Dummy(self, container)
 
-     def all_names_in_grammar():
+     def __init__(self, name=None, template=None, condition=None):
+         if not name:
+             if not template:
+                 template=self.__class__.__name__.upper()
+             name = f"_{template}_{VirtualDefinition.counter}"
+             VirtualDefinition.counter+=1
+         super().__init__(name, condition)
+
+     def all_names_in_grammar(self):
          return iter(())
+
+class ControlDefinition(VirtualDefinition):
+     """ Control definitions has no grammar, they just modify the other items of the container """
 
      _grammar = None
      """ This object does not generate a grammar """
 
-     def has_grammar(self):
-         return None
-class Ignored(ControlDefinition):
+class Stub(VirtualDefinition):
+    """ Item that allows to reuse existing item on the other place
+    e.g. in another branch of Switch """
+
+    def __init__(self, item, name=None, condition=None):
+        super().__init__(name=None, template=f'STUB FOR {name}', condition=None)
+        self.item=item
+        self.condition=None
+
+    def _save_to_file(self, file, value, always=True):
+         item = value._container[self.item]
+         if self.condition and not self.condition(value):
+             return
+         return item._save_to_file(file, always=True)
+
+    def _create_grammar(self, allow_dangerous=False, **kwargs):
+         item = self.container[self.item]
+         out=item._grammar(allow_dangerous)
+         return pp.Forward() << out
+
+class Ignored:
     """ Output definition for an ignored option.
         Output definition can override the standard definition and
         set a special way how the item is read/writen:
@@ -1557,8 +1614,12 @@ class Ignored(ControlDefinition):
 
     _grammar = None
 
-    def _save_to_file(self, file, value):
+    def has_grammar(self):
+        return False
+
+    def _save_to_file(self, file, value, always=False):
         return
+
 
 class Gather:
     """
@@ -1574,7 +1635,7 @@ class Gather:
         self.value_delimiter = value_delimiter
         self.value_delimiter_grammar = value_delimiter_grammar
 
-    def _grammar(self, allow_dangerous=False):
+    def _grammar(self, allow_dangerous=False, **kwargs):
         names = [ i._grammar_of_name() for i in self.items if i.name_in_grammar ]
         ln = len(names)
         delimiter = bool(names)
@@ -1582,7 +1643,6 @@ class Gather:
         def values():
             nonlocal delimiter
             for i in self.items:
-                #if i.name == 'EMAX': breakpoint()
                 yield i._grammar(allow_dangerous,
                                  name_value_delimiter=delimiter,
                                  name_in_grammar=False,
@@ -1598,7 +1658,7 @@ class Gather:
         out.setParseAction(discard_names)
         return out
 
-    def _save_to_file(self, file, value):
+    def _save_to_file(self, file, value, always=False):
         names = self.name_delimiter.join(i.formated_name for i in self.items if i.name_in_grammar)
         if names:
             value._definition.write_name(file, names)
@@ -1645,10 +1705,12 @@ def switch(item, values, name=None):
 class Switch(ControlDefinition):
    """ Items of this class can control, which elements of grammar will be active and which not """
 
+   create_object = None
+
    with generate_grammar():
        empty = pp.Empty()
 
-   def __init__(self, item, values, name=None):
+   def __init__(self, item, values, name=None, template=None):
        """
        Parameters
        ----------
@@ -1679,31 +1741,47 @@ class Switch(ControlDefinition):
        """
 
        self.item = item
-       self.values = { k : v if isinstance(v, (list, tuple)) else (v,) for k,v in values.items() }
-       self.prepared = {}
+       used = set()
+
+       def create(n):
+           nonlocal used
+           if n.name in used:
+               return Stub(n.name, condition=self)
+           else:
+               used.add(n.name)
+               return n
+
+       def convert(v):
+           nonlocal used
+           if isinstance(v, dict):
+                return { i: create(v) for i,v in v.items() }
+           else:
+                if not isinstance(v, (tuple, list)):
+                   v=[v]
+                return { i.name: create(i) for i in v }
+       self.values = { k : convert(v) if isinstance(v, (list, tuple)) else { v.name: v} for k,v in values.items() }
        self.container = None
        self.copied = False
-       if name is None:
-          name = f'_SWITCH_{item}_{ControlDefinition.counter}'
-          ControlDefinition.counter+=1
-       super().__init__(name)
+       if template is None:
+          template='_SWITCH_{item}'
+       super().__init__(name, template)
 
    def copy(self):
-       out = copy.copy(self)
-       out.copied = True
-       return out
+       raise NotImplemented
 
    def __call__(self, option):
-       return option.name in self.values[option._container[self.name]()]
+       return option._definition in self.values[option._container[self.item]()].values()
 
    def all_values(self):
-       return itertools.chain.from_iterable( self.values.values() )
+       return itertools.chain.from_iterable( (i.values() for i in self.values.values()) )
 
    def item_hook(self, grammar):
+       if not self.container.force_order:
+          raise NotImplemented("Switch for custom-order containers have not yet been implemented")
        def item_value(value):
-           ok = self.values.get(value, [])
-           for i in ok:
-               tpl = self.prepared.get(i.name, None)
+           ok = self.values.get(value, {})
+           for i in ok.values():
+               tpl = grammar._prepared.get(i.name, None)
                if tpl:
                   tpl[1] << tpl[0]
                   tpl[1].setName(f"<IF True THEN {str(tpl[0])}>")
@@ -1711,28 +1789,32 @@ class Switch(ControlDefinition):
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
            #no.setParseAction(lambda x: breakpoint() or x)
-           for i in set(self.all_values()).difference(ok):
-               tpl = self.prepared.get(i.name, None)
+           for i in set(self.all_values()).difference(ok.values()):
+               tpl = grammar._prepared.get(i.name, None)
                if tpl:
                   tpl[1].setName(f"<IF False THEN {str(tpl[0])}>")
                   tpl[1] << self.empty
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
+       grammar._prepared = {}
+       #if getattr(sys, "hhh", None): breakpoint()
+       self.grammar = grammar
        return grammar.addParseAction(lambda x: item_value(x[0][1]) and x)
 
    def prepare_grammar(self, definition, grammar):
        f = pp.Forward()
+       #if getattr(sys, "hhh", None): breakpoint()
        #old pyparsing compatibility
        if hasattr(f, 'set_name'):
            f.set_name(f"<IF {self.item} THEN {grammar.name}>")
-       self.prepared[definition.name] = (grammar, f)
+       self.grammar._prepared[definition.name] = (grammar, f)
        return f
 
    def remove_from_container(self):
        if self.container:
            self.container[self.item].remove_grammar_hook(self.item_hook)
            for i in self.values.values():
-               for j in i:
+               for j in i.values():
                    j.condition = None
 
    def added_to_container(self, container):
@@ -1740,24 +1822,33 @@ class Switch(ControlDefinition):
        if container:
            if self.copied:
               self.copied = False
-              self.values = { k:[ container[i.name] for i in v ] for k,v in self.values }
+              self.values = { k:{ n : container[n] for n in v } for k,v in self.values }
+
            container[self.item].add_grammar_hook(self.item_hook)
            for i in self.values.values():
-                for j in i:
+                for j in i.values():
                     j.condition = self
-
-       self.container = container
+       super().added_to_container(container)
 
    def __del__(self):
        self.remove_from_container()
 
 
-class SeparatorDefinition(ValueDefinition):
+class SeparatorDefinition(VirtualDefinition):
     """ Basic class for separators """
-    _counter = 0
+    def __repr__(self):
+        return "<SEPARATOR>"
 
-    def __init__(self, name = None):
-      if not name:
-         SeparatorDefinition._counter += 1
-         name = f'_Separator_{SeparatorDefinition._counter}'
-      super().__init__(name, self.separator_type, is_hidden=True, name_in_grammar=False)
+    def __init__(self):
+        super().__init__(template='SEPARATOR')
+
+    def _create_grammar(self, allow_dangerous=False):
+        return pp.Suppress(self.separator_type.grammar())
+
+    def _save_to_file(self, file, value, always=False):
+        if not always:
+            if self.condition and self.condition(container):
+                    return False
+            self.separator_type.write(file, None)
+            return True
+import sys

@@ -1,14 +1,14 @@
 """ Definition of value in configuration/output files,
 that is generated from other values """
 
-from .configuration_definitions import BaseDefinition
+from .configuration_definitions import RealItemDefinition
 from .decorators import add_to_signature
 from functools import partial
 from .options import Option
 import copy
 import numpy as np
 
-class BaseGeneratedValueDefinition(BaseDefinition):
+class BaseGeneratedValueDefinition(RealItemDefinition):
   """ Base class for all generated values. It just set
   that it is generated. """
 
@@ -34,7 +34,7 @@ class BaseGeneratedValueDefinition(BaseDefinition):
 
 class GeneratedValueDefinition(BaseGeneratedValueDefinition):
 
-   @add_to_signature(BaseDefinition.__init__, prepend=True)
+   @add_to_signature(RealItemDefinition.__init__, prepend=True)
    def __init__(self, name, getter, setter=None, **kwargs):
        super().__init__(name, **kwargs)
        self.getter = getter
@@ -84,7 +84,7 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
     PlotInfo object that defines how the results are plotted
    """
 
-   @add_to_signature(BaseDefinition.__init__, prepend=True)
+   @add_to_signature(RealItemDefinition.__init__, prepend=True)
    def __init__(self, name, data, selector=slice(None),
                 shape=None, transpose=False, reorder=None,
                 transform_key=None,

@@ -49,7 +49,41 @@ class DangerousValue:
       else:
          file.write(value)
 
-class Option(Configuration):
+class BaseOption(Configuration):
+  """ A base placeholder for a leaf element of a grammar file,
+  both the a-value-holding ones (:class:`Option`) and
+  dummy ones (Dummy)
+  """
+  def _save_to_file(self, file, always=False):
+      """ Write the name-value pair to the given file, if the value
+      is set. """
+      return self._definition.output_definition._save_to_file(file, self, always)
+  def _find_value(self, name):
+      if self._definition.name == name:
+         return self
+
+  def get_path(self):
+      return self._get_path()
+
+  def as_dict(self, only_changed: Union[bool,str]='basic', generated:bool=False, copy:bool=False):
+      return None
+
+  def clear(self, do_not_check_required=False, call_hooks=True, generated=True):
+      pass
+
+class Dummy(BaseOption):
+
+  def validate(self, why='save'):
+      return True
+
+  def has_any_value(self):
+      return False
+
+  def __repr__(self):
+      return f'<DUMMY {self._definition.name}>'
+
+
+class Option(BaseOption):
   """ Class for one option (a configuration value) of SPRKKR - either to
   be used as a part of InputParameters or Potential configuration.
   Usage:
@@ -375,22 +409,29 @@ class Option(Configuration):
       """ True, if the value is set (even equal to the default value) """
       return self._value is not None
 
-  def _written_value(self):
+  def _written_value(self, always=False):
       """
+      Parameters
+      ----------
+      always:
+        Skip all condition checking
+
       Returns
       -------
       write value: Any
         The value to be written
-      write: bool
+      write: bool,
         Whether to write the value or not
       """
       d = self._definition
       if not d.is_stored:
-         return None, False
-      if d.condition and not d.codition(self):
-         return None, False
-      if not d.write_condition(self):
-         return None, False
+          return None, False
+
+      if not always:
+          if d.condition and not d.condition(self):
+             return None, False
+          if not d.write_condition(self):
+             return None, False
 
       if not d.type.has_value:
          return None, True
@@ -406,10 +447,6 @@ class Option(Configuration):
           return value, False
       return value, True
 
-  def _save_to_file(self, file):
-      """ Write the name-value pair to the given file, if the value
-      is set. """
-      return self._definition.output_definition._save_to_file(file, self)
 
   def validate(self, why='save'):
       d = self._definition
@@ -492,13 +529,8 @@ class Option(Configuration):
       else:
           return d.type.is_the_same_value(value, default)
 
-
-  def _find_value(self, name):
-      if self._definition.name == name:
-         return self
-
-  def get_path(self):
-      return self._get_path()
+  def has_any_value(self):
+      return self.result is not None
 
   def __len__(self):
       return len(self())
@@ -511,14 +543,15 @@ class Option(Configuration):
 
   def __repr__(self):
       if self._definition.is_generated:
-         v = self()
-         o = ' (generated)'
+         return f"<Generated value {self._get_path()}>"
       else:
          v = self._value
          o = None
 
       if o is None and v is None:
          v = self.default_value
+         if callable(v):
+            v = 'fn()'
          if v is not None:
             o=' (default)'
 
@@ -531,6 +564,8 @@ class Option(Configuration):
       else:
          o=''
          v=' = '+str(v)
+         if(len(v)>20):
+           v=f'{v[:10]}...{v[-10:]}'
 
       type = '(generated)' if self._definition.is_generated else f'of type {self._definition.type}'
       return f"<Option {self._get_path()} {type} with{o} value{v}>"
