@@ -529,7 +529,7 @@ class SPRKKR(Calculator):
             else:
                input_parameters = self.input_parameters
 
-            if not input_parameters.CONTROL.POTFIL() and not potential and not potential_file:
+            if not input_parameters.CONTROL.POTFIL.result and not potential and not potential_file:
                 raise ValueError("Potential in the input parameters is not set and no Atoms nor Potential object have been given.")
             if save_input is None:
                 save_input = True
