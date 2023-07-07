@@ -8,6 +8,7 @@ from ase.build import bulk
 from ..calculator import SPRKKR
 from ...potentials.potentials import Potential
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -23,7 +24,14 @@ class CalculatorTest(TestCase):
      from ase2sprkkr.sprkkr.build import semiinfinite_system
      b=semiinfinite_system(a, repeat=3)
      from ase2sprkkr import SPRKKR
-     SPRKKR().calculate(b, print_output=True, options={'NITER':2})
+     cal=SPRKKR(atoms=b)
+     cal.input_parameters.set_from_atoms(b)
+     self.assertTrue(bool(re.search('NKTAB3D=', cal.input_parameters.to_string())))
+     self.assertFalse(bool(re.match('NKTAB=', cal.input_parameters.to_string())))
+     out=SPRKKR().calculate(b, print_output=True, options={'NITER':2})
+     self.assertTrue(bool(re.search('NKTAB3D=', out.input_parameters.to_string())))
+     self.assertFalse(bool(re.match('NKTAB=', out.input_parameters.to_string())))
+
 
  def test_calculator(self):
      print_output = '-v' in sys.argv or '--verbose' in sys.argv
