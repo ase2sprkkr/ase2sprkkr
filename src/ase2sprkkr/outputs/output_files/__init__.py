@@ -81,12 +81,13 @@ class OutputFile(ConfigurationFile):
       if isinstance(first_try,str):
           first_try=[ first_try ]
 
+      first = None
       if first_try:
          out=None
          try:
              out = cls.from_file(filename, first_try=False, try_only=first_try)
          except Exception as e:
-             last = e
+             first = e
          if out: return out
       else:
          last = None
@@ -107,7 +108,7 @@ class OutputFile(ConfigurationFile):
               return cls.unknown_output_file_definition.read_from_file(filename)
           except pp.ParseBaseException as e:
               raise Exception(f'Can not parse file: {filename}') from e
-      raise last
+      raise first or last
 
 class CommonOutputFile(ConfigurationFile):
 
