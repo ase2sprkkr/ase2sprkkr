@@ -14,6 +14,11 @@ import itertools
 import re
 from typing import Union, Any, Dict
 
+class DisabledAttributeError(AttributeError):
+      """ This exception is raised, if the attribute of a container exists,
+      but it is disabled. E.g. because it has no sense for the current data.
+      """
+
 class ConfigurationContainer(Configuration):
   """ A container for configuration (problem-definition) options and/or sections.
 
@@ -84,10 +89,16 @@ class ConfigurationContainer(Configuration):
           raise AttributeError(f'No {name} member of {self._definition}')
       d = out._definition
       if d.is_hidden:
-          raise AttributeError(f'member {name} of {self._definition} is not directly accessible')
+          raise DisabledAttributeError(f'member {name} of {self} is not directly accessible. '
+                                       'Probably it''s a hidden attribute used for some kind of logic, '
+                                       'for which a direct access has no sense. If you really need '
+                                       'an access to the attribute, you can use the "container[''name'']" notation.')
       if d.condition and not d.condition(out):
-          raise AttributeError(f'member {name} of {self._definition} is not accessible for '
-                                ' the current data')
+          raise DisabledAttributeError(f'member {name} of {self} is not accessible for '
+                                'the current data. It is probably not available or has no sense '
+                                'in this particular case (e.g. data file does not contain needed '
+                                'data for it). If you eally need an access to the attribute, you can use the '
+                                '"container[''name'']" notation.')
       return out
 
   def __getattr__(self, name):
@@ -98,8 +109,13 @@ class ConfigurationContainer(Configuration):
       try:
         out = self._get_member(name)
       except AttributeError as e:
-        raise AttributeError(f"There is no value with name {name} in {self}.\nMaybe, you want to add a custom value using the add method?") \
-              from e
+        if isinstance(e, DisabledAttributeError):
+           msg = str(e)
+           cls = DisabledAttributeError
+        else:
+           msg = f"There is no value with name {name} in {self}.\nMaybe, you want to add a custom value using the add method?"
+           cls = AttributeError
+        raise cls(msg) from e
       return out
 
   def __getitem__(self, name):
