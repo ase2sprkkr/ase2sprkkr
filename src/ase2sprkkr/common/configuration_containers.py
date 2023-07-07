@@ -448,7 +448,9 @@ class ConfigurationContainer(Configuration):
       return False
 
 class DictAdaptor:
-  """ This class wraps a container to behave as a read-only dict """
+  """ This class wraps a container to behave as a read-only dict.
+  It is used during validation of a container.
+  """
 
   def __init__(self, container):
       self.container=container
