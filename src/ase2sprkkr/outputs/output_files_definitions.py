@@ -24,7 +24,7 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
   type_from_type_map = { str: line_string }
   type_of_dangerous = pot_mixed
 
-class BlankSeparator(SeparatorDefinition, OutputFileValueDefinition):
+class BlankSeparator(SeparatorDefinition):
   """
   A special (hidden) value, that appears in a output file header
 
@@ -32,7 +32,7 @@ class BlankSeparator(SeparatorDefinition, OutputFileValueDefinition):
   """
   separator_type = BlankSeparatorType()
 
-class Separator(SeparatorDefinition, OutputFileValueDefinition):
+class Separator(SeparatorDefinition):
   """
   A special (hidden) value, that appears in a output file header
 
