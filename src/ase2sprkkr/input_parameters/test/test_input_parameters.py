@@ -534,13 +534,38 @@ XSITES NR=3 FLAG
     grammar = ipd.grammar()
     assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar);
     assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar);
-    #grammar.set_debug(True, True)
+    out=ipd.read_from_string('ENERGY A=2 C=4')
+    self.assertEquals(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n')
     assertParse('ENERGY A=1 B=2', {'ENERGY': {'A' : 1, 'B' : 2}}, grammar);
     assertNotValid('ENERGY A=2 B=2', grammar)
     assertNotValid('ENERGY A=1 C=1', grammar)
     assertNotValid('ENERGY A=1 B=2 C=1', grammar)
     assertNotValid('ENERGY A=2 B=2 C=1', grammar)
     assertNotValid('ENERGY A=3 C=3', grammar)
+
+    print("\n\n\n***************\n\n")
+    ipd = cd.InputParametersDefinition.from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        *switch('A', {
+          1: [ V('B', 2), V('D', 3), V('C',1) ],
+          2: [ V('C', 3), V('E', 1), V('B',2)] })
+       ]})
+    ipd['ENERGY'].force_order = True
+    grammar = ipd.grammar()
+    assertParse('ENERGY A=2 C=4 E=2 B=6', {'ENERGY': {'A':2, 'C':4, 'E':2, 'B':6 }}, grammar);
+    assertParse('ENERGY A=1 B=5 D=3 C=5', {'ENERGY': {'A':1, 'B':5, 'D':3, 'C':5 }}, grammar);
+
+    grammar = ipd.grammar()
+    assertNotValid('ENERGY A=2 B=2', grammar)
+    assertNotValid('ENERGY A=1 B=2', grammar)
+    assertNotValid('ENERGY A=1 B=2 D=3', grammar)
+    assertNotValid('ENERGY A=1 B=5 D=3 C=5 B=6', grammar);
+    assertNotValid('ENERGY A=1 B=5 D=3 C=5 E=6', grammar);
+    assertNotValid('ENERGY A=2 B=5 C=4 E=3', grammar);
+    out=ipd.read_from_string('ENERGY A=2 C=4 E=2 B=6')
+    self.assertEqual(out['ENERGY'].to_dict(), {'A': 2, 'B': 6, 'C': 4, 'E':2})
+    self.assertEquals(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n\tE=2\n\tB=6\n')
 
 
 
