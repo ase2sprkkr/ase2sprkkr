@@ -24,13 +24,10 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
     _arithmetic_values = [('RAW_DATA', (slice(None), slice(2,6)))]
 
-    def _check_arithmetic(self, other):
-        try:
-            assert np.allclose(other.ENERGY(), self.ENERGY())
-            assert np.allclose(other.THETA(), self.THETA())
-        except AssertionError:
-            raise ValueError("The outputs are not compatibile to summed/subtracted.");
-
+    def _assert_arithmetic(self, other):
+         """ Check, that the file can be summed/subtracked from an other file """
+         assert np.allclose(other.ENERGY(), self.ENERGY())
+         assert np.allclose(other.THETA(), self.THETA())
 
 class ARPESDefinition(OutputFileDefinition):
 

@@ -133,6 +133,11 @@ class CommonOutputFile(ConfigurationFile):
 class Arithmetic:
 
     def _check_arithmetic(self, other):
+        if hasattr(self, '_assert_arithmetic'):
+            try:
+                self._assert_arithmetic(other)
+            except AssertionError as e:
+                raise ValueError("The outputs are not compatibile to be summed or subtracted.") from e
         pass
 
     def __add__(self, other):
