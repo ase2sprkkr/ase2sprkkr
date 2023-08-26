@@ -112,10 +112,10 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
 
    def source(self, container):
        if callable(self.selector):
-          selector=self.selector(container)
+          out = self.selector(container[self.data](), container)
        else:
           selector=self.selector
-       out=container[self.data]()[selector]
+          out=container[self.data]()[self.selector]
        if self.shape:
           out.shape = self.determine_shape(container)
        if self.reorder:

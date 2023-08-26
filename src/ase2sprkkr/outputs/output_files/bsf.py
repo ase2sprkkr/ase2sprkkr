@@ -22,15 +22,44 @@ class BSFDefinition(OutputFileDefinition):
 
 def create_definition():
 
-    def i(c, i):
-        if i == -1:
-           i=2 if  c.MODE() == 'BSF' else 0
-        ln = c.NE()*c.NQ_EFF()*c.NK()
-        start=ln*i
-        return slice(start,start+ln)
 
     reorder = (1, 0, 2)
 
+    def i(type):
+        def index(data, c):
+          """
+          Returns data in the shape
+          ('NE/NK1','NQ_EFF', 'NK2')
+          for a given type.
+          Reorder parameter then change the order of the axes to
+          ('NQ_EFF', 'NE/NK1', 'NK2')
+
+          Data structure:
+            IX,Y,Z (BSF-SPOL)
+                k-e: NE, type, NQ, NK  types(I,x,y,z)
+                k-k: type, K1, NQ, K2, types(I,x,y,z)
+
+           Iup,dn (BSF) two sets
+                k-e: NE, type, NQ, NK   types(u,d)
+                     NE, type, NQ, NK   types(I)
+                k-k: NK, type, NQ, NK   types(u,d)
+                     NK, NQ, NK   types(I)
+          """
+          nq=c.NQ_EFF()
+          nk2=c.NK2()
+          if c.KEYWORD() == 'BSF':
+             nk1 = c.NE() if c.MODE() == 'EK-REL' else c.NK1()
+             limit = nq*nk2*2
+             if type:
+                return data[:limit].reshape(nk1, 2, nq, nk2)[:,type]
+             else:
+                return data[limit:].reshape(nk1,nq,nk2)
+          else:
+             if c.MODE() == 'EK-REL':
+                return data.reshape(c.NE(), 4, nq, nk2)[:,type]
+             else:
+                return data.reshape(4, c.NK1(), nq, nk2)[:,type]
+        return index
     definition = create_output_file_definition(Keyword('BSF', 'BSF-SPOL'), [
       Separator(),
       V('DATASET', str, written_name='#DATASET'),
@@ -77,16 +106,16 @@ def create_definition():
       V('RAW_DATA', NumpyArray(written_shape=(-1,1), shape=(-1,)), name_in_grammar=False),
       *switch('KEYWORD', {
         'BSF' : [
-            NV('I_UP', 'RAW_DATA', lambda c: i(c,0), ('SHAPE','NQ_EFF', 'NK2'), reorder=reorder ),
-            NV('I_DOWN', 'RAW_DATA', lambda c: i(c,1), ('SHAPE','NQ_EFF', 'NK2'), reorder=reorder ),
+            NV('I_UP', 'RAW_DATA', i(c,1), reorder=reorder ),
+            NV('I_DOWN', 'RAW_DATA', i(c,2), reorder=reorder ),
         ],
         'BSF-SPOL': [
-            NV('I_X', 'RAW_DATA', lambda c: i(c,1), ('SHAPE','NQ_EFF', 'NK2'), reorder=reorder ),
-            NV('I_Y', 'RAW_DATA', lambda c: i(c,2), ('SHAPE','NQ_EFF', 'NK2'), reorder=reorder ),
-            NV('I_Z', 'RAW_DATA', lambda c: i(c,3), ('SHAPE','NQ_EFF', 'NK2'), reorder=reorder ),
+            NV('I_X', 'RAW_DATA', i(c,1), reorder=reorder ),
+            NV('I_Y', 'RAW_DATA', i(c,2), reorder=reorder ),
+            NV('I_Z', 'RAW_DATA', i(c,3), reorder=reorder ),
         ]
       }),
-      NV('I', 'RAW_DATA', lambda c: i(c, -1), ('SHAPE','NQ_EFF', 'NK2'), reorder=reorder ),
+      NV('I', 'RAW_DATA', i(c, 0), reorder=reorder ),
 
     ], cls=BSFDefinition, name='BSF')
 
