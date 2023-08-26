@@ -631,7 +631,10 @@ class ValueDefinition(RealItemDefinition):
        self.default_value = None if isinstance(type,dict) else self.type.convert(type)
     else:
        self.type = type_from_type(type, type_map = self.type_from_type_map)
-       self.default_value = self.type.convert(default_value) if default_value is not None else None
+       if default_value is not None:
+          if not callable(default_value):
+             default_value = self.type.convert(default_value)
+       self.default_value = default_value
 
     assert isinstance(self.type, GrammarType), "grammar_type (sprkkr.common.grammar_types.GrammarType descendat) required as a value type"
     self.type.used_in_definition(self)
@@ -898,7 +901,7 @@ class ValueDefinition(RealItemDefinition):
      """
      if self.default_value is not None:
         if callable(self.default_value):
-           return self.default_value(option)
+           return self.type.convert(self.default_value(option))
         return self.default_value
      return None
 
