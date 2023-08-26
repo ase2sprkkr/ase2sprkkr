@@ -8,7 +8,7 @@ from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, Nump
 from ...common.generated_configuration_definitions import \
     NumpyViewDefinition as NV, \
     GeneratedValueDefinition as GV
-from ...visualise.plot import PlotInfo, combined_colormap, Multiplot
+from ...visualise.plot import Multiplot
 
 from ase.units import Rydberg
 
@@ -184,18 +184,8 @@ class DOSDefinition(OutputFileDefinition):
 
 def create_definition():
 
-    pi = PlotInfo(
-        axes = (('K', r'$k_{\parallel} $(${\rm \AA}^{-1}$)'),
-                ('ENERGY', r'$E-E_{\rm F}$ (eV)')),
-        #axes = ('K', 'ENERGY' ),
-        show_zero_line = True,
-        colormap = combined_colormap()
-    )
-
     def i(j):
         return slice(None),j
-
-
 
     definition = create_output_file_definition('DOS', [
       V('DOS-FMT', str, written_name='DOS-FMT:'),
