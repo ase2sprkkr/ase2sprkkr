@@ -10,8 +10,7 @@ from ...common.generated_configuration_definitions import \
     GeneratedValueDefinition as GV
 from ...visualise.plot import PlotInfo, combined_colormap, Multiplot
 
-import scipy.constants
-Ry = 0.5*scipy.constants.value('Hartree energy in eV')
+from ase.units import Rydberg
 
 class DOS(Arithmetic):
 
@@ -173,7 +172,7 @@ class DOSOutputFile(CommonOutputFile):
            out=out[:,l]
         if spin is not None:
            out=out[spin]
-        return DOS( (self.ENERGY() - self.EFERMI())*Ry, out / Ry, type, id, spin, l)
+        return DOS( (self.ENERGY() - self.EFERMI())*Rydberg, out / Rydberg, type, id, spin, l)
 
     def n_spins(self):
         return len(self.DOS()) // sum( (t['IQAT'][0] for t in self.TYPES()) )
