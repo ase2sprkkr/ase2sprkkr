@@ -43,5 +43,5 @@ class CalculatorTest(TestCase):
       calc.set('NKTAB', 5)
       calc.set('NKTAB2D', 5)
       calc.set('NKTAB3D', 5)
-      out = out.calculator.calculate()
-      self.assertTrue(isinstance(out.spc.ENERGY(), np.ndarray))
+      out2 = out.calculator.calculate()
+      self.assertTrue(isinstance(out2.spc.ENERGY(), np.ndarray))
