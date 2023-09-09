@@ -93,7 +93,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
   def _generic_info(self):
       return f"Input parameters for task {self.name}"
 
-  def __init__(self, name, sections=None,
+  def __init__(self, name, members=None,
                executable='kkrscf', mpi=True, result_reader=None,
                **kwargs):
       """
@@ -117,7 +117,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       self.mpi = mpi
       self.result_reader = result_reader
 
-      super().__init__(name, sections, **kwargs)
+      super().__init__(name, members, **kwargs)
       if not 'TASK' in self:
          self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
       elif not 'TASK' in self['TASK']:
