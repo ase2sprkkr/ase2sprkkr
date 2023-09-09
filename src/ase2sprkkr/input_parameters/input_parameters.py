@@ -22,7 +22,7 @@ from typing import Union
 class InputSection(ConfigurationSection):
     """ Input parameters sections has nothing special, yet. """
 
-def resolve_executable_postfix(postfix:Union[str,bool]):
+def resolve_executable_suffix(postfix:Union[str,bool]):
     """" Return the postfix, that is appended after the name of SPR-KKR executable.
 
     Parameters
@@ -155,12 +155,15 @@ class InputParameters(ConfigurationFile):
       """
       return mpi and self._definition.mpi
 
-  def run_process(self, calculator, input_file, output_file, print_output=False, executable_postfix=None, mpi=None):
+  def run_process(self, calculator, input_file, output_file, directory='.', print_output=None, executable_suffix=None, mpi=None):
       """
       Run the process that calculate the task specified by this input paameters
 
       calculator: ase2sprkkr.sprkkr.calculator.SPRKKR
         Calculator, used for running the task. Various configurations are readed from them.
+
+      directory: str
+        Where to run the calculation
 
       input_file: file
         File, where the input parameters for the task are stored.
@@ -172,7 +175,7 @@ class InputParameters(ConfigurationFile):
         Print the output to the stdout, too? String value 'info' prints only selected infromations
         (depending on the task runned)
 
-      executable_postfix: str or None
+      executable_suffix: str or None
         Postfix, appended to the name of the called executable (sometimes, SPRKKR executables are
         compiled so that the resulting executables has postfixies)
 
@@ -186,12 +189,13 @@ class InputParameters(ConfigurationFile):
         parsed output of the runned task.
 
       """
+      print_output = calculator.value_or_default('print_output', print_output)
+      executable_suffix = calculator.value_or_default('executable_suffix', executable_suffix)
+      mpi = calculator.value_or_default('mpi', mpi)
+
       d = self._definition
       executable = d.executable
-      print_output = print_output if print_output is not None else calculator.print_output
-      executable_postfix = calculator.executable_postfix if executable_postfix is None else executable_postfix
-      executable += resolve_executable_postfix(calculator.executable_postfix)
-      directory = calculator._directory
+      executable += resolve_executable_suffix(executable_suffix)
       process = self.result_reader(calculator)
       try:
         mpi = self.mpi_runner(mpi)

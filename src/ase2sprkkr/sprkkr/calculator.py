@@ -47,7 +47,7 @@ class SPRKKR(Calculator):
                  print_output='info',
                  mpi=False,
                  input_parameters=None, options={}, potential=None,
-                 executable_postfix=True,
+                 executable_suffix=True,
                  empty_spheres : str|bool = False,
                  **kwargs):
         """
@@ -109,7 +109,7 @@ class SPRKKR(Calculator):
           when calculate or save_input
           methods are called (either directly, or via atoms, input_parameters etc.)
 
-        executable_postfix: str or bool
+        executable_suffix: str or bool
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
           True: use SPRKKR_EXECUTABLE_SUFFIX environment variable
@@ -136,7 +136,7 @@ class SPRKKR(Calculator):
         self._potential = None
         self.atoms = atoms
         self.potential = potential
-        self.executable_postfix = executable_postfix
+        self.executable_suffix = executable_suffix
         """ The default postfix for the names of executables. False means no postfix, True means
         to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. """
 
@@ -663,7 +663,7 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str|bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_postfix=None):
+                  print_output=None, executable_suffix=None):
         """
         Do the calculation, return various results.
 
@@ -675,7 +675,7 @@ class SPRKKR(Calculator):
             If print_output=='info' only a few lines per iteration will be printed.
             None means to use a default value (specified in constructor)
 
-        executable_postfix: str or bool or None
+        executable_suffix: str or bool or None
             If not None, it overrides the executable_postifx, that have been specified when the
             calculator have been created.
 
@@ -708,10 +708,18 @@ class SPRKKR(Calculator):
                               directory=directory)
 
           with directory.chdir():
-            return input_parameters.run_process(self, input_file, output_file, print_output if print_output is not None else self.print_output,
-                                     executable_postfix = executable_postfix,
-                                     mpi=self.mpi if mpi is None else mpi
-                                    )
+            return input_parameters.run_process(self, input_file, output_file,
+                                directory=str(directory),
+                                print_output=print_output,
+                                executable_suffix=executable_suffix,
+                                mpi=mpi,
+                                )
+
+    def value_or_default(self, name, value):
+        """ Return the default value of the parameter, if the given value is None"""
+        if value is None:
+           value = getattr(self, name)
+        return value
 
     def calculate(self, atoms=None, properties=['energy'], system_changes=all_changes,
                   input_parameters=None, potential=None,
@@ -720,7 +728,7 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str|bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_postfix=None):
+                  print_output=None, executable_suffix=None):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
         for the requested properties (currently always the SCF one) and updates the
@@ -768,7 +776,7 @@ class SPRKKR(Calculator):
                   empty_spheres,
                   mpi,
                   options, task,
-                  print_output, executable_postfix
+                  print_output, executable_suffix
         )
         if hasattr(out, 'energy'):
             self.results.update({
