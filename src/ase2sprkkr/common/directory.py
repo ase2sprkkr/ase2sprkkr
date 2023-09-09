@@ -23,6 +23,9 @@ class Directory:
     def __str__(self):
         return str(self.dir) if self.dir is not False else self.path
 
+    def __repr__(self):
+        return f"<Directory {str(self)}>"
+
     def __enter__(self):
         self.enters += 1
         if self.enters == 1:
