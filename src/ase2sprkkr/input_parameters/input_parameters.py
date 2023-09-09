@@ -277,10 +277,11 @@ class InputParameters(ConfigurationFile):
 
   @cached_class_property
   def definitions():
-      names = (i for i in pkgutil.iter_modules(definitions.__path__) if i.name != 'sections')
+      #user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
+      names = (i for i in pkgutil.iter_modules(definitions.__path__))
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
-      return { m.input_parameters.name.upper(): m.input_parameters for m in modules }
+      return { m.__name__.rsplit('.',1)[1].upper(): m.input_parameters for m in modules if hasattr(m, 'input_parameters') }
 
   @classmethod
   def is_it_a_input_parameters_name(cls, name):

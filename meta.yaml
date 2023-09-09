@@ -28,6 +28,7 @@ requirements:
     - spglib
     - pyparsing
     - mendeleev
+    - platformdirs
 
 test:
   source_files:
