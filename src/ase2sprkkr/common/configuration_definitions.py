@@ -816,7 +816,10 @@ class ValueDefinition(RealItemDefinition):
 
   def __str__(self):
     out="<{}: {}>".format(self.name, str(self.type))
-    val = self.get_value()
+    try:
+      val = self.get_value()
+    except Exception:
+      val = "<ERRORNEOUS VALUE>"
     if val is not None:
       out+= "={}".format(val)
     return out
