@@ -14,16 +14,22 @@ from ..outputs.output_files import OutputFile
 
 def plot():
   #READ IN COMAND LINE PARAMETERS
-  description='This is a script for plotting SPR-KKR output files'
-  parser = argparse.ArgumentParser(description=description)
-  parser.add_argument('output', help='SPR-KKR output file, e.g. ARPES output (*.spc).')
-  parser.add_argument('-v','--value', dest='value', type=str, help='Only the value of the given name will be plotted (can be repeated)', action='append', default=[], required=False)
+  description='This is a script for plotting SPR-KKR output files. The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n' + \
+   '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].definition.info()}", OutputFile.definitions.items()))
+
+  parser = argparse.ArgumentParser(
+      description=description,
+      formatter_class=argparse.RawDescriptionHelpFormatter
+      )
+  parser.add_argument('output', help='SPR-KKR output file name (see the supported files above).')
   parser.add_argument('-o','--output_filename', dest='filename', type=str, help='The plot will be saved to a file with given name, instead of showing it on the screen', default=None, required=False)
-  parser.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', default=True, help='Do not use LaTex for captions generating', required=False)
+  parser.add_argument('-v','--value', dest='value', type=str, help='Only the value of the given name will be plotted (option can be repeated)', action='append', default=[], required=False)
+
   parser.add_argument('-s','--plot_size', dest='figsize', default=(6,4), type=parse_tuple_function(float,2),   help='The plot size', required=False)
   parser.add_argument('-c','--colormap', dest='colormap', type=str, help='Matplotlib colormap', required=False)
   parser.add_argument('-n','--norm', dest='norm', choices=['lin', 'log'], help='Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)', required=False)
 
+  parser.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', default=True, help='Do not use LaTex for captions generating', required=False)
   parser.add_argument('-S','--set', dest='args', type=parse_named_option, help='Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_<something> functions (e.g. title or (x|y)label). This option can be repeated.', action='append', default=[], required=False)
   args = parser.parse_args()
   kwargs = vars(args)
