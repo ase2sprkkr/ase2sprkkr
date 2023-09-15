@@ -214,65 +214,8 @@ class Multiplot:
           i.set_visible(False)
       finish_plot(filename, show, dpi)
 
-class PlotInfo:
-  """
-  Object that describe, how the values are plotted (the method and default values
-  for plotting)
-  """
-
-  def __init__(self, axes, method=None, **kwargs):
-      self.kwargs = kwargs
-      self.axes = axes
-      self.method = method
-
-  def __add__(self, others):
-      if not isinstance(others, dict):
-          raise NotImplementedError("Only dict can be added to the PlotInfo")
-      out = copy.copy(self)
-      out.kwargs = copy.copy(out.kwargs)
-      out.kwargs.update(others)
-      return out
-
-  def __call__(self, option, **kwargs):
-      values = option()
-      tmp = self.kwargs.copy()
-      tmp.update( (k,v) for k,v in kwargs.items() if v is not None )
-      kwargs = tmp
-      if 'args' in kwargs and option.name in kwargs['args']:
-         kwargs.update(kwargs['args'][option.name])
-      kwargs = { k: v(option) if isinstance(v, PlotValue) else v for k,v in kwargs.items() }
-
-      axes = kwargs.get('axes', self.axes)
-      method = kwargs.get('method', self.method)
-      if method is None:
-         if values.ndim == 2: method = colormesh
-
-      kwargs = { i:j for i,j in kwargs.items() if i not in ('axes', 'method', 'args') }
-
-      xdata = []
-      for i,axe in zip(axes, ['x', 'y', 'z']):
-          pname = axe + 'label'
-          if isinstance(i, tuple):
-              i, label = i
-          else:
-              label = i
-          if label and not pname in kwargs:
-              kwargs[pname] = label
-          if isinstance(i, str):
-             i = option._container[i]()
-          xdata.append(i)
-
-      if 'title' in kwargs and kwargs['title'] == False:
-         del kwargs['title']
-      elif 'title' not in kwargs:
-         kwargs['title'] = option.info if option.info else option.name
-
-      method(*xdata, values, **kwargs)
-
-class PlotValue:
-
-  def __init__(self, func):
-      self.func = func
-
-  def __call__(self, option):
-      return self.func(option)
+def change_default_kwargs(f, **kwargs):
+    """ Return the same function, with default kwargs changed """
+    out = functools.partial(f, **kwargs)
+    functools.update_wrapper(out, f)
+    return out

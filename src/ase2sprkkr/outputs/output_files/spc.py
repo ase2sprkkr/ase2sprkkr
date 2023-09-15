@@ -5,7 +5,7 @@ import numpy as np
 from ..output_files import Arithmetic, CommonOutputFile
 from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
-from ...visualise.plot import PlotInfo, combined_colormap, Multiplot, PlotValue
+from ...visualise.plot import change_default_kwargs, colormesh, Multiplot
 import matplotlib.pyplot as plt
 
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
@@ -36,15 +36,19 @@ class ARPESDefinition(OutputFileDefinition):
 
 def create_definition():
 
-    pi = PlotInfo(
-        axes = (('K', r'$k_{\parallel} $(${\rm \AA}^{-1}$)'),
-                ('ENERGY', r'$E-E_{\rm F}$ (eV)')),
-        #axes = ('K', 'ENERGY' ),
-        show_zero_line = True,
-        mode = 'from_zero',
-        norm='log',
-        vmax = PlotValue( lambda o: o._container.TOTAL().max() )
-    )
+    def plot(option, **kwargs):
+        c = option._container
+        kw = {
+            'show_zero_line' : True,
+            'mode' : 'from_zero',
+            'norm' : 'log',
+            'vmax' : c.TOTAL().max(),
+            'xlabel' : r'$k_{\parallel} $(${\rm \AA}^{-1}$)',
+            'ylabel' : r'$E-E_{\rm F}$ (eV)',
+        }
+        kw.update(kwargs)
+        colormesh(c.K(), c.ENERGY(), option(), **kw)
+
     def i(j):
         return slice(None),j
 
@@ -56,15 +60,11 @@ def create_definition():
 
       NV('THETA', 'RAW_DATA', i(0), ('NE', 'NT')),
       NV('ENERGY', 'RAW_DATA', i(1), ('NE', 'NT')),
-      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=pi),
-      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=pi),
-      NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=pi),
+      NV('TOTAL', 'RAW_DATA', i(2), ('NE', 'NT'), info='Total intensity', plot=plot),
+      NV('UP', 'RAW_DATA', i(3), ('NE', 'NT'), info='Spin up', plot=plot),
+      NV('DOWN', 'RAW_DATA', i(4), ('NE', 'NT'), info='Spin down', plot=plot),
       NV('POLARIZATION', 'RAW_DATA', i(5), ('NE', 'NT'), info='Spin polarization',
-         plot=pi + {
-           'mode' : 'zero_centered',
-           'norm' : 'lin',
-           'vmax' : None
-         },
+         plot=change_default_kwargs(plot, mode = 'zero_centered', norm = 'lin', vmax = None)
         ),
       NV('K', 'RAW_DATA', i(6), ('NE', 'NT'), info='K_parallel (pi/A)'),
       NV('DETERMINANT', 'RAW_DATA', i(7), ('NE', 'NT')),
