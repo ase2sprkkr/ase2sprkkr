@@ -33,10 +33,12 @@ def plot():
   value = args.value
   del kwargs['value']
 
+  kwargs = { k:v for k,v in kwargs.items() if v is not None }
+
   if value:
-    fn = kwargs['filename']
+    fn = kwargs.get('filename', None)
     for name in value:
-      if fn:
+      if fn is not None:
          kwargs['filename'] = append_id_to_filename(fn, name)
       try:
          val = of[name.upper()]
