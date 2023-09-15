@@ -9,7 +9,7 @@ if not __package__:
   __package__ = 'ase2sprkkr.tools'
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
-from ..common.tools import parse_tuple_function
+from ..common.tools import parse_tuple_function, parse_named_option
 from ..outputs.output_files import OutputFile
 
 def plot():
@@ -24,6 +24,7 @@ def plot():
   parser.add_argument('-c','--colormap', dest='colormap', type=str, help='Matplotlib colormap', required=False)
   parser.add_argument('-n','--norm', dest='norm', choices=['lin', 'log'], help='Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)', required=False)
 
+  parser.add_argument('-S','--set', dest='args', type=parse_named_option, help='Given a value of the format name=value, pass the value to the plotting function. You can so override various options that matplotlib plotting functions accept (e.g. vmin or vmax for pcolormesh), or the values that can be set using set_<something> functions (e.g. title or (x|y)label). This option can be repeated.', action='append', default=[], required=False)
   args = parser.parse_args()
   kwargs = vars(args)
 
@@ -34,6 +35,8 @@ def plot():
   del kwargs['value']
 
   kwargs = { k:v for k,v in kwargs.items() if v is not None }
+  kwargs.update(dict(kwargs['args']))
+  del kwargs['args']
 
   if value:
     fn = kwargs.get('filename', None)
