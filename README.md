@@ -66,7 +66,7 @@ package sources.
 
 -   Python \>= 3.7
 -   SPR-KKR (not checked by the installer)
--   Python packages: ase, mendeleev, spglib, pyparsing
+-   Python packages: see the the setup.cfg
 -   Git (to obtain the sources)
 
 ### Obtaining the package using GIT
