@@ -135,13 +135,13 @@ def plotting_function(func):
            single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, callback=None, *args, **kwargs)
     return plot_function
 
-def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None):
+def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, xticks=None, yticks=None):
    l = locals()
    """
    This functions just set the properties of an matplotlib axis, that are common across various plots.
    """
    args = { n: l[n]
-            for n in ('xlabel', 'ylabel', 'xticklabels', 'yticklabels', 'title')
+            for n in ('xlabel', 'ylabel', 'xticks', 'yticks', 'xticklabels', 'yticklabels', 'title')
             if l[n] is not None }
    for name in args:
        if args[name] is not None:
