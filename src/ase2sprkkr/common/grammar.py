@@ -4,7 +4,7 @@ Various pyparsing grammar elements and a few useful routines.
 
 from contextlib import contextmanager
 import pyparsing as pp
-from functools import cache
+from .decorators import cache
 
 @contextmanager
 def generate_grammar():
