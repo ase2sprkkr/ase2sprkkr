@@ -76,14 +76,14 @@ def output_file_header():
     the first ``KEYWORD`` value (which differs for each output file)"""
     V = OutputFileValueDefinition
     return [
-      V('TITLE', str),
-      V('SYSTEM', str),
-      V('NQ_EFF', int),
-      V('NT_EFF', int),
+      V('TITLE', str, info='Name of the calculation'),
+      V('SYSTEM', str, info='Description of the calculated system'),
+      V('NQ_EFF', int, info='Number of atomic sites'),
+      V('NT_EFF', int, info='Number of types of atoms'),
       BlankSeparator(),
       V('NE', int),
       V('IREL', int),
-      V('EFERMI', float),
+      V('EFERMI', float, info='Fermi energy'),
       V('INFO', str),
       BlankSeparator(),
       V('ORBITALS', Table({'NLQ' : unsigned}, numbering='IQ', flatten=True), name_in_grammar = False),
