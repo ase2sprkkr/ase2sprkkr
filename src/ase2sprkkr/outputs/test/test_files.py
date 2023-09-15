@@ -10,8 +10,9 @@ import os.path
 from ..output_files import OutputFile
 
 import scipy.constants
-Ry = 0.5*scipy.constants.value('Hartree energy in eV')
+from ase.units import Rydberg as Ry
 from ...common.configuration_containers import DisabledAttributeError
+import tempfile
 
 class TestOutput(TestCase):
 
@@ -30,11 +31,13 @@ class TestOutput(TestCase):
                    self.assertEqual(out[i](), o2[i]())
                for i in 'TOTAL', 'POLARIZATION', 'UP', 'DOWN':
                    self.assertEqual(2*out[i](), o2[i]())
+
             elif ext=='dos':
                self.assertEqual(out.n_orbitals(1), 3)
                self.assertEqual(out.n_spins(), 2)
                self.assertEqual((2,3,1200), out.dos_for_site_type('Ta').shape)
                self.assertEqual(out.DOS['Ta'][5] / Ry, out.dos_for_site_type('Ta',1,2)[:])
+
             elif ext=='bsf':
                self.assertEqual(out.I().shape, (out.NQ_EFF(), out.NE(), out.NK()))
                if out.KEYWORD() == 'BSF':
@@ -43,4 +46,17 @@ class TestOutput(TestCase):
                else:
                   self.assertEqual(out.I_X().shape, (out.NQ_EFF(), out.NE(), out.NK()))
                   self.assertRaises(DisabledAttributeError, lambda: out.I_UP)
-               #breakpoint()
+
+               if out.MODE() == 'EK-REL':
+                  self.assertEqual(len(out.K()), out.NK())
+                  self.assertEqual(len(out.E()), out.NE())
+               else:
+                  self.assertWarns(RuntimeWarning, out.NK1())
+                  self.assertEqual(out.NK1()[0], 0)
+                  out.VECK_START=[1,1,1]
+                  self.assertEqual(out.NK1()[0], np.sqrt(3))
+                  self.assertEqual(len(out.K1()), out.NK1())
+                  self.assertEqual(len(out.K2()), out.NK2())
+
+            with tempfile.NamedTemporaryFile() as name:
+                  out.plot(filename=name)
