@@ -161,7 +161,7 @@ class class_property:
         return self.fget(cls)
 
 
-def add_to_signature(func, prepend=False, excluding=None):
+def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
   """
   Add the arguments in the ``func`` function to the list of arguments
   of the resulting function (as keyword_only arguments)
@@ -193,7 +193,10 @@ def add_to_signature(func, prepend=False, excluding=None):
     If they are given as regular ones, they takes their new position, too.
 
   excluding
-    Do not add this arguments
+    Do not add arguments of this name(s)
+
+  kwargs
+    The resulting function will have kwargs argument
   """
   if not excluding:
      excluding=[]
@@ -204,10 +207,10 @@ def add_to_signature(func, prepend=False, excluding=None):
   pars = list( signature.parameters.values())
   P = inspect.Parameter
 
-  arg_ar = arg_kw = None
+  arg_ar = _arg_kw = None
   for i in pars:
       if i.kind == P.VAR_KEYWORD:
-         arg_kw = i.name
+         _arg_kw = i.name
       elif i.kind == P.VAR_POSITIONAL:
          arg_ar = i.name
 
@@ -215,8 +218,15 @@ def add_to_signature(func, prepend=False, excluding=None):
       new_sig = inspect.signature(mod_func)
       new_pars = new_sig.parameters.values()
 
+      arg_kw = _arg_kw
+      if kwargs:
+          for i in new_pars:
+              if i.kind == P.VAR_KEYWORD:
+                 arg_kw = i.name
+                 break
+
       #remove args/kwargs from the childs argument
-      new_pars = { i.name:i for i in new_pars if i.kind != P.VAR_KEYWORD and i.kind != P.VAR_POSITIONAL }
+      new_pars = { i.name:i for i in new_pars if (i.kind != P.VAR_KEYWORD or kwargs ) and i.kind != P.VAR_POSITIONAL }
 
       used = set()
       def use(i):
