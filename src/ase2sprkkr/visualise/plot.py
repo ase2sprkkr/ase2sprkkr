@@ -60,7 +60,7 @@ def create_rc_context(latex:bool=True):
 
     return rc_context(params)
 
-def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, latex=True, figsize=(6,4), **kwargs):
+def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, latex=True, figsize=(6,4), callback=None, **kwargs):
     """
     Creates single plot according to the given function a either show it or save it.
 
@@ -81,6 +81,7 @@ def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[b
       fig, ax = plt.subplots(figsize=figsize)
       plt.subplots_adjust(left=0.15,right=0.95,bottom=0.17,top=0.93)
       fn(*args, **kwargs, axis=ax)
+      if callback: callback(ax)
       finish_plot(filename, show, dpi)
 
 def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
@@ -112,6 +113,7 @@ def auto_range(rng, data):
         rng[0] if rng[0] is not None else np.min(data),
         rng[1] if rng[1] is not None else np.max(data),
         )
+
 def plotting_function(func):
     """ Decorator, that 'completes' the given function that just draw into a
     matplolib axis.
@@ -124,11 +126,13 @@ def plotting_function(func):
 
     @add_to_signature(func)
     @functools.wraps(func)
-    def plot_function(*args, filename=None, show=None, dpi=600, latex=True, axis=None, **kwargs):
+    def plot_function(*args, filename=None, show=None, dpi=600, latex=True, figsize=(6,4), callback=None, axis=None, **kwargs):
         if axis:
            func(*args, axis=axis, **kwargs)
+           if callback:
+             callback(axis)
         else:
-           single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, *args, **kwargs)
+           single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, callback=None, *args, **kwargs)
     return plot_function
 
 def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None):
