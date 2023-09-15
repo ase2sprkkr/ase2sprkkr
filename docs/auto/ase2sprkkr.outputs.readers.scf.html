@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>scf &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,12 +65,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files.html">output_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files_definitions.html">output_files_definitions</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.arpes.html">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.readers.default.html">default</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">scf</a></li>
 </ul>
@@ -80,6 +88,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -97,11 +106,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.outputs.html">outputs</a> &raquo;</li>
-          <li><a href="ase2sprkkr.outputs.readers.html">readers</a> &raquo;</li>
-      <li>scf</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.outputs.html">outputs</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.outputs.readers.html">readers</a></li>
+      <li class="breadcrumb-item active">scf</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto/ase2sprkkr.outputs.readers.scf.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -112,17 +121,17 @@
            <div itemprop="articleBody">
              
   <section id="scf">
-<h1>scf<a class="headerlink" href="#scf" title="Permalink to this heading"></a></h1>
+<h1>scf<a class="headerlink" href="#scf" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.readers.scf</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-0e30809e6d8ecc9ef323cb472822916b67623a54.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.scf.RealOrStars, ase2sprkkr.outputs.readers.scf.ScfOutputReader, ase2sprkkr.outputs.readers.scf.ScfResult" usemap="#inheritanceb259a1ba24" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-52475ee3d67f0dae97a3eeccd59880fa366d2485.png" alt="Inheritance diagram of ase2sprkkr.outputs.readers.scf.RealOrStars, ase2sprkkr.outputs.readers.scf.ScfOutputReader, ase2sprkkr.outputs.readers.scf.ScfResult" usemap="#inheritanceb259a1ba24" class="inheritance graphviz" /></div>
 <map id="inheritanceb259a1ba24" name="inheritanceb259a1ba24">
 <area shape="rect" id="node1" href="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,104,200,129"/>
 <area shape="rect" id="node5" href="ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.task_result.OutputReader" target="_top" title="Process reader, that construct (a descendant of) InputParametersResult as a result." alt="" coords="249,104,361,129"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.GrammarType.html#ase2sprkkr.common.grammar_types.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="45,55,160,80"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.TypedGrammarType.html#ase2sprkkr.common.grammar_types.TypedGrammarType" target="_top" title="TypedGrammarType" alt="" coords="229,55,381,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.Number.html#ase2sprkkr.common.grammar_types.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="439,55,514,80"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.grammar_types.Real.html#ase2sprkkr.common.grammar_types.Real" target="_top" title="A real value" alt="" coords="572,55,644,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="45,55,160,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="TypedGrammarType" alt="" coords="229,55,381,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="439,55,514,80"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" target="_top" title="A real value" alt="" coords="572,55,644,80"/>
 <area shape="rect" id="node8" href="ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader" target="_top" title="This class reads and parses the output of the SCF task of the SPR&#45;KKR." alt="" coords="411,104,543,129"/>
 <area shape="rect" id="node7" href="ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" target="_top" title="A real value, where ``****`` means ``NaN``" alt="" coords="673,55,772,80"/>
 <area shape="rect" id="node9" href="ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult" target="_top" title="Objects of this class holds the results of computed SCF class" alt="" coords="264,5,347,31"/>
@@ -131,12 +140,8 @@
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<span class="target" id="module-ase2sprkkr.outputs.readers.scf"></span><p class="rubric">Classes</p>
+<p class="rubric" id="module-ase2sprkkr.outputs.readers.scf">Classes</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars" title="ase2sprkkr.outputs.readers.scf.RealOrStars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RealOrStars</span></code></a>([prefix, postfix, format, ...])</p></td>
 <td><p>A real value, where <code class="docutils literal notranslate"><span class="pre">****</span></code> means <code class="docutils literal notranslate"><span class="pre">NaN</span></code></p></td>

@@ -1,0 +1,43 @@
+visualise
+=========
+
+Full name: **ase2sprkkr.visualise**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.visualise
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.visualise.plot
+  
+  

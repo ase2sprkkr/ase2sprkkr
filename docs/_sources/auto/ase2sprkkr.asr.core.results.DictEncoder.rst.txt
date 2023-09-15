@@ -1,0 +1,36 @@
+DictEncoder
+===========
+
+
+.. currentmodule:: ase2sprkkr.asr.core.results
+
+.. autoclass:: DictEncoder
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.core.results.DictEncoder
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

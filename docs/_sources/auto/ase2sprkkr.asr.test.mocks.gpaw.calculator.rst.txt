@@ -1,0 +1,55 @@
+calculator
+==========
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.calculator**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator  ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator  ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations  ase2sprkkr.asr.test.mocks.gpaw.calculator.Parameters  ase2sprkkr.asr.test.mocks.gpaw.calculator.Setups  ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.calculator
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ASRCalculator
+      DOSCalculator
+      Occupations
+      Parameters
+      Setups
+      WaveFunctions
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,8 @@
+plot\_bandstructure
+===================
+
+Full name: **ase2sprkkr.asr.phonons.plot\_bandstructure**
+
+.. currentmodule:: ase2sprkkr.asr.phonons
+
+.. autofunction:: plot_bandstructure

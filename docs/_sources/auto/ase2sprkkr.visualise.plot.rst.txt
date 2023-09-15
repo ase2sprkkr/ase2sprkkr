@@ -1,0 +1,68 @@
+plot
+====
+
+Full name: **ase2sprkkr.visualise.plot**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.visualise.plot.Multiplot 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.visualise.plot
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      auto_range
+      change_default_kwargs
+      colormesh
+      combine_colormaps
+      combined_colormap
+      create_rc_context
+      finish_plot
+      normalize_rc_params
+      plotting_function
+      set_up_common_plot
+      single_plot
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Multiplot
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -39,6 +39,8 @@ Full name: **ase2sprkkr.outputs**
      :recursive:
   
      ase2sprkkr.outputs.output_definitions
+     ase2sprkkr.outputs.output_files
+     ase2sprkkr.outputs.output_files_definitions
      ase2sprkkr.outputs.readers
      ase2sprkkr.outputs.task_result
      ase2sprkkr.outputs.test

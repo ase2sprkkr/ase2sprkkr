@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.chc &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.chc</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.chc</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">AtomsFile</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+
+
+<div class="viewcode-block" id="CHCError">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.CHCError.html#ase2sprkkr.asr.chc.CHCError">[docs]</a>
+<span class="k">class</span> <span class="nc">CHCError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="gscheck">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.gscheck.html#ase2sprkkr.asr.chc.gscheck">[docs]</a>
+<span class="k">def</span> <span class="nf">gscheck</span><span class="p">(</span><span class="n">us</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">us</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">us</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">us</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">us</span><span class="p">[</span><span class="n">j</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="projuv">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.projuv.html#ase2sprkkr.asr.chc.projuv">[docs]</a>
+<span class="k">def</span> <span class="nf">projuv</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="n">dp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">un2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">u</span> <span class="o">*</span> <span class="n">dp</span> <span class="o">/</span> <span class="n">un2</span></div>
+
+
+
+<div class="viewcode-block" id="mgs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.mgs.html#ase2sprkkr.asr.chc.mgs">[docs]</a>
+<span class="k">def</span> <span class="nf">mgs</span><span class="p">(</span><span class="n">u0</span><span class="p">):</span>
+    <span class="c1"># Do Modified Gram-Schmidt to get N orthogonal vectors</span>
+    <span class="c1"># starting from u</span>
+    <span class="k">assert</span> <span class="n">u0</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">u0</span><span class="p">)</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="p">[</span><span class="n">es</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">)]</span>
+    <span class="n">lid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">):</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">u0</span><span class="p">]</span> <span class="o">+</span> <span class="n">es</span><span class="p">[:</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">es</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">lid</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">M</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lid</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">assert</span> <span class="n">lid</span>
+
+    <span class="n">us</span> <span class="o">=</span> <span class="p">[</span><span class="n">u0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndim</span><span class="p">):</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">-=</span> <span class="n">projuv</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">u</span><span class="p">)</span>
+
+        <span class="n">us</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+    <span class="n">gscheck</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">us</span></div>
+
+
+
+<div class="viewcode-block" id="orthogonalize">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.orthogonalize.html#ase2sprkkr.asr.chc.orthogonalize">[docs]</a>
+<span class="k">def</span> <span class="nf">orthogonalize</span><span class="p">(</span><span class="n">us</span><span class="p">):</span>
+    <span class="n">nus</span> <span class="o">=</span> <span class="p">[</span><span class="n">us</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">)):</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">u</span> <span class="o">-=</span> <span class="n">projuv</span><span class="p">(</span><span class="n">nus</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">u</span><span class="p">)</span>
+        <span class="n">nus</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nus</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nus</span><span class="p">)):</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">nus</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nus</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;US:&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">us</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NUS:&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">nu</span> <span class="ow">in</span> <span class="n">nus</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">nu</span><span class="p">)</span>
+
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;not fricking orthogonal&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nus</span></div>
+
+
+
+<div class="viewcode-block" id="mgsls">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.mgsls.html#ase2sprkkr.asr.chc.mgsls">[docs]</a>
+<span class="k">def</span> <span class="nf">mgsls</span><span class="p">(</span><span class="n">us</span><span class="p">):</span>
+    <span class="c1"># Do Modified Gram-Schmidt to get a vector</span>
+    <span class="c1"># that is orthogonal to us</span>
+    <span class="c1"># us = [u.copy() for u in us]</span>
+    <span class="n">us</span> <span class="o">=</span> <span class="n">orthogonalize</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+    <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">nmissing</span> <span class="o">=</span> <span class="n">ndim</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">nmissing</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ndim = </span><span class="si">{</span><span class="n">ndim</span><span class="si">}</span><span class="s2">, nvecs = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">us</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">ndim</span><span class="p">)</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="p">[</span><span class="n">es</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">)]</span>
+    <span class="n">lid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span><span class="p">):</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">us</span><span class="p">]</span> <span class="o">+</span> <span class="n">es</span><span class="p">[</span><span class="n">j</span><span class="p">:</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">lid</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">M</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lid</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">assert</span> <span class="n">lid</span>
+
+    <span class="n">newu</span> <span class="o">=</span> <span class="n">M</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">newu</span> <span class="o">-=</span> <span class="n">projuv</span><span class="p">(</span><span class="n">us</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">newu</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;newu: </span><span class="si">{</span><span class="n">newu</span><span class="si">}</span><span class="s2">, ip: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">newu</span><span class="p">,</span><span class="w"> </span><span class="n">us</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">newu</span><span class="p">,</span> <span class="n">us</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="mi">0</span><span class="p">),</span> <span class="n">msg</span>
+
+    <span class="n">us</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newu</span><span class="p">)</span>
+
+    <span class="c1"># gscheck(us)</span>
+    <span class="k">return</span> <span class="n">newu</span></div>
+
+
+
+<div class="viewcode-block" id="Hyperplane">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Hyperplane.html#ase2sprkkr.asr.chc.Hyperplane">[docs]</a>
+<span class="k">class</span> <span class="nc">Hyperplane</span><span class="p">:</span>
+<div class="viewcode-block" id="Hyperplane.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Hyperplane.html#ase2sprkkr.asr.chc.Hyperplane.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">references</span> <span class="o">=</span> <span class="n">references</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;ndim=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">, len(pts)=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts</span> <span class="o">=</span> <span class="n">pts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)):</span>
+            <span class="n">vec</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">vec</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normal_vector</span> <span class="o">=</span> <span class="n">mgsls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-----&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">references</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+
+                <span class="k">raise</span> <span class="n">e</span></div>
+
+
+<div class="viewcode-block" id="Hyperplane.contains">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Hyperplane.html#ase2sprkkr.asr.chc.Hyperplane.contains">[docs]</a>
+    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="n">pt</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vector</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">C</span></div>
+
+
+<div class="viewcode-block" id="Hyperplane.find_ts">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Hyperplane.html#ase2sprkkr.asr.chc.Hyperplane.find_ts">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">contained</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">rP</span> <span class="o">=</span> <span class="n">P</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">ts</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">rP</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contained</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ts</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Line">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Line.html#ase2sprkkr.asr.chc.Line">[docs]</a>
+<span class="k">class</span> <span class="nc">Line</span><span class="p">:</span>
+<div class="viewcode-block" id="Line.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Line.html#ase2sprkkr.asr.chc.Line.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt1</span> <span class="o">=</span> <span class="n">pt1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pt2</span> <span class="o">=</span> <span class="n">pt2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span> <span class="o">=</span> <span class="n">pt1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">pt2</span> <span class="o">-</span> <span class="n">pt1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span> <span class="o">=</span> <span class="n">mgs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">-</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="Line.intersects">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Line.html#ase2sprkkr.asr.chc.Line.intersects">[docs]</a>
+    <span class="k">def</span> <span class="nf">intersects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plane</span><span class="p">):</span>
+        <span class="c1"># TODO Improve readability of this function</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">pts</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">normals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span> <span class="o">+</span> <span class="p">[</span><span class="n">plane</span><span class="o">.</span><span class="n">normal_vector</span><span class="p">]</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">N</span><span class="o">.</span><span class="n">T</span> <span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">normals</span><span class="p">])</span>
+        <span class="n">parallel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parallel</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">plane</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_point</span><span class="p">)</span>
+
+        <span class="n">bp</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span><span class="p">)</span> <span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">normal_vectors</span><span class="p">]</span>
+        <span class="n">bp</span> <span class="o">=</span> <span class="n">bp</span> <span class="o">+</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">plane</span><span class="o">.</span><span class="n">normal_vector</span><span class="p">,</span> <span class="n">plane</span><span class="o">.</span><span class="n">base_point</span><span class="p">)]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+
+        <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_s</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">find_ts</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">contained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">((</span><span class="n">t</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># This check is not purely geometrical and thus</span>
+            <span class="c1"># should be put somewhere else (in calculate_intermediates)</span>
+            <span class="c1"># but I cant be bothered to this now.</span>
+            <span class="c1"># Sorry, future person!</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Line.find_s">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Line.html#ase2sprkkr.asr.chc.Line.find_s">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="n">P</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_point</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Intermediate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Intermediate.html#ase2sprkkr.asr.chc.Intermediate">[docs]</a>
+<span class="k">class</span> <span class="nc">Intermediate</span><span class="p">:</span>
+<div class="viewcode-block" id="Intermediate.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Intermediate.html#ase2sprkkr.asr.chc.Intermediate.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">references</span><span class="p">,</span> <span class="n">mat_reference</span><span class="p">,</span> <span class="n">reactant_reference</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">references</span> <span class="o">=</span> <span class="n">references</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mat_ref</span> <span class="o">=</span> <span class="n">mat_reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reactant_ref</span> <span class="o">=</span> <span class="n">reactant_reference</span>
+        <span class="n">hform</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_hform_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hform</span> <span class="o">=</span> <span class="n">hform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span></div>
+
+
+<div class="viewcode-block" id="Intermediate.to_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Intermediate.html#ase2sprkkr.asr.chc.Intermediate.to_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">refdcts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">]</span>
+        <span class="n">matdct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">reactdct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+        <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;refdcts&#39;</span><span class="p">:</span> <span class="n">refdcts</span><span class="p">,</span>
+               <span class="s1">&#39;matdct&#39;</span><span class="p">:</span> <span class="n">matdct</span><span class="p">,</span>
+               <span class="s1">&#39;reactdct&#39;</span><span class="p">:</span> <span class="n">reactdct</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">dct</span></div>
+
+
+<div class="viewcode-block" id="Intermediate.from_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Intermediate.html#ase2sprkkr.asr.chc.Intermediate.from_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;refdcts&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LeanIntermediate</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span>
+
+        <span class="n">refdcts</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;refdcts&#39;</span><span class="p">]</span>
+        <span class="n">matdct</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;matdct&#39;</span><span class="p">]</span>
+        <span class="n">reactdct</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;reactdct&#39;</span><span class="p">]</span>
+        <span class="n">refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span> <span class="k">for</span> <span class="n">dct</span> <span class="ow">in</span> <span class="n">refdcts</span><span class="p">]</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">matdct</span><span class="p">)</span>
+        <span class="n">react</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">reactdct</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Intermediate</span><span class="p">(</span><span class="n">refs</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">react</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">)</span>
+        <span class="n">x_lab</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">s</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39; + &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">x_lab</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">label</span>
+
+<div class="viewcode-block" id="Intermediate.to_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Intermediate.html#ase2sprkkr.asr.chc.Intermediate.to_result">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">thns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">hform</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">))</span>
+        <span class="n">strs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;References: </span><span class="si">{</span><span class="n">thns</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Reactant content: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reactant_content</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Hform: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hform</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">strs</span></div>
+
+
+<div class="viewcode-block" id="Intermediate._get_hform_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Intermediate.html#ase2sprkkr.asr.chc.Intermediate._get_hform_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_hform_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="c1"># Transform each reference into a vector</span>
+        <span class="c1"># where entry i is count of element i</span>
+        <span class="c1"># that is present in reference</span>
+        <span class="c1"># Solve linear equation Ax = b</span>
+        <span class="c1"># where A is matrix from reference vectors</span>
+        <span class="c1"># and b is vector from mat_ref</span>
+
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">to_elements</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Els:</span><span class="si">{</span><span class="n">elements</span><span class="si">}</span><span class="s1">, refs: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">hof</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hform</span>
+            <span class="n">reac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">reac</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">natoms</span>
+
+            <span class="k">return</span> <span class="n">hof</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">ref2vec</span><span class="p">(</span><span class="n">_ref</span><span class="p">):</span>
+            <span class="n">_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">elements</span><span class="p">):</span>
+                <span class="n">_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ref</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">_vec</span>
+
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ref2vec</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="n">b</span> <span class="o">=</span> <span class="n">ref2vec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mat_ref</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">err</span> <span class="o">&gt;</span> <span class="mf">1e-4</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not find solution.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+        <span class="c1"># hforms = np.array([ref.hform for ref in self.references])</span>
+        <span class="n">hforms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ref</span><span class="o">.</span><span class="n">energy</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">])</span>
+
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">sum</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">])</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">hforms</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">x</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">reactant_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">counters</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">references</span><span class="p">)</span>
+
+        <span class="n">rform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span>
+
+        <span class="n">total_reactants</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">rform</span><span class="p">],</span>
+                                  <span class="n">counters</span><span class="p">))</span>
+        <span class="n">total_matrefs</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">total_reactants</span> <span class="o">/</span> <span class="p">(</span><span class="n">total_reactants</span> <span class="o">+</span> <span class="n">total_matrefs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LeanIntermediate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.LeanIntermediate.html#ase2sprkkr.asr.chc.LeanIntermediate">[docs]</a>
+<span class="k">class</span> <span class="nc">LeanIntermediate</span><span class="p">:</span>
+<div class="viewcode-block" id="LeanIntermediate.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.LeanIntermediate.html#ase2sprkkr.asr.chc.LeanIntermediate.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat_reference</span><span class="p">,</span> <span class="n">reactant_reference</span><span class="p">,</span>
+                 <span class="n">reference</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mat_ref</span> <span class="o">=</span> <span class="n">mat_reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reactant_ref</span> <span class="o">=</span> <span class="n">reactant_reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hform</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">hform</span>
+        <span class="n">react_symbol</span> <span class="o">=</span> <span class="n">reactant_reference</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">rc</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">react_symbol</span><span class="p">]</span> <span class="o">/</span> <span class="n">reference</span><span class="o">.</span><span class="n">natoms</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">rc</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reactant_content</span> <span class="o">=</span> <span class="n">rc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rc</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">reference</span><span class="o">.</span><span class="n">formula</span></div>
+
+
+<div class="viewcode-block" id="LeanIntermediate.to_result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.LeanIntermediate.html#ase2sprkkr.asr.chc.LeanIntermediate.to_result">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_result</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">thns</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span>
+        <span class="n">strs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Reference: </span><span class="si">{</span><span class="n">thns</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Reactant content: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">reactant_content</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Hform: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hform</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">strs</span></div>
+
+
+<div class="viewcode-block" id="LeanIntermediate.to_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.LeanIntermediate.html#ase2sprkkr.asr.chc.LeanIntermediate.to_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">dct</span><span class="p">[</span><span class="s2">&quot;mat_ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">dct</span><span class="p">[</span><span class="s2">&quot;react_ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">dct</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">dct</span></div>
+
+
+<div class="viewcode-block" id="LeanIntermediate.from_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.LeanIntermediate.html#ase2sprkkr.asr.chc.LeanIntermediate.from_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+        <span class="n">mat_ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;mat_ref&quot;</span><span class="p">])</span>
+        <span class="n">react_ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;react_ref&quot;</span><span class="p">])</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s2">&quot;ref&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">LeanIntermediate</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">react_ref</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Reference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Reference.html#ase2sprkkr.asr.chc.Reference">[docs]</a>
+<span class="k">class</span> <span class="nc">Reference</span><span class="p">:</span>
+<div class="viewcode-block" id="Reference.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Reference.html#ase2sprkkr.asr.chc.Reference.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">hform</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
+        <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">formula</span> <span class="o">=</span> <span class="n">formula</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hform</span> <span class="o">=</span> <span class="n">hform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Formula</span> <span class="o">=</span> <span class="n">Formula</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hform</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">natoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make string version of object.</span>
+
+<span class="sd">        Represent Reference by formula and heat of formation in a tuple.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hform</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Equate.</span>
+
+<span class="sd">        Equate Reference-object with another</span>
+<span class="sd">        If formulas and heat of formations</span>
+<span class="sd">        are equal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">!=</span> <span class="n">Reference</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dont compare Reference to non-Reference&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+            <span class="kn">from</span> <span class="nn">asr.fere</span> <span class="kn">import</span> <span class="n">formulas_eq</span>
+            <span class="n">feq</span> <span class="o">=</span> <span class="n">formulas_eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+            <span class="n">heq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hform</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">feq</span> <span class="ow">and</span> <span class="n">heq</span>
+
+    <span class="k">def</span> <span class="nf">__neq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Not Equal.</span>
+
+<span class="sd">        Equate Reference-object with another</span>
+<span class="sd">        if formulas and heat of formations</span>
+<span class="sd">        are equal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span> <span class="o">==</span> <span class="n">other</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Reference.to_elements">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Reference.html#ase2sprkkr.asr.chc.Reference.to_elements">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Reference.to_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Reference.html#ase2sprkkr.asr.chc.Reference.to_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;formula&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span>
+               <span class="s1">&#39;hform&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hform</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">dct</span></div>
+
+
+<div class="viewcode-block" id="Reference.from_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Reference.html#ase2sprkkr.asr.chc.Reference.from_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+        <span class="n">formula</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;formula&#39;</span><span class="p">]</span>
+        <span class="n">hform</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;hform&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Reference</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">hform</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">natoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="ConvexHullReference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.ConvexHullReference.html#ase2sprkkr.asr.chc.ConvexHullReference">[docs]</a>
+<span class="k">class</span> <span class="nc">ConvexHullReference</span><span class="p">(</span><span class="n">Reference</span><span class="p">):</span>
+<div class="viewcode-block" id="ConvexHullReference.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.ConvexHullReference.html#ase2sprkkr.asr.chc.ConvexHullReference.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements</span> <span class="o">=</span> <span class="n">elements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_construct_coordinates</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullReference._construct_coordinates">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.ConvexHullReference.html#ase2sprkkr.asr.chc.ConvexHullReference._construct_coordinates">[docs]</a>
+    <span class="k">def</span> <span class="nf">_construct_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">natoms</span><span class="p">,</span> <span class="n">elements</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">coords</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullReference.from_reference">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.ConvexHullReference.html#ase2sprkkr.asr.chc.ConvexHullReference.from_reference">[docs]</a>
+    <span class="k">def</span> <span class="nf">from_reference</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ConvexHullReference</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">hform</span><span class="p">,</span> <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConvexHullReference.is_single">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.ConvexHullReference.html#ase2sprkkr.asr.chc.ConvexHullReference.is_single">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_single</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get string version of ConvexHullRef.</span>
+
+<span class="sd">        Represent Convex Hull Reference by</span>
+<span class="sd">        1. Formula</span>
+<span class="sd">        2. Heat of formation</span>
+<span class="sd">        3. List of elements used in convex hull</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ConvexHullReference:&#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Formula: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Hform: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hform</span><span class="si">}</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Elements: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">elements</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.webpanel.html#ase2sprkkr.asr.chc.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span> <span class="k">as</span> <span class="n">asrfig</span>
+
+    <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;./convexhullcut.png&#39;</span>
+
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Convex Hull Cut&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">asrfig</span><span class="p">(</span><span class="n">fname</span><span class="p">)],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span>
+             <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">chcut_plot</span><span class="p">,</span>
+               <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">fname</span><span class="p">]}]}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="filrefs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.filrefs.html#ase2sprkkr.asr.chc.filrefs">[docs]</a>
+<span class="k">def</span> <span class="nf">filrefs</span><span class="p">(</span><span class="n">refs</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.fere</span> <span class="kn">import</span> <span class="n">formulas_eq</span>
+    <span class="n">nrefs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">formulas_eq</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+                <span class="n">seen</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">visited</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+
+        <span class="n">vals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">formulas_eq</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">form</span><span class="p">),</span> <span class="n">refs</span><span class="p">))</span>
+
+        <span class="n">minref</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">nrefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">minref</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nrefs</span></div>
+
+
+
+<div class="viewcode-block" id="chcut_plot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.chcut_plot.html#ase2sprkkr.asr.chc.chcut_plot">[docs]</a>
+<span class="k">def</span> <span class="nf">chcut_plot</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.chc.json&#39;</span><span class="p">)</span>
+    <span class="n">mat_ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;_matref&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">refs</span> <span class="o">=</span> <span class="n">filrefs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_refs&#39;</span><span class="p">))</span>
+        <span class="n">nrefs</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
+            <span class="n">atoms</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+            <span class="n">nrefs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">form</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+
+        <span class="kn">from</span> <span class="nn">ase.phasediagram</span> <span class="kn">import</span> <span class="n">PhaseDiagram</span>
+        <span class="n">pd</span> <span class="o">=</span> <span class="n">PhaseDiagram</span><span class="p">(</span><span class="n">nrefs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="n">dims</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;./chcconvexhull.png&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">mat_ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;_matref&#39;</span><span class="p">])</span>
+    <span class="n">reactant_ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;_reactant_ref&#39;</span><span class="p">])</span>
+    <span class="n">intermediates</span> <span class="o">=</span> <span class="p">[</span><span class="n">Intermediate</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+                     <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;_intermediates&#39;</span><span class="p">]]</span>
+    <span class="n">xs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">im</span><span class="p">:</span> <span class="n">im</span><span class="o">.</span><span class="n">reactant_content</span><span class="p">,</span> <span class="n">intermediates</span><span class="p">))</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">im</span><span class="p">:</span> <span class="n">im</span><span class="o">.</span><span class="n">hform</span><span class="p">,</span> <span class="n">intermediates</span><span class="p">))</span>
+    <span class="n">xs_es_ims</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">es</span><span class="p">,</span> <span class="n">intermediates</span><span class="p">))</span>
+    <span class="n">xs_es_ims</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs_es_ims</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">es</span><span class="p">,</span> <span class="n">ims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">xs_es_ims</span><span class="p">)]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">im</span><span class="p">:</span> <span class="n">im</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">ims</span><span class="p">))</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">]</span> <span class="o">+</span> <span class="n">labels</span> <span class="o">+</span> <span class="p">[</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">]</span>
+    <span class="n">allxs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">+</span> <span class="n">xs</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
+    <span class="n">allxs</span> <span class="o">=</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">allxs</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">l</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">l</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">allxs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">l</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">hform</span><span class="p">]</span> <span class="o">+</span> <span class="n">es</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span><span class="si">}</span><span class="s1"> content&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Heat of formation&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;./convexhullcut.png&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.Result.html#ase2sprkkr.asr.chc.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ase_webpanel&#39;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.chc&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;structure.json&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;results-asr.convex_hull.json&#39;</span><span class="p">],</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="nd">@argument</span><span class="p">(</span><span class="s1">&#39;dbs&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atoms&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Atoms to be relaxed.&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">AtomsFile</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reactant&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Reactant to add to convex hull&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">dbs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+         <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+         <span class="n">reactant</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;O&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="c1"># Do type hints</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Must supply at least one database&#39;</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
+    <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
+    <span class="n">dbs</span> <span class="o">=</span> <span class="p">[</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span> <span class="k">for</span> <span class="n">db</span> <span class="ow">in</span> <span class="n">dbs</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span>
+    <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Formula</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="c1"># formula, elements = read_structure(&quot;structure.json&quot;)</span>
+
+    <span class="k">if</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CHCError</span><span class="p">(</span><span class="s1">&#39;Reactant is in elements&#39;</span><span class="p">)</span>
+
+    <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reactant</span><span class="p">)</span>
+
+    <span class="n">mat_ref</span> <span class="o">=</span> <span class="n">results2ref</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span>
+
+    <span class="n">reactant_ref</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">(</span><span class="n">reactant</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">references</span> <span class="o">=</span> <span class="p">[</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">]</span>
+    <span class="n">append_references</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">dbs</span><span class="p">,</span> <span class="n">references</span><span class="p">)</span>
+    <span class="n">refs</span> <span class="o">=</span> <span class="n">convex_hull</span><span class="p">(</span><span class="n">references</span><span class="p">,</span> <span class="n">mat_ref</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">intermediates</span> <span class="o">=</span> <span class="n">calculate_intermediates</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">intermediates</span> <span class="o">=</span> <span class="n">refs2ims</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+    <span class="n">mum</span> <span class="o">=</span> <span class="n">mu_adjustment</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">intermediates</span><span class="p">)</span>
+
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;intermediates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">to_result</span><span class="p">()</span> <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">intermediates</span><span class="p">]</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;material_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;reactant&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reactant</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;mu_measure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mum</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;_matref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat_ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;_intermediates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">intermediates</span><span class="p">]</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;_reactant_ref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">reactant_ref</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;_refs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">references</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<div class="viewcode-block" id="read_structure">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.read_structure.html#ase2sprkkr.asr.chc.read_structure">[docs]</a>
+<span class="k">def</span> <span class="nf">read_structure</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span>
+    <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Formula</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">formula</span><span class="p">,</span> <span class="n">elements</span></div>
+
+
+
+<div class="viewcode-block" id="results2ref">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.results2ref.html#ase2sprkkr.asr.chc.results2ref">[docs]</a>
+<span class="k">def</span> <span class="nf">results2ref</span><span class="p">(</span><span class="n">formula</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.convex_hull.json&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Reference</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;hform&quot;</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="get_hof">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.get_hof.html#ase2sprkkr.asr.chc.get_hof">[docs]</a>
+<span class="k">def</span> <span class="nf">get_hof</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="n">Formula</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span>
+    <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">hof</span> <span class="o">=</span> <span class="n">energy</span>
+    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">el</span><span class="si">}</span><span class="s2">, ns=1&quot;</span><span class="p">):</span>
+            <span class="n">_formula</span> <span class="o">=</span> <span class="n">Formula</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+            <span class="n">nels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">_formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">nels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">energy_per_el</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">energy</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">_formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">hof</span> <span class="o">+=</span> <span class="o">-</span> <span class="n">formula</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="n">el</span><span class="p">]</span> <span class="o">*</span> <span class="n">energy_per_el</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">hof</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="row2ref">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.row2ref.html#ase2sprkkr.asr.chc.row2ref">[docs]</a>
+<span class="k">def</span> <span class="nf">row2ref</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">dbs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">&quot;hform&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Reference</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">&quot;de&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Reference</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">de</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s2">&quot;hof&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Reference</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">hof</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># from asr.fere import get_hof</span>
+        <span class="c1"># from ase.formula import Formula</span>
+        <span class="c1"># hof = get_hof(dbs[0], Formula(row.formula), row=row)</span>
+        <span class="n">hof</span> <span class="o">=</span> <span class="n">get_hof</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="n">dbs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">Reference</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">hof</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="convex_hull">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.convex_hull.html#ase2sprkkr.asr.chc.convex_hull">[docs]</a>
+<span class="k">def</span> <span class="nf">convex_hull</span><span class="p">(</span><span class="n">references</span><span class="p">,</span> <span class="n">mat_ref</span><span class="p">):</span>
+    <span class="c1"># Remove materials not on convex hull, except for formula</span>
+    <span class="kn">from</span> <span class="nn">ase.phasediagram</span> <span class="kn">import</span> <span class="n">PhaseDiagram</span>
+    <span class="n">pd</span> <span class="o">=</span> <span class="n">PhaseDiagram</span><span class="p">([(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span> <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">references</span><span class="p">],</span>
+                      <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">hull</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">hull</span>
+    <span class="n">filtered_refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">references</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">hull</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+    <span class="c1"># filtered_refs = []</span>
+    <span class="c1"># for i, x in enumerate(hull):</span>
+    <span class="c1">#     if x:</span>
+    <span class="c1">#         filtered_refs.append(references[i])</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">mat_ref</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filtered_refs</span><span class="p">):</span>
+        <span class="n">filtered_refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">filtered_refs</span></div>
+
+
+
+<div class="viewcode-block" id="append_references">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.append_references.html#ase2sprkkr.asr.chc.append_references">[docs]</a>
+<span class="k">def</span> <span class="nf">append_references</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">dbs</span><span class="p">,</span> <span class="n">references</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_refin</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">refls</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">other_ref</span> <span class="ow">in</span> <span class="n">refls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">other_ref</span> <span class="o">==</span> <span class="n">ref</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_elementcheck</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
+        <span class="n">formula</span> <span class="o">=</span> <span class="n">Formula</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+        <span class="n">_elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">el</span> <span class="ow">in</span> <span class="n">elements</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">_elements</span><span class="p">)</span>
+
+    <span class="n">selected_refs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">db</span> <span class="ow">in</span> <span class="n">dbs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">_elementcheck</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">ref</span> <span class="o">=</span> <span class="n">row2ref</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">dbs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">_refin</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">selected_refs</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="n">selected_refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span>
+
+    <span class="n">references</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">selected_refs</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+
+<div class="viewcode-block" id="mu_adjustment">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.mu_adjustment.html#ase2sprkkr.asr.chc.mu_adjustment">[docs]</a>
+<span class="k">def</span> <span class="nf">mu_adjustment</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">intermediates</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">im</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">hform</span> <span class="o">-</span> <span class="n">mat_ref</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">reactant_content</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bling blong&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ref</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">references</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ref </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;An Intermediate has 0 reactant content&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">/=</span> <span class="n">im</span><span class="o">.</span><span class="n">reactant_content</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="n">adjustments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">intermediates</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">adjustments</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_coords">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.get_coords.html#ase2sprkkr.asr.chc.get_coords">[docs]</a>
+<span class="k">def</span> <span class="nf">get_coords</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">elements</span><span class="p">):</span>
+    <span class="c1"># Calculate relative content of each element in elements</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">ref</span><span class="o">.</span><span class="n">count</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">/</span> <span class="n">ref</span><span class="o">.</span><span class="n">natoms</span><span class="p">,</span> <span class="n">elements</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">hform</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_intermediates">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.calculate_intermediates.html#ase2sprkkr.asr.chc.calculate_intermediates">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_intermediates</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">refs</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="c1"># Take out refs that consists of a single element and have</span>
+    <span class="c1"># positive heat of formation. They will never be on the hull</span>
+    <span class="c1"># but may destabilize hull algorithm.</span>
+    <span class="n">_refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">refs</span> <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">hform</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">symbols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">_refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mat_ref</span><span class="p">]</span> <span class="o">+</span> <span class="n">_refs</span> <span class="o">+</span> <span class="p">[</span><span class="n">reactant_ref</span><span class="p">]</span>
+
+    <span class="c1"># Ordered list of unique elements</span>
+    <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mat_ref</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">+</span> <span class="p">[</span><span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">]</span>
+    <span class="c1"># elements = list(set(flatten(map(lambda r: r.to_elements(), _refs))))</span>
+
+    <span class="n">chrefs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ConvexHullReference</span><span class="o">.</span><span class="n">from_reference</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">_refs</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">is_single</span><span class="p">()</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">hform</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">chrefs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot have reference phase with negative HoF&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Line and planes are representation of the geometrical objects</span>
+    <span class="c1"># plus information needed for this specific algorithm</span>
+    <span class="c1"># e.g. heat of formation and chemical formula</span>
+    <span class="n">line</span><span class="p">,</span> <span class="n">planes</span> <span class="o">=</span> <span class="n">convex_hull_planes</span><span class="p">(</span><span class="n">chrefs</span><span class="p">,</span> <span class="n">mat_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span>
+    <span class="n">ims</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">plane</span> <span class="ow">in</span> <span class="n">planes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">plane</span><span class="p">):</span>
+            <span class="n">refs</span> <span class="o">=</span> <span class="n">plane</span><span class="o">.</span><span class="n">references</span>
+            <span class="k">if</span> <span class="n">mat_ref</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">im</span> <span class="o">=</span> <span class="n">Intermediate</span><span class="p">(</span><span class="n">refs</span><span class="p">,</span> <span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">)</span>
+            <span class="n">ims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+
+    <span class="n">ims</span> <span class="o">=</span> <span class="p">[</span><span class="n">im</span> <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">ims</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">reactant_content</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">ims</span></div>
+
+
+
+<div class="viewcode-block" id="convex_hull_planes">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.convex_hull_planes.html#ase2sprkkr.asr.chc.convex_hull_planes">[docs]</a>
+<span class="k">def</span> <span class="nf">convex_hull_planes</span><span class="p">(</span><span class="n">chrefs</span><span class="p">,</span> <span class="n">mat_formula</span><span class="p">,</span> <span class="n">react_formula</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">ConvexHull</span>
+    <span class="k">if</span> <span class="n">chrefs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">formula</span> <span class="o">!=</span> <span class="n">mat_formula</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Material must be first in convex hull refs:&#39;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="p">(</span><span class="n">chrefs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span><span class="w"> </span><span class="n">mat_formula</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="n">hull_coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">hform</span><span class="p">],</span> <span class="n">chrefs</span><span class="p">))</span>
+
+    <span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">hull_coords</span><span class="p">)</span>
+
+    <span class="c1"># Equations contains a list of normal vectors and</span>
+    <span class="c1"># offsets for the facet planes.</span>
+    <span class="c1"># i.e. eqs[i] is [normalvector, offset] for facet i</span>
+    <span class="c1"># We assume</span>
+    <span class="c1"># (like ase.phasediagram.PhaseDiagram) that the normal vectors</span>
+    <span class="c1"># are outward-pointing but this is not always true,</span>
+    <span class="c1"># see http://www.qhull.org/html/qh-faq.htm#orient</span>
+    <span class="n">eqs</span> <span class="o">=</span> <span class="n">hull</span><span class="o">.</span><span class="n">equations</span>
+
+    <span class="c1"># Get facet that points &quot;downwards&quot; in energy directions</span>
+    <span class="c1"># This depends on energy being the last dimension</span>
+    <span class="n">_onhull</span> <span class="o">=</span> <span class="n">eqs</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span>
+    <span class="c1"># hull.simplices is a list of tuples</span>
+    <span class="c1"># The tuples are the indices of the cornes of the</span>
+    <span class="c1"># simplices.</span>
+    <span class="n">simplex_indices</span> <span class="o">=</span> <span class="n">hull</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">_onhull</span><span class="p">]</span>
+    <span class="n">onhull</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hull</span><span class="o">.</span><span class="n">points</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">simplex</span> <span class="ow">in</span> <span class="n">simplex_indices</span><span class="p">:</span>
+        <span class="n">onhull</span><span class="p">[</span><span class="n">simplex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">hull</span><span class="o">.</span><span class="n">points</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">planes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plane_inds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">indices</span> <span class="ow">in</span> <span class="n">simplex_indices</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)):</span>
+            <span class="c1"># Remove point i from simplex.</span>
+            <span class="c1"># This leaves us with a hyperplane</span>
+            <span class="c1"># of dimension 1 lower than embedding space.</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span><span class="p">[:</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])</span>
+            <span class="c1"># Check whether this tuple has already been considered</span>
+            <span class="c1"># up to permutations</span>
+            <span class="k">if</span> <span class="n">_permutecontain</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">plane_inds</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">plane_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">plane_inds</span><span class="p">:</span>
+        <span class="n">refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">chrefs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">]</span>
+        <span class="c1"># Exclude if points are collinear</span>
+        <span class="k">if</span> <span class="n">is_collinear</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">ind</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">eqs</span><span class="p">,</span> <span class="n">simplex_indices</span><span class="p">,</span> <span class="n">onhull</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">plane</span> <span class="o">=</span> <span class="n">Hyperplane</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">refs</span><span class="p">)</span>
+        <span class="n">planes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plane</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">line</span><span class="p">,</span> <span class="n">planes</span></div>
+
+
+
+<div class="viewcode-block" id="is_collinear">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.is_collinear.html#ase2sprkkr.asr.chc.is_collinear">[docs]</a>
+<span class="k">def</span> <span class="nf">is_collinear</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">ind</span><span class="p">,</span> <span class="n">apts</span><span class="p">,</span> <span class="n">eqs</span><span class="p">,</span> <span class="n">sis</span><span class="p">,</span> <span class="n">oh</span><span class="p">):</span>
+    <span class="c1"># Return whether pts form a</span>
+    <span class="c1"># N - 1 dimensional hyperplane</span>
+    <span class="c1"># N = len(pts)</span>
+    <span class="n">npts</span> <span class="o">=</span> <span class="p">[</span><span class="n">pt</span> <span class="o">-</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+    <span class="n">ortho_pts</span> <span class="o">=</span> <span class="n">orthogonalize</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pt</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ortho_pts</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="is_independent">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.is_independent.html#ase2sprkkr.asr.chc.is_independent">[docs]</a>
+<span class="k">def</span> <span class="nf">is_independent</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">/</span> <span class="n">x2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x1</span> <span class="o">/</span> <span class="n">x2</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="refs2ims">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.refs2ims.html#ase2sprkkr.asr.chc.refs2ims">[docs]</a>
+<span class="k">def</span> <span class="nf">refs2ims</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">refs</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.fere</span> <span class="kn">import</span> <span class="n">formulas_eq</span>
+    <span class="n">ims</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ref</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">formulas_eq</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">mat_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">formulas_eq</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="o">.</span><span class="n">formula</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">lim</span> <span class="o">=</span> <span class="n">LeanIntermediate</span><span class="p">(</span><span class="n">mat_ref</span><span class="p">,</span> <span class="n">reactant_ref</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+
+        <span class="n">ims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lim</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ims</span></div>
+
+
+
+<div class="viewcode-block" id="_permutecontain">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc._permutecontain.html#ase2sprkkr.asr.chc._permutecontain">[docs]</a>
+<span class="k">def</span> <span class="nf">_permutecontain</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">tls</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">tuplespermuted</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tls</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="tuplespermuted">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.chc.tuplespermuted.html#ase2sprkkr.asr.chc.tuplespermuted">[docs]</a>
+<span class="k">def</span> <span class="nf">tuplespermuted</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ite</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span> <span class="o">==</span> <span class="n">x</span><span class="p">,</span> <span class="n">ite</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">t1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">t2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">count</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">t1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">count</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">t2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

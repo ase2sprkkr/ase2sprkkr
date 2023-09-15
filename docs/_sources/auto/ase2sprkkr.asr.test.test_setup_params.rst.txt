@@ -1,0 +1,45 @@
+test\_setup\_params
+===================
+
+Full name: **ase2sprkkr.asr.test.test\_setup\_params**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_setup_params
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_setup_params
+      test_setup_params_input_dict
+      test_setup_params_parametrize
+      test_setup_params_recurse_dict
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

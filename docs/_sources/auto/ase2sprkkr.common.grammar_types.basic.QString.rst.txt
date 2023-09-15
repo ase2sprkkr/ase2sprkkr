@@ -1,0 +1,36 @@
+QString
+=======
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.basic
+
+.. autoclass:: QString
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.basic.QString
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

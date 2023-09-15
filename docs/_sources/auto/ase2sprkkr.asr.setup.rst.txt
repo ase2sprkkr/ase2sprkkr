@@ -1,0 +1,51 @@
+setup
+=====
+
+Full name: **ase2sprkkr.asr.setup**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.setup
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.setup.decorate
+     ase2sprkkr.asr.setup.defects
+     ase2sprkkr.asr.setup.displacements
+     ase2sprkkr.asr.setup.magnetize
+     ase2sprkkr.asr.setup.materials
+     ase2sprkkr.asr.setup.params
+     ase2sprkkr.asr.setup.scanparams
+     ase2sprkkr.asr.setup.strains
+     ase2sprkkr.asr.setup.symmetrize
+  
+  

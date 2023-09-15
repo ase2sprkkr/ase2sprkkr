@@ -1,0 +1,62 @@
+bandstructure
+=============
+
+Full name: **ase2sprkkr.asr.bandstructure**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.bandstructure.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.bandstructure
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      add_bs_pbe
+      bs_pbe
+      bs_pbe_html
+      plot_with_colors
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,8 @@
+test\_database\_fromtree\_raises\_when\_missing\_uids
+=====================================================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_fromtree.test\_database\_fromtree\_raises\_when\_missing\_uids**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_database_fromtree
+
+.. autofunction:: test_database_fromtree_raises_when_missing_uids

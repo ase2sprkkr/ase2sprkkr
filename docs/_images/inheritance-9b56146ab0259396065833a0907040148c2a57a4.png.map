@@ -1,0 +1,9 @@
+<map id="inheritance7f26d6920d" name="inheritance7f26d6920d">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="14,104,86,129"/>
+<area shape="rect" id="node7" title="Abstract encoder base class." alt="" coords="124,104,239,129"/>
+<area shape="rect" id="node2" title="Base class for describing results generated with recipes." alt="" coords="5,31,95,56"/>
+<area shape="rect" id="node3" href="ase2sprkkr.asr.test.test_core_results.MyResult.html#ase2sprkkr.asr.test.test_core_results.MyResult" target="_top" title="Generic results." alt="" coords="140,5,223,31"/>
+<area shape="rect" id="node4" href="ase2sprkkr.asr.test.test_core_results.MyResultVer0.html#ase2sprkkr.asr.test.test_core_results.MyResultVer0" target="_top" title="Generic results." alt="" coords="125,55,237,80"/>
+<area shape="rect" id="node5" href="ase2sprkkr.asr.test.test_core_results.MyWebPanel.html#ase2sprkkr.asr.test.test_core_results.MyWebPanel" target="_top" title="WebPanel for testing." alt="" coords="435,104,540,129"/>
+<area shape="rect" id="node6" title="Encoder for ASE compatible webpanels." alt="" coords="268,104,405,129"/>
+</map>

@@ -1,0 +1,43 @@
+test\_stiffness
+===============
+
+Full name: **ase2sprkkr.asr.test.test\_stiffness**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_stiffness
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_stiffness_emt
+      test_stiffness_gpaw
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

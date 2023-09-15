@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.berry &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.berry</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.berry</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Topological analysis of electronic structure.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.berry&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">],</span>
+         <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;120:10h&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--gs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Ground state&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kpar&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-points along path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kperp&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-points orthogonal to path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">kpar</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span>
+              <span class="n">kperp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate ground state on specified k-point grid.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">gpaw.berryphase</span> <span class="kn">import</span> <span class="n">parallel_transport</span>
+    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">world</span>
+
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+    <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the easy axis of magnetic materials&quot;&quot;&quot;</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;results-asr.magnetic_anisotropy.json&#39;</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.magnetic_anisotropy.json&#39;</span><span class="p">)</span>
+        <span class="n">dE_zy</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;dE_zy&#39;</span><span class="p">]</span>
+        <span class="n">dE_zx</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="s1">&#39;dE_zx&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">dE_zy</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">dE_zx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="mi">90</span>
+            <span class="k">if</span> <span class="n">dE_zy</span> <span class="o">&gt;</span> <span class="n">dE_zx</span><span class="p">:</span>
+                <span class="n">phi</span> <span class="o">=</span> <span class="mi">90</span>
+
+    <span class="n">ND</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span>
+                    <span class="n">kpts</span><span class="o">=</span><span class="p">(</span><span class="n">kperp</span><span class="p">,</span> <span class="n">kpar</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">fixdensity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">symmetry</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span>
+                    <span class="n">txt</span><span class="o">=</span><span class="s1">&#39;gs_berry.txt&#39;</span><span class="p">)</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">phi_km</span><span class="p">,</span> <span class="n">s_km</span> <span class="o">=</span> <span class="n">parallel_transport</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span>
+                                          <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>
+                                          <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi0_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi_km</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s0_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_km</span>
+
+        <span class="k">if</span> <span class="n">world</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;rm gs_berry.gpw&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">elif</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;kx = 0&quot;&quot;&quot;</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span>
+                    <span class="n">kpts</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kperp</span><span class="p">,</span> <span class="n">kpar</span><span class="p">),</span>
+                    <span class="n">fixdensity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">symmetry</span><span class="o">=</span><span class="s1">&#39;off&#39;</span><span class="p">,</span>
+                    <span class="n">txt</span><span class="o">=</span><span class="s1">&#39;gs_berry.txt&#39;</span><span class="p">)</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">phi_km</span><span class="p">,</span> <span class="n">s_km</span> <span class="o">=</span> <span class="n">parallel_transport</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span>
+                                          <span class="n">direction</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>
+                                          <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi1_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi_km</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s1_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_km</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ky = 0&quot;&quot;&quot;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpts</span><span class="o">=</span><span class="p">(</span><span class="n">kpar</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kperp</span><span class="p">))</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">phi_km</span><span class="p">,</span> <span class="n">s_km</span> <span class="o">=</span> <span class="n">parallel_transport</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span>
+                                          <span class="n">direction</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>
+                                          <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi2_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi_km</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s2_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_km</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;kz = 0&quot;&quot;&quot;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpts</span><span class="o">=</span><span class="p">(</span><span class="n">kperp</span><span class="p">,</span> <span class="n">kpar</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">phi_km</span><span class="p">,</span> <span class="n">s_km</span> <span class="o">=</span> <span class="n">parallel_transport</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span>
+                                          <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>
+                                          <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi0_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi_km</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s0_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_km</span>
+
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;kz = \pi&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">monkhorst_pack</span>
+        <span class="n">kpts</span> <span class="o">=</span> <span class="n">monkhorst_pack</span><span class="p">((</span><span class="n">kperp</span><span class="p">,</span> <span class="n">kpar</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">kpts</span><span class="o">=</span><span class="n">kpts</span><span class="p">)</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">phi_km</span><span class="p">,</span> <span class="n">s_km</span> <span class="o">=</span> <span class="n">parallel_transport</span><span class="p">(</span><span class="s1">&#39;gs_berry.gpw&#39;</span><span class="p">,</span>
+                                          <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span>
+                                          <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi0_pi_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi_km</span>
+        <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s0_pi_km&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s_km</span>
+
+        <span class="k">if</span> <span class="n">world</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;rm gs_berry.gpw&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span>
+
+
+<div class="viewcode-block" id="plot_phases">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.berry.plot_phases.html#ase2sprkkr.asr.berry.plot_phases">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_phases</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;berry&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.berry@calculate.json&#39;</span><span class="p">)</span>
+    <span class="n">phit_km</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;phi</span><span class="si">%s</span><span class="s1">_km&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">]</span>
+    <span class="n">St_km</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;s</span><span class="si">%s</span><span class="s1">_km&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">]</span>
+    <span class="n">Nk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">St_km</span><span class="p">)</span>
+
+    <span class="n">phi_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">phit_km</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">phit_km</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">phi_km</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">phit_km</span>
+    <span class="n">phi_km</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">phit_km</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">S_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">phit_km</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">phit_km</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">S_km</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">St_km</span>
+    <span class="n">S_km</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">St_km</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">S_km</span> <span class="o">/=</span> <span class="mi">2</span>
+
+    <span class="n">Nm</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">phi_km</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">phi_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">phi_km</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">phi_km</span><span class="p">[:,</span> <span class="n">Nm</span><span class="p">:]</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">S_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">S_km</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phi_km</span><span class="p">)),</span> <span class="nb">len</span><span class="p">(</span><span class="n">phi_km</span><span class="o">.</span><span class="n">T</span><span class="p">)),</span>
+                <span class="n">phi_km</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">),</span>
+                <span class="n">c</span><span class="o">=</span><span class="n">S_km</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\langle S_z\rangle/\hbar$&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\gamma_x$&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nk</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">Nk</span><span class="p">],</span>
+               <span class="p">[</span><span class="sa">r</span><span class="s1">&#39;$-\mathrm</span><span class="si">{M}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\Gamma$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\mathrm</span><span class="si">{M}</span><span class="s1">$&#39;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">],</span> <span class="p">[</span><span class="sa">r</span><span class="s1">&#39;$0$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\pi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$2\pi$&#39;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nk</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">figname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1">-phi</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.png&#39;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">figname</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.berry.webpanel.html#ase2sprkkr.asr.berry.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">Topology</span> <span class="o">==</span> <span class="s1">&#39;Not checked&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Band topology&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">Topology</span><span class="p">]</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Summary&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Electronic properties&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+                             <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">row</span><span class="p">]}]]}</span>
+
+    <span class="n">basicelec</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Basic electronic properties (PBE)&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Property&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+                               <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">row</span><span class="p">]}]],</span>
+                 <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">summary</span><span class="p">,</span> <span class="n">basicelec</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.berry.Result.html#ase2sprkkr.asr.berry.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">Topology</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Topology&#39;</span><span class="p">:</span> <span class="s1">&#39;Band topology.&#39;</span><span class="p">}</span>
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.berry&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;results-asr.berry@calculate.json&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.berry@calculate&#39;</span><span class="p">],</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">paropen</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;topology.dat&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">paropen</span><span class="p">(</span><span class="s1">&#39;topology.dat&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Topology&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">paropen</span><span class="p">(</span><span class="s1">&#39;topology.dat&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Not checked!&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Topology&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Not checked&#39;</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

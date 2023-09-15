@@ -1,5 +1,0 @@
-<map id="inheritance5c02abcc5e" name="inheritance5c02abcc5e">
-<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.GrammarType.html#ase2sprkkr.common.grammar_types.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,227,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.TypedGrammarType.html#ase2sprkkr.common.grammar_types.TypedGrammarType" target="_top" title="grammar_types.TypedGrammarType" alt="" coords="256,5,515,31"/>
-<area shape="rect" id="node2" href="#ase2sprkkr.common.grammar_types.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="544,5,725,31"/>
-</map>

@@ -1,0 +1,44 @@
+test\_database\_duplicates
+==========================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_duplicates**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_database_duplicates
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_database_duplicates
+      test_database_duplicates_filter_magstate
+      test_database_duplicates_no_duplicates
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

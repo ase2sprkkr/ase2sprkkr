@@ -1,0 +1,8 @@
+test\_stiffness\_emt
+====================
+
+Full name: **ase2sprkkr.asr.test.test\_stiffness.test\_stiffness\_emt**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_stiffness
+
+.. autofunction:: test_stiffness_emt

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.fermisurface &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.fermisurface</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.fermisurface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fermi surfaces.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+
+
+<div class="viewcode-block" id="bz_vertices">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.bz_vertices.html#ase2sprkkr.asr.fermisurface.bz_vertices">[docs]</a>
+<span class="k">def</span> <span class="nf">bz_vertices</span><span class="p">(</span><span class="n">cell</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Voronoi</span>
+    <span class="n">icell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">icell</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">vor</span> <span class="o">=</span> <span class="n">Voronoi</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">bz1</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">points</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vor</span><span class="o">.</span><span class="n">ridge_vertices</span><span class="p">,</span> <span class="n">vor</span><span class="o">.</span><span class="n">ridge_points</span><span class="p">):</span>
+        <span class="k">if</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vertices</span> <span class="ow">and</span> <span class="mi">4</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+            <span class="n">normal</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">points</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">normal</span> <span class="o">/=</span> <span class="p">(</span><span class="n">normal</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">**</span><span class="mf">0.5</span>
+            <span class="n">bz1</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">vor</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">vertices</span><span class="p">],</span> <span class="n">normal</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">bz1</span></div>
+
+
+
+<div class="viewcode-block" id="find_contours">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.find_contours.html#ase2sprkkr.asr.fermisurface.find_contours">[docs]</a>
+<span class="k">def</span> <span class="nf">find_contours</span><span class="p">(</span><span class="n">eigs_nk</span><span class="p">,</span> <span class="n">bzk_kv</span><span class="p">,</span> <span class="n">s_nk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="n">minx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">maxx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="n">npoints</span> <span class="o">=</span> <span class="mi">1000</span>
+
+    <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">npoints</span><span class="p">)</span>
+
+    <span class="n">zis</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">eigs_k</span> <span class="ow">in</span> <span class="n">eigs_nk</span><span class="p">:</span>
+        <span class="n">zi</span> <span class="o">=</span> <span class="n">griddata</span><span class="p">((</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">eigs_k</span><span class="p">,</span>
+                      <span class="p">(</span><span class="n">xi</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">yi</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+        <span class="n">zis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zi</span><span class="p">)</span>
+
+    <span class="n">contours</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">zi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zis</span><span class="p">):</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_paths</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iter_segments</span><span class="p">(</span><span class="n">simplify</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">vertex</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                          <span class="n">vertex</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                                          <span class="n">vertex</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">float</span><span class="p">))</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">s_nk</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">si</span> <span class="o">=</span> <span class="n">griddata</span><span class="p">((</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bzk_kv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">s_nk</span><span class="p">[</span><span class="n">n</span><span class="p">],</span>
+                              <span class="n">vertices</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+                <span class="n">vertices</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">si</span>
+            <span class="n">contours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">contours</span></div>
+
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.webpanel.html#ase2sprkkr.asr.fermisurface.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Fermi surface&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;fermi_surface.png&#39;</span><span class="p">)]],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">plot_fermi</span><span class="p">,</span>
+                                    <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;fermi_surface.png&#39;</span><span class="p">]}],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="plot_fermi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.plot_fermi.html#ase2sprkkr.asr.fermisurface.plot_fermi">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span>
+               <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">svbm</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">scbm</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">lwvbm</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+               <span class="n">sfs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scalecb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">lat</span><span class="o">.</span><span class="n">plot_bz</span><span class="p">(</span><span class="n">vectors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pointstyle</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">})</span>
+    <span class="n">add_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="n">annotate</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">sfs</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scalecb</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="add_fermi">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.add_fermi.html#ase2sprkkr.asr.fermisurface.add_fermi">[docs]</a>
+<span class="k">def</span> <span class="nf">add_fermi</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="mi">0</span><span class="p">,):</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">verts</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results-asr.fermisurface.json&#39;</span><span class="p">][</span><span class="s1">&#39;contours&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">normalize</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rotate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+                       <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+                       <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+    <span class="n">verts</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">/=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">verts</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rotate</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">verts</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">verts</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">verts</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">verts</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+                    <span class="n">norm</span><span class="o">=</span><span class="n">normalize</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">rect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="n">rect</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">+</span> <span class="n">center</span>
+    <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbaxes</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">()</span>
+    <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">langle S_z </span><span class="se">\\</span><span class="s1">rangle$&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cbaxes</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fermisurface.Result.html#ase2sprkkr.asr.fermisurface.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.fermisurface&#39;</span><span class="p">,</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;results-asr.structureinfo.json&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">gpw2eigs</span>
+    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">to1bz</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+    <span class="n">eigs_km</span><span class="p">,</span> <span class="n">ef</span><span class="p">,</span> <span class="n">s_kvm</span> <span class="o">=</span> <span class="n">gpw2eigs</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span>
+                                  <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+    <span class="n">eigs_mk</span> <span class="o">=</span> <span class="n">eigs_km</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">eigs_mk</span> <span class="o">-=</span> <span class="n">ef</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">s_mk</span> <span class="o">=</span> <span class="n">s_kvm</span><span class="p">[:,</span> <span class="n">get_spin_index</span><span class="p">()]</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">A_cv</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+    <span class="n">B_cv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">A_cv</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="n">bzk_kc</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">kd</span><span class="o">.</span><span class="n">bzk_kc</span>
+    <span class="n">bzk_kv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">bzk_kc</span><span class="p">,</span> <span class="n">B_cv</span><span class="p">)</span>
+
+    <span class="n">contours</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">eigs_mk</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">eigs_mk</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">eigs_mk</span> <span class="o">=</span> <span class="n">eigs_mk</span><span class="p">[</span><span class="n">selection</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">s_mk</span> <span class="o">=</span> <span class="n">s_mk</span><span class="p">[</span><span class="n">selection</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">bz2ibz_k</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">kd</span><span class="o">.</span><span class="n">bz2ibz_k</span>
+    <span class="n">eigs_mk</span> <span class="o">=</span> <span class="n">eigs_mk</span><span class="p">[:,</span> <span class="n">bz2ibz_k</span><span class="p">]</span>
+    <span class="n">s_mk</span> <span class="o">=</span> <span class="n">s_mk</span><span class="p">[:,</span> <span class="n">bz2ibz_k</span><span class="p">]</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">N_xc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">N_xc</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">N_xv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">N_xc</span><span class="p">,</span> <span class="n">B_cv</span><span class="p">)</span>
+
+    <span class="n">eigs_mk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">eigs_mk</span><span class="p">,</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">s_mk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">s_mk</span><span class="p">,</span> <span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">tmpbzk_kv</span> <span class="o">=</span> <span class="p">(</span><span class="n">bzk_kv</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">+</span> <span class="n">N_xv</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">tmpcontours</span> <span class="o">=</span> <span class="n">find_contours</span><span class="p">(</span><span class="n">eigs_mk</span><span class="p">,</span> <span class="n">tmpbzk_kv</span><span class="p">,</span> <span class="n">s_nk</span><span class="o">=</span><span class="n">s_mk</span><span class="p">)</span>
+
+    <span class="c1"># Only include contours with a part in 1st BZ</span>
+    <span class="k">for</span> <span class="n">cnt</span> <span class="ow">in</span> <span class="n">tmpcontours</span><span class="p">:</span>
+        <span class="n">k_kv</span> <span class="o">=</span> <span class="n">cnt</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">k_kv</span> <span class="o">=</span> <span class="n">k_kv</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">k_kv</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">k_kc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">k_kv</span><span class="p">,</span> <span class="n">A_cv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="n">inds_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">to1bz</span><span class="p">(</span><span class="n">k_kc</span><span class="p">,</span> <span class="n">A_cv</span><span class="p">)</span> <span class="o">-</span> <span class="n">k_kc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">inds_k</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="n">contours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnt</span><span class="p">[</span><span class="n">inds_k</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="n">contours</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">contours</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;contours&#39;</span><span class="p">:</span> <span class="n">contours</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

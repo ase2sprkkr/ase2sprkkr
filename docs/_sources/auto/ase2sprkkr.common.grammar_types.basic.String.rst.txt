@@ -1,0 +1,36 @@
+String
+======
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.basic
+
+.. autoclass:: String
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.basic.String
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

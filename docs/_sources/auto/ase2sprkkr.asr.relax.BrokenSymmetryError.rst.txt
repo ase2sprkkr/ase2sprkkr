@@ -1,0 +1,6 @@
+ase2sprkkr.asr.relax.BrokenSymmetryError
+========================================
+
+.. currentmodule:: ase2sprkkr.asr.relax
+
+.. autoexception:: BrokenSymmetryError

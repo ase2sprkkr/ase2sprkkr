@@ -1,0 +1,8 @@
+symmetrize\_atoms
+=================
+
+Full name: **ase2sprkkr.asr.setup.symmetrize.symmetrize\_atoms**
+
+.. currentmodule:: ase2sprkkr.asr.setup.symmetrize
+
+.. autofunction:: symmetrize_atoms

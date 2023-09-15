@@ -1,0 +1,8 @@
+filter\_uids
+============
+
+Full name: **ase2sprkkr.asr.database.duplicates.filter\_uids**
+
+.. currentmodule:: ase2sprkkr.asr.database.duplicates
+
+.. autofunction:: filter_uids

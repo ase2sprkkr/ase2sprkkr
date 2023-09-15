@@ -1,0 +1,41 @@
+warnings
+========
+
+Full name: **ase2sprkkr.common.grammar\_types.warnings**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.grammar_types.warnings
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      SuspiciousValueWarning
+   
+   
+
+
+  
+  
+  

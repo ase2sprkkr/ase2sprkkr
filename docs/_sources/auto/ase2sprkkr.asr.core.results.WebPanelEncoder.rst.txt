@@ -1,0 +1,36 @@
+WebPanelEncoder
+===============
+
+
+.. currentmodule:: ase2sprkkr.asr.core.results
+
+.. autoclass:: WebPanelEncoder
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.core.results.WebPanelEncoder
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

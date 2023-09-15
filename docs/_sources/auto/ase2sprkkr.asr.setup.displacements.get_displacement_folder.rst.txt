@@ -1,0 +1,8 @@
+get\_displacement\_folder
+=========================
+
+Full name: **ase2sprkkr.asr.setup.displacements.get\_displacement\_folder**
+
+.. currentmodule:: ase2sprkkr.asr.setup.displacements
+
+.. autofunction:: get_displacement_folder

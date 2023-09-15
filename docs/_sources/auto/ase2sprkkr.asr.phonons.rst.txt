@@ -1,0 +1,65 @@
+phonons
+=======
+
+Full name: **ase2sprkkr.asr.phonons**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.phonons.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.phonons
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      creates
+      mingocorrection
+      plot_bandstructure
+      plot_phonons
+      requires
+      todict
+      topckl
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

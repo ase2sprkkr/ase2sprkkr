@@ -1,0 +1,8 @@
+pytest\_configure
+=================
+
+Full name: **ase2sprkkr.asr.test.conftest.pytest\_configure**
+
+.. currentmodule:: ase2sprkkr.asr.test.conftest
+
+.. autofunction:: pytest_configure

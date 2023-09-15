@@ -1,0 +1,8 @@
+get\_git\_rev\_list
+===================
+
+Full name: **ase2sprkkr.asr.core.cli.get\_git\_rev\_list**
+
+.. currentmodule:: ase2sprkkr.asr.core.cli
+
+.. autofunction:: get_git_rev_list

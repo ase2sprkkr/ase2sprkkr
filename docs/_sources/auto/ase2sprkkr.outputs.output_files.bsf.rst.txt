@@ -1,0 +1,59 @@
+bsf
+===
+
+Full name: **ase2sprkkr.outputs.output\_files.bsf**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.outputs.output_files.bsf.BSFDefinition  ase2sprkkr.outputs.output_files.bsf.BSFOutputFile 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.outputs.output_files.bsf
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BSFDefinition
+      BSFOutputFile
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

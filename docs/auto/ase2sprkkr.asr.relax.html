@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>relax &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="is_relax_done" href="ase2sprkkr.asr.relax.is_relax_done.html" />
+    <link rel="prev" title="Result" href="ase2sprkkr.asr.raman.Result.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.asr.html">asr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bader.html">bader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bandstructure.html">bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.berry.html">berry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.borncharges.html">borncharges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bse.html">bse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.calculators.html">calculators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.chc.html">chc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.convex_hull.html">convex_hull</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.core.html">core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.defectformation.html">defectformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.deformationpotentials.html">deformationpotentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dimensionality.html">dimensionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dos.html">dos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.emasses.html">emasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.exchange.html">exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fere.html">fere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fermisurface.html">fermisurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.formalpolarization.html">formalpolarization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gs.html">gs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gw.html">gw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.hse.html">hse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.infraredpolarizability.html">infraredpolarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magnetic_anisotropy.html">magnetic_anisotropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magstate.html">magstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.pdos.html">pdos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonons.html">phonons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonopy.html">phonopy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.piezoelectrictensor.html">piezoelectrictensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.plasmafrequency.html">plasmafrequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.polarizability.html">polarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.projected_bandstructure.html">projected_bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.push.html">push</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.raman.html">raman</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">relax</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.is_relax_done.html">is_relax_done</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.relax.html">relax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.set_initial_magnetic_moments.html">set_initial_magnetic_moments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.Result.html">Result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.SpgAtoms.html">SpgAtoms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.myBFGS.html">myBFGS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.relax.BrokenSymmetryError.html">ase2sprkkr.asr.relax.BrokenSymmetryError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setinfo.html">setinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setup.html">setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.stiffness.html">stiffness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.structureinfo.html">structureinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.test.html">test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.workflow.html">workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.html">asr</a></li>
+      <li class="breadcrumb-item active">relax</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.asr.relax.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="relax">
+<h1>relax<a class="headerlink" href="#relax" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.asr.relax</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-1776b32e2af3c5d4b29962773e3f0f291d98386c.png" alt="Inheritance diagram of ase2sprkkr.asr.relax.Result, ase2sprkkr.asr.relax.SpgAtoms, ase2sprkkr.asr.relax.myBFGS" usemap="#inheritancea1f1bef0ee" class="inheritance graphviz" /></div>
+<map id="inheritancea1f1bef0ee" name="inheritancea1f1bef0ee">
+<area shape="rect" id="node7" href="ase2sprkkr.asr.relax.Result.html#ase2sprkkr.asr.relax.Result" target="_top" title="Result class for :py:func:`asr.relax.main`." alt="" coords="132,104,204,129"/>
+<area shape="rect" id="node8" href="ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms" target="_top" title="SpgAtoms" alt="" coords="124,55,212,80"/>
+<area shape="rect" id="node9" href="ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS" target="_top" title="myBFGS" alt="" coords="459,5,537,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.asr.relax">Relax atomic structures.</p>
+<p>By defaults read from “unrelaxed.json” from disk and relaxes
+structures and saves the final relaxed structure in “structure.json”.</p>
+<p>The relax recipe has a couple of note-worthy features:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>It automatically handles structures of any dimensionality</p></li>
+<li><p>It tries to enforce symmetries</p></li>
+<li><p>It continously checks after each step that no symmetries are broken,
+and raises an error if this happens.</p></li>
+</ul>
+</div></blockquote>
+<p>The recipe also supports relaxing structure with vdW forces using DFTD3.
+To install DFTD3 do</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>~/DFTD3<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/DFTD3
+<span class="gp">$ </span>wget<span class="w"> </span>chemie.uni-bonn.de/pctc/mulliken-center/software/dft-d3/dftd3.tgz
+<span class="gp">$ </span>tar<span class="w"> </span>-zxf<span class="w"> </span>dftd3.tgz
+<span class="gp">$ </span>make
+<span class="gp">$ </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export ASE_DFTD3_COMMAND=$HOME/DFTD3/dftd3&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="gp">$ </span><span class="nb">source</span><span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<p>Relax without using DFTD3</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ase<span class="w"> </span>build<span class="w"> </span>-x<span class="w"> </span>diamond<span class="w"> </span>Si<span class="w"> </span>unrelaxed.json
+<span class="gp">$ </span>asr<span class="w"> </span>run<span class="w"> </span><span class="s2">&quot;relax --nod3&quot;</span>
+</pre></div>
+</div>
+<p>Relax using the LDA exchange-correlation functional</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ase<span class="w"> </span>build<span class="w"> </span>-x<span class="w"> </span>diamond<span class="w"> </span>Si<span class="w"> </span>unrelaxed.json
+<span class="gp">$ </span>asr<span class="w"> </span>run<span class="w"> </span><span class="s2">&quot;relax --calculator {&#39;xc&#39;:&#39;LDA&#39;,...}&quot;</span>
+</pre></div>
+</div>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.is_relax_done.html#ase2sprkkr.asr.relax.is_relax_done" title="ase2sprkkr.asr.relax.is_relax_done"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_relax_done</span></code></a>(atoms[, fmax, smax, smask])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.relax.html#ase2sprkkr.asr.relax.relax" title="ase2sprkkr.asr.relax.relax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">relax</span></code></a>(atoms, tmp_atoms_file[, emin, smask, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.set_initial_magnetic_moments.html#ase2sprkkr.asr.relax.set_initial_magnetic_moments" title="ase2sprkkr.asr.relax.set_initial_magnetic_moments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_initial_magnetic_moments</span></code></a>(atoms)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.Result.html#ase2sprkkr.asr.relax.Result" title="ase2sprkkr.asr.relax.Result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Result</span></code></a>(atoms, etot, c, b, beta, a, edft, ...)</p></td>
+<td><p>Result class for <code class="xref py py-func docutils literal notranslate"><span class="pre">asr.relax.main()</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms" title="ase2sprkkr.asr.relax.SpgAtoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpgAtoms</span></code></a>([symbols, positions, numbers, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS" title="ase2sprkkr.asr.relax.myBFGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">myBFGS</span></code></a>(atoms[, restart, logfile, ...])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.relax.BrokenSymmetryError.html#ase2sprkkr.asr.relax.BrokenSymmetryError" title="ase2sprkkr.asr.relax.BrokenSymmetryError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BrokenSymmetryError</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.asr.raman.Result.html" class="btn btn-neutral float-left" title="Result" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.asr.relax.is_relax_done.html" class="btn btn-neutral float-right" title="is_relax_done" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

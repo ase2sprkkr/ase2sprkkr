@@ -12,11 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.common.formats</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.formats</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -85,9 +89,45 @@
              
   <h1>Source code for ase2sprkkr.common.formats</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Formating routines &quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<div class="viewcode-block" id="format_for_string">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.format_for_string.html#ase2sprkkr.common.formats.format_for_string">[docs]</a>
+<span class="k">def</span> <span class="nf">format_for_string</span><span class="p">(</span><span class="nb">format</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a format string derived from given format,</span>
+<span class="sd">    that suits for string.</span>
 
-<div class="viewcode-block" id="fortran_format"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.fortran_format.html#ase2sprkkr.common.formats.fortran_format">[docs]</a><span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;:.12e&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    &gt;&gt;&gt; format_for_string(&#39;&gt;14&#39;)</span>
+<span class="sd">    &#39;&gt;14&#39;</span>
+<span class="sd">    &gt;&gt;&gt; format_for_string(&#39;&gt;14e&#39;)</span>
+<span class="sd">    &#39;&gt;14&#39;</span>
+<span class="sd">    &gt;&gt;&gt; format_for_string(&#39;&gt;14e&#39;)</span>
+<span class="sd">    &#39;&gt;14&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[eEfFgG]$&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="full_format_for_string">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.full_format_for_string.html#ase2sprkkr.common.formats.full_format_for_string">[docs]</a>
+<span class="k">def</span> <span class="nf">full_format_for_string</span><span class="p">(</span><span class="nb">format</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a format string derived from given format,</span>
+<span class="sd">    that suits for string.</span>
+
+<span class="sd">    &gt;&gt;&gt; full_format_for_string(&#39;Cokoli {&gt;14} tu&#39;)</span>
+<span class="sd">    &#39;Cokoli {&gt;14} tu&#39;</span>
+<span class="sd">    &gt;&gt;&gt; full_format_for_string(&#39;Remove{&gt;14e}here&#39;)</span>
+<span class="sd">    &#39;Remove{&gt;14}here&#39;</span>
+<span class="sd">    &gt;&gt;&gt; full_format_for_string(&#39;{&gt;14g}&#39;)</span>
+<span class="sd">    &#39;{&gt;14}&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;[eEfFgG]}(?!})&#39;</span><span class="p">,</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="fortran_format">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.formats.fortran_format.html#ase2sprkkr.common.formats.fortran_format">[docs]</a>
+<span class="k">def</span> <span class="nf">fortran_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;:.12e&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Format the value with a leading zero.</span>
 
 <span class="sd">    Format the given float number using the given fortran scientific notation format string,</span>
@@ -128,6 +168,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span><span class="p">(</span><span class="s2">&quot;No E in fortran format string: &quot;</span> <span class="o">+</span> <span class="nb">format</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">leading</span> <span class="o">+</span> <span class="s1">&#39;0.</span><span class="si">{}{}{}{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="n">e</span><span class="p">],</span><span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">:</span><span class="n">e</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="nb">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span><span class="o">*</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">trailing</span></div>
+
 </pre></div>
 
            </div>

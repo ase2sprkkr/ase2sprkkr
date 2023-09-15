@@ -1,0 +1,49 @@
+fixtures
+========
+
+Full name: **ase2sprkkr.asr.test.fixtures**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.fixtures
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _get_webcontent
+      asr_tmpdir
+      asr_tmpdir_w_params
+      duplicates_test_db
+      get_webcontent
+      mockgpaw
+      set_asr_test_environ_variable
+      test_material
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

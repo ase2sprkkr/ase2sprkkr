@@ -1,0 +1,43 @@
+test\_formalpolarization
+========================
+
+Full name: **ase2sprkkr.asr.test.test\_formalpolarization**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_formalpolarization
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_formalpolarization
+      test_formalpolarization_test_atoms_too_close_to_boundary
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

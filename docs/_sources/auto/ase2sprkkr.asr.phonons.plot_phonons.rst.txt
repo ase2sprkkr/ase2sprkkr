@@ -1,0 +1,8 @@
+plot\_phonons
+=============
+
+Full name: **ase2sprkkr.asr.phonons.plot\_phonons**
+
+.. currentmodule:: ase2sprkkr.asr.phonons
+
+.. autofunction:: plot_phonons

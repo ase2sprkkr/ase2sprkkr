@@ -1,0 +1,36 @@
+ConvexHullReference
+===================
+
+
+.. currentmodule:: ase2sprkkr.asr.chc
+
+.. autoclass:: ConvexHullReference
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.chc.ConvexHullReference
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

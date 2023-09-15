@@ -1,0 +1,49 @@
+test\_database\_rmsd
+====================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_rmsd**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_database_rmsd
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      rattle_atoms
+      test_database_rmsd_duplicates
+      test_database_rmsd_duplicates_comparison_keys
+      test_database_rmsd_move_one_atom
+      test_database_rmsd_none_handling
+      test_database_rmsd_not_equal
+      test_database_rmsd_rattled
+      test_database_rmsd_rotation
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

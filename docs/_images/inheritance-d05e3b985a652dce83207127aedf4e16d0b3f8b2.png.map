@@ -1,0 +1,12 @@
+<map id="inheritance0523d1d4be" name="inheritance0523d1d4be">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="39,153,111,179"/>
+<area shape="rect" id="node4" href="ase2sprkkr.asr.core.results.ResultEncoder.html#ase2sprkkr.asr.core.results.ResultEncoder" target="_top" title="Abstract encoder base class." alt="" coords="185,153,299,179"/>
+<area shape="rect" id="node2" href="ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult" target="_top" title="Base class for describing results generated with recipes." alt="" coords="30,104,119,129"/>
+<area shape="rect" id="node6" href="ase2sprkkr.asr.core.results.HackedASRResult.html#ase2sprkkr.asr.core.results.HackedASRResult" target="_top" title="HackedASRResult" alt="" coords="173,104,311,129"/>
+<area shape="rect" id="node3" href="ase2sprkkr.asr.core.results.DictEncoder.html#ase2sprkkr.asr.core.results.DictEncoder" target="_top" title="Dict ASRResult encoder." alt="" coords="359,79,459,104"/>
+<area shape="rect" id="node5" href="ase2sprkkr.asr.core.results.HTMLEncoder.html#ase2sprkkr.asr.core.results.HTMLEncoder" target="_top" title="HTML ASRResult encoder." alt="" coords="353,128,464,153"/>
+<area shape="rect" id="node7" href="ase2sprkkr.asr.core.results.JSONEncoder.html#ase2sprkkr.asr.core.results.JSONEncoder" target="_top" title="JSON ASRResult encoder." alt="" coords="355,177,462,203"/>
+<area shape="rect" id="node10" href="ase2sprkkr.asr.core.results.WebPanelEncoder.html#ase2sprkkr.asr.core.results.WebPanelEncoder" target="_top" title="Encoder for ASE compatible webpanels." alt="" coords="340,227,477,252"/>
+<area shape="rect" id="node8" href="ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData" target="_top" title="Metadata object." alt="" coords="31,55,118,80"/>
+<area shape="rect" id="node9" href="ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription" target="_top" title="Result object descriptor." alt="" coords="5,5,144,31"/>
+</map>

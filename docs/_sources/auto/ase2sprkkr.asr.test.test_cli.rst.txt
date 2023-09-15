@@ -1,0 +1,49 @@
+test\_cli
+=========
+
+Full name: **ase2sprkkr.asr.test.test\_cli**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_cli
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_asr
+      test_asr_find
+      test_asr_find_help
+      test_asr_find_no_versions
+      test_asr_list
+      test_asr_results_bandstructure
+      test_asr_results_help
+      test_asr_run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

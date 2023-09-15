@@ -1,0 +1,66 @@
+gs
+==
+
+Full name: **ase2sprkkr.asr.gs**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.gs.GapsResult  ase2sprkkr.asr.gs.Result  ase2sprkkr.asr.gs.VacuumLevelResults 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.gs
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      bz_with_band_extremums
+      evacdiff
+      gaps
+      get_1bz_k
+      get_gap_info
+      vacuumlevels
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      GapsResult
+      Result
+      VacuumLevelResults
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

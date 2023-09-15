@@ -1,8 +1,0 @@
-<map id="inheritancebe634c1c7f" name="inheritancebe634c1c7f">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionDefinition" target="_top" title="Default class for definitions of SPRKKR configuration files&#39; sections" alt="" coords="506,3,665,16"/>
-<area shape="rect" id="node5" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="680,3,865,16"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="338,3,491,16"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="3,3,147,16"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="162,3,323,16"/>
-<area shape="rect" id="node6" href="#ase2sprkkr.input_parameters.definitions.sections.TauSection" target="_top" title="TAU Section of input parameters." alt="" coords="880,3,957,16"/>
-</map>

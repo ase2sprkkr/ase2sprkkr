@@ -1,0 +1,43 @@
+kpt\_descriptor
+===============
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.kpt\_descriptor**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.kpt_descriptor
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      kpts2sizeandoffsets
+      to1bz
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

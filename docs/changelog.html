@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Changelog &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,6 +63,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#version-2-0-1">Version 2.0.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-2-0-4">Version 2.0.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-2-1-1">Version 2.1.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">User interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Internals</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
@@ -90,8 +100,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Changelog</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Changelog</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/changelog.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -102,9 +112,9 @@
            <div itemprop="articleBody">
              
   <section id="changelog">
-<h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this heading"></a></h1>
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
 <section id="version-1-0-6">
-<h2>Version 1.0.6<a class="headerlink" href="#version-1-0-6" title="Permalink to this heading"></a></h2>
+<h2>Version 1.0.6<a class="headerlink" href="#version-1-0-6" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Sites data moved to ASE arrays to allow merging two Atoms structures</p></li>
 <li><p>Testing switched to pytest</p></li>
@@ -112,7 +122,7 @@
 </ul>
 </section>
 <section id="version-1-0-7">
-<h2>Version 1.0.7<a class="headerlink" href="#version-1-0-7" title="Permalink to this heading"></a></h2>
+<h2>Version 1.0.7<a class="headerlink" href="#version-1-0-7" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>a2s_visualise_in_struct script fixed</p></li>
 <li><p>a2s_visualise_in_struct accepts scale-radii argument to control the size of visualised atoms</p></li>
@@ -120,9 +130,9 @@
 </ul>
 </section>
 <section id="version-2-0-0-beta1">
-<h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.0-beta1<a class="headerlink" href="#version-2-0-0-beta1" title="Link to this heading"></a></h2>
 <section id="user-interface">
-<h3>User interface<a class="headerlink" href="#user-interface" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#user-interface" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Runtime documentation available.</p></li>
 <li><p>Runtime documentation is added to the docstring and to the generated documentation.
@@ -132,7 +142,7 @@
 </ul>
 </section>
 <section id="architecture-changes">
-<h3>Architecture changes<a class="headerlink" href="#architecture-changes" title="Permalink to this heading"></a></h3>
+<h3>Architecture changes<a class="headerlink" href="#architecture-changes" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Allow the Keywords arguments to accept descirptions of the keywords.</p></li>
 <li><p>Complex GrammarType were added.</p></li>
@@ -149,9 +159,9 @@ values are outputed only if they differ from the defaults.</p></li>
 </section>
 </section>
 <section id="version-2-0-0-beta2">
-<h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.0-beta2<a class="headerlink" href="#version-2-0-0-beta2" title="Link to this heading"></a></h2>
 <section id="id1">
-<h3>User interface<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>User interface<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>es_finder integration for empty spheres finding</p></li>
 <li><p>Support for 2D problems</p></li>
@@ -161,7 +171,7 @@ values are outputed only if they differ from the defaults.</p></li>
 </ul>
 </section>
 <section id="internals">
-<h3>Internals<a class="headerlink" href="#internals" title="Permalink to this heading"></a></h3>
+<h3>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Sections validation</p></li>
 <li><p>LatticeData class refactored</p></li>
@@ -170,11 +180,46 @@ values are outputed only if they differ from the defaults.</p></li>
 </section>
 </section>
 <section id="version-2-0-1">
-<h2>Version 2.0.1<a class="headerlink" href="#version-2-0-1" title="Permalink to this heading"></a></h2>
+<h2>Version 2.0.1<a class="headerlink" href="#version-2-0-1" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Fix of sys-file generation</p></li>
 <li><p>Hastily written ASE2SPRKKR slides included</p></li>
 </ul>
+</section>
+<section id="version-2-0-4">
+<h2>Version 2.0.4<a class="headerlink" href="#version-2-0-4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Some fixies</p></li>
+<li><p>ASR repcipies available as ase2sprkkr.asr subpackage</p></li>
+</ul>
+</section>
+<section id="version-2-1-1">
+<h2>Version 2.1.1<a class="headerlink" href="#version-2-1-1" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>User interface<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>ARPES and SCF task definition improved</p></li>
+<li><p>ARPES SPC results can be parsed and plotted</p></li>
+<li><p>DOS results parsing</p></li>
+<li><p>FULLPOT mode for SCF calculation</p></li>
+<li><p>a2s_plot_output script to plot SPC results</p></li>
+<li><p>Better naming of input and potential files</p></li>
+<li><p>Gilbert TASK added (experimental, not tested)</p></li>
+<li><p>input_parameters.change_task method fixed</p></li>
+<li><p>[] access to array options/values (no need for VARIABLE()[] notation)</p></li>
+<li><p>Numbered arrays (e.g. CONTROL.MDIR) can be set using arrays</p></li>
+<li><p>Better formating of input parameters</p></li>
+<li><p>Some minor tweaks and corrections of input parameters</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Internals<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>GrammmarTypes refactorized (splitted to more files)</p></li>
+<li><p>Generated grammar types and values for easy access to output files</p></li>
+<li><p>Calculator.save_input refactored</p></li>
+</ul>
+</section>
 </section>
 </section>
 

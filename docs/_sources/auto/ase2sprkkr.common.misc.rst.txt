@@ -5,14 +5,6 @@ Full name: **ase2sprkkr.common.misc**
 
 
 
-.. rubric:: Module class hierarchy
-
-.. inheritance-diagram::  ase2sprkkr.common.misc.OrderedDict 
-      :parts: 1
-
-|
-
-
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.common.misc
@@ -32,6 +24,7 @@ Full name: **ase2sprkkr.common.misc**
    
       as_integer
       copy_list
+      dict_first_item
       njit
       numpy_index
    
@@ -39,14 +32,6 @@ Full name: **ase2sprkkr.common.misc**
 
 
    
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :template: custom-class-template.rst
-   
-      OrderedDict
    
    
 

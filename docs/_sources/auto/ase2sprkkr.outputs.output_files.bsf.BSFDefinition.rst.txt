@@ -1,0 +1,36 @@
+BSFDefinition
+=============
+
+
+.. currentmodule:: ase2sprkkr.outputs.output_files.bsf
+
+.. autoclass:: BSFDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.output_files.bsf.BSFDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

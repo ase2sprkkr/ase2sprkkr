@@ -1,0 +1,45 @@
+utilities
+=========
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.utilities**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.utilities
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.mocks.gpaw.utilities.dos
+     ase2sprkkr.asr.test.mocks.gpaw.utilities.ibz2bz
+     ase2sprkkr.asr.test.mocks.gpaw.utilities.progressbar
+  
+  

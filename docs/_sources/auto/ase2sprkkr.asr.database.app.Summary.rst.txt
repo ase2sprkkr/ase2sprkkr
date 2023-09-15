@@ -1,0 +1,36 @@
+Summary
+=======
+
+
+.. currentmodule:: ase2sprkkr.asr.database.app
+
+.. autoclass:: Summary
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.database.app.Summary
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

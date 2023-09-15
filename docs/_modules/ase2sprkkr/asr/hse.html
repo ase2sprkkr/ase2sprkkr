@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.hse &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.hse</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.hse</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;HSE band structure.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.hse&#39;</span><span class="p">,</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">],</span>
+         <span class="n">creates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hse_nowfs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;hse-snapshot.json&#39;</span><span class="p">],</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">],</span>
+         <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;24:10h&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kptdensity&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-point density&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--emptybands&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;number of empty bands to include&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">8.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate HSE corrections.&quot;&quot;&quot;</span>
+    <span class="n">eigs</span><span class="p">,</span> <span class="n">calc</span> <span class="o">=</span> <span class="n">hse</span><span class="p">(</span><span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="o">=</span><span class="n">emptybands</span><span class="p">)</span>
+    <span class="n">eigs_soc</span> <span class="o">=</span> <span class="n">hse_spinorbit</span><span class="p">(</span><span class="n">eigs</span><span class="p">,</span> <span class="n">calc</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;hse_eigenvalues&#39;</span><span class="p">:</span> <span class="n">eigs</span><span class="p">,</span>
+               <span class="s1">&#39;hse_eigenvalues_soc&#39;</span><span class="p">:</span> <span class="n">eigs_soc</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="c1"># XXX move to utils? [also in asr.polarizability]</span>
+<div class="viewcode-block" id="get_kpts_size">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.get_kpts_size.html#ase2sprkkr.asr.hse.get_kpts_size">[docs]</a>
+<span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find reasonable monkhorst-pack size which hits high symmetry points.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
+    <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">k2so</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">)</span>
+    <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span> <span class="mi">6</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">size</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">//</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">kpts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">kpts</span></div>
+
+
+
+<div class="viewcode-block" id="hse">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.hse.html#ase2sprkkr.asr.hse.hse">[docs]</a>
+<span class="k">def</span> <span class="nf">hse</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">gpaw.hybrids.eigenvalues</span> <span class="kn">import</span> <span class="n">non_self_consistent_eigenvalues</span>
+
+    <span class="n">convbands</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">emptybands</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;band&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;kpt&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_atoms</span><span class="p">()</span>
+    <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">ND</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">kpts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="n">kptdensity</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;even&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">kpts</span> <span class="o">=</span> <span class="n">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">)</span>
+
+    <span class="n">calc</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">nbands</span><span class="o">=-</span><span class="n">emptybands</span><span class="p">,</span>
+             <span class="n">fixdensity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">kpts</span><span class="o">=</span><span class="n">kpts</span><span class="p">,</span>
+             <span class="n">convergence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bands&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">convbands</span><span class="p">},</span>
+             <span class="n">txt</span><span class="o">=</span><span class="s1">&#39;hse.txt&#39;</span><span class="p">)</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;hse_nowfs.gpw&#39;</span><span class="p">)</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_number_of_bands</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">non_self_consistent_eigenvalues</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span>
+                                             <span class="s1">&#39;HSE06&#39;</span><span class="p">,</span>
+                                             <span class="n">n1</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                             <span class="n">n2</span><span class="o">=</span><span class="n">nb</span> <span class="o">-</span> <span class="n">convbands</span><span class="p">,</span>
+                                             <span class="n">snapshot</span><span class="o">=</span><span class="s1">&#39;hse-snapshot.json&#39;</span><span class="p">)</span>
+    <span class="n">e_pbe_skn</span><span class="p">,</span> <span class="n">vxc_pbe_skn</span><span class="p">,</span> <span class="n">vxc_hse_skn</span> <span class="o">=</span> <span class="n">result</span>
+    <span class="n">e_hse_skn</span> <span class="o">=</span> <span class="n">e_pbe_skn</span> <span class="o">-</span> <span class="n">vxc_pbe_skn</span> <span class="o">+</span> <span class="n">vxc_hse_skn</span>
+
+    <span class="n">dct</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vxc_hse_skn</span><span class="o">=</span><span class="n">vxc_hse_skn</span><span class="p">,</span>
+               <span class="n">e_pbe_skn</span><span class="o">=</span><span class="n">e_pbe_skn</span><span class="p">,</span>
+               <span class="n">vxc_pbe_skn</span><span class="o">=</span><span class="n">vxc_pbe_skn</span><span class="p">,</span>
+               <span class="n">e_hse_skn</span><span class="o">=</span><span class="n">e_hse_skn</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dct</span><span class="p">,</span> <span class="n">calc</span></div>
+
+
+
+<div class="viewcode-block" id="hse_spinorbit">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.hse_spinorbit.html#ase2sprkkr.asr.hse.hse_spinorbit">[docs]</a>
+<span class="k">def</span> <span class="nf">hse_spinorbit</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
+
+    <span class="n">e_skn</span> <span class="o">=</span> <span class="n">dct</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;e_hse_skn&#39;</span><span class="p">)</span>
+    <span class="n">dct_soc</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+
+    <span class="n">soc</span> <span class="o">=</span> <span class="n">soc_eigenstates</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span>
+                          <span class="n">eigenvalues</span><span class="o">=</span><span class="n">e_skn</span><span class="p">,</span>
+                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">dct_soc</span><span class="p">[</span><span class="s1">&#39;e_hse_mk&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">soc</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">dct_soc</span><span class="p">[</span><span class="s1">&#39;s_hse_mk&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">soc</span><span class="o">.</span><span class="n">spin_projections</span><span class="p">()[:,</span> <span class="p">:,</span> <span class="n">get_spin_index</span><span class="p">()]</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">dct_soc</span></div>
+
+
+
+<div class="viewcode-block" id="MP_interpolate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.MP_interpolate.html#ase2sprkkr.asr.hse.MP_interpolate">[docs]</a>
+<span class="k">def</span> <span class="nf">MP_interpolate</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">delta_skn</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate corrections to band patch.</span>
+
+<span class="sd">    Calculates band stucture along the same band path used for PBE</span>
+<span class="sd">    by interpolating a correction onto the PBE band structure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">gpaw.spinorbit</span> <span class="kn">import</span> <span class="n">soc_eigenstates</span>
+    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_monkhorst_pack_size_and_offset</span><span class="p">,</span>
+                                 <span class="n">monkhorst_pack_interpolate</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">singleprec_dict</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
+
+    <span class="n">bandrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+    <span class="c1"># read PBE (without SOC)</span>
+    <span class="n">results_bandstructure</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">results_bandstructure</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">e_pbe_skn</span> <span class="o">=</span> <span class="n">results_bandstructure</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+
+    <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">get_monkhorst_pack_size_and_offset</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">get_bz_k_points</span><span class="p">())</span>
+    <span class="n">bz2ibz</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_bz_to_ibz_map</span><span class="p">()</span>
+    <span class="n">icell</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_reciprocal_cell</span><span class="p">()</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">monkhorst_pack_interpolate</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">kpts</span><span class="p">,</span> <span class="n">delta_skn</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                                     <span class="n">icell</span><span class="p">,</span> <span class="n">bz2ibz</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+    <span class="n">delta_interp_skn</span> <span class="o">=</span> <span class="n">eps</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">e_int_skn</span> <span class="o">=</span> <span class="n">e_pbe_skn</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">bandrange</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta_interp_skn</span>
+    <span class="n">dct</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">e_int_skn</span><span class="o">=</span><span class="n">e_int_skn</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="c1"># add SOC from bs.gpw</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">)</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+    <span class="n">soc</span> <span class="o">=</span> <span class="n">soc_eigenstates</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="o">=</span><span class="n">e_int_skn</span><span class="p">,</span>
+                          <span class="n">n1</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">ub</span><span class="p">,</span>
+                          <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">dct</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">e_int_mk</span><span class="o">=</span><span class="n">soc</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;bandstructure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">singleprec_dict</span><span class="p">(</span><span class="n">dct</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+
+<div class="viewcode-block" id="bs_hse">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.bs_hse.html#ase2sprkkr.asr.hse.bs_hse">[docs]</a>
+<span class="k">def</span> <span class="nf">bs_hse</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+           <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;hse-bs.png&#39;</span><span class="p">,</span>
+           <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+           <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+           <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+           <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.hse.json&#39;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;bandstructure&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fontsize</span>
+    <span class="n">ef</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;efermi_hse_soc&#39;</span><span class="p">]</span>
+
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$E - E_\mathrm</span><span class="si">{vac}</span><span class="s1">$ [eV]&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$E - E_\mathrm</span><span class="si">{F}</span><span class="s1">$ [eV]&#39;</span>
+
+    <span class="n">emin</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm_hse&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">reference</span>
+    <span class="n">emax</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm_hse&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">reference</span>
+    <span class="n">e_mk</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;bandstructure&#39;</span><span class="p">][</span><span class="s1">&#39;e_int_mk&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">reference</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">get_linear_kpoint_axis</span><span class="p">()</span>
+
+    <span class="c1"># hse with soc</span>
+    <span class="n">hse_style</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="n">lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">e_m</span> <span class="ow">in</span> <span class="n">e_mk</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e_m</span><span class="p">,</span> <span class="o">**</span><span class="n">hse_style</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">emin</span><span class="p">,</span> <span class="n">emax</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$k$-points&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="n">lab</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\Gamma$&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span>
+
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.01</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">ef</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s1">&#39;$E_\mathrm</span><span class="si">{F}</span><span class="s1">$&#39;</span><span class="p">,</span>
+        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">ef</span> <span class="o">-</span> <span class="n">reference</span><span class="p">),</span>
+        <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+        <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span> <span class="o">*</span> <span class="mf">1.3</span><span class="p">)</span>
+    <span class="n">text</span><span class="o">.</span><span class="n">set_path_effects</span><span class="p">([</span>
+        <span class="n">path_effects</span><span class="o">.</span><span class="n">Stroke</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">foreground</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="n">path_effects</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+    <span class="p">])</span>
+
+    <span class="c1"># add PBE band structure with soc</span>
+    <span class="kn">from</span> <span class="nn">asr.bandstructure</span> <span class="kn">import</span> <span class="n">add_bs_pbe</span>
+    <span class="k">if</span> <span class="s1">&#39;results-asr.bandstructure.json&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">)),</span>
+                        <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">Xi</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">Xi</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">**</span><span class="n">hse_style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;HSE&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">show_legend</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.webpanel.html#ase2sprkkr.asr.hse.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
+
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gap_hse&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="n">hse</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span>
+                    <span class="p">[</span><span class="s1">&#39;gap_hse&#39;</span><span class="p">,</span> <span class="s1">&#39;gap_dir_hse&#39;</span><span class="p">],</span>
+                    <span class="n">kd</span><span class="o">=</span><span class="n">key_descriptions</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">):</span>
+            <span class="n">hse</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[[</span><span class="s1">&#39;Valence band maximum wrt. vacuum level (HSE)&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">vbm_hse</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">evac</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">],</span>
+                 <span class="p">[</span><span class="s1">&#39;Conduction band minimum wrt. vacuum level (HSE)&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cbm_hse</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">evac</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hse</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[[</span><span class="s1">&#39;Valence band maximum wrt. Fermi level (HSE)&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">vbm_hse</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">efermi</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">],</span>
+                 <span class="p">[</span><span class="s1">&#39;Conduction band minimum wrt. Fermi level (HSE)&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cbm_hse</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">efermi</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hse</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span>
+                    <span class="p">[],</span>
+                    <span class="n">kd</span><span class="o">=</span><span class="n">key_descriptions</span><span class="p">)</span>
+
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Electronic band structure (HSE)&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;hse-bs.png&#39;</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;bz-with-gaps.png&#39;</span><span class="p">),</span> <span class="n">hse</span><span class="p">]],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">bs_hse</span><span class="p">,</span>
+                                    <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;hse-bs.png&#39;</span><span class="p">]}],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gap_hse&#39;</span><span class="p">):</span>
+        <span class="n">hse_table</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Electronic properties&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gap_hse&#39;</span><span class="p">],</span>
+                          <span class="n">key_descriptions</span><span class="p">)</span>
+        <span class="c1"># rows = [[&#39;Band gap (HSE)&#39;, f&#39;{row.gap_hse:0.2f} eV&#39;]]</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Summary&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">hse_table</span><span class="p">]],</span>
+                   <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">11</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">,</span> <span class="n">summary</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.hse.Result.html#ase2sprkkr.asr.hse.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+    <span class="n">vbm_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cbm_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_dir_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">kvbm_nosoc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">kcbm_nosoc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">vbm_hse</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cbm_hse</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_dir_hse</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_hse</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">kvbm</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">kcbm</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">efermi_hse_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">efermi_hse_soc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">bandstructure</span><span class="p">:</span> <span class="n">BandStructure</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;vbm_hse_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;Valence band maximum w/o soc. (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cbm_hse_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;Conduction band minimum w/o soc. (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gap_dir_hse_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;Direct gap w/o soc. (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gap_hse_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;Band gap w/o soc. (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kvbm_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;k-point of HSE valence band maximum w/o soc&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kcbm_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;k-point of HSE conduction band minimum w/o soc&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vbm_hse&quot;</span><span class="p">:</span> <span class="s2">&quot;KVP: Valence band maximum (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cbm_hse&quot;</span><span class="p">:</span> <span class="s2">&quot;KVP: Conduction band minimum (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gap_dir_hse&quot;</span><span class="p">:</span> <span class="s2">&quot;KVP: Direct band gap (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gap_hse&quot;</span><span class="p">:</span> <span class="s2">&quot;KVP: Band gap (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kvbm&quot;</span><span class="p">:</span> <span class="s2">&quot;k-point of HSE valence band maximum&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kcbm&quot;</span><span class="p">:</span> <span class="s2">&quot;k-point of HSE conduction band minimum&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;efermi_hse_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;Fermi level w/o soc. (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;efermi_hse_soc&quot;</span><span class="p">:</span> <span class="s2">&quot;Fermi level (HSE) [eV]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bandstructure&quot;</span><span class="p">:</span> <span class="s2">&quot;HSE bandstructure.&quot;</span>
+    <span class="p">}</span>
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.hse&#39;</span><span class="p">,</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.hse@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.bandstructure&#39;</span><span class="p">],</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;hse_nowfs.gpw&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;results-asr.hse@calculate.json&#39;</span><span class="p">],</span>
+         <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;1:10m&#39;</span><span class="p">,</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interpolate HSE band structure along a given path.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">fermi_level</span>
+    <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
+
+    <span class="c1"># interpolate band structure</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;hse_nowfs.gpw&#39;</span><span class="p">)</span>
+    <span class="n">results_hse</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.hse@calculate.json&#39;</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">results_hse</span><span class="p">[</span><span class="s1">&#39;hse_eigenvalues&#39;</span><span class="p">]</span>
+    <span class="n">nbands</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;e_hse_skn&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">delta_skn</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;vxc_hse_skn&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;vxc_pbe_skn&#39;</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">MP_interpolate</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">delta_skn</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nbands</span><span class="p">)</span>
+
+    <span class="c1"># get gap, cbm, vbm, etc...</span>
+    <span class="n">results_calc</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.hse@calculate.json&#39;</span><span class="p">)</span>
+    <span class="n">eps_skn</span> <span class="o">=</span> <span class="n">results_calc</span><span class="p">[</span><span class="s1">&#39;hse_eigenvalues&#39;</span><span class="p">][</span><span class="s1">&#39;e_hse_skn&#39;</span><span class="p">]</span>
+    <span class="n">ibzkpts</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_ibz_k_points</span><span class="p">()</span>
+    <span class="n">efermi_nosoc</span> <span class="o">=</span> <span class="n">fermi_level</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="o">=</span><span class="n">eps_skn</span><span class="p">,</span>
+                               <span class="n">nspins</span><span class="o">=</span><span class="n">eps_skn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">gap</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">bandgap</span><span class="p">(</span><span class="n">eigenvalues</span><span class="o">=</span><span class="n">eps_skn</span><span class="p">,</span> <span class="n">efermi</span><span class="o">=</span><span class="n">efermi_nosoc</span><span class="p">,</span>
+                          <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">gapd</span><span class="p">,</span> <span class="n">p1d</span><span class="p">,</span> <span class="n">p2d</span> <span class="o">=</span> <span class="n">bandgap</span><span class="p">(</span><span class="n">eigenvalues</span><span class="o">=</span><span class="n">eps_skn</span><span class="p">,</span> <span class="n">efermi</span><span class="o">=</span><span class="n">efermi_nosoc</span><span class="p">,</span>
+                             <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gap</span><span class="p">:</span>
+        <span class="n">kvbm_nosoc</span> <span class="o">=</span> <span class="n">ibzkpts</span><span class="p">[</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>  <span class="c1"># k coordinates of vbm</span>
+        <span class="n">kcbm_nosoc</span> <span class="o">=</span> <span class="n">ibzkpts</span><span class="p">[</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>  <span class="c1"># k coordinates of cbm</span>
+        <span class="n">vbm</span> <span class="o">=</span> <span class="n">eps_skn</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span>
+        <span class="n">cbm</span> <span class="o">=</span> <span class="n">eps_skn</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span>
+        <span class="n">subresults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vbm_hse_nosoc&#39;</span><span class="p">:</span> <span class="n">vbm</span><span class="p">,</span>
+                      <span class="s1">&#39;cbm_hse_nosoc&#39;</span><span class="p">:</span> <span class="n">cbm</span><span class="p">,</span>
+                      <span class="s1">&#39;gap_dir_hse_nosoc&#39;</span><span class="p">:</span> <span class="n">gapd</span><span class="p">,</span>
+                      <span class="s1">&#39;gap_hse_nosoc&#39;</span><span class="p">:</span> <span class="n">gap</span><span class="p">,</span>
+                      <span class="s1">&#39;kvbm_nosoc&#39;</span><span class="p">:</span> <span class="n">kvbm_nosoc</span><span class="p">,</span>
+                      <span class="s1">&#39;kcbm_nosoc&#39;</span><span class="p">:</span> <span class="n">kcbm_nosoc</span><span class="p">}</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">subresults</span><span class="p">)</span>
+
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">results_calc</span><span class="p">[</span><span class="s1">&#39;hse_eigenvalues_soc&#39;</span><span class="p">][</span><span class="s1">&#39;e_hse_mk&#39;</span><span class="p">]</span>
+    <span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span><span class="o">.</span><span class="n">transpose</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>  <span class="c1"># e_skm, dummy spin index</span>
+    <span class="n">efermi_soc</span> <span class="o">=</span> <span class="n">fermi_level</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">eigenvalues</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">nspins</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">bzkpts</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_bz_k_points</span><span class="p">()</span>
+    <span class="n">gap</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">bandgap</span><span class="p">(</span><span class="n">eigenvalues</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">efermi</span><span class="o">=</span><span class="n">efermi_soc</span><span class="p">,</span>
+                          <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">gapd</span><span class="p">,</span> <span class="n">p1d</span><span class="p">,</span> <span class="n">p2d</span> <span class="o">=</span> <span class="n">bandgap</span><span class="p">(</span><span class="n">eigenvalues</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">efermi</span><span class="o">=</span><span class="n">efermi_soc</span><span class="p">,</span>
+                             <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gap</span><span class="p">:</span>
+        <span class="n">kvbm</span> <span class="o">=</span> <span class="n">bzkpts</span><span class="p">[</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">kcbm</span> <span class="o">=</span> <span class="n">bzkpts</span><span class="p">[</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">vbm</span> <span class="o">=</span> <span class="n">eps</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span>
+        <span class="n">cbm</span> <span class="o">=</span> <span class="n">eps</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span>
+        <span class="n">subresults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vbm_hse&#39;</span><span class="p">:</span> <span class="n">vbm</span><span class="p">,</span>
+                      <span class="s1">&#39;cbm_hse&#39;</span><span class="p">:</span> <span class="n">cbm</span><span class="p">,</span>
+                      <span class="s1">&#39;gap_dir_hse&#39;</span><span class="p">:</span> <span class="n">gapd</span><span class="p">,</span>
+                      <span class="s1">&#39;gap_hse&#39;</span><span class="p">:</span> <span class="n">gap</span><span class="p">,</span>
+                      <span class="s1">&#39;kvbm&#39;</span><span class="p">:</span> <span class="n">kvbm</span><span class="p">,</span>
+                      <span class="s1">&#39;kcbm&#39;</span><span class="p">:</span> <span class="n">kcbm</span><span class="p">}</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">subresults</span><span class="p">)</span>
+
+    <span class="n">subresults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;efermi_hse_nosoc&#39;</span><span class="p">:</span> <span class="n">efermi_nosoc</span><span class="p">,</span>
+                  <span class="s1">&#39;efermi_hse_soc&#39;</span><span class="p">:</span> <span class="n">efermi_soc</span><span class="p">}</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">subresults</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

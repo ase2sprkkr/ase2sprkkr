@@ -1,0 +1,8 @@
+create\_displacements\_folder
+=============================
+
+Full name: **ase2sprkkr.asr.setup.displacements.create\_displacements\_folder**
+
+.. currentmodule:: ase2sprkkr.asr.setup.displacements
+
+.. autofunction:: create_displacements_folder

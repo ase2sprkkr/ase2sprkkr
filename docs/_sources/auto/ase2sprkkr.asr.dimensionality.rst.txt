@@ -1,0 +1,44 @@
+dimensionality
+==============
+
+Full name: **ase2sprkkr.asr.dimensionality**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.dimensionality
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_dimtypes
+      plot_dimensionality_histogram
+      webpanel
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

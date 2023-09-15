@@ -1,0 +1,70 @@
+browser
+=======
+
+Full name: **ase2sprkkr.asr.database.browser**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.database.browser.RowWrapper 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database.browser
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_table
+      describe_entries
+      describe_entry
+      dict_to_list
+      entry_parameter_description
+      extract_recipe_from_filename
+      fig
+      is_results_file
+      layout
+      merge_panels
+      miscellaneous_section
+      table
+      val2str
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      RowWrapper
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

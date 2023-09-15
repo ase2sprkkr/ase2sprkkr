@@ -1,0 +1,36 @@
+Hyperplane
+==========
+
+
+.. currentmodule:: ase2sprkkr.asr.chc
+
+.. autoclass:: Hyperplane
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.chc.Hyperplane
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

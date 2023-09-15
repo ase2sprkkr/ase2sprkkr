@@ -1,0 +1,43 @@
+totree
+======
+
+Full name: **ase2sprkkr.asr.database.totree**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database.totree
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      make_folder_dict
+      make_folder_tree
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

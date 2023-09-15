@@ -1,0 +1,58 @@
+occupations
+===========
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.occupations**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.test.mocks.gpaw.occupations.FermiDirac 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.occupations
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_occ_calc
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FermiDirac
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,45 @@
+mpi
+===
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.mpi**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.mpi
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      barrier
+      broadcast
+      new_communicator
+      world_sum
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

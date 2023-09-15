@@ -1,0 +1,6 @@
+<map id="inheritance965336722d" name="inheritance965336722d">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,212,23"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="234,4,462,23"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="483,4,714,23"/>
+<area shape="rect" id="node4" href="#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="736,4,956,23"/>
+</map>

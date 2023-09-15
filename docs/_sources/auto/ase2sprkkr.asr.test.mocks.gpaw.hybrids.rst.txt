@@ -1,0 +1,43 @@
+hybrids
+=======
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.hybrids**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.hybrids
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.mocks.gpaw.hybrids.eigenvalues
+  
+  

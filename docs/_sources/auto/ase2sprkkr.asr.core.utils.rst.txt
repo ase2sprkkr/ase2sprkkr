@@ -1,0 +1,56 @@
+utils
+=====
+
+Full name: **ase2sprkkr.asr.core.utils**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.core.utils
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      chdir
+      dct_to_object
+      encode_json
+      file_barrier
+      get_dep_tree
+      get_recipe_from_name
+      md5sum
+      parse_dict_string
+      parse_mod_func
+      read_json
+      recursive_update
+      singleprec_dict
+      unlink
+      write_file
+      write_json
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

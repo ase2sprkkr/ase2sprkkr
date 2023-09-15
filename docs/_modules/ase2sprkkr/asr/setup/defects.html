@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.setup.defects &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.setup.defects</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.setup.defects</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Generate defective atomic structures.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">import</span> <span class="nn">click</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.setup.defects&#39;</span><span class="p">,</span>
+         <span class="n">creates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;general_parameters.json&#39;</span><span class="p">])</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atomfile&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Atomic structure.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-q&#39;</span><span class="p">,</span> <span class="s1">&#39;--chargestates&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Charge states included (-q, ..., +q).&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--supercell&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]),</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of repetitions in lat. vector directions [N_x, N_y, N_z]&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--maxsize&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum supercell size in Å.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--intrinsic&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify whether you want to incorporate anti-site defects.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--vacancies&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify whether you want to incorporate vacancies.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">atomfile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="n">supercell</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+         <span class="n">maxsize</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+         <span class="n">vacancies</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up defect structures for a given host.</span>
+
+<span class="sd">    Recipe setting up all possible defects within a reasonable supercell as</span>
+<span class="sd">    well as the respective pristine system for a given input structure.</span>
+<span class="sd">    Defects include: vacancies, anti-site defects. For a given primitive input</span>
+<span class="sd">    structure this recipe will create a directory tree in the following way:</span>
+
+<span class="sd">    For the example of MoS2:</span>
+
+<span class="sd">    - There has to be a &#39;unrelaxed.json&#39; file with the primitive structure</span>
+<span class="sd">      of the desired system in the folder you run setup.defects. The tree</span>
+<span class="sd">      structure will then look like this</span>
+
+<span class="sd">    .                                                                        &#39;</span>
+<span class="sd">    ├── general_parameters.json                                              &#39;</span>
+<span class="sd">    ├── MoS2_231.v_at_b0                                                     &#39;</span>
+<span class="sd">    │   ├── charge_0                                                         &#39;</span>
+<span class="sd">    │   │   ├── params.json                                                  &#39;</span>
+<span class="sd">    │   │   └── unrelaxed.json                                               &#39;</span>
+<span class="sd">    │   ├── charge_1                                                         &#39;</span>
+<span class="sd">    │   │   ├── ...                                                          &#39;</span>
+<span class="sd">    │   │   .                                                                &#39;</span>
+<span class="sd">    │   .                                                                    &#39;</span>
+<span class="sd">    │                                                                        &#39;</span>
+<span class="sd">    ├── MoS2_231.Mo_at_i1                                                    &#39;</span>
+<span class="sd">    │   ├── charge_0                                                         &#39;</span>
+<span class="sd">    .   .                                                                    &#39;</span>
+<span class="sd">    .                                                                        &#39;</span>
+<span class="sd">    ├── pristine                                                             &#39;</span>
+<span class="sd">    │   └── neutral                                                          &#39;</span>
+<span class="sd">    │       ├── params.json                                                  &#39;</span>
+<span class="sd">    │       └── unrelaxed.json                                               &#39;</span>
+<span class="sd">    ├── pristine_sc                                                          &#39;</span>
+<span class="sd">    │   └── neutral                                                          &#39;</span>
+<span class="sd">    │       ├── params.json                                                  &#39;</span>
+<span class="sd">    │       └── unrelaxed.json                                               &#39;</span>
+<span class="sd">    ├── results_setup.defects.json                                           &#39;</span>
+<span class="sd">    └── unrelaxed.json                                                       &#39;</span>
+
+<span class="sd">    - Here, the notation for the defects is the following:</span>
+<span class="sd">      &#39;formula_supercellsize.defect_at_substitutionposition&#39; where &#39;v&#39;</span>
+<span class="sd">      denotes a vacancy</span>
+<span class="sd">    - In the resulting folders you can find the unrelaxed structures, as</span>
+<span class="sd">      well as a &#39;params.json&#39; file which contains the charge states of the</span>
+<span class="sd">      different defect structures.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="c1"># first, read input atomic structure and store it in ase&#39;s atoms object</span>
+    <span class="n">structure</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">atomfile</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: starting recipe for setting up defect systems of &#39;</span>
+          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> host system.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
+
+    <span class="c1"># check dimensionality of initial parent structure</span>
+    <span class="n">nd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="n">nd</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">is2d</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">nd</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">is2d</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="n">nd</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Setup defects not implemented for 1D &#39;</span>
+                                  <span class="sa">f</span><span class="s1">&#39;structures&#39;</span><span class="p">)</span>
+    <span class="c1"># set up the different defect systems and store their properties</span>
+    <span class="c1"># in a dictionary</span>
+    <span class="n">structure_dict</span> <span class="o">=</span> <span class="n">setup_defects</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">intrinsic</span><span class="o">=</span><span class="n">intrinsic</span><span class="p">,</span>
+                                   <span class="n">charge_states</span><span class="o">=</span><span class="n">chargestates</span><span class="p">,</span>
+                                   <span class="n">vacancies</span><span class="o">=</span><span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="o">=</span><span class="n">supercell</span><span class="p">,</span>
+                                   <span class="n">max_lattice</span><span class="o">=</span><span class="n">maxsize</span><span class="p">,</span> <span class="n">is_2D</span><span class="o">=</span><span class="n">is2d</span><span class="p">)</span>
+
+    <span class="c1"># based on this dictionary, create a folder structure for all defects</span>
+    <span class="c1"># and respective charge states</span>
+    <span class="n">create_folder_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">structure_dict</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">,</span>
+                            <span class="n">intrinsic</span><span class="o">=</span><span class="n">intrinsic</span><span class="p">,</span> <span class="n">vacancies</span><span class="o">=</span><span class="n">vacancies</span><span class="p">,</span>
+                            <span class="n">sc</span><span class="o">=</span><span class="n">supercell</span><span class="p">,</span> <span class="n">max_lattice</span><span class="o">=</span><span class="n">maxsize</span><span class="p">,</span> <span class="n">is_2D</span><span class="o">=</span><span class="n">is2d</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="setup_supercell">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_supercell.html#ase2sprkkr.asr.setup.defects.setup_supercell">[docs]</a>
+<span class="k">def</span> <span class="nf">setup_supercell</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up the supercell of a given structure depending.</span>
+
+<span class="sd">    Set up the supercell of a given structure depending on a</span>
+<span class="sd">    maximum supercell lattice vector length for 2D or 3D structures.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure</span>
+<span class="sd">        input structure (primitive cell)</span>
+<span class="sd">    max_lattice : float</span>
+<span class="sd">        maximum supercell lattice vector length in Å</span>
+<span class="sd">    is_2D : bool</span>
+<span class="sd">        choose 2D or 3D supercell (is_2D=False)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    structure_sc</span>
+<span class="sd">        supercell structure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
+        <span class="n">struc_temp</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">struc_temp</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="n">max_lattice</span><span class="p">:</span>
+            <span class="n">x_size</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">break</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
+        <span class="n">struc_temp</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">struc_temp</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="n">max_lattice</span><span class="p">:</span>
+            <span class="n">y_size</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_2D</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">):</span>
+            <span class="n">struc_temp</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">struc_temp</span><span class="o">.</span><span class="n">get_distance</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="n">max_lattice</span><span class="p">:</span>
+                <span class="n">z_size</span> <span class="o">=</span> <span class="n">z</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">z_size</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: setting up supercell: (</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+          <span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">z_size</span><span class="p">))</span>
+    <span class="n">x_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_size</span><span class="p">)</span>
+    <span class="n">y_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_size</span><span class="p">)</span>
+    <span class="n">z_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">z_size</span><span class="p">)</span>
+    <span class="n">structure_sc</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">z_size</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">structure_sc</span><span class="p">,</span> <span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">z_size</span></div>
+
+
+
+<div class="viewcode-block" id="setup_defects">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_defects.html#ase2sprkkr.asr.setup.defects.setup_defects">[docs]</a>
+<span class="k">def</span> <span class="nf">setup_defects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">,</span> <span class="n">charge_states</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
+                  <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up all possible defects.</span>
+
+<span class="sd">    Sets up all possible defects (i.e. vacancies, intrinsic anti-sites,</span>
+<span class="sd">    extrinsic point defects(&#39;extrinsic=True&#39;)) for a given structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    structure</span>
+<span class="sd">        input structure (primitive cell)</span>
+<span class="sd">    intrinsic : bool</span>
+<span class="sd">        incorporate intrinsic point defects</span>
+<span class="sd">    vacancies : bool</span>
+<span class="sd">        incorporate vacancies</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    structure_dict : dict</span>
+<span class="sd">        dictionary of all possible defect configurations</span>
+<span class="sd">        of the given structure with different charge</span>
+<span class="sd">        states. The dictionary is built up in the</span>
+<span class="sd">        following way: see folder structure in &#39;main()&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">spglib</span>
+
+    <span class="c1"># set up artificial array in order to check for equivalent positions later</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">structure</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(),</span>
+            <span class="n">structure</span><span class="o">.</span><span class="n">numbers</span><span class="p">)</span>
+
+    <span class="c1"># set up a dictionary</span>
+    <span class="n">structure_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">symbols</span>
+
+    <span class="c1"># first, find the desired supercell</span>
+    <span class="k">if</span> <span class="n">sc</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">pristine</span><span class="p">,</span> <span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span> <span class="o">=</span> <span class="n">setup_supercell</span><span class="p">(</span>
+            <span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">N_x</span> <span class="o">=</span> <span class="n">sc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">N_y</span> <span class="o">=</span> <span class="n">sc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">N_z</span> <span class="o">=</span> <span class="n">sc</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: setting up supercell: (</span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">, </span><span class="si">{2}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+              <span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span><span class="p">))</span>
+        <span class="n">pristine</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">repeat</span><span class="p">((</span><span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span><span class="p">))</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;defects.pristine_sc&#39;</span>
+    <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;asr.relax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">structure_dict</span><span class="p">[</span><span class="n">string</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;structure&#39;</span><span class="p">:</span> <span class="n">pristine</span><span class="p">,</span> <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+
+    <span class="c1"># incorporate the possible vacancies</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">spglib</span><span class="o">.</span><span class="n">get_symmetry_dataset</span><span class="p">(</span><span class="n">cell</span><span class="p">)</span>
+    <span class="n">eq_pos</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;equivalent_atoms&#39;</span><span class="p">)</span>
+    <span class="n">wyckoffs</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wyckoffs&#39;</span><span class="p">)</span>
+
+    <span class="n">finished_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">vacancies</span><span class="p">:</span>
+        <span class="n">temp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">structure</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">eq_pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">finished_list</span><span class="p">:</span>
+                <span class="n">vacancy</span> <span class="o">=</span> <span class="n">pristine</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">vacancy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;defects.</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}{2}{3}</span><span class="s1">.v_</span><span class="si">{4}{5}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                         <span class="n">formula</span><span class="p">,</span> <span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span><span class="p">,</span> <span class="n">wyckoffs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">charge_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">charge_states</span><span class="p">,</span> <span class="n">charge_states</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;asr.relax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;chargestate&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+                    <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;chargestate&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+                    <span class="n">charge_string</span> <span class="o">=</span> <span class="s1">&#39;charge_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+                    <span class="n">charge_dict</span><span class="p">[</span><span class="n">charge_string</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;structure&#39;</span><span class="p">:</span> <span class="n">vacancy</span><span class="p">,</span>
+                                                  <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+                    <span class="n">temp_dict</span><span class="p">[</span><span class="n">string</span><span class="p">]</span> <span class="o">=</span> <span class="n">charge_dict</span>
+            <span class="n">finished_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eq_pos</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># incorporate anti-site defects</span>
+    <span class="n">finished_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">intrinsic</span><span class="p">:</span>
+        <span class="n">defect_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">structure</span><span class="p">)):</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="n">structure</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span>
+            <span class="k">if</span> <span class="n">symbol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">defect_list</span><span class="p">:</span>
+                <span class="n">defect_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">symbol</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">structure</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">eq_pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">finished_list</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">defect_list</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">structure</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="n">element</span><span class="p">:</span>
+                        <span class="n">defect</span> <span class="o">=</span> <span class="n">pristine</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="n">defect</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">element</span>
+                        <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;defects.</span><span class="si">{0}</span><span class="s1">_</span><span class="si">{1}{2}{3}</span><span class="s1">.</span><span class="si">{4}</span><span class="s1">_at_</span><span class="si">{5}{6}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                 <span class="n">formula</span><span class="p">,</span> <span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span>
+                                 <span class="n">wyckoffs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+                        <span class="n">charge_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+                                <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">charge_states</span><span class="p">,</span>
+                                <span class="n">charge_states</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                            <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+                            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;asr.relax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;chargestate&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+                            <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;chargestate&#39;</span><span class="p">:</span> <span class="n">q</span><span class="p">}</span>
+                            <span class="n">charge_string</span> <span class="o">=</span> <span class="s1">&#39;charge_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+                            <span class="n">charge_dict</span><span class="p">[</span><span class="n">charge_string</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s1">&#39;structure&#39;</span><span class="p">:</span> <span class="n">defect</span><span class="p">,</span> <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">parameters</span><span class="p">}</span>
+                            <span class="n">temp_dict</span><span class="p">[</span><span class="n">string</span><span class="p">]</span> <span class="o">=</span> <span class="n">charge_dict</span>
+                <span class="n">finished_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eq_pos</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># put together structure dict</span>
+    <span class="n">structure_dict</span><span class="p">[</span><span class="s1">&#39;defects&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_dict</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: setting up </span><span class="si">{0}</span><span class="s1"> different defect supercell systems in &#39;</span>
+          <span class="s1">&#39;charge states -</span><span class="si">{1}</span><span class="s1">, ..., +</span><span class="si">{1}</span><span class="s1">, as well as the pristine supercell &#39;</span>
+          <span class="s1">&#39;system.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">structure_dict</span><span class="p">[</span><span class="s1">&#39;defects&#39;</span><span class="p">]),</span> <span class="n">charge_states</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">structure_dict</span></div>
+
+
+
+<div class="viewcode-block" id="create_folder_structure">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.create_folder_structure.html#ase2sprkkr.asr.setup.defects.create_folder_structure">[docs]</a>
+<span class="k">def</span> <span class="nf">create_folder_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">structure_dict</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">,</span>
+                            <span class="n">intrinsic</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create folder for all configurations.</span>
+
+<span class="sd">    Creates a folder for every configuration of the defect supercell in</span>
+<span class="sd">    the following way:</span>
+
+<span class="sd">    - see example directory tree in &#39;main()&#39;</span>
+<span class="sd">    - these each contain two files: &#39;unrelaxed.json&#39; (the defect</span>
+<span class="sd">      supercell structure), &#39;params.json&#39; (the non-general parameters</span>
+<span class="sd">      of each system)</span>
+<span class="sd">    - the content of those folders can then be used to do further</span>
+<span class="sd">      processing (e.g. relax the defect structure)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">write</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">write_json</span>
+
+    <span class="c1"># create a json file for general parameters that are equivalent for all</span>
+    <span class="c1"># the different defect systems</span>
+    <span class="k">if</span> <span class="n">sc</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="n">pristine</span><span class="p">,</span> <span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span> <span class="o">=</span> <span class="n">setup_supercell</span><span class="p">(</span>
+            <span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">N_x</span> <span class="o">=</span> <span class="n">sc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">N_y</span> <span class="o">=</span> <span class="n">sc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">N_z</span> <span class="o">=</span> <span class="n">sc</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">gen_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">gen_params</span><span class="p">[</span><span class="s1">&#39;chargestates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">chargestates</span>
+    <span class="n">gen_params</span><span class="p">[</span><span class="s1">&#39;is_2D&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_2D</span>
+    <span class="n">gen_params</span><span class="p">[</span><span class="s1">&#39;supercell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">N_x</span><span class="p">,</span> <span class="n">N_y</span><span class="p">,</span> <span class="n">N_z</span><span class="p">]</span>
+    <span class="n">gen_params</span><span class="p">[</span><span class="s1">&#39;intrinsic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intrinsic</span>
+    <span class="n">gen_params</span><span class="p">[</span><span class="s1">&#39;vacancies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vacancies</span>
+    <span class="n">write_json</span><span class="p">(</span><span class="s1">&#39;general_parameters.json&#39;</span><span class="p">,</span> <span class="n">gen_params</span><span class="p">)</span>
+
+    <span class="c1"># then, create a seperate folder for each possible defect</span>
+    <span class="c1"># configuration of this parent folder, as well as the pristine</span>
+    <span class="c1"># supercell system</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">structure_dict</span><span class="p">:</span>
+        <span class="n">folder_name</span> <span class="o">=</span> <span class="n">element</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_name</span> <span class="o">==</span> <span class="s1">&#39;defects&#39;</span><span class="p">:</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">folder_name</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: folder (&quot;</span><span class="si">{0}</span><span class="s1">&quot;) already exists in this &#39;</span>
+                  <span class="sa">f</span><span class="s1">&#39;directory. Skip creating it.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">folder_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">structure_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;structure&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">struc</span> <span class="o">=</span> <span class="n">structure_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;structure&#39;</span><span class="p">)</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">structure_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">write</span><span class="p">(</span><span class="n">folder_name</span> <span class="o">+</span> <span class="s1">&#39;/unrelaxed.json&#39;</span><span class="p">,</span> <span class="n">struc</span><span class="p">)</span>
+                <span class="n">write_json</span><span class="p">(</span><span class="n">folder_name</span> <span class="o">+</span> <span class="s1">&#39;/params.json&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: files already exist inside this folder.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sub_dict</span> <span class="o">=</span> <span class="n">structure_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">sub_element</span> <span class="ow">in</span> <span class="n">sub_dict</span><span class="p">:</span>
+                <span class="n">defect_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sub_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+                <span class="n">defect_folder_name</span> <span class="o">=</span> <span class="n">defect_name</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="n">defect_folder_name</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s1">&#39;WARNING: folder (&quot;</span><span class="si">{0}</span><span class="s1">&quot;) already exists in this &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;directory. Skip creating &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;it.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">defect_folder_name</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">chargestates</span><span class="p">,</span> <span class="n">chargestates</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">charge_name</span> <span class="o">=</span> <span class="s1">&#39;charge_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">charge_folder_name</span> <span class="o">=</span> <span class="n">defect_folder_name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">charge_name</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">Path</span><span class="p">(</span><span class="n">charge_folder_name</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+                    <span class="k">except</span> <span class="ne">FileExistsError</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="s1">&#39;WARNING: folder (&quot;</span><span class="si">{0}</span><span class="s1">&quot;) already exists in this &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;directory. Skip creating &#39;</span>
+                            <span class="sa">f</span><span class="s1">&#39;it.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">charge_folder_name</span><span class="p">))</span>
+                    <span class="n">struc</span> <span class="o">=</span> <span class="n">sub_dict</span><span class="p">[</span><span class="n">sub_element</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">charge_name</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;structure&#39;</span><span class="p">)</span>
+                    <span class="n">params</span> <span class="o">=</span> <span class="n">sub_dict</span><span class="p">[</span><span class="n">sub_element</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">charge_name</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">)</span>
+                    <span class="n">write</span><span class="p">(</span><span class="n">charge_folder_name</span> <span class="o">+</span> <span class="s1">&#39;/unrelaxed.json&#39;</span><span class="p">,</span> <span class="n">struc</span><span class="p">)</span>
+                    <span class="n">write_json</span><span class="p">(</span><span class="n">charge_folder_name</span> <span class="o">+</span> <span class="s1">&#39;/params.json&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="collect_data">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.collect_data.html#ase2sprkkr.asr.setup.defects.collect_data">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<span class="c1"># def webpanel(result, row, key_descriptions):</span>
+<span class="c1">#    from asr.browser import fig, table</span>
+<span class="c1">#</span>
+<span class="c1">#    if &#39;something&#39; not in row.data:</span>
+<span class="c1">#        return None, []</span>
+<span class="c1">#</span>
+<span class="c1">#    table1 = table(row,</span>
+<span class="c1">#                   &#39;Property&#39;,</span>
+<span class="c1">#                   [&#39;something&#39;],</span>
+<span class="c1">#                   kd=key_descriptions)</span>
+<span class="c1">#    panel = (&#39;Title&#39;,</span>
+<span class="c1">#             [[fig(&#39;something.png&#39;), table1]])</span>
+<span class="c1">#    things = [(create_plot, [&#39;something.png&#39;])]</span>
+<span class="c1">#    return panel, things</span>
+
+
+<span class="c1"># def create_plot(row, fname):</span>
+<span class="c1">#    import matplotlib.pyplot as plt</span>
+<span class="c1">#</span>
+<span class="c1">#    data = row.data.something</span>
+<span class="c1">#    fig = plt.figure()</span>
+<span class="c1">#    ax = fig.gca()</span>
+<span class="c1">#    ax.plot(data.things)</span>
+<span class="c1">#    plt.savefig(fname)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

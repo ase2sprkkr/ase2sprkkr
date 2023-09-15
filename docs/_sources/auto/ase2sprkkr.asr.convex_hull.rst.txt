@@ -1,0 +1,63 @@
+convex\_hull
+============
+
+Full name: **ase2sprkkr.asr.convex\_hull**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.convex_hull.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.convex_hull
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      convex_hull_tables
+      get_reference_energies
+      hof
+      plot
+      select_references
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

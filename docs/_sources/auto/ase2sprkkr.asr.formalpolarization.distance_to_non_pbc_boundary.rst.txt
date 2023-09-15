@@ -1,0 +1,8 @@
+distance\_to\_non\_pbc\_boundary
+================================
+
+Full name: **ase2sprkkr.asr.formalpolarization.distance\_to\_non\_pbc\_boundary**
+
+.. currentmodule:: ase2sprkkr.asr.formalpolarization
+
+.. autofunction:: distance_to_non_pbc_boundary

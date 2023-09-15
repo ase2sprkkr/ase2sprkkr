@@ -1,0 +1,58 @@
+spinorbit
+=========
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.spinorbit**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.test.mocks.gpaw.spinorbit.SOC 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.spinorbit
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      soc_eigenstates
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SOC
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

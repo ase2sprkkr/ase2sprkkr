@@ -1,0 +1,9 @@
+<map id="inheritancea1f1bef0ee" name="inheritancea1f1bef0ee">
+<area shape="rect" id="node1" title="Base class for describing results generated with recipes." alt="" coords="5,104,95,129"/>
+<area shape="rect" id="node7" href="ase2sprkkr.asr.relax.Result.html#ase2sprkkr.asr.relax.Result" target="_top" title="Result class for :py:func:`asr.relax.main`." alt="" coords="132,104,204,129"/>
+<area shape="rect" id="node2" title="Atoms object." alt="" coords="14,55,86,80"/>
+<area shape="rect" id="node8" href="ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms" target="_top" title="SpgAtoms" alt="" coords="124,55,212,80"/>
+<area shape="rect" id="node9" href="ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS" target="_top" title="myBFGS" alt="" coords="459,5,537,31"/>
+<area shape="rect" id="node4" title="Base&#45;class for all structure optimization classes." alt="" coords="241,5,328,31"/>
+<area shape="rect" id="node5" title="Base&#45;class for all MD and structure optimization classes." alt="" coords="125,5,211,31"/>
+</map>

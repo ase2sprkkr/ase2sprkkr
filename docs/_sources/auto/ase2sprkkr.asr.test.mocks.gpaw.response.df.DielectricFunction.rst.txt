@@ -1,0 +1,36 @@
+DielectricFunction
+==================
+
+
+.. currentmodule:: ase2sprkkr.asr.test.mocks.gpaw.response.df
+
+.. autoclass:: DielectricFunction
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.test.mocks.gpaw.response.df.DielectricFunction
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

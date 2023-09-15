@@ -1,0 +1,8 @@
+<map id="inheritancecfb6f15c8b" name="inheritancecfb6f15c8b">
+<area shape="rect" id="node1" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="163,55,260,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="291,29,363,55"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.options.Dummy.html#ase2sprkkr.common.options.Dummy" target="_top" title="Dummy" alt="" coords="289,79,364,104"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="15,55,124,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="393,29,508,55"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.options.DangerousValue.html#ase2sprkkr.common.options.DangerousValue" target="_top" title="This class is used to store (encapsulate) a value, which should not be validated" alt="" coords="5,5,133,31"/>
+</map>

@@ -1,0 +1,36 @@
+IntBool
+=======
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.basic
+
+.. autoclass:: IntBool
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.basic.IntBool
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

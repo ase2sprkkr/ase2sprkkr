@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.pdos &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.pdos</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.pdos</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Projected density of states.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+
+<span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">magnetic_atoms</span>
+
+
+<span class="c1"># Recipe tests:</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="s2">&quot;{&#39;mode&#39;:{&#39;ecut&#39;:200,...},&#39;kpts&#39;:{&#39;density&#39;:2.0},...}&quot;</span>
+<span class="n">ctests</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ctests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Test the refined ground state of Si&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test_asr.pdos_Si_gpw&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;tags&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gitlab-ci&#39;</span><span class="p">],</span>
+               <span class="s1">&#39;cli&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;asr run &quot;setup.materials -s Si2&quot;&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;ase convert materials.json structure.json&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr run &quot;setup.params &#39;</span>
+                       <span class="sa">f</span><span class="s1">&#39;asr.gs@calculate:calculator </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> &#39;</span>
+                       <span class="s1">&#39;asr.pdos@calculate:kptdensity 3.0 &#39;</span>
+                       <span class="s1">&#39;asr.pdos@calculate:emptybands 5&quot;&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr run gs&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr run pdos@calculate&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr run database.fromtree&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr run &quot;database.browser --only-figures&quot;&#39;</span><span class="p">]})</span>
+
+<span class="n">tests</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Test the pdos of Si (cores=1)&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test_asr.pdos_Si_serial&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;cli&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;asr run &quot;setup.materials -s Si2&quot;&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;ase convert materials.json structure.json&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run &quot;setup.params &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;asr.gs@calculate:calculator </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="s1">&#39;asr.pdos@calculate:kptdensity 3.0 &#39;</span>
+                      <span class="s1">&#39;asr.pdos@calculate:emptybands 5&quot;&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run gs&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run pdos&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run database.fromtree&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run &quot;database.browser --only-figures&quot;&#39;</span><span class="p">]})</span>
+<span class="n">tests</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Test the pdos of Si (cores=2)&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;test_asr.pdos_Si_parallel&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;cli&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;asr run &quot;setup.materials -s Si2&quot;&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;ase convert materials.json structure.json&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run &quot;setup.params &#39;</span>
+                      <span class="sa">f</span><span class="s1">&#39;asr.gs@calculate:calculator </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1"> &#39;</span>
+                      <span class="s1">&#39;asr.pdos@calculate:kptdensity 3.0 &#39;</span>
+                      <span class="s1">&#39;asr.pdos@calculate:emptybands 5&quot;&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run gs&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run -p 2 pdos&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run database.fromtree&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;asr run &quot;database.browser --only-figures&quot;&#39;</span><span class="p">]})</span>
+
+
+<span class="c1"># ---------- Webpanel ---------- #</span>
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.webpanel.html#ase2sprkkr.asr.pdos.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+    <span class="c1"># PDOS without spin-orbit coupling</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Projected band structure and DOS (PBE)&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[],</span>
+                         <span class="p">[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;pbe-pdos_nosoc.png&#39;</span><span class="p">,</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;empty&#39;</span><span class="p">)]],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">plot_pdos_nosoc</span><span class="p">,</span>
+                                    <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;pbe-pdos_nosoc.png&#39;</span><span class="p">]}],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># ---------- Main functionality ---------- #</span>
+
+
+<span class="c1"># ----- Slow steps ----- #</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.pdos&#39;</span><span class="p">,</span>
+         <span class="n">creates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pdos.gpw&#39;</span><span class="p">],</span>
+         <span class="n">tests</span><span class="o">=</span><span class="n">ctests</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">])</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="s1">&#39;--kptdensity&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-point density&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--emptybands&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;number of empty bands to include&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">asr.utils.refinegs</span> <span class="kn">import</span> <span class="n">refinegs</span>
+    <span class="n">refinegs</span><span class="p">(</span><span class="n">selfc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+             <span class="n">kptdensity</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">,</span> <span class="n">emptybands</span><span class="o">=</span><span class="n">emptybands</span><span class="p">,</span>
+             <span class="n">gpw</span><span class="o">=</span><span class="s1">&#39;pdos.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="s1">&#39;pdos.txt&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># ----- Fast steps ----- #</span>
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.Result.html#ase2sprkkr.asr.pdos.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">pdos_nosoc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">pdos_soc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">dos_at_ef_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">dos_at_ef_soc</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;pdos_nosoc&quot;</span><span class="p">:</span> <span class="s2">&quot;Projected density of states w/o soc.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pdos_soc&quot;</span><span class="p">:</span> <span class="s2">&quot;Projected density of states&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dos_at_ef_nosoc&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;Density of states at the Fermi &quot;</span>
+        <span class="s2">&quot;level w/o soc [states/(eV * unit cell)]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dos_at_ef_soc&quot;</span><span class="p">:</span>
+        <span class="s2">&quot;Density of states at the Fermi level [states/(eV * unit cell)]&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.pdos&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">,</span> <span class="s1">&#39;pdos.gpw&#39;</span><span class="p">],</span>
+         <span class="n">tests</span><span class="o">=</span><span class="n">tests</span><span class="p">,</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.pdos@calculate&#39;</span><span class="p">],</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">singleprec_dict</span>
+    <span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">parprint</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
+
+    <span class="c1"># Get refined ground state with more k-points</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;pdos.gpw&#39;</span><span class="p">)</span>
+
+    <span class="n">dos1</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">dos</span><span class="p">(</span><span class="n">shift_fermi_level</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+    <span class="n">dos2</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">dos</span><span class="p">(</span><span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span> <span class="n">shift_fermi_level</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Calculate the dos at the Fermi energy</span>
+    <span class="n">parprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing dos at Ef&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;dos_at_ef_nosoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dos1</span><span class="o">.</span><span class="n">raw_dos</span><span class="p">([</span><span class="n">dos1</span><span class="o">.</span><span class="n">fermi_level</span><span class="p">],</span>
+                                              <span class="n">width</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">parprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing dos at Ef with spin-orbit coupling&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;dos_at_ef_soc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dos2</span><span class="o">.</span><span class="n">raw_dos</span><span class="p">([</span><span class="n">dos2</span><span class="o">.</span><span class="n">fermi_level</span><span class="p">],</span>
+                                            <span class="n">width</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Calculate pdos</span>
+    <span class="n">parprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing pdos&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;pdos_nosoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">singleprec_dict</span><span class="p">(</span><span class="n">pdos</span><span class="p">(</span><span class="n">dos1</span><span class="p">,</span> <span class="n">calc</span><span class="p">))</span>
+    <span class="n">parprint</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing pdos with spin-orbit coupling&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;pdos_soc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">singleprec_dict</span><span class="p">(</span><span class="n">pdos</span><span class="p">(</span><span class="n">dos2</span><span class="p">,</span> <span class="n">calc</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="c1"># ---------- Recipe methodology ---------- #</span>
+
+
+<span class="c1"># ----- PDOS ----- #</span>
+
+
+<div class="viewcode-block" id="pdos">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.pdos.html#ase2sprkkr.asr.pdos.pdos">[docs]</a>
+<span class="k">def</span> <span class="nf">pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Do a single pdos calculation.</span>
+
+<span class="sd">    Main functionality to do a single pdos calculation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Do calculation</span>
+    <span class="n">e_e</span><span class="p">,</span> <span class="n">pdos_syl</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">ef</span> <span class="o">=</span> <span class="n">calculate_pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;pdos_syl&#39;</span><span class="p">:</span> <span class="n">pdos_syl</span><span class="p">,</span> <span class="s1">&#39;symbols&#39;</span><span class="p">:</span> <span class="n">symbols</span><span class="p">,</span>
+            <span class="s1">&#39;energies&#39;</span><span class="p">:</span> <span class="n">e_e</span><span class="p">,</span> <span class="s1">&#39;efermi&#39;</span><span class="p">:</span> <span class="n">ef</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_pdos">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.calculate_pdos.html#ase2sprkkr.asr.pdos.calculate_pdos">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the projected density of states.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    energies : nd.array</span>
+<span class="sd">        energies 10 eV under and above Fermi energy</span>
+<span class="sd">    pdos_syl : defaultdict</span>
+<span class="sd">        pdos for spin, symbol and orbital angular momentum</span>
+<span class="sd">    symbols : list</span>
+<span class="sd">        chemical symbols in Atoms object</span>
+<span class="sd">    efermi : float</span>
+<span class="sd">        Fermi energy</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">gpaw.mpi</span> <span class="k">as</span> <span class="nn">mpi</span>
+    <span class="kn">from</span> <span class="nn">gpaw.utilities.progressbar</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+    <span class="kn">from</span> <span class="nn">ase.utils</span> <span class="kn">import</span> <span class="n">DevNull</span>
+
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
+    <span class="n">chem_symbols</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">()</span>
+    <span class="n">efermi</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">()</span>
+    <span class="n">l_a</span> <span class="o">=</span> <span class="n">get_l_a</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_number_of_spins</span><span class="p">()</span>
+    <span class="n">gaps</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">)</span>
+    <span class="n">e1</span> <span class="o">=</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">)</span>
+    <span class="n">e2</span> <span class="o">=</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">)</span>
+    <span class="n">e_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">e1</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="n">e2</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+
+    <span class="c1"># We distinguish in (spin(s), chemical symbol(y), angular momentum (l)),</span>
+    <span class="c1"># that is if there are multiple atoms in the unit cell of the same chemical</span>
+    <span class="c1"># species, their pdos are added together.</span>
+    <span class="n">pdos_syl</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">s_i</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">l_a</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">l_a</span><span class="p">[</span><span class="n">a</span><span class="p">]]</span>
+    <span class="n">a_i</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">l_a</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">l_a</span><span class="p">[</span><span class="n">a</span><span class="p">]]</span>
+    <span class="n">l_i</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ns</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">l_a</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">l_a</span><span class="p">[</span><span class="n">a</span><span class="p">]]</span>
+    <span class="n">sal_i</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s_i</span><span class="p">,</span> <span class="n">a_i</span><span class="p">,</span> <span class="n">l_i</span><span class="p">)]</span>
+
+    <span class="c1"># Set up progressbar</span>
+    <span class="k">if</span> <span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">pb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">devnull</span> <span class="o">=</span> <span class="n">DevNull</span><span class="p">()</span>
+        <span class="n">pb</span> <span class="o">=</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">devnull</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">spin</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pb</span><span class="o">.</span><span class="n">enumerate</span><span class="p">(</span><span class="n">sal_i</span><span class="p">):</span>
+        <span class="n">symbol</span> <span class="o">=</span> <span class="n">chem_symbols</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">dos</span><span class="o">.</span><span class="n">raw_pdos</span><span class="p">(</span><span class="n">e_e</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="s1">&#39;spdfg&#39;</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spin</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="c1"># Store in dictionary</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">spin</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">symbol</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)])</span>
+        <span class="n">pdos_syl</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+=</span> <span class="n">p</span>
+
+    <span class="k">return</span> <span class="n">e_e</span><span class="p">,</span> <span class="n">pdos_syl</span><span class="p">,</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">(),</span> <span class="n">efermi</span></div>
+
+
+
+<div class="viewcode-block" id="get_l_a">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_l_a.html#ase2sprkkr.asr.pdos.get_l_a">[docs]</a>
+<span class="k">def</span> <span class="nf">get_l_a</span><span class="p">(</span><span class="n">zs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Define which atoms and angular momentum to project onto.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    zs : [z1, z2, ...]-list or array</span>
+<span class="sd">        list of atomic numbers (zi: int)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    l_a : {int: str, ...}-dict</span>
+<span class="sd">        keys are atomic indices and values are a string such as &#39;spd&#39;</span>
+<span class="sd">        that determines which angular momentum to project onto or a</span>
+<span class="sd">        given atom</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lantha</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="mi">72</span><span class="p">)</span>
+    <span class="n">acti</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">104</span><span class="p">)</span>
+
+    <span class="n">zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">zs</span><span class="p">)</span>
+    <span class="n">l_a</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="n">numbers</span><span class="o">=</span><span class="n">zs</span><span class="p">)</span>
+    <span class="n">mag_elements</span> <span class="o">=</span> <span class="n">magnetic_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">mag</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">zs</span><span class="p">,</span> <span class="n">mag_elements</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">lantha</span> <span class="ow">or</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">acti</span><span class="p">:</span>
+            <span class="n">l_a</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;spdf&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">l_a</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;spd&#39;</span> <span class="k">if</span> <span class="n">mag</span> <span class="k">else</span> <span class="s1">&#39;sp&#39;</span>
+    <span class="k">return</span> <span class="n">l_a</span></div>
+
+
+
+<span class="c1"># ---------- Plotting ---------- #</span>
+
+
+<div class="viewcode-block" id="get_ordered_syl_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_ordered_syl_dict.html#ase2sprkkr.asr.pdos.get_ordered_syl_dict">[docs]</a>
+<span class="k">def</span> <span class="nf">get_ordered_syl_dict</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Order a dictionary with syl keys.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dct_syl : dict</span>
+<span class="sd">        Dictionary with keys f&#39;{s},{y},{l}&#39;</span>
+<span class="sd">        (spin (s), chemical symbol (y), angular momentum (l))</span>
+<span class="sd">    symbols : list</span>
+<span class="sd">        Sort symbols after index in this list</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    outdct_syl : OrderedDict</span>
+<span class="sd">        Sorted dct_syl</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+    <span class="c1"># Setup ssili (spin, symbol index, angular momentum index) key</span>
+    <span class="k">def</span> <span class="nf">ssili</span><span class="p">(</span><span class="n">syl</span><span class="p">):</span>
+        <span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">syl</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="c1"># Symbols list can have multiple entries of the same symbol</span>
+        <span class="c1"># ex. [&#39;O&#39;, &#39;Fe&#39;, &#39;O&#39;]. In this case &#39;O&#39; will have index 0 and</span>
+        <span class="c1"># &#39;Fe&#39; will have index 1.</span>
+        <span class="n">si</span> <span class="o">=</span> <span class="n">symbols</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}{</span><span class="n">si</span><span class="si">}{</span><span class="n">li</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dct_syl</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">ssili</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span></div>
+
+
+
+<div class="viewcode-block" id="get_yl_colors">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_yl_colors.html#ase2sprkkr.asr.pdos.get_yl_colors">[docs]</a>
+<span class="k">def</span> <span class="nf">get_yl_colors</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the color indices corresponding to each symbol and angular momentum.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dct_syl : OrderedDict</span>
+<span class="sd">        Ordered dictionary with keys f&#39;{s},{y},{l}&#39;</span>
+<span class="sd">        (spin (s), chemical symbol (y), angular momentum (l))</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    color_yl : OrderedDict</span>
+<span class="sd">        Color strings for each symbol and angular momentum</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+    <span class="n">color_yl</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct_syl</span><span class="p">:</span>
+        <span class="c1"># Do not differentiate spin by color</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># if spin is 0</span>
+            <span class="n">color_yl</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">:]]</span> <span class="o">=</span> <span class="s1">&#39;C</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">%</span> <span class="mi">10</span>  <span class="c1"># only 10 colors available in cycler</span>
+
+    <span class="k">return</span> <span class="n">color_yl</span></div>
+
+
+
+<div class="viewcode-block" id="plot_pdos_nosoc">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_nosoc.html#ase2sprkkr.asr.pdos.plot_pdos_nosoc">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_pdos_nosoc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plot_pdos</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot_pdos_soc">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_soc.html#ase2sprkkr.asr.pdos.plot_pdos_soc">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_pdos_soc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">plot_pdos</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="plot_pdos">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos.html#ase2sprkkr.asr.pdos.plot_pdos">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_pdos</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">smooth</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">npts</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">npts</span><span class="p">)</span> <span class="o">/</span> <span class="n">npts</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Check if pdos data is stored in row</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="s1">&#39;results-asr.pdos.json&#39;</span>
+    <span class="n">pdos</span> <span class="o">=</span> <span class="s1">&#39;pdos_soc&#39;</span> <span class="k">if</span> <span class="n">soc</span> <span class="k">else</span> <span class="s1">&#39;pdos_nosoc&#39;</span>
+    <span class="k">if</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span> <span class="ow">and</span> <span class="n">pdos</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">results</span><span class="p">]:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">results</span><span class="p">][</span><span class="n">pdos</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
+
+    <span class="c1"># Extract raw data</span>
+    <span class="n">symbols</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;symbols&#39;</span><span class="p">]</span>
+    <span class="n">pdos_syl</span> <span class="o">=</span> <span class="n">get_ordered_syl_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;pdos_syl&#39;</span><span class="p">],</span> <span class="n">symbols</span><span class="p">)</span>
+    <span class="n">e_e</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">ef</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Find energy range to plot in</span>
+    <span class="k">if</span> <span class="n">soc</span><span class="p">:</span>
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">emax</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nosoc_data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">][</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">]</span>
+        <span class="n">vbmnosoc</span> <span class="o">=</span> <span class="n">nosoc_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span>
+        <span class="n">cbmnosoc</span> <span class="o">=</span> <span class="n">nosoc_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vbmnosoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">vbmnosoc</span> <span class="o">=</span> <span class="n">ef</span>
+
+        <span class="k">if</span> <span class="n">cbmnosoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbmnosoc</span> <span class="o">=</span> <span class="n">ef</span>
+
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">vbmnosoc</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">emax</span> <span class="o">=</span> <span class="n">cbmnosoc</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Set up energy range to plot in</span>
+    <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e_e</span> <span class="o">-</span> <span class="n">emin</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">(),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e_e</span> <span class="o">-</span> <span class="n">emax</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+
+    <span class="c1"># Get color code</span>
+    <span class="n">color_yl</span> <span class="o">=</span> <span class="n">get_yl_colors</span><span class="p">(</span><span class="n">pdos_syl</span><span class="p">)</span>
+
+    <span class="c1"># Figure out if pdos has been calculated for more than one spin channel</span>
+    <span class="n">spinpol</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">pdos_syl</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">spinpol</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+    <span class="c1"># Set up plot</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="c1"># Plot pdos</span>
+    <span class="n">pdosint_s</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pdos_syl</span><span class="p">:</span>
+        <span class="n">pdos</span> <span class="o">=</span> <span class="n">pdos_syl</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">spin</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">lstr</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">spin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">spin</span><span class="p">)</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">spin</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="c1"># Integrate pdos to find suiting pdos range</span>
+        <span class="n">pdosint_s</span><span class="p">[</span><span class="n">spin</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">pdos</span><span class="p">[</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="n">e_e</span><span class="p">[</span><span class="n">i1</span><span class="p">:</span><span class="n">i2</span><span class="p">])</span>
+
+        <span class="c1"># Label atomic symbol and angular momentum</span>
+        <span class="k">if</span> <span class="n">spin</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">lstr</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">smooth</span><span class="p">(</span><span class="n">pdos</span><span class="p">)</span> <span class="o">*</span> <span class="n">sign</span><span class="p">,</span> <span class="n">e_e</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color_yl</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">:]])</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">ef</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set up axis limits</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">emin</span><span class="p">,</span> <span class="n">emax</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">spinpol</span><span class="p">:</span>  <span class="c1"># Use symmetric limits</span>
+        <span class="n">xmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pdosint_s</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">pdosint_s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># Annotate E_F</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.01</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">ef</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                    <span class="sa">r</span><span class="s1">&#39;$E_\mathrm</span><span class="si">{F}</span><span class="s1">$&#39;</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.25</span><span class="p">,</span>
+                    <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+                    <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+
+    <span class="n">text</span><span class="o">.</span><span class="n">set_path_effects</span><span class="p">([</span>
+        <span class="n">path_effects</span><span class="o">.</span><span class="n">Stroke</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">foreground</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="n">path_effects</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+    <span class="p">])</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;projected dos [states / eV]&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$E-E_\mathrm</span><span class="si">{vac}</span><span class="s1">$ [eV]&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$E$ [eV]&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set up legend</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.02</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">,</span>
+               <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

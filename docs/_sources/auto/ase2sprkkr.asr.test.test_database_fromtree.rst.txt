@@ -1,0 +1,46 @@
+test\_database\_fromtree
+========================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_fromtree**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_database_fromtree
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      folder_tree
+      make_tree
+      test_database_fromtree_raises_when_missing_uids
+      test_database_fromtree_totree
+      test_database_fromtree_works_without_write_permission
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

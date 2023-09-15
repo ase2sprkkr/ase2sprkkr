@@ -1,0 +1,44 @@
+rmsd
+====
+
+Full name: **ase2sprkkr.asr.database.rmsd**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database.rmsd
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_rmsd
+      normalize_nonpbc_atoms
+      update_rmsd
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

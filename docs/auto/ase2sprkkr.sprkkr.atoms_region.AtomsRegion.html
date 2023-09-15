@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AtomsRegion &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +65,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -90,6 +95,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -107,11 +113,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.sprkkr.html">sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a> &raquo;</li>
-      <li>AtomsRegion</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
+      <li class="breadcrumb-item active">AtomsRegion</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto/ase2sprkkr.sprkkr.atoms_region.AtomsRegion.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -122,10 +128,10 @@
            <div itemprop="articleBody">
              
   <section id="atomsregion">
-<h1>AtomsRegion<a class="headerlink" href="#atomsregion" title="Permalink to this heading"></a></h1>
+<h1>AtomsRegion<a class="headerlink" href="#atomsregion" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.atoms_region.</span></span><span class="sig-name descname"><span class="pre">AtomsRegion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pbc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[True,</span> <span class="pre">True,</span> <span class="pre">True]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherit_cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.atoms_region.</span></span><span class="sig-name descname"><span class="pre">AtomsRegion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pbc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[True,</span> <span class="pre">True,</span> <span class="pre">True]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherit_cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion" title="Link to this definition"></a></dt>
 <dd><p>AtomsRegion define a region of Atoms object,
 that can have its own cell and pbc.</p>
 <p>E.g. this system:</p>
@@ -145,33 +151,33 @@ a central 2D-symmetric region.</p>
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – </p></li>
 <li><p><strong>slice</strong> (<em>slice</em>) – </p></li>
-<li><p><strong>cell</strong> (<em>Union</em><em>[</em><em>Cell</em><em>, </em><em>ndarray</em><em>]</em>) – </p></li>
-<li><p><strong>pbc</strong> (<em>List</em><em>[</em><em>Optional</em><em>[</em><em>bool</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>inherit_cell</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>List</em><em>[</em><em>bool</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>cell</strong> (<em>Cell</em><em> | </em><em>ndarray</em>) – </p></li>
+<li><p><strong>pbc</strong> (<em>List</em><em>[</em><em>bool</em><em> | </em><em>None</em><em>]</em>) – </p></li>
+<li><p><strong>inherit_cell</strong> (<em>bool</em><em> | </em><em>List</em><em>[</em><em>bool</em><em>]</em>) – </p></li>
 <li><p><strong>atoms</strong> (<em>Atoms</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pbc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[True,</span> <span class="pre">True,</span> <span class="pre">True]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherit_cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pbc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[True,</span> <span class="pre">True,</span> <span class="pre">True]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherit_cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.__init__" title="Link to this definition"></a></dt>
 <dd><p>Atoms region defines a spatial part of an Atoms object.
 The cell can has zero vectors - such vectors are taken from the parent
 atoms object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>slice</strong> (<em>slice</em>) – Which sites (atoms) belong to the region</p></li>
-<li><p><strong>cell</strong> (<em>Union</em><em>[</em><em>Cell</em><em>, </em><em>ndarray</em><em>]</em>) – The primitive cell</p></li>
-<li><p><strong>pbc</strong> (<em>List</em><em>[</em><em>Optional</em><em>[</em><em>bool</em><em>]</em><em>]</em>) – The peridodicity vector (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ase.Atoms</span></code>)</p></li>
-<li><p><strong>inherit_cell</strong> (<em>Union</em><em>[</em><em>bool</em><em>, </em><em>List</em><em>[</em><em>bool</em><em>]</em><em>]</em>) – Inherit the cell and the pcb from the parent atoms for given axes.
+<li><p><strong>cell</strong> (<em>Cell</em><em> | </em><em>ndarray</em>) – The primitive cell</p></li>
+<li><p><strong>pbc</strong> (<em>List</em><em>[</em><em>bool</em><em> | </em><em>None</em><em>]</em>) – The peridodicity vector (see <code class="xref py py-class docutils literal notranslate"><span class="pre">ase.Atoms</span></code>)</p></li>
+<li><p><strong>inherit_cell</strong> (<em>bool</em><em> | </em><em>List</em><em>[</em><em>bool</em><em>]</em>) – Inherit the cell and the pcb from the parent atoms for given axes.
 Use of this argument is the same, as setting <code class="docutils literal notranslate"><span class="pre">pcb</span></code> to None and
 <code class="docutils literal notranslate"><span class="pre">cell</span></code> to <code class="docutils literal notranslate"><span class="pre">[0,0,0]</span></code> for the given axes.</p></li>
-<li><p><strong>atoms</strong> (<em>Optional</em><em>[</em><em>Atoms</em><em>]</em>) – The master object, of which the region is defined</p></li>
+<li><p><strong>atoms</strong> (<em>Atoms</em>) – The master object, of which the region is defined</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
@@ -180,16 +186,16 @@ Use of this argument is the same, as setting <code class="docutils literal notra
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.from_atoms">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherit_cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.from_atoms" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherit_cell</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.from_atoms" title="Link to this definition"></a></dt>
 <dd><p>Creates a region from the property of the given atoms object. The pbc and cell
 are taken from it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>from_atoms</strong> (<em>Atoms</em>) – </p></li>
 <li><p><strong>name</strong> (<em>str</em>) – </p></li>
 <li><p><strong>slice</strong> (<em>slice</em>) – </p></li>
-<li><p><strong>atoms</strong> (<em>Optional</em><em>[</em><em>Atoms</em><em>]</em>) – </p></li>
+<li><p><strong>atoms</strong> (<em>Atoms</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -197,72 +203,72 @@ are taken from it.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.cell">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cell</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.cell" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cell</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.cell" title="Link to this definition"></a></dt>
 <dd><p>Return the cell.</p>
 <p>If the cell has some zero vectors, these are replaced with parent atoms cell vectors</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.pbc">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pbc</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.pbc" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pbc</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.pbc" title="Link to this definition"></a></dt>
 <dd><p>Return the pbc</p>
 <p>If the pbc has None items, these are replace with parent atoms pbc values</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.slice">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slice</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.slice" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slice</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.slice" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion._clear_cache">
-<span class="sig-name descname"><span class="pre">_clear_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion._clear_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion._clear_cache" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_clear_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion._clear_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion._clear_cache" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_atoms">
-<span class="sig-name descname"><span class="pre">set_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.set_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_atoms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.set_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_atoms" title="Link to this definition"></a></dt>
 <dd><p>Set the master atoms - of which the region is described</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.create_atoms">
-<span class="sig-name descname"><span class="pre">create_atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.create_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.create_atoms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.create_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.create_atoms" title="Link to this definition"></a></dt>
 <dd><p>Create an atoms object, that contains only the region</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.symbols">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbols</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.symbols" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbols</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.symbols" title="Link to this definition"></a></dt>
 <dd><p>Return the symbols in the region</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.shared_ids_with">
-<span class="sig-name descname"><span class="pre">shared_ids_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.shared_ids_with"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.shared_ids_with" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">shared_ids_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.shared_ids_with"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.shared_ids_with" title="Link to this definition"></a></dt>
 <dd><p>Return ids of the sites, that belongs to the both regions</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.ids">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ids</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.ids" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ids</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.ids" title="Link to this definition"></a></dt>
 <dd><p>Returns ids of sites that belongs to the region</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_of_ids">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_of_ids</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_of_ids" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_of_ids</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.set_of_ids" title="Link to this definition"></a></dt>
 <dd><p>Returns set of ids of sites that belongs to the region</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.positions">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">positions</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.positions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">positions</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.positions" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.atoms_region.AtomsRegion.only_vacuum_atoms">
-<span class="sig-name descname"><span class="pre">only_vacuum_atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.only_vacuum_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.only_vacuum_atoms" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">only_vacuum_atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/atoms_region.html#AtomsRegion.only_vacuum_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.atoms_region.AtomsRegion.only_vacuum_atoms" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

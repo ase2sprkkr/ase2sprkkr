@@ -5,14 +5,6 @@ Full name: **ase2sprkkr.common.grammar\_types**
 
 
 
-.. rubric:: Module class hierarchy
-
-.. inheritance-diagram::  ase2sprkkr.common.grammar_types.Array  ase2sprkkr.common.grammar_types.BaseMixed  ase2sprkkr.common.grammar_types.BaseRealWithUnits  ase2sprkkr.common.grammar_types.BaseString  ase2sprkkr.common.grammar_types.Bool  ase2sprkkr.common.grammar_types.Complex  ase2sprkkr.common.grammar_types.Date  ase2sprkkr.common.grammar_types.Energy  ase2sprkkr.common.grammar_types.Flag  ase2sprkkr.common.grammar_types.GrammarType  ase2sprkkr.common.grammar_types.Integer  ase2sprkkr.common.grammar_types.Keyword  ase2sprkkr.common.grammar_types.LineString  ase2sprkkr.common.grammar_types.Mixed  ase2sprkkr.common.grammar_types.Number  ase2sprkkr.common.grammar_types.ObjectNumber  ase2sprkkr.common.grammar_types.PotMixed  ase2sprkkr.common.grammar_types.QString  ase2sprkkr.common.grammar_types.Range  ase2sprkkr.common.grammar_types.Real  ase2sprkkr.common.grammar_types.RealWithUnits  ase2sprkkr.common.grammar_types.Separator  ase2sprkkr.common.grammar_types.Sequence  ase2sprkkr.common.grammar_types.SetOf  ase2sprkkr.common.grammar_types.String  ase2sprkkr.common.grammar_types.Table  ase2sprkkr.common.grammar_types.TypedGrammarType  ase2sprkkr.common.grammar_types.Unsigned 
-      :parts: 1
-
-|
-
-
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.common.grammar_types
@@ -25,83 +17,19 @@ Full name: **ase2sprkkr.common.grammar\_types**
       :toctree:
       :template: custom-base-template.rst
    
-      integer
-      unsigned
-      boolean
-      flag
-      real
-      date
-      string
-      qstring
-      line_string
-      energy
-      complex_number
-      set_of_integers
-      set_of_reals
-      separator
-      mixed
-      pot_mixed
       type_from_type_map
-      recognized_set_types
       type_from_set_map
+      recognized_set_types
    
    
 
 
    
    
-   .. rubric:: Functions
-
-   .. autosummary::
-      :toctree:
-      :template: custom-base-template.rst
-   
-      DefKeyword
-      compare_numpy_values
-      format_for_type
-      type_from_default_value
-      type_from_type
-      type_from_value
-   
    
 
 
    
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :template: custom-class-template.rst
-   
-      Array
-      BaseMixed
-      BaseRealWithUnits
-      BaseString
-      Bool
-      Complex
-      Date
-      Energy
-      Flag
-      GrammarType
-      Integer
-      Keyword
-      LineString
-      Mixed
-      Number
-      ObjectNumber
-      PotMixed
-      QString
-      Range
-      Real
-      RealWithUnits
-      Separator
-      Sequence
-      SetOf
-      String
-      Table
-      TypedGrammarType
-      Unsigned
    
    
 
@@ -112,5 +40,19 @@ Full name: **ase2sprkkr.common.grammar\_types**
 
 
   
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.common.grammar_types.arrays
+     ase2sprkkr.common.grammar_types.basic
+     ase2sprkkr.common.grammar_types.data
+     ase2sprkkr.common.grammar_types.grammar_type
+     ase2sprkkr.common.grammar_types.mixed
+     ase2sprkkr.common.grammar_types.warnings
   
   

@@ -1,0 +1,45 @@
+duplicates
+==========
+
+Full name: **ase2sprkkr.asr.database.duplicates**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database.duplicates
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      compare
+      filter_uids
+      find_duplicate_group
+      parse_filter_string
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

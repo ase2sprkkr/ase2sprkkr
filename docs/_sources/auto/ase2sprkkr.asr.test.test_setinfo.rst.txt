@@ -1,0 +1,44 @@
+test\_setinfo
+=============
+
+Full name: **ase2sprkkr.asr.test.test\_setinfo**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_setinfo
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_info
+      test_info_call_from_cli
+      test_info_raises_with_protected_key
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

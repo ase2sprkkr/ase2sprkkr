@@ -1,0 +1,36 @@
+WaveFunctions
+=============
+
+
+.. currentmodule:: ase2sprkkr.asr.test.mocks.gpaw.calculator
+
+.. autoclass:: WaveFunctions
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

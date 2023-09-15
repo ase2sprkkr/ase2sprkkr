@@ -1,0 +1,89 @@
+results
+=======
+
+Full name: **ase2sprkkr.asr.core.results**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.core.results.ASRResult  ase2sprkkr.asr.core.results.DictEncoder  ase2sprkkr.asr.core.results.HTMLEncoder  ase2sprkkr.asr.core.results.HackedASRResult  ase2sprkkr.asr.core.results.JSONEncoder  ase2sprkkr.asr.core.results.MetaData  ase2sprkkr.asr.core.results.ObjectDescription  ase2sprkkr.asr.core.results.ResultEncoder  ase2sprkkr.asr.core.results.WebPanelEncoder 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.core.results
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      data_to_dict
+      dct_to_result
+      find_class_matching_version
+      format_key_description_pair
+      get_key_descriptions
+      get_object_matching_obj_id
+      get_object_types
+      get_reader_function
+      make_property
+      obj_to_id
+      object_description_to_object
+      prepare_result
+      read_hacked_data
+      read_new_data
+      read_old_data
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ASRResult
+      DictEncoder
+      HTMLEncoder
+      HackedASRResult
+      JSONEncoder
+      MetaData
+      ObjectDescription
+      ResultEncoder
+      WebPanelEncoder
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      MetaDataNotSetError
+      UnknownASRResultFormat
+      UnknownDataFormat
+   
+   
+
+
+  
+  
+  

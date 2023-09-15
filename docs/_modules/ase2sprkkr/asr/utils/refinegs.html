@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.utils.refinegs &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.utils.refinegs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.utils.refinegs</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">asr.utils.kpts</span> <span class="kn">import</span> <span class="n">get_kpts_size</span>
+
+
+<div class="viewcode-block" id="nonselfc">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.refinegs.nonselfc.html#ase2sprkkr.asr.utils.refinegs.nonselfc">[docs]</a>
+<span class="k">def</span> <span class="nf">nonselfc</span><span class="p">(</span><span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kptdensity</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">emptybands</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Non self-consistent calculation based on the density in gs.gpw.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">kpts</span> <span class="o">=</span> <span class="n">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">)</span>
+    <span class="n">convbands</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">emptybands</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">fixed_density</span><span class="p">(</span><span class="n">nbands</span><span class="o">=-</span><span class="n">emptybands</span><span class="p">,</span>
+                              <span class="n">txt</span><span class="o">=</span><span class="n">txt</span><span class="p">,</span>
+                              <span class="n">kpts</span><span class="o">=</span><span class="n">kpts</span><span class="p">,</span>
+                              <span class="n">convergence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bands&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">convbands</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">calc</span></div>
+
+
+
+<div class="viewcode-block" id="get_filenames">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.refinegs.get_filenames.html#ase2sprkkr.asr.utils.refinegs.get_filenames">[docs]</a>
+<span class="k">def</span> <span class="nf">get_filenames</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">selfc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get file names as specified by input.&quot;&quot;&quot;</span>
+    <span class="n">parstr</span> <span class="o">=</span> <span class="n">get_parstr</span><span class="p">(</span><span class="n">selfc</span><span class="o">=</span><span class="n">selfc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">gpw</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+            <span class="n">gpw</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;refinedgs_</span><span class="si">{</span><span class="n">parstr</span><span class="si">}</span><span class="s1">.gpw&#39;</span>
+        <span class="k">assert</span> <span class="n">gpw</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.gpw&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">gpw</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">txt</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;refinedgs_</span><span class="si">{</span><span class="n">parstr</span><span class="si">}</span><span class="s1">.txt&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">txt</span> <span class="ow">is</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">gpw</span><span class="p">,</span> <span class="n">txt</span></div>
+
+
+
+<div class="viewcode-block" id="get_parstr">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.refinegs.get_parstr.html#ase2sprkkr.asr.utils.refinegs.get_parstr">[docs]</a>
+<span class="k">def</span> <span class="nf">get_parstr</span><span class="p">(</span><span class="n">selfc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get parameter string, specifying how the ground state is refined.&quot;&quot;&quot;</span>
+    <span class="n">parstr</span> <span class="o">=</span> <span class="s1">&#39;selfc«</span><span class="si">%s</span><span class="s1">»&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">selfc</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;kptdensity&#39;</span><span class="p">,</span> <span class="s1">&#39;emptybands&#39;</span><span class="p">]:</span>
+        <span class="n">parstr</span> <span class="o">+=</span> <span class="s1">&#39;_</span><span class="si">%s</span><span class="s1">«</span><span class="si">%s</span><span class="s1">»&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kw</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="n">kw</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">parstr</span></div>
+
+
+
+<div class="viewcode-block" id="refinegs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.refinegs.refinegs.html#ase2sprkkr.asr.utils.refinegs.refinegs">[docs]</a>
+<span class="k">def</span> <span class="nf">refinegs</span><span class="p">(</span><span class="n">selfc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gpw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Refine the ground state calculation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    selfc : bool</span>
+<span class="sd">        Perform new self-consistency cycle to refine also the density</span>
+<span class="sd">    gpw : str</span>
+<span class="sd">        Write the refined ground state as a .gpw file.</span>
+<span class="sd">        If &#39;default&#39; is specified, use f&#39;refinedgs_{parstr}.gpw&#39; as file name.</span>
+<span class="sd">        If another string is specified, use that as file name.</span>
+<span class="sd">    txt : str</span>
+<span class="sd">        Write the GPAW output to a .txt file.</span>
+<span class="sd">        If &#39;default&#39; is specified, use f&#39;refinedgs_{parstr}.txt&#39; as file name.</span>
+<span class="sd">        If another string is specified, use that as file name.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    calc : obj</span>
+<span class="sd">        GPAW calculator object</span>
+<span class="sd">    gpw : str</span>
+<span class="sd">        filename of written GPAW calculator object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="n">gpw</span><span class="p">,</span> <span class="n">txt</span> <span class="o">=</span> <span class="n">get_filenames</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">txt</span><span class="p">,</span> <span class="n">selfc</span><span class="o">=</span><span class="n">selfc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gpw</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">gpw</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">selfc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Someone should implement refinement &#39;</span>
+                                      <span class="o">+</span> <span class="s1">&#39;with self-consistency&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">calc</span> <span class="o">=</span> <span class="n">nonselfc</span><span class="p">(</span><span class="n">txt</span><span class="o">=</span><span class="n">txt</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">gpw</span><span class="p">:</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">gpw</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">calc</span><span class="p">,</span> <span class="n">gpw</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

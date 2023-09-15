@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.defectformation &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.defectformation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.defectformation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defect formation energies.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+
+
+<span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;property&#39;</span>
+<span class="n">creates</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># what files are created</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.defectformation&#39;</span><span class="p">,</span>
+         <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;1:2h&#39;</span><span class="p">,</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.setup.defects&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">],</span>
+         <span class="n">creates</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="c1"># later include &#39;asr.dielectricconstant&#39; and &#39;asr.relax&#39;)</span>
+<span class="c1"># and also the files that this recipe creates</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--pristine&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the groundstate .gpw file of the pristine system. It &#39;</span>
+             <span class="s1">&#39;always has to be somewhere within a folder that is called &#39;</span>
+             <span class="s1">&#39;&quot;pristine&quot; in order to work correctly.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--defect&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the groundstate .gpw file of the defect systems. They &#39;</span>
+             <span class="s1">&#39;always have to be within a folder for the specific defect with &#39;</span>
+             <span class="s1">&#39;a subfolder calles &quot;charge_q&quot; for the respective chargestate q &#39;</span>
+             <span class="s1">&#39;in order to work correctly.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--defect_name&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Runs recipe for all defect folder within your directory when &#39;</span>
+             <span class="s1">&#39;set to None. Set this option to the name of a desired defect &#39;</span>
+             <span class="s1">&#39;folder in order for it to run only for this particular defect.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">pristine</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">defect</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span>
+         <span class="n">defect_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate formation energy of defects.</span>
+
+<span class="sd">    This recipe needs the directory structure that was created with</span>
+<span class="sd">    setup.defects in order to run properly. It has to be launched within the</span>
+<span class="sd">    folder of the initial structure, i.e. the folder where setup.defects was</span>
+<span class="sd">    also executed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">write_json</span><span class="p">,</span> <span class="n">read_json</span>
+    <span class="kn">from</span> <span class="nn">gpaw.defects</span> <span class="kn">import</span> <span class="n">ElectrostaticCorrections</span>
+    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">q</span><span class="p">,</span> <span class="n">epsilons</span><span class="p">,</span> <span class="n">path_gs</span> <span class="o">=</span> <span class="n">check_and_get_general_inputs</span><span class="p">()</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">)</span>
+    <span class="n">nd</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()))</span>
+    <span class="n">gs_dict</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">)</span>
+    <span class="n">defectformation_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">defectformation_dict</span><span class="p">[</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gs_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">)</span>
+    <span class="n">defectformation_dict</span><span class="p">[</span><span class="s1">&#39;gaps_soc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gs_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gaps_soc&#39;</span><span class="p">)</span>
+
+    <span class="n">sigma</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">nd</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="p">(</span><span class="n">epsilons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">epsilons</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">epsilons</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mf">3.</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="s1">&#39;3d&#39;</span>
+    <span class="k">elif</span> <span class="n">nd</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="p">[(</span><span class="n">epsilons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">epsilons</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">epsilons</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="s1">&#39;2d&#39;</span>
+
+    <span class="n">folder_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Either run for all defect folders or just a specific one</span>
+    <span class="k">if</span> <span class="n">defect_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">folder_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;pristine_sc&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="p">[</span><span class="n">folder_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">defect_name</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">folder_list</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">sub_folder_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="p">[</span><span class="n">sub_folder_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()]</span>
+        <span class="n">e_form</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># e_fermi = []</span>
+        <span class="n">charges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># e_fermi_calc = []</span>
+        <span class="k">for</span> <span class="n">sub_folder</span> <span class="ow">in</span> <span class="n">sub_folder_list</span><span class="p">:</span>
+            <span class="n">sub_folder_path</span> <span class="o">=</span> <span class="n">folder</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">sub_folder</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">setup_params</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">sub_folder_path</span> <span class="o">+</span> <span class="s1">&#39;/params.json&#39;</span><span class="p">)</span>
+            <span class="n">chargestate</span> <span class="o">=</span> <span class="n">setup_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;charge&#39;</span><span class="p">)</span>
+            <span class="n">charged_file</span> <span class="o">=</span> <span class="n">find_file_in_folder</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span>
+                                               <span class="n">sub_folder_path</span><span class="p">)</span>
+            <span class="n">elc</span> <span class="o">=</span> <span class="n">ElectrostaticCorrections</span><span class="p">(</span><span class="n">pristine</span><span class="o">=</span><span class="n">path_gs</span><span class="p">,</span>
+                                           <span class="n">charged</span><span class="o">=</span><span class="n">charged_file</span><span class="p">,</span>
+                                           <span class="n">q</span><span class="o">=</span><span class="n">chargestate</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span>
+                                           <span class="n">dimensionality</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+            <span class="n">elc</span><span class="o">.</span><span class="n">set_epsilons</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">chargestate</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">e_form</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elc</span><span class="o">.</span><span class="n">calculate_uncorrected_formation_energy</span><span class="p">())</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">e_form</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elc</span><span class="o">.</span><span class="n">calculate_corrected_formation_energy</span><span class="p">())</span>
+            <span class="n">charges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chargestate</span><span class="p">)</span>
+            <span class="c1"># calc = GPAW(find_file_in_folder(&#39;gs.gpw&#39;, sub_folder_path))</span>
+            <span class="c1"># e_fermi_calc.append(calc.get_fermi_level())</span>
+            <span class="c1"># e_fermi.append(0)</span>
+        <span class="n">defectformation_dict</span><span class="p">[</span><span class="n">folder</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;formation_energies&#39;</span><span class="p">:</span> <span class="n">e_form</span><span class="p">,</span>
+                                             <span class="s1">&#39;chargestates&#39;</span><span class="p">:</span> <span class="n">charges</span><span class="p">}</span>
+        <span class="c1"># &#39;fermi_energies_c&#39;: e_fermi_calc</span>
+        <span class="c1"># &#39;fermi_energies&#39;: e_fermi,</span>
+    <span class="n">write_json</span><span class="p">(</span><span class="s1">&#39;defectformation.json&#39;</span><span class="p">,</span> <span class="n">defectformation_dict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="check_and_get_general_inputs">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.check_and_get_general_inputs.html#ase2sprkkr.asr.defectformation.check_and_get_general_inputs">[docs]</a>
+<span class="k">def</span> <span class="nf">check_and_get_general_inputs</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine whether all necessary files exist.</span>
+
+<span class="sd">    Checks if all necessary input files and input parameters for</span>
+<span class="sd">    this recipe are acessible.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+
+    <span class="c1"># first, get path of &#39;gs.gpw&#39; file of pristine_sc, as well as the path of</span>
+    <span class="c1"># &#39;dielectricconstant.json&#39; of the pristine system</span>
+    <span class="n">path_epsilon</span> <span class="o">=</span> <span class="n">find_file_in_folder</span><span class="p">(</span><span class="s1">&#39;dielectricconstant.json&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">path_gs</span> <span class="o">=</span> <span class="n">find_file_in_folder</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;pristine_sc&#39;</span><span class="p">)</span>
+    <span class="n">path_q</span> <span class="o">=</span> <span class="n">find_file_in_folder</span><span class="p">(</span><span class="s1">&#39;general_parameters.json&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># if paths were found correctly, extract epsilon and q</span>
+    <span class="n">gen_params</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">path_q</span><span class="p">)</span>
+    <span class="n">params_eps</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">path_epsilon</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">gen_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;chargestates&#39;</span><span class="p">)</span>
+    <span class="n">epsilons</span> <span class="o">=</span> <span class="n">params_eps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;local_field&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">q</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">epsilons</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;INFO: number of chargestates and dielectric constant &#39;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;extracted: q = </span><span class="si">{}</span><span class="s1">, eps = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">epsilons</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;either number of chargestates and/or dielectric &#39;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;constant of the host material could not be extracted&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">path_gs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: check of general inputs successful&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">q</span><span class="p">,</span> <span class="n">epsilons</span><span class="p">,</span> <span class="n">path_gs</span></div>
+
+
+
+<div class="viewcode-block" id="find_file_in_folder">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.find_file_in_folder.html#ase2sprkkr.asr.defectformation.find_file_in_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">find_file_in_folder</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">foldername</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find a specific file in folder.</span>
+
+<span class="sd">    Finds a specific file within a folder starting from your current</span>
+<span class="sd">    position in the directory tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">find_success</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># check in current folder directly if no folder specified</span>
+    <span class="k">if</span> <span class="n">foldername</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">check_empty</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">tmp_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">tmp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: found </span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span>
+                                                <span class="n">file_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()))</span>
+            <span class="n">find_success</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: no unique </span><span class="si">{}</span><span class="s1"> found in this directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">filename</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tmp_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;**/&#39;</span> <span class="o">+</span> <span class="n">foldername</span><span class="p">))</span>
+        <span class="n">check_empty</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># check sub_folders</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_empty</span><span class="p">:</span>
+        <span class="n">file_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">foldername</span> <span class="o">+</span> <span class="s1">&#39;/**/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">file_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;INFO: found </span><span class="si">{0}</span><span class="s1"> in </span><span class="si">{1}</span><span class="s1">: </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">filename</span><span class="p">,</span> <span class="n">foldername</span><span class="p">,</span> <span class="n">file_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()))</span>
+            <span class="n">find_success</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: no </span><span class="si">{}</span><span class="s1"> found in this directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">filename</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: several </span><span class="si">{0}</span><span class="s1"> files in directory tree: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">filename</span><span class="p">,</span> <span class="n">tmp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">absolute</span><span class="p">()))</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_empty</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: no </span><span class="si">{0}</span><span class="s1"> found in this directory tree&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">foldername</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">check_empty</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: several </span><span class="si">{0}</span><span class="s1"> folders in directory tree: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">foldername</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">absolute</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">find_success</span><span class="p">:</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="collect_data">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.collect_data.html#ase2sprkkr.asr.defectformation.collect_data">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_data</span><span class="p">():</span>
+    <span class="c1"># from ase.io import jsonio</span>
+    <span class="c1"># from pathlib import Path</span>
+    <span class="c1"># if not Path(&#39;results_defectformation.json&#39;).is_file():</span>
+    <span class="c1">#     return {}, {}, {}</span>
+
+    <span class="c1"># kvp = {}</span>
+    <span class="c1"># data = {}</span>
+    <span class="c1"># key_descriptions = {}</span>
+    <span class="c1"># dct = jsonio.decode(Path(&#39;results_defectformation.json&#39;).read_text())</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<span class="c1"># ========================================================================== #</span>
+<span class="c1"># This function doesn&#39;t exist in the new asr version anymore and has to be   #</span>
+<span class="c1"># changed at a later stage, as well as the way the plots are created (db)    #</span>
+<span class="c1"># ========================================================================== #</span>
+<span class="c1"># def postprocessing():</span>
+<span class="c1">#     from asr.utils import read_json</span>
+<span class="c1">#</span>
+<span class="c1">#     formation_dict = read_json(&#39;defectformation.json&#39;)</span>
+<span class="c1">#     transitions_dict = {}</span>
+<span class="c1">#     gap = formation_dict.get(&#39;gaps_nosoc&#39;).get(&#39;gap&#39;)</span>
+<span class="c1">#     for element in formation_dict:</span>
+<span class="c1">#         if element != &#39;gaps_soc&#39; and element != &#39;gaps_nosoc&#39;:</span>
+<span class="c1">#             print(element)</span>
+<span class="c1">#             plotname = element</span>
+<span class="c1">#             defect_dict = formation_dict[element]</span>
+<span class="c1">#             transitions_dict[plotname] = plot_formation_and_transitions(</span>
+<span class="c1">#                 defect_dict, plotname, gap)</span>
+<span class="c1">#</span>
+<span class="c1">#     return transitions_dict</span>
+
+
+<div class="viewcode-block" id="line_intersection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.line_intersection.html#ase2sprkkr.asr.defectformation.line_intersection">[docs]</a>
+<span class="k">def</span> <span class="nf">line_intersection</span><span class="p">(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get intersection between two lines.</span>
+
+<span class="sd">    Helper function to calculate intersection of two given lines.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xdiff</span> <span class="o">=</span> <span class="p">(</span><span class="n">line1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">line1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">line2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">line2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ydiff</span> <span class="o">=</span> <span class="p">(</span><span class="n">line1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">line1</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">line2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">line2</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">det</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">div</span> <span class="o">=</span> <span class="n">det</span><span class="p">(</span><span class="n">xdiff</span><span class="p">,</span> <span class="n">ydiff</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">div</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;lines do not intersect&#39;</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">det</span><span class="p">(</span><span class="o">*</span><span class="n">line1</span><span class="p">),</span> <span class="n">det</span><span class="p">(</span><span class="o">*</span><span class="n">line2</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">det</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">xdiff</span><span class="p">)</span> <span class="o">/</span> <span class="n">div</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">det</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">ydiff</span><span class="p">)</span> <span class="o">/</span> <span class="n">div</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+
+
+<div class="viewcode-block" id="line">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.line.html#ase2sprkkr.asr.defectformation.line">[docs]</a>
+<span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Define a line between p1 and p2.</span>
+
+<span class="sd">    Helper function to define a line.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="o">-</span><span class="n">C</span></div>
+
+
+
+<div class="viewcode-block" id="intersection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.intersection.html#ase2sprkkr.asr.defectformation.intersection">[docs]</a>
+<span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span> <span class="n">L2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get intersection between two lines L1 and L2.</span>
+
+<span class="sd">    Helper function to calculate intersection of two given lines that were</span>
+<span class="sd">    defined with the upper &#39;line&#39; function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">L1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">L2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">L1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">L2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Dx</span> <span class="o">=</span> <span class="n">L1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">L2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">L1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">L2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">Dy</span> <span class="o">=</span> <span class="n">L1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">L2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">L1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">L2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">D</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Dx</span> <span class="o">/</span> <span class="n">D</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">Dy</span> <span class="o">/</span> <span class="n">D</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="plot_formation_and_transitions">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.defectformation.plot_formation_and_transitions.html#ase2sprkkr.asr.defectformation.plot_formation_and_transitions">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_formation_and_transitions</span><span class="p">(</span><span class="n">defect_dict</span><span class="p">,</span> <span class="n">defectname</span><span class="p">,</span> <span class="n">gap</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;XXX: Do me.</span>
+
+<span class="sd">    Function to plot formation energies versus the Fermi energy and to</span>
+<span class="sd">    obtain transition points between most stable charge states of a given</span>
+<span class="sd">    defect</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># from asr.utils import write_json</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="c1"># initalize and read formation energies and charge states</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">defect_dict</span><span class="p">[</span><span class="s1">&#39;fermi_energies&#39;</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">defect_dict</span><span class="p">[</span><span class="s1">&#39;formation_energies&#39;</span><span class="p">])</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">defect_dict</span><span class="p">[</span><span class="s1">&#39;chargestates&#39;</span><span class="p">])</span>
+
+    <span class="c1"># set general parameters</span>
+    <span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">gap</span><span class="p">])</span>
+    <span class="n">x_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]]])</span>
+    <span class="n">y_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[[</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_diff</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_diff</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]]])</span>
+
+    <span class="c1"># set general plotting parameters</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">lw</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">linestylelist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span> <span class="s1">&#39;dashdot&#39;</span><span class="p">,</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span> <span class="s1">&#39;dotted&#39;</span><span class="p">]</span>
+    <span class="n">colorlist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="s1">&#39;C1&#39;</span><span class="p">]</span>
+    <span class="c1"># plt.ylim(0, max(y_edges[:, 0]) * 1.1)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">gap</span><span class="p">,</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">gap</span><span class="p">)</span>
+    <span class="c1"># bbox = {&#39;fc&#39;: &#39;0.8&#39;, &#39;pad&#39;: 0}</span>
+
+    <span class="c1"># initialise np array containing all lines</span>
+    <span class="n">linearray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">line</span><span class="p">([</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span>
+                                <span class="p">[</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]]])</span>
+
+    <span class="c1"># initialise plot</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">y_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colorlist</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">lw</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
+             <span class="n">linestyle</span><span class="o">=</span><span class="n">linestylelist</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">])],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;q = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span>
+             <span class="nb">max</span><span class="p">(</span><span class="n">y_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.1</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;valence band&#39;</span><span class="p">,</span>
+             <span class="p">{</span><span class="s1">&#39;ha&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;va&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">},</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span>
+             <span class="nb">max</span><span class="p">(</span><span class="n">y_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.1</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;conduction band&#39;</span><span class="p">,</span>
+             <span class="p">{</span><span class="s1">&#39;ha&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="s1">&#39;va&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">},</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+    <span class="c1"># append other lines in a loop</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)):</span>
+        <span class="n">x_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="p">[[</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">y_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_edges</span><span class="p">,</span> <span class="p">[[</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_diff</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                       <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_diff</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">linearray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linearray</span><span class="p">,</span> <span class="p">[[</span><span class="n">line</span><span class="p">([</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span>
+                              <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]]),</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span>
+                 <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                 <span class="n">color</span><span class="o">=</span><span class="n">colorlist</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">])],</span>
+                 <span class="n">lw</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
+                 <span class="n">linestyle</span><span class="o">=</span><span class="n">linestylelist</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">])],</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s1">&#39;q = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="c1"># flip arrays in order for them to start with positive slope</span>
+    <span class="n">linearray_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">linearray</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">x_diff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">y_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">y_edges</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">q_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+    <span class="c1"># IMPORTANT: all of the important arrays have now been reversed!</span>
+    <span class="c1"># find minimum line at zero energy and create temporary array with lines</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_edges</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]):</span>
+            <span class="c1"># start_index = i</span>
+            <span class="n">linearray_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">s_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">trans_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">q_copy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">q_copy</span><span class="p">[</span><span class="n">i</span><span class="p">]]])</span>
+            <span class="n">q_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">q_copy</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">s_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># loop over all lines in linearray_up and calculate intersection points</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">linedists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">intersection</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                            <span class="n">linearray_up</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span>
+                              <span class="n">q_copy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q_copy</span><span class="p">[</span><span class="mi">1</span><span class="p">]]])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">)):</span>
+                <span class="n">linedists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linedists</span><span class="p">,</span> <span class="p">[[</span><span class="n">intersection</span><span class="p">(</span>
+                    <span class="n">linearray_up</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">linearray_up</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">q_copy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">q_copy</span><span class="p">[</span><span class="n">j</span><span class="p">]]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">linearray_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">q_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">q_copy</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">x_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">linedists</span><span class="p">:</span>
+            <span class="n">x_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">x_list</span><span class="p">):</span>
+                    <span class="n">trans_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trans_array</span><span class="p">,</span> <span class="p">[</span><span class="n">element</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">dropout</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">x_list</span><span class="p">)</span>
+                  <span class="ow">and</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">trans_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">trans_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trans_array</span><span class="p">,</span> <span class="p">[</span><span class="n">element</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">trans_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">trans_array</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">dropout</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dropout</span><span class="p">):</span>
+            <span class="n">linearray_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">linearray_up</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">s_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_edges</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_edges</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]):</span>
+            <span class="n">trans_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trans_array</span><span class="p">,</span> <span class="p">[[(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y_edges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span>
+                                                   <span class="n">trans_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+                                                   <span class="n">trans_array</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]]],</span>
+                                    <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># plot the results and save the figure</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">trans_array</span><span class="p">:</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ymax</span><span class="o">=</span><span class="n">ratio</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">,</span>
+                    <span class="n">linestyle</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">gap</span><span class="p">,</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">gap</span><span class="p">,</span> <span class="n">x_range</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">)</span>
+    <span class="n">x_val</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">trans_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]]</span>
+    <span class="n">y_val</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">trans_array</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]]</span>
+    <span class="c1"># plt.plot(x_val, y_val, marker=&#39;D&#39;, linestyle=&#39;-&#39;, color=&#39;C3&#39;)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C3&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$E_</span><span class="si">{F}</span><span class="s1">$ in eV&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$E_</span><span class="si">{formation}</span><span class="s1">$ in eV&#39;</span><span class="p">)</span>
+    <span class="n">plotname</span> <span class="o">=</span> <span class="s1">&#39;plot_</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">defectname</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">plotname</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">trans_array</span></div>
+
+
+
+<span class="c1"># def webpanel(result, row, key_descriptions):</span>
+<span class="c1">#    from asr.database.browser import fig, table</span>
+<span class="c1">#</span>
+<span class="c1">#    if &#39;something&#39; not in row.data:</span>
+<span class="c1">#        return None, []</span>
+<span class="c1">#</span>
+<span class="c1">#    table1 = table(row,</span>
+<span class="c1">#                   &#39;Property&#39;,</span>
+<span class="c1">#                   [&#39;something&#39;],</span>
+<span class="c1">#                   kd=key_descriptions)</span>
+<span class="c1">#    panel = (&#39;Title&#39;,</span>
+<span class="c1">#             [[fig(&#39;something.png&#39;), table1]])</span>
+<span class="c1">#    things = [(create_plot, [&#39;something.png&#39;])]</span>
+<span class="c1">#    return panel, things</span>
+
+
+<span class="c1"># def create_plot(row, fname):</span>
+<span class="c1">#    import matplotlib.pyplot as plt</span>
+<span class="c1">#</span>
+<span class="c1">#    data = row.data.something</span>
+<span class="c1">#    fig = plt.figure()</span>
+<span class="c1">#    ax = fig.gca()</span>
+<span class="c1">#    ax.plot(data.things)</span>
+<span class="c1">#    plt.savefig(fname)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

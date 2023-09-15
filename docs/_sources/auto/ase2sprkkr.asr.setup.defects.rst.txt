@@ -1,0 +1,45 @@
+defects
+=======
+
+Full name: **ase2sprkkr.asr.setup.defects**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.setup.defects
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      collect_data
+      create_folder_structure
+      setup_defects
+      setup_supercell
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,7 @@
+<map id="inheritance6034bbae05" name="inheritance6034bbae05">
+<area shape="rect" id="node1" href="#ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits" target="_top" title="The base class for float value, which can have units append." alt="" coords="773,5,955,30"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.basic.Real.html#ase2sprkkr.common.grammar_types.basic.Real" target="_top" title="A real value" alt="" coords="657,5,745,30"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="519,5,629,30"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="grammar_type.TypedGrammarType" alt="" coords="244,5,490,30"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,215,30"/>
+</map>

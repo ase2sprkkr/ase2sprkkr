@@ -47,6 +47,13 @@ Full name: **ase2sprkkr.common.configuration\_containers**
 
    
    
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DisabledAttributeError
+   
    
 
 

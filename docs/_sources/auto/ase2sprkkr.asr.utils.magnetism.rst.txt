@@ -1,0 +1,43 @@
+magnetism
+=========
+
+Full name: **ase2sprkkr.asr.utils.magnetism**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.utils.magnetism
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      is_magnetic
+      magnetic_atoms
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

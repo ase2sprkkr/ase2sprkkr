@@ -1,0 +1,36 @@
+DOSCalculator
+=============
+
+
+.. currentmodule:: ase2sprkkr.asr.test.mocks.gpaw.calculator
+
+.. autoclass:: DOSCalculator
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

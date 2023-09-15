@@ -1,0 +1,6 @@
+ase2sprkkr.asr.fere.DBAlreadyExistsError
+========================================
+
+.. currentmodule:: ase2sprkkr.asr.fere
+
+.. autoexception:: DBAlreadyExistsError

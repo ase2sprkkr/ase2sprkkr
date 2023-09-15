@@ -39,6 +39,7 @@ Full name: **ase2sprkkr.sprkkr.test**
      :recursive:
   
      ase2sprkkr.sprkkr.test.init_tests
+     ase2sprkkr.sprkkr.test.test_arpes
      ase2sprkkr.sprkkr.test.test_build
      ase2sprkkr.sprkkr.test.test_calculator
      ase2sprkkr.sprkkr.test.test_sites

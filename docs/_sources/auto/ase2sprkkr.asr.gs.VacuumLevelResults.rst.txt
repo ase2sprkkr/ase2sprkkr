@@ -1,0 +1,36 @@
+VacuumLevelResults
+==================
+
+
+.. currentmodule:: ase2sprkkr.asr.gs
+
+.. autoclass:: VacuumLevelResults
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.gs.VacuumLevelResults
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,60 @@
+infraredpolarizability
+======================
+
+Full name: **ase2sprkkr.asr.infraredpolarizability**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.infraredpolarizability.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.infraredpolarizability
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_plot
+      get_phonon_pol
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

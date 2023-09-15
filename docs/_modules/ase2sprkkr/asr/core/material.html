@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.core.material &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.core.material</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.core.material</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines material class.</span>
+
+<span class="sd">A material object closely mimics the behaviour of an ase.db.atomsrow.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+
+<div class="viewcode-block" id="Material">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.Material.html#ase2sprkkr.asr.core.material.Material">[docs]</a>
+<span class="k">class</span> <span class="nc">Material</span><span class="p">:</span>
+<div class="viewcode-block" id="Material.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.Material.html#ase2sprkkr.asr.core.material.Material.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">kvp</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct material object.</span>
+
+<span class="sd">        Make make material instance. This objects bind together an</span>
+<span class="sd">        atomic structure with its key-value-pairs and its raw data and</span>
+<span class="sd">        closely mimics the structure of an ase.db.atomsrow instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atoms : ase.Atoms object</span>
+<span class="sd">        kvp : dict</span>
+<span class="sd">            Key value pairs associated with atomic stucture.</span>
+<span class="sd">        data : dict</span>
+<span class="sd">            Raw data associated with atomic structure-</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kvp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kvp</span> <span class="o">=</span> <span class="n">kvp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Is property in key-value-pairs.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kvp</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over material attributes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get material attribute.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set material attribute.&quot;&quot;&quot;</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Material.get">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.Material.html#ase2sprkkr.asr.core.material.Material.get">[docs]</a>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kvp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Material.toatoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.Material.html#ase2sprkkr.asr.core.material.Material.toatoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">toatoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="get_material_from_folder">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.get_material_from_folder.html#ase2sprkkr.asr.core.material.get_material_from_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">get_material_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contruct a material from ASR structure folder.</span>
+
+<span class="sd">    Constructs an :class:`asr.core.material.Material` instance from</span>
+<span class="sd">    the data available in `folder`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folder : str</span>
+<span class="sd">        Where to collect material from.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    material : :class:`asr.core.material.Material`</span>
+<span class="sd">        Output material instance</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">dct_to_object</span>
+    <span class="kn">from</span> <span class="nn">asr.database.fromtree</span> <span class="kn">import</span> <span class="n">collect_file</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="n">kvp</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;results-*.json&#39;</span><span class="p">):</span>
+        <span class="n">tmpkvp</span><span class="p">,</span> <span class="n">tmpdata</span> <span class="o">=</span> <span class="n">collect_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tmpkvp</span> <span class="ow">or</span> <span class="n">tmpdata</span><span class="p">:</span>
+            <span class="n">kvp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tmpkvp</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tmpdata</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">dct_to_object</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span>
+
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">material</span> <span class="o">=</span> <span class="n">Material</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">kvp</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">material</span></div>
+
+
+
+<div class="viewcode-block" id="get_webpanels_from_material">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.get_webpanels_from_material.html#ase2sprkkr.asr.core.material.get_webpanels_from_material">[docs]</a>
+<span class="k">def</span> <span class="nf">get_webpanels_from_material</span><span class="p">(</span><span class="n">material</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return web-panels of recipe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    material : :class:`asr.core.material.Material`</span>
+<span class="sd">        Material on which the webpanel should be evaluated</span>
+<span class="sd">    recipe : :class:`asr.core.ASRCommand`</span>
+<span class="sd">        Recipe instance</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    panels : list</span>
+<span class="sd">        List of panels and contents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.database.app</span> <span class="kn">import</span> <span class="n">create_key_descriptions</span>
+    <span class="n">kd</span> <span class="o">=</span> <span class="n">create_key_descriptions</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">recipe</span><span class="o">.</span><span class="n">format_as</span><span class="p">(</span><span class="s1">&#39;ase_webpanel&#39;</span><span class="p">,</span> <span class="n">material</span><span class="p">,</span> <span class="n">kd</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="make_panel_figures">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.material.make_panel_figures.html#ase2sprkkr.asr.core.material.make_panel_figures">[docs]</a>
+<span class="k">def</span> <span class="nf">make_panel_figures</span><span class="p">(</span><span class="n">material</span><span class="p">,</span> <span class="n">panels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make figures in list of panels.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    material : :class:`asr.core.material.Material`</span>
+<span class="sd">        Material of interest</span>
+<span class="sd">    panels : list</span>
+<span class="sd">        List of panels and contents</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">panel</span> <span class="ow">in</span> <span class="n">panels</span><span class="p">:</span>
+        <span class="n">pd</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot_descriptions&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">pd</span><span class="p">:</span>
+            <span class="n">pds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
+            <span class="n">panel</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;plot_descriptions&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">pds</span><span class="p">:</span>
+        <span class="n">pd</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">](</span><span class="n">material</span><span class="p">,</span> <span class="o">*</span><span class="n">pd</span><span class="p">[</span><span class="s1">&#39;filenames&#39;</span><span class="p">])</span>
+        <span class="n">figures</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="p">[</span><span class="s1">&#39;filenames&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saved figures: </span><span class="si">{</span><span class="n">figures</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

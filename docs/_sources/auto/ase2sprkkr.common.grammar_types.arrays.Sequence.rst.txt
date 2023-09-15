@@ -1,0 +1,36 @@
+Sequence
+========
+
+
+.. currentmodule:: ase2sprkkr.common.grammar_types.arrays
+
+.. autoclass:: Sequence
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.grammar_types.arrays.Sequence
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

@@ -1,0 +1,50 @@
+cli
+===
+
+Full name: **ase2sprkkr.asr.core.cli**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.core.cli
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      append_job
+      check_git
+      extract_hash_from_file
+      format
+      get_config_dir
+      get_git_rev_list
+      initialize_asr_configuration_dir
+      is_asr_initialized
+      run_command
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

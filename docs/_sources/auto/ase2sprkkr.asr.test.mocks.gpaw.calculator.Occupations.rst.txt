@@ -1,0 +1,36 @@
+Occupations
+===========
+
+
+.. currentmodule:: ase2sprkkr.asr.test.mocks.gpaw.calculator
+
+.. autoclass:: Occupations
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

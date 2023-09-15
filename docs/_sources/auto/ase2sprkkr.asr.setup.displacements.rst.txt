@@ -1,0 +1,45 @@
+displacements
+=============
+
+Full name: **ase2sprkkr.asr.setup.displacements**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.setup.displacements
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_displacements_folder
+      displace_atom
+      get_all_displacements
+      get_displacement_folder
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

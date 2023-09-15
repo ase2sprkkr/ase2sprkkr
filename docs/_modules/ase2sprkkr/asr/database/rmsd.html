@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.database.rmsd &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.database.rmsd</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.database.rmsd</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">asr.utils</span> <span class="kn">import</span> <span class="n">timed_print</span>
+
+
+<div class="viewcode-block" id="normalize_nonpbc_atoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.rmsd.normalize_nonpbc_atoms.html#ase2sprkkr.asr.database.rmsd.normalize_nonpbc_atoms">[docs]</a>
+<span class="k">def</span> <span class="nf">normalize_nonpbc_atoms</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">):</span>
+    <span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">atoms2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">pbc1_c</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()</span>
+    <span class="n">pbc2_c</span> <span class="o">=</span> <span class="n">atoms2</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">pbc1_c</span> <span class="o">==</span> <span class="n">pbc2_c</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">pbc1_c</span><span class="p">):</span>
+        <span class="n">cell1_cv</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+        <span class="n">n1_c</span> <span class="o">=</span> <span class="p">(</span><span class="n">cell1_cv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="n">cell2_cv</span> <span class="o">=</span> <span class="n">atoms2</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+        <span class="n">n2_c</span> <span class="o">=</span> <span class="p">(</span><span class="n">cell2_cv</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="n">cell2_cv</span><span class="p">[</span><span class="o">~</span><span class="n">pbc2_c</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="n">n1_c</span> <span class="o">/</span> <span class="n">n2_c</span><span class="p">)[</span><span class="o">~</span><span class="n">pbc2_c</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">atoms2</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell2_cv</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span></div>
+
+
+
+<div class="viewcode-block" id="get_rmsd">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.rmsd.get_rmsd.html#ase2sprkkr.asr.database.rmsd.get_rmsd">[docs]</a>
+<span class="k">def</span> <span class="nf">get_rmsd</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">,</span> <span class="n">adaptor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">matcher</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pymatgen.analysis.structure_matcher</span> <span class="kn">import</span> <span class="n">StructureMatcher</span>
+    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">niggli_reduce</span>
+
+    <span class="k">if</span> <span class="n">adaptor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">pymatgen.io.ase</span> <span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
+        <span class="n">adaptor</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">matcher</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">matcher</span> <span class="o">=</span> <span class="n">StructureMatcher</span><span class="p">(</span><span class="n">primitive_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                   <span class="n">attempt_supercell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span> <span class="o">=</span> <span class="n">normalize_nonpbc_atoms</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">atoms2</span><span class="p">)</span>
+
+    <span class="n">atoms1</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">atoms2</span> <span class="o">=</span> <span class="n">atoms2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">atoms1</span><span class="o">.</span><span class="n">set_pbc</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">atoms2</span><span class="o">.</span><span class="n">set_pbc</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">niggli_reduce</span><span class="p">(</span><span class="n">atoms1</span><span class="p">)</span>
+    <span class="n">niggli_reduce</span><span class="p">(</span><span class="n">atoms2</span><span class="p">)</span>
+    <span class="n">struct1</span> <span class="o">=</span> <span class="n">adaptor</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">atoms1</span><span class="p">)</span>
+    <span class="n">struct2</span> <span class="o">=</span> <span class="n">adaptor</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">atoms2</span><span class="p">)</span>
+
+    <span class="n">struct1</span><span class="p">,</span> <span class="n">struct2</span> <span class="o">=</span> <span class="n">matcher</span><span class="o">.</span><span class="n">_process_species</span><span class="p">([</span><span class="n">struct1</span><span class="p">,</span> <span class="n">struct2</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">matcher</span><span class="o">.</span><span class="n">_subset</span> <span class="ow">and</span> <span class="n">matcher</span><span class="o">.</span><span class="n">_comparator</span><span class="o">.</span><span class="n">get_hash</span><span class="p">(</span><span class="n">struct1</span><span class="o">.</span><span class="n">composition</span><span class="p">)</span> \
+            <span class="o">!=</span> <span class="n">matcher</span><span class="o">.</span><span class="n">_comparator</span><span class="o">.</span><span class="n">get_hash</span><span class="p">(</span><span class="n">struct2</span><span class="o">.</span><span class="n">composition</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">struct1</span><span class="p">,</span> <span class="n">struct2</span><span class="p">,</span> <span class="n">fu</span><span class="p">,</span> <span class="n">s1_supercell</span> <span class="o">=</span> <span class="n">matcher</span><span class="o">.</span><span class="n">_preprocess</span><span class="p">(</span><span class="n">struct1</span><span class="p">,</span> <span class="n">struct2</span><span class="p">)</span>
+    <span class="n">match</span> <span class="o">=</span> <span class="n">matcher</span><span class="o">.</span><span class="n">_match</span><span class="p">(</span><span class="n">struct1</span><span class="p">,</span> <span class="n">struct2</span><span class="p">,</span> <span class="n">fu</span><span class="p">,</span> <span class="n">s1_supercell</span><span class="p">,</span>
+                           <span class="n">break_on_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_rms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rmsd</span> <span class="o">=</span> <span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Fix normalization</span>
+        <span class="n">vol</span> <span class="o">=</span> <span class="n">atoms1</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
+        <span class="n">natoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms1</span><span class="p">)</span>
+        <span class="n">old_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">natoms</span> <span class="o">/</span> <span class="n">vol</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">rmsd</span> <span class="o">/=</span> <span class="n">old_norm</span>  <span class="c1"># Undo</span>
+        <span class="k">return</span> <span class="n">rmsd</span></div>
+
+
+
+<div class="viewcode-block" id="update_rmsd">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.rmsd.update_rmsd.html#ase2sprkkr.asr.database.rmsd.update_rmsd">[docs]</a>
+<span class="k">def</span> <span class="nf">update_rmsd</span><span class="p">(</span><span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">otherrowid</span><span class="p">,</span> <span class="n">rmsd</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">rowid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rmsd_by_id</span><span class="p">:</span>
+        <span class="n">rmsd_by_id</span><span class="p">[</span><span class="n">rowid</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">otherrowid</span><span class="p">:</span> <span class="n">rmsd</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rmsd_by_id</span><span class="p">[</span><span class="n">rowid</span><span class="p">][</span><span class="n">otherrowid</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmsd</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.database.rmsd&#39;</span><span class="p">,</span>
+         <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;1:20m&#39;</span><span class="p">)</span>
+<span class="nd">@argument</span><span class="p">(</span><span class="s1">&#39;databaseout&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@argument</span><span class="p">(</span><span class="s1">&#39;database&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--comparison-keys&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Keys that have to be identical for RMSD to be calculated.&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--max-rmsd&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Maximum allowed RMSD.&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--skip-distance-calc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip distance calculation. Only match structures &quot;</span>
+        <span class="s2">&quot;based on their reduced formula and comparison_keys.&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">databaseout</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">comparison_keys</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">max_rmsd</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="n">skip_distance_calc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate RMSD between materials of a database.</span>
+
+<span class="sd">    Uses pymatgens StructureMatcher to calculate rmsd. If</span>
+<span class="sd">    ``databaseout`` is specified a new database will be written to the</span>
+<span class="sd">    given filename with extra data for rows where a similar row exists</span>
+<span class="sd">    in ``row.data[&#39;results-asr.database.rmsd.json&#39;]``. The structure</span>
+<span class="sd">    of this data is similar to ``rmsd_by_id``. It also stores two</span>
+<span class="sd">    extra key-value-pairs ``row.min_rmsd`` and ``row.min_rmsd_uid``</span>
+<span class="sd">    containing the minimum rmsd of the current material to any other</span>
+<span class="sd">    material and ``uid`` of that other material.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Please note that for systems &lt;3D the computed RMSD can still be</span>
+<span class="sd">    larger than max_rmsd due to a renormalization of the RMSD measure.</span>
+<span class="sd">    Normally, a large value is preferred.</span>
+
+<span class="sd">    The structure of ``rmsd_by_id`` is::</span>
+
+<span class="sd">        {</span>
+<span class="sd">            &#39;1&#39;: {&#39;2&#39;: 0.01},</span>
+<span class="sd">            &#39;2&#39;: {&#39;1&#39;: 0.01},</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    database : str</span>
+<span class="sd">        ASE database filename.</span>
+<span class="sd">    databaseout : str or None</span>
+<span class="sd">        If not None, write a new database with rmsd data. Default is None.</span>
+<span class="sd">    comparison_keys : str</span>
+<span class="sd">        Comma separated string of keys that should be identical between</span>
+<span class="sd">        rows to be compared. Eg. &#39;magstate,natoms&#39;. Default is &#39;&#39;.</span>
+<span class="sd">    max_rmsd : float</span>
+<span class="sd">        Maximum rmsd allowed for RMSD to be calculated.</span>
+<span class="sd">    skip_distance_calc : bool</span>
+<span class="sd">        If true, only use reduced formula and comparison_keys to match</span>
+<span class="sd">        structures. Skip calculating distances between structures. The</span>
+<span class="sd">        output rmsd&#39;s will be 0 for matching structures.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Keys:</span>
+<span class="sd">            - ``rmsd_by_id``: RMSDs between materials. The keys are the uids.</span>
+<span class="sd">            - ``uid_key``: uid_key of the database.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">pymatgen.analysis.structure_matcher</span> <span class="kn">import</span> <span class="n">StructureMatcher</span>
+    <span class="kn">from</span> <span class="nn">pymatgen.io.ase</span> <span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
+    <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
+    <span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+    <span class="n">adaptor</span> <span class="o">=</span> <span class="n">AseAtomsAdaptor</span><span class="p">()</span>
+    <span class="n">matcher</span> <span class="o">=</span> <span class="n">StructureMatcher</span><span class="p">(</span><span class="n">primitive_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">attempt_supercell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">stol</span><span class="o">=</span><span class="n">max_rmsd</span><span class="p">)</span>
+
+    <span class="n">comparison_keys</span> <span class="o">=</span> <span class="n">comparison_keys</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Try to figure out what the UID key should be</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">uid_key</span> <span class="o">=</span> <span class="s1">&#39;uid&#39;</span> <span class="k">if</span> <span class="s1">&#39;uid&#39;</span> <span class="ow">in</span> <span class="n">row</span> <span class="k">else</span> <span class="s1">&#39;id&#39;</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">include_data</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">rows</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uid_key</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">toatoms</span><span class="p">(),</span>
+                                  <span class="n">row</span><span class="p">,</span>
+                                  <span class="n">Formula</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">formula</span><span class="p">)</span><span class="o">.</span><span class="n">reduce</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Calculating RMSDs for all materials...&#39;</span><span class="p">)</span>
+    <span class="n">nmat</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+    <span class="n">rmsd_by_id</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">rowid</span><span class="p">,</span> <span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">reduced_formula</span><span class="p">)</span> <span class="ow">in</span> <span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">timed_print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">now</span><span class="si">:</span><span class="s1">%H:%M:%S</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nmat</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">otherrowid</span><span class="p">,</span> <span class="p">(</span><span class="n">otheratoms</span><span class="p">,</span> <span class="n">otherrow</span><span class="p">,</span>
+                         <span class="n">other_reduced_formula</span><span class="p">)</span> <span class="ow">in</span> <span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">rowid</span> <span class="o">==</span> <span class="n">otherrowid</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">reduced_formula</span> <span class="o">==</span> <span class="n">other_reduced_formula</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Skip calculation if it has been performed already</span>
+            <span class="k">if</span> <span class="n">rowid</span> <span class="ow">in</span> <span class="n">rmsd_by_id</span> <span class="ow">and</span> <span class="n">otherrowid</span> <span class="ow">in</span> <span class="n">rmsd_by_id</span><span class="p">[</span><span class="n">rowid</span><span class="p">]:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">comparison_keys</span> <span class="ow">and</span> \
+               <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">otherrow</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">comparison_keys</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">skip_distance_calc</span><span class="p">:</span>
+                <span class="n">rmsd</span> <span class="o">=</span> <span class="n">get_rmsd</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">otheratoms</span><span class="p">,</span>
+                                <span class="n">adaptor</span><span class="o">=</span><span class="n">adaptor</span><span class="p">,</span>
+                                <span class="n">matcher</span><span class="o">=</span><span class="n">matcher</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rmsd</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">update_rmsd</span><span class="p">(</span><span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">otherrowid</span><span class="p">,</span> <span class="n">rmsd</span><span class="p">)</span>
+            <span class="n">update_rmsd</span><span class="p">(</span><span class="n">rmsd_by_id</span><span class="p">,</span> <span class="n">otherrowid</span><span class="p">,</span> <span class="n">rowid</span><span class="p">,</span> <span class="n">rmsd</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">databaseout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing to new database...&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">connect</span><span class="p">(</span><span class="n">databaseout</span><span class="p">)</span> <span class="k">as</span> <span class="n">dbwithrmsd</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">():</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                <span class="n">timed_print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">now</span><span class="si">:</span><span class="s1">%H:%M:%S</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nmat</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">key_value_pairs</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">key_value_pairs</span>
+                <span class="n">uid</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">uid_key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">rmsd_by_id</span><span class="p">:</span>
+                    <span class="n">rmsd_dict</span> <span class="o">=</span> <span class="n">rmsd_by_id</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;results-asr.database.rmsd.json&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmsd_dict</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="n">val</span><span class="p">,</span> <span class="n">uid</span><span class="p">)</span> <span class="k">for</span> <span class="n">uid</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">rmsd_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                              <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">min_rmsd</span><span class="p">,</span> <span class="n">min_rmsd_uid</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+                    <span class="n">key_value_pairs</span><span class="p">[</span><span class="s1">&#39;min_rmsd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_rmsd</span>
+                    <span class="n">key_value_pairs</span><span class="p">[</span><span class="s1">&#39;min_rmsd_uid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_rmsd_uid</span>
+                <span class="n">dbwithrmsd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">toatoms</span><span class="p">(),</span>
+                                 <span class="o">**</span><span class="n">key_value_pairs</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">dbwithrmsd</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">metadata</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rmsd_by_id&#39;</span><span class="p">:</span> <span class="n">rmsd_by_id</span><span class="p">,</span>
+               <span class="s1">&#39;uid_key&#39;</span><span class="p">:</span> <span class="n">uid_key</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

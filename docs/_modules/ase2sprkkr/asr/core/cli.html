@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.core.cli &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.core.cli</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.core.cli</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;ASR command line interface.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">asr</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">chdir</span><span class="p">,</span> <span class="n">ASRCommand</span>
+<span class="kn">import</span> <span class="nn">click</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">parprint</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+
+
+<span class="n">prt</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">parprint</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="format">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.format.html#ase2sprkkr.asr.core.cli.format">[docs]</a>
+<span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">colwidth_c</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="n">nchar</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">colwidth_c</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">colwidth_c</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">nchar</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="n">colwidth_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nchar</span><span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">indent</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">colw</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">colwidth_c</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">desc</span><span class="si">:</span><span class="s1"> &lt;</span><span class="si">{</span><span class="n">colw</span><span class="si">}}</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">pad</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="n">out</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+
+<span class="n">CONTEXT_SETTINGS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">help_option_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">])</span>
+
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">context_settings</span><span class="o">=</span><span class="n">CONTEXT_SETTINGS</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">version_option</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="n">asr</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cli</span><span class="p">():</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;command&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;folders&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--not-recipe&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;COMMAND is not a recipe.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--dry-run&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show what would happen without doing anything.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="s1">&#39;--njobs&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Run COMMAND in serial on JOBS processes.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-S&#39;</span><span class="p">,</span> <span class="s1">&#39;--skip-if-done&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Skip execution of recipe if done.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--dont-raise&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Continue to next folder when encountering error.&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--update&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Update existing results files. &quot;</span>
+              <span class="s2">&quot;Only runs a recipe if it is already done.&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--must-exist&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip folder where this file doesn&#39;t exist.&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">not_recipe</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">,</span> <span class="n">njobs</span><span class="p">,</span>
+        <span class="n">skip_if_done</span><span class="p">,</span> <span class="n">dont_raise</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">must_exist</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Run recipe or python function in multiple folders.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Run the relax recipe</span>
+<span class="sd">    &gt;&gt;&gt; asr run relax</span>
+
+<span class="sd">    Run the calculate function in the gs module</span>
+<span class="sd">    &gt;&gt;&gt; asr run gs@calculate</span>
+
+<span class="sd">    Get help for a recipe</span>
+<span class="sd">    &gt;&gt;&gt; asr run &quot;relax -h&quot;</span>
+
+<span class="sd">    Specify an argument</span>
+<span class="sd">    &gt;&gt;&gt; asr run &quot;relax --ecut 600&quot;</span>
+
+<span class="sd">    Run relax recipe in two folders sequentially</span>
+<span class="sd">    &gt;&gt;&gt; asr run relax folder1/ folder2/</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+    <span class="n">nfolders</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">folders</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">folders</span><span class="p">:</span>
+        <span class="n">folders</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">prt</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of folders: </span><span class="si">{</span><span class="n">nfolders</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">skip_if_done</span>
+
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;update&#39;</span><span class="p">:</span> <span class="n">update</span><span class="p">,</span>
+        <span class="s1">&#39;skip_if_done&#39;</span><span class="p">:</span> <span class="n">skip_if_done</span><span class="p">,</span>
+        <span class="s1">&#39;dont_raise&#39;</span><span class="p">:</span> <span class="n">dont_raise</span><span class="p">,</span>
+        <span class="s1">&#39;dry_run&#39;</span><span class="p">:</span> <span class="n">dry_run</span><span class="p">,</span>
+        <span class="s1">&#39;not_recipe&#39;</span><span class="p">:</span> <span class="n">not_recipe</span><span class="p">,</span>
+        <span class="s1">&#39;command&#39;</span><span class="p">:</span> <span class="n">command</span><span class="p">,</span>
+        <span class="s1">&#39;must_exist&#39;</span><span class="p">:</span> <span class="n">must_exist</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">njobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">njobs</span><span class="p">):</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;job_num&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">job</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="n">run_command</span><span class="p">,</span>
+                <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">folders</span><span class="p">[</span><span class="n">job</span><span class="p">::</span><span class="n">njobs</span><span class="p">],</span> <span class="p">),</span>
+                <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
+            <span class="n">proc</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+            <span class="n">proc</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+            <span class="k">assert</span> <span class="n">proc</span><span class="o">.</span><span class="n">exitcode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">run_command</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="append_job">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.append_job.html#ase2sprkkr.asr.core.cli.append_job">[docs]</a>
+<span class="k">def</span> <span class="nf">append_job</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">job_num</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Append job number to message if provided.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">job_num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">string</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Job #</span><span class="si">{</span><span class="n">job_num</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="run_command">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.run_command.html#ase2sprkkr.asr.core.cli.run_command">[docs]</a>
+<span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">not_recipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                <span class="n">skip_if_done</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">dont_raise</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                <span class="n">job_num</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="n">must_exist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run command in folders.&quot;&quot;&quot;</span>
+    <span class="n">nfolders</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">folders</span><span class="p">)</span>
+    <span class="n">module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">function</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="s1">&#39;@&#39;</span> <span class="ow">in</span> <span class="n">module</span><span class="p">:</span>
+        <span class="n">module</span><span class="p">,</span> <span class="n">function</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">skip_if_done</span><span class="p">,</span> \
+            <span class="n">append_job</span><span class="p">(</span><span class="s1">&#39;Cannot combine --update with --skip-if-done.&#39;</span><span class="p">,</span>
+                       <span class="n">job_num</span><span class="o">=</span><span class="n">job_num</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">not_recipe</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">function</span><span class="p">,</span> \
+            <span class="n">append_job</span><span class="p">(</span><span class="s1">&#39;If this is not a recipe you have to specify a &#39;</span>
+                       <span class="s1">&#39;specific function to execute.&#39;</span><span class="p">,</span> <span class="n">job_num</span><span class="o">=</span><span class="n">job_num</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">module</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;asr.&#39;</span><span class="p">):</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;asr.</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">function</span><span class="p">:</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
+
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">function</span><span class="p">),</span> \
+        <span class="n">append_job</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1">@</span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="s1"> doesn</span><span class="se">\&#39;</span><span class="s1">t exist.&#39;</span><span class="p">,</span> <span class="n">job_num</span><span class="o">=</span><span class="n">job_num</span><span class="p">)</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ASRCommand</span><span class="p">):</span>
+        <span class="n">is_asr_command</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">is_asr_command</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">dry_run</span><span class="p">:</span>
+        <span class="n">prt</span><span class="p">(</span><span class="n">append_job</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Would run </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s1">@</span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="s1"> &#39;</span>
+                       <span class="sa">f</span><span class="s1">&#39;in </span><span class="si">{</span><span class="n">nfolders</span><span class="si">}</span><span class="s1"> folders.&#39;</span><span class="p">,</span> <span class="n">job_num</span><span class="o">=</span><span class="n">job_num</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">folder</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">folders</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">skip_if_done</span> <span class="ow">and</span> <span class="n">func</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="n">update</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">func</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="n">must_exist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">must_exist</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="k">continue</span>
+                <span class="n">prt</span><span class="p">(</span><span class="n">append_job</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;In folder: </span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nfolders</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span>
+                               <span class="n">job_num</span><span class="o">=</span><span class="n">job_num</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">is_asr_command</span><span class="p">:</span>
+                    <span class="n">func</span><span class="o">.</span><span class="n">cli</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">+</span> <span class="n">args</span>
+                    <span class="n">func</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">click</span><span class="o">.</span><span class="n">Abort</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">dont_raise</span><span class="p">:</span>
+                    <span class="k">raise</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">prt</span><span class="p">(</span><span class="n">append_job</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">job_num</span><span class="o">=</span><span class="n">job_num</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unexpected error:&#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">dont_raise</span><span class="p">:</span>
+                    <span class="k">raise</span></div>
+
+
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">asrlist</span><span class="p">(</span><span class="n">search</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List and search for recipes.</span>
+
+<span class="sd">    If SEARCH is specified: list only recipes containing SEARCH in their</span>
+<span class="sd">    description.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">get_recipes</span>
+    <span class="n">recipes</span> <span class="o">=</span> <span class="n">get_recipes</span><span class="p">()</span>
+    <span class="n">recipes</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="s1">&#39;----&#39;</span><span class="p">,</span> <span class="s1">&#39;-----------&#39;</span><span class="p">]]</span>
+
+    <span class="k">for</span> <span class="n">recipe</span> <span class="ow">in</span> <span class="n">recipes</span><span class="p">:</span>
+        <span class="n">longhelp</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">_main</span><span class="o">.</span><span class="vm">__doc__</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">longhelp</span><span class="p">:</span>
+            <span class="n">longhelp</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">shorthelp</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">longhelp</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">search</span> <span class="ow">and</span> <span class="p">(</span><span class="n">search</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">longhelp</span>
+                       <span class="ow">and</span> <span class="n">search</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="p">[</span><span class="n">recipe</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">4</span><span class="p">:],</span> <span class="n">shorthelp</span><span class="p">]</span>
+        <span class="n">panel</span> <span class="o">+=</span> <span class="p">[</span><span class="n">status</span><span class="p">]</span>
+    <span class="n">panel</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="nb">format</span><span class="p">(</span><span class="n">panel</span><span class="p">))</span>
+
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--show/--dont-show&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show generated figures&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">results</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show results for a specific recipe.</span>
+
+<span class="sd">    Generate and save figures relating to recipe with NAME. Examples</span>
+<span class="sd">    of valid names are asr.bandstructure, asr.gs etc.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">get_recipe_from_name</span>
+    <span class="kn">from</span> <span class="nn">asr.core.material</span> <span class="kn">import</span> <span class="p">(</span><span class="n">get_material_from_folder</span><span class="p">,</span>
+                                   <span class="n">make_panel_figures</span><span class="p">)</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">get_recipe_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;results-</span><span class="si">{</span><span class="n">recipe</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.json&quot;</span>
+    <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">(),</span> \
+        <span class="sa">f</span><span class="s1">&#39;No results file for </span><span class="si">{</span><span class="n">recipe</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, so I cannot show the results!&#39;</span>
+
+    <span class="n">material</span> <span class="o">=</span> <span class="n">get_material_from_folder</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">material</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s1">&#39;ase_webpanel&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">get_formats</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">recipe</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> does not have any results to present!&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="kn">from</span> <span class="nn">asr.database.app</span> <span class="kn">import</span> <span class="n">create_key_descriptions</span>
+    <span class="n">kd</span> <span class="o">=</span> <span class="n">create_key_descriptions</span><span class="p">()</span>
+    <span class="n">panels</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">format_as</span><span class="p">(</span><span class="s1">&#39;ase_webpanel&#39;</span><span class="p">,</span> <span class="n">material</span><span class="p">,</span> <span class="n">kd</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;panels&#39;</span><span class="p">,</span> <span class="n">panels</span><span class="p">)</span>
+    <span class="n">make_panel_figures</span><span class="p">(</span><span class="n">material</span><span class="p">,</span> <span class="n">panels</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;recipe&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;hashes&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;[HASH]...&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">hashes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find result files.</span>
+
+<span class="sd">    Find all results files belonging to RECIPE. Optionally, filter</span>
+<span class="sd">    these according to a certain ranges of Git hashes (requires having</span>
+<span class="sd">    Git installed). Valid recipe names are asr.bandstructure etc.</span>
+
+<span class="sd">    Find all results files calculated with a checkout of ASR that is</span>
+<span class="sd">    an ancestor of HASH (including HASH): &quot;asr find asr.bandstructure</span>
+<span class="sd">    HASH&quot;.</span>
+
+<span class="sd">    Find all results files calculated with a checkout of ASR that is</span>
+<span class="sd">    an ancestor of HASH2 but not HASH1: &quot;asr find asr.bandstructure</span>
+<span class="sd">    HASH1..HASH2&quot; (not including HASH1).</span>
+
+<span class="sd">    Find all results files that are calculated with a checkout of ASR</span>
+<span class="sd">    that is an ancestor of HASH1 or HASH2: &quot;asr find asr.bandstructure</span>
+<span class="sd">    HASH1 HASH2&quot;.</span>
+
+<span class="sd">    This is basically a wrapper around Git&#39;s rev-list command and all</span>
+<span class="sd">    hashes are forwarded to this command. For example, we can use the</span>
+<span class="sd">    special HASH^ to refer to the parent of HASH.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">walk</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_asr_initialized</span><span class="p">():</span>
+        <span class="n">initialize_asr_configuration_dir</span><span class="p">()</span>
+
+    <span class="n">recipe_results_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;results-</span><span class="si">{</span><span class="n">recipe</span><span class="si">}</span><span class="s2">.json&quot;</span>
+
+    <span class="k">if</span> <span class="n">hashes</span><span class="p">:</span>
+        <span class="n">hashes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">hashes</span><span class="p">)</span>
+        <span class="n">check_git</span><span class="p">()</span>
+
+    <span class="n">matching_files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">walk</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">followlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">recipe_results_file</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+            <span class="n">matching_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">/</span> <span class="n">recipe_results_file</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">hashes</span><span class="p">:</span>
+        <span class="n">rev_list</span> <span class="o">=</span> <span class="n">get_git_rev_list</span><span class="p">(</span><span class="n">hashes</span><span class="p">)</span>
+        <span class="n">matching_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">extract_hash_from_file</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">in</span> <span class="n">rev_list</span><span class="p">,</span>
+                   <span class="n">matching_files</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">matching_files</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matching_files</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="extract_hash_from_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.extract_hash_from_file.html#ase2sprkkr.asr.core.cli.extract_hash_from_file">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_hash_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the ASR hash from an ASR results file.&quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;__versions__&#39;</span><span class="p">][</span><span class="s1">&#39;asr&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Problem when extration asr git hash from </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span>
+
+    <span class="k">if</span> <span class="n">version</span> <span class="ow">and</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">version</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">version</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="check_git">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.check_git.html#ase2sprkkr.asr.core.cli.check_git">[docs]</a>
+<span class="k">def</span> <span class="nf">check_git</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that Git is installed.&quot;&quot;&quot;</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">],</span>
+                            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                            <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">err</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="se">\n</span><span class="s2">Problem with your Git installation.&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="get_git_rev_list">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.get_git_rev_list.html#ase2sprkkr.asr.core.cli.get_git_rev_list">[docs]</a>
+<span class="k">def</span> <span class="nf">get_git_rev_list</span><span class="p">(</span><span class="n">hashes</span><span class="p">,</span> <span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Git rev list from HASH1 to HASH2.&quot;&quot;&quot;</span>
+    <span class="n">cfgdir</span> <span class="o">=</span> <span class="n">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
+
+    <span class="n">git_repo</span> <span class="o">=</span> <span class="s1">&#39;https://gitlab.com/mortengjerding/asr.git&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">cfgdir</span> <span class="o">/</span> <span class="s1">&#39;asr&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;clone&#39;</span><span class="p">,</span> <span class="n">git_repo</span><span class="p">],</span>
+                                <span class="n">cwd</span><span class="o">=</span><span class="n">cfgdir</span><span class="p">)</span>
+
+    <span class="n">asrdir</span> <span class="o">=</span> <span class="n">cfgdir</span> <span class="o">/</span> <span class="s2">&quot;asr&quot;</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;pull&#39;</span><span class="p">],</span>
+                            <span class="n">cwd</span><span class="o">=</span><span class="n">asrdir</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;rev-list&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">hashes</span><span class="p">,</span>
+                                  <span class="n">cwd</span><span class="o">=</span><span class="n">asrdir</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="is_asr_initialized">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.is_asr_initialized.html#ase2sprkkr.asr.core.cli.is_asr_initialized">[docs]</a>
+<span class="k">def</span> <span class="nf">is_asr_initialized</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if ASR is initialized.&quot;&quot;&quot;</span>
+    <span class="n">cfgdir</span> <span class="o">=</span> <span class="n">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">cfgdir</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="initialize_asr_configuration_dir">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.initialize_asr_configuration_dir.html#ase2sprkkr.asr.core.cli.initialize_asr_configuration_dir">[docs]</a>
+<span class="k">def</span> <span class="nf">initialize_asr_configuration_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct ASR configuration dir.&quot;&quot;&quot;</span>
+    <span class="n">cfgdir</span> <span class="o">=</span> <span class="n">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
+    <span class="n">cfgdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_config_dir">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.get_config_dir.html#ase2sprkkr.asr.core.cli.get_config_dir">[docs]</a>
+<span class="k">def</span> <span class="nf">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get path to ASR configuration dir.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">home</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">home</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">home</span> <span class="o">/</span> <span class="s1">&#39;.asr&#39;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

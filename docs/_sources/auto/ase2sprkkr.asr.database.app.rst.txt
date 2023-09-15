@@ -1,0 +1,64 @@
+app
+===
+
+Full name: **ase2sprkkr.asr.database.app**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.database.app.Summary 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database.app
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      asr_sort_key_descriptions
+      create_key_descriptions
+      handle_query
+      initialize_project
+      row_to_dict
+      setup_app
+      setup_data_endpoints
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Summary
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

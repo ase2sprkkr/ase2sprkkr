@@ -1,0 +1,45 @@
+response
+========
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.response**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.response
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.mocks.gpaw.response.bse
+     ase2sprkkr.asr.test.mocks.gpaw.response.df
+     ase2sprkkr.asr.test.mocks.gpaw.response.g0w0
+  
+  

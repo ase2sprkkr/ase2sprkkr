@@ -1,0 +1,8 @@
+get\_strain\_from\_atoms
+========================
+
+Full name: **ase2sprkkr.asr.test.test\_piezoelectrictensor.get\_strain\_from\_atoms**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_piezoelectrictensor
+
+.. autofunction:: get_strain_from_atoms

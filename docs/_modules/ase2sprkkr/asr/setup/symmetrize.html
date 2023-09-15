@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.setup.symmetrize &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.setup.symmetrize</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.setup.symmetrize</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Generate symmetrized atomic structure.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
+
+
+<div class="viewcode-block" id="symmetrize_atoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.symmetrize.symmetrize_atoms.html#ase2sprkkr.asr.setup.symmetrize.symmetrize_atoms">[docs]</a>
+<span class="k">def</span> <span class="nf">symmetrize_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">angle_tolerance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">return_dataset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+    <span class="kn">from</span> <span class="nn">asr.utils.symmetry</span> <span class="kn">import</span> <span class="n">atoms2symmetry</span>
+    <span class="n">symmetry</span> <span class="o">=</span> <span class="n">atoms2symmetry</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="n">tolerance</span><span class="p">,</span>
+                              <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">)</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">symmetry</span><span class="o">.</span><span class="n">dataset</span>
+    <span class="n">cell_cv</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+    <span class="n">spos_ac</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()</span>
+    <span class="n">numbers</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">()</span>
+
+    <span class="n">uspos_sac</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">M_scc</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">origin_sc</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">point_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">U_scc</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;rotations&#39;</span><span class="p">]</span>
+    <span class="n">t_sc</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;translations&#39;</span><span class="p">]</span>
+    <span class="c1"># t_sc -= np.rint(t_sc)</span>
+    <span class="k">for</span> <span class="n">U_cc</span><span class="p">,</span> <span class="n">t_c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">U_scc</span><span class="p">,</span> <span class="n">t_sc</span><span class="p">):</span>
+        <span class="n">origin_sc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U_cc</span><span class="p">,</span> <span class="n">point_c</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_c</span><span class="p">)</span>
+        <span class="n">symspos_ac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">spos_ac</span><span class="p">,</span> <span class="n">U_cc</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">t_c</span>
+
+        <span class="n">symcell_cv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">U_cc</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">)</span>
+
+        <span class="c1"># Cell metric</span>
+        <span class="n">M_cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">symcell_cv</span><span class="p">,</span> <span class="n">symcell_cv</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">M_scc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">M_cc</span><span class="p">)</span>
+        <span class="n">inds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s_c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spos_ac</span><span class="p">):</span>
+            <span class="n">d_ac</span> <span class="o">=</span> <span class="n">s_c</span> <span class="o">-</span> <span class="n">symspos_ac</span>
+            <span class="n">dm_ac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">d_ac</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">d_ac</span><span class="p">))</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dm_ac</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">symspos_ac</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">d_ac</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span>
+            <span class="n">inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">inds</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="n">uspos_ac</span> <span class="o">=</span> <span class="n">symspos_ac</span><span class="p">[</span><span class="n">inds</span><span class="p">]</span>
+        <span class="n">uspos_sac</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">uspos_ac</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">spos_ac</span> <span class="o">-</span> <span class="n">uspos_ac</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">)</span>
+
+    <span class="n">origin_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">origin_sc</span><span class="p">)</span>
+    <span class="n">origin_sc</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">t_sc</span><span class="p">)</span>
+    <span class="n">origin_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">origin_sc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Shift origin</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Origin shifted by&#39;</span><span class="p">,</span> <span class="n">origin_c</span><span class="p">)</span>
+    <span class="n">spos_ac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">uspos_sac</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">origin_c</span>
+    <span class="n">M_cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">M_scc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">cellpar_to_cell</span>
+    <span class="n">dotprods</span> <span class="o">=</span> <span class="n">M_cc</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">l_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dotprods</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">angles_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dotprods</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">/</span> <span class="n">l_c</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">/</span> <span class="n">l_c</span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+    <span class="n">angles_c</span> <span class="o">*=</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="n">cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">l_c</span><span class="p">,</span> <span class="n">angles_c</span><span class="p">])</span>
+
+    <span class="n">ab_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">cellpar_to_cell</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">ab_normal</span><span class="o">=</span><span class="n">ab_normal</span><span class="p">,</span>
+                           <span class="n">a_direction</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">idealized</span> <span class="o">=</span> <span class="n">Atoms</span><span class="p">(</span><span class="n">numbers</span><span class="o">=</span><span class="n">numbers</span><span class="p">,</span>
+                      <span class="n">scaled_positions</span><span class="o">=</span><span class="n">spos_ac</span><span class="p">,</span> <span class="n">cell</span><span class="o">=</span><span class="n">cell</span><span class="p">,</span>
+                      <span class="n">pbc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">newsymmetry</span> <span class="o">=</span> <span class="n">atoms2symmetry</span><span class="p">(</span><span class="n">idealized</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="n">tolerance</span><span class="p">,</span>
+                                 <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">angle_tolerance</span><span class="p">)</span>
+    <span class="n">newdataset</span> <span class="o">=</span> <span class="n">newsymmetry</span><span class="o">.</span><span class="n">dataset</span>
+    <span class="k">if</span> <span class="n">return_dataset</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">idealized</span><span class="p">,</span> <span class="n">origin_c</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">newdataset</span>
+
+    <span class="k">return</span> <span class="n">idealized</span><span class="p">,</span> <span class="n">origin_c</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.setup.symmetrize&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--tolerance&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Tolerance when evaluating symmetries&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--angle-tolerance&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Tolerance one angles when evaluating symmetries&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+         <span class="n">angle_tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Symmetrize atomic structure.</span>
+
+<span class="sd">    This function changes the atomic positions and the unit cell</span>
+<span class="sd">    of an approximately symmetric structure into an exactly</span>
+<span class="sd">    symmetric structure.</span>
+
+<span class="sd">    In practice, the spacegroup of the structure located in &#39;original.json&#39;</span>
+<span class="sd">    is evaluated using a not-very-strict tolerance, which can be adjusted using</span>
+<span class="sd">    the --tolerance and --angle-tolerance switches. Then the symmetries of the</span>
+<span class="sd">    spacegroup are used to generate equivalent atomic structures and by taking</span>
+<span class="sd">    an average of these atomic positions we generate an exactly symmetric</span>
+<span class="sd">    atomic structure.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Symmetrize an atomic structure using the default tolerances</span>
+<span class="sd">    $ ase build -x diamond C original.json</span>
+<span class="sd">    $ asr run setup.symmetrize</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span><span class="p">,</span> <span class="n">write</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;original.json&#39;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> \
+        <span class="p">(</span><span class="s1">&#39;Symmetrization has only been tested for 3D systems! &#39;</span>
+         <span class="s1">&#39;To apply it to other systems you will have to test and update &#39;</span>
+         <span class="s1">&#39;the code.&#39;</span><span class="p">)</span>
+    <span class="n">idealized</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">spgs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># There is a chance that the space group changes when symmetrizing</span>
+    <span class="c1"># structure.</span>
+    <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxiter</span><span class="p">):</span>
+        <span class="n">atol</span> <span class="o">=</span> <span class="n">angle_tolerance</span>
+        <span class="n">idealized</span><span class="p">,</span> <span class="n">origin_c</span><span class="p">,</span> <span class="n">dataset1</span><span class="p">,</span> <span class="n">dataset2</span> <span class="o">=</span> \
+            <span class="n">symmetrize_atoms</span><span class="p">(</span><span class="n">idealized</span><span class="p">,</span>
+                             <span class="n">tolerance</span><span class="o">=</span><span class="n">tolerance</span><span class="p">,</span>
+                             <span class="n">angle_tolerance</span><span class="o">=</span><span class="n">atol</span><span class="p">,</span>
+                             <span class="n">return_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">spg1</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset1</span><span class="p">[</span><span class="s1">&#39;international&#39;</span><span class="p">],</span>
+                                <span class="n">dataset1</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+        <span class="n">spg2</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset2</span><span class="p">[</span><span class="s1">&#39;international&#39;</span><span class="p">],</span>
+                                <span class="n">dataset2</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">spgs</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">spg1</span><span class="p">,</span> <span class="n">spg2</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">spgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spg2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">spg1</span> <span class="o">==</span> <span class="n">spg2</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Spacegroup changed </span><span class="si">{</span><span class="n">spg1</span><span class="si">}</span><span class="s1"> -&gt; </span><span class="si">{</span><span class="n">spg2</span><span class="si">}</span><span class="s1">. Trying again.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Reached maximum iteration! Went through &#39;</span> <span class="o">+</span> <span class="s1">&#39; -&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">spgs</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Idealizing structure into spacegroup </span><span class="si">{</span><span class="n">spg2</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+    <span class="n">idealized</span><span class="o">.</span><span class="n">set_initial_magnetic_moments</span><span class="p">(</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">get_initial_magnetic_moments</span><span class="p">())</span>
+    <span class="n">write</span><span class="p">(</span><span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">,</span> <span class="n">idealized</span><span class="p">)</span>
+
+    <span class="c1"># Check that the cell was only slightly perturbed</span>
+    <span class="n">cp</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()</span>
+    <span class="n">idcp</span> <span class="o">=</span> <span class="n">idealized</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">cellpar</span><span class="p">()</span>
+    <span class="n">deltacp</span> <span class="o">=</span> <span class="n">idcp</span> <span class="o">-</span> <span class="n">cp</span>
+    <span class="n">abc</span><span class="p">,</span> <span class="n">abg</span> <span class="o">=</span> <span class="n">deltacp</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">deltacp</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Cell Change: (Δa, Δb, Δc, Δα, Δβ, Δγ) = &#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">abc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1"> Å, </span><span class="si">{</span><span class="n">abc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1"> Å, </span><span class="si">{</span><span class="n">abc</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1"> Å, &#39;</span>
+          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">abg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">°, </span><span class="si">{</span><span class="n">abg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">°, </span><span class="si">{</span><span class="n">abg</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.2e</span><span class="si">}</span><span class="s1">°)&#39;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">abc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">tolerance</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> \
+        <span class="s1">&#39;a, b and/or c changed too much! See output above.&#39;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">abg</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">angle_tolerance</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> \
+        <span class="s1">&#39;α, β and/or γ changed too much! See output above.&#39;</span>
+
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">idealized</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+    <span class="n">spos_ac</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">idspos_ac</span> <span class="o">=</span> <span class="n">idealized</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">+</span> <span class="n">origin_c</span>
+    <span class="n">dpos_av</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">idspos_ac</span> <span class="o">-</span> <span class="n">spos_ac</span><span class="p">,</span> <span class="n">cell</span><span class="p">)</span>
+    <span class="n">dpos_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dpos_av</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">suppress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Change of positions:&#39;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;    &#39;</span>
+        <span class="k">for</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">dpos</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">,</span> <span class="n">dpos_a</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">dpos</span><span class="si">:</span><span class="s1">.1e</span><span class="si">}</span><span class="s1"> Å,&#39;</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">70</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;    &#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="p">(</span><span class="n">dpos_a</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">tolerance</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> \
+        <span class="s1">&#39;Some atoms moved too much! See output above.&#39;</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

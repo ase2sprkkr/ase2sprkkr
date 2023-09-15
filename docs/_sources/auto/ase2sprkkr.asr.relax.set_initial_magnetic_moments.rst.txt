@@ -1,0 +1,8 @@
+set\_initial\_magnetic\_moments
+===============================
+
+Full name: **ase2sprkkr.asr.relax.set\_initial\_magnetic\_moments**
+
+.. currentmodule:: ase2sprkkr.asr.relax
+
+.. autofunction:: set_initial_magnetic_moments

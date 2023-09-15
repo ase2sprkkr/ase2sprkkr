@@ -1,0 +1,8 @@
+update\_rmsd
+============
+
+Full name: **ase2sprkkr.asr.database.rmsd.update\_rmsd**
+
+.. currentmodule:: ase2sprkkr.asr.database.rmsd
+
+.. autofunction:: update_rmsd

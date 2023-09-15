@@ -12,11 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.common.process_output_reader</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.process_output_reader</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -95,15 +99,19 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="BaseProcessOutputReader"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader">[docs]</a><span class="k">class</span> <span class="nc">BaseProcessOutputReader</span><span class="p">:</span>
-  <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BaseProcessOutputReader">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseProcessOutputReader</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Class, that run a process, optionally saves all the output of the process to a file,</span>
 <span class="sd">  and pass the stdout and stderr of the process to its two asyn routines, read_error</span>
 <span class="sd">  and read_output.</span>
 
 <span class="sd">  The descendant can redefine the routines to parse the output (or its parts).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="BaseProcessOutputReader.run_subprocess"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.run_subprocess">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">run_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseProcessOutputReader.run_subprocess">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.run_subprocess">[docs]</a>
+  <span class="k">async</span> <span class="k">def</span> <span class="nf">run_subprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">:</span>
          <span class="n">dr</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -153,8 +161,11 @@
 
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="o">*</span><span class="n">out</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseProcessOutputReader.result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.result">[docs]</a>  <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">wait</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot; This function is for postprocessing the results.</span>
+
+<div class="viewcode-block" id="BaseProcessOutputReader.result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.result">[docs]</a>
+  <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">wait</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; This function is for postprocessing the results.</span>
 
 <span class="sd">      It is intended to be predefined in the descendants</span>
 
@@ -185,7 +196,10 @@
          <span class="k">raise</span> <span class="n">e</span>
       <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span></div>
 
-<div class="viewcode-block" id="BaseProcessOutputReader.run"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.run">[docs]</a>  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseProcessOutputReader.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.run">[docs]</a>
+  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
       <span class="k">try</span><span class="p">:</span>
@@ -201,17 +215,26 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="BaseProcessOutputReader.read_error"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.read_error">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stderr</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseProcessOutputReader.read_error">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.read_error">[docs]</a>
+  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stderr</span><span class="p">):</span>
       <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
           <span class="n">line</span><span class="o">=</span><span class="k">await</span> <span class="n">stderr</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
           <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
              <span class="k">return</span>
           <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="BaseProcessOutputReader.read_output"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseProcessOutputReader.read_output">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.read_output">[docs]</a>
+  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
       <span class="k">raise</span> <span class="bp">NotImplemented</span><span class="p">(</span><span class="s1">&#39;Please, redefine BaseProcess.read_output coroutine&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseProcessOutputReader.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.read_from_file">[docs]</a>  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseProcessOutputReader.read_from_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.read_from_file">[docs]</a>
+  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
       <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
@@ -230,22 +253,32 @@
       <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">out</span><span class="p">(),</span> <span class="n">err</span><span class="p">(),</span> <span class="n">return_code</span><span class="p">)</span>
       <span class="k">finally</span><span class="p">:</span>
-        <span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+        <span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</div>
 
-<div class="viewcode-block" id="AsyncioFileReader"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader">[docs]</a><span class="k">class</span> <span class="nc">AsyncioFileReader</span><span class="p">:</span>
-  <span class="sd">&quot;&quot;&quot; File reader that mimics asyncio StreamReader.</span>
+
+<div class="viewcode-block" id="AsyncioFileReader">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader">[docs]</a>
+<span class="k">class</span> <span class="nc">AsyncioFileReader</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; File reader that mimics asyncio StreamReader.</span>
 <span class="sd">      In fact, it is synchronous, but it offers the</span>
 <span class="sd">      same interface as the asyncio StreamReader.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AsyncioFileReader.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">buffersize</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
+<div class="viewcode-block" id="AsyncioFileReader.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.__init__">[docs]</a>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">buffersize</span><span class="o">=</span><span class="mi">8192</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">buffersize</span> <span class="o">=</span> <span class="n">buffersize</span></div>
 
-<div class="viewcode-block" id="AsyncioFileReader.close"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.close">[docs]</a>  <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AsyncioFileReader.close">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.close">[docs]</a>
+  <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">=</span><span class="kc">None</span></div>
+
 
   <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -256,10 +289,15 @@
   <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AsyncioFileReader.readline"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readline">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AsyncioFileReader.readline">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readline">[docs]</a>
+  <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AsyncioFileReader.separator_shifts"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.separator_shifts">[docs]</a>  <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="AsyncioFileReader.separator_shifts">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.separator_shifts">[docs]</a>
+  <span class="nd">@staticmethod</span>
   <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">separator_shifts</span><span class="p">(</span><span class="n">sep</span><span class="p">):</span>
       <span class="n">shifts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
@@ -270,7 +308,10 @@
         <span class="n">shifts</span><span class="p">[</span><span class="n">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">shift</span>
       <span class="k">return</span> <span class="n">shifts</span></div>
 
-<div class="viewcode-block" id="AsyncioFileReader.readuntil"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readuntil">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">readuntil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AsyncioFileReader.readuntil">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.process_output_reader.AsyncioFileReader.html#ase2sprkkr.common.process_output_reader.AsyncioFileReader.readuntil">[docs]</a>
+  <span class="k">async</span> <span class="k">def</span> <span class="nf">readuntil</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
       <span class="n">lsep</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">lsep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
           <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
@@ -311,7 +352,9 @@
           <span class="n">matchLen</span> <span class="o">-=</span> <span class="n">shifts</span><span class="p">[</span><span class="n">matchLen</span><span class="p">]</span>
         <span class="n">matchLen</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">matchLen</span> <span class="o">==</span> <span class="n">lsep</span><span class="p">:</span>
-           <span class="k">return</span> <span class="n">result</span><span class="p">()</span></div></div>
+           <span class="k">return</span> <span class="n">result</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
            </div>

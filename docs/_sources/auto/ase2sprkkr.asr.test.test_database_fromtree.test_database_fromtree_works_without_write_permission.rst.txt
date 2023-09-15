@@ -1,0 +1,8 @@
+test\_database\_fromtree\_works\_without\_write\_permission
+===========================================================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_fromtree.test\_database\_fromtree\_works\_without\_write\_permission**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_database_fromtree
+
+.. autofunction:: test_database_fromtree_works_without_write_permission

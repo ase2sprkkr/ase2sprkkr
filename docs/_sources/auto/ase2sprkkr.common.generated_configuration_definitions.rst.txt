@@ -1,0 +1,52 @@
+generated\_configuration\_definitions
+=====================================
+
+Full name: **ase2sprkkr.common.generated\_configuration\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.generated_configuration_definitions.BaseGeneratedValueDefinition  ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition  ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.generated_configuration_definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BaseGeneratedValueDefinition
+      GeneratedValueDefinition
+      NumpyViewDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

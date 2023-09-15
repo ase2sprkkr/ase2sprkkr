@@ -1,0 +1,44 @@
+dos
+===
+
+Full name: **ase2sprkkr.asr.dos**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.dos
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      collect_data
+      plot
+      webpanel
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

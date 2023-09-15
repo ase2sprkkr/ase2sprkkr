@@ -1,0 +1,85 @@
+asr
+===
+
+Full name: **ase2sprkkr.asr**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.asr
+     ase2sprkkr.asr.bader
+     ase2sprkkr.asr.bandstructure
+     ase2sprkkr.asr.berry
+     ase2sprkkr.asr.borncharges
+     ase2sprkkr.asr.bse
+     ase2sprkkr.asr.calculators
+     ase2sprkkr.asr.chc
+     ase2sprkkr.asr.convex_hull
+     ase2sprkkr.asr.core
+     ase2sprkkr.asr.database
+     ase2sprkkr.asr.defectformation
+     ase2sprkkr.asr.deformationpotentials
+     ase2sprkkr.asr.dimensionality
+     ase2sprkkr.asr.dos
+     ase2sprkkr.asr.emasses
+     ase2sprkkr.asr.exchange
+     ase2sprkkr.asr.fere
+     ase2sprkkr.asr.fermisurface
+     ase2sprkkr.asr.formalpolarization
+     ase2sprkkr.asr.gs
+     ase2sprkkr.asr.gw
+     ase2sprkkr.asr.hse
+     ase2sprkkr.asr.infraredpolarizability
+     ase2sprkkr.asr.magnetic_anisotropy
+     ase2sprkkr.asr.magstate
+     ase2sprkkr.asr.pdos
+     ase2sprkkr.asr.phonons
+     ase2sprkkr.asr.phonopy
+     ase2sprkkr.asr.piezoelectrictensor
+     ase2sprkkr.asr.plasmafrequency
+     ase2sprkkr.asr.polarizability
+     ase2sprkkr.asr.projected_bandstructure
+     ase2sprkkr.asr.push
+     ase2sprkkr.asr.raman
+     ase2sprkkr.asr.relax
+     ase2sprkkr.asr.setinfo
+     ase2sprkkr.asr.setup
+     ase2sprkkr.asr.stiffness
+     ase2sprkkr.asr.structureinfo
+     ase2sprkkr.asr.test
+     ase2sprkkr.asr.utils
+     ase2sprkkr.asr.workflow
+  
+  

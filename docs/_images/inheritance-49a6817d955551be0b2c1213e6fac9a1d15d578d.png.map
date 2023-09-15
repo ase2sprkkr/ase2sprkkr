@@ -1,0 +1,9 @@
+<map id="inheritance8955ae8cae" name="inheritance8955ae8cae">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType" target="_top" title="AtomicType" alt="" coords="692,5,791,31"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.basic.ObjectNumber.html#ase2sprkkr.common.grammar_types.basic.ObjectNumber" target="_top" title="An abstract class, that describe an unsigned integer, that reffers to an object." alt="" coords="547,31,663,56"/>
+<area shape="rect" id="node7" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site" target="_top" title="Site" alt="" coords="705,55,777,80"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,31,120,56"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType" target="_top" title="TypedGrammarType" alt="" coords="149,31,301,56"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.common.grammar_types.basic.Number" target="_top" title="Base class for a number &#45; descendants of this class can have minimal and/or maximal possible value." alt="" coords="331,31,405,56"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.common.grammar_types.basic.Unsigned" target="_top" title="Unsigned integer (zero is possible)" alt="" coords="435,31,517,56"/>
+</map>

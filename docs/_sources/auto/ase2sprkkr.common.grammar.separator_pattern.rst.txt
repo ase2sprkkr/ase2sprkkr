@@ -5,4 +5,4 @@ Full name: **ase2sprkkr.common.grammar.separator\_pattern**
 
 .. currentmodule:: ase2sprkkr.common.grammar
 
-.. autodata:: separator_pattern
+.. autofunction:: separator_pattern

@@ -1,0 +1,8 @@
+test\_stiffness\_gpaw
+=====================
+
+Full name: **ase2sprkkr.asr.test.test\_stiffness.test\_stiffness\_gpaw**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_stiffness
+
+.. autofunction:: test_stiffness_gpaw

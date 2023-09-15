@@ -1,0 +1,93 @@
+chc
+===
+
+Full name: **ase2sprkkr.asr.chc**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.chc.ConvexHullReference  ase2sprkkr.asr.chc.Hyperplane  ase2sprkkr.asr.chc.Intermediate  ase2sprkkr.asr.chc.LeanIntermediate  ase2sprkkr.asr.chc.Line  ase2sprkkr.asr.chc.Reference  ase2sprkkr.asr.chc.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.chc
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _permutecontain
+      append_references
+      calculate_intermediates
+      chcut_plot
+      convex_hull
+      convex_hull_planes
+      filrefs
+      get_coords
+      get_hof
+      gscheck
+      is_collinear
+      is_independent
+      mgs
+      mgsls
+      mu_adjustment
+      orthogonalize
+      projuv
+      read_structure
+      refs2ims
+      results2ref
+      row2ref
+      tuplespermuted
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ConvexHullReference
+      Hyperplane
+      Intermediate
+      LeanIntermediate
+      Line
+      Reference
+      Result
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      CHCError
+   
+   
+
+
+  
+  
+  

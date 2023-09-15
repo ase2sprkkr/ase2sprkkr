@@ -1,0 +1,67 @@
+fere
+====
+
+Full name: **ase2sprkkr.asr.fere**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.fere
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      count
+      create_corrected_db
+      elements_from_refs
+      formulas_eq
+      get_dE_alpha
+      get_hof
+      load_data
+      minimize_error
+      multiply_formula
+      only
+      parse_reactions
+      parse_refs
+      safe_get
+      select
+      single
+      unique
+      where
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DBAlreadyExistsError
+      MaterialNotFoundError
+      ParseError
+   
+   
+
+
+  
+  
+  

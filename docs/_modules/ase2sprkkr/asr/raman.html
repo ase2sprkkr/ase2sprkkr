@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.raman &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.raman</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.raman</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Raman spectrum.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.webpanel.html#ase2sprkkr.asr.raman.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+
+    <span class="c1"># Make a table from the phonon modes</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.raman.json&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">freqs_l</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;freqs_l&#39;</span><span class="p">]</span>
+        <span class="n">w_l</span><span class="p">,</span> <span class="n">rep_l</span> <span class="o">=</span> <span class="n">count_deg</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">)</span>
+        <span class="c1"># print(w_l)</span>
+        <span class="c1"># print(rep_l)</span>
+        <span class="n">nph</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_l</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nph</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;Mode </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ii</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">key</span><span class="p">,</span>
+                 <span class="n">np</span><span class="o">.</span><span class="n">array2string</span><span class="p">(</span>
+                     <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+                         <span class="n">w_l</span><span class="p">[</span><span class="n">ii</span><span class="p">]),</span>
+                     <span class="n">precision</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">rep_l</span><span class="p">[</span><span class="n">ii</span><span class="p">]))</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Mode&#39;</span><span class="p">,</span> <span class="s1">&#39;Frequency (1/cm)&#39;</span><span class="p">,</span> <span class="s1">&#39;Degeneracy&#39;</span><span class="p">],</span>
+               <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># Make the panel</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Raman spectrum (RPA)&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;Raman.png&#39;</span><span class="p">)],</span> <span class="p">[</span><span class="n">opt</span><span class="p">]],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span>
+                 <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">raman</span><span class="p">,</span>
+                   <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Raman.png&#39;</span><span class="p">]}],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.Result.html#ase2sprkkr.asr.raman.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.raman&#39;</span><span class="p">,</span> <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<div class="viewcode-block" id="raman">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.raman.html#ase2sprkkr.asr.raman.raman">[docs]</a>
+<span class="k">def</span> <span class="nf">raman</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="c1"># Import the required modules</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="c1"># All required settings</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;broadening&#39;</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>  <span class="c1"># in cm^-1</span>
+              <span class="s1">&#39;wavelength&#39;</span><span class="p">:</span> <span class="mf">532.0</span><span class="p">,</span>  <span class="c1"># in nm</span>
+              <span class="s1">&#39;polarization&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;yy&#39;</span><span class="p">,</span> <span class="s1">&#39;zz&#39;</span><span class="p">],</span>
+              <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">}</span>
+
+    <span class="c1"># Read the data from the disk</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.raman.json&#39;</span><span class="p">)</span>
+
+    <span class="c1"># If no data, return</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Lorentzian function definition</span>
+    <span class="k">def</span> <span class="nf">lor</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="n">lor</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">g</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">((</span><span class="n">w</span><span class="o">.</span><span class="n">real</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">lor</span>
+    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+    <span class="c1"># Gaussian function definition</span>
+
+    <span class="k">def</span> <span class="nf">gauss</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="n">gauss</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">g</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">gauss</span><span class="p">[</span><span class="n">gauss</span> <span class="o">&lt;</span> <span class="mf">1e-16</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">gauss</span>
+
+    <span class="c1"># Compute spectrum based on a set of resonances</span>
+    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">kB</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">8065.544</span>
+    <span class="n">kbT</span> <span class="o">=</span> <span class="n">kB</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">cm</span>
+
+    <span class="k">def</span> <span class="nf">calcspectrum</span><span class="p">(</span><span class="n">wlist</span><span class="p">,</span> <span class="n">rlist</span><span class="p">,</span> <span class="n">ww</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">kbT</span><span class="o">=</span><span class="n">kbT</span><span class="p">):</span>
+        <span class="n">rr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">ww</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">wi</span><span class="p">,</span> <span class="n">ri</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">wlist</span><span class="p">,</span> <span class="n">rlist</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">wi</span> <span class="o">&gt;</span> <span class="mf">1e-1</span><span class="p">:</span>
+                <span class="n">nw</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">wi</span> <span class="o">/</span> <span class="n">kbT</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">curr</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nw</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ri</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">rr</span> <span class="o">=</span> <span class="n">rr</span> <span class="o">+</span> <span class="n">curr</span> <span class="o">*</span> <span class="n">gauss</span><span class="p">(</span><span class="n">ww</span> <span class="o">-</span> <span class="n">wi</span> <span class="o">-</span> <span class="n">shift</span><span class="p">,</span> <span class="n">gamma</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rr</span>
+
+    <span class="c1"># Make a latex type formula</span>
+    <span class="k">def</span> <span class="nf">getformula</span><span class="p">(</span><span class="n">matstr</span><span class="p">):</span>
+        <span class="n">matformula</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">matstr</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="n">matformula</span> <span class="o">+=</span> <span class="s1">&#39;$_&#39;</span> <span class="o">+</span> <span class="n">ch</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">matformula</span> <span class="o">+=</span> <span class="n">ch</span>
+        <span class="k">return</span> <span class="n">matformula</span>
+
+    <span class="c1"># Set the variables and parameters</span>
+    <span class="n">wavelength_w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;wavelength_w&#39;</span><span class="p">]</span>
+    <span class="n">freqs_l</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;freqs_l&#39;</span><span class="p">]</span>
+    <span class="n">amplitudes_vvwl</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;amplitudes_vvwl&#39;</span><span class="p">]</span>
+    <span class="n">selpol</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;polarization&#39;</span><span class="p">]</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;broadening&#39;</span><span class="p">]</span>
+
+    <span class="c1"># If the wavelength was not found, return</span>
+    <span class="n">waveind</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">wavelength_w</span> <span class="o">==</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;wavelength&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">waveind</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Check the data to be consistent</span>
+    <span class="n">ampshape</span> <span class="o">=</span> <span class="n">amplitudes_vvwl</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">freqshape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">)</span>
+    <span class="n">waveshape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wavelength_w</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ampshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ampshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">ampshape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">waveshape</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">ampshape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="n">freqshape</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Make the spectrum</span>
+    <span class="n">maxw</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">)</span> <span class="o">+</span> <span class="mi">200</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1.2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">))])</span>
+    <span class="n">minw</span> <span class="o">=</span> <span class="o">-</span><span class="n">maxw</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="n">ww</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minw</span><span class="p">,</span> <span class="n">maxw</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">maxw</span><span class="p">)</span>
+    <span class="n">rr</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">maxr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">selpol</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">pol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">selpol</span><span class="p">):</span>
+        <span class="n">d_i</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">*</span> <span class="p">(</span><span class="n">pol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">pol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">pol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+        <span class="n">d_o</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">*</span> <span class="p">(</span><span class="n">pol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">pol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">pol</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+        <span class="n">rr</span><span class="p">[</span><span class="n">pol</span><span class="p">]</span> <span class="o">=</span> <span class="n">calcspectrum</span><span class="p">(</span>
+            <span class="n">freqs_l</span><span class="p">,</span> <span class="n">amplitudes_vvwl</span><span class="p">[</span><span class="n">d_i</span><span class="p">,</span> <span class="n">d_o</span><span class="p">,</span> <span class="n">waveind</span><span class="p">],</span> <span class="n">ww</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">)</span>
+        <span class="n">maxr</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rr</span><span class="p">[</span><span class="n">pol</span><span class="p">])</span>
+
+    <span class="c1"># Make the figure panel and add y=0 axis</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Plot the data and add the axis labels</span>
+    <span class="k">for</span> <span class="n">ipol</span><span class="p">,</span> <span class="n">pol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">selpol</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ww</span><span class="p">,</span> <span class="n">rr</span><span class="p">[</span><span class="n">pol</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">maxr</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ipol</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">pol</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Raman shift (cm$^{-1}$)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Raman intensity (a.u.)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="n">minw</span><span class="p">,</span> <span class="n">maxw</span><span class="p">))</span>
+
+    <span class="c1"># Add the legend to figure</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="c1"># Count the modes and their degeneracy factors</span>
+    <span class="n">w_l</span><span class="p">,</span> <span class="n">rep_l</span> <span class="o">=</span> <span class="n">count_deg</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">)</span>
+
+    <span class="c1"># Add the phonon bars to the figure with showing their degeneracy factors</span>
+    <span class="n">pltbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">w_l</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">maxw</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">rect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pltbar</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_width</span><span class="p">()</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">rep_l</span><span class="p">[</span><span class="n">idx</span><span class="p">])),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Remove the extra space and save the figure</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+
+
+<span class="c1"># Count the modes and their degeneracy factors</span>
+
+
+<div class="viewcode-block" id="count_deg">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.raman.count_deg.html#ase2sprkkr.asr.raman.count_deg">[docs]</a>
+<span class="k">def</span> <span class="nf">count_deg</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">,</span> <span class="n">freq_err</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+
+    <span class="c1"># Degeneracy factor for modes</span>
+    <span class="n">w_l</span> <span class="o">=</span> <span class="p">[</span><span class="n">freqs_l</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">rep_l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Loop over modes</span>
+    <span class="k">for</span> <span class="n">wss</span> <span class="ow">in</span> <span class="n">freqs_l</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">w_l</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w_l</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">-</span> <span class="n">wss</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">freq_err</span><span class="p">:</span>
+            <span class="n">w_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wss</span><span class="p">)</span>
+            <span class="n">rep_l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rep_l</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">w_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">w_l</span><span class="p">)</span>
+    <span class="n">rep_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rep_l</span><span class="p">)</span>
+    <span class="c1"># Return the output</span>
+    <span class="k">return</span> <span class="n">w_l</span><span class="p">,</span> <span class="n">rep_l</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

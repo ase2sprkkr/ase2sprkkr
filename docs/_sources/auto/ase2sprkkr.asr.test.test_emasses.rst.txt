@@ -1,0 +1,45 @@
+test\_emasses
+=============
+
+Full name: **ase2sprkkr.asr.test.test\_emasses**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_emasses
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _get_all_eigenvalues
+      resultstest
+      test_emasses_freelectron
+      test_emasses_indirect
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

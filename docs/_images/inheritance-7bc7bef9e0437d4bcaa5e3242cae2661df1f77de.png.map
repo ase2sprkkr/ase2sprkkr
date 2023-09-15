@@ -1,0 +1,6 @@
+<map id="inheritance338ccc792a" name="inheritance338ccc792a">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,230,25"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="253,4,487,25"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.common.configuration_definitions.ControlDefinition" target="_top" title="Control definitions has no grammar, they just modify the other items of the container" alt="" coords="511,4,748,25"/>
+<area shape="rect" id="node4" href="#ase2sprkkr.common.configuration_definitions.Switch" target="_top" title="Items of this class can control, which elements of grammar will be active and which not" alt="" coords="772,4,956,25"/>
+</map>

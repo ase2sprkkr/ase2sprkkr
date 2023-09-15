@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PotentialDefinition &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +65,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -85,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -102,11 +108,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.potentials.html">potentials</a> &raquo;</li>
-          <li><a href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a> &raquo;</li>
-      <li>PotentialDefinition</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.potentials.html">potentials</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a></li>
+      <li class="breadcrumb-item active">PotentialDefinition</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto/ase2sprkkr.potentials.potential_definitions.PotentialDefinition.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,31 +123,36 @@
            <div itemprop="articleBody">
              
   <section id="potentialdefinition">
-<h1>PotentialDefinition<a class="headerlink" href="#potentialdefinition" title="Permalink to this heading"></a></h1>
+<h1>PotentialDefinition<a class="headerlink" href="#potentialdefinition" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_definitions.</span></span><span class="sig-name descname"><span class="pre">PotentialDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.potentials.potential_definitions.</span></span><span class="sig-name descname"><span class="pre">PotentialDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition" title="Link to this definition"></a></dt>
 <dd><p>This class describes the format of a potential file</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-782819420b66ab5add71c330f89deb454a7f9546.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_definitions.PotentialDefinition" usemap="#inheritance635629d395" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-b513c85835714e5f3684c49d0d734ec75bd484ff.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_definitions.PotentialDefinition" usemap="#inheritance635629d395" class="inheritance graphviz" /></div>
 <map id="inheritance635629d395" name="inheritance635629d395">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="612,3,777,18"/>
-<area shape="rect" id="node5" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition" target="_top" title="This class describes the format of a potential file" alt="" coords="794,3,957,18"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="382,3,595,18"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="3,3,167,18"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="184,3,365,18"/>
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="671,3,808,15"/>
+<area shape="rect" id="node6" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition" target="_top" title="This class describes the format of a potential file" alt="" coords="822,3,957,15"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="480,3,657,15"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,138,15"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="152,3,301,15"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="315,3,466,15"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the value/section</p></li>
-<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value</p></li>
+<li><p><strong>written_name</strong> (<em>str</em><em> or </em><em>None</em>) – Name to write to the input file. Default None means use the name.</p></li>
+<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value. If no written_name is given,
+the first alternative_names is used for the output. However, contrary to
+written_name, such way still allow to parse the name during parsing as
+the name of the value.</p></li>
 <li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
 <li><p><strong>is_hidden</strong> (<em>boolean</em>) – Hidden values are not offered to a user, usually they are
 set by another object (and so a direct setting of their values
@@ -154,7 +165,18 @@ If None, the default class value is used</p></li>
 <li><p><strong>info</strong> (<em>str</em>) – A short help message for the value/section. It will be the perex for description.</p></li>
 <li><p><strong>description</strong> (<em>str</em>) – The additional informations for the users.</p></li>
 <li><p><strong>write_alternative_name</strong> – Wheter use the name or the (first) alternative name in the output.</p></li>
-<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section</p></li>
+<li><p><strong>write_condition</strong> – If defined, write the value, only if write_condition(the option) is True.</p></li>
+<li><p><strong>condition</strong> – <dl class="simple">
+<dt>If defined, the condition</dt><dd><ul>
+<li><p>the condition.parse_condition() is invoked, when given grammar element
+should be parsed. If it is False, the element is skipped</p></li>
+<li><p>the condition() is invoked, when the elements of the container is listed
+to hide the inactive members</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section.</p></li>
 </ul>
 </dd>
 </dl>
@@ -162,44 +184,44 @@ If None, the default class value is used</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.child_class">
-<span class="sig-name descname"><span class="pre">child_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.child_class" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">child_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.child_class" title="Link to this definition"></a></dt>
 <dd><p>Definition of the standard child class:</p>
 <p>alias of <a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.PotSectionDefinition" title="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">PotSectionDefinition</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.result_class">
-<span class="sig-name descname"><span class="pre">result_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.result_class" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">result_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.result_class" title="Link to this definition"></a></dt>
 <dd><p>The parsing of a potential file results in an instance of Potential.</p>
 <p>alias of <a class="reference internal" href="ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" title="ase2sprkkr.potentials.potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.configuration_type_name">
-<span class="sig-name descname"><span class="pre">configuration_type_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'POTENTIAL</span> <span class="pre">FILE'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.configuration_type_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">configuration_type_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'POTENTIAL</span> <span class="pre">FILE'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.configuration_type_name" title="Link to this definition"></a></dt>
 <dd><p>Name of the container type in the runtime documentation</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.force_order">
-<span class="sig-name descname"><span class="pre">force_order</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.force_order" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">force_order</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.force_order" title="Link to this definition"></a></dt>
 <dd><p>The order of items in potential file is fixed</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.delimiter">
-<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'*******************************************************************************\n'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.delimiter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'*******************************************************************************\n'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.delimiter" title="Link to this definition"></a></dt>
 <dd><p>Sections delimiter</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter">
-<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Suppress:(*******************************************************************************&lt;newline&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">Suppress:(*******************************************************************************&lt;newline&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.grammar_of_delimiter" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>
 </dd>
 </dl>
@@ -207,25 +229,25 @@ If None, the default class value is used</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_class">
-<span class="sig-name descname"><span class="pre">custom_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_class" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">custom_class</span></span><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_class" title="Link to this definition"></a></dt>
 <dd><p>Unknown sections will be of this type</p>
 <p>alias of <a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" title="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomPotentialSection</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition._generic_info">
-<span class="sig-name descname"><span class="pre">_generic_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition._generic_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition._generic_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_generic_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition._generic_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition._generic_info" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_value_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition.custom_value_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_value_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/potentials/potential_definitions.html#PotentialDefinition.custom_value_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_value_grammar" title="Link to this definition"></a></dt>
 <dd><p>Unknown sections are parsed by this grammar</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters">
-<span class="sig-name descname"><span class="pre">custom_name_characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-()</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">custom_name_characters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-()</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition.custom_name_characters" title="Link to this definition"></a></dt>
 <dd><p>There can be space in a potential-section name</p>
 </dd></dl>
 

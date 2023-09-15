@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.database.browser &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.database.browser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.database.browser</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">dct_to_result</span><span class="p">,</span>
+                      <span class="n">ASRResult</span><span class="p">,</span> <span class="n">UnknownDataFormat</span><span class="p">,</span> <span class="n">get_recipe_from_name</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">ase.db.row</span> <span class="kn">import</span> <span class="n">AtomsRow</span>
+<span class="kn">from</span> <span class="nn">ase.db.core</span> <span class="kn">import</span> <span class="n">float_to_time_string</span><span class="p">,</span> <span class="n">now</span>
+
+<span class="k">assert</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">plotlyjs</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;&lt;script src=&quot;https://cdn.plot.ly/plotly-latest.min.js&quot;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;&lt;/script&gt;&#39;</span><span class="p">)</span>
+<span class="n">external_libraries</span> <span class="o">=</span> <span class="p">[</span><span class="n">plotlyjs</span><span class="p">]</span>
+
+<span class="n">unique_key</span> <span class="o">=</span> <span class="s1">&#39;uid&#39;</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;legend.fontsize&#39;</span><span class="p">:</span> <span class="s1">&#39;large&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;axes.labelsize&#39;</span><span class="p">:</span> <span class="s1">&#39;large&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;axes.titlesize&#39;</span><span class="p">:</span> <span class="s1">&#39;large&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;xtick.labelsize&#39;</span><span class="p">:</span> <span class="s1">&#39;large&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;ytick.labelsize&#39;</span><span class="p">:</span> <span class="s1">&#39;large&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;savefig.dpi&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_table">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.create_table.html#ase2sprkkr.asr.database.browser.create_table">[docs]</a>
+<span class="k">def</span> <span class="nf">create_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>  <span class="c1"># AtomsRow</span>
+                 <span class="n">header</span><span class="p">,</span>  <span class="c1"># List[str]</span>
+                 <span class="n">keys</span><span class="p">,</span>  <span class="c1"># List[str]</span>
+                 <span class="n">key_descriptions</span><span class="p">,</span>  <span class="c1"># Dict[str, Tuple[str, str, str]]</span>
+                 <span class="n">digits</span><span class="o">=</span><span class="mi">3</span>  <span class="c1"># int</span>
+                 <span class="p">):</span>  <span class="c1"># -&gt; Dict[str, Any]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create table-dict from row.&quot;&quot;&quot;</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span>
+            <span class="n">age</span> <span class="o">=</span> <span class="n">float_to_time_string</span><span class="p">(</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">row</span><span class="o">.</span><span class="n">ctime</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="n">age</span><span class="p">))</span>
+            <span class="k">continue</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;{:.</span><span class="si">{}</span><span class="s1">f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">longdesc</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">key_descriptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">unit</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">unit</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">desc</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="n">header</span><span class="p">,</span>
+            <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="n">table</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="miscellaneous_section">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.miscellaneous_section.html#ase2sprkkr.asr.database.browser.miscellaneous_section">[docs]</a>
+<span class="k">def</span> <span class="nf">miscellaneous_section</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">,</span> <span class="n">exclude</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make help function for adding a &quot;miscellaneous&quot; section.</span>
+
+<span class="sd">    Create table with all keys except those in exclude.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">misckeys</span> <span class="o">=</span> <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">key_descriptions</span><span class="p">)</span>
+                <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">key_value_pairs</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span>
+    <span class="n">misc</span> <span class="o">=</span> <span class="n">create_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Items&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">misckeys</span><span class="p">),</span> <span class="n">key_descriptions</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;Miscellaneous&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="n">misc</span><span class="p">]])</span></div>
+
+
+
+<div class="viewcode-block" id="describe_entry">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.describe_entry.html#ase2sprkkr.asr.database.browser.describe_entry">[docs]</a>
+<span class="k">def</span> <span class="nf">describe_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> \
+       <span class="ow">and</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">value</span> \
+       <span class="ow">and</span> <span class="s1">&#39;description&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span>
+                    <span class="n">description</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">description</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="describe_entries">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.describe_entries.html#ase2sprkkr.asr.database.browser.describe_entries">[docs]</a>
+<span class="k">def</span> <span class="nf">describe_entries</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">description</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">ir</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">ic</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incompatible value=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">describe_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span>
+            <span class="n">rows</span><span class="p">[</span><span class="n">ir</span><span class="p">][</span><span class="n">ic</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">rows</span></div>
+
+
+
+<div class="viewcode-block" id="dict_to_list">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.dict_to_list.html#ase2sprkkr.asr.database.browser.dict_to_list">[docs]</a>
+<span class="k">def</span> <span class="nf">dict_to_list</span><span class="p">(</span><span class="n">dct</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">char</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">lst2</span> <span class="o">=</span> <span class="n">dict_to_list</span><span class="p">(</span><span class="n">value</span><span class="p">,</span>
+                                <span class="n">indent</span><span class="o">=</span><span class="n">indent</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+                                <span class="n">char</span><span class="o">=</span><span class="n">char</span><span class="p">)</span>
+            <span class="n">lst</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">indent</span> <span class="o">*</span> <span class="n">char</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&lt;/b&gt;=&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">lst2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">indent</span> <span class="o">*</span> <span class="n">char</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">&lt;/b&gt;=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lst</span></div>
+
+
+
+<div class="viewcode-block" id="entry_parameter_description">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.entry_parameter_description.html#ase2sprkkr.asr.database.browser.entry_parameter_description">[docs]</a>
+<span class="k">def</span> <span class="nf">entry_parameter_description</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;results-</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.json&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">params</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">recipe</span> <span class="o">=</span> <span class="n">get_recipe_from_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get_defaults</span><span class="p">()</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;No parameters can be found, meaning that&#39;</span>
+                  <span class="s1">&#39;the recipe was probably run with the &#39;</span>
+                  <span class="s1">&#39;default parameter set below</span><span class="se">\n</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;&lt;b&gt;Default parameters&lt;/b&gt;&#39;</span><span class="p">)</span>
+
+    <span class="n">lst</span> <span class="o">=</span> <span class="n">dict_to_list</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&lt;pre&gt;&lt;code&gt;&#39;</span> <span class="o">+</span> <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lst</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">lst</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&lt;/code&gt;&lt;/pre&gt;&#39;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;&lt;b&gt;Calculation parameters&lt;/b&gt;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="o">+</span> <span class="n">header</span>
+        <span class="o">+</span> <span class="n">string</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">describe_entry</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span> <span class="n">description</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="val2str">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.val2str.html#ase2sprkkr.asr.database.browser.val2str">[docs]</a>
+<span class="k">def</span> <span class="nf">val2str</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;{:.</span><span class="si">{}</span><span class="s1">f}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="fig">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.fig.html#ase2sprkkr.asr.database.browser.fig">[docs]</a>
+<span class="k">def</span> <span class="nf">fig</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Dict[str, Any]&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shortcut for figure dict.&quot;&quot;&quot;</span>
+    <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">link</span><span class="p">:</span>
+        <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;link&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">link</span>
+    <span class="k">if</span> <span class="n">caption</span><span class="p">:</span>
+        <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;caption&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">caption</span>
+    <span class="k">return</span> <span class="n">dct</span></div>
+
+
+
+<div class="viewcode-block" id="table">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.table.html#ase2sprkkr.asr.database.browser.table">[docs]</a>
+<span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">kd</span><span class="o">=</span><span class="p">{},</span> <span class="n">digits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">create_table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="p">[</span><span class="n">title</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">],</span> <span class="n">keys</span><span class="p">,</span> <span class="n">kd</span><span class="p">,</span> <span class="n">digits</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="merge_panels">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.merge_panels.html#ase2sprkkr.asr.database.browser.merge_panels">[docs]</a>
+<span class="k">def</span> <span class="nf">merge_panels</span><span class="p">(</span><span class="n">page</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge panels which have the same title.</span>
+
+<span class="sd">    Also merge tables with same first entry in header.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Update panels</span>
+    <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">panels</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">panels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">panels</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;sort&#39;</span><span class="p">])</span>
+
+        <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                 <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[],</span> <span class="p">[]],</span>
+                 <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                 <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="n">panels</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;sort&#39;</span><span class="p">]}</span>
+        <span class="n">known_tables</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tmppanel</span> <span class="ow">in</span> <span class="n">panels</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">tmppanel</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">column</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;table&#39;</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="s1">&#39;header&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="n">header</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">known_tables</span><span class="p">:</span>
+                                <span class="n">known_tables</span><span class="p">[</span><span class="n">header</span><span class="p">][</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span> \
+                                    <span class="n">extend</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">])</span>
+                                <span class="n">column</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">known_tables</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
+
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">tmppanel</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+
+            <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">]</span>
+            <span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">item</span><span class="p">]</span>
+            <span class="n">panel</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">panel</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">panel</span><span class="p">[</span><span class="s1">&#39;plot_descriptions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmppanel</span><span class="p">[</span><span class="s1">&#39;plot_descriptions&#39;</span><span class="p">])</span>
+        <span class="n">page</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">panel</span></div>
+
+
+
+<div class="viewcode-block" id="extract_recipe_from_filename">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.extract_recipe_from_filename.html#ase2sprkkr.asr.database.browser.extract_recipe_from_filename">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_recipe_from_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse filename and return recipe name.&quot;&quot;&quot;</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;results-(.*)\.json&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="is_results_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.is_results_file.html#ase2sprkkr.asr.database.browser.is_results_file">[docs]</a>
+<span class="k">def</span> <span class="nf">is_results_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;results-&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="RowWrapper">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.RowWrapper.html#ase2sprkkr.asr.database.browser.RowWrapper">[docs]</a>
+<span class="k">class</span> <span class="nc">RowWrapper</span><span class="p">:</span>
+
+<div class="viewcode-block" id="RowWrapper.__init__">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.RowWrapper.html#ase2sprkkr.asr.database.browser.RowWrapper.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_row</span> <span class="o">=</span> <span class="n">row</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap attribute lookup of AtomsRow.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_row</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap contains of atomsrow.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row</span><span class="o">.</span><span class="fm">__contains__</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="layout">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.browser.layout.html#ase2sprkkr.asr.database.browser.layout">[docs]</a>
+<span class="k">def</span> <span class="nf">layout</span><span class="p">(</span><span class="n">row</span><span class="p">:</span> <span class="n">AtomsRow</span><span class="p">,</span>
+           <span class="n">key_descriptions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+           <span class="n">prefix</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Page layout.&quot;&quot;&quot;</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">row</span> <span class="o">=</span> <span class="n">RowWrapper</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">is_results_file</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">dct_to_result</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">UnknownDataFormat</span><span class="p">:</span>
+                <span class="n">value</span><span class="p">[</span><span class="s1">&#39;__asr_hacked__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">dct_to_result</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">assert</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">obj</span>
+
+    <span class="c1"># Locate all webpanels</span>
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">),</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="s1">&#39;ase_webpanel&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">get_formats</span><span class="p">():</span>
+            <span class="k">continue</span>
+        <span class="n">panels</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">format_as</span><span class="p">(</span><span class="s1">&#39;ase_webpanel&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">panels</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">thispanel</span> <span class="ow">in</span> <span class="n">panels</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="s1">&#39;title&#39;</span> <span class="ow">in</span> <span class="n">thispanel</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;No title in </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s1"> webpanel&#39;</span>
+            <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[],</span> <span class="p">[]],</span>
+                     <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                     <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">99</span><span class="p">}</span>
+            <span class="n">panel</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">thispanel</span><span class="p">)</span>
+            <span class="n">paneltitle</span> <span class="o">=</span> <span class="n">panel</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">paneltitle</span> <span class="ow">in</span> <span class="n">page</span><span class="p">:</span>
+                <span class="n">page</span><span class="p">[</span><span class="n">paneltitle</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">page</span><span class="p">[</span><span class="n">paneltitle</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span>
+
+    <span class="n">merge_panels</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="p">[</span><span class="n">panel</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">panel</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+    <span class="c1"># Sort sections if they have a sort key</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sort&#39;</span><span class="p">,</span> <span class="mi">99</span><span class="p">))]</span>
+
+    <span class="n">misc_title</span><span class="p">,</span> <span class="n">misc_columns</span> <span class="o">=</span> <span class="n">miscellaneous_section</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">,</span>
+                                                     <span class="n">exclude</span><span class="p">)</span>
+    <span class="n">misc_panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">misc_title</span><span class="p">,</span>
+                  <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="n">misc_columns</span><span class="p">}</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">misc_panel</span><span class="p">)</span>
+
+    <span class="c1"># Get descriptions of figures that are created by all webpanels</span>
+    <span class="n">plot_descriptions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">panel</span> <span class="ow">in</span> <span class="n">page</span><span class="p">:</span>
+        <span class="n">plot_descriptions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">panel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot_descriptions&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+    <span class="c1"># List of functions and the figures they create:</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># missing figures</span>
+    <span class="k">for</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">plot_descriptions</span><span class="p">:</span>
+        <span class="n">function</span> <span class="o">=</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;filenames&#39;</span><span class="p">]</span>
+        <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                <span class="c1"># Create figure(s) only once:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">function</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="o">*</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ASRTESTENV&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                        <span class="k">raise</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                        <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># mark as missing</span>
+                <span class="k">break</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">missing</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="c1"># We convert the page into ASE format</span>
+    <span class="n">asepage</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">panel</span> <span class="ow">in</span> <span class="n">page</span><span class="p">:</span>
+        <span class="n">asepage</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">panel</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span> <span class="n">panel</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">ok</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;table&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;figure&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">])</span> <span class="ow">in</span> <span class="n">missing</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># Remove missing figures from layout:</span>
+    <span class="n">final_page</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">columns</span> <span class="ow">in</span> <span class="n">asepage</span><span class="p">:</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[[</span><span class="n">block</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">column</span> <span class="k">if</span> <span class="n">ok</span><span class="p">(</span><span class="n">block</span><span class="p">)]</span>
+                   <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">columns</span><span class="p">):</span>
+            <span class="n">final_page</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">title</span><span class="p">,</span> <span class="n">columns</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">final_page</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.database.browser&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--database&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--only-figures&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Dont show browser, just save figures&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;database.db&#39;</span><span class="p">,</span>
+         <span class="n">only_figures</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Open results in web browser.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+    <span class="n">custom</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;python3 -m ase db </span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1"> -w -M </span><span class="si">{</span><span class="n">custom</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">only_figures</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39; -l&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

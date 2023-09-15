@@ -1,0 +1,8 @@
+test\_database\_rmsd\_move\_one\_atom
+=====================================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_rmsd.test\_database\_rmsd\_move\_one\_atom**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_database_rmsd
+
+.. autofunction:: test_database_rmsd_move_one_atom

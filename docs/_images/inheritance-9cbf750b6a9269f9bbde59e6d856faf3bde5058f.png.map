@@ -1,6 +1,0 @@
-<map id="inheritancec704dbed98" name="inheritancec704dbed98">
-<area shape="rect" id="node1" href="ase2sprkkr.common.grammar_types.BaseString.html#ase2sprkkr.common.grammar_types.BaseString" target="_top" title="Base type for string grammar types" alt="" coords="544,5,743,31"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.common.grammar_types.String" target="_top" title="Just a string (without whitespaces and few special chars)" alt="" coords="772,5,939,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.grammar_types.TypedGrammarType.html#ase2sprkkr.common.grammar_types.TypedGrammarType" target="_top" title="grammar_types.TypedGrammarType" alt="" coords="256,5,515,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.grammar_types.GrammarType.html#ase2sprkkr.common.grammar_types.GrammarType" target="_top" title="Base class for definition of configuration option types" alt="" coords="5,5,227,31"/>
-</map>

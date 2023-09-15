@@ -12,11 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.sprkkr.atomic_types</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.sprkkr.atomic_types</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -89,8 +93,10 @@
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 
-<div class="viewcode-block" id="AtomicType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType">[docs]</a><span class="k">class</span> <span class="nc">AtomicType</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; Atomic type represent a type of atom, that could be placed at the atomic site.</span>
+<div class="viewcode-block" id="AtomicType">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType">[docs]</a>
+<span class="k">class</span> <span class="nc">AtomicType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Atomic type represent a type of atom, that could be placed at the atomic site.</span>
 
 <span class="sd">    It can be either a real chemical element, or vacuum pseudoelement.</span>
 <span class="sd">    It also determine the number of electrons and valence electrons.</span>
@@ -110,8 +116,10 @@
           <span class="n">AtomicType</span><span class="o">.</span><span class="n">_mendeleev_module</span> <span class="o">=</span> <span class="n">mendeleev</span>
         <span class="k">return</span> <span class="n">AtomicType</span><span class="o">.</span><span class="n">_mendeleev_module</span><span class="o">.</span><span class="n">element</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AtomicType.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">atomic_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_core</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_semicore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_electrons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AtomicType.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">atomic_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_core</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_valence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_semicore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_electrons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        symbol: str or int</span>
@@ -169,7 +177,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_n_electrons</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AtomicType._check_n_electrons"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType._check_n_electrons">[docs]</a>    <span class="k">def</span> <span class="nf">_check_n_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AtomicType._check_n_electrons">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType._check_n_electrons">[docs]</a>
+    <span class="k">def</span> <span class="nf">_check_n_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_n_core</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_n_valence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
@@ -183,11 +194,14 @@
 <span class="s2">n_valence: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_valence</span><span class="si">}</span><span class="s2">,</span>
 <span class="s2">n_semicore: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_semicore</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">)</span></div>
 
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">atomic_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_atomic_number</span>
 
-<div class="viewcode-block" id="AtomicType._clear_symbol_cache"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType._clear_symbol_cache">[docs]</a>    <span class="k">def</span> <span class="nf">_clear_symbol_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType._clear_symbol_cache">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType._clear_symbol_cache">[docs]</a>
+    <span class="k">def</span> <span class="nf">_clear_symbol_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
           <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">mendeleev</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -202,6 +216,7 @@
           <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
           <span class="k">pass</span></div>
+
 
     <span class="nd">@atomic_number</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">atomic_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
@@ -272,8 +287,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_semicore</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__check_n_electrons</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AtomicType.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.copy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.copy">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;X&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span>
@@ -281,17 +299,27 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AtomicType.to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.to_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.to_tuple">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.to_tuple">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_electrons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_core</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_valence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_semicore</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomicType.to_atomic_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.to_atomic_type">[docs]</a>    <span class="nd">@classmethod</span>
+
+<div class="viewcode-block" id="AtomicType.to_atomic_type">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.to_atomic_type">[docs]</a>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">to_atomic_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
            <span class="k">return</span> <span class="n">value</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AtomicType.is_vacuum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.is_vacuum">[docs]</a>    <span class="k">def</span> <span class="nf">is_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span> <span class="o">==</span> <span class="mi">0</span></div></div>
+
+<div class="viewcode-block" id="AtomicType.is_vacuum">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.atomic_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.is_vacuum">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_vacuum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atomic_number</span> <span class="o">==</span> <span class="mi">0</span></div>
+</div>
+
 </pre></div>
 
            </div>

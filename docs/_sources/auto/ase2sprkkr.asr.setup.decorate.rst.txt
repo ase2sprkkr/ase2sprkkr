@@ -1,0 +1,45 @@
+decorate
+========
+
+Full name: **ase2sprkkr.asr.setup.decorate**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.setup.decorate
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      apply_substitution
+      find_substitutions
+      generate_structures
+      get_p_ab
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

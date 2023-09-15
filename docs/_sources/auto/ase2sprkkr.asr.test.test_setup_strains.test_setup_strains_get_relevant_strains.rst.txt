@@ -1,0 +1,8 @@
+test\_setup\_strains\_get\_relevant\_strains
+============================================
+
+Full name: **ase2sprkkr.asr.test.test\_setup\_strains.test\_setup\_strains\_get\_relevant\_strains**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_setup_strains
+
+.. autofunction:: test_setup_strains_get_relevant_strains

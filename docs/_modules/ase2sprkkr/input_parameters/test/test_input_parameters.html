@@ -12,11 +12,11 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.input_parameters.test.test_input_parameters</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.input_parameters.test.test_input_parameters</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -97,14 +101,51 @@
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">input_parameters</span> <span class="k">as</span> <span class="n">input_parameters</span>
 <span class="kn">from</span> <span class="nn">...common.configuration_containers</span> <span class="kn">import</span> <span class="n">Section</span><span class="p">,</span> <span class="n">CustomSection</span>
 <span class="kn">from</span> <span class="nn">...common.options</span> <span class="kn">import</span> <span class="n">Option</span><span class="p">,</span> <span class="n">CustomOption</span>
+<span class="kn">from</span> <span class="nn">...common.configuration_definitions</span> <span class="kn">import</span> <span class="n">gather</span><span class="p">,</span> <span class="n">switch</span>
 <span class="kn">import</span> <span class="nn">io</span><span class="o">,</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">...common.grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
 <span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<div class="viewcode-block" id="TestInputParameters"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters">[docs]</a><span class="k">class</span> <span class="nc">TestInputParameters</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputValueDefinition</span>
+<div class="viewcode-block" id="ar">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.ar.html#ase2sprkkr.input_parameters.test.test_input_parameters.ar">[docs]</a>
+<span class="k">def</span> <span class="nf">ar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestInputParameters.test_section_delimiter_value"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_section_delimiter_value">[docs]</a>  <span class="k">def</span> <span class="nf">test_section_delimiter_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="TestInputParameters">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters">[docs]</a>
+<span class="k">class</span> <span class="nc">TestInputParameters</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestInputParameters.assertParse">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.assertParse">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertParse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span><span class="o">.</span><span class="n">asList</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestInputParameters.parse">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.parse">[docs]</a>
+  <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParserElement</span><span class="p">):</span>
+           <span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestInputParameters.assertNotValid">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.assertNotValid">[docs]</a>
+  <span class="k">def</span> <span class="nf">assertNotValid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">grammar</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="TestInputParameters.test_section_delimiter_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_section_delimiter_value">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_section_delimiter_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
      <span class="n">grammar</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">grammar_of_delimiter</span><span class="p">()</span>
      <span class="n">grammar</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span> <span class="o">+</span> <span class="n">grammar</span> <span class="o">+</span> <span class="s1">&#39;b&#39;</span>
      <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;a b&#39;</span><span class="p">,</span><span class="s1">&#39;a</span><span class="se">\n</span><span class="s1"> b&#39;</span><span class="p">,</span><span class="s1">&#39;a</span><span class="se">\n\n</span><span class="s1"> b&#39;</span><span class="p">,</span><span class="s1">&#39;a</span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> b&#39;</span><span class="p">,</span><span class="s1">&#39;a </span><span class="se">\n\n</span><span class="s1"> b&#39;</span><span class="p">,</span> <span class="s1">&#39;a</span><span class="se">\n\n\n</span><span class="s1"> b&#39;</span><span class="p">]:</span>
@@ -113,15 +154,16 @@
          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="n">grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">asList</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="TestInputParameters.test_custom_value"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_custom_value">[docs]</a>  <span class="k">def</span> <span class="nf">test_custom_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestInputParameters.test_custom_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_custom_value">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_custom_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
      <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
        <span class="n">cv</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputSectionDefinition</span><span class="o">.</span><span class="n">custom_member_grammar</span><span class="p">([</span><span class="s1">&#39;aaa&#39;</span><span class="p">])</span>
      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">whiteChars</span><span class="p">)</span>
-     <span class="k">def</span> <span class="nf">assertParse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="n">result</span><span class="p">):</span>
-         <span class="k">assert</span> <span class="n">cv</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">result</span>
 
-     <span class="k">def</span> <span class="nf">assertNotValid</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">cv</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+     <span class="n">assertParse</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cv</span><span class="p">)</span>
+     <span class="n">assertNotValid</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertNotValid</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cv</span><span class="p">)</span>
 
      <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;bbb=1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
      <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;bbb=1.3&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">))</span>
@@ -130,20 +172,23 @@
      <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;aaa=1&quot;</span><span class="p">)</span>
      <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
         <span class="n">cv</span> <span class="o">=</span> <span class="n">cv</span> <span class="o">+</span> <span class="s1">&#39;a&#39;</span>
-     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;bbb=1a&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1">#in this case, &#39;a&#39; is in result[1]</span>
+     <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;bbb=1a&quot;</span><span class="p">,</span> <span class="n">cv</span><span class="p">)</span>
+     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="p">[(</span><span class="s1">&#39;bbb&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">])</span>
      <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;bbb=1</span><span class="se">\n</span><span class="s2">a&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TestInputParameters.test_dangerous_value"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_dangerous_value">[docs]</a>  <span class="k">def</span> <span class="nf">test_dangerous_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestInputParameters.test_dangerous_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_dangerous_value">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_dangerous_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
      <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
        <span class="n">cv</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputValueDefinition</span><span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
-     <span class="k">def</span> <span class="nf">assertParse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="n">result</span><span class="p">):</span>
-         <span class="k">assert</span> <span class="n">cv</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">result</span>
+
+     <span class="n">assertParse</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cv</span><span class="p">)</span>
+     <span class="n">assertNotValid</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertNotValid</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cv</span><span class="p">)</span>
      <span class="k">def</span> <span class="nf">assertParseDangerous</span><span class="p">(</span><span class="n">text</span><span class="p">,</span><span class="n">result</span><span class="p">):</span>
          <span class="n">out</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
          <span class="k">assert</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
          <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-     <span class="k">def</span> <span class="nf">assertNotValid</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">cv</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
 
      <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;aaa=1&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
      <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">)</span>
@@ -158,9 +203,31 @@
      <span class="n">assertParseDangerous</span><span class="p">(</span><span class="s2">&quot;aaa=sss&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="s1">&#39;sss&#39;</span><span class="p">))</span>
      <span class="n">assertParseDangerous</span><span class="p">(</span><span class="s2">&quot;aaa={2,3}&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;aaa&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])))</span></div>
 
-<div class="viewcode-block" id="TestInputParameters.test_input_parameters_definition"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_input_parameters_definition">[docs]</a>  <span class="k">def</span> <span class="nf">test_input_parameters_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">V</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputValueDefinition</span>
 
+<div class="viewcode-block" id="TestInputParameters.test_write_condition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_write_condition">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_write_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">input_parameters_def</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="p">]})</span>
+    <span class="k">del</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="s1">&#39;TASK&#39;</span><span class="p">]</span>
+    <span class="nb">id</span><span class="o">=</span><span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="s1">&#39;ENERGY E=1&#39;</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">id</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s2">&quot;ENERGY</span><span class="se">\n\t</span><span class="s2">E=1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">input_parameters_def</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">write_condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">id</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s2">&quot;ENERGY</span><span class="se">\n\t</span><span class="s2">E=1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">input_parameters_def</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">][</span><span class="s1">&#39;E&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">write_condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">id</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s2">&quot;ENERGY</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">input_parameters_def</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">write_condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">id</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s2">&quot;ENERGY</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">input_parameters_def</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">write_condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">id</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestInputParameters.test_input_parameters_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_input_parameters_definition">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_input_parameters_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">input_parameters_def</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
       <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="n">V</span><span class="p">(</span><span class="s1">&#39;GRID&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">fixed_value</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
@@ -171,23 +238,10 @@
         <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
       <span class="p">]</span>
     <span class="p">})</span>
-
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">_grammar</span> <span class="o">=</span> <span class="n">_grammar</span> <span class="ow">or</span> <span class="n">grammar</span>
-        <span class="k">return</span> <span class="n">_grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">assertNotValid</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">grammar</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="nf">assertParse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">_grammar</span><span class="p">)</span><span class="o">.</span><span class="n">asList</span><span class="p">()</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">ar</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-      <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
     <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;SITES&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;NL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertParse</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertNotValid</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">grammar</span><span class="p">)</span>
+
     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;NL=3&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
     <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="s1">&#39;NE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;NE=</span><span class="si">{3}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
@@ -215,32 +269,32 @@
 
     <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">)}})</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 
 
 <span class="s2">          &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="mi">300</span><span class="p">}})</span>
     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY</span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
-<span class="s2">                     GRID=</span><span class="si">{3}</span><span class="s2"></span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
+<span class="s2">                     GRID=</span><span class="si">{3}</span>
 
 
-<span class="s2">SITES NL=2&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="mi">300</span><span class="p">},</span> <span class="s1">&#39;SITES&#39;</span><span class="p">:{</span><span class="s1">&#39;NL&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">}}</span> <span class="p">)</span>
+<span class="s2">SITES NL=2&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span> <span class="s1">&#39;SITES&#39;</span><span class="p">:{</span><span class="s1">&#39;NL&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">}}</span> <span class="p">)</span>
 
     <span class="c1">#custom values</span>
     <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
-      <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_values_grammar</span><span class="p">()</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+      <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_grammar_of_values</span><span class="p">()</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">300</span><span class="p">)})</span>
 
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                   NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;GRID=</span><span class="si">{3}</span>
+<span class="s2">                   NE=</span><span class="si">{300}</span>
 <span class="s2">                   NXXX=5&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">300</span><span class="p">),</span> <span class="s1">&#39;NXXX&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
 
     <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX=5</span>
 
 
@@ -249,8 +303,8 @@
     <span class="p">)</span>
 
 
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX</span>
 
 <span class="s2">SITES NL=2</span>
@@ -260,8 +314,8 @@
     <span class="p">)</span>
 
     <span class="c1">#SITES do not start on the begin of the line, so it is not the start of the section</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX</span>
 
 <span class="s2">     SITES NL=2</span>
@@ -271,8 +325,8 @@
     <span class="p">)</span>
 
 
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX</span>
 
 <span class="s2">  SITES NL=2</span>
@@ -283,8 +337,8 @@
 
 
 
-    <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX</span>
 
 
@@ -294,10 +348,11 @@
 <span class="s2">              &quot;&quot;&quot;</span><span class="p">)</span>
 
     <span class="c1">#custom section</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX</span>
 
+<span class="s2">    #numbered_arrays</span>
 
 <span class="s2">SITES NL=2</span>
 
@@ -310,8 +365,8 @@
       <span class="p">})</span>
 
     <span class="c1">#multiline custom section</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NXXX</span>
 
 
@@ -327,10 +382,10 @@
       <span class="p">})</span>
 
     <span class="c1">#custom section with a flag</span>
-    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
 <span class="s2">                     NXXX</span>
+<span class="s2">                     NE=</span><span class="si">{300}</span>
 <span class="s2">                     NZZZ=4</span>
-<span class="s2">                     NE=</span><span class="si">{300}</span><span class="s2"></span>
 
 
 <span class="s2">SITES NL=2</span>
@@ -339,12 +394,12 @@
 <span class="s2">                     FLOAT=3.5</span>
 <span class="s2">              &quot;&quot;&quot;</span><span class="p">,</span>
 
-         <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">300</span><span class="p">),</span> <span class="s1">&#39;NXXX&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;NZZZ&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">},</span>
+     <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;NXXX&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="n">ar</span><span class="p">(</span><span class="mi">300</span><span class="p">),</span> <span class="s1">&#39;NZZZ&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">},</span>
                               <span class="s1">&#39;SITES&#39;</span><span class="p">:{</span><span class="s1">&#39;NL&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">},</span>
                               <span class="s1">&#39;XSITES&#39;</span><span class="p">:{</span><span class="s1">&#39;NR&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;FLAG&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;FLOAT&#39;</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">}</span>
       <span class="p">})</span>
 
-    <span class="n">ips</span><span class="o">=</span><span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"></span>
+    <span class="n">ips</span><span class="o">=</span><span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY GRID=</span><span class="si">{3}</span>
 <span class="s2">                     NE={300,200}</span>
 <span class="s2">                     NXXX</span>
 
@@ -365,6 +420,15 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">ips</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">,</span> <span class="s1">&#39;NXXX&#39;</span><span class="p">))</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ips</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span><span class="mi">200</span><span class="p">)))</span>
+    <span class="n">cps</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">copy_values</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cps</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">100</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ips</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">300</span><span class="p">,</span><span class="mi">200</span><span class="p">)))</span>
+    <span class="n">dps</span> <span class="o">=</span> <span class="n">cps</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">dps</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">150</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cps</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">150</span><span class="p">,</span><span class="mi">200</span><span class="p">)))</span>
+    <span class="n">cps</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">180</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">dps</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">180</span><span class="p">,</span><span class="mi">200</span><span class="p">)))</span>
+
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ips</span><span class="p">[</span><span class="s1">&#39;SITES&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">NL</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ips</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_path</span><span class="p">(),</span> <span class="s1">&#39;SITES.NL&#39;</span><span class="p">)</span>
     <span class="n">ips</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -388,9 +452,12 @@
     <span class="n">output</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">ips2</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;sss&#39;</span><span class="p">,</span> <span class="n">ips</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">NE</span><span class="p">())</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ips</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="n">ips2</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ips</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="n">ips2</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()))</span></div>
 
-    <span class="c1">#numbered_arrays</span>
+
+<div class="viewcode-block" id="TestInputParameters.test_numbered_array">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_numbered_array">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_numbered_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">input_parameters_def</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
       <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
         <span class="n">V</span><span class="p">(</span><span class="s1">&#39;GRID&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">fixed_value</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
@@ -401,12 +468,17 @@
         <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NL&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
       <span class="p">]</span>
     <span class="p">})</span>
+    <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
+      <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">_grammar_of_values</span><span class="p">()</span>
+
+    <span class="n">assertParse</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertNotValid</span><span class="p">,</span> <span class="n">grammar</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">grammar</span><span class="p">)</span>
 
     <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;ENERGY NE=1 Ime=0.5 Ime=2.0&quot;</span><span class="p">);</span>
     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;ENERGY NE=1 Ime=0.5&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;NE&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;Ime&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">}});</span>
     <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">][</span><span class="s1">&#39;Ime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">is_numbered_array</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
-      <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">_values_grammar</span><span class="p">()</span>
+      <span class="n">grammar</span> <span class="o">=</span> <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">_grammar_of_values</span><span class="p">()</span>
 
     <span class="n">assertNotValid</span><span class="p">(</span><span class="s2">&quot;ENERGY NE=1 Ime=0.5 Ime=2.0&quot;</span><span class="p">);</span>
     <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;NE&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;Ime&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;def&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>  <span class="mi">1</span><span class="p">:</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span><span class="mf">0.8</span><span class="p">}</span> <span class="p">},</span> <span class="p">});</span>
@@ -414,6 +486,9 @@
     <span class="n">ip</span><span class="o">=</span><span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8&quot;</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">())</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.8</span><span class="p">],</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[:])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s1">&#39;def&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">},</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="o">.</span><span class="n">as_dict</span><span class="p">());</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s1">&#39;def&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">},</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">(</span><span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.7</span>
     <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;ENERGY GRID=</span><span class="si">{3}</span><span class="s1"> NE=</span><span class="si">{1}</span><span class="s1"> Ime=0.5 Ime1=0.7 Ime5=0.8 Ime9=0.9&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span>
@@ -431,6 +506,13 @@
     <span class="k">def</span> <span class="nf">e</span><span class="p">():</span>
        <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[</span><span class="s1">&#39;5&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.3</span><span class="p">],</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">]])</span>
+    <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">3</span><span class="p">:</span> <span class="mf">5.</span><span class="p">,</span> <span class="s1">&#39;def&#39;</span><span class="p">:</span> <span class="mf">3.</span><span class="p">}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">5.</span><span class="p">],</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[:])</span>
+    <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[:])</span>
+    <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">7.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="mf">7.</span><span class="p">,</span><span class="mf">7.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">8.</span><span class="p">],</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">[:])</span>
 
     <span class="n">ip</span><span class="o">=</span><span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="s2">&quot;ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8&quot;</span><span class="p">))</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
@@ -453,7 +535,172 @@
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">ParseBaseException</span><span class="p">):</span>
          <span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
     <span class="n">ip</span><span class="o">=</span><span class="n">input_parameters_def</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">(</span><span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;def&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span><span class="s1">&#39;yy&#39;</span> <span class="p">}</span> <span class="p">)</span></div></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">Ime</span><span class="p">(</span><span class="n">all_values</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">{</span><span class="s1">&#39;def&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span><span class="s1">&#39;yy&#39;</span> <span class="p">}</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestInputParameters.test_gather">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_gather">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_gather</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">assertParse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span>
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;GRID&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">fixed_value</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+        <span class="o">*</span><span class="n">gather</span><span class="p">(</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="p">]</span>
+    <span class="p">})</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"> A B=1 2 C=3&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;GRID&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span> <span class="p">:</span> <span class="mi">3</span> <span class="p">}},</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">());</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="s2">&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"> A B=1 2 C=3&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s2">&quot;ENERGY GRID=</span><span class="si">{3}</span><span class="s2"> A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION &quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\s\t\n]+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">to_string</span><span class="p">()))</span></div>
+
+
+
+<div class="viewcode-block" id="TestInputParameters.test_given_len_array">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_given_len_array">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_given_len_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">assertParse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span>
+
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">NumpyArray</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span> <span class="p">),</span>
+      <span class="p">]</span>
+    <span class="p">})</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY</span>
+<span class="s2">    1 1</span>
+<span class="s2">    2 2</span>
+<span class="s2">    3 3</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)}},</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">());</span>
+
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">NumpyArray</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span> <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">NumpyArray</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+      <span class="p">]</span>
+    <span class="p">})</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;ENERGY A=3 B=2</span>
+<span class="s2">    1 1</span>
+<span class="s2">    2 2</span>
+<span class="s2">    3 3</span>
+<span class="s2">    4 5 6</span>
+<span class="s2">    5 9 8</span>
+<span class="s2">    E=77&quot;&quot;&quot;</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span><span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">g</span><span class="p">);</span>
+    <span class="n">ipd</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">force_order</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span><span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">g</span><span class="p">);</span>
+
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">NumpyArray</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span> <span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">gt</span><span class="o">.</span><span class="n">NumpyArray</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+      <span class="p">]</span>
+    <span class="p">})</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;ENERGY A=3 B=2 </span>
+<span class="s2">    1 1</span>
+<span class="s2">    2 2</span>
+<span class="s2">    3 3</span>
+<span class="s2">    4 5 6</span>
+<span class="s2">    5 9 8</span>
+<span class="s2">    E=77&quot;&quot;&quot;</span><span class="p">,{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">());</span>
+
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">is_repeated</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">]})</span>
+
+    <span class="n">data</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;ENERGY A=3</span>
+<span class="s2">    B=2</span>
+<span class="s2">    B=5</span>
+<span class="s2">    B=8</span>
+<span class="s2">    C=77&quot;&quot;&quot;</span><span class="p">;</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">]),</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">ip</span><span class="o">=</span><span class="n">ipd</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">]),</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_dict</span><span class="p">());</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;ENERGY A=3 B=2 B=5 B=8 C=77&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span>
+    <span class="n">ipd</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">force_order</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">]),</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">ip</span><span class="o">=</span><span class="n">ipd</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">]),</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_dict</span><span class="p">());</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;ENERGY A=3 B=2 B=5 B=8 C=77&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span>
+
+    <span class="n">data</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;ENERGY A=3</span>
+<span class="s2">    B=2</span>
+<span class="s2">    C=77&quot;&quot;&quot;</span><span class="p">;</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">());</span>
+    <span class="n">ip</span><span class="o">=</span><span class="n">ipd</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="n">ar</span><span class="p">([</span><span class="mi">2</span><span class="p">]),</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">77</span><span class="p">}},</span> <span class="n">ip</span><span class="o">.</span><span class="n">to_dict</span><span class="p">());</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;ENERGY A=3 B=2 C=77&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TestInputParameters.test_switch">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_switch">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">assertParse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertParse</span>
+    <span class="n">assertNotValid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertNotValid</span>
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="o">*</span><span class="n">switch</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="mi">1</span><span class="p">:</span> <span class="p">[</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">],</span>
+          <span class="mi">2</span><span class="p">:</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">})</span>
+       <span class="p">]})</span>
+
+    <span class="n">ipd</span><span class="o">.</span><span class="n">custom_class</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">ipd</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">custom_class</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">ipd</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">force_order</span><span class="o">=</span><span class="kc">True</span>
+    <span class="c1">#ipd[&#39;ENERGY&#39;][&#39;C&#39;].add_grammar_hook(lambda x:x.addParseAction(lambda x: breakpoint() or x))</span>
+    <span class="c1">#ipd[&#39;ENERGY&#39;][&#39;B&#39;].add_grammar_hook(lambda x:x.addParseAction(lambda x: breakpoint() or x))</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 C=4&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 C=4&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">out</span><span class="o">=</span><span class="n">ipd</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 C=4&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s1">&#39;ENERGY</span><span class="se">\n\t</span><span class="s1">A=2</span><span class="se">\n\t</span><span class="s1">C=4</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=2&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 B=2&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 C=1&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=2 C=1&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 B=2 C=1&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=3 C=3&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">***************</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="o">*</span><span class="n">switch</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="mi">1</span><span class="p">:</span> <span class="p">[</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">],</span>
+          <span class="mi">2</span><span class="p">:</span> <span class="p">[</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">)]</span> <span class="p">})</span>
+       <span class="p">]})</span>
+    <span class="n">ipd</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">force_order</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 C=4 E=2 B=6&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">6</span> <span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">assertParse</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=5 D=3 C=5&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span><span class="mi">5</span> <span class="p">}},</span> <span class="n">grammar</span><span class="p">);</span>
+
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 B=2&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=2&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=2 D=3&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=5 D=3 C=5 B=6&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=1 B=5 D=3 C=5 E=6&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">assertNotValid</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 B=5 C=4 E=3&#39;</span><span class="p">,</span> <span class="n">grammar</span><span class="p">);</span>
+    <span class="n">out</span><span class="o">=</span><span class="n">ipd</span><span class="o">.</span><span class="n">read_from_string</span><span class="p">(</span><span class="s1">&#39;ENERGY A=2 C=4 E=2 B=6&#39;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="s1">&#39;ENERGY</span><span class="se">\n\t</span><span class="s1">A=2</span><span class="se">\n\t</span><span class="s1">C=4</span><span class="se">\n\t</span><span class="s1">E=2</span><span class="se">\n\t</span><span class="s1">B=6</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+</div>
+
+
+
+
 </pre></div>
 
            </div>

@@ -1,0 +1,8 @@
+normalize\_nonpbc\_atoms
+========================
+
+Full name: **ase2sprkkr.asr.database.rmsd.normalize\_nonpbc\_atoms**
+
+.. currentmodule:: ase2sprkkr.asr.database.rmsd
+
+.. autofunction:: normalize_nonpbc_atoms

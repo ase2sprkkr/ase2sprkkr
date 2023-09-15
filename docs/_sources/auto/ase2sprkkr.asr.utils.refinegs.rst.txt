@@ -1,0 +1,45 @@
+refinegs
+========
+
+Full name: **ase2sprkkr.asr.utils.refinegs**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.utils.refinegs
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_filenames
+      get_parstr
+      nonselfc
+      refinegs
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

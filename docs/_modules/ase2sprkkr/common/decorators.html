@@ -12,11 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.common.decorators</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.decorators</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,17 +94,21 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">heapq</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">functools</span><span class="p">,</span><span class="s1">&#39;cache&#39;</span><span class="p">):</span>
    <span class="n">cache</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">cache</span>
-   <span class="sd">&quot;&quot;&quot; Functools.cache. Python 3.8 and earlier does not have this method, so it is mocked for this version of python. &quot;&quot;&quot;</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Functools.cache. Python 3.8 and earlier does not have this method, so it is mocked for this version of python. &quot;&quot;&quot;</span>
 <span class="k">else</span><span class="p">:</span>
    <span class="n">cache</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-   <span class="sd">&quot;&quot;&quot; Functools.cache. Python 3.8 and earlier does not have this method, so it is mocked for this version of python. &quot;&quot;&quot;</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Functools.cache. Python 3.8 and earlier does not have this method, so it is mocked for this version of python. &quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="cached_class_property"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.common.decorators.cached_class_property">[docs]</a><span class="k">class</span> <span class="nc">cached_class_property</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="cached_class_property">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.sprkkr.sites.cached_class_property">[docs]</a>
+<span class="k">class</span> <span class="nc">cached_class_property</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
 <span class="sd">    that can be accessed directly from the class. The value is computed only</span>
 <span class="sd">    once.</span>
@@ -121,9 +129,12 @@
 
 <span class="sd">          x = Cls.cls_property</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="cached_class_property.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.common.decorators.cached_class_property.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="cached_class_property.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_class_property.html#ase2sprkkr.sprkkr.sites.cached_class_property.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span>
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
@@ -139,17 +150,18 @@
         <span class="k">return</span> <span class="n">out</span></div>
 
 
+
 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">functools</span><span class="p">,</span> <span class="s1">&#39;cached_property&#39;</span><span class="p">):</span>
-    <span class="n">cached_property</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="sd">&quot;&quot;&quot; Functools.cached_property decorator - the value is computed only once and then stored as an (same-name) instance attribute.</span>
+    <span class="n">std_cached_property</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">cached_property</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Functools.cached_property decorator - the value is computed only once and then stored as an (same-name) instance attribute.</span>
 <span class="sd">    You can delete the attribute to invalidate the cache.</span>
 
 <span class="sd">    Earlier versions of python do not have this decorator, so for these versions is implemented below, otherwise it is taken from functools.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="c1">#https://github.com/pydanny/cached-property/blob/master/cached_property.py</span>
-    <span class="k">class</span> <span class="nc">cached_property</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">std_cached_property</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A property that is only computed once per instance and then replaces itself</span>
 <span class="sd">        with an ordinary attribute. Deleting the attribute resets the property.</span>
 <span class="sd">        Source: `https://github.com/bottlepy/bottle/commit/fa7733e075da0d790d809aa3d2f53071897e6f76`</span>
@@ -166,21 +178,76 @@
             <span class="k">if</span> <span class="n">asyncio</span> <span class="ow">and</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrap_in_coroutine</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 
-            <span class="n">value</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="c1">#for Py3.7, we need to use attrname and not self.func.__name__</span>
+            <span class="c1">#since in complex cases when nested decorators are used,</span>
+            <span class="c1">#this information can be lost</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attrname</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="k">def</span> <span class="nf">_wrap_in_coroutine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
             <span class="nd">@wraps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
             <span class="nd">@asyncio</span><span class="o">.</span><span class="n">coroutine</span>
             <span class="k">def</span> <span class="nf">wrapper</span><span class="p">():</span>
                 <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
-                <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">future</span>
+                <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span> <span class="o">=</span> <span class="n">future</span>
                 <span class="k">return</span> <span class="n">future</span>
 
             <span class="k">return</span> <span class="n">wrapper</span><span class="p">()</span>
 
-<div class="viewcode-block" id="class_property"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.common.decorators.class_property">[docs]</a><span class="k">class</span> <span class="nc">class_property</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="cached_property">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property">[docs]</a>
+<span class="k">class</span> <span class="nc">cached_property</span><span class="p">(</span><span class="n">std_cached_property</span><span class="p">):</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Cached property, that allows setter and deleter &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="cached_property.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property.__init__">[docs]</a>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="o">=</span> <span class="n">fdel</span></div>
+
+
+   <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+   <span class="k">def</span> <span class="fm">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="k">del</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span>
+
+<div class="viewcode-block" id="cached_property.setter">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property.setter">[docs]</a>
+   <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fset</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cached_property.deleter">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.cached_property.html#ase2sprkkr.sprkkr.sites.cached_property.deleter">[docs]</a>
+   <span class="k">def</span> <span class="nf">deleter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdel</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="n">fdel</span><span class="p">)</span></div>
+
+
+   <span class="c1">#for some reason, in 3.7 and lower the attribute in the dict do not override the __get__</span>
+   <span class="c1">#in subclasses</span>
+   <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">8</span><span class="p">):</span>
+      <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrname</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+               <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attrname</span><span class="p">]</span>
+          <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="class_property">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.sprkkr.sites.class_property">[docs]</a>
+<span class="k">class</span> <span class="nc">class_property</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator that converts a method with a single cls argument into a property</span>
 <span class="sd">    that can be accessed directly from the class. The value is not cached, see</span>
 <span class="sd">    :func:`cached_class_property`, if caching is desirable.</span>
@@ -197,15 +264,21 @@
 
 <span class="sd">          x = Cls.cls_property</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="class_property.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.common.decorators.class_property.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="class_property.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.class_property.html#ase2sprkkr.sprkkr.sites.class_property.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">method</span></div>
+
 
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="add_to_signature"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_to_signature.html#ase2sprkkr.common.decorators.add_to_signature">[docs]</a><span class="k">def</span> <span class="nf">add_to_signature</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">self_name</span><span class="o">=</span><span class="s1">&#39;self&#39;</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="add_to_signature">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_to_signature.html#ase2sprkkr.sprkkr.sites.add_to_signature">[docs]</a>
+<span class="k">def</span> <span class="nf">add_to_signature</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">excluding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Add the arguments in the ``func`` function to the list of arguments</span>
 <span class="sd">  of the resulting function (as keyword_only arguments)</span>
 <span class="sd">  The modified function has to have its arguments defined as</span>
@@ -228,27 +301,32 @@
 <span class="sd">    A function, whose parameters will be added to the resulting function signature.</span>
 
 <span class="sd">  prepend</span>
-<span class="sd">    If true, the new positional arguments will be the first.</span>
-<span class="sd">    If false, they will be after the parents positional arguments.</span>
-<span class="sd">    The same-named arguments just alter the properties of the &quot;old&quot;</span>
-<span class="sd">    arguments, retaining their position.</span>
+<span class="sd">    If True, the new positional arguments will be the first.</span>
+<span class="sd">    If False, they will be after the parents positional arguments.</span>
 
-<span class="sd">  self_name</span>
-<span class="sd">    Name of the self-parameter (for object method), that should be the first, even</span>
-<span class="sd">    if ``prepend`` is True.</span>
-<span class="sd">    Default self, set to None if you do not want special handling of self parameter</span>
-<span class="sd">    (i.e. if your function has the first argument named *self* and it is not a method).</span>
+<span class="sd">    The same-named arguments can be given as keyword-only - then</span>
+<span class="sd">    they just alter the properties of the &quot;old&quot; arguments, retaining their position.</span>
+<span class="sd">    If they are given as regular ones, they takes their new position, too.</span>
 
+<span class="sd">  excluding</span>
+<span class="sd">    Do not add arguments of this name(s)</span>
+
+<span class="sd">  kwargs</span>
+<span class="sd">    The resulting function will have kwargs argument</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">excluding</span><span class="p">:</span>
+     <span class="n">excluding</span><span class="o">=</span><span class="p">[]</span>
+  <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">excluding</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+     <span class="n">excluding</span><span class="o">=</span><span class="p">[</span> <span class="n">excluding</span> <span class="p">]</span>
 
   <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
   <span class="n">pars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">signature</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
   <span class="n">P</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span>
 
-  <span class="n">arg_ar</span> <span class="o">=</span> <span class="n">arg_kw</span> <span class="o">=</span> <span class="kc">None</span>
+  <span class="n">arg_ar</span> <span class="o">=</span> <span class="n">_arg_kw</span> <span class="o">=</span> <span class="kc">None</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pars</span><span class="p">:</span>
       <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">:</span>
-         <span class="n">arg_kw</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span>
+         <span class="n">_arg_kw</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span>
       <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span><span class="p">:</span>
          <span class="n">arg_ar</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span>
 
@@ -256,8 +334,15 @@
       <span class="n">new_sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">mod_func</span><span class="p">)</span>
       <span class="n">new_pars</span> <span class="o">=</span> <span class="n">new_sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
+      <span class="n">arg_kw</span> <span class="o">=</span> <span class="n">_arg_kw</span>
+      <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_pars</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">:</span>
+                 <span class="n">arg_kw</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span>
+                 <span class="k">break</span>
+
       <span class="c1">#remove args/kwargs from the childs argument</span>
-      <span class="n">new_pars</span> <span class="o">=</span> <span class="p">{</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_pars</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_KEYWORD</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span> <span class="p">}</span>
+      <span class="n">new_pars</span> <span class="o">=</span> <span class="p">{</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_pars</span> <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_KEYWORD</span> <span class="ow">or</span> <span class="n">kwargs</span> <span class="p">)</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span> <span class="p">}</span>
 
       <span class="n">used</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
       <span class="k">def</span> <span class="nf">use</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
@@ -265,8 +350,27 @@
           <span class="n">used</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
           <span class="k">return</span> <span class="n">i</span>
 
-      <span class="n">old_pars</span> <span class="o">=</span> <span class="p">[</span> <span class="n">use</span><span class="p">(</span><span class="n">new_pars</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">])</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">new_pars</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pars</span> <span class="p">]</span>
-      <span class="n">add_pars</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_pars</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span> <span class="p">]</span>
+      <span class="k">if</span> <span class="n">prepend</span><span class="p">:</span>
+        <span class="n">old_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pars</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluding</span><span class="p">))</span>
+        <span class="n">old_pars</span> <span class="o">=</span> <span class="p">[</span> <span class="n">use</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_pars</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> \
+                     <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span> <span class="ow">or</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">old_names</span> <span class="p">]</span>
+        <span class="k">def</span> <span class="nf">add_pars</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pars</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">excluding</span><span class="p">:</span>
+                   <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_pars</span><span class="p">:</span>
+                   <span class="k">yield</span> <span class="n">i</span>
+                <span class="k">else</span><span class="p">:</span>
+                   <span class="n">n</span><span class="o">=</span><span class="n">new_pars</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                   <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="n">P</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">:</span>
+                       <span class="k">continue</span>
+                   <span class="c1">#keyword only parameters retain the old position, taken new default and annotation</span>
+                   <span class="n">P</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="n">n</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span>
+                   <span class="k">yield</span> <span class="n">n</span>
+        <span class="n">add_pars</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">add_pars</span><span class="p">()</span> <span class="p">]</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">old_pars</span> <span class="o">=</span> <span class="p">[</span> <span class="n">use</span><span class="p">(</span><span class="n">new_pars</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">])</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">new_pars</span> <span class="k">else</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pars</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluding</span> <span class="p">]</span>
+        <span class="n">add_pars</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_pars</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span> <span class="p">]</span>
 
       <span class="c1">#the easy and fast way - only keyword arguments are present, the function can be called as is,</span>
       <span class="c1">#just make its signature pretty</span>
@@ -279,22 +383,10 @@
         <span class="n">mod_func</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">result</span>
         <span class="k">return</span> <span class="n">mod_func</span>
 
-      <span class="c1">#the hard way, the arguments have to be rearranged</span>
-      <span class="k">if</span> <span class="n">prepend</span><span class="p">:</span>
-         <span class="k">if</span> <span class="n">old_pars</span> <span class="ow">and</span> <span class="n">old_pars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">self_name</span><span class="p">:</span>
-            <span class="bp">self</span> <span class="o">=</span> <span class="n">old_pars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">del</span> <span class="n">old_pars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span> <span class="o">=</span> <span class="kc">None</span>
-         <span class="n">result</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">add_pars</span><span class="p">,</span> <span class="n">old_pars</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
-         <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">((</span><span class="bp">self</span><span class="p">,),</span> <span class="n">result</span><span class="p">)</span>
-      <span class="k">else</span><span class="p">:</span>
-         <span class="n">result</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">old_pars</span><span class="p">,</span> <span class="n">add_pars</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
-         <span class="bp">self</span> <span class="o">=</span> <span class="kc">None</span>
-
+      <span class="n">result</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">old_pars</span><span class="p">,</span> <span class="n">add_pars</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
       <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
       <span class="n">result</span><span class="o">=</span><span class="n">new_sig</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">result</span><span class="p">)</span>
+
 
       <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">mod_func</span><span class="p">)</span>
       <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -318,8 +410,11 @@
 
   <span class="k">return</span> <span class="n">modify</span></div>
 
-<div class="viewcode-block" id="add_called_class_as_argument"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_called_class_as_argument.html#ase2sprkkr.common.decorators.add_called_class_as_argument">[docs]</a><span class="k">def</span> <span class="nf">add_called_class_as_argument</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; If a decorator is used on a method, the information about the defining class is lost.</span>
+
+<div class="viewcode-block" id="add_called_class_as_argument">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.add_called_class_as_argument.html#ase2sprkkr.sprkkr.sites.add_called_class_as_argument">[docs]</a>
+<span class="k">def</span> <span class="nf">add_called_class_as_argument</span><span class="p">(</span><span class="n">decorator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; If a decorator is used on a method, the information about the defining class is lost.</span>
 <span class="sd">    As a consequence, the execution of ``super()....`` failed.</span>
 
 <span class="sd">    This decorator can be applied to another decorator: it will add the defining class as a first</span>
@@ -361,7 +456,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">function</span>
 
         <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot; Catch the defining class &quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot; Catch the defining class &quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cls</span><span class="o">=</span><span class="n">owner</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="n">name</span>
 
@@ -377,7 +472,7 @@
              <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instancetype</span><span class="p">):</span>
-           <span class="sd">&quot;&quot;&quot; Descriptor method - via this method the actual calling instance</span>
+<span class="w">           </span><span class="sd">&quot;&quot;&quot; Descriptor method - via this method the actual calling instance</span>
 <span class="sd">           (self of the very resulting method) is obtained. &quot;&quot;&quot;</span>
            <span class="n">out</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
            <span class="k">return</span> <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">)</span>
@@ -388,6 +483,27 @@
         <span class="k">return</span> <span class="n">AddCalledClassAsArgument</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapper</span></div>
+
+
+<div class="viewcode-block" id="warnings_from_here">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.decorators.warnings_from_here.html#ase2sprkkr.sprkkr.sites.warnings_from_here">[docs]</a>
+<span class="k">def</span> <span class="nf">warnings_from_here</span><span class="p">(</span><span class="n">stacklevel</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">stacklevel</span><span class="o">+=</span><span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+
+       <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+       <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+           <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">warning_list</span><span class="p">:</span>
+               <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">warning</span> <span class="ow">in</span> <span class="n">warning_list</span><span class="p">:</span>
+               <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">warning</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">warning</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">stacklevel</span> <span class="o">=</span><span class="n">stacklevel</span><span class="p">)</span>
+           <span class="k">return</span> <span class="n">result</span>
+
+       <span class="k">return</span> <span class="n">wrapped</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span></div>
+
 </pre></div>
 
            </div>

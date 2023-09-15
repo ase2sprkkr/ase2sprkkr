@@ -1,0 +1,91 @@
+emasses
+=======
+
+Full name: **ase2sprkkr.asr.emasses**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.emasses.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.emasses
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      calculate_bs_along_emass_vecs
+      check_soc
+      convert_key_to_tuple
+      create_columns_fnames
+      custom_table
+      em
+      embands
+      evalmodel
+      fit
+      get_2nd_order_extremum
+      get_3rd_order_extremum
+      get_bt_ks
+      get_emass_dict_from_row
+      get_extremum_type
+      get_gapskn
+      get_name
+      get_range
+      get_vb_cb_indices
+      kptsinsphere
+      make_the_plots
+      model
+      nonsc_sphere
+      preliminary_refine
+      set_default
+      unpack_masses
+      webpanel
+      wideMAE
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      NoGapError
+   
+   
+
+
+  
+  
+  

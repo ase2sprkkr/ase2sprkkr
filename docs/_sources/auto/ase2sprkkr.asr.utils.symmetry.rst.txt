@@ -1,0 +1,46 @@
+symmetry
+========
+
+Full name: **ase2sprkkr.asr.utils.symmetry**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.utils.symmetry
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _atoms2symmetry_gpaw
+      atoms2spgcell
+      atoms2symmetry
+      has_inversion
+      restrict_spin_projection_2d
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

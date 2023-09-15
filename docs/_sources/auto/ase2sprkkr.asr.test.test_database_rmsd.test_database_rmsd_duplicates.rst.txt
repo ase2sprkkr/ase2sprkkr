@@ -1,0 +1,8 @@
+test\_database\_rmsd\_duplicates
+================================
+
+Full name: **ase2sprkkr.asr.test.test\_database\_rmsd.test\_database\_rmsd\_duplicates**
+
+.. currentmodule:: ase2sprkkr.asr.test.test_database_rmsd
+
+.. autofunction:: test_database_rmsd_duplicates

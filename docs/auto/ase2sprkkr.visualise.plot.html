@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>plot &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="auto_range" href="ase2sprkkr.visualise.plot.auto_range.html" />
+    <link rel="prev" title="visualise" href="ase2sprkkr.visualise.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">plot</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.auto_range.html">auto_range</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.change_default_kwargs.html">change_default_kwargs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.colormesh.html">colormesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.combine_colormaps.html">combine_colormaps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.combined_colormap.html">combined_colormap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.create_rc_context.html">create_rc_context</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.finish_plot.html">finish_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.normalize_rc_params.html">normalize_rc_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.plotting_function.html">plotting_function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.set_up_common_plot.html">set_up_common_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.single_plot.html">single_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.visualise.plot.Multiplot.html">Multiplot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.visualise.html">visualise</a></li>
+      <li class="breadcrumb-item active">plot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.visualise.plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="plot">
+<h1>plot<a class="headerlink" href="#plot" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.visualise.plot</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-9ebc9f67f3a0afa538dafa2d66e480c6a72fe923.png" alt="Inheritance diagram of ase2sprkkr.visualise.plot.Multiplot" usemap="#inheritance46dd74bcec" class="inheritance graphviz" /></div>
+<map id="inheritance46dd74bcec" name="inheritance46dd74bcec">
+<area shape="rect" id="node1" href="ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot" target="_top" title="This class can be used for plotting more plots into one resulting image/window." alt="" coords="5,5,85,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.visualise.plot">In this file the general plotting routines are present.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.auto_range.html#ase2sprkkr.visualise.plot.auto_range" title="ase2sprkkr.visualise.plot.auto_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">auto_range</span></code></a>(rng, data)</p></td>
+<td><p>Fill the missing value in the given range by the data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.change_default_kwargs.html#ase2sprkkr.visualise.plot.change_default_kwargs" title="ase2sprkkr.visualise.plot.change_default_kwargs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_default_kwargs</span></code></a>(f, **kwargs)</p></td>
+<td><p>Return the same function, with default kwargs changed</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.colormesh.html#ase2sprkkr.visualise.plot.colormesh" title="ase2sprkkr.visualise.plot.colormesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colormesh</span></code></a>(x, y, c[, xrange, yrange, ...])</p></td>
+<td><p>Plot 3D data by assigning colors to 2D grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.combine_colormaps.html#ase2sprkkr.visualise.plot.combine_colormaps" title="ase2sprkkr.visualise.plot.combine_colormaps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combine_colormaps</span></code></a>(cmap1, cmap2, n1, n2, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.combined_colormap.html#ase2sprkkr.visualise.plot.combined_colormap" title="ase2sprkkr.visualise.plot.combined_colormap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">combined_colormap</span></code></a>([range1, range2, n1, n2, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.create_rc_context.html#ase2sprkkr.visualise.plot.create_rc_context" title="ase2sprkkr.visualise.plot.create_rc_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_rc_context</span></code></a>([latex])</p></td>
+<td><p>Create the context that sets defaults for plotting</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.finish_plot.html#ase2sprkkr.visualise.plot.finish_plot" title="ase2sprkkr.visualise.plot.finish_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finish_plot</span></code></a>([filename, show, dpi])</p></td>
+<td><p>Show the plot and/or save it to the given file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.normalize_rc_params.html#ase2sprkkr.visualise.plot.normalize_rc_params" title="ase2sprkkr.visualise.plot.normalize_rc_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_rc_params</span></code></a>(params)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.plotting_function.html#ase2sprkkr.visualise.plot.plotting_function" title="ase2sprkkr.visualise.plot.plotting_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting_function</span></code></a>(func)</p></td>
+<td><p>Decorator, that 'completes' the given function that just draw into a matplolib axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.set_up_common_plot.html#ase2sprkkr.visualise.plot.set_up_common_plot" title="ase2sprkkr.visualise.plot.set_up_common_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_up_common_plot</span></code></a>(axis[, title, xlabel, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.single_plot.html#ase2sprkkr.visualise.plot.single_plot" title="ase2sprkkr.visualise.plot.single_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">single_plot</span></code></a>(fn, *args[, filename, show, ...])</p></td>
+<td><p>Creates single plot according to the given function a either show it or save it.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.visualise.plot.Multiplot.html#ase2sprkkr.visualise.plot.Multiplot" title="ase2sprkkr.visualise.plot.Multiplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Multiplot</span></code></a>(layout[, figsize, latex, ...])</p></td>
+<td><p>This class can be used for plotting more plots into one resulting image/window.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.visualise.html" class="btn btn-neutral float-left" title="visualise" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.visualise.plot.auto_range.html" class="btn btn-neutral float-right" title="auto_range" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

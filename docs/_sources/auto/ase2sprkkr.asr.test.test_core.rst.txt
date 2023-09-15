@@ -1,0 +1,46 @@
+test\_core
+==========
+
+Full name: **ase2sprkkr.asr.test.test\_core**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_core
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      recipe
+      test_core
+      test_recipe_defaults
+      test_recipe_setting_new_defaults
+      test_recipe_setting_overriding_defaults
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

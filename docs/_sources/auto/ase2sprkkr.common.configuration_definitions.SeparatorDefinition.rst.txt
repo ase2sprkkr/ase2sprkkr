@@ -1,0 +1,36 @@
+SeparatorDefinition
+===================
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: SeparatorDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_definitions.SeparatorDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

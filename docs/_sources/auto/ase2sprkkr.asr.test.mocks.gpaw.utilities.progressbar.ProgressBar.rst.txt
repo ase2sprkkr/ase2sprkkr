@@ -1,0 +1,36 @@
+ProgressBar
+===========
+
+
+.. currentmodule:: ase2sprkkr.asr.test.mocks.gpaw.utilities.progressbar
+
+.. autoclass:: ProgressBar
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.test.mocks.gpaw.utilities.progressbar.ProgressBar
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

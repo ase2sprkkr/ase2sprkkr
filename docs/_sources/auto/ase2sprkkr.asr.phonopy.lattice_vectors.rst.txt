@@ -1,0 +1,8 @@
+lattice\_vectors
+================
+
+Full name: **ase2sprkkr.asr.phonopy.lattice\_vectors**
+
+.. currentmodule:: ase2sprkkr.asr.phonopy
+
+.. autofunction:: lattice_vectors

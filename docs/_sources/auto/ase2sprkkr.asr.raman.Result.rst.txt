@@ -1,0 +1,36 @@
+Result
+======
+
+
+.. currentmodule:: ase2sprkkr.asr.raman
+
+.. autoclass:: Result
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.raman.Result
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

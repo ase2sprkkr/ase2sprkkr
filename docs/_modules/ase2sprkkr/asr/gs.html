@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.gs &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.gs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.gs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Electronic ground state properties.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span>
+         <span class="n">creates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">],</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;structure.json&#39;</span><span class="p">],</span>
+         <span class="n">resources</span><span class="o">=</span><span class="s1">&#39;8:10h&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--calculator&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Calculator params.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">DictStr</span><span class="p">())</span>
+<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">calculator</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;gpaw&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;mode&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;pw&#39;</span><span class="p">,</span> <span class="s1">&#39;ecut&#39;</span><span class="p">:</span> <span class="mi">800</span><span class="p">},</span>
+        <span class="s1">&#39;xc&#39;</span><span class="p">:</span> <span class="s1">&#39;PBE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;basis&#39;</span><span class="p">:</span> <span class="s1">&#39;dzp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;kpts&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="mf">12.0</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+        <span class="s1">&#39;occupations&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;fermi-dirac&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">},</span>
+        <span class="s1">&#39;convergence&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;bands&#39;</span><span class="p">:</span> <span class="s1">&#39;CBM+3.0&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;nbands&#39;</span><span class="p">:</span> <span class="s1">&#39;200%&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;txt&#39;</span><span class="p">:</span> <span class="s1">&#39;gs.txt&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;charge&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate ground state file.</span>
+
+<span class="sd">    This recipe saves the ground state to a file gs.gpw based on the structure</span>
+<span class="sd">    in &#39;structure.json&#39;. This can then be processed by asr.gs@postprocessing</span>
+<span class="sd">    for storing any derived quantities. See asr.gs@postprocessing for more</span>
+<span class="sd">    information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">PropertyNotImplementedError</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">set_initial_magnetic_moments</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;initial_magmoms&#39;</span><span class="p">):</span>
+        <span class="n">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+    <span class="n">nd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nd</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> \
+            <span class="s1">&#39;The third unit cell axis should be aperiodic for a 2D material!&#39;</span>
+        <span class="n">calculator</span><span class="p">[</span><span class="s1">&#39;poissonsolver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dipolelayer&#39;</span><span class="p">:</span> <span class="s1">&#39;xy&#39;</span><span class="p">}</span>
+
+    <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">get_calculator_class</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">get_calculator_class</span><span class="p">(</span><span class="n">name</span><span class="p">)(</span><span class="o">**</span><span class="n">calculator</span><span class="p">)</span>
+
+    <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span>
+    <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">get_stress</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">PropertyNotImplementedError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+    <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ASRResult</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.webpanel.html#ase2sprkkr.asr.gs.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span>
+                                      <span class="n">entry_parameter_description</span><span class="p">,</span>
+                                      <span class="n">describe_entry</span><span class="p">)</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span>
+              <span class="p">[</span><span class="s1">&#39;gap&#39;</span><span class="p">,</span> <span class="s1">&#39;gap_dir&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;dipz&#39;</span><span class="p">,</span> <span class="s1">&#39;evacdiff&#39;</span><span class="p">,</span> <span class="s1">&#39;workfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;dos_at_ef_soc&#39;</span><span class="p">],</span>
+              <span class="n">key_descriptions</span><span class="p">)</span>
+
+    <span class="n">gap</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gap&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">gap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">):</span>
+            <span class="n">t</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[[</span><span class="s1">&#39;Valence band maximum wrt. vacuum level&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">vbm</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">evac</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">],</span>
+                 <span class="p">[</span><span class="s1">&#39;Conduction band minimum wrt. vacuum level&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cbm</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">evac</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[[</span><span class="s1">&#39;Valence band maximum wrt. Fermi level&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">vbm</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">efermi</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">],</span>
+                 <span class="p">[</span><span class="s1">&#39;Conduction band minimum wrt. Fermi level&#39;</span><span class="p">,</span>
+                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">cbm</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">row</span><span class="o">.</span><span class="n">efermi</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">]])</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Basic electronic properties (PBE)&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">t</span><span class="p">],</span> <span class="p">[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;bz-with-gaps.png&#39;</span><span class="p">)]],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;The electronic band gap including spin-orbit effects</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+    <span class="n">datarow</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Band gap (PBE)&#39;</span><span class="p">,</span>
+               <span class="n">entry_parameter_description</span><span class="p">(</span>
+                   <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                   <span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">,</span>
+                   <span class="n">describe_entry</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">gap</span><span class="si">:</span><span class="s1">0.2f</span><span class="si">}</span><span class="s1"> eV&#39;</span><span class="p">,</span>
+                                  <span class="n">description</span><span class="p">))]</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Summary&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Electronic properties&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span>
+                             <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">datarow</span><span class="p">]}]],</span>
+               <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">bz_with_band_extremums</span><span class="p">,</span>
+                                      <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bz-with-gaps.png&#39;</span><span class="p">]}],</span>
+               <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">,</span> <span class="n">summary</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="bz_with_band_extremums">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.bz_with_band_extremums.html#ase2sprkkr.asr.gs.bz_with_band_extremums">[docs]</a>
+<span class="k">def</span> <span class="nf">bz_with_band_extremums</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.geometry.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">Cell</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">get_bravais_lattice</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">lat</span><span class="o">.</span><span class="n">plot_bz</span><span class="p">(</span><span class="n">vectors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pointstyle</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">})</span>
+    <span class="n">gsresults</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">)</span>
+    <span class="n">cbm_c</span> <span class="o">=</span> <span class="n">gsresults</span><span class="p">[</span><span class="s1">&#39;k_cbm_c&#39;</span><span class="p">]</span>
+    <span class="n">vbm_c</span> <span class="o">=</span> <span class="n">gsresults</span><span class="p">[</span><span class="s1">&#39;k_vbm_c&#39;</span><span class="p">]</span>
+    <span class="n">op_scc</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="p">[</span>
+        <span class="s1">&#39;results-asr.structureinfo.json&#39;</span><span class="p">][</span><span class="s1">&#39;spglib_dataset&#39;</span><span class="p">][</span><span class="s1">&#39;rotations&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cbm_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">icell_cv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">vbm_style</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;edgecolors&#39;</span><span class="p">:</span> <span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;lw&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                     <span class="s1">&#39;zorder&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+        <span class="n">cbm_style</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;zorder&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+        <span class="n">cbm_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">op_scc</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">cbm_c</span><span class="p">)</span>
+        <span class="n">vbm_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">op_scc</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">vbm_c</span><span class="p">)</span>
+        <span class="n">cbm_sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cbm_sc</span><span class="p">,</span> <span class="n">icell_cv</span><span class="p">)</span>
+        <span class="n">vbm_sv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vbm_sc</span><span class="p">,</span> <span class="n">icell_cv</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">vbm_sv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">vbm_sv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]],</span> <span class="o">**</span><span class="n">vbm_style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;VBM&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">cbm_sv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">cbm_sv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]],</span> <span class="o">**</span><span class="n">cbm_style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CBM&#39;</span><span class="p">)</span>
+        <span class="n">xlim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">())</span> <span class="o">*</span> <span class="mf">1.4</span>
+        <span class="n">ylim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">())</span> <span class="o">*</span> <span class="mf">1.4</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="GapsResult">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.GapsResult.html#ase2sprkkr.asr.gs.GapsResult">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">GapsResult</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">gap</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">vbm</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cbm</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_dir</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">vbm_dir</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cbm_dir</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">k_vbm_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">k_cbm_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">k_vbm_dir_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">k_cbm_dir_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">skn1</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">skn2</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">skn1_dir</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">skn2_dir</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">efermi</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">key_descriptions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">efermi</span><span class="o">=</span><span class="s1">&#39;Fermi level [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gap</span><span class="o">=</span><span class="s1">&#39;Band gap [eV].&#39;</span><span class="p">,</span>
+        <span class="n">vbm</span><span class="o">=</span><span class="s1">&#39;Valence band maximum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">cbm</span><span class="o">=</span><span class="s1">&#39;Conduction band minimum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gap_dir</span><span class="o">=</span><span class="s1">&#39;Direct band gap [eV].&#39;</span><span class="p">,</span>
+        <span class="n">vbm_dir</span><span class="o">=</span><span class="s1">&#39;Direct valence band maximum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">cbm_dir</span><span class="o">=</span><span class="s1">&#39;Direct conduction band minimum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">k_vbm_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of valence band maximum (VBM).&#39;</span><span class="p">,</span>
+        <span class="n">k_cbm_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of conduction band minimum (CBM).&#39;</span><span class="p">,</span>
+        <span class="n">k_vbm_dir_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of direct valence band maximum (VBM).&#39;</span><span class="p">,</span>
+        <span class="n">k_cbm_dir_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of direct calence band minimum (CBM).&#39;</span><span class="p">,</span>
+        <span class="n">skn1</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for valence band maximum.&quot;</span><span class="p">,</span>
+        <span class="n">skn2</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for conduction band minimum.&quot;</span><span class="p">,</span>
+        <span class="n">skn1_dir</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for direct valence band maximum.&quot;</span><span class="p">,</span>
+        <span class="n">skn2_dir</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for direct conduction band minimum.&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="gaps">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.gaps.html#ase2sprkkr.asr.gs.gaps">[docs]</a>
+<span class="k">def</span> <span class="nf">gaps</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GapsResult</span><span class="p">:</span>
+    <span class="c1"># ##TODO min kpt dens? XXX</span>
+    <span class="c1"># inputs: gpw groundstate file, soc?, direct gap? XXX</span>
+    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+    <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">calc2eigs</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
+
+    <span class="k">if</span> <span class="n">soc</span><span class="p">:</span>
+        <span class="n">ibzkpts</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_bz_k_points</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ibzkpts</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_ibz_k_points</span><span class="p">()</span>
+
+    <span class="p">(</span><span class="n">evbm_ecbm_gap</span><span class="p">,</span>
+     <span class="n">skn_vbm</span><span class="p">,</span> <span class="n">skn_cbm</span><span class="p">)</span> <span class="o">=</span> <span class="n">get_gap_info</span><span class="p">(</span><span class="n">soc</span><span class="o">=</span><span class="n">soc</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                      <span class="n">calc</span><span class="o">=</span><span class="n">calc</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">evbm_ecbm_direct_gap</span><span class="p">,</span>
+     <span class="n">direct_skn_vbm</span><span class="p">,</span> <span class="n">direct_skn_cbm</span><span class="p">)</span> <span class="o">=</span> <span class="n">get_gap_info</span><span class="p">(</span><span class="n">soc</span><span class="o">=</span><span class="n">soc</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                    <span class="n">calc</span><span class="o">=</span><span class="n">calc</span><span class="p">)</span>
+
+    <span class="n">k_vbm</span><span class="p">,</span> <span class="n">k_cbm</span> <span class="o">=</span> <span class="n">skn_vbm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">skn_cbm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">direct_k_vbm</span><span class="p">,</span> <span class="n">direct_k_cbm</span> <span class="o">=</span> <span class="n">direct_skn_vbm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">direct_skn_cbm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">get_kc</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">get_1bz_k</span><span class="p">,</span> <span class="n">ibzkpts</span><span class="p">,</span> <span class="n">calc</span><span class="p">)</span>
+
+    <span class="n">k_vbm_c</span> <span class="o">=</span> <span class="n">get_kc</span><span class="p">(</span><span class="n">k_vbm</span><span class="p">)</span>
+    <span class="n">k_cbm_c</span> <span class="o">=</span> <span class="n">get_kc</span><span class="p">(</span><span class="n">k_cbm</span><span class="p">)</span>
+    <span class="n">direct_k_vbm_c</span> <span class="o">=</span> <span class="n">get_kc</span><span class="p">(</span><span class="n">direct_k_vbm</span><span class="p">)</span>
+    <span class="n">direct_k_cbm_c</span> <span class="o">=</span> <span class="n">get_kc</span><span class="p">(</span><span class="n">direct_k_cbm</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">soc</span><span class="p">:</span>
+        <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">efermi</span> <span class="o">=</span> <span class="n">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">efermi</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">GapsResult</span><span class="o">.</span><span class="n">fromdata</span><span class="p">(</span>
+        <span class="n">gap</span><span class="o">=</span><span class="n">evbm_ecbm_gap</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">vbm</span><span class="o">=</span><span class="n">evbm_ecbm_gap</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">cbm</span><span class="o">=</span><span class="n">evbm_ecbm_gap</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">gap_dir</span><span class="o">=</span><span class="n">evbm_ecbm_direct_gap</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">vbm_dir</span><span class="o">=</span><span class="n">evbm_ecbm_direct_gap</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">cbm_dir</span><span class="o">=</span><span class="n">evbm_ecbm_direct_gap</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">k_vbm_c</span><span class="o">=</span><span class="n">k_vbm_c</span><span class="p">,</span>
+        <span class="n">k_cbm_c</span><span class="o">=</span><span class="n">k_cbm_c</span><span class="p">,</span>
+        <span class="n">k_vbm_dir_c</span><span class="o">=</span><span class="n">direct_k_vbm_c</span><span class="p">,</span>
+        <span class="n">k_cbm_dir_c</span><span class="o">=</span><span class="n">direct_k_cbm_c</span><span class="p">,</span>
+        <span class="n">skn1</span><span class="o">=</span><span class="n">skn_vbm</span><span class="p">,</span>
+        <span class="n">skn2</span><span class="o">=</span><span class="n">skn_cbm</span><span class="p">,</span>
+        <span class="n">skn1_dir</span><span class="o">=</span><span class="n">direct_skn_vbm</span><span class="p">,</span>
+        <span class="n">skn2_dir</span><span class="o">=</span><span class="n">direct_skn_cbm</span><span class="p">,</span>
+        <span class="n">efermi</span><span class="o">=</span><span class="n">efermi</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_1bz_k">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.get_1bz_k.html#ase2sprkkr.asr.gs.get_1bz_k">[docs]</a>
+<span class="k">def</span> <span class="nf">get_1bz_k</span><span class="p">(</span><span class="n">ibzkpts</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">k_index</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">to1bz</span>
+    <span class="n">k_c</span> <span class="o">=</span> <span class="n">ibzkpts</span><span class="p">[</span><span class="n">k_index</span><span class="p">]</span> <span class="k">if</span> <span class="n">k_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">k_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">k_c</span> <span class="o">=</span> <span class="n">to1bz</span><span class="p">(</span><span class="n">k_c</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">calc</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">gd</span><span class="o">.</span><span class="n">cell_cv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">k_c</span></div>
+
+
+
+<div class="viewcode-block" id="get_gap_info">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.get_gap_info.html#ase2sprkkr.asr.gs.get_gap_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_gap_info</span><span class="p">(</span><span class="n">soc</span><span class="p">,</span> <span class="n">direct</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
+    <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">calc2eigs</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
+    <span class="c1"># e1 is VBM, e2 is CBM</span>
+    <span class="k">if</span> <span class="n">soc</span><span class="p">:</span>
+        <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+        <span class="n">e_km</span><span class="p">,</span> <span class="n">efermi</span> <span class="o">=</span> <span class="n">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span>
+                                 <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+        <span class="c1"># km1 is VBM index tuple: (s, k, n), km2 is CBM index tuple: (s, k, n)</span>
+        <span class="n">gap</span><span class="p">,</span> <span class="n">km1</span><span class="p">,</span> <span class="n">km2</span> <span class="o">=</span> <span class="n">bandgap</span><span class="p">(</span><span class="n">eigenvalues</span><span class="o">=</span><span class="n">e_km</span><span class="p">,</span> <span class="n">efermi</span><span class="o">=</span><span class="n">efermi</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="n">direct</span><span class="p">,</span>
+                                <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">km1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">e1</span> <span class="o">=</span> <span class="n">e_km</span><span class="p">[</span><span class="n">km1</span><span class="p">]</span>
+            <span class="n">e2</span> <span class="o">=</span> <span class="n">e_km</span><span class="p">[</span><span class="n">km2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">gap</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">km1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">km2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">g</span><span class="p">,</span> <span class="n">skn1</span><span class="p">,</span> <span class="n">skn2</span> <span class="o">=</span> <span class="n">bandgap</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="n">direct</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">skn1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">e1</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_eigenvalues</span><span class="p">(</span><span class="n">spin</span><span class="o">=</span><span class="n">skn1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kpt</span><span class="o">=</span><span class="n">skn1</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="n">skn1</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+            <span class="n">e2</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_eigenvalues</span><span class="p">(</span><span class="n">spin</span><span class="o">=</span><span class="n">skn2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kpt</span><span class="o">=</span><span class="n">skn2</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="n">skn2</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">,</span> <span class="n">g</span><span class="p">),</span> <span class="n">skn1</span><span class="p">,</span> <span class="n">skn2</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+
+
+<div class="viewcode-block" id="VacuumLevelResults">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.VacuumLevelResults.html#ase2sprkkr.asr.gs.VacuumLevelResults">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">VacuumLevelResults</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+    <span class="n">z_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">v_z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">evacdiff</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">dipz</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">evac1</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">evac2</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">evacmean</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">efermi_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;z_z&#39;</span><span class="p">:</span> <span class="s1">&#39;Grid points for potential [Å].&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;v_z&#39;</span><span class="p">:</span> <span class="s1">&#39;Electrostatic potential [eV].&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;evacdiff&#39;</span><span class="p">:</span> <span class="s1">&#39;Difference of vacuum levels on both sides of slab [eV].&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;dipz&#39;</span><span class="p">:</span> <span class="s1">&#39;Out-of-plane dipole [e * Ang].&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;evac1&#39;</span><span class="p">:</span> <span class="s1">&#39;Top side vacuum level [eV].&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;evac2&#39;</span><span class="p">:</span> <span class="s1">&#39;Bottom side vacuum level [eV]&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;evacmean&#39;</span><span class="p">:</span> <span class="s1">&#39;Average vacuum level [eV].&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;efermi_nosoc&#39;</span><span class="p">:</span> <span class="s1">&#39;Fermi level without SOC [eV].&#39;</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="vacuumlevels">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.vacuumlevels.html#ase2sprkkr.asr.gs.vacuumlevels">[docs]</a>
+<span class="k">def</span> <span class="nf">vacuumlevels</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the vacuumlevels on both sides of a 2D material.</span>
+
+<span class="sd">    Get the vacuumlevels on both sides of a 2D material. Will</span>
+<span class="sd">    do a dipole corrected dft calculation, if needed (Janus structures).</span>
+<span class="sd">    Assumes the 2D material periodic directions are x and y.</span>
+<span class="sd">    Assumes that the 2D material is centered in the z-direction of</span>
+<span class="sd">    the unit cell.</span>
+
+<span class="sd">    Dipole corrected dft calculation -&gt; dipcorrgs.gpw</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    gpw: str</span>
+<span class="sd">       name of gpw file to base the dipole corrected calc on</span>
+<span class="sd">    evacdiffmin: float</span>
+<span class="sd">        thresshold in eV for doing a dipole moment corrected</span>
+<span class="sd">        dft calculations if the predicted evac difference is less</span>
+<span class="sd">        than this value don&#39;t do it</span>
+<span class="sd">    n: int</span>
+<span class="sd">        number of gridpoints away from the edge to evaluate the vac levels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">())</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">VacuumLevelResults</span><span class="o">.</span><span class="n">fromdata</span><span class="p">(</span>
+            <span class="n">z_z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">v_z</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">evacdiff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">dipz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">evac1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">evac2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">evacmean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">efermi_nosoc</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Record electrostatic potential as a function of z</span>
+    <span class="n">v_z</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_electrostatic_potential</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">z_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">v_z</span><span class="p">),</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Store data</span>
+    <span class="k">return</span> <span class="n">VacuumLevelResults</span><span class="o">.</span><span class="n">fromdata</span><span class="p">(</span>
+        <span class="n">z_z</span><span class="o">=</span><span class="n">z_z</span><span class="p">,</span>
+        <span class="n">v_z</span><span class="o">=</span><span class="n">v_z</span><span class="p">,</span>
+        <span class="n">dipz</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_dipole_moment</span><span class="p">()[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">evacdiff</span><span class="o">=</span><span class="n">evacdiff</span><span class="p">(</span><span class="n">atoms</span><span class="p">),</span>
+        <span class="n">evac1</span><span class="o">=</span><span class="n">v_z</span><span class="p">[</span><span class="n">n</span><span class="p">],</span>
+        <span class="n">evac2</span><span class="o">=</span><span class="n">v_z</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="p">],</span>
+        <span class="n">evacmean</span><span class="o">=</span><span class="p">(</span><span class="n">v_z</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">v_z</span><span class="p">[</span><span class="o">-</span><span class="n">n</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">efermi_nosoc</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="evacdiff">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.evacdiff.html#ase2sprkkr.asr.gs.evacdiff">[docs]</a>
+<span class="k">def</span> <span class="nf">evacdiff</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derive vacuum energy level difference from the dipole moment.</span>
+
+<span class="sd">    Calculate vacuum energy level difference from the dipole moment of</span>
+<span class="sd">    a slab assumed to be in the xy plane</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out: float</span>
+<span class="sd">        vacuum level difference in eV</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span><span class="p">,</span> <span class="n">Hartree</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">Bohr</span><span class="p">)</span>
+    <span class="n">dipz</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_dipole_moment</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">Bohr</span>
+    <span class="n">evacsplit</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">dipz</span> <span class="o">/</span> <span class="n">A</span> <span class="o">*</span> <span class="n">Hartree</span>
+
+    <span class="k">return</span> <span class="n">evacsplit</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.gs.Result.html#ase2sprkkr.asr.gs.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for ground state results.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; res = Result(data=dict(etot=0), strict=False)</span>
+<span class="sd">    &gt;&gt;&gt; res.etot</span>
+<span class="sd">    0</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">forces</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">stresses</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">etot</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">evac</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">evacdiff</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">dipz</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">efermi</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">vbm</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cbm</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_dir</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">vbm_dir</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">cbm_dir</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_dir_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gap_nosoc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">gaps_nosoc</span><span class="p">:</span> <span class="n">GapsResult</span>
+    <span class="n">k_vbm_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">k_cbm_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">k_vbm_dir_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">k_cbm_dir_c</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">skn1</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">skn2</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">skn1_dir</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">skn2_dir</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">workfunction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">vacuumlevels</span><span class="p">:</span> <span class="n">VacuumLevelResults</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">forces</span><span class="o">=</span><span class="s1">&#39;Forces on atoms [eV/Angstrom].&#39;</span><span class="p">,</span>
+        <span class="n">stresses</span><span class="o">=</span><span class="s1">&#39;Stress on unit cell [eV/Angstrom^dim].&#39;</span><span class="p">,</span>
+        <span class="n">etot</span><span class="o">=</span><span class="s1">&#39;Total energy [eV].&#39;</span><span class="p">,</span>
+        <span class="n">evac</span><span class="o">=</span><span class="s1">&#39;Vacuum level [eV].&#39;</span><span class="p">,</span>
+        <span class="n">evacdiff</span><span class="o">=</span><span class="s1">&#39;Vacuum level shift (Vacuum level shift) [eV].&#39;</span><span class="p">,</span>
+        <span class="n">dipz</span><span class="o">=</span><span class="s1">&#39;Out-of-plane dipole [e * Ang].&#39;</span><span class="p">,</span>
+        <span class="n">efermi</span><span class="o">=</span><span class="s1">&#39;Fermi level [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gap</span><span class="o">=</span><span class="s1">&#39;Band gap [eV].&#39;</span><span class="p">,</span>
+        <span class="n">vbm</span><span class="o">=</span><span class="s1">&#39;Valence band maximum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">cbm</span><span class="o">=</span><span class="s1">&#39;Conduction band minimum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gap_dir</span><span class="o">=</span><span class="s1">&#39;Direct band gap [eV].&#39;</span><span class="p">,</span>
+        <span class="n">vbm_dir</span><span class="o">=</span><span class="s1">&#39;Direct valence band maximum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">cbm_dir</span><span class="o">=</span><span class="s1">&#39;Direct conduction band minimum [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gap_dir_nosoc</span><span class="o">=</span><span class="s1">&#39;Direct gap without SOC [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gap_nosoc</span><span class="o">=</span><span class="s1">&#39;Gap without SOC [eV].&#39;</span><span class="p">,</span>
+        <span class="n">gaps_nosoc</span><span class="o">=</span><span class="s1">&#39;Container for bandgap results without SOC.&#39;</span><span class="p">,</span>
+        <span class="n">vacuumlevels</span><span class="o">=</span><span class="s1">&#39;Container for results that relate to vacuum levels.&#39;</span><span class="p">,</span>
+        <span class="n">k_vbm_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of valence band maximum (VBM).&#39;</span><span class="p">,</span>
+        <span class="n">k_cbm_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of conduction band minimum (CBM).&#39;</span><span class="p">,</span>
+        <span class="n">k_vbm_dir_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of direct valence band maximum (VBM).&#39;</span><span class="p">,</span>
+        <span class="n">k_cbm_dir_c</span><span class="o">=</span><span class="s1">&#39;Scaled k-point coordinates of direct calence band minimum (CBM).&#39;</span><span class="p">,</span>
+        <span class="n">skn1</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for valence band maximum.&quot;</span><span class="p">,</span>
+        <span class="n">skn2</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for conduction band minimum.&quot;</span><span class="p">,</span>
+        <span class="n">skn1_dir</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for direct valence band maximum.&quot;</span><span class="p">,</span>
+        <span class="n">skn2_dir</span><span class="o">=</span><span class="s2">&quot;(spin,k-index,band-index)-tuple for direct conduction band minimum.&quot;</span><span class="p">,</span>
+        <span class="n">workfunction</span><span class="o">=</span><span class="s2">&quot;Workfunction [eV]&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;structure.json&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;results-asr.magnetic_anisotropy.json&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.magnetic_anisotropy&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">],</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract derived quantities from groundstate in gs.gpw.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">asr.calculators</span> <span class="kn">import</span> <span class="n">get_calculator</span>
+    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">serial_comm</span>
+
+    <span class="c1"># Just some quality control before we start</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">get_calculator</span><span class="p">()(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">communicator</span><span class="o">=</span><span class="n">serial_comm</span><span class="p">)</span>
+    <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span>
+    <span class="n">ndim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">pbc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> \
+            <span class="s1">&#39;The third unit cell axis should be aperiodic for a 2D material!&#39;</span>
+        <span class="c1"># For 2D materials we check that the calculater used a dipole</span>
+        <span class="c1"># correction if the material has an out-of-plane dipole</span>
+
+        <span class="c1"># Small hack</span>
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span>
+        <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="n">calc</span>
+        <span class="n">evacdiffmin</span> <span class="o">=</span> <span class="mf">10e-3</span>
+        <span class="k">if</span> <span class="n">evacdiff</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">evacdiffmin</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">calc</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;poissonsolver&#39;</span><span class="p">,</span> <span class="p">{})</span> <span class="o">==</span> \
+                <span class="p">{</span><span class="s1">&#39;dipolelayer&#39;</span><span class="p">:</span> <span class="s1">&#39;xy&#39;</span><span class="p">},</span> \
+                <span class="p">(</span><span class="s1">&#39;The ground state has a finite dipole moment along aperiodic &#39;</span>
+                 <span class="s1">&#39;axis but calculation was without dipole correction.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Now that some checks are done, we can extract information</span>
+    <span class="n">forces</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;forces&#39;</span><span class="p">,</span> <span class="n">allow_calculation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">stresses</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;stress&#39;</span><span class="p">,</span> <span class="n">allow_calculation</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">etot</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+
+    <span class="n">gaps_nosoc</span> <span class="o">=</span> <span class="n">gaps</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">gaps_soc</span> <span class="o">=</span> <span class="n">gaps</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">vac</span> <span class="o">=</span> <span class="n">vacuumlevels</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">calc</span><span class="p">)</span>
+    <span class="n">workfunction</span> <span class="o">=</span> <span class="n">vac</span><span class="o">.</span><span class="n">evacmean</span> <span class="o">-</span> <span class="n">gaps_soc</span><span class="o">.</span><span class="n">efermi</span> <span class="k">if</span> <span class="n">vac</span><span class="o">.</span><span class="n">evacmean</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">Result</span><span class="o">.</span><span class="n">fromdata</span><span class="p">(</span>
+        <span class="n">forces</span><span class="o">=</span><span class="n">forces</span><span class="p">,</span>
+        <span class="n">stresses</span><span class="o">=</span><span class="n">stresses</span><span class="p">,</span>
+        <span class="n">etot</span><span class="o">=</span><span class="n">etot</span><span class="p">,</span>
+        <span class="n">gaps_nosoc</span><span class="o">=</span><span class="n">gaps_nosoc</span><span class="p">,</span>
+        <span class="n">gap_dir_nosoc</span><span class="o">=</span><span class="n">gaps_nosoc</span><span class="o">.</span><span class="n">gap_dir</span><span class="p">,</span>
+        <span class="n">gap_nosoc</span><span class="o">=</span><span class="n">gaps_nosoc</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span>
+        <span class="n">gap</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span>
+        <span class="n">vbm</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">vbm</span><span class="p">,</span>
+        <span class="n">cbm</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">cbm</span><span class="p">,</span>
+        <span class="n">gap_dir</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">gap_dir</span><span class="p">,</span>
+        <span class="n">vbm_dir</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">vbm_dir</span><span class="p">,</span>
+        <span class="n">cbm_dir</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">cbm_dir</span><span class="p">,</span>
+        <span class="n">k_vbm_c</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">k_vbm_c</span><span class="p">,</span>
+        <span class="n">k_cbm_c</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">k_cbm_c</span><span class="p">,</span>
+        <span class="n">k_vbm_dir_c</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">k_vbm_dir_c</span><span class="p">,</span>
+        <span class="n">k_cbm_dir_c</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">k_cbm_dir_c</span><span class="p">,</span>
+        <span class="n">skn1</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">skn1</span><span class="p">,</span>
+        <span class="n">skn2</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">skn2</span><span class="p">,</span>
+        <span class="n">skn1_dir</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">skn1_dir</span><span class="p">,</span>
+        <span class="n">skn2_dir</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">skn2_dir</span><span class="p">,</span>
+        <span class="n">efermi</span><span class="o">=</span><span class="n">gaps_soc</span><span class="o">.</span><span class="n">efermi</span><span class="p">,</span>
+        <span class="n">vacuumlevels</span><span class="o">=</span><span class="n">vac</span><span class="p">,</span>
+        <span class="n">dipz</span><span class="o">=</span><span class="n">vac</span><span class="o">.</span><span class="n">dipz</span><span class="p">,</span>
+        <span class="n">evac</span><span class="o">=</span><span class="n">vac</span><span class="o">.</span><span class="n">evacmean</span><span class="p">,</span>
+        <span class="n">evacdiff</span><span class="o">=</span><span class="n">vac</span><span class="o">.</span><span class="n">evacdiff</span><span class="p">,</span>
+        <span class="n">workfunction</span><span class="o">=</span><span class="n">workfunction</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

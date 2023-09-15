@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InputParametersDefinition &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +65,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
@@ -81,6 +86,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -98,11 +104,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.input_parameters.html">input_parameters</a> &raquo;</li>
-          <li><a href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a> &raquo;</li>
-      <li>InputParametersDefinition</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
+      <li class="breadcrumb-item active">InputParametersDefinition</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -113,28 +119,29 @@
            <div itemprop="articleBody">
              
   <section id="inputparametersdefinition">
-<h1>InputParametersDefinition<a class="headerlink" href="#inputparametersdefinition" title="Permalink to this heading"></a></h1>
+<h1>InputParametersDefinition<a class="headerlink" href="#inputparametersdefinition" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.input_parameters.input_parameters_definitions.</span></span><span class="sig-name descname"><span class="pre">InputParametersDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kkrscf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.input_parameters.input_parameters_definitions.</span></span><span class="sig-name descname"><span class="pre">InputParametersDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kkrscf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" title="Link to this definition"></a></dt>
 <dd><p>This class describes the format of a task file.</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-7357eadcde4346f5c5c1a60458f96d1209f2eb99.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" usemap="#inheritance40c7756f4a" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-16e8189d1f0d64b868744fc825eb14442b87def1.png" alt="Inheritance diagram of ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" usemap="#inheritance40c7756f4a" class="inheritance graphviz" /></div>
 <map id="inheritance40c7756f4a" name="inheritance40c7756f4a">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="575,3,730,17"/>
-<area shape="rect" id="node5" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" target="_top" title="This class describes the format of a task file." alt="" coords="746,3,957,17"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="359,3,559,17"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="3,3,156,17"/>
-<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="172,3,343,17"/>
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="637,2,767,14"/>
+<area shape="rect" id="node6" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition" target="_top" title="This class describes the format of a task file." alt="" coords="780,2,958,14"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="456,2,624,14"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="2,2,131,14"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="145,2,286,14"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="299,2,442,14"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kkrscf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kkrscf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_reader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>others</strong> – For the meaning of the others parameters please see <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationRootDefinition</span></code></p></li>
 <li><p><strong>executable</strong> (<em>str</em>) – Executable to run</p></li>
@@ -149,44 +156,44 @@ means, that the class is determined from the TASK name
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.child_class">
-<span class="sig-name descname"><span class="pre">child_class</span></span><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.child_class" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">child_class</span></span><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.child_class" title="Link to this definition"></a></dt>
 <dd><p>Sections of the <code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code> are defined by <a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputSectionDefinition</span></code></a></p>
 <p>alias of <a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition" title="ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputSectionDefinition</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.result_class">
-<span class="sig-name descname"><span class="pre">result_class</span></span><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.result_class" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">result_class</span></span><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.result_class" title="Link to this definition"></a></dt>
 <dd><p>The parsing of a potential file results in an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></p>
 <p>alias of <a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters" title="ase2sprkkr.input_parameters.input_parameters.InputParameters"><code class="xref py py-class docutils literal notranslate"><span class="pre">InputParameters</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.custom_class">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.custom_class" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.custom_class" title="Link to this definition"></a></dt>
 <dd><p>The class factory for custom sections in the container</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.configuration_type_name">
-<span class="sig-name descname"><span class="pre">configuration_type_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'INPUT</span> <span class="pre">PARAMETERS'</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.configuration_type_name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">configuration_type_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'INPUT</span> <span class="pre">PARAMETERS'</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.configuration_type_name" title="Link to this definition"></a></dt>
 <dd><p>Name of the container type in the runtime documentation</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.delimiter">
-<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n'</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.delimiter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n'</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.delimiter" title="Link to this definition"></a></dt>
 <dd><p>Sections are delimited by newline in the output</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.grammar_of_delimiter">
-<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;newline&gt;&lt;printable&gt;</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.grammar_of_delimiter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;newline&gt;&lt;printable&gt;</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.grammar_of_delimiter" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>
 </dd>
 </dl>
@@ -194,12 +201,12 @@ means, that the class is determined from the TASK name
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.custom_value_grammar">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_value_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition.custom_value_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.custom_value_grammar" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">custom_value_grammar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition.custom_value_grammar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.custom_value_grammar" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition._generic_info">
-<span class="sig-name descname"><span class="pre">_generic_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition._generic_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition._generic_info" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_generic_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters_definitions.html#InputParametersDefinition._generic_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition._generic_info" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

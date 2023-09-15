@@ -1,0 +1,8 @@
+get\_rmsd
+=========
+
+Full name: **ase2sprkkr.asr.database.rmsd.get\_rmsd**
+
+.. currentmodule:: ase2sprkkr.asr.database.rmsd
+
+.. autofunction:: get_rmsd

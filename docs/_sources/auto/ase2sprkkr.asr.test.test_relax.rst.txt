@@ -1,0 +1,48 @@
+test\_relax
+===========
+
+Full name: **ase2sprkkr.asr.test.test\_relax**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_relax
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_relax_basic
+      test_relax_bn_gpaw
+      test_relax_emt
+      test_relax_emt_fail_broken_symmetry
+      test_relax_find_higher_symmetry
+      test_relax_magmoms
+      test_relax_si_gpaw
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,45 @@
+acceptance
+==========
+
+Full name: **ase2sprkkr.asr.test.acceptance**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.acceptance
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.acceptance.test_borncharges
+     ase2sprkkr.asr.test.acceptance.test_piezoelectrictensor
+     ase2sprkkr.asr.test.acceptance.test_relax
+  
+  

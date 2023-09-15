@@ -1,0 +1,59 @@
+types
+=====
+
+Full name: **ase2sprkkr.asr.core.types**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.core.types.AtomsFile  ase2sprkkr.asr.core.types.DictStr 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.core.types
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      clickify_docstring
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      AtomsFile
+      DictStr
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

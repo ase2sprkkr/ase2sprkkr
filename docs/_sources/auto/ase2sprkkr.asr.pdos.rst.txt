@@ -1,0 +1,66 @@
+pdos
+====
+
+Full name: **ase2sprkkr.asr.pdos**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.pdos.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.pdos
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      calculate_pdos
+      get_l_a
+      get_ordered_syl_dict
+      get_yl_colors
+      pdos
+      plot_pdos
+      plot_pdos_nosoc
+      plot_pdos_soc
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

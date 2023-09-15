@@ -12,11 +12,11 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.potentials.custom_potential_section</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.potentials.custom_potential_section</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -91,37 +95,44 @@
 
 <span class="kn">from</span> <span class="nn">..common.grammar_types</span> <span class="kn">import</span> <span class="n">GrammarType</span>
 <span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationValueDefinition</span><span class="p">,</span> <span class="n">CustomConfigurationValue</span>
-<span class="kn">from</span> <span class="nn">..common.grammar</span> <span class="kn">import</span> <span class="n">separator</span><span class="p">,</span> <span class="n">line_end</span>
+<span class="kn">from</span> <span class="nn">..common.grammar</span> <span class="kn">import</span> <span class="n">separator_pattern</span><span class="p">,</span> <span class="n">line_end</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span><span class="p">,</span> <span class="n">class_property</span><span class="p">,</span> <span class="n">cache</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
 
-<div class="viewcode-block" id="CustomPotentialSectionDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSectionDefinition">[docs]</a><span class="k">class</span> <span class="nc">CustomPotentialSectionDefinition</span><span class="p">(</span><span class="n">ConfigurationValueDefinition</span><span class="p">):</span>
-  <span class="sd">&quot;&quot;&quot; The custom sections are in fact values - their content can be</span>
+<div class="viewcode-block" id="CustomPotentialSectionDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSectionDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">CustomPotentialSectionDefinition</span><span class="p">(</span><span class="n">ConfigurationValueDefinition</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; The custom sections are in fact values - their content can be</span>
 <span class="sd">  readed or writed as one value (in the most cases string).</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="n">mandatory</span> <span class="o">=</span> <span class="kc">False</span>
-  <span class="sd">&quot;&quot;&quot; Obviously, the custom sections are not required &quot;&quot;&quot;</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; Obviously, the custom sections are not required &quot;&quot;&quot;</span>
 
   <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
 
   <span class="n">name_value_delimiter</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
-  <span class="sd">&quot;&quot;&quot; The content of the section is delimited from the name by a newline &quot;&quot;&quot;</span></div>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; The content of the section is delimited from the name by a newline &quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="CustomSectionToken"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.potential_definitions.CustomSectionToken">[docs]</a><span class="k">class</span> <span class="nc">CustomSectionToken</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Token</span><span class="p">):</span>
-   <span class="sd">&quot;&quot;&quot; The grammar for a custom section - i.e. for unknown section, whose</span>
+
+<div class="viewcode-block" id="CustomSectionToken">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.potential_definitions.CustomSectionToken">[docs]</a>
+<span class="k">class</span> <span class="nc">CustomSectionToken</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Token</span><span class="p">):</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; The grammar for a custom section - i.e. for unknown section, whose</span>
 <span class="sd">   content is let as is.</span>
 
 <span class="sd">   The grammar just reads all  up to the section separator.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
 
-   <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">separator</span><span class="o">.</span><span class="n">pattern</span> <span class="o">+</span> <span class="s1">&#39;[ </span><span class="se">\r\t</span><span class="s1">]*</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>  <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+   <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">separator_pattern</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;[ </span><span class="se">\r\t</span><span class="s1">]*</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>  <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;CustomSection&#39;</span>
 
-<div class="viewcode-block" id="CustomSectionToken.parseImpl"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.potential_definitions.CustomSectionToken.parseImpl">[docs]</a>   <span class="k">def</span> <span class="nf">parseImpl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instr</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">doActions</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomSectionToken.parseImpl">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html#ase2sprkkr.potentials.potential_definitions.CustomSectionToken.parseImpl">[docs]</a>
+   <span class="k">def</span> <span class="nf">parseImpl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instr</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">doActions</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">instr</span><span class="p">,</span><span class="n">loc</span><span class="p">)</span>
        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
           <span class="n">out</span> <span class="o">=</span> <span class="n">instr</span><span class="p">[</span><span class="n">loc</span><span class="p">:</span><span class="n">result</span><span class="o">.</span><span class="n">start</span><span class="p">()]</span>
@@ -129,57 +140,89 @@
        <span class="k">else</span><span class="p">:</span>
           <span class="n">out</span> <span class="o">=</span> <span class="n">instr</span><span class="p">[</span><span class="n">loc</span><span class="p">:]</span>
           <span class="n">loc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">instr</span><span class="p">)</span>
-       <span class="k">return</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseResults</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div></div>
+       <span class="k">return</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseResults</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div>
+</div>
 
-<div class="viewcode-block" id="SectionString"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString">[docs]</a><span class="k">class</span> <span class="nc">SectionString</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SectionString">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString">[docs]</a>
+<span class="k">class</span> <span class="nc">SectionString</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      The grammar_type of a custom section - i.e. string, that</span>
 <span class="sd">      ends with a section separator.</span>
 
 <span class="sd">      This grammar_type as used as a value type for the custom section.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
 
-      <span class="n">delimiter_pattern</span> <span class="o">=</span> <span class="s1">&#39;(?:[ </span><span class="se">\t\r</span><span class="s1">]*(?:</span><span class="se">\n</span><span class="s1">[ </span><span class="se">\t\r</span><span class="s1">]*)*)*</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span><span class="n">separator</span><span class="o">.</span><span class="n">pattern</span> <span class="o">+</span> <span class="s1">&#39;(?:[ </span><span class="se">\t\r</span><span class="s1">]*(?:</span><span class="se">\n</span><span class="s1">[ </span><span class="se">\t\r</span><span class="s1">]*))*</span><span class="se">\n</span><span class="s1">&#39;</span>
+      <span class="n">delimiter_pattern</span> <span class="o">=</span> <span class="s1">&#39;(?:[ </span><span class="se">\t\r</span><span class="s1">]*(?:</span><span class="se">\n</span><span class="s1">[ </span><span class="se">\t\r</span><span class="s1">]*)*)*</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span><span class="n">separator_pattern</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;(?:[ </span><span class="se">\t\r</span><span class="s1">]*(?:</span><span class="se">\n</span><span class="s1">[ </span><span class="se">\t\r</span><span class="s1">]*))*</span><span class="se">\n</span><span class="s1">&#39;</span>
 
       <span class="nd">@cached_class_property</span>
       <span class="k">def</span> <span class="nf">grammar_of_delimiter</span><span class="p">():</span>
           <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="n">SectionString</span><span class="o">.</span><span class="n">delimiter_pattern</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="o">*</span><span class="mi">79</span> <span class="o">+</span> <span class="s1">&#39;&lt;newline&gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SectionString._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString._grammar">[docs]</a>      <span class="nd">@cached_class_property</span>
+<div class="viewcode-block" id="SectionString._grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString._grammar">[docs]</a>
+      <span class="nd">@cached_class_property</span>
       <span class="k">def</span> <span class="nf">_grammar</span><span class="p">():</span>
           <span class="k">return</span> <span class="n">CustomSectionToken</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SectionString.grammar_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString.grammar_name">[docs]</a>      <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SectionString.grammar_name">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString.grammar_name">[docs]</a>
+      <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
           <span class="k">return</span> <span class="s1">&#39;&lt;all up to the end of the section&gt;&#39;</span></div>
 
-<div class="viewcode-block" id="SectionString.write"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString.write">[docs]</a>      <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SectionString.write">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.SectionString.html#ase2sprkkr.potentials.potential_definitions.SectionString.write">[docs]</a>
+      <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
           <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-          <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+          <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+</div>
+
 
 <span class="n">SectionString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">SectionString</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CustomPotentialSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection">[docs]</a><span class="k">class</span> <span class="nc">CustomPotentialSection</span><span class="p">(</span><span class="n">CustomConfigurationValue</span><span class="p">):</span>
-      <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CustomPotentialSection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection">[docs]</a>
+<span class="k">class</span> <span class="nc">CustomPotentialSection</span><span class="p">(</span><span class="n">CustomConfigurationValue</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Unknown sections of the potential file are mapped to a &quot;section&quot;</span>
 <span class="sd">      of this type.</span>
 
 <span class="sd">      In fact, it is not a Section - a container - but just an Option,</span>
 <span class="sd">      that holds a string value: a content of the section.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="CustomPotentialSection.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection.__init__">[docs]</a>      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomPotentialSection.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection.__init__">[docs]</a>
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
           <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">CustomPotentialSectionDefinition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">SectionString</span><span class="o">.</span><span class="n">I</span><span class="p">),</span> <span class="n">container</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CustomPotentialSection._depends_on"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection._depends_on">[docs]</a>      <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CustomPotentialSection._depends_on">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection._depends_on">[docs]</a>
+      <span class="k">def</span> <span class="nf">_depends_on</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
           <span class="k">return</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="CustomPotentialSection._set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection._set_from_atoms">[docs]</a>      <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CustomPotentialSection._set_from_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection._set_from_atoms">[docs]</a>
+      <span class="k">def</span> <span class="nf">_set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
           <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="CustomPotentialSection._update_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection._update_atoms">[docs]</a>      <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CustomPotentialSection._update_atoms">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection._update_atoms">[docs]</a>
+      <span class="k">def</span> <span class="nf">_update_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
           <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="CustomPotentialSection.reset"><a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection.reset">[docs]</a>      <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="CustomPotentialSection.reset">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html#ase2sprkkr.potentials.potential_definitions.CustomPotentialSection.reset">[docs]</a>
+      <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span></div>
+</div>
+
 </pre></div>
 
            </div>

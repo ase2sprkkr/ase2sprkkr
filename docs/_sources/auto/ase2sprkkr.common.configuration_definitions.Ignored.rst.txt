@@ -1,0 +1,36 @@
+Ignored
+=======
+
+
+.. currentmodule:: ase2sprkkr.common.configuration_definitions
+
+.. autoclass:: Ignored
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.configuration_definitions.Ignored
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

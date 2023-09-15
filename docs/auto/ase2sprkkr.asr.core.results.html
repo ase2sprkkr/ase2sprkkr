@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>results &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="data_to_dict" href="ase2sprkkr.asr.core.results.data_to_dict.html" />
+    <link rel="prev" title="Material" href="ase2sprkkr.asr.core.material.Material.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.asr.html">asr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bader.html">bader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bandstructure.html">bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.berry.html">berry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.borncharges.html">borncharges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bse.html">bse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.calculators.html">calculators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.chc.html">chc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.convex_hull.html">convex_hull</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.asr.core.html">core</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.core.cli.html">cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.core.command.html">command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.core.fix_old_files.html">fix_old_files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.core.material.html">material</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.core.types.html">types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.core.utils.html">utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.defectformation.html">defectformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.deformationpotentials.html">deformationpotentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dimensionality.html">dimensionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dos.html">dos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.emasses.html">emasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.exchange.html">exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fere.html">fere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fermisurface.html">fermisurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.formalpolarization.html">formalpolarization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gs.html">gs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gw.html">gw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.hse.html">hse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.infraredpolarizability.html">infraredpolarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magnetic_anisotropy.html">magnetic_anisotropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magstate.html">magstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.pdos.html">pdos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonons.html">phonons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonopy.html">phonopy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.piezoelectrictensor.html">piezoelectrictensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.plasmafrequency.html">plasmafrequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.polarizability.html">polarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.projected_bandstructure.html">projected_bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.push.html">push</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.raman.html">raman</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.relax.html">relax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setinfo.html">setinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setup.html">setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.stiffness.html">stiffness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.structureinfo.html">structureinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.test.html">test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.workflow.html">workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.html">asr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.core.html">core</a></li>
+      <li class="breadcrumb-item active">results</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.asr.core.results.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="results">
+<h1>results<a class="headerlink" href="#results" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.asr.core.results</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-d05e3b985a652dce83207127aedf4e16d0b3f8b2.png" alt="Inheritance diagram of ase2sprkkr.asr.core.results.ASRResult, ase2sprkkr.asr.core.results.DictEncoder, ase2sprkkr.asr.core.results.HTMLEncoder, ase2sprkkr.asr.core.results.HackedASRResult, ase2sprkkr.asr.core.results.JSONEncoder, ase2sprkkr.asr.core.results.MetaData, ase2sprkkr.asr.core.results.ObjectDescription, ase2sprkkr.asr.core.results.ResultEncoder, ase2sprkkr.asr.core.results.WebPanelEncoder" usemap="#inheritance0523d1d4be" class="inheritance graphviz" /></div>
+<map id="inheritance0523d1d4be" name="inheritance0523d1d4be">
+<area shape="rect" id="node4" href="ase2sprkkr.asr.core.results.ResultEncoder.html#ase2sprkkr.asr.core.results.ResultEncoder" target="_top" title="Abstract encoder base class." alt="" coords="185,153,299,179"/>
+<area shape="rect" id="node2" href="ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult" target="_top" title="Base class for describing results generated with recipes." alt="" coords="30,104,119,129"/>
+<area shape="rect" id="node6" href="ase2sprkkr.asr.core.results.HackedASRResult.html#ase2sprkkr.asr.core.results.HackedASRResult" target="_top" title="HackedASRResult" alt="" coords="173,104,311,129"/>
+<area shape="rect" id="node3" href="ase2sprkkr.asr.core.results.DictEncoder.html#ase2sprkkr.asr.core.results.DictEncoder" target="_top" title="Dict ASRResult encoder." alt="" coords="359,79,459,104"/>
+<area shape="rect" id="node5" href="ase2sprkkr.asr.core.results.HTMLEncoder.html#ase2sprkkr.asr.core.results.HTMLEncoder" target="_top" title="HTML ASRResult encoder." alt="" coords="353,128,464,153"/>
+<area shape="rect" id="node7" href="ase2sprkkr.asr.core.results.JSONEncoder.html#ase2sprkkr.asr.core.results.JSONEncoder" target="_top" title="JSON ASRResult encoder." alt="" coords="355,177,462,203"/>
+<area shape="rect" id="node10" href="ase2sprkkr.asr.core.results.WebPanelEncoder.html#ase2sprkkr.asr.core.results.WebPanelEncoder" target="_top" title="Encoder for ASE compatible webpanels." alt="" coords="340,227,477,252"/>
+<area shape="rect" id="node8" href="ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData" target="_top" title="Metadata object." alt="" coords="31,55,118,80"/>
+<area shape="rect" id="node9" href="ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription" target="_top" title="Result object descriptor." alt="" coords="5,5,144,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.asr.core.results">Implements ASRResult object and related quantities.</p>
+<p>The most important class in this module is
+<code class="xref py py-class docutils literal notranslate"><span class="pre">asr.core.results.ASRResult</span></code>, which is used to wrap results
+generated with ASR.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">asr.core.results.ASRResult</span></code> has a bunch of associated
+encoders that implements different ways of representing results, and
+potentially also implements ways to decode results. These encoders are:</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">asr.core.results.DictEncoder</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">asr.core.results.JSONEncoder</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">asr.core.results.HTMLEncoder</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">asr.core.results.WebPanelEncoder</span></code></p></li>
+</ul>
+<p>A dictionary representation of a result-object can be converted to a
+result object through <code class="xref py py-func docutils literal notranslate"><span class="pre">asr.core.results.dct_to_result()</span></code>.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.data_to_dict.html#ase2sprkkr.asr.core.results.data_to_dict" title="ase2sprkkr.asr.core.results.data_to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_to_dict</span></code></a>(dct)</p></td>
+<td><p>Recursively .todict all result instances.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.dct_to_result.html#ase2sprkkr.asr.core.results.dct_to_result" title="ase2sprkkr.asr.core.results.dct_to_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dct_to_result</span></code></a>(dct)</p></td>
+<td><p>Convert dict representing an ASR result to corresponding result object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.find_class_matching_version.html#ase2sprkkr.asr.core.results.find_class_matching_version" title="ase2sprkkr.asr.core.results.find_class_matching_version"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_class_matching_version</span></code></a>(returns, version)</p></td>
+<td><p>Find result class that matches version.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.format_key_description_pair.html#ase2sprkkr.asr.core.results.format_key_description_pair" title="ase2sprkkr.asr.core.results.format_key_description_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_key_description_pair</span></code></a>(key, attr_type, ...)</p></td>
+<td><p>Format a key-type-description for a docstring.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.get_key_descriptions.html#ase2sprkkr.asr.core.results.get_key_descriptions" title="ase2sprkkr.asr.core.results.get_key_descriptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_key_descriptions</span></code></a>(obj)</p></td>
+<td><p>Get key descriptions of object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.get_object_matching_obj_id.html#ase2sprkkr.asr.core.results.get_object_matching_obj_id" title="ase2sprkkr.asr.core.results.get_object_matching_obj_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_object_matching_obj_id</span></code></a>(asr_obj_id)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.get_object_types.html#ase2sprkkr.asr.core.results.get_object_types" title="ase2sprkkr.asr.core.results.get_object_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_object_types</span></code></a>(obj)</p></td>
+<td><p>Get type hints of object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.get_reader_function.html#ase2sprkkr.asr.core.results.get_reader_function" title="ase2sprkkr.asr.core.results.get_reader_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_reader_function</span></code></a>(dct)</p></td>
+<td><p>Determine dataformat of dct and return approriate reader.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.make_property.html#ase2sprkkr.asr.core.results.make_property" title="ase2sprkkr.asr.core.results.make_property"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_property</span></code></a>(key, doc, return_type)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.obj_to_id.html#ase2sprkkr.asr.core.results.obj_to_id" title="ase2sprkkr.asr.core.results.obj_to_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">obj_to_id</span></code></a>(cls)</p></td>
+<td><p>Get a string representation of path to object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.object_description_to_object.html#ase2sprkkr.asr.core.results.object_description_to_object" title="ase2sprkkr.asr.core.results.object_description_to_object"><code class="xref py py-obj docutils literal notranslate"><span class="pre">object_description_to_object</span></code></a>(object_description)</p></td>
+<td><p>Instantiate object description.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.prepare_result.html#ase2sprkkr.asr.core.results.prepare_result" title="ase2sprkkr.asr.core.results.prepare_result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepare_result</span></code></a>(cls)</p></td>
+<td><p>Prepare result class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.read_hacked_data.html#ase2sprkkr.asr.core.results.read_hacked_data" title="ase2sprkkr.asr.core.results.read_hacked_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_hacked_data</span></code></a>(dct)</p></td>
+<td><p>Fix hacked results files to contain necessary metadata.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.read_new_data.html#ase2sprkkr.asr.core.results.read_new_data" title="ase2sprkkr.asr.core.results.read_new_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_new_data</span></code></a>(dct)</p></td>
+<td><p>Parse a new style result dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.read_old_data.html#ase2sprkkr.asr.core.results.read_old_data" title="ase2sprkkr.asr.core.results.read_old_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_old_data</span></code></a>(dct)</p></td>
+<td><p>Parse an old style result dictionary.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.ASRResult.html#ase2sprkkr.asr.core.results.ASRResult" title="ase2sprkkr.asr.core.results.ASRResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASRResult</span></code></a>([data, metadata, strict])</p></td>
+<td><p>Base class for describing results generated with recipes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.DictEncoder.html#ase2sprkkr.asr.core.results.DictEncoder" title="ase2sprkkr.asr.core.results.DictEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DictEncoder</span></code></a>()</p></td>
+<td><p>Dict ASRResult encoder.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.HTMLEncoder.html#ase2sprkkr.asr.core.results.HTMLEncoder" title="ase2sprkkr.asr.core.results.HTMLEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTMLEncoder</span></code></a>()</p></td>
+<td><p>HTML ASRResult encoder.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.HackedASRResult.html#ase2sprkkr.asr.core.results.HackedASRResult" title="ase2sprkkr.asr.core.results.HackedASRResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HackedASRResult</span></code></a>([data, metadata, strict])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.JSONEncoder.html#ase2sprkkr.asr.core.results.JSONEncoder" title="ase2sprkkr.asr.core.results.JSONEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JSONEncoder</span></code></a>()</p></td>
+<td><p>JSON ASRResult encoder.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.MetaData.html#ase2sprkkr.asr.core.results.MetaData" title="ase2sprkkr.asr.core.results.MetaData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MetaData</span></code></a>(**kwargs)</p></td>
+<td><p>Metadata object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.ObjectDescription.html#ase2sprkkr.asr.core.results.ObjectDescription" title="ase2sprkkr.asr.core.results.ObjectDescription"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObjectDescription</span></code></a>(object_id, args, kwargs[, ...])</p></td>
+<td><p>Result object descriptor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.ResultEncoder.html#ase2sprkkr.asr.core.results.ResultEncoder" title="ase2sprkkr.asr.core.results.ResultEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResultEncoder</span></code></a>()</p></td>
+<td><p>Abstract encoder base class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.WebPanelEncoder.html#ase2sprkkr.asr.core.results.WebPanelEncoder" title="ase2sprkkr.asr.core.results.WebPanelEncoder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WebPanelEncoder</span></code></a>()</p></td>
+<td><p>Encoder for ASE compatible webpanels.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Exceptions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.MetaDataNotSetError.html#ase2sprkkr.asr.core.results.MetaDataNotSetError" title="ase2sprkkr.asr.core.results.MetaDataNotSetError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MetaDataNotSetError</span></code></a></p></td>
+<td><p>Error raised when encountering unknown metadata key.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.UnknownASRResultFormat.html#ase2sprkkr.asr.core.results.UnknownASRResultFormat" title="ase2sprkkr.asr.core.results.UnknownASRResultFormat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnknownASRResultFormat</span></code></a></p></td>
+<td><p>Exception when encountering unknown results version number.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.core.results.UnknownDataFormat.html#ase2sprkkr.asr.core.results.UnknownDataFormat" title="ase2sprkkr.asr.core.results.UnknownDataFormat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnknownDataFormat</span></code></a></p></td>
+<td><p>Unknown ASR Result format.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.asr.core.material.Material.html" class="btn btn-neutral float-left" title="Material" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.asr.core.results.data_to_dict.html" class="btn btn-neutral float-right" title="data_to_dict" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

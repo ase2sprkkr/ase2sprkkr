@@ -1,0 +1,8 @@
+pytest\_sessionstart
+====================
+
+Full name: **ase2sprkkr.asr.test.conftest.pytest\_sessionstart**
+
+.. currentmodule:: ase2sprkkr.asr.test.conftest
+
+.. autofunction:: pytest_sessionstart

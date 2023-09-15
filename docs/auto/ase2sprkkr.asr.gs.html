@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gs &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="bz_with_band_extremums" href="ase2sprkkr.asr.gs.bz_with_band_extremums.html" />
+    <link rel="prev" title="ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary" href="ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.asr.html">asr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bader.html">bader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bandstructure.html">bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.berry.html">berry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.borncharges.html">borncharges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bse.html">bse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.calculators.html">calculators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.chc.html">chc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.convex_hull.html">convex_hull</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.core.html">core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.defectformation.html">defectformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.deformationpotentials.html">deformationpotentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dimensionality.html">dimensionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dos.html">dos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.emasses.html">emasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.exchange.html">exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fere.html">fere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fermisurface.html">fermisurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.formalpolarization.html">formalpolarization</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">gs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.bz_with_band_extremums.html">bz_with_band_extremums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.evacdiff.html">evacdiff</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.gaps.html">gaps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.get_1bz_k.html">get_1bz_k</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.get_gap_info.html">get_gap_info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.vacuumlevels.html">vacuumlevels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.webpanel.html">webpanel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.GapsResult.html">GapsResult</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.Result.html">Result</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.gs.VacuumLevelResults.html">VacuumLevelResults</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gw.html">gw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.hse.html">hse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.infraredpolarizability.html">infraredpolarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magnetic_anisotropy.html">magnetic_anisotropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magstate.html">magstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.pdos.html">pdos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonons.html">phonons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonopy.html">phonopy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.piezoelectrictensor.html">piezoelectrictensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.plasmafrequency.html">plasmafrequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.polarizability.html">polarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.projected_bandstructure.html">projected_bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.push.html">push</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.raman.html">raman</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.relax.html">relax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setinfo.html">setinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setup.html">setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.stiffness.html">stiffness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.structureinfo.html">structureinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.test.html">test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.workflow.html">workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.html">asr</a></li>
+      <li class="breadcrumb-item active">gs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.asr.gs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gs">
+<h1>gs<a class="headerlink" href="#gs" title="Link to this heading"></a></h1>
+<p>Full name: <strong>ase2sprkkr.asr.gs</strong></p>
+<p class="rubric">Module class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-e89c8c2643148569665c034ac1c6a85663e51dcb.png" alt="Inheritance diagram of ase2sprkkr.asr.gs.GapsResult, ase2sprkkr.asr.gs.Result, ase2sprkkr.asr.gs.VacuumLevelResults" usemap="#inheritance12fe3cf74e" class="inheritance graphviz" /></div>
+<map id="inheritance12fe3cf74e" name="inheritance12fe3cf74e">
+<area shape="rect" id="node2" href="ase2sprkkr.asr.gs.GapsResult.html#ase2sprkkr.asr.gs.GapsResult" target="_top" title="GapsResult" alt="" coords="155,5,251,31"/>
+<area shape="rect" id="node3" href="ase2sprkkr.asr.gs.Result.html#ase2sprkkr.asr.gs.Result" target="_top" title="Container for ground state results." alt="" coords="167,55,239,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.asr.gs.VacuumLevelResults.html#ase2sprkkr.asr.gs.VacuumLevelResults" target="_top" title="VacuumLevelResults" alt="" coords="124,104,281,129"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Description</p>
+<p id="module-ase2sprkkr.asr.gs">Electronic ground state properties.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.bz_with_band_extremums.html#ase2sprkkr.asr.gs.bz_with_band_extremums" title="ase2sprkkr.asr.gs.bz_with_band_extremums"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bz_with_band_extremums</span></code></a>(row, fname)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.evacdiff.html#ase2sprkkr.asr.gs.evacdiff" title="ase2sprkkr.asr.gs.evacdiff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evacdiff</span></code></a>(atoms)</p></td>
+<td><p>Derive vacuum energy level difference from the dipole moment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.gaps.html#ase2sprkkr.asr.gs.gaps" title="ase2sprkkr.asr.gs.gaps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaps</span></code></a>(calc[, soc])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.get_1bz_k.html#ase2sprkkr.asr.gs.get_1bz_k" title="ase2sprkkr.asr.gs.get_1bz_k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_1bz_k</span></code></a>(ibzkpts, calc, k_index)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.get_gap_info.html#ase2sprkkr.asr.gs.get_gap_info" title="ase2sprkkr.asr.gs.get_gap_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_gap_info</span></code></a>(soc, direct, calc)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.vacuumlevels.html#ase2sprkkr.asr.gs.vacuumlevels" title="ase2sprkkr.asr.gs.vacuumlevels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vacuumlevels</span></code></a>(atoms, calc[, n])</p></td>
+<td><p>Get the vacuumlevels on both sides of a 2D material.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.webpanel.html#ase2sprkkr.asr.gs.webpanel" title="ase2sprkkr.asr.gs.webpanel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">webpanel</span></code></a>(result, row, key_descriptions)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.GapsResult.html#ase2sprkkr.asr.gs.GapsResult" title="ase2sprkkr.asr.gs.GapsResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GapsResult</span></code></a>(k_cbm_c, efermi, cbm, k_vbm_c, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.Result.html#ase2sprkkr.asr.gs.Result" title="ase2sprkkr.asr.gs.Result"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Result</span></code></a>(evacdiff, efermi, cbm, k_vbm_c, gap, ...)</p></td>
+<td><p>Container for ground state results.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.asr.gs.VacuumLevelResults.html#ase2sprkkr.asr.gs.VacuumLevelResults" title="ase2sprkkr.asr.gs.VacuumLevelResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VacuumLevelResults</span></code></a>(evacdiff, evac2, evac1, ...)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary.html" class="btn btn-neutral float-left" title="ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.asr.gs.bz_with_band_extremums.html" class="btn btn-neutral float-right" title="bz_with_band_extremums" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

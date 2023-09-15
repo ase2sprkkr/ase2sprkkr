@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.polarizability &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.polarizability</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.polarizability</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Optical polarizability.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+<span class="kn">from</span> <span class="nn">click</span> <span class="kn">import</span> <span class="n">Choice</span>
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.webpanel.html#ase2sprkkr.asr.polarizability.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
+
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span> <span class="p">[</span>
+        <span class="s1">&#39;alphax_el&#39;</span><span class="p">,</span> <span class="s1">&#39;alphay_el&#39;</span><span class="p">,</span> <span class="s1">&#39;alphaz_el&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;alphax_lat&#39;</span><span class="p">,</span> <span class="s1">&#39;alphay_lat&#39;</span><span class="p">,</span> <span class="s1">&#39;alphaz_lat&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;alphax&#39;</span><span class="p">,</span> <span class="s1">&#39;alphay&#39;</span><span class="p">,</span> <span class="s1">&#39;alphaz&#39;</span><span class="p">,</span>
+    <span class="p">],</span> <span class="n">key_descriptions</span><span class="p">)</span>
+
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Optical polarizability (RPA)&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;rpa-pol-x.png&#39;</span><span class="p">),</span> <span class="n">fig</span><span class="p">(</span><span class="s1">&#39;rpa-pol-z.png&#39;</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;rpa-pol-y.png&#39;</span><span class="p">),</span> <span class="n">opt</span><span class="p">]],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span>
+                 <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">polarizability</span><span class="p">,</span>
+                   <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;rpa-pol-x.png&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;rpa-pol-y.png&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;rpa-pol-z.png&#39;</span><span class="p">]}],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_kpts_size">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.get_kpts_size.html#ase2sprkkr.asr.polarizability.get_kpts_size">[docs]</a>
+<span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Try to get a reasonable monkhorst size which hits high symmetry points.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
+    <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">k2so</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="p">)</span>
+    <span class="n">size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">size</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">%</span> <span class="mi">6</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">size</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="p">(</span><span class="n">size</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">//</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">kpts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">kpts</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.Result.html#ase2sprkkr.asr.polarizability.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+    <span class="n">alphax_el</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alphay_el</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alphaz_el</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alphax_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alphay_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alphaz_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alpha0x_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alpha0y_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">alpha0z_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
+    <span class="n">plasmafreq_vv</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+    <span class="n">frequencies</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;alphax_el&quot;</span><span class="p">:</span> <span class="s2">&quot;Static interband polarizability (x) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphay_el&quot;</span><span class="p">:</span> <span class="s2">&quot;Static interband polarizability (y) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphaz_el&quot;</span><span class="p">:</span> <span class="s2">&quot;Static interband polarizability (z) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphax_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Interband polarizability (x) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphay_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Interband polarizability (y) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphaz_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Interband polarizability (z) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alpha0x_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Interband polarizability without local field effects (x) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alpha0y_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Interband polarizability without local field effects (y) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alpha0z_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Interband polarizability without local field effects (z) [Ang]&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;plasmafreq_vv&quot;</span><span class="p">:</span> <span class="s2">&quot;Plasmafrequency tensor.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;frequencies&quot;</span><span class="p">:</span> <span class="s2">&quot;Frequency grid [eV].&quot;</span>
+    <span class="p">}</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.polarizability&#39;</span><span class="p">,</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">],</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">],</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span>
+    <span class="s1">&#39;--gs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Ground state on which response is based&#39;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kptdensity&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;K-point density&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--ecut&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Plane wave cutoff&#39;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--xc&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;XC interaction&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">Choice</span><span class="p">([</span><span class="s1">&#39;RPA&#39;</span><span class="p">,</span> <span class="s1">&#39;ALDA&#39;</span><span class="p">]))</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--bandfactor&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of unoccupied bands = (#occ. bands) * bandfactor)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">gs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">kptdensity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span> <span class="n">ecut</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">,</span>
+         <span class="n">xc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;RPA&#39;</span><span class="p">,</span> <span class="n">bandfactor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate linear response polarizability or dielectricfunction (only in 3D).&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">world</span>
+    <span class="kn">from</span> <span class="nn">gpaw.response.df</span> <span class="kn">import</span> <span class="n">DielectricFunction</span>
+    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+    <span class="n">pbc</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="n">dfkwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="s1">&#39;domega0&#39;</span><span class="p">:</span> <span class="mf">0.005</span><span class="p">,</span>
+        <span class="s1">&#39;ecut&#39;</span><span class="p">:</span> <span class="n">ecut</span><span class="p">,</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;chi&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;intraband&#39;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">}</span>
+
+    <span class="n">ND</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">kpts</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="n">kptdensity</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;even&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">ND</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">kpts</span> <span class="o">=</span> <span class="n">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">kptdensity</span><span class="p">)</span>
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">volume</span> <span class="o">&lt;</span> <span class="mi">120</span><span class="p">:</span>
+            <span class="n">nblocks</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">4</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nblocks</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">dfkwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;nblocks&#39;</span><span class="p">:</span> <span class="n">nblocks</span><span class="p">,</span>
+            <span class="s1">&#39;pbc&#39;</span><span class="p">:</span> <span class="n">pbc</span><span class="p">,</span>
+            <span class="s1">&#39;integrationmode&#39;</span><span class="p">:</span> <span class="s1">&#39;tetrahedron integration&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;truncation&#39;</span><span class="p">:</span> <span class="s1">&#39;2D&#39;</span>
+        <span class="p">})</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s1">&#39;Polarizability not implemented for 1D and 2D structures&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;es.gpw&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="n">calc_old</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">nval</span> <span class="o">=</span> <span class="n">calc_old</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">nvalence</span>
+
+            <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span>
+                <span class="n">gs</span><span class="p">,</span>
+                <span class="n">txt</span><span class="o">=</span><span class="s1">&#39;es.txt&#39;</span><span class="p">,</span>
+                <span class="n">fixdensity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">nbands</span><span class="o">=</span><span class="p">(</span><span class="n">bandfactor</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">nval</span><span class="p">,</span>
+                <span class="n">convergence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;bands&#39;</span><span class="p">:</span> <span class="n">bandfactor</span> <span class="o">*</span> <span class="n">nval</span><span class="p">},</span>
+                <span class="n">occupations</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;fermi-dirac&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">},</span>
+                <span class="n">kpts</span><span class="o">=</span><span class="n">kpts</span><span class="p">)</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;es.gpw&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">DielectricFunction</span><span class="p">(</span><span class="s1">&#39;es.gpw&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">dfkwargs</span><span class="p">)</span>
+        <span class="n">alpha0x</span><span class="p">,</span> <span class="n">alphax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">get_polarizability</span><span class="p">(</span>
+            <span class="n">q_c</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">pbc</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">xc</span><span class="o">=</span><span class="n">xc</span><span class="p">)</span>
+        <span class="n">alpha0y</span><span class="p">,</span> <span class="n">alphay</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">get_polarizability</span><span class="p">(</span>
+            <span class="n">q_c</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">pbc</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">xc</span><span class="o">=</span><span class="n">xc</span><span class="p">)</span>
+        <span class="n">alpha0z</span><span class="p">,</span> <span class="n">alphaz</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">get_polarizability</span><span class="p">(</span>
+            <span class="n">q_c</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">pbc</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">xc</span><span class="o">=</span><span class="n">xc</span><span class="p">)</span>
+
+        <span class="n">plasmafreq_vv</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">chi0</span><span class="o">.</span><span class="n">plasmafreq_vv</span>
+
+        <span class="n">frequencies</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">get_frequencies</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;alpha0x_w&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alpha0x</span><span class="p">),</span>
+            <span class="s1">&#39;alphax_w&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alphax</span><span class="p">),</span>
+            <span class="s1">&#39;alpha0y_w&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alpha0y</span><span class="p">),</span>
+            <span class="s1">&#39;alphay_w&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alphay</span><span class="p">),</span>
+            <span class="s1">&#39;alpha0z_w&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alpha0z</span><span class="p">),</span>
+            <span class="s1">&#39;alphaz_w&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alphaz</span><span class="p">),</span>
+            <span class="s1">&#39;plasmafreq_vv&#39;</span><span class="p">:</span> <span class="n">plasmafreq_vv</span><span class="p">,</span>
+            <span class="s1">&#39;frequencies&#39;</span><span class="p">:</span> <span class="n">frequencies</span>
+        <span class="p">}</span>
+
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphax_el&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphax_w&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphay_el&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphay_w&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphaz_el&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphaz_w&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">world</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">world</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;es.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;chi+0+0+0.pckl&#39;</span><span class="p">]:</span>
+                <span class="n">es_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">es_file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+                    <span class="n">es_file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="polarizability">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.polarizability.html#ase2sprkkr.asr.polarizability.polarizability">[docs]</a>
+<span class="k">def</span> <span class="nf">polarizability</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">fz</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="k">def</span> <span class="nf">xlim</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">ylims</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">wstart</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="n">wstart</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">imag</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x2</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">*</span> <span class="mf">1.02</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x1</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">x2</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">*</span> <span class="mf">1.02</span>
+        <span class="k">return</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.polarizability.json&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;frequencies&#39;</span><span class="p">]</span>
+    <span class="n">i2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">frequencies</span> <span class="o">-</span> <span class="mf">50.0</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+    <span class="n">frequencies</span> <span class="o">=</span> <span class="n">frequencies</span><span class="p">[:</span><span class="n">i2</span><span class="p">]</span>
+    <span class="n">alphax_w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphax_w&#39;</span><span class="p">][:</span><span class="n">i2</span><span class="p">]</span>
+    <span class="n">alphay_w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphay_w&#39;</span><span class="p">][:</span><span class="n">i2</span><span class="p">]</span>
+    <span class="n">alphaz_w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;alphaz_w&#39;</span><span class="p">][:</span><span class="n">i2</span><span class="p">]</span>
+
+    <span class="n">infrared</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.infraredpolarizability.json&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">infrared</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+        <span class="n">omegatmp_w</span> <span class="o">=</span> <span class="n">infrared</span><span class="p">[</span><span class="s1">&#39;omega_w&#39;</span><span class="p">]</span>
+        <span class="n">alpha_wvv</span> <span class="o">=</span> <span class="n">infrared</span><span class="p">[</span><span class="s1">&#39;alpha_wvv&#39;</span><span class="p">]</span>
+        <span class="n">alphax</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alpha_wvv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                          <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">alphax_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">alphax_w</span> <span class="o">+</span> <span class="n">alphax</span><span class="p">(</span><span class="n">frequencies</span><span class="p">))</span>
+        <span class="n">alphay</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alpha_wvv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                          <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">alphay_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">alphay_w</span> <span class="o">+</span> <span class="n">alphay</span><span class="p">(</span><span class="n">frequencies</span><span class="p">))</span>
+        <span class="n">alphaz</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alpha_wvv</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                          <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">alphaz_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">alphaz_w</span> <span class="o">+</span> <span class="n">alphaz</span><span class="p">(</span><span class="n">frequencies</span><span class="p">))</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">ax</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">wpx</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">plasmafrequency_x</span>
+        <span class="k">if</span> <span class="n">wpx</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
+            <span class="n">alphaxfull_w</span> <span class="o">=</span> <span class="n">alphax_w</span> <span class="o">-</span> <span class="n">wpx</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">frequencies</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">frequencies</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphaxfull_w</span><span class="p">),</span>
+                <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">frequencies</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphax_w</span><span class="p">),</span>
+                <span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real (interband)&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphax_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphax_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">alphax_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;x-polarization&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Energy [eV]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Polarizability [$\mathrm{\AA}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylims</span><span class="p">(</span><span class="n">ws</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">alphax_w</span><span class="p">,</span> <span class="n">wstart</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fx</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">ax</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">wpy</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">plasmafrequency_y</span>
+        <span class="k">if</span> <span class="n">wpy</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">:</span>
+            <span class="n">alphayfull_w</span> <span class="o">=</span> <span class="n">alphay_w</span> <span class="o">-</span> <span class="n">wpy</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">frequencies</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">frequencies</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphayfull_w</span><span class="p">),</span>
+                <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                <span class="n">frequencies</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphay_w</span><span class="p">),</span>
+                <span class="s1">&#39;--&#39;</span><span class="p">,</span>
+                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real (interband)&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphay_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphay_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">alphay_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;y-polarization&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Energy [eV]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Polarizability [$\mathrm{\AA}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylims</span><span class="p">(</span><span class="n">ws</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">alphax_w</span><span class="p">,</span> <span class="n">wstart</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fy</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">ax</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">alphaz_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">alphaz_w</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;z-polarization&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Energy [eV]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Polarizability [$\mathrm{\AA}$]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">ylims</span><span class="p">(</span><span class="n">ws</span><span class="o">=</span><span class="n">frequencies</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">alphaz_w</span><span class="p">,</span> <span class="n">wstart</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fz</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

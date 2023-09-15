@@ -1,0 +1,42 @@
+test\_borncharges
+=================
+
+Full name: **ase2sprkkr.asr.test.acceptance.test\_borncharges**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.acceptance.test_borncharges
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_gpaw_berry_get_berry_phases_integration
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

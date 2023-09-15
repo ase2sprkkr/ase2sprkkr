@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>output_definitions &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +65,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -72,6 +77,8 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html">OutputValueEqualDefinition</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files.html">output_files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files_definitions.html">output_files_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.test.html">test</a></li>
@@ -82,6 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -99,10 +107,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.outputs.html">outputs</a> &raquo;</li>
-      <li>output_definitions</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.outputs.html">outputs</a></li>
+      <li class="breadcrumb-item active">output_definitions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto/ase2sprkkr.outputs.output_definitions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -113,34 +121,31 @@
            <div itemprop="articleBody">
              
   <section id="output-definitions">
-<h1>output_definitions<a class="headerlink" href="#output-definitions" title="Permalink to this heading"></a></h1>
+<h1>output_definitions<a class="headerlink" href="#output-definitions" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.outputs.output_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-46728a001dc3992598489b04abe9f203f7718cb4.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition, ase2sprkkr.outputs.output_definitions.OutputSectionDefinition, ase2sprkkr.outputs.output_definitions.OutputValueDefinition, ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition" usemap="#inheritance93c48dceb2" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-8cc9b6e83796e14a157b21ac83dcdfcfbf22302a.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition, ase2sprkkr.outputs.output_definitions.OutputSectionDefinition, ase2sprkkr.outputs.output_definitions.OutputValueDefinition, ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition" usemap="#inheritance93c48dceb2" class="inheritance graphviz" /></div>
 <map id="inheritance93c48dceb2" name="inheritance93c48dceb2">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="5,31,123,56"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="152,5,300,31"/>
-<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="165,55,287,80"/>
-<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="345,5,479,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" target="_top" title="Value in an output file, that has no name, there is just the value" alt="" coords="524,55,744,80"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="329,55,495,80"/>
-<area shape="rect" id="node8" href="ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition" target="_top" title="Value in an output file, of a form &#39;NAME=VALUE&#39; (spaces possible)" alt="" coords="533,104,735,129"/>
-<area shape="rect" id="node5" href="ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.output_definitions.OutputSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="545,5,723,31"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="5,31,123,56"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="152,31,296,56"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="325,5,473,31"/>
+<area shape="rect" id="node7" href="ase2sprkkr.common.configuration_definitions.SectionDefinition.html#ase2sprkkr.common.configuration_definitions.SectionDefinition" target="_top" title="Base class for definition of the sections in Pot or InputParameters files." alt="" coords="519,5,652,31"/>
+<area shape="rect" id="node8" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="ValueDefinition" alt="" coords="339,55,460,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" target="_top" title="Value in an output file, that has no name, there is just the value" alt="" coords="697,55,917,80"/>
+<area shape="rect" id="node5" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="503,55,668,80"/>
+<area shape="rect" id="node9" href="ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition" target="_top" title="Value in an output file, of a form &#39;NAME=VALUE&#39; (spaces possible)" alt="" coords="707,104,908,129"/>
+<area shape="rect" id="node6" href="ase2sprkkr.outputs.output_definitions.OutputSectionDefinition.html#ase2sprkkr.outputs.output_definitions.OutputSectionDefinition" target="_top" title="This class describes the format of one" alt="" coords="719,5,896,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<span class="target" id="module-ase2sprkkr.outputs.output_definitions"></span><p>This file contains the classes for definitions of parts of output
+<p id="module-ase2sprkkr.outputs.output_definitions">This file contains the classes for definitions of parts of output
 files, from that the result data are obtained.</p>
 <p>Although the files are used only for reading, the same
 grammar definition approach as for potential and input parameters
 files is used</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition" title="ase2sprkkr.outputs.output_definitions.OutputNonameValueDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OutputNonameValueDefinition</span></code></a>(*args[, required])</p></td>
 <td><p>Value in an output file, that has no name, there is just the value (identified by its position after some other known stuff)</p></td>

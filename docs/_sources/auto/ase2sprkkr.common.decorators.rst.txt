@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.decorators**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.decorators.cached_class_property  ase2sprkkr.common.decorators.class_property 
+.. inheritance-diagram::  ase2sprkkr.common.decorators.cached_class_property  ase2sprkkr.common.decorators.cached_property  ase2sprkkr.common.decorators.class_property 
       :parts: 1
 
 |
@@ -26,7 +26,7 @@ Full name: **ase2sprkkr.common.decorators**
       :template: custom-base-template.rst
    
       cache
-      cached_property
+      std_cached_property
    
    
 
@@ -41,6 +41,7 @@ Full name: **ase2sprkkr.common.decorators**
    
       add_called_class_as_argument
       add_to_signature
+      warnings_from_here
    
    
 
@@ -54,6 +55,7 @@ Full name: **ase2sprkkr.common.decorators**
       :template: custom-class-template.rst
    
       cached_class_property
+      cached_property
       class_property
    
    

@@ -1,0 +1,44 @@
+material\_fingerprint
+=====================
+
+Full name: **ase2sprkkr.asr.database.material\_fingerprint**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database.material_fingerprint
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_hash_of_atoms
+      get_uid_of_atoms
+      todict
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

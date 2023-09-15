@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASRCalculator &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DOSCalculator" href="ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.html" />
+    <link rel="prev" title="calculator" href="ase2sprkkr.asr.test.mocks.gpaw.calculator.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.asr.html">asr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bader.html">bader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bandstructure.html">bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.berry.html">berry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.borncharges.html">borncharges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.bse.html">bse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.calculators.html">calculators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.chc.html">chc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.convex_hull.html">convex_hull</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.core.html">core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.database.html">database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.defectformation.html">defectformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.deformationpotentials.html">deformationpotentials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dimensionality.html">dimensionality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.dos.html">dos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.emasses.html">emasses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.exchange.html">exchange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fere.html">fere</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.fermisurface.html">fermisurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.formalpolarization.html">formalpolarization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gs.html">gs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.gw.html">gw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.hse.html">hse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.infraredpolarizability.html">infraredpolarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magnetic_anisotropy.html">magnetic_anisotropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.magstate.html">magstate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.pdos.html">pdos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonons.html">phonons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.phonopy.html">phonopy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.piezoelectrictensor.html">piezoelectrictensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.plasmafrequency.html">plasmafrequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.polarizability.html">polarizability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.projected_bandstructure.html">projected_bandstructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.push.html">push</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.raman.html">raman</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.relax.html">relax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setinfo.html">setinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.setup.html">setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.stiffness.html">stiffness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.structureinfo.html">structureinfo</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.asr.test.html">test</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.acceptance.html">acceptance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.conftest.html">conftest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.fixtures.html">fixtures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.materials.html">materials</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.asr.test.mocks.html">mocks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_bandstructure.html">test_bandstructure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_berry.html">test_berry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_borncharges.html">test_borncharges</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_bse.html">test_bse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_cli.html">test_cli</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_convex_hull.html">test_convex_hull</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_core.html">test_core</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_core_material.html">test_core_material</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_core_results.html">test_core_results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_database_duplicates.html">test_database_duplicates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_database_fromtree.html">test_database_fromtree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_database_rmsd.html">test_database_rmsd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_database_totree.html">test_database_totree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_dimensionality.html">test_dimensionality</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_emasses.html">test_emasses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_fixtures.html">test_fixtures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_formalpolarization.html">test_formalpolarization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_gs.html">test_gs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_gw.html">test_gw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_hse.html">test_hse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_pdos.html">test_pdos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_phonons.html">test_phonons</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_phonopy.html">test_phonopy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_piezoelectrictensor.html">test_piezoelectrictensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_plasmafrequency.html">test_plasmafrequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_polarizability.html">test_polarizability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_projected_bandstructure.html">test_projected_bandstructure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_raman.html">test_raman</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_recipes.html">test_recipes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_relax.html">test_relax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setinfo.html">test_setinfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_decorate.html">test_setup_decorate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_displacements.html">test_setup_displacements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_magnetize.html">test_setup_magnetize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_materials.html">test_setup_materials</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_params.html">test_setup_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_scanparams.html">test_setup_scanparams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_strains.html">test_setup_strains</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_setup_symmetrize.html">test_setup_symmetrize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.test.test_stiffness.html">test_stiffness</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.workflow.html">workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.html">asr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.test.html">test</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.test.mocks.html">mocks</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.test.mocks.gpaw.html">gpaw</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.asr.test.mocks.gpaw.calculator.html">calculator</a></li>
+      <li class="breadcrumb-item active">ASRCalculator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="asrcalculator">
+<h1>ASRCalculator<a class="headerlink" href="#asrcalculator" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.test.mocks.gpaw.calculator.</span></span><span class="sig-name descname"><span class="pre">ASRCalculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restart=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_bad_restart_file=&lt;object</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory='.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator" title="Link to this definition"></a></dt>
+<dd><p>Mock of a generic ASE calculator.</p>
+<p>This test calculator is specifically designed to look like the
+GPAW calculator, and to make additional monkey patching easy. Each
+of the public methods have an identical private method prefaced
+with underscore that can be easily patch using the pytest
+mocker.patch functionality. For example,
+ASRCalculator.get_fermi_level has an identical
+ASRCalculator._get_fermi_level method that can be easily mocked
+up.</p>
+<p>By default, the eigenvalues set up the calculator has some valence
+bands with negative curvature and some conduction bands with
+positive curvature. Furthermore, if the return value of
+_get_band_gap is non-zero the valence and conduction bands will be
+separated by a band gap. This provides an easy way to manipulate
+the properties of a test material.</p>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-6215dc662800173b0fa279e14b30373a05fb450a.png" alt="Inheritance diagram of ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator" usemap="#inheritance55e740a030" class="inheritance graphviz" /></div>
+<map id="inheritance55e740a030" name="inheritance55e740a030">
+<area shape="rect" id="node3" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator" target="_top" title="Mock of a generic ASE calculator." alt="" coords="499,5,680,31"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">restart=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_bad_restart_file=&lt;object</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory='.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Basic calculator implementation.</p>
+<dl class="simple">
+<dt>restart: str</dt><dd><p>Prefix for restart file.  May contain a directory. Default
+is None: don’t restart.</p>
+</dd>
+<dt>ignore_bad_restart_file: bool</dt><dd><p>Deprecated, please do not use.
+Passing more than one positional argument to Calculator()
+is deprecated and will stop working in the future.
+Ignore broken or missing restart file.  By default, it is an
+error if the restart file is missing or broken.</p>
+</dd>
+<dt>directory: str or PurePath</dt><dd><p>Working directory in which to read and write files and
+perform calculations.</p>
+</dd>
+<dt>label: str</dt><dd><p>Name used for all files.  Not supported by all calculators.
+May contain a directory, but please use the directory parameter
+for that instead.</p>
+</dd>
+<dt>atoms: Atoms object</dt><dd><p>Optional Atoms object to which the calculator will be
+attached.  When restarting, atoms will get its positions and
+unit-cell updated from file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.implemented_properties">
+<span class="sig-name descname"><span class="pre">implemented_properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['energy',</span> <span class="pre">'forces',</span> <span class="pre">'stress',</span> <span class="pre">'dipole',</span> <span class="pre">'magmom',</span> <span class="pre">'magmoms',</span> <span class="pre">'stresses',</span> <span class="pre">'charges',</span> <span class="pre">'fermi_level',</span> <span class="pre">'gap',</span> <span class="pre">'berry_phases']</span></em><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.implemented_properties" title="Link to this definition"></a></dt>
+<dd><p>Properties calculator can handle (energy, forces, …)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.default_parameters">
+<span class="sig-name descname"><span class="pre">default_parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'gridsize':</span> <span class="pre">3,</span> <span class="pre">'kpts':</span> <span class="pre">(4,</span> <span class="pre">4,</span> <span class="pre">4),</span> <span class="pre">'nbands':</span> <span class="pre">12,</span> <span class="pre">'txt':</span> <span class="pre">None}</span></em><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.default_parameters" title="Link to this definition"></a></dt>
+<dd><p>Default parameters</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.occupations">
+<span class="sig-name descname"><span class="pre">occupations</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.occupations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.wfs">
+<span class="sig-name descname"><span class="pre">wfs</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.wfs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.world">
+<span class="sig-name descname"><span class="pre">world</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">namespace(size=1,</span> <span class="pre">rank=0,</span> <span class="pre">broadcast=&lt;function</span> <span class="pre">broadcast&gt;,</span> <span class="pre">barrier=&lt;function</span> <span class="pre">barrier&gt;,</span> <span class="pre">new_communicator=&lt;function</span> <span class="pre">new_communicator&gt;,</span> <span class="pre">sum=&lt;function</span> <span class="pre">world_sum&gt;)</span></em><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.world" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.calculate" title="Link to this definition"></a></dt>
+<dd><p>Calculate properties of atoms and set some necessary instance variables.</p>
+<p>This is the main method that calculates the energy, forces and
+other properties of the given structure. This method should
+not be mocked. In stead mock the implementation of the
+specific property you need to amend.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.set" title="Link to this definition"></a></dt>
+<dd><p>Set parameters like set(key1=value1, key2=value2, …).</p>
+<p>A dictionary containing the parameters that have been changed
+is returned.</p>
+<p>Subclasses must implement a set() method that will look at the
+chaneged parameters and decide if a call to reset() is needed.
+If the changed parameters are harmless, like a change in
+verbosity, then there is no need to call reset().</p>
+<p>The special keyword ‘parameters’ can be used to read
+parameters from a file.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.spos_ac">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">spos_ac</span></span><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.spos_ac" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_scaled_positions">
+<span class="sig-name descname"><span class="pre">_get_scaled_positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_scaled_positions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_scaled_positions" title="Link to this definition"></a></dt>
+<dd><p>Get scaled positions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setups">
+<span class="sig-name descname"><span class="pre">_get_setups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_setups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setups" title="Link to this definition"></a></dt>
+<dd><p>Get all setups.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_fingerprint">
+<span class="sig-name descname"><span class="pre">_get_setup_fingerprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_setup_fingerprint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_fingerprint" title="Link to this definition"></a></dt>
+<dd><p>Get specific setup fingerprint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element_number</strong> (<em>int</em>) – Atomic number of element.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_symbol">
+<span class="sig-name descname"><span class="pre">_get_setup_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_setup_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_symbol" title="Link to this definition"></a></dt>
+<dd><p>Get setup symbol.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_nvalence">
+<span class="sig-name descname"><span class="pre">_get_setup_nvalence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_setup_nvalence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_nvalence" title="Link to this definition"></a></dt>
+<dd><p>Get number of valence electrons.</p>
+<p>This also dynamically controls the number of valence bands.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup">
+<span class="sig-name descname"><span class="pre">_get_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_number</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup" title="Link to this definition"></a></dt>
+<dd><p>Get specific setup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element_number</strong> (<em>int</em>) – Atomic number of element.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SimpleNamespace that resembles a GPAW Setups class.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SimpleNamespace</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_berry_phases">
+<span class="sig-name descname"><span class="pre">_get_berry_phases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_berry_phases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_berry_phases" title="Link to this definition"></a></dt>
+<dd><p>Return berry phases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir</strong> (<em>int</em>) – Which direction to return berry phases along.</p></li>
+<li><p><strong>spin</strong> (<em>int</em>) – Spin channel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Berry phases along a specific axis</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_band_gap">
+<span class="sig-name descname"><span class="pre">_get_band_gap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_band_gap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_band_gap" title="Link to this definition"></a></dt>
+<dd><p>Get band gap.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_dipole_moment">
+<span class="sig-name descname"><span class="pre">_get_dipole_moment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_dipole_moment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_dipole_moment" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_fermi_level">
+<span class="sig-name descname"><span class="pre">get_fermi_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_fermi_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_fermi_level" title="Link to this definition"></a></dt>
+<dd><p>Get cached fermi level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_fermi_level">
+<span class="sig-name descname"><span class="pre">_get_fermi_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_fermi_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_fermi_level" title="Link to this definition"></a></dt>
+<dd><p>Get formi level.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_forces">
+<span class="sig-name descname"><span class="pre">_get_forces</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_forces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_forces" title="Link to this definition"></a></dt>
+<dd><p>Get atomic forces.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_magmom">
+<span class="sig-name descname"><span class="pre">_get_magmom</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_magmom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_magmom" title="Link to this definition"></a></dt>
+<dd><p>Get total magnetic moment.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_magmoms">
+<span class="sig-name descname"><span class="pre">_get_magmoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_magmoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_magmoms" title="Link to this definition"></a></dt>
+<dd><p>Get atomic magnetic moments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_potential_energy">
+<span class="sig-name descname"><span class="pre">_get_potential_energy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_potential_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_potential_energy" title="Link to this definition"></a></dt>
+<dd><p>Get potential energy.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_stress">
+<span class="sig-name descname"><span class="pre">_get_stress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator._get_stress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_stress" title="Link to this definition"></a></dt>
+<dd><p>Get cell stress.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_all_eigenvalues">
+<span class="sig-name descname"><span class="pre">get_all_eigenvalues</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_all_eigenvalues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_all_eigenvalues" title="Link to this definition"></a></dt>
+<dd><p>Get all eigenvalues.</p>
+<p>Constructs all eigenvalues for the test calculator. The
+valence bands will have a negative curvature and the number of
+valence bands are determined by
+<a class="reference internal" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_valence_electrons" title="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_valence_electrons"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ASRCalculator.get_number_of_valence_electrons()</span></code></a>. Conduction
+bands have positive curvature and are separated from the
+valence bands by a bandgap. The band gap is obtained from
+<a class="reference internal" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_band_gap" title="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_band_gap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ASRCalculator._get_band_gap()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_eigenvalues">
+<span class="sig-name descname"><span class="pre">get_eigenvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kpt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_eigenvalues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_eigenvalues" title="Link to this definition"></a></dt>
+<dd><p>Return the eigenvalues of a specific k-point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kpt</strong> (<em>int</em>) – K-point index.</p></li>
+<li><p><strong>spin</strong> (<em>int</em>) – Spin channel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_k_point_weights">
+<span class="sig-name descname"><span class="pre">get_k_point_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_k_point_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_k_point_weights" title="Link to this definition"></a></dt>
+<dd><p>Get all k-point weights.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_ibz_k_points">
+<span class="sig-name descname"><span class="pre">get_ibz_k_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_ibz_k_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_ibz_k_points" title="Link to this definition"></a></dt>
+<dd><p>Get an array of all irreducible k-points.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_bz_k_points">
+<span class="sig-name descname"><span class="pre">get_bz_k_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_bz_k_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_bz_k_points" title="Link to this definition"></a></dt>
+<dd><p>Get an array of all k-points.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_bz_to_ibz_map">
+<span class="sig-name descname"><span class="pre">get_bz_to_ibz_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_bz_to_ibz_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_bz_to_ibz_map" title="Link to this definition"></a></dt>
+<dd><p>Get BZ to IBZ map.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_spins">
+<span class="sig-name descname"><span class="pre">get_number_of_spins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_number_of_spins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_spins" title="Link to this definition"></a></dt>
+<dd><p>Get number of spins in calculation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_bands">
+<span class="sig-name descname"><span class="pre">get_number_of_bands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_number_of_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_bands" title="Link to this definition"></a></dt>
+<dd><p>Get total number of bands in calculation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_conduction_electrons">
+<span class="sig-name descname"><span class="pre">get_number_of_conduction_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_number_of_conduction_electrons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_conduction_electrons" title="Link to this definition"></a></dt>
+<dd><p>Get number of conduction electrons per unit cell.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_electrons">
+<span class="sig-name descname"><span class="pre">get_number_of_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_number_of_electrons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_electrons" title="Link to this definition"></a></dt>
+<dd><p>Get number of electrons.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_valence_electrons">
+<span class="sig-name descname"><span class="pre">get_number_of_valence_electrons</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_number_of_valence_electrons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_valence_electrons" title="Link to this definition"></a></dt>
+<dd><p>Get number of valence electrons.</p>
+<p>The number of valence electrons exclude any extra doping there
+might exist due to any additional doping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.write" title="Link to this definition"></a></dt>
+<dd><p>Write calculator to file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.read" title="Link to this definition"></a></dt>
+<dd><p>Read calculator from file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_electrostatic_potential">
+<span class="sig-name descname"><span class="pre">get_electrostatic_potential</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.get_electrostatic_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_electrostatic_potential" title="Link to this definition"></a></dt>
+<dd><p>Get electrostatic potential.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.diagonalize_full_hamiltonian">
+<span class="sig-name descname"><span class="pre">diagonalize_full_hamiltonian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ecut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.diagonalize_full_hamiltonian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.diagonalize_full_hamiltonian" title="Link to this definition"></a></dt>
+<dd><p>Diagonalize full Hamiltonian.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.dos">
+<span class="sig-name descname"><span class="pre">dos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">soc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_fermi_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.dos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.dos" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.fixed_density">
+<span class="sig-name descname"><span class="pre">fixed_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/test/mocks/gpaw/calculator.html#ASRCalculator.fixed_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.fixed_density" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._abc_impl" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.asr.test.mocks.gpaw.calculator.html" class="btn btn-neutral float-left" title="calculator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.html" class="btn btn-neutral float-right" title="DOSCalculator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

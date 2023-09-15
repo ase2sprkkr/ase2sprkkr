@@ -1,0 +1,36 @@
+NumpyViewDefinition
+===================
+
+
+.. currentmodule:: ase2sprkkr.common.generated_configuration_definitions
+
+.. autoclass:: NumpyViewDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

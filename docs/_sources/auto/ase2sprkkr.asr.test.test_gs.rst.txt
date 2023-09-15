@@ -1,0 +1,44 @@
+test\_gs
+========
+
+Full name: **ase2sprkkr.asr.test.test\_gs**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_gs
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_gs
+      test_gs_asr_cli_results_figures
+      test_gs_integration_gpaw
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

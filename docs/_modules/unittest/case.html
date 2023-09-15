@@ -12,11 +12,11 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>unittest.case</li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">unittest.case</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -109,7 +113,7 @@
                  <span class="s1">&#39;Set self.maxDiff to None to see it.&#39;</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">SkipTest</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raise this exception in a test to skip it.</span>
 
 <span class="sd">    Usually you can use TestCase.skipTest() or one of the skipping decorators</span>
@@ -117,12 +121,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <span class="k">class</span> <span class="nc">_ShouldStop</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The test should stop.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <span class="k">class</span> <span class="nc">_UnexpectedSuccess</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The test was supposed to fail, but it didn&#39;t!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -133,12 +137,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_supports_subtests</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;addSubTest&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">skipped</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">expectedFailure</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">isTest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">subTest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">old_success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">try</span><span class="p">:</span>
@@ -147,7 +149,7 @@
             <span class="k">raise</span>
         <span class="k">except</span> <span class="n">SkipTest</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">skipped</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">test_case</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+            <span class="n">_addSkip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">_ShouldStop</span><span class="p">:</span>
             <span class="k">pass</span>
         <span class="k">except</span><span class="p">:</span>
@@ -156,30 +158,68 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">expectedFailure</span> <span class="o">=</span> <span class="n">exc_info</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">test_case</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">subTest</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">addSubTest</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">test_case</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_addError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
             <span class="c1"># explicitly break a reference cycle:</span>
             <span class="c1"># exc_info -&gt; frame -&gt; exc_info</span>
             <span class="n">exc_info</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_supports_subtests</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">test_case</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">subTest</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">addSubTest</span><span class="p">(</span><span class="n">test_case</span><span class="o">.</span><span class="n">test_case</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="ow">and</span> <span class="n">old_success</span>
 
+
+<span class="k">def</span> <span class="nf">_addSkip</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+    <span class="n">addSkip</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;addSkip&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">addSkip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">addSkip</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;TestResult has no addSkip method, skips not reported&quot;</span><span class="p">,</span>
+                      <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">addSuccess</span><span class="p">(</span><span class="n">test_case</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_addError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exc_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test</span><span class="o">.</span><span class="n">failureException</span><span class="p">):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">addFailure</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">addError</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_id</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">obj</span>
 
 
+<span class="k">def</span> <span class="nf">_enter_context</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">addcleanup</span><span class="p">):</span>
+    <span class="c1"># We look up the special methods on the type to match the with</span>
+    <span class="c1"># statement.</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">enter</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__enter__</span>
+        <span class="n">exit</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__exit__</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&#39; object does &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;not support the context manager protocol&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">enter</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
+    <span class="n">addcleanup</span><span class="p">(</span><span class="n">exit</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
 <span class="n">_module_cleanups</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">def</span> <span class="nf">addModuleCleanup</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Same as addCleanup, except the cleanup items are called even if</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Same as addCleanup, except the cleanup items are called even if</span>
 <span class="sd">    setUpModule fails (unlike tearDownModule).&quot;&quot;&quot;</span>
     <span class="n">_module_cleanups</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
 
+<span class="k">def</span> <span class="nf">enterModuleContext</span><span class="p">(</span><span class="n">cm</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Same as enterContext, but module-wide.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_enter_context</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">addModuleCleanup</span><span class="p">)</span>
+
 
 <span class="k">def</span> <span class="nf">doModuleCleanups</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Execute all module cleanup functions. Normally called for you after</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute all module cleanup functions. Normally called for you after</span>
 <span class="sd">    tearDownModule.&quot;&quot;&quot;</span>
     <span class="n">exceptions</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">while</span> <span class="n">_module_cleanups</span><span class="p">:</span>
@@ -195,7 +235,7 @@
 
 
 <span class="k">def</span> <span class="nf">skip</span><span class="p">(</span><span class="n">reason</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unconditionally skip a test.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">test_item</span><span class="p">):</span>
@@ -215,7 +255,7 @@
     <span class="k">return</span> <span class="n">decorator</span>
 
 <span class="k">def</span> <span class="nf">skipIf</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Skip a test if the condition is true.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
@@ -223,7 +263,7 @@
     <span class="k">return</span> <span class="n">_id</span>
 
 <span class="k">def</span> <span class="nf">skipUnless</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Skip a test unless the condition is true.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">condition</span><span class="p">:</span>
@@ -261,7 +301,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If args is empty, assertRaises/Warns is being used as a</span>
 <span class="sd">        context manager, so check for a &#39;msg&#39; kwarg and return self.</span>
 <span class="sd">        If args is not empty, call a callable passing positional and keyword</span>
@@ -291,7 +331,7 @@
 
 
 <span class="k">class</span> <span class="nc">_AssertRaisesContext</span><span class="p">(</span><span class="n">_AssertRaisesBaseContext</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A context manager used to implement TestCase.assertRaises* methods.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A context manager used to implement TestCase.assertRaises* methods.&quot;&quot;&quot;</span>
 
     <span class="n">_base_type</span> <span class="o">=</span> <span class="ne">BaseException</span>
     <span class="n">_base_type_str</span> <span class="o">=</span> <span class="s1">&#39;an exception type or tuple of exception types&#39;</span>
@@ -330,7 +370,7 @@
 
 
 <span class="k">class</span> <span class="nc">_AssertWarnsContext</span><span class="p">(</span><span class="n">_AssertRaisesBaseContext</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A context manager used to implement TestCase.assertWarns* methods.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A context manager used to implement TestCase.assertWarns* methods.&quot;&quot;&quot;</span>
 
     <span class="n">_base_type</span> <span class="o">=</span> <span class="ne">Warning</span>
     <span class="n">_base_type_str</span> <span class="o">=</span> <span class="s1">&#39;a warning type or tuple of warning types&#39;</span>
@@ -392,7 +432,7 @@
 
 
 <span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A class whose instances are single test cases.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class whose instances are single test cases.</span>
 
 <span class="sd">    By default, the test code itself should be placed in a method named</span>
 <span class="sd">    &#39;runTest&#39;.</span>
@@ -434,14 +474,16 @@
     <span class="c1"># of difflib.  See #11763.</span>
     <span class="n">_diffThreshold</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">16</span>
 
-    <span class="c1"># Attribute used by TestSuite for classSetUp</span>
+    <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Attribute used by TestSuite for classSetUp</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_classSetupFailed</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cleanups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="n">_classSetupFailed</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="n">_class_cleanups</span> <span class="o">=</span> <span class="p">[]</span>
-
-<div class="viewcode-block" id="TestCase.__init__"><a class="viewcode-back" href="../../auto/ase2sprkkr.tools.test.init_tests.TestCase.html#ase2sprkkr.common.test.test_common.TestCase.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;runTest&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create an instance of the class that will use the named test</span>
+<div class="viewcode-block" id="TestCase.__init__">
+<a class="viewcode-back" href="../../auto/ase2sprkkr.tools.test.init_tests.TestCase.html#ase2sprkkr.tools.test.init_tests.TestCase.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">methodName</span><span class="o">=</span><span class="s1">&#39;runTest&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of the class that will use the named test</span>
 <span class="sd">           method when executed. Raises a ValueError if the instance does</span>
 <span class="sd">           not have a method with the specified name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -472,8 +514,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">addTypeEqualityFunc</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">,</span> <span class="s1">&#39;assertSetEqual&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addTypeEqualityFunc</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;assertMultiLineEqual&#39;</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">addTypeEqualityFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typeobj</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add a type specific assertEqual style function to compare a type.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a type specific assertEqual style function to compare a type.</span>
 
 <span class="sd">        This method is for use by TestCase subclasses that need to register</span>
 <span class="sd">        their own type equality functions to provide nicer error messages.</span>
@@ -488,18 +531,31 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_type_equality_funcs</span><span class="p">[</span><span class="n">typeobj</span><span class="p">]</span> <span class="o">=</span> <span class="n">function</span>
 
     <span class="k">def</span> <span class="nf">addCleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add a function, with arguments, to be called when the test is</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a function, with arguments, to be called when the test is</span>
 <span class="sd">        completed. Functions added are called on a LIFO basis and are</span>
 <span class="sd">        called after tearDown on test failure or success.</span>
 
 <span class="sd">        Cleanup items are called even if setUp fails (unlike tearDown).&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cleanups</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
 
+    <span class="k">def</span> <span class="nf">enterContext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enters the supplied context manager.</span>
+
+<span class="sd">        If successful, also adds its __exit__ method as a cleanup</span>
+<span class="sd">        function and returns the result of the __enter__ method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_enter_context</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">addCleanup</span><span class="p">)</span>
+
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">addClassCleanup</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Same as addCleanup, except the cleanup items are called even if</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as addCleanup, except the cleanup items are called even if</span>
 <span class="sd">        setUpClass fails (unlike tearDownClass).&quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cleanups</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">function</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">enterClassContext</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cm</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as enterContext, but class-wide.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_enter_context</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">addClassCleanup</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">&quot;Hook method for setting up the test fixture before exercising it.&quot;</span>
@@ -524,7 +580,7 @@
         <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">TestResult</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">shortDescription</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a one-line description of the test, or None if no</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a one-line description of the test, or None if no</span>
 <span class="sd">        description has been provided.</span>
 
 <span class="sd">        The default implementation of this method returns the first line of</span>
@@ -547,24 +603,15 @@
         <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">,</span> <span class="n">strclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">,</span> <span class="n">strclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2"> testMethod=</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> \
                <span class="p">(</span><span class="n">strclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_addSkip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">test_case</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
-        <span class="n">addSkip</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;addSkip&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">addSkip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">addSkip</span><span class="p">(</span><span class="n">test_case</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;TestResult has no addSkip method, skips not reported&quot;</span><span class="p">,</span>
-                          <span class="ne">RuntimeWarning</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">addSuccess</span><span class="p">(</span><span class="n">test_case</span><span class="p">)</span>
-
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
     <span class="k">def</span> <span class="nf">subTest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">_subtest_msg_sentinel</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a context manager that will return the enclosed block</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a context manager that will return the enclosed block</span>
 <span class="sd">        of code in a subtest identified by the optional message and</span>
 <span class="sd">        keyword parameters.  A failure in the subtest marks the test</span>
 <span class="sd">        case as failed but resumes execution at the end of the enclosed</span>
@@ -580,7 +627,7 @@
             <span class="n">params_map</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">new_child</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_subtest</span> <span class="o">=</span> <span class="n">_SubTest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">params_map</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outcome</span><span class="o">.</span><span class="n">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subtest</span><span class="p">,</span> <span class="n">isTest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outcome</span><span class="o">.</span><span class="n">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_subtest</span><span class="p">,</span> <span class="n">subTest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                 <span class="k">yield</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outcome</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outcome</span><span class="o">.</span><span class="n">result</span>
@@ -592,16 +639,6 @@
                 <span class="k">raise</span> <span class="n">_ShouldStop</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_subtest</span> <span class="o">=</span> <span class="n">parent</span>
-
-    <span class="k">def</span> <span class="nf">_feedErrorsToResult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">errors</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">_SubTest</span><span class="p">):</span>
-                <span class="n">result</span><span class="o">.</span><span class="n">addSubTest</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">test_case</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">exc_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">):</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">addFailure</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">result</span><span class="o">.</span><span class="n">addError</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_addExpectedFailure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -632,7 +669,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_callTestMethod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
-        <span class="n">method</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">method</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;It is deprecated to return a value that is not None from a &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;test case (</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_callTearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tearDown</span><span class="p">()</span>
@@ -658,7 +697,7 @@
                 <span class="c1"># If the class or method was skipped.</span>
                 <span class="n">skip_why</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s1">&#39;__unittest_skip_why__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
                             <span class="ow">or</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">testMethod</span><span class="p">,</span> <span class="s1">&#39;__unittest_skip_why__&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_addSkip</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">skip_why</span><span class="p">)</span>
+                <span class="n">_addSkip</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">skip_why</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">result</span>
 
             <span class="n">expecting_failure</span> <span class="o">=</span> <span class="p">(</span>
@@ -673,16 +712,13 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_callSetUp</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">outcome</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
                     <span class="n">outcome</span><span class="o">.</span><span class="n">expecting_failure</span> <span class="o">=</span> <span class="n">expecting_failure</span>
-                    <span class="k">with</span> <span class="n">outcome</span><span class="o">.</span><span class="n">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isTest</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="n">outcome</span><span class="o">.</span><span class="n">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_callTestMethod</span><span class="p">(</span><span class="n">testMethod</span><span class="p">)</span>
                     <span class="n">outcome</span><span class="o">.</span><span class="n">expecting_failure</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="k">with</span> <span class="n">outcome</span><span class="o">.</span><span class="n">testPartExecutor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_callTearDown</span><span class="p">()</span>
-
                 <span class="bp">self</span><span class="o">.</span><span class="n">doCleanups</span><span class="p">()</span>
-                <span class="k">for</span> <span class="n">test</span><span class="p">,</span> <span class="n">reason</span> <span class="ow">in</span> <span class="n">outcome</span><span class="o">.</span><span class="n">skipped</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_addSkip</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_feedErrorsToResult</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">outcome</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span>
+
                 <span class="k">if</span> <span class="n">outcome</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">expecting_failure</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">outcome</span><span class="o">.</span><span class="n">expectedFailure</span><span class="p">:</span>
@@ -693,11 +729,10 @@
                         <span class="n">result</span><span class="o">.</span><span class="n">addSuccess</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">result</span>
             <span class="k">finally</span><span class="p">:</span>
-                <span class="c1"># explicitly break reference cycles:</span>
-                <span class="c1"># outcome.errors -&gt; frame -&gt; outcome -&gt; outcome.errors</span>
+                <span class="c1"># explicitly break reference cycle:</span>
                 <span class="c1"># outcome.expectedFailure -&gt; frame -&gt; outcome -&gt; outcome.expectedFailure</span>
-                <span class="n">outcome</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
                 <span class="n">outcome</span><span class="o">.</span><span class="n">expectedFailure</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">outcome</span> <span class="o">=</span> <span class="kc">None</span>
 
                 <span class="c1"># clear the outcome, no more needed</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_outcome</span> <span class="o">=</span> <span class="kc">None</span>
@@ -708,7 +743,7 @@
                 <span class="n">stopTestRun</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">doCleanups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute all cleanup functions. Normally called for you after</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute all cleanup functions. Normally called for you after</span>
 <span class="sd">        tearDown.&quot;&quot;&quot;</span>
         <span class="n">outcome</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outcome</span> <span class="ow">or</span> <span class="n">_Outcome</span><span class="p">()</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cleanups</span><span class="p">:</span>
@@ -722,7 +757,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">doClassCleanups</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute all class cleanup functions. Normally called for you after</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute all class cleanup functions. Normally called for you after</span>
 <span class="sd">        tearDownClass.&quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">tearDown_exceptions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_class_cleanups</span><span class="p">:</span>
@@ -736,7 +771,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Run the test without collecting errors in a TestResult&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run the test without collecting errors in a TestResult&quot;&quot;&quot;</span>
         <span class="n">testMethod</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_testMethodName</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s2">&quot;__unittest_skip__&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="n">testMethod</span><span class="p">,</span> <span class="s2">&quot;__unittest_skip__&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
@@ -753,27 +788,27 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_callCleanup</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">skipTest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Skip this test.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Skip this test.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="n">SkipTest</span><span class="p">(</span><span class="n">reason</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail immediately, with the given message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail immediately, with the given message.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check that the expression is false.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check that the expression is false.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">expr</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not false&quot;</span> <span class="o">%</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">expr</span><span class="p">))</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check that the expression is true.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check that the expression is true.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">expr</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not true&quot;</span> <span class="o">%</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">expr</span><span class="p">))</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_formatMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Honour the longMessage attribute when generating failure messages.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Honour the longMessage attribute when generating failure messages.</span>
 <span class="sd">        If longMessage is False this means:</span>
 <span class="sd">        * Use only an explicit message if it is provided</span>
 <span class="sd">        * Otherwise use the standard message for the assert</span>
@@ -794,7 +829,7 @@
             <span class="k">return</span>  <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> : </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">standardMsg</span><span class="p">),</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertRaises</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expected_exception</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail unless an exception of class expected_exception is raised</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail unless an exception of class expected_exception is raised</span>
 <span class="sd">           by the callable when invoked with specified positional and</span>
 <span class="sd">           keyword arguments. If a different type of exception is</span>
 <span class="sd">           raised, it will not be caught, and the test case will be</span>
@@ -827,7 +862,7 @@
             <span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">assertWarns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expected_warning</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail unless a warning of class warnClass is triggered</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail unless a warning of class warnClass is triggered</span>
 <span class="sd">           by the callable when invoked with specified positional and</span>
 <span class="sd">           keyword arguments.  If a different type of warning is</span>
 <span class="sd">           triggered, it will not be handled: depending on the other</span>
@@ -858,7 +893,7 @@
         <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="s1">&#39;assertWarns&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertLogs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail unless a log message of level *level* or higher is emitted</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail unless a log message of level *level* or higher is emitted</span>
 <span class="sd">        on *logger_name* or its children.  If omitted, *level* defaults to</span>
 <span class="sd">        INFO and *logger* defaults to the root logger.</span>
 
@@ -882,7 +917,7 @@
         <span class="k">return</span> <span class="n">_AssertLogsContext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">no_logs</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertNoLogs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Fail unless no log messages of level *level* or higher are emitted</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fail unless no log messages of level *level* or higher are emitted</span>
 <span class="sd">        on *logger_name* or its children.</span>
 
 <span class="sd">        This method must be used as a context manager.</span>
@@ -891,7 +926,7 @@
         <span class="k">return</span> <span class="n">_AssertLogsContext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">no_logs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_getAssertEqualityFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a detailed comparison function for the types of the two args.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a detailed comparison function for the types of the two args.</span>
 
 <span class="sd">        Returns: A callable accepting (first, second, msg=None) that will</span>
 <span class="sd">        raise a failure exception if first != second with a useful human</span>
@@ -917,21 +952,21 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_baseAssertEqual</span>
 
     <span class="k">def</span> <span class="nf">_baseAssertEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The default assertEqual implementation, not type specific.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The default assertEqual implementation, not type specific.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">first</span> <span class="o">==</span> <span class="n">second</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> != </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">_common_shorten_repr</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail if the two objects are unequal as determined by the &#39;==&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail if the two objects are unequal as determined by the &#39;==&#39;</span>
 <span class="sd">           operator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">assertion_func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getAssertEqualityFunc</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
         <span class="n">assertion_func</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertNotEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail if the two objects are equal as determined by the &#39;!=&#39;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail if the two objects are equal as determined by the &#39;!=&#39;</span>
 <span class="sd">           operator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">first</span> <span class="o">!=</span> <span class="n">second</span><span class="p">:</span>
@@ -941,7 +976,7 @@
 
     <span class="k">def</span> <span class="nf">assertAlmostEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">places</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                           <span class="n">delta</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail if the two objects are unequal as determined by their</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail if the two objects are unequal as determined by their</span>
 <span class="sd">           difference rounded to the given number of decimal places</span>
 <span class="sd">           (default 7) and comparing to zero, or by comparing that the</span>
 <span class="sd">           difference between the two objects is more than the given</span>
@@ -986,7 +1021,7 @@
 
     <span class="k">def</span> <span class="nf">assertNotAlmostEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">places</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">delta</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail if the two objects are equal as determined by their</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail if the two objects are equal as determined by their</span>
 <span class="sd">           difference rounded to the given number of decimal places</span>
 <span class="sd">           (default 7) and comparing to zero, or by comparing that the</span>
 <span class="sd">           difference between the two objects is less than the given delta.</span>
@@ -1020,7 +1055,7 @@
         <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertSequenceEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seq_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;An equality assertion for ordered sequences (like lists and tuples).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;An equality assertion for ordered sequences (like lists and tuples).</span>
 
 <span class="sd">        For the purposes of this function, a valid ordered sequence type is one</span>
 <span class="sd">        which can be indexed, has a length, and has an equality operator.</span>
@@ -1125,7 +1160,7 @@
         <span class="k">return</span> <span class="n">message</span> <span class="o">+</span> <span class="p">(</span><span class="n">DIFF_OMITTED</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertListEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A list-specific equality assertion.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A list-specific equality assertion.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            list1: The first list to compare.</span>
@@ -1137,7 +1172,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">list1</span><span class="p">,</span> <span class="n">list2</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">seq_type</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertTupleEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tuple1</span><span class="p">,</span> <span class="n">tuple2</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A tuple-specific equality assertion.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A tuple-specific equality assertion.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            tuple1: The first tuple to compare.</span>
@@ -1148,7 +1183,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">tuple1</span><span class="p">,</span> <span class="n">tuple2</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">seq_type</span><span class="o">=</span><span class="nb">tuple</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertSetEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set1</span><span class="p">,</span> <span class="n">set2</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A set-specific equality assertion.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A set-specific equality assertion.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            set1: The first set to compare.</span>
@@ -1191,28 +1226,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertIn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a in b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a in b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">container</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not found in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">member</span><span class="p">),</span>
                                                   <span class="n">safe_repr</span><span class="p">(</span><span class="n">container</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertNotIn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a not in b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a not in b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">container</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> unexpectedly found in </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">member</span><span class="p">),</span>
                                                         <span class="n">safe_repr</span><span class="p">(</span><span class="n">container</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertIs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr1</span><span class="p">,</span> <span class="n">expr2</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a is b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a is b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">expr1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">expr2</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">expr1</span><span class="p">),</span>
                                              <span class="n">safe_repr</span><span class="p">(</span><span class="n">expr2</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertIsNot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr1</span><span class="p">,</span> <span class="n">expr2</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a is not b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a is not b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">expr1</span> <span class="ow">is</span> <span class="n">expr2</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;unexpectedly identical: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">expr1</span><span class="p">),)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
@@ -1230,10 +1265,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertDictContainsSubset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subset</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether dictionary is a superset of subset.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether dictionary is a superset of subset.&quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;assertDictContainsSubset is deprecated&#39;</span><span class="p">,</span>
-                      <span class="ne">DeprecationWarning</span><span class="p">,</span>
-                      <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">)</span>
         <span class="n">missing</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">mismatched</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">subset</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1260,7 +1294,7 @@
 
 
     <span class="k">def</span> <span class="nf">assertCountEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Asserts that two iterables have the same elements, the same number of</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asserts that two iterables have the same elements, the same number of</span>
 <span class="sd">        times, without regard to order.</span>
 
 <span class="sd">            self.assertEqual(Counter(list(first)),</span>
@@ -1292,7 +1326,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertMultiLineEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Assert that two multi-line strings are equal.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assert that two multi-line strings are equal.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;First argument is not a string&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;Second argument is not a string&#39;</span><span class="p">)</span>
 
@@ -1312,57 +1346,57 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertLess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &lt; b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &lt; b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not less than </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertLessEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &lt;= b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &lt;= b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not less than or equal to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertGreater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &gt; b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &gt; b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not greater than </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertGreaterEqual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &gt;= b), but with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just like self.assertTrue(a &gt;= b), but with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> not greater than or equal to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">safe_repr</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertIsNone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Same as self.assertTrue(obj is None), with a nicer default message.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as self.assertTrue(obj is None), with a nicer default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not None&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">obj</span><span class="p">),)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Included for symmetry with assertIsNone.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Included for symmetry with assertIsNone.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;unexpectedly None&#39;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertIsInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Same as self.assertTrue(isinstance(obj, cls)), with a nicer</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as self.assertTrue(isinstance(obj, cls)), with a nicer</span>
 <span class="sd">        default message.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not an instance of </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="bp">cls</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertNotIsInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Included for symmetry with assertIsInstance.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Included for symmetry with assertIsInstance.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
             <span class="n">standardMsg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is an instance of </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">safe_repr</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="bp">cls</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_formatMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">standardMsg</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">assertRaisesRegex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expected_exception</span><span class="p">,</span> <span class="n">expected_regex</span><span class="p">,</span>
                           <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Asserts that the message in a raised exception matches a regex.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asserts that the message in a raised exception matches a regex.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            expected_exception: Exception class expected to be raised.</span>
@@ -1378,7 +1412,7 @@
 
     <span class="k">def</span> <span class="nf">assertWarnsRegex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expected_warning</span><span class="p">,</span> <span class="n">expected_regex</span><span class="p">,</span>
                          <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Asserts that the message in a triggered warning matches a regexp.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asserts that the message in a triggered warning matches a regexp.</span>
 <span class="sd">        Basic functioning is similar to assertWarns() with the addition</span>
 <span class="sd">        that only warnings whose messages also match the regular expression</span>
 <span class="sd">        are considered successful matches.</span>
@@ -1396,7 +1430,7 @@
         <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="s1">&#39;assertWarnsRegex&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertRegex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">expected_regex</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail the test unless the text matches the regular expression.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail the test unless the text matches the regular expression.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">expected_regex</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
             <span class="k">assert</span> <span class="n">expected_regex</span><span class="p">,</span> <span class="s2">&quot;expected_regex must not be empty.&quot;</span>
             <span class="n">expected_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">expected_regex</span><span class="p">)</span>
@@ -1408,7 +1442,7 @@
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">assertNotRegex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">unexpected_regex</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fail the test if the text matches the regular expression.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fail the test if the text matches the regular expression.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unexpected_regex</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
             <span class="n">unexpected_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">unexpected_regex</span><span class="p">)</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">unexpected_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -1445,7 +1479,7 @@
 
 
 <span class="k">class</span> <span class="nc">FunctionTestCase</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A test case that wraps a test function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A test case that wraps a test function.</span>
 
 <span class="sd">    This is useful for slipping pre-existing test functions into the</span>
 <span class="sd">    unittest framework. Optionally, set-up and tidy-up functions can be</span>
@@ -1529,7 +1563,7 @@
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">id</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subDescription</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">shortDescription</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a one-line description of the subtest, or None if no</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a one-line description of the subtest, or None if no</span>
 <span class="sd">        description has been provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_case</span><span class="o">.</span><span class="n">shortDescription</span><span class="p">()</span>

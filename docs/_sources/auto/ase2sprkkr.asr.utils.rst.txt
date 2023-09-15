@@ -1,0 +1,51 @@
+utils
+=====
+
+Full name: **ase2sprkkr.asr.utils**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.utils
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.utils.args
+     ase2sprkkr.asr.utils.calculator_utils
+     ase2sprkkr.asr.utils.gpw2eigs
+     ase2sprkkr.asr.utils.kpts
+     ase2sprkkr.asr.utils.magnetism
+     ase2sprkkr.asr.utils.refinegs
+     ase2sprkkr.asr.utils.something
+     ase2sprkkr.asr.utils.symmetry
+     ase2sprkkr.asr.utils.utils
+  
+  

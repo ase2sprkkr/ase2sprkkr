@@ -1,0 +1,36 @@
+Multiplot
+=========
+
+
+.. currentmodule:: ase2sprkkr.visualise.plot
+
+.. autoclass:: Multiplot
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.visualise.plot.Multiplot
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

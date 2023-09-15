@@ -1,0 +1,45 @@
+test\_recipes
+=============
+
+Full name: **ase2sprkkr.asr.test.test\_recipes**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_recipes
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_recipe_cli_help_calls
+      test_recipe_cli_types
+      test_recipe_type_hints
+      test_recipe_use_new_webpanel_implementation
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

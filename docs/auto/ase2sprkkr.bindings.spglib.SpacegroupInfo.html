@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SpacegroupInfo &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -30,11 +30,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +65,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.bindings.es_finder.html">es_finder</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.bindings.spglib.html">spglib</a><ul class="current">
@@ -78,6 +83,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 </ul>
 </li>
 </ul>
@@ -95,11 +101,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="ase2sprkkr.html">ase2sprkkr</a> &raquo;</li>
-          <li><a href="ase2sprkkr.bindings.html">bindings</a> &raquo;</li>
-          <li><a href="ase2sprkkr.bindings.spglib.html">spglib</a> &raquo;</li>
-      <li>SpacegroupInfo</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.bindings.html">bindings</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.bindings.spglib.html">spglib</a></li>
+      <li class="breadcrumb-item active">SpacegroupInfo</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -110,10 +116,10 @@
            <div itemprop="articleBody">
              
   <section id="spacegroupinfo">
-<h1>SpacegroupInfo<a class="headerlink" href="#spacegroupinfo" title="Permalink to this heading"></a></h1>
+<h1>SpacegroupInfo<a class="headerlink" href="#spacegroupinfo" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.spglib.</span></span><span class="sig-name descname"><span class="pre">SpacegroupInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equivalent_sites</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.bindings.spglib.</span></span><span class="sig-name descname"><span class="pre">SpacegroupInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equivalent_sites</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="Link to this definition"></a></dt>
 <dd><p>Class, that carry information about spacegroup and symmetry of a structure</p>
 <p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-d9f34d18028da3630ffe48e3f96460eed3021cc8.png" alt="Inheritance diagram of ase2sprkkr.bindings.spglib.SpacegroupInfo" usemap="#inheritance55bb180844" class="inheritance graphviz" /></div>
@@ -124,7 +130,7 @@
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>atoms</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><em>sprkkr_atoms.SPRKKRAtoms</em></a>) – </p></li>
 <li><p><strong>spacegroup</strong> (<em>Optional</em><em>[</em><em>Spacegroup</em><em>]</em>) – </p></li>
@@ -135,16 +141,16 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equivalent_sites</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.__init__" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacegroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equivalent_sites</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>atoms</strong> (<a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html#ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms" title="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms"><em>SPRKKRAtoms</em></a>) – ASE atoms object desribed by the SpacegroupInfo</p></li>
-<li><p><strong>spacegroup</strong> (<em>Optional</em><em>[</em><em>Spacegroup</em><em>]</em>) – ASE spacegroup object. If None, there is no symmetry in the crystal.</p></li>
-<li><p><strong>dataset</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – SPGLib dataset - a dictionary, containing many informations about the symmetry and
+<li><p><strong>spacegroup</strong> (<em>Spacegroup</em><em> | </em><em>None</em>) – ASE spacegroup object. If None, there is no symmetry in the crystal.</p></li>
+<li><p><strong>dataset</strong> (<em>Dict</em><em> | </em><em>None</em>) – SPGLib dataset - a dictionary, containing many informations about the symmetry and
 spacegroup of the structure. If it is not provided, and <code class="docutils literal notranslate"><span class="pre">spacegroup</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>
 the spacegroup is recomputed to obtain the dataset, if the dataset is requested.</p></li>
-<li><p><strong>equivalent_sites</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="ase2sprkkr.common.unique_values.UniqueValuesMapping"><em>UniqueValuesMapping</em></a><em>]</em>) – Object, that provides equivalence classes for the atoms. If it is not provided,
+<li><p><strong>equivalent_sites</strong> (<a class="reference internal" href="ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="ase2sprkkr.common.unique_values.UniqueValuesMapping"><em>UniqueValuesMapping</em></a><em> | </em><em>None</em>) – Object, that provides equivalence classes for the atoms. If it is not provided,
 and <code class="docutils literal notranslate"><span class="pre">spacegroup</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the spacegroup is recomputed to obtain the equivalence
 equivalent_sites, if the equivalent_sites is requested.</p></li>
 </ul>
@@ -154,12 +160,12 @@ equivalent_sites, if the equivalent_sites is requested.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.number">
-<span class="sig-name descname"><span class="pre">number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.number" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.number" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Spacegroup number or None, if there is no spacegroup.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>spacegroup</p>
 </dd>
 </dl>
@@ -167,12 +173,12 @@ equivalent_sites, if the equivalent_sites is requested.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.dataset">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dataset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.dataset" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dataset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.dataset" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.equivalent_sites">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">equivalent_sites</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="ase2sprkkr.common.unique_values.UniqueValuesMapping"><span class="pre">UniqueValuesMapping</span></a></em><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.equivalent_sites" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">equivalent_sites</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="ase2sprkkr.common.unique_values.UniqueValuesMapping"><span class="pre">UniqueValuesMapping</span></a></em><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.equivalent_sites" title="Link to this definition"></a></dt>
 <dd><p>Object, that provide equivalence classes for the atoms. If it is not provided,
 and <code class="docutils literal notranslate"><span class="pre">spacegroup</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the spacegroup is recomputed to obtain the equivalent_sites,
 if the equivalent_sites is requested.</p>
@@ -180,7 +186,7 @@ if the equivalent_sites is requested.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.recompute">
-<span class="sig-name descname"><span class="pre">recompute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_change</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.recompute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.recompute" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">recompute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_change</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.recompute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.recompute" title="Link to this definition"></a></dt>
 <dd><p>Recompute spacegroup, dataset and equivalent_sites.</p>
 <dl class="simple">
 <dt>allow_change</dt><dd><p>If False, the resulting spacegroup have to be the same as the old one.
@@ -189,7 +195,7 @@ without providing spglib dataset.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>allow_change</strong> (<em>bool</em>) – </p>
 </dd>
 </dl>
@@ -197,12 +203,12 @@ without providing spglib dataset.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.compute_spacegroup_info">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_spacegroup_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.compute_spacegroup_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.compute_spacegroup_info" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_spacegroup_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.compute_spacegroup_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.compute_spacegroup_info" title="Link to this definition"></a></dt>
 <dd><p>Return the values needed to create (or update) <code class="xref py py-class docutils literal notranslate"><span class="pre">Spacegroup</span></code>
 that suits to the atoms’ cell structure.</p>
 <p>For the parameters description, see the ‘<a class="reference internal" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms" title="ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_atoms()</span></code></a> method.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
 <li><p><em>spacegroup</em> – ASE Spacegroup object, describing the spacegroup</p></li>
 <li><p><em>dataset</em> – Dataset, describing symmetry- and spacegroup-related information
@@ -214,7 +220,7 @@ the names in the C structure)</p></li>
 </ul>
 </p>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>atoms</strong> (<em>Atoms</em>) – </p></li>
 <li><p><strong>atomic_numbers</strong> (<em>List</em>) – </p></li>
@@ -223,7 +229,7 @@ the names in the C structure)</p></li>
 <li><p><strong>angular_precision</strong> (<em>float</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[Spacegroup, Dict, <a class="reference internal" href="ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping" title="ase2sprkkr.common.unique_values.UniqueValuesMapping">UniqueValuesMapping</a>]</p>
 </dd>
 </dl>
@@ -231,13 +237,13 @@ the names in the C structure)</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atomic_numbers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_old</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angular_precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/bindings/spglib.html#SpacegroupInfo.from_atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms" title="Link to this definition"></a></dt>
 <dd><p>Create <a class="reference internal" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpacegroupInfo</span></code></a> for given ASE <code class="xref py py-class docutils literal notranslate"><span class="pre">Atoms</span></code> object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>atoms</strong> (<em>Atoms</em>) – ASE atoms structure</p></li>
-<li><p><strong>atomic_numbers</strong> (<em>Optional</em><em>[</em><em>List</em><em>]</em>) – The atomic numbers can be overriden, e.g. to force (partialy) break the symmetry.
+<li><p><strong>atomic_numbers</strong> (<em>List</em>) – The atomic numbers can be overriden, e.g. to force (partialy) break the symmetry.
 The atomic numbers have not to be the real ones, they can be (and are treated) just
 the labels of equivalence classes.</p></li>
 <li><p><strong>consider_old</strong> (<em>bool</em>) – </p></li>
@@ -245,7 +251,7 @@ the labels of equivalence classes.</p></li>
 <li><p><strong>angular_precision</strong> (<em>float</em>) – The tolerated unprecision in angular coordinate</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><em>SpacegroupInfo</em></a></p>
 </dd>
 </dl>

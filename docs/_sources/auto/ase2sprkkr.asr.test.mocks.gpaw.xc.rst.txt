@@ -1,0 +1,44 @@
+xc
+==
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw.xc**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw.xc
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.mocks.gpaw.xc.exx
+     ase2sprkkr.asr.test.mocks.gpaw.xc.tools
+  
+  

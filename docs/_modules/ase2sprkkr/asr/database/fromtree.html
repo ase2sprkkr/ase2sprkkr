@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.database.fromtree &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.database.fromtree</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.database.fromtree</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Convert a folder tree to an ASE database.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+<span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">argument</span><span class="p">,</span> <span class="n">chdir</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span>
+<span class="kn">from</span> <span class="nn">asr.database.key_descriptions</span> <span class="kn">import</span> <span class="n">key_descriptions</span> <span class="k">as</span> <span class="n">asr_kd</span>
+<span class="kn">from</span> <span class="nn">asr.database.material_fingerprint</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">mf</span>
+<span class="kn">from</span> <span class="nn">asr.database.material_fingerprint</span> <span class="kn">import</span> <span class="n">get_uid_of_atoms</span><span class="p">,</span> \
+    <span class="n">get_hash_of_atoms</span>
+<span class="kn">from</span> <span class="nn">asr.database.check</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">check_database</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+
+<div class="viewcode-block" id="MissingUIDS">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.MissingUIDS.html#ase2sprkkr.asr.database.fromtree.MissingUIDS">[docs]</a>
+<span class="k">class</span> <span class="nc">MissingUIDS</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="parse_key_descriptions">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.parse_key_descriptions.html#ase2sprkkr.asr.database.fromtree.parse_key_descriptions">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_key_descriptions</span><span class="p">(</span><span class="n">key_descriptions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse key descriptions.</span>
+
+<span class="sd">    This function parses a dictionary of key descriptions. A valid key</span>
+<span class="sd">    description looks like::</span>
+
+<span class="sd">        `KVP: Long description !short description! [unit]`</span>
+
+<span class="sd">    - KVP: marks a key as a key-value-pair.</span>
+<span class="sd">    - !short description!: gives a short description of the key.</span>
+<span class="sd">    - [unit]: Marks the unit of the key.</span>
+<span class="sd">    - The rest of the text will be interpreted as the long description</span>
+<span class="sd">      of the key.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">re</span>
+
+    <span class="n">tmpkd</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">key_descriptions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">descdict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;iskvp&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s1">&#39;shortdesc&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;longdesc&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">desc</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">descdict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+            <span class="n">tmpkd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">desc</span>
+            <span class="k">continue</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">desc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> \
+            <span class="sa">f</span><span class="s1">&#39;Key description has to be dict or str. (</span><span class="si">{</span><span class="n">desc</span><span class="si">}</span><span class="s1">)&#39;</span>
+        <span class="c1"># Get key type</span>
+        <span class="n">desc</span><span class="p">,</span> <span class="o">*</span><span class="n">keytype</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">keytype</span><span class="p">:</span>
+            <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">keytype</span>
+
+        <span class="c1"># Is this a kvp?</span>
+        <span class="n">iskvp</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;KVP:&#39;</span><span class="p">)</span>
+        <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;iskvp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iskvp</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;KVP:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c1"># Find units</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[(.*)\]&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">unit</span><span class="p">:</span>
+            <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c1"># Find short description</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\!(.*)\!&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="p">)</span>
+        <span class="n">shortdesc</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">shortdesc</span><span class="p">:</span>
+            <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shortdesc</span>
+
+        <span class="c1"># Everything remaining is the long description</span>
+        <span class="n">longdesc</span> <span class="o">=</span> <span class="n">desc</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;!</span><span class="si">{</span><span class="n">shortdesc</span><span class="si">}</span><span class="s1">!&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">longdesc</span><span class="p">:</span>
+            <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">longdesc</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">shortdesc</span><span class="p">:</span>
+                <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;shortdesc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">descdict</span><span class="p">[</span><span class="s1">&#39;longdesc&#39;</span><span class="p">]</span>
+        <span class="n">tmpkd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">descdict</span>
+
+    <span class="k">return</span> <span class="n">tmpkd</span></div>
+
+
+
+<span class="n">tmpkd</span> <span class="o">=</span> <span class="n">parse_key_descriptions</span><span class="p">(</span>
+    <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span>
+     <span class="k">for</span> <span class="n">dct</span> <span class="ow">in</span> <span class="n">asr_kd</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dct</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+
+<div class="viewcode-block" id="get_key_value_pairs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.get_key_value_pairs.html#ase2sprkkr.asr.database.fromtree.get_key_value_pairs">[docs]</a>
+<span class="k">def</span> <span class="nf">get_key_value_pairs</span><span class="p">(</span><span class="n">resultsdct</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract key-value-pairs from results dictionary.</span>
+
+<span class="sd">    Note to determine which key in the results dictionary is a</span>
+<span class="sd">    key-value-pair we parse the data in `asr.database.key_descriptions`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resultsdct: dict</span>
+<span class="sd">        Dictionary containing asr results file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    kvp: dict</span>
+<span class="sd">        key-value-pairs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">kvp</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">tmpkd</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">resultsdct</span> <span class="ow">and</span> <span class="n">desc</span><span class="p">[</span><span class="s1">&#39;iskvp&#39;</span><span class="p">]</span>
+           <span class="ow">and</span> <span class="n">resultsdct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">kvp</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">resultsdct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">kvp</span></div>
+
+
+
+<div class="viewcode-block" id="collect_file">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.collect_file.html#ase2sprkkr.asr.database.fromtree.collect_file">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_file</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect a single file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    kvp: dict</span>
+<span class="sd">        Key-value pairs</span>
+<span class="sd">    data: dict</span>
+<span class="sd">        Dict with keys=filenames where filenames is the input filename</span>
+<span class="sd">        and any additional files that were created or required by this recipe.</span>
+<span class="sd">    links: dict</span>
+<span class="sd">        Dict with keys</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">):</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">format_as</span><span class="p">(</span><span class="s1">&#39;dict&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="n">results</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)]</span> <span class="o">=</span> <span class="n">dct</span>
+
+    <span class="c1"># Find and try to collect related files for this resultsfile</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__files__&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">extra_files</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__requires__&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">extra_files</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__creates__&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+
+    <span class="k">for</span> <span class="n">extrafile</span><span class="p">,</span> <span class="n">checksum</span> <span class="ow">in</span> <span class="n">extra_files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="n">extrafile</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">extrafile</span><span class="si">}</span><span class="s1"> already collected!&#39;</span>
+
+        <span class="k">if</span> <span class="n">extrafile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">extrafile</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: Required file </span><span class="si">{</span><span class="n">file</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39; doesn</span><span class="se">\&#39;</span><span class="s1">t exist.&#39;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
+            <span class="n">extra</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">extrafile</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extra</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">):</span>
+                <span class="n">dct</span> <span class="o">=</span> <span class="n">extra</span><span class="o">.</span><span class="n">format_as</span><span class="p">(</span><span class="s1">&#39;dict&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dct</span> <span class="o">=</span> <span class="n">extra</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dct</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pointer&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">absolute</span><span class="p">())}</span>
+
+        <span class="n">data</span><span class="p">[</span><span class="n">extrafile</span><span class="p">]</span> <span class="o">=</span> <span class="n">dct</span>
+
+    <span class="n">kvp</span> <span class="o">=</span> <span class="n">get_key_value_pairs</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">kvp</span><span class="p">,</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="collect_links_to_child_folders">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.collect_links_to_child_folders.html#ase2sprkkr.asr.database.fromtree.collect_links_to_child_folders">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_links_to_child_folders</span><span class="p">(</span><span class="n">folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect links to all subfolders.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folder: Path</span>
+<span class="sd">        Path to folder.</span>
+<span class="sd">    atomsname: str</span>
+<span class="sd">        Name of file containing atoms, i.e. &#39;structure.json&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    children: dict</span>
+<span class="sd">        Dictionary with key=relative path to child material and</span>
+<span class="sd">        value=uid of child material, i.e.: {&#39;strains&#39;:</span>
+<span class="sd">        &#39;Si2-abcdefghiklmn&#39;}.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">topdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">followlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">this_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">atomsname</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="n">this_folder</span><span class="p">):</span>
+                <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">atomsname</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">uid</span> <span class="o">=</span> <span class="n">get_material_uid</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+                <span class="n">children</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">=</span> <span class="n">uid</span>
+    <span class="k">return</span> <span class="n">children</span></div>
+
+
+
+<div class="viewcode-block" id="get_material_uid">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.get_material_uid.html#ase2sprkkr.asr.database.fromtree.get_material_uid">[docs]</a>
+<span class="k">def</span> <span class="nf">get_material_uid</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get UID of atoms.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mf</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mf</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">PermissionError</span><span class="p">:</span>
+            <span class="k">pass</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">read_json</span><span class="p">(</span>
+            <span class="s1">&#39;results-asr.database.material_fingerprint.json&#39;</span><span class="p">)[</span><span class="s1">&#39;uid&#39;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="c1"># FileNotFoundError happens some times on Gitlab CI</span>
+        <span class="c1"># and I have not been able to reproduce it on any of</span>
+        <span class="c1"># my own devices. The problem started when we started</span>
+        <span class="c1"># to use multiprocessing so I suspect that it is somehow</span>
+        <span class="c1"># related to that. Somehow, writing and IMMEDIATELY reading</span>
+        <span class="c1"># a file gives problems on gitlab CI.</span>
+        <span class="nb">hash</span> <span class="o">=</span> <span class="n">get_hash_of_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">get_uid_of_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="nb">hash</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="collect_folder">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.collect_folder.html#ase2sprkkr.asr.database.fromtree.collect_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                   <span class="n">children_patterns</span><span class="o">=</span><span class="p">[]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect data from a material folder.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    folder: Path</span>
+<span class="sd">        Path to folder.</span>
+<span class="sd">    atomsname: str</span>
+<span class="sd">        Name of file containing atoms, i.e. &#39;structure.json&#39;.</span>
+<span class="sd">    patterns: List[str]</span>
+<span class="sd">        List of patterns marking which files to include.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    atoms: Atoms</span>
+<span class="sd">        Atomic structure.</span>
+<span class="sd">    kvp: dict</span>
+<span class="sd">        Key-value-pairs.</span>
+<span class="sd">    data: dict</span>
+<span class="sd">        Dictionary containing data files and links.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">fnmatch</span> <span class="kn">import</span> <span class="n">fnmatch</span>
+
+    <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="n">folder</span><span class="o">.</span><span class="n">resolve</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">atomsname</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">atomsname</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">uid</span> <span class="o">=</span> <span class="n">get_material_uid</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="n">kvp</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;folder&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">folder</span><span class="p">),</span>
+               <span class="s1">&#39;uid&#39;</span><span class="p">:</span> <span class="n">uid</span><span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;__children__&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">atomsname</span><span class="p">]</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">atomsname</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">children_patterns</span><span class="p">):</span>
+                <span class="n">children</span> <span class="o">=</span> <span class="n">collect_links_to_child_folders</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;__children__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">):</span>
+                <span class="n">tmpkvp</span><span class="p">,</span> <span class="n">tmpdata</span> <span class="o">=</span> <span class="n">collect_file</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">kvp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tmpkvp</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tmpdata</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;__children__&#39;</span><span class="p">]:</span>
+            <span class="k">del</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;__children__&#39;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">kvp</span><span class="p">,</span> <span class="n">data</span></div>
+
+
+
+<div class="viewcode-block" id="make_data_identifiers">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.make_data_identifiers.html#ase2sprkkr.asr.database.fromtree.make_data_identifiers">[docs]</a>
+<span class="k">def</span> <span class="nf">make_data_identifiers</span><span class="p">(</span><span class="n">filenames</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make key-value-pairs for identifying data files.</span>
+
+<span class="sd">    This function looks at the keys of `data` and identifies any</span>
+<span class="sd">    result files. If a result file has been identified a key value</span>
+<span class="sd">    pair with name has_asr_name=True will be returned. I.e. if</span>
+<span class="sd">    results-asr.gs@calculate.json is in `data` a key-value-pair with</span>
+<span class="sd">    name `has_asr_gs_calculate=True` will be generated</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filenames: List[str]</span>
+<span class="sd">        List of file names.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Dict containing identifying key-value-pairs,</span>
+<span class="sd">        i.e. {&#39;has_asr_gs_calculate&#39;: True}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">kvp</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;results-&#39;</span><span class="p">),</span> <span class="n">filenames</span><span class="p">):</span>
+        <span class="n">recipe</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;has_</span><span class="si">{</span><span class="n">recipe</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">kvp</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">kvp</span></div>
+
+
+
+<div class="viewcode-block" id="recurse_through_folders">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.recurse_through_folders.html#ase2sprkkr.asr.database.fromtree.recurse_through_folders">[docs]</a>
+<span class="k">def</span> <span class="nf">recurse_through_folders</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find all folders from folder that contain atomsname.&quot;&quot;&quot;</span>
+    <span class="n">folders</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">topdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">followlinks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">atomsname</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">folders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">folders</span></div>
+
+
+
+<div class="viewcode-block" id="_collect_folders">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree._collect_folders.html#ase2sprkkr.asr.database.fromtree._collect_folders">[docs]</a>
+<span class="k">def</span> <span class="nf">_collect_folders</span><span class="p">(</span><span class="n">folders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                     <span class="n">atomsname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">children_patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">dbname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">jobid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect `myfolders` to `mydbname`.&quot;&quot;&quot;</span>
+    <span class="n">nfolders</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">folders</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="p">,</span> <span class="n">serial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ifol</span><span class="p">,</span> <span class="n">folder</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">folders</span><span class="p">):</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Collecting folder </span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">ifol</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nfolders</span><span class="si">}</span><span class="s1">)&#39;</span>
+            <span class="k">if</span> <span class="n">jobid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Subprocess #</span><span class="si">{</span><span class="n">jobid</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+            <span class="n">atoms</span><span class="p">,</span> <span class="n">key_value_pairs</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">collect_folder</span><span class="p">(</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">folder</span><span class="p">),</span>
+                <span class="n">atomsname</span><span class="p">,</span>
+                <span class="n">patterns</span><span class="p">,</span>
+                <span class="n">children_patterns</span><span class="o">=</span><span class="n">children_patterns</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">identifier_kvp</span> <span class="o">=</span> <span class="n">make_data_identifiers</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">key_value_pairs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">identifier_kvp</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">db</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">key_value_pairs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;folder=</span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;atoms=</span><span class="si">{</span><span class="n">atoms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;data=</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;kvp=</span><span class="si">{</span><span class="n">key_value_pairs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">raise</span></div>
+
+
+
+<div class="viewcode-block" id="collect_folders">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.collect_folders.html#ase2sprkkr.asr.database.fromtree.collect_folders">[docs]</a>
+<span class="k">def</span> <span class="nf">collect_folders</span><span class="p">(</span><span class="n">folders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                    <span class="n">atomsname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">children_patterns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dbname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">jobid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect `myfolders` to `mydbname`.</span>
+
+<span class="sd">    This wraps _collect_folders and handles printing exception traceback, which</span>
+<span class="sd">    is broken using multiproces.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_collect_folders</span><span class="p">(</span><span class="n">folders</span><span class="o">=</span><span class="n">folders</span><span class="p">,</span> <span class="n">atomsname</span><span class="o">=</span><span class="n">atomsname</span><span class="p">,</span>
+                                <span class="n">patterns</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span>
+                                <span class="n">children_patterns</span><span class="o">=</span><span class="n">children_patterns</span><span class="p">,</span>
+                                <span class="n">dbname</span><span class="o">=</span><span class="n">dbname</span><span class="p">,</span>
+                                <span class="n">jobid</span><span class="o">=</span><span class="n">jobid</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="c1"># Put all exception text into an exception and raise that</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())))</span></div>
+
+
+
+<div class="viewcode-block" id="delegate_to_njobs">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.database.fromtree.delegate_to_njobs.html#ase2sprkkr.asr.database.fromtree.delegate_to_njobs">[docs]</a>
+<span class="k">def</span> <span class="nf">delegate_to_njobs</span><span class="p">(</span><span class="n">njobs</span><span class="p">,</span> <span class="n">dbpath</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">,</span>
+                      <span class="n">patterns</span><span class="p">,</span> <span class="n">children_patterns</span><span class="p">,</span> <span class="n">dbname</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Delegating database collection to </span><span class="si">{</span><span class="n">njobs</span><span class="si">}</span><span class="s1"> subprocesses.&#39;</span><span class="p">)</span>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">jobid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">njobs</span><span class="p">):</span>
+        <span class="n">jobdbname</span> <span class="o">=</span> <span class="n">dbpath</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">jobid</span><span class="si">}</span><span class="s1">.db&#39;</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">collect_folders</span><span class="p">,</span>
+            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">folders</span><span class="p">[</span><span class="n">jobid</span><span class="p">::</span><span class="n">njobs</span><span class="p">],</span> <span class="p">),</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;jobid&#39;</span><span class="p">:</span> <span class="n">jobid</span><span class="p">,</span>
+                <span class="s1">&#39;dbname&#39;</span><span class="p">:</span> <span class="n">jobdbname</span><span class="p">,</span>
+                <span class="s1">&#39;atomsname&#39;</span><span class="p">:</span> <span class="n">atomsname</span><span class="p">,</span>
+                <span class="s1">&#39;patterns&#39;</span><span class="p">:</span> <span class="n">patterns</span><span class="p">,</span>
+                <span class="s1">&#39;children_patterns&#39;</span><span class="p">:</span> <span class="n">children_patterns</span>
+            <span class="p">})</span>
+        <span class="n">processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">jobid</span><span class="p">,</span> <span class="n">proc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">processes</span><span class="p">):</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">proc</span><span class="o">.</span><span class="n">exitcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Error in Job #</span><span class="si">{</span><span class="n">jobid</span><span class="si">}</span><span class="s1">.&#39;</span>
+
+    <span class="c1"># Then we have to collect the separately collected databases</span>
+    <span class="c1"># to a single final database file.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Merging separate database files to </span><span class="si">{</span><span class="n">dbname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+          <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">nmat</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">connect</span><span class="p">(</span><span class="n">dbname</span><span class="p">,</span> <span class="n">serial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">db2</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">jobid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">njobs</span><span class="p">):</span>
+            <span class="n">jobdbname</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dbname</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">jobid</span><span class="si">}</span><span class="s1">.db&#39;</span>
+            <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">jobdbname</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Merging </span><span class="si">{</span><span class="n">jobdbname</span><span class="si">}</span><span class="s1"> into </span><span class="si">{</span><span class="n">dbname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">connect</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">jobdbname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">serial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">select</span><span class="p">():</span>
+                    <span class="n">kvp</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;key_value_pairs&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+                    <span class="n">db2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">toatoms</span><span class="p">(),</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kvp</span><span class="p">)</span>
+                    <span class="n">nmat</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">nmatdb</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">db2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">nmatdb</span> <span class="o">==</span> <span class="n">nmat</span><span class="p">,</span> \
+        <span class="p">(</span><span class="s1">&#39;Merging of databases went wrong, &#39;</span>
+         <span class="sa">f</span><span class="s1">&#39;number of materials changed: </span><span class="si">{</span><span class="n">nmatdb</span><span class="si">}</span><span class="s1"> != </span><span class="si">{</span><span class="n">nmat</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dbname</span><span class="si">}</span><span class="s1">.*.db&#39;</span><span class="p">):</span>
+        <span class="n">name</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.database.fromtree&#39;</span><span class="p">,</span> <span class="n">save_results_file</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nd">@argument</span><span class="p">(</span><span class="s1">&#39;folders&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--recursive&#39;</span><span class="p">,</span> <span class="n">is_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Recurse and collect subdirectories.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--children-patterns&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--patterns&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Only select files matching pattern.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--dbname&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Database name.&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--njobs&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Delegate collection of database to NJOBS subprocesses. &#39;</span>
+        <span class="s1">&#39;Can significantly speed up database collection.&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">folders</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+         <span class="n">children_patterns</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span>
+         <span class="n">patterns</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;info.json,params.json,results-asr.*.json&#39;</span><span class="p">,</span>
+         <span class="n">dbname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;database.db&#39;</span><span class="p">,</span>
+         <span class="n">njobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect ASR data from folder tree into an ASE database.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.database.key_descriptions</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">set_key_descriptions</span>
+
+    <span class="k">def</span> <span class="nf">item_show_func</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="n">atomsname</span> <span class="o">=</span> <span class="s1">&#39;structure.json&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">folders</span><span class="p">:</span>
+        <span class="n">folders</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tmpfolders</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">:</span>
+            <span class="n">tmpfolders</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">folder</span><span class="p">))</span>
+        <span class="n">folders</span> <span class="o">=</span> <span class="n">tmpfolders</span>
+
+    <span class="k">if</span> <span class="n">recursive</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recursing through folder tree...&#39;</span><span class="p">)</span>
+        <span class="n">newfolders</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">:</span>
+            <span class="n">newfolders</span> <span class="o">+=</span> <span class="n">recurse_through_folders</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">)</span>
+        <span class="n">folders</span> <span class="o">=</span> <span class="n">newfolders</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done.&#39;</span><span class="p">)</span>
+
+    <span class="n">folders</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">patterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="n">children_patterns</span> <span class="o">=</span> <span class="n">children_patterns</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We use absolute path because of chdir in collect_folder()!</span>
+    <span class="n">dbpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dbname</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">dbpath</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># Delegate collection of database to subprocesses to reduce I/O time.</span>
+    <span class="k">if</span> <span class="n">njobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">delegate_to_njobs</span><span class="p">(</span><span class="n">njobs</span><span class="p">,</span> <span class="n">dbpath</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folders</span><span class="p">,</span> <span class="n">atomsname</span><span class="p">,</span>
+                          <span class="n">patterns</span><span class="p">,</span> <span class="n">children_patterns</span><span class="p">,</span> <span class="n">dbname</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_collect_folders</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span>
+                         <span class="n">jobid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">dbname</span><span class="o">=</span><span class="n">dbname</span><span class="p">,</span>
+                         <span class="n">atomsname</span><span class="o">=</span><span class="n">atomsname</span><span class="p">,</span>
+                         <span class="n">patterns</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span>
+                         <span class="n">children_patterns</span><span class="o">=</span><span class="n">children_patterns</span><span class="p">)</span>
+
+    <span class="n">set_key_descriptions</span><span class="p">(</span><span class="n">dbname</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">check_database</span><span class="p">(</span><span class="n">dbname</span><span class="p">)</span>
+    <span class="n">missing_child_uids</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;missing_child_uids&#39;</span><span class="p">]</span>
+    <span class="n">duplicate_uids</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;duplicate_uids&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">missing_child_uids</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">MissingUIDS</span><span class="p">(</span>
+            <span class="s1">&#39;Missing child uids in collected database. &#39;</span>
+            <span class="s1">&#39;Did you collect all subfolders?&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">duplicate_uids</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">MissingUIDS</span><span class="p">(</span>
+            <span class="s1">&#39;Duplicate uids in database.&#39;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

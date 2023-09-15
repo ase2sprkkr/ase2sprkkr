@@ -1,0 +1,36 @@
+AtomsFile
+=========
+
+
+.. currentmodule:: ase2sprkkr.asr.core.types
+
+.. autoclass:: AtomsFile
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.core.types.AtomsFile
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

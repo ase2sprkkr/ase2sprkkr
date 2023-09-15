@@ -1,0 +1,44 @@
+test\_setup\_displacements
+==========================
+
+Full name: **ase2sprkkr.asr.test.test\_setup\_displacements**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_setup_displacements
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_setup_displacements
+      test_setup_displacements_displace_atom
+      test_setup_displacements_get_all_displacements
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

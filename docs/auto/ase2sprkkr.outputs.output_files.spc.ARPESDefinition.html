@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARPESDefinition &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ARPESOutputFile" href="ase2sprkkr.outputs.output_files.spc.ARPESOutputFile.html" />
+    <link rel="prev" title="create_definition" href="ase2sprkkr.outputs.output_files.spc.create_definition.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.output_files.html">output_files</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_files.Arithmetic.html">Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_files.CommonOutputFile.html">CommonOutputFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_files.OutputFile.html">OutputFile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_files.UnknownDataValue.html">UnknownDataValue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_files.bsf.html">bsf</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_files.dos.html">dos</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="ase2sprkkr.outputs.output_files.spc.html">spc</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files_definitions.html">output_files_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.test.html">test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.outputs.html">outputs</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.outputs.output_files.html">output_files</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.outputs.output_files.spc.html">spc</a></li>
+      <li class="breadcrumb-item active">ARPESDefinition</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.outputs.output_files.spc.ARPESDefinition.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="arpesdefinition">
+<h1>ARPESDefinition<a class="headerlink" href="#arpesdefinition" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.output_files.spc.ARPESDefinition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.output_files.spc.</span></span><span class="sig-name descname"><span class="pre">ARPESDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/output_files/spc.html#ARPESDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.output_files.spc.ARPESDefinition" title="Link to this definition"></a></dt>
+<dd><p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-e4b731f7bdacb2ae9ca6dc670619ae3eeac6ff05.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_files.spc.ARPESDefinition" usemap="#inheritance18838137a1" class="inheritance graphviz" /></div>
+<map id="inheritance18838137a1" name="inheritance18838137a1">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="607,2,731,13"/>
+<area shape="rect" id="node6" href="ase2sprkkr.outputs.output_files_definitions.OutputFileDefinition.html#ase2sprkkr.outputs.output_files_definitions.OutputFileDefinition" target="_top" title="This class describes the format of one" alt="" coords="744,2,878,13"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="434,2,594,13"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="2,2,125,13"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="138,2,272,13"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.ContainerDefinition.html#ase2sprkkr.common.configuration_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="285,2,421,13"/>
+<area shape="rect" id="node7" href="#ase2sprkkr.outputs.output_files.spc.ARPESDefinition" target="_top" title="spc.ARPESDefinition" alt="" coords="891,2,958,13"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.output_files.spc.ARPESDefinition.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.outputs.output_files.spc.ARPESDefinition.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the value/section</p></li>
+<li><p><strong>written_name</strong> (<em>str</em><em> or </em><em>None</em>) – Name to write to the input file. Default None means use the name.</p></li>
+<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Alternative names that can denotes the value. If no written_name is given,
+the first alternative_names is used for the output. However, contrary to
+written_name, such way still allow to parse the name during parsing as
+the name of the value.</p></li>
+<li><p><strong>is_optional</strong> (<em>boolean</em>) – If True, this section/value can be missing in the .pot/task file</p></li>
+<li><p><strong>is_hidden</strong> (<em>boolean</em>) – Hidden values are not offered to a user, usually they are
+set by another object (and so a direct setting of their values
+has no sense)</p></li>
+<li><p><strong>is_expert</strong> (<em>boolean</em>) – Expert values/sections are not required and they are somewhat hidden
+from the user</p></li>
+<li><p><strong>name_in_grammar</strong> (<em>boolean</em><em> or </em><em>None</em>) – If False, there the name of the variable is not printed in the
+configuration file. The variable is recognized by its position.
+If None, the default class value is used</p></li>
+<li><p><strong>info</strong> (<em>str</em>) – A short help message for the value/section. It will be the perex for description.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – The additional informations for the users.</p></li>
+<li><p><strong>write_alternative_name</strong> – Wheter use the name or the (first) alternative name in the output.</p></li>
+<li><p><strong>write_condition</strong> – If defined, write the value, only if write_condition(the option) is True.</p></li>
+<li><p><strong>condition</strong> – <dl class="simple">
+<dt>If defined, the condition</dt><dd><ul>
+<li><p>the condition.parse_condition() is invoked, when given grammar element
+should be parsed. If it is False, the element is skipped</p></li>
+<li><p>the condition() is invoked, when the elements of the container is listed
+to hide the inactive members</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.outputs.output_files.spc.ARPESDefinition.result_class">
+<span class="sig-name descname"><span class="pre">result_class</span></span><a class="headerlink" href="#ase2sprkkr.outputs.output_files.spc.ARPESDefinition.result_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="ase2sprkkr.outputs.output_files.spc.ARPESOutputFile.html#ase2sprkkr.outputs.output_files.spc.ARPESOutputFile" title="ase2sprkkr.outputs.output_files.spc.ARPESOutputFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ARPESOutputFile</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.outputs.output_files.spc.create_definition.html" class="btn btn-neutral float-left" title="create_definition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.outputs.output_files.spc.ARPESOutputFile.html" class="btn btn-neutral float-right" title="ARPESOutputFile" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

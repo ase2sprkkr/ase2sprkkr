@@ -1,0 +1,8 @@
+get\_atomic\_polarization\_phase
+================================
+
+Full name: **ase2sprkkr.asr.formalpolarization.get\_atomic\_polarization\_phase**
+
+.. currentmodule:: ase2sprkkr.asr.formalpolarization
+
+.. autofunction:: get_atomic_polarization_phase

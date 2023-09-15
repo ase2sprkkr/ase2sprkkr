@@ -1,0 +1,8 @@
+get\_orbital\_ldos
+==================
+
+Full name: **ase2sprkkr.asr.projected\_bandstructure.get\_orbital\_ldos**
+
+.. currentmodule:: ase2sprkkr.asr.projected_bandstructure
+
+.. autofunction:: get_orbital_ldos

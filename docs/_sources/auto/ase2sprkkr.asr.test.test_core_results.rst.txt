@@ -1,0 +1,63 @@
+test\_core\_results
+===================
+
+Full name: **ase2sprkkr.asr.test.test\_core\_results**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.test.test_core_results.MyResult  ase2sprkkr.asr.test.test_core_results.MyResultVer0  ase2sprkkr.asr.test.test_core_results.MyWebPanel 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_core_results
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_read_old_format
+      test_reading_older_version
+      test_reading_result
+      test_results_object
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      MyResult
+      MyResultVer0
+      MyWebPanel
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

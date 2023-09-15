@@ -38,6 +38,7 @@ Full name: **ase2sprkkr.outputs.readers**
      :template: custom-module-template.rst
      :recursive:
   
+     ase2sprkkr.outputs.readers.arpes
      ase2sprkkr.outputs.readers.default
      ase2sprkkr.outputs.readers.scf
   

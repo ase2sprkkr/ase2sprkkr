@@ -1,0 +1,36 @@
+RowWrapper
+==========
+
+
+.. currentmodule:: ase2sprkkr.asr.database.browser
+
+.. autoclass:: RowWrapper
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.database.browser.RowWrapper
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

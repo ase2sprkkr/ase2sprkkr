@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.infraredpolarizability &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.infraredpolarizability</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.infraredpolarizability</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Infrared polarizability.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">read_json</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.infraredpolarizability.webpanel.html#ase2sprkkr.asr.infraredpolarizability.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
+
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span>
+        <span class="n">row</span><span class="p">,</span> <span class="s2">&quot;Property&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;alphax_lat&quot;</span><span class="p">,</span> <span class="s2">&quot;alphay_lat&quot;</span><span class="p">,</span> <span class="s2">&quot;alphaz_lat&quot;</span><span class="p">],</span> <span class="n">key_descriptions</span>
+    <span class="p">)</span>
+
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Infrared polarizability (RPA)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s2">&quot;infrax.png&quot;</span><span class="p">),</span> <span class="n">fig</span><span class="p">(</span><span class="s2">&quot;infraz.png&quot;</span><span class="p">)],</span> <span class="p">[</span><span class="n">fig</span><span class="p">(</span><span class="s2">&quot;infray.png&quot;</span><span class="p">),</span> <span class="n">opt</span><span class="p">]],</span>
+        <span class="s2">&quot;plot_descriptions&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="n">create_plot</span><span class="p">,</span>
+                <span class="s2">&quot;filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;infrax.png&quot;</span><span class="p">,</span> <span class="s2">&quot;infray.png&quot;</span><span class="p">,</span> <span class="s2">&quot;infraz.png&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;sort&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="create_plot">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.infraredpolarizability.create_plot.html#ase2sprkkr.asr.infraredpolarizability.create_plot">[docs]</a>
+<span class="k">def</span> <span class="nf">create_plot</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="o">*</span><span class="n">fnames</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+
+    <span class="c1"># Get electronic polarizability</span>
+    <span class="n">infrareddct</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results-asr.infraredpolarizability.json&quot;</span><span class="p">)</span>
+    <span class="n">omega_w</span> <span class="o">=</span> <span class="n">infrareddct</span><span class="p">[</span><span class="s2">&quot;omega_w&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e3</span>
+    <span class="n">alpha_wvv</span> <span class="o">=</span> <span class="n">infrareddct</span><span class="p">[</span><span class="s2">&quot;alpha_wvv&quot;</span><span class="p">]</span>
+
+    <span class="n">electrondct</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results-asr.polarizability.json&quot;</span><span class="p">)</span>
+    <span class="n">alphax_w</span> <span class="o">=</span> <span class="n">electrondct</span><span class="p">[</span><span class="s2">&quot;alphax_w&quot;</span><span class="p">]</span>
+    <span class="n">alphay_w</span> <span class="o">=</span> <span class="n">electrondct</span><span class="p">[</span><span class="s2">&quot;alphay_w&quot;</span><span class="p">]</span>
+    <span class="n">alphaz_w</span> <span class="o">=</span> <span class="n">electrondct</span><span class="p">[</span><span class="s2">&quot;alphaz_w&quot;</span><span class="p">]</span>
+    <span class="n">omegatmp_w</span> <span class="o">=</span> <span class="n">electrondct</span><span class="p">[</span><span class="s2">&quot;frequencies&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1e3</span>
+
+    <span class="c1"># Get max phonon freq</span>
+    <span class="n">phonondata</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;results-asr.phonons.json&quot;</span><span class="p">)</span>
+    <span class="n">maxphononfreq</span> <span class="o">=</span> <span class="n">phonondata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;omega_kl&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1e3</span>
+    <span class="n">maxomega</span> <span class="o">=</span> <span class="n">maxphononfreq</span> <span class="o">*</span> <span class="mf">1.5</span>
+
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">toatoms</span><span class="p">()</span>
+    <span class="n">pbc_c</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span>
+    <span class="n">ndim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pbc_c</span><span class="p">))</span>
+
+    <span class="n">realphax</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alphax_w</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imalphax</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alphax_w</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">ax_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">realphax</span><span class="p">(</span><span class="n">omega_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">imalphax</span><span class="p">(</span><span class="n">omega_w</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">alpha_wvv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">realphay</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alphay_w</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imalphay</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alphay_w</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">ay_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">realphay</span><span class="p">(</span><span class="n">omega_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">imalphay</span><span class="p">(</span><span class="n">omega_w</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">alpha_wvv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">realphaz</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alphaz_w</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="n">imalphaz</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">omegatmp_w</span><span class="p">,</span> <span class="n">alphaz_w</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+    <span class="n">az_w</span> <span class="o">=</span> <span class="p">(</span><span class="n">realphaz</span><span class="p">(</span><span class="n">omega_w</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">imalphaz</span><span class="p">(</span><span class="n">omega_w</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">alpha_wvv</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">epsx_w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ax_w</span>
+        <span class="n">epsy_w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ay_w</span>
+        <span class="n">epsz_w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">az_w</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">epsx_w</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">epsx_w</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;x-polarization&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Energy [meV]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Dielectric function&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxomega</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fnames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">epsy_w</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">epsy_w</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;y-polarization&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Energy [meV]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Dielectric function&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxomega</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fnames</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">epsz_w</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">epsz_w</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;z-polarization&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Energy [meV]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Dielectric function&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxomega</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fnames</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">ndim</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\mathrm{\AA}$&quot;</span>
+        <span class="k">elif</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\mathrm{\AA}^2$&quot;</span>
+        <span class="k">elif</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$\mathrm{\AA}^3$&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">ax_w</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">ax_w</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;x-polarization&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Energy [meV]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Polarizability [</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxomega</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fnames</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">ay_w</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">ay_w</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;y-polarization&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Energy [meV]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Polarizability [</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxomega</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fnames</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">az_w</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;imag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">az_w</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;real&#39;</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;z-polarization&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Energy [meV]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Polarizability [</span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxomega</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fnames</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.infraredpolarizability.Result.html#ase2sprkkr.asr.infraredpolarizability.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">alpha_wvv</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]]]</span>
+    <span class="n">omega_w</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">alphax_lat</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">alphay_lat</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">alphaz_lat</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">alphax</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">alphay</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="n">alphaz</span><span class="p">:</span> <span class="nb">complex</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;alpha_wvv&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice polarizability.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;omega_w&quot;</span><span class="p">:</span> <span class="s2">&quot;Frequency grid [eV].&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphax_lat&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice polarizability at omega=0 (x-direction).&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphay_lat&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice polarizability at omega=0 (y-direction).&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphaz_lat&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice polarizability at omega=0 (z-direction).&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphax&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice+electronic polarizability at omega=0 (x-direction).&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphay&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice+electronic polarizability at omega=0 (y-direction).&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alphaz&quot;</span><span class="p">:</span> <span class="s2">&quot;Lattice+electronic polarizability at omega=0 (z-direction).&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span>
+    <span class="s2">&quot;asr.infraredpolarizability&quot;</span><span class="p">,</span>
+    <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;asr.phonons&quot;</span><span class="p">,</span> <span class="s2">&quot;asr.borncharges&quot;</span><span class="p">,</span> <span class="s2">&quot;asr.polarizability&quot;</span><span class="p">],</span>
+    <span class="n">requires</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;structure.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;results-asr.phonons.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;results-asr.borncharges.json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;results-asr.polarizability.json&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s2">&quot;--nfreq&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of frequency points&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s2">&quot;--eta&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Relaxation rate&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">nfreq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+
+    <span class="c1"># Get relevant atomic structure</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s2">&quot;structure.json&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get phonons</span>
+    <span class="n">phresults</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.phonons.json&quot;</span><span class="p">)</span>
+    <span class="n">u_ql</span> <span class="o">=</span> <span class="n">phresults</span><span class="p">[</span><span class="s2">&quot;modes_kl&quot;</span><span class="p">]</span>
+    <span class="n">q_qc</span> <span class="o">=</span> <span class="n">phresults</span><span class="p">[</span><span class="s2">&quot;q_qc&quot;</span><span class="p">]</span>
+    <span class="n">omega_ql</span> <span class="o">=</span> <span class="n">phresults</span><span class="p">[</span><span class="s2">&quot;omega_kl&quot;</span><span class="p">]</span>
+
+    <span class="n">iq_q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">q_qc</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">iq_q</span><span class="p">),</span> <span class="s2">&quot;Calculated phonons do not contain Gamma point.&quot;</span>
+
+    <span class="n">iq</span> <span class="o">=</span> <span class="n">iq_q</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">m_a</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span>
+    <span class="n">m_inv_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">m_a</span> <span class="o">**</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">freqs_l</span><span class="p">,</span> <span class="n">modes_liv</span> <span class="o">=</span> <span class="n">omega_ql</span><span class="p">[</span><span class="n">iq</span><span class="p">],</span> <span class="n">u_ql</span><span class="p">[</span><span class="n">iq</span><span class="p">]</span>
+    <span class="n">modes_xl</span> <span class="o">=</span> <span class="n">modes_liv</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">freqs_l</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">modes_xl</span> <span class="o">*=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">m_inv_x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="c1"># Make frequency grid</span>
+    <span class="n">fmin</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">fmax</span> <span class="o">=</span> <span class="n">omega_ql</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mi">3</span>  <span class="c1"># Factor of 3 should be enough</span>
+    <span class="n">omega_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="p">,</span> <span class="n">nfreq</span><span class="p">)</span>
+
+    <span class="c1"># Read born charges</span>
+    <span class="n">borndct</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.borncharges.json&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get other relevant quantities</span>
+    <span class="n">m_a</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span>
+    <span class="n">cell_cv</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span>
+    <span class="n">Z_avv</span> <span class="o">=</span> <span class="n">borndct</span><span class="p">[</span><span class="s2">&quot;Z_avv&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Get phonon polarizability</span>
+    <span class="n">alpha_wvv</span> <span class="o">=</span> <span class="n">get_phonon_pol</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">Z_avv</span><span class="p">,</span> <span class="n">freqs_l</span><span class="p">,</span> <span class="n">modes_xl</span><span class="p">,</span> <span class="n">m_a</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">,</span> <span class="n">eta</span><span class="p">)</span>
+
+    <span class="c1"># Normalize according to dimensionality</span>
+    <span class="n">pbc_c</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span>
+    <span class="k">if</span> <span class="n">pbc_c</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">cell_cv</span><span class="p">[</span><span class="o">~</span><span class="n">pbc_c</span><span class="p">][:,</span> <span class="o">~</span><span class="n">pbc_c</span><span class="p">]))</span>
+    <span class="n">alpha_wvv</span> <span class="o">*=</span> <span class="n">norm</span>
+
+    <span class="n">alphax_lat</span> <span class="o">=</span> <span class="n">alpha_wvv</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">alphay_lat</span> <span class="o">=</span> <span class="n">alpha_wvv</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+    <span class="n">alphaz_lat</span> <span class="o">=</span> <span class="n">alpha_wvv</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="n">elecdict</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.polarizability.json&quot;</span><span class="p">)</span>
+    <span class="n">alphax_el</span> <span class="o">=</span> <span class="n">elecdict</span><span class="p">[</span><span class="s2">&quot;alphax_el&quot;</span><span class="p">]</span>
+    <span class="n">alphay_el</span> <span class="o">=</span> <span class="n">elecdict</span><span class="p">[</span><span class="s2">&quot;alphay_el&quot;</span><span class="p">]</span>
+    <span class="n">alphaz_el</span> <span class="o">=</span> <span class="n">elecdict</span><span class="p">[</span><span class="s2">&quot;alphaz_el&quot;</span><span class="p">]</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;alpha_wvv&quot;</span><span class="p">:</span> <span class="n">alpha_wvv</span><span class="p">,</span>
+        <span class="s2">&quot;omega_w&quot;</span><span class="p">:</span> <span class="n">omega_w</span><span class="p">,</span>
+        <span class="s2">&quot;alphax_lat&quot;</span><span class="p">:</span> <span class="n">alphax_lat</span><span class="p">,</span>
+        <span class="s2">&quot;alphay_lat&quot;</span><span class="p">:</span> <span class="n">alphay_lat</span><span class="p">,</span>
+        <span class="s2">&quot;alphaz_lat&quot;</span><span class="p">:</span> <span class="n">alphaz_lat</span><span class="p">,</span>
+        <span class="s2">&quot;alphax&quot;</span><span class="p">:</span> <span class="n">alphax_lat</span> <span class="o">+</span> <span class="n">alphax_el</span><span class="p">,</span>
+        <span class="s2">&quot;alphay&quot;</span><span class="p">:</span> <span class="n">alphay_lat</span> <span class="o">+</span> <span class="n">alphay_el</span><span class="p">,</span>
+        <span class="s2">&quot;alphaz&quot;</span><span class="p">:</span> <span class="n">alphaz_lat</span> <span class="o">+</span> <span class="n">alphaz_el</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<div class="viewcode-block" id="get_phonon_pol">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.infraredpolarizability.get_phonon_pol.html#ase2sprkkr.asr.infraredpolarizability.get_phonon_pol">[docs]</a>
+<span class="k">def</span> <span class="nf">get_phonon_pol</span><span class="p">(</span><span class="n">omega_w</span><span class="p">,</span> <span class="n">Z_avv</span><span class="p">,</span> <span class="n">freqs_l</span><span class="p">,</span> <span class="n">modes_xl</span><span class="p">,</span> <span class="n">m_a</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">,</span> <span class="n">eta</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Hartree</span><span class="p">,</span> <span class="n">Bohr</span>
+
+    <span class="n">Z_vx</span> <span class="o">=</span> <span class="n">Z_avv</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">f2_w</span><span class="p">,</span> <span class="n">D_xw</span> <span class="o">=</span> <span class="p">(</span><span class="n">freqs_l</span> <span class="o">/</span> <span class="n">Hartree</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">modes_xl</span>
+
+    <span class="n">vol</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">cell_cv</span><span class="p">))</span> <span class="o">/</span> <span class="n">Bohr</span> <span class="o">**</span> <span class="mi">3</span>
+    <span class="n">omega_w</span> <span class="o">=</span> <span class="n">omega_w</span> <span class="o">/</span> <span class="n">Hartree</span>
+    <span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span> <span class="o">/</span> <span class="n">Hartree</span>
+    <span class="n">me</span> <span class="o">=</span> <span class="mf">1822.888</span>
+    <span class="n">m_a</span> <span class="o">=</span> <span class="n">m_a</span> <span class="o">*</span> <span class="n">me</span>
+    <span class="n">alpha_wvv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">omega_w</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+    <span class="n">m_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">m_a</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
+
+    <span class="k">for</span> <span class="n">f2</span><span class="p">,</span> <span class="n">D_x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">f2_w</span><span class="p">,</span> <span class="n">D_xw</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+        <span class="c1"># Neglect acoustic modes</span>
+        <span class="k">if</span> <span class="n">f2</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mf">1e-3</span> <span class="o">/</span> <span class="n">Hartree</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">DM_x</span> <span class="o">=</span> <span class="n">D_x</span> <span class="o">/</span> <span class="n">m_x</span>
+        <span class="n">Z_v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Z_vx</span><span class="p">,</span> <span class="n">DM_x</span><span class="p">)</span>
+        <span class="n">alpha_wvv</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">Z_v</span><span class="p">,</span> <span class="n">Z_v</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+            <span class="o">/</span> <span class="p">((</span><span class="n">f2</span> <span class="o">-</span> <span class="n">omega_w</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">omega_w</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="n">alpha_wvv</span> <span class="o">/=</span> <span class="n">vol</span>
+    <span class="k">return</span> <span class="n">alpha_wvv</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

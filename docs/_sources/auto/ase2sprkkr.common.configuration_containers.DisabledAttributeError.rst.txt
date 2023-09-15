@@ -1,0 +1,6 @@
+ase2sprkkr.common.configuration\_containers.DisabledAttributeError
+==================================================================
+
+.. currentmodule:: ase2sprkkr.common.configuration_containers
+
+.. autoexception:: DisabledAttributeError

@@ -46,6 +46,7 @@ Full name: **ase2sprkkr.common**
      ase2sprkkr.common.directory
      ase2sprkkr.common.doc
      ase2sprkkr.common.formats
+     ase2sprkkr.common.generated_configuration_definitions
      ase2sprkkr.common.grammar
      ase2sprkkr.common.grammar_types
      ase2sprkkr.common.init_tests
@@ -54,6 +55,7 @@ Full name: **ase2sprkkr.common**
      ase2sprkkr.common.options
      ase2sprkkr.common.process_output_reader
      ase2sprkkr.common.test
+     ase2sprkkr.common.tools
      ase2sprkkr.common.unique_values
   
   

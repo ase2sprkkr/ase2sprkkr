@@ -1,0 +1,64 @@
+projected\_bandstructure
+========================
+
+Full name: **ase2sprkkr.asr.projected\_bandstructure**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.projected_bandstructure.Result 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.projected_bandstructure
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_bs_sampling
+      get_orbital_ldos
+      get_pie_markers
+      get_pie_slice
+      get_yl_ordering
+      projected_bs_pbe
+      webpanel
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

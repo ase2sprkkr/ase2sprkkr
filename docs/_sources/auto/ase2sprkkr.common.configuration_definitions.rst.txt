@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.configuration_definitions.BaseDefinition  ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition  ase2sprkkr.common.configuration_definitions.ContainerDefinition  ase2sprkkr.common.configuration_definitions.MergeDictAdaptor  ase2sprkkr.common.configuration_definitions.SectionDefinition  ase2sprkkr.common.configuration_definitions.ValueDefinition 
+.. inheritance-diagram::  ase2sprkkr.common.configuration_definitions.BaseDefinition  ase2sprkkr.common.configuration_definitions.ConfigurationRootDefinition  ase2sprkkr.common.configuration_definitions.ContainerDefinition  ase2sprkkr.common.configuration_definitions.ControlDefinition  ase2sprkkr.common.configuration_definitions.Gather  ase2sprkkr.common.configuration_definitions.Ignored  ase2sprkkr.common.configuration_definitions.MergeDictAdaptor  ase2sprkkr.common.configuration_definitions.RealItemDefinition  ase2sprkkr.common.configuration_definitions.SectionDefinition  ase2sprkkr.common.configuration_definitions.SeparatorDefinition  ase2sprkkr.common.configuration_definitions.Stub  ase2sprkkr.common.configuration_definitions.Switch  ase2sprkkr.common.configuration_definitions.ValueDefinition  ase2sprkkr.common.configuration_definitions.VirtualDefinition 
       :parts: 1
 
 |
@@ -31,7 +31,9 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
       :template: custom-base-template.rst
    
       add_excluded_names_condition
-      unique_dict
+      dict_from_parsed
+      gather
+      switch
    
    
 
@@ -47,9 +49,17 @@ Full name: **ase2sprkkr.common.configuration\_definitions**
       BaseDefinition
       ConfigurationRootDefinition
       ContainerDefinition
+      ControlDefinition
+      Gather
+      Ignored
       MergeDictAdaptor
+      RealItemDefinition
       SectionDefinition
+      SeparatorDefinition
+      Stub
+      Switch
       ValueDefinition
+      VirtualDefinition
    
    
 

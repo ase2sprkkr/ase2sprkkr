@@ -1,0 +1,54 @@
+database
+========
+
+Full name: **ase2sprkkr.asr.database**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.database
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.database.app
+     ase2sprkkr.asr.database.browser
+     ase2sprkkr.asr.database.check
+     ase2sprkkr.asr.database.clonetree
+     ase2sprkkr.asr.database.duplicates
+     ase2sprkkr.asr.database.fromtree
+     ase2sprkkr.asr.database.key_descriptions
+     ase2sprkkr.asr.database.material_fingerprint
+     ase2sprkkr.asr.database.merge
+     ase2sprkkr.asr.database.rmsd
+     ase2sprkkr.asr.database.templates
+     ase2sprkkr.asr.database.totree
+  
+  

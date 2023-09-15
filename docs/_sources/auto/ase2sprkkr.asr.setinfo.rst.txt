@@ -1,0 +1,58 @@
+setinfo
+=======
+
+Full name: **ase2sprkkr.asr.setinfo**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.setinfo.KeyValuePair 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.setinfo
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      check_key_value
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      KeyValuePair
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

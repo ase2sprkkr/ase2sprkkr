@@ -1,0 +1,71 @@
+grammar\_type
+=============
+
+Full name: **ase2sprkkr.common.grammar\_types.grammar\_type**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.grammar_types.grammar_type.GrammarType  ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.grammar_types.grammar_type
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      recognized_set_types
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      compare_numpy_values
+      format_for_type
+      type_from_default_value
+      type_from_type
+      type_from_value
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      GrammarType
+      TypedGrammarType
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

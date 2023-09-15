@@ -1,0 +1,36 @@
+GeneratedValueDefinition
+========================
+
+
+.. currentmodule:: ase2sprkkr.common.generated_configuration_definitions
+
+.. autoclass:: GeneratedValueDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.generated_configuration_definitions.GeneratedValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

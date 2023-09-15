@@ -1,0 +1,8 @@
+atoms2spgcell
+=============
+
+Full name: **ase2sprkkr.asr.utils.symmetry.atoms2spgcell**
+
+.. currentmodule:: ase2sprkkr.asr.utils.symmetry
+
+.. autofunction:: atoms2spgcell

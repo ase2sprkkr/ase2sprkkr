@@ -1,0 +1,8 @@
+<map id="inheritance40caee8619" name="inheritance40caee8619">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="4,4,138,21"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.options.BaseOption.html#ase2sprkkr.common.options.BaseOption" target="_top" title="A base placeholder for a leaf element of a grammar file," alt="" coords="157,4,258,21"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.CustomConfigurationValue.html#ase2sprkkr.sprkkr.configuration.CustomConfigurationValue" target="_top" title="Custom value (option) in a SPRKKR configuration file." alt="" coords="509,4,701,21"/>
+<area shape="rect" id="node4" href="#ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection" target="_top" title="Unknown sections of the potential file are mapped to a &quot;section&quot;" alt="" coords="721,4,956,21"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.options.CustomOption.html#ase2sprkkr.common.options.CustomOption" target="_top" title="An user&#45;added option (configuration value). It can be removed from the section." alt="" coords="377,4,489,21"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" target="_top" title="Class for one option (a configuration value) of SPRKKR &#45; either to" alt="" coords="278,4,357,21"/>
+</map>

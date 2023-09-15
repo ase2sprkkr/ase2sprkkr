@@ -12,11 +12,11 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -27,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> ASE2SPRKKR
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>ase2sprkkr.common.test.test_grammar_types</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.test.test_grammar_types</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,6 +94,7 @@
    <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">grammar_types</span> <span class="k">as</span> <span class="n">gt</span>
 <span class="kn">from</span> <span class="nn">..grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
@@ -97,9 +102,13 @@
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 
-<div class="viewcode-block" id="GrammarTest"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest">[docs]</a><span class="k">class</span> <span class="nc">GrammarTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="GrammarTest">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest">[docs]</a>
+<span class="k">class</span> <span class="nc">GrammarTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="GrammarTest.test_is_the_same_value"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest.test_is_the_same_value">[docs]</a>  <span class="k">def</span> <span class="nf">test_is_the_same_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GrammarTest.test_is_the_same_value">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest.test_is_the_same_value">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_is_the_same_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Integer</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Real</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">))</span>
@@ -110,17 +119,23 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])))</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">gt</span><span class="o">.</span><span class="n">Array</span><span class="o">.</span><span class="n">is_the_same_value</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span></div>
+
       <span class="c1">#TODO this is not working. However, it should not be needed, so i let it as it for now</span>
       <span class="c1">#self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,np.array([1,2])]),np.array([1,2,np.array([1,2])])))</span>
       <span class="c1">#self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,np.array([1,2])]),np.array([1,2,np.array([1,3])])))</span>
       <span class="c1">#self.assertTrue(gt.Array.is_the_same_value(np.array([1,2,(np.array([1,2]),1)]),np.array([1,2,(np.array([1,2]),1)])))</span>
       <span class="c1">#self.assertFalse(gt.Array.is_the_same_value(np.array([1,2,(np.array([1,2]),1)]),np.array([1,2,(np.array([1,3]),1)])))</span>
 
-<div class="viewcode-block" id="GrammarTest.test_types"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest.test_types">[docs]</a>  <span class="k">def</span> <span class="nf">test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GrammarTest.test_types">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest.test_types">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">_test_types</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="GrammarTest._test_types"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest._test_types">[docs]</a>  <span class="k">def</span> <span class="nf">_test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GrammarTest._test_types">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_grammar_types.GrammarTest.html#ase2sprkkr.common.test.test_grammar_types.GrammarTest._test_types">[docs]</a>
+  <span class="k">def</span> <span class="nf">_test_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">Error</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
 
     <span class="k">class</span> <span class="nc">Invalid</span><span class="p">:</span>
@@ -152,12 +167,21 @@
 
     <span class="k">def</span> <span class="nf">test_invalid</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
       <span class="k">try</span><span class="p">:</span>
-        <span class="n">val</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+          <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+          <span class="n">val</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">)</span>
       <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">pass</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_warning</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">(</span><span class="n">record</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">warning_list</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="n">warning_list</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">test_valid</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
       <span class="n">val</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
@@ -212,7 +236,7 @@
         <span class="p">(</span><span class="s1">&#39;-1e-2&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-2</span><span class="p">)</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Real</span><span class="p">(</span><span class="nb">min</span><span class="o">=-</span><span class="mf">5.</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -225,7 +249,8 @@
         <span class="p">(</span><span class="s1">&#39;-1e-2&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-2</span><span class="p">)</span>
         <span class="p">]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">15.</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">15.</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)]:</span> <span class="n">test_warning</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">String</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -244,7 +269,8 @@
          <span class="p">(</span><span class="s1">&#39;1 eV&#39;</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">Rydberg</span><span class="p">),</span>
          <span class="p">]:</span>
          <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;aaaa&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">)]:</span> <span class="n">test_warning</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
 
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">SetOf</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -280,7 +306,7 @@
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">YY</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">ZZZ</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[(</span>
-        <span class="sd">&quot;&quot;&quot; X YY ZZZ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; X YY ZZZ</span>
 <span class="sd">        1 dog 2.5</span>
 <span class="sd">        3 cat 3e-2&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="mf">2.5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="mf">3e-2</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;YY&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ZZZ&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)])</span>
         <span class="p">),</span>
@@ -298,11 +324,29 @@
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">YY</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">ZZZ</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">numbering</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[(</span>
-        <span class="sd">&quot;&quot;&quot; X YY ZZZ</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; X YY ZZZ</span>
 <span class="sd">        1 1 dog 2.5</span>
 <span class="sd">        2 3 cat 3e-2&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="mf">2.5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="mf">3e-2</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;YY&#39;</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ZZZ&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)])</span>
         <span class="p">)]:</span>
         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Y X</span>
+<span class="sd">        1 1</span>
+<span class="sd">        2 3&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+        <span class="p">)]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">numbering</span><span class="o">=</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[(</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Y X</span>
+<span class="sd">        1 1</span>
+<span class="sd">        2 3&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="p">)]:</span>
+        <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+
+
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">PotMixed</span><span class="o">.</span><span class="n">I</span>
     <span class="k">for</span> <span class="n">val</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">[</span>
@@ -349,7 +393,9 @@
          <span class="p">(</span><span class="s1">&#39;</span><span class="si">{40}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
          <span class="p">]:</span>
          <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;asasd&#39;</span><span class="p">,</span> <span class="mi">3</span> <span class="p">]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;asasd&#39;</span> <span class="p">]:</span> <span class="n">test_invalid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">r</span> <span class="ow">in</span> <span class="p">[</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mf">3.</span><span class="p">),</span> <span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mf">1.</span><span class="p">),</span><span class="n">a</span><span class="p">(</span><span class="mf">5.</span><span class="p">,</span><span class="mf">1.</span><span class="p">)),</span> <span class="p">((</span><span class="mf">7.</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">a</span><span class="p">(</span><span class="mf">7.</span><span class="p">,</span><span class="mf">3.</span><span class="p">))</span> <span class="p">]:</span> <span class="n">test_warning</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">3.</span><span class="p">],</span> <span class="mf">8.</span> <span class="p">]:</span> <span class="n">test_valid</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
     <span class="nb">type</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">Date</span><span class="p">()</span>
@@ -358,7 +404,9 @@
          <span class="p">(</span><span class="s1">&#39;23.01.2020&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">23</span><span class="p">)</span> <span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;40&#39;</span><span class="p">,</span> <span class="n">Error</span><span class="p">),</span>
          <span class="p">]:</span>
-         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span></div></div>
+         <span class="n">test</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

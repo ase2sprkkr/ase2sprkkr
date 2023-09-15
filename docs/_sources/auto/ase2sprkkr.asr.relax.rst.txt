@@ -1,0 +1,69 @@
+relax
+=====
+
+Full name: **ase2sprkkr.asr.relax**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.relax.Result  ase2sprkkr.asr.relax.SpgAtoms  ase2sprkkr.asr.relax.myBFGS 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.relax
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      is_relax_done
+      relax
+      set_initial_magnetic_moments
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Result
+      SpgAtoms
+      myBFGS
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      BrokenSymmetryError
+   
+   
+
+
+  
+  
+  

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.test.mocks.gpaw.calculator &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.test.mocks.gpaw.calculator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.test.mocks.gpaw.calculator</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">encode_json</span>
+<span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">kpts2ndarray</span><span class="p">,</span> <span class="n">Calculator</span>
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Bohr</span><span class="p">,</span> <span class="n">Ha</span>
+<span class="kn">from</span> <span class="nn">ase.symbols</span> <span class="kn">import</span> <span class="n">Symbols</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">.mpi</span> <span class="kn">import</span> <span class="n">world</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
+
+
+<div class="viewcode-block" id="Parameters">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.Parameters.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.Parameters">[docs]</a>
+<span class="k">class</span> <span class="nc">Parameters</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dictionary for parameters.</span>
+
+<span class="sd">    Special feature: If param is a Parameters instance, then param.xc</span>
+<span class="sd">    is a shorthand for param[&#39;xc&#39;].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get attribute.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">dict</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set an attribute.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="WaveFunctions">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions">[docs]</a>
+<span class="k">class</span> <span class="nc">WaveFunctions</span><span class="p">:</span>
+<div class="viewcode-block" id="WaveFunctions.GridDescriptor">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.GridDescriptor">[docs]</a>
+    <span class="k">class</span> <span class="nc">GridDescriptor</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="WaveFunctions.KPointDescriptor">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.KPointDescriptor">[docs]</a>
+    <span class="k">class</span> <span class="nc">KPointDescriptor</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="WaveFunctions.BandDescriptor">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.WaveFunctions.BandDescriptor">[docs]</a>
+    <span class="k">class</span> <span class="nc">BandDescriptor</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="n">gd</span> <span class="o">=</span> <span class="n">GridDescriptor</span><span class="p">()</span>
+    <span class="n">bd</span> <span class="o">=</span> <span class="n">BandDescriptor</span><span class="p">()</span>
+    <span class="n">kd</span> <span class="o">=</span> <span class="n">KPointDescriptor</span><span class="p">()</span>
+    <span class="n">nvalence</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="Occupations">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations">[docs]</a>
+<span class="k">class</span> <span class="nc">Occupations</span><span class="p">:</span>
+<div class="viewcode-block" id="Occupations.todict">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.Occupations.todict">[docs]</a>
+    <span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fermi-dirac&quot;</span><span class="p">,</span> <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Setups">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.Setups.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.Setups">[docs]</a>
+<span class="k">class</span> <span class="nc">Setups</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="n">nvalence</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id_a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">setup</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">setup</span><span class="o">.</span><span class="n">Nv</span><span class="p">,</span> <span class="s1">&#39;paw&#39;</span><span class="p">,</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="ASRCalculator">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator">[docs]</a>
+<span class="k">class</span> <span class="nc">ASRCalculator</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mock of a generic ASE calculator.</span>
+
+<span class="sd">    This test calculator is specifically designed to look like the</span>
+<span class="sd">    GPAW calculator, and to make additional monkey patching easy. Each</span>
+<span class="sd">    of the public methods have an identical private method prefaced</span>
+<span class="sd">    with underscore that can be easily patch using the pytest</span>
+<span class="sd">    mocker.patch functionality. For example,</span>
+<span class="sd">    ASRCalculator.get_fermi_level has an identical</span>
+<span class="sd">    ASRCalculator._get_fermi_level method that can be easily mocked</span>
+<span class="sd">    up.</span>
+
+<span class="sd">    By default, the eigenvalues set up the calculator has some valence</span>
+<span class="sd">    bands with negative curvature and some conduction bands with</span>
+<span class="sd">    positive curvature. Furthermore, if the return value of</span>
+<span class="sd">    _get_band_gap is non-zero the valence and conduction bands will be</span>
+<span class="sd">    separated by a band gap. This provides an easy way to manipulate</span>
+<span class="sd">    the properties of a test material.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">implemented_properties</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;energy&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;forces&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stress&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dipole&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;magmom&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;magmoms&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;stresses&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;charges&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fermi_level&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gap&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;berry_phases&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">default_parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;kpts&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s2">&quot;gridsize&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;nbands&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">&quot;txt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">occupations</span> <span class="o">=</span> <span class="n">Occupations</span><span class="p">()</span>
+
+    <span class="n">wfs</span> <span class="o">=</span> <span class="n">WaveFunctions</span><span class="p">()</span>
+
+    <span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+
+<div class="viewcode-block" id="ASRCalculator.calculate">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.calculate">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate properties of atoms and set some necessary instance variables.</span>
+
+<span class="sd">        This is the main method that calculates the energy, forces and</span>
+<span class="sd">        other properties of the given structure. This method should</span>
+<span class="sd">        not be mocked. In stead mock the implementation of the</span>
+<span class="sd">        specific property you need to amend.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
+
+        <span class="c1"># These are reasonable instance attributes</span>
+        <span class="n">kpts</span> <span class="o">=</span> <span class="n">kpts2ndarray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">kpts</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kpts</span> <span class="o">=</span> <span class="n">kpts</span>
+        <span class="n">nbands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_bands</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_eigenvalues</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="p">),</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">nbands</span>
+
+        <span class="c1"># These are unreasonable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_setups</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">kd</span><span class="o">.</span><span class="n">nibzkpts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">kpts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">kd</span><span class="o">.</span><span class="n">weight_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_k_point_weights</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setups</span><span class="o">.</span><span class="n">nvalence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">nvalence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wfs</span><span class="o">.</span><span class="n">gd</span><span class="o">.</span><span class="n">cell_cv</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_cell</span><span class="p">()</span> <span class="o">/</span> <span class="n">Bohr</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;energy&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_potential_energy</span><span class="p">(),</span>
+            <span class="s2">&quot;forces&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_forces</span><span class="p">(),</span>
+            <span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_stress</span><span class="p">(),</span>
+            <span class="s2">&quot;dipole&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dipole_moment</span><span class="p">(),</span>
+            <span class="s2">&quot;magmom&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magmom</span><span class="p">(),</span>
+            <span class="s2">&quot;magmoms&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_magmoms</span><span class="p">(),</span>
+            <span class="s2">&quot;fermi_level&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_fermi_level</span><span class="p">(),</span>
+            <span class="s2">&quot;gap&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_band_gap</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="c1"># TODO: Fix this hack</span>
+        <span class="n">ASRCalculator</span><span class="o">.</span><span class="n">_gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;gap&quot;</span><span class="p">]</span>
+        <span class="n">ASRCalculator</span><span class="o">.</span><span class="n">_fermi_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;fermi_level&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;txt&#39;</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                    <span class="s1">&#39;results&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">}</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">txt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">txt</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Assume that this is a file-descriptor</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;txt&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">encode_json</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.set">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.set">[docs]</a>
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Calculator</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">spos_ac</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_scaled_positions</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ASRCalculator._get_scaled_positions">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_scaled_positions">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_scaled_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get scaled positions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">(</span><span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_setups">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setups">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_setups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all setups.&quot;&quot;&quot;</span>
+        <span class="n">setups</span> <span class="o">=</span> <span class="n">Setups</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">():</span>
+            <span class="n">setups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_setup</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">setups</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_setup_fingerprint">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_fingerprint">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_setup_fingerprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_number</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get specific setup fingerprint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element_number : int</span>
+<span class="sd">            Atomic number of element.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;asdf1234&quot;</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_setup_symbol">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_symbol">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_setup_symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_number</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get setup symbol.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Symbols</span><span class="p">([</span><span class="n">element_number</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_setup_nvalence">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup_nvalence">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_setup_nvalence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_number</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of valence electrons.</span>
+
+<span class="sd">        This also dynamically controls the number of valence bands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_setup">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_setup">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_number</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get specific setup.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element_number : int</span>
+<span class="sd">            Atomic number of element.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SimpleNamespace</span>
+<span class="sd">            A SimpleNamespace that resembles a GPAW Setups class.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">setup</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_setup_symbol</span><span class="p">(</span><span class="n">element_number</span><span class="p">),</span>
+                                <span class="n">fingerprint</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_setup_fingerprint</span><span class="p">(</span>
+                                    <span class="n">element_number</span><span class="p">),</span>
+                                <span class="n">Nv</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_setup_nvalence</span><span class="p">(</span><span class="n">element_number</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">setup</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_berry_phases">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_berry_phases">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_berry_phases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">spin</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return berry phases.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dir : int</span>
+<span class="sd">            Which direction to return berry phases along.</span>
+<span class="sd">        spin : int</span>
+<span class="sd">            Spin channel.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            Berry phases along a specific axis</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,),</span> <span class="nb">float</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_band_gap">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_band_gap">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_band_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get band gap.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_dipole_moment">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_dipole_moment">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_dipole_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pos_av</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
+        <span class="n">charges_a</span> <span class="o">=</span> <span class="p">[</span><span class="n">setup</span><span class="o">.</span><span class="n">Nv</span> <span class="k">for</span> <span class="n">setup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setups</span><span class="p">]</span>
+        <span class="n">moment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">charges_a</span><span class="p">,</span> <span class="n">pos_av</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">moment</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_fermi_level">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_fermi_level">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_fermi_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cached fermi level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;fermi_level&#39;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_fermi_level">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_fermi_level">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_fermi_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get formi level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_forces">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_forces">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get atomic forces.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_magmom">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_magmom">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_magmom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total magnetic moment.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_magmoms">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_magmoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_magmoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get atomic magnetic moments.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_potential_energy">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_potential_energy">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_potential_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get potential energy.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator._get_stress">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator._get_stress">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cell stress.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_all_eigenvalues">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_all_eigenvalues">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_all_eigenvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all eigenvalues.</span>
+
+<span class="sd">        Constructs all eigenvalues for the test calculator. The</span>
+<span class="sd">        valence bands will have a negative curvature and the number of</span>
+<span class="sd">        valence bands are determined by</span>
+<span class="sd">        :py:meth:`ASRCalculator.get_number_of_valence_electrons`. Conduction</span>
+<span class="sd">        bands have positive curvature and are separated from the</span>
+<span class="sd">        valence bands by a bandgap. The band gap is obtained from</span>
+<span class="sd">        :py:meth:`ASRCalculator._get_band_gap`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">icell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_reciprocal_cell</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">Bohr</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">gridsize</span>
+        <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span> <span class="o">**</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">-</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">eps_kn</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kpts</span> <span class="o">+</span> <span class="n">offsets</span><span class="p">,</span> <span class="n">icell</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">eps_kn</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="n">nvalence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">()</span>
+        <span class="n">nvalencebands</span> <span class="o">=</span> <span class="n">nvalence</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_band_gap</span><span class="p">()</span>
+        <span class="n">eps_kn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="o">-</span><span class="n">eps_kn</span><span class="p">[:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span> <span class="o">-</span><span class="n">nvalencebands</span><span class="p">:],</span>
+             <span class="n">eps_kn</span> <span class="o">+</span> <span class="n">gap</span> <span class="o">/</span> <span class="n">Ha</span><span class="p">),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">nbands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_bands</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">eps_kn</span><span class="p">[:,</span> <span class="p">:</span><span class="n">nbands</span><span class="p">]</span> <span class="o">*</span> <span class="n">Ha</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_eigenvalues">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_eigenvalues">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_eigenvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kpt</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the eigenvalues of a specific k-point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        kpt : int</span>
+<span class="sd">            K-point index.</span>
+<span class="sd">        spin : int</span>
+<span class="sd">            Spin channel.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span><span class="p">[</span><span class="n">kpt</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_k_point_weights">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_k_point_weights">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_k_point_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all k-point weights.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_ibz_k_points">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_ibz_k_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_ibz_k_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an array of all irreducible k-points.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_bz_k_points">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_bz_k_points">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bz_k_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an array of all k-points.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_bz_to_ibz_map">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_bz_to_ibz_map">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bz_to_ibz_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get BZ to IBZ map.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kpts</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_number_of_spins">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_spins">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_spins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of spins in calculation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_number_of_bands">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_bands">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get total number of bands in calculation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">nbands</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">nbands</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="o">/</span> <span class="mi">100</span>
+                <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">nbands</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+                        <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">nbands</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">nbands</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_number_of_conduction_electrons">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_conduction_electrons">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_conduction_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of conduction electrons per unit cell.&quot;&quot;&quot;</span>
+        <span class="n">fermi_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_fermi_level</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fermi_level</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">nkpts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_bz_k_points</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eigenvalues</span> <span class="o">&lt;</span> <span class="n">fermi_level</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">nkpts</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_number_of_electrons">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_electrons">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of electrons.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_valence_electrons</span><span class="p">()</span> <span class="o">+</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_conduction_electrons</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_number_of_valence_electrons">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_number_of_valence_electrons">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_valence_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of valence electrons.</span>
+
+<span class="sd">        The number of valence electrons exclude any extra doping there</span>
+<span class="sd">        might exist due to any additional doping.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">4</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.write">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.write">[docs]</a>
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write calculator to file.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">write_json</span>
+        <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+        <span class="c1"># We have to do a deep copy because the current version of</span>
+        <span class="c1"># ase.calculators.calculator.KPoints overwrites the __dict__</span>
+        <span class="c1"># attribute of KPoints upon writing the first time.</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;atoms&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span>
+            <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="n">write_json</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">calc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.read">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.read">[docs]</a>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read calculator from file.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+
+        <span class="n">saved_calc</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="o">**</span><span class="n">saved_calc</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">saved_calc</span><span class="p">[</span><span class="s1">&#39;atoms&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.get_electrostatic_potential">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.get_electrostatic_potential">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_electrostatic_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get electrostatic potential.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.diagonalize_full_hamiltonian">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.diagonalize_full_hamiltonian">[docs]</a>
+    <span class="k">def</span> <span class="nf">diagonalize_full_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ecut</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Diagonalize full Hamiltonian.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.dos">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.dos">[docs]</a>
+    <span class="k">def</span> <span class="nf">dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shift_fermi_level</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DOSCalculator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ASRCalculator.fixed_density">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator.fixed_density">[docs]</a>
+    <span class="k">def</span> <span class="nf">fixed_density</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DOSCalculator">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator">[docs]</a>
+<span class="k">class</span> <span class="nc">DOSCalculator</span><span class="p">:</span>
+<div class="viewcode-block" id="DOSCalculator.__init__">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fermi_level</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fermi_level</span> <span class="o">=</span> <span class="n">fermi_level</span></div>
+
+
+<div class="viewcode-block" id="DOSCalculator.raw_dos">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.raw_dos">[docs]</a>
+    <span class="k">def</span> <span class="nf">raw_dos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DOSCalculator.raw_pdos">
+<a class="viewcode-back" href="../../../../../../auto/ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.html#ase2sprkkr.asr.test.mocks.gpaw.calculator.DOSCalculator.raw_pdos">[docs]</a>
+    <span class="k">def</span> <span class="nf">raw_pdos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

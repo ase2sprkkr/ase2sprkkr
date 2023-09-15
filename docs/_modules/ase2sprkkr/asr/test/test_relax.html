@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.test.test_relax &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.test.test_relax</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.test.test_relax</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">BrokenSymmetryError</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="test_relax_basic">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_basic.html#ase2sprkkr.asr.test.test_relax.test_relax_basic">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<span class="k">def</span> <span class="nf">test_relax_basic</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">mockgpaw</span><span class="p">,</span> <span class="n">test_material</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that the relaxation recipe actually produces a structure.json.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">relax</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">relax</span><span class="p">(</span><span class="n">test_material</span><span class="p">,</span>
+                    <span class="n">calculator</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpaw&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;kpts&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;density&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                    <span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_relax_magmoms">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_magmoms.html#ase2sprkkr.asr.test.test_relax.test_relax_magmoms">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;initial_magmoms&#39;</span><span class="p">,</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;set_magmoms&#39;</span><span class="p">,</span> <span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]))</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;final_magmoms&#39;</span><span class="p">,</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="k">def</span> <span class="nf">test_relax_magmoms</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">mockgpaw</span><span class="p">,</span> <span class="n">mocker</span><span class="p">,</span> <span class="n">test_material</span><span class="p">,</span>
+                       <span class="n">initial_magmoms</span><span class="p">,</span> <span class="n">set_magmoms</span><span class="p">,</span> <span class="n">final_magmoms</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that the initial magnetic moments are correctly set.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">asr.relax</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="n">mocker</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">GPAW</span><span class="p">,</span> <span class="s2">&quot;_get_magmoms&quot;</span><span class="p">)</span>
+    <span class="n">spy</span> <span class="o">=</span> <span class="n">mocker</span><span class="o">.</span><span class="n">spy</span><span class="p">(</span><span class="n">asr</span><span class="o">.</span><span class="n">relax</span><span class="p">,</span> <span class="s2">&quot;set_initial_magnetic_moments&quot;</span><span class="p">)</span>
+    <span class="n">GPAW</span><span class="o">.</span><span class="n">_get_magmoms</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">test_material</span><span class="p">),</span> <span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+                                      <span class="o">+</span> <span class="n">final_magmoms</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">set_magmoms</span><span class="p">:</span>
+        <span class="n">test_material</span><span class="o">.</span><span class="n">set_initial_magnetic_moments</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">initial_magmoms</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_material</span><span class="p">))</span>
+
+    <span class="n">test_material</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">)</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">([])</span>
+
+    <span class="n">relaxed</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">relaxed</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;initial_magmoms&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">final_magmoms</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">relaxed</span><span class="o">.</span><span class="n">get_magnetic_moments</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">relaxed</span><span class="o">.</span><span class="n">get_initial_magnetic_moments</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+
+    <span class="c1"># If user has set magnetic moments, make sure that we don&#39;t touch them</span>
+    <span class="k">if</span> <span class="n">test_material</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;initial_magmoms&#39;</span><span class="p">):</span>
+        <span class="n">spy</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">spy</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="test_relax_emt">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_emt.html#ase2sprkkr.asr.test.test_relax.test_relax_emt">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">,</span> <span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;Pd&#39;</span><span class="p">,</span> <span class="s1">&#39;Pt&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_relax_emt</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">relax</span>
+    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+
+    <span class="n">unrelaxed</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">relax</span><span class="p">(</span><span class="n">unrelaxed</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;emt&#39;</span><span class="p">})</span></div>
+
+
+
+<div class="viewcode-block" id="test_relax_emt_fail_broken_symmetry">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_emt_fail_broken_symmetry.html#ase2sprkkr.asr.test.test_relax.test_relax_emt_fail_broken_symmetry">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">,</span> <span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;Pd&#39;</span><span class="p">,</span> <span class="s1">&#39;Pt&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_relax_emt_fail_broken_symmetry</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                                        <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that a broken symmetry raises an error.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">relax</span>
+    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+    <span class="kn">from</span> <span class="nn">ase.calculators.emt</span> <span class="kn">import</span> <span class="n">EMT</span>
+
+    <span class="n">unrelaxed</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_stress</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">EMT</span><span class="p">,</span> <span class="s1">&#39;get_stress&#39;</span><span class="p">,</span> <span class="n">get_stress</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">BrokenSymmetryError</span><span class="p">)</span> <span class="k">as</span> <span class="n">excinfo</span><span class="p">:</span>
+        <span class="n">relax</span><span class="p">(</span><span class="n">unrelaxed</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;emt&#39;</span><span class="p">},</span> <span class="n">enforce_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="s1">&#39;The symmetry was broken during the relaxation!&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">excinfo</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="test_relax_find_higher_symmetry">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_find_higher_symmetry.html#ase2sprkkr.asr.test.test_relax.test_relax_find_higher_symmetry">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<span class="k">def</span> <span class="nf">test_relax_find_higher_symmetry</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that a structure is allowed to find a higher symmetry without failing.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span><span class="p">,</span> <span class="n">SpgAtoms</span><span class="p">,</span> <span class="n">myBFGS</span>
+
+    <span class="n">diamond</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+    <span class="n">natoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">diamond</span><span class="p">)</span>
+    <span class="n">sposoriginal_ac</span> <span class="o">=</span> <span class="n">diamond</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()</span>
+    <span class="n">spos_ac</span> <span class="o">=</span> <span class="n">diamond</span><span class="o">.</span><span class="n">get_scaled_positions</span><span class="p">()</span>
+    <span class="n">spos_ac</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.1</span>
+    <span class="n">diamond</span><span class="o">.</span><span class="n">set_scaled_positions</span><span class="p">(</span><span class="n">spos_ac</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_stress</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">6</span><span class="p">,),</span> <span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_forces</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">natoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">irun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">set_scaled_positions</span><span class="p">(</span><span class="n">sposoriginal_ac</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="kc">False</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">SpgAtoms</span><span class="p">,</span> <span class="s1">&#39;get_forces&#39;</span><span class="p">,</span> <span class="n">get_forces</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">SpgAtoms</span><span class="p">,</span> <span class="s1">&#39;get_stress&#39;</span><span class="p">,</span> <span class="n">get_stress</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">myBFGS</span><span class="p">,</span> <span class="s1">&#39;irun&#39;</span><span class="p">,</span> <span class="n">irun</span><span class="p">)</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">diamond</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;emt&#39;</span><span class="p">})</span>
+
+    <span class="n">captured</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;The spacegroup has changed during relaxation. &quot;</span> <span class="ow">in</span> <span class="n">captured</span><span class="o">.</span><span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="test_relax_si_gpaw">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_si_gpaw.html#ase2sprkkr.asr.test.test_relax.test_relax_si_gpaw">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test_gpaw</span>
+<span class="k">def</span> <span class="nf">test_relax_si_gpaw</span><span class="p">(</span><span class="n">asr_tmpdir</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+    <span class="kn">from</span> <span class="nn">asr.setup.materials</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setupmaterial</span>
+    <span class="kn">from</span> <span class="nn">asr.setup.params</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setupparams</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">relax</span>
+    <span class="n">setupmaterial</span><span class="o">.</span><span class="n">cli</span><span class="p">([</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;Si2&quot;</span><span class="p">])</span>
+    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;materials.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;unrelaxed.json&quot;</span><span class="p">)</span>
+    <span class="n">relaxargs</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;{&#39;mode&#39;:{&#39;ecut&#39;:200,&#39;dedecut&#39;:&#39;estimate&#39;,...},&quot;</span>
+        <span class="s2">&quot;&#39;kpts&#39;:{&#39;density&#39;:1,&#39;gamma&#39;:True},...}&quot;</span>
+    <span class="p">)</span>
+    <span class="n">setupparams</span><span class="p">([</span><span class="s1">&#39;asr.relax:calculator&#39;</span><span class="p">,</span> <span class="n">relaxargs</span><span class="p">])</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">relax</span><span class="o">.</span><span class="n">cli</span><span class="p">([])</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">3.978</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.001</span></div>
+
+
+
+<div class="viewcode-block" id="test_relax_bn_gpaw">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_bn_gpaw.html#ase2sprkkr.asr.test.test_relax.test_relax_bn_gpaw">[docs]</a>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test_gpaw</span>
+<span class="k">def</span> <span class="nf">test_relax_bn_gpaw</span><span class="p">(</span><span class="n">asr_tmpdir</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.setup.params</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setupparams</span>
+    <span class="kn">from</span> <span class="nn">.materials</span> <span class="kn">import</span> <span class="n">BN</span>
+    <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">relax</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+
+    <span class="n">BN</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;unrelaxed.json&#39;</span><span class="p">)</span>
+    <span class="n">relaxargs</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;{&#39;mode&#39;:{&#39;ecut&#39;:300,&#39;dedecut&#39;:&#39;estimate&#39;,...},&quot;</span>
+        <span class="s2">&quot;&#39;kpts&#39;:{&#39;density&#39;:2,&#39;gamma&#39;:True},...}&quot;</span>
+    <span class="p">)</span>
+    <span class="n">setupparams</span><span class="p">([</span><span class="s1">&#39;asr.relax:calculator&#39;</span><span class="p">,</span> <span class="n">relaxargs</span><span class="p">])</span>
+    <span class="n">relax</span><span class="o">.</span><span class="n">cli</span><span class="p">([])</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.relax.json&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

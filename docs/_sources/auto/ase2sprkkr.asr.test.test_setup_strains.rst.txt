@@ -1,0 +1,43 @@
+test\_setup\_strains
+====================
+
+Full name: **ase2sprkkr.asr.test.test\_setup\_strains**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.test_setup_strains
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      test_setup_strains
+      test_setup_strains_get_relevant_strains
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

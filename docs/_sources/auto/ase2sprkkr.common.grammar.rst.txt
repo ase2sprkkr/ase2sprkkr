@@ -28,8 +28,6 @@ Full name: **ase2sprkkr.common.grammar**
       optional_line_end
       line_end
       end_of_file
-      separator_pattern
-      separator
       optional_quote
    
    
@@ -48,6 +46,8 @@ Full name: **ase2sprkkr.common.grammar**
       delimitedList
       generate_grammar
       replace_whitechars
+      separator_grammar
+      separator_pattern
    
    
 

@@ -1,0 +1,53 @@
+gpaw
+====
+
+Full name: **ase2sprkkr.asr.test.mocks.gpaw**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test.mocks.gpaw
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.mocks.gpaw.berryphase
+     ase2sprkkr.asr.test.mocks.gpaw.calculator
+     ase2sprkkr.asr.test.mocks.gpaw.hybrids
+     ase2sprkkr.asr.test.mocks.gpaw.kpt_descriptor
+     ase2sprkkr.asr.test.mocks.gpaw.mpi
+     ase2sprkkr.asr.test.mocks.gpaw.occupations
+     ase2sprkkr.asr.test.mocks.gpaw.response
+     ase2sprkkr.asr.test.mocks.gpaw.spinorbit
+     ase2sprkkr.asr.test.mocks.gpaw.symmetry
+     ase2sprkkr.asr.test.mocks.gpaw.utilities
+     ase2sprkkr.asr.test.mocks.gpaw.xc
+  
+  

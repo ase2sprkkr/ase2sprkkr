@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.asr.bandstructure &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.asr.bandstructure</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.asr.bandstructure</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Electronic band structures.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">singleprec_dict</span><span class="p">,</span> <span class="n">prepare_result</span>
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.bandstructure&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">],</span>
+         <span class="n">creates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.gs@calculate&#39;</span><span class="p">])</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--kptpath&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Custom kpoint path.&#39;</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--npoints&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="nd">@option</span><span class="p">(</span><span class="s1">&#39;--emptybands&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">kptpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">npoints</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
+              <span class="n">emptybands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASRResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate electronic band structure.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">kptpath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bandpath</span><span class="p">(</span><span class="n">npoints</span><span class="o">=</span><span class="n">npoints</span><span class="p">,</span> <span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bandpath</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">kptpath</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="n">npoints</span><span class="p">,</span>
+                                   <span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span>
+
+    <span class="n">convbands</span> <span class="o">=</span> <span class="n">emptybands</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">parms</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;basis&#39;</span><span class="p">:</span> <span class="s1">&#39;dzp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;nbands&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">emptybands</span><span class="p">,</span>
+        <span class="s1">&#39;txt&#39;</span><span class="p">:</span> <span class="s1">&#39;bs.txt&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;fixdensity&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;kpts&#39;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s1">&#39;convergence&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;bands&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">convbands</span><span class="p">},</span>
+        <span class="s1">&#39;symmetry&#39;</span><span class="p">:</span> <span class="s1">&#39;off&#39;</span><span class="p">}</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">parms</span><span class="p">)</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">()</span>
+    <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="bs_pbe_html">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe_html.html#ase2sprkkr.asr.bandstructure.bs_pbe_html">[docs]</a>
+<span class="k">def</span> <span class="nf">bs_pbe_html</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+                <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-bs.html&#39;</span><span class="p">,</span>
+                <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">),</span>
+                <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">plotly</span>
+    <span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">kpts</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">kpts</span>
+    <span class="n">ef</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;&lt;i&gt;E&lt;/i&gt; - &lt;i&gt;E&lt;/i&gt;&lt;sub&gt;vac&lt;/sub&gt; [eV]&#39;</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;&lt;i&gt;E&lt;/i&gt; - &lt;i&gt;E&lt;/i&gt;&lt;sub&gt;F&lt;/sub&gt; [eV]&#39;</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="n">ef</span>
+
+    <span class="n">gaps</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">):</span>
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">ef</span> <span class="o">-</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">):</span>
+        <span class="n">emax</span> <span class="o">=</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">,</span> <span class="n">ef</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">emax</span> <span class="o">=</span> <span class="n">ef</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="n">e_skn</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">e_skn</span><span class="o">.</span><span class="n">shape</span>
+    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
+    <span class="n">xcoords</span><span class="p">,</span> <span class="n">label_xcoords</span><span class="p">,</span> <span class="n">orig_labels</span> <span class="o">=</span> <span class="n">labels_from_kpts</span><span class="p">(</span><span class="n">kpts</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+    <span class="n">xcoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">xcoords</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="c1"># colors_s = plt.get_cmap(&#39;viridis&#39;)([0, 1])  # color for sz = 0</span>
+    <span class="n">e_kn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">e_skn</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scattergl</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">xcoords</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">e_kn</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;PBE no SOC&#39;</span><span class="p">,</span>
+        <span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#999999&#39;</span><span class="p">))</span>
+    <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
+
+    <span class="n">e_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">kpts</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">kpts</span>
+    <span class="n">ef</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+    <span class="n">sz_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;sz_mk&#39;</span><span class="p">]</span>
+
+    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
+    <span class="n">xcoords</span><span class="p">,</span> <span class="n">label_xcoords</span><span class="p">,</span> <span class="n">orig_labels</span> <span class="o">=</span> <span class="n">labels_from_kpts</span><span class="p">(</span><span class="n">kpts</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">e_mk</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">perm</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">sz_mk</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">e_mk</span> <span class="o">=</span> <span class="n">e_mk</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">sz_mk</span> <span class="o">=</span> <span class="n">sz_mk</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">xcoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">xcoords</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">xcoords</span> <span class="o">=</span> <span class="n">xcoords</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Unicode for &lt;S_z&gt;</span>
+    <span class="n">sdir</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spin_axis&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    <span class="n">cbtitle</span> <span class="o">=</span> <span class="s1">&#39;&amp;#x3008; &lt;i&gt;&lt;b&gt;S&lt;/b&gt;&lt;/i&gt;&lt;sub&gt;</span><span class="si">{}</span><span class="s1">&lt;/sub&gt; &amp;#x3009;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sdir</span><span class="p">)</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scattergl</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">xcoords</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">e_mk</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;markers&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;PBE&#39;</span><span class="p">,</span>
+        <span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">sz_mk</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+            <span class="n">colorscale</span><span class="o">=</span><span class="s1">&#39;Viridis&#39;</span><span class="p">,</span>
+            <span class="n">showscale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">tickmode</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">,</span>
+                <span class="n">tickvals</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="n">ticktext</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-1&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">cbtitle</span><span class="p">,</span>
+                <span class="n">titleside</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)))</span>
+    <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trace</span><span class="p">)</span>
+
+    <span class="n">linetrace</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">xcoords</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)],</span>
+        <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="n">ef</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span> <span class="n">ef</span> <span class="o">-</span> <span class="n">reference</span><span class="p">],</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;lines&#39;</span><span class="p">,</span>
+        <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;rgb(0, 0, 0)&#39;</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dash</span><span class="o">=</span><span class="s1">&#39;dash&#39;</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Fermi level&#39;</span><span class="p">)</span>
+    <span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">linetrace</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pretty</span><span class="p">(</span><span class="n">kpt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kpt</span> <span class="o">==</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span>
+            <span class="n">kpt</span> <span class="o">=</span> <span class="s1">&#39;&amp;#x393;&#39;</span>  <span class="c1"># Gamma in unicode</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">kpt</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">kpt</span> <span class="o">=</span> <span class="n">kpt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;$_&#39;</span> <span class="o">+</span> <span class="n">kpt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span>
+        <span class="k">return</span> <span class="n">kpt</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">pretty</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">orig_labels</span><span class="p">]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">label_xcoords</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">label_xcoords</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">bandxaxis</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">XAxis</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;k-points&quot;</span><span class="p">,</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">xcoords</span><span class="p">)],</span>
+        <span class="n">showgrid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">showline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">ticks</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">showticklabels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">mirror</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">ticktext</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+        <span class="n">tickvals</span><span class="o">=</span><span class="n">label_xcoords</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">bandyaxis</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">YAxis</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+        <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="n">emin</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span> <span class="n">emax</span> <span class="o">-</span> <span class="n">reference</span><span class="p">],</span>
+        <span class="n">showgrid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">showline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">zeroline</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">mirror</span><span class="o">=</span><span class="s2">&quot;ticks&quot;</span><span class="p">,</span>
+        <span class="n">ticks</span><span class="o">=</span><span class="s2">&quot;inside&quot;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">tickwidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">zerolinewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">bandlayout</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+        <span class="n">xaxis</span><span class="o">=</span><span class="n">bandxaxis</span><span class="p">,</span>
+        <span class="n">yaxis</span><span class="o">=</span><span class="n">bandyaxis</span><span class="p">,</span>
+        <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">hovermode</span><span class="o">=</span><span class="s1">&#39;closest&#39;</span><span class="p">,</span>
+        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+        <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">))</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">traces</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">bandlayout</span><span class="p">}</span>
+    <span class="c1"># fig[&#39;layout&#39;][&#39;margin&#39;] = {&#39;t&#39;: 40, &#39;r&#39;: 100}</span>
+    <span class="c1"># fig[&#39;layout&#39;][&#39;hovermode&#39;] = &#39;closest&#39;</span>
+    <span class="c1"># fig[&#39;layout&#39;][&#39;legend&#39;] =</span>
+
+    <span class="n">plot_html</span> <span class="o">=</span> <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">include_plotlyjs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>
+    <span class="c1"># plot_html = &#39;&#39;.join([&#39;&lt;div style=&quot;width: 1000px;&#39;,</span>
+    <span class="c1">#                      &#39;height=1000px;&quot;&gt;&#39;,</span>
+    <span class="c1">#                      plot_html,</span>
+    <span class="c1">#                      &#39;&lt;/div&gt;&#39;])</span>
+
+    <span class="n">inds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plot_html</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span>
+            <span class="n">inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">plotdivid</span> <span class="o">=</span> <span class="n">plot_html</span><span class="p">[</span><span class="n">inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">resize_script</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;&#39;</span>
+        <span class="s1">&#39;&lt;script type=&quot;text/javascript&quot;&gt;&#39;</span>
+        <span class="s1">&#39;window.addEventListener(&quot;resize&quot;, function(){{&#39;</span>
+        <span class="s1">&#39;Plotly.Plots.resize(document.getElementById(&quot;</span><span class="si">{id}</span><span class="s1">&quot;));}});&#39;</span>
+        <span class="s1">&#39;&lt;/script&gt;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">plotdivid</span><span class="p">)</span>
+
+    <span class="c1"># Insert plotly.js</span>
+    <span class="n">plotlyjs</span> <span class="o">=</span> <span class="s1">&#39;&lt;script src=&quot;https://cdn.plot.ly/plotly-latest.min.js&quot;&gt;&lt;/script&gt;&#39;</span>
+
+    <span class="n">html</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+        <span class="s1">&#39;&lt;html&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;/head&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;body&gt;&#39;</span><span class="p">,</span> <span class="n">plotlyjs</span><span class="p">,</span>
+        <span class="n">plot_html</span><span class="p">,</span> <span class="n">resize_script</span><span class="p">,</span> <span class="s1">&#39;&lt;/body&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;/html&gt;&#39;</span>
+    <span class="p">])</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="add_bs_pbe">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.add_bs_pbe.html#ase2sprkkr.asr.bandstructure.add_bs_pbe">[docs]</a>
+<span class="k">def</span> <span class="nf">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot pbe with soc on ax.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">e_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+    <span class="n">xcoords</span><span class="p">,</span> <span class="n">label_xcoords</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">labels_from_kpts</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">kpts</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">e_k</span> <span class="ow">in</span> <span class="n">e_mk</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xcoords</span><span class="p">,</span> <span class="n">e_k</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;PBE&#39;</span><span class="p">)</span>
+    <span class="n">ef</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">ef</span> <span class="o">-</span> <span class="n">reference</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+
+<div class="viewcode-block" id="plot_with_colors">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.plot_with_colors.html#ase2sprkkr.asr.bandstructure.plot_with_colors">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_with_colors</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span>
+                     <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">emin</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span>
+                     <span class="n">emax</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">show</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">energies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">clabel</span><span class="o">=</span><span class="s1">&#39;$s_z$&#39;</span><span class="p">,</span>
+                     <span class="n">cmin</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+                     <span class="n">cmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                     <span class="n">sortcolors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                     <span class="n">loc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                     <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot band-structure with colors.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="c1"># if bs.ax is None:</span>
+    <span class="c1">#     ax = bs.prepare_plot(ax, emin, emax, ylabel)</span>
+    <span class="c1"># trying to find vertical lines and putt them in the back</span>
+
+    <span class="k">def</span> <span class="nf">vlines2back</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+        <span class="n">zmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">l</span><span class="o">.</span><span class="n">get_zorder</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">set_zorder</span><span class="p">(</span><span class="n">zmin</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">vlines2back</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">energies</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">xcoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">bs</span><span class="o">.</span><span class="n">xcoords</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">sortcolors</span><span class="p">:</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">colors</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">energies</span> <span class="o">=</span> <span class="n">energies</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">xcoords</span> <span class="o">=</span> <span class="n">xcoords</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">e_k</span><span class="p">,</span> <span class="n">c_k</span><span class="p">,</span> <span class="n">x_k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">energies</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">):</span>
+        <span class="n">things</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_k</span><span class="p">,</span> <span class="n">e_k</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c_k</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">cmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">cmax</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">colorbar</span><span class="p">:</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">things</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">clabel</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">bs</span><span class="o">.</span><span class="n">finish_plot</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">loc</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cbar</span></div>
+
+
+
+<div class="viewcode-block" id="bs_pbe">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe.html#ase2sprkkr.asr.bandstructure.bs_pbe">[docs]</a>
+<span class="k">def</span> <span class="nf">bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+           <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-bs.png&#39;</span><span class="p">,</span>
+           <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+           <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+           <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.patheffects</span> <span class="k">as</span> <span class="nn">path_effects</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">BandStructure</span><span class="p">,</span> <span class="n">BandStructurePlot</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">ef_nosoc</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+    <span class="n">ef_soc</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+    <span class="n">ref_nosoc</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">))</span>
+    <span class="n">ref_soc</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;efermi&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;evac&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$E - E_\mathrm</span><span class="si">{vac}</span><span class="s1">$ [eV]&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$E - E_\mathrm</span><span class="si">{F}</span><span class="s1">$ [eV]&#39;</span>
+
+    <span class="n">e_skn</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+    <span class="n">nspins</span> <span class="o">=</span> <span class="n">e_skn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">e_kn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">e_skn</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nspins</span><span class="p">)])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="n">gaps</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">):</span>
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;vbm&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">emin</span> <span class="o">=</span> <span class="n">ef_nosoc</span> <span class="o">-</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">):</span>
+        <span class="n">emax</span> <span class="o">=</span> <span class="n">gaps</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cbm&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">emax</span> <span class="o">=</span> <span class="n">ef_nosoc</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="n">bs</span> <span class="o">=</span> <span class="n">BandStructure</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">e_kn</span> <span class="o">-</span> <span class="n">ref_nosoc</span><span class="p">,</span> <span class="n">ef_soc</span> <span class="o">-</span> <span class="n">ref_soc</span><span class="p">)</span>
+    <span class="c1"># pbe without soc</span>
+    <span class="n">nosoc_style</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;0.8&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">e_skn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PBE no SOC&#39;</span><span class="p">,</span>
+        <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="n">lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">bsp</span> <span class="o">=</span> <span class="n">BandStructurePlot</span><span class="p">(</span><span class="n">bs</span><span class="p">)</span>
+    <span class="n">bsp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">emin</span><span class="o">=</span><span class="n">emin</span> <span class="o">-</span> <span class="n">ref_nosoc</span><span class="p">,</span>
+        <span class="n">emax</span><span class="o">=</span><span class="n">emax</span> <span class="o">-</span> <span class="n">ref_nosoc</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">nosoc_style</span><span class="p">)</span>
+    <span class="c1"># pbe with soc</span>
+    <span class="n">e_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+    <span class="n">sz_mk</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;bs_soc&#39;</span><span class="p">][</span><span class="s1">&#39;sz_mk&#39;</span><span class="p">]</span>
+    <span class="n">sdir</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spin_axis&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    <span class="n">colorbar</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">magstate</span> <span class="o">==</span> <span class="s1">&#39;NM&#39;</span> <span class="ow">and</span> <span class="n">row</span><span class="o">.</span><span class="n">has_inversion_symmetry</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">,</span> <span class="n">cbar</span> <span class="o">=</span> <span class="n">plot_with_colors</span><span class="p">(</span>
+        <span class="n">bsp</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">energies</span><span class="o">=</span><span class="n">e_mk</span> <span class="o">-</span> <span class="n">ref_soc</span><span class="p">,</span>
+        <span class="n">colors</span><span class="o">=</span><span class="n">sz_mk</span><span class="p">,</span>
+        <span class="n">colorbar</span><span class="o">=</span><span class="n">colorbar</span><span class="p">,</span>
+        <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">emin</span><span class="o">=</span><span class="n">emin</span> <span class="o">-</span> <span class="n">ref_soc</span><span class="p">,</span>
+        <span class="n">emax</span><span class="o">=</span><span class="n">emax</span> <span class="o">-</span> <span class="n">ref_soc</span><span class="p">,</span>
+        <span class="n">sortcolors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span>
+        <span class="n">clabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\langle S_</span><span class="si">{}</span><span class="s1"> \rangle $&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sdir</span><span class="p">),</span>
+        <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">cbar</span><span class="p">:</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">update_ticks</span><span class="p">()</span>
+    <span class="n">csz0</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;viridis&#39;</span><span class="p">)(</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># color for sz = 0</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PBE&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">csz0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$k$-points&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+    <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.01</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s1">&#39;$E_\mathrm</span><span class="si">{F}</span><span class="s1">$&#39;</span><span class="p">,</span>
+        <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">ef_soc</span> <span class="o">-</span> <span class="n">ref_soc</span><span class="p">),</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.25</span><span class="p">,</span>
+        <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+        <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+
+    <span class="n">text</span><span class="o">.</span><span class="n">set_path_effects</span><span class="p">([</span>
+        <span class="n">path_effects</span><span class="o">.</span><span class="n">Stroke</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">foreground</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+        <span class="n">path_effects</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+    <span class="p">])</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">show_legend</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="webpanel">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.webpanel.html#ase2sprkkr.asr.bandstructure.webpanel">[docs]</a>
+<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
+    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+
+    <span class="k">def</span> <span class="nf">rmxclabel</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="s1">&#39;Tuple[str, str, str]&#39;</span><span class="p">,</span>
+                  <span class="n">xcs</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Tuple[str, str, str]&#39;</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">rm</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">xc</span> <span class="ow">in</span> <span class="n">xcs</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xc</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">rm</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">d</span><span class="p">)</span>
+
+    <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Electronic band structure (PBE)&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;pbe-bs.png&#39;</span><span class="p">,</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;pbe-bs.html&#39;</span><span class="p">)],</span>
+                         <span class="p">[</span><span class="n">fig</span><span class="p">(</span><span class="s1">&#39;bz-with-gaps.png&#39;</span><span class="p">)]],</span>
+             <span class="s1">&#39;plot_descriptions&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">bs_pbe</span><span class="p">,</span>
+                                    <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;pbe-bs.png&#39;</span><span class="p">]},</span>
+                                   <span class="p">{</span><span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="n">bs_pbe_html</span><span class="p">,</span>
+                                    <span class="s1">&#39;filenames&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;pbe-bs.html&#39;</span><span class="p">]}],</span>
+             <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Result">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.Result.html#ase2sprkkr.asr.bandstructure.Result">[docs]</a>
+<span class="nd">@prepare_result</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
+
+    <span class="n">version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">bs_soc</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">bs_nosoc</span><span class="p">:</span> <span class="nb">dict</span>
+
+    <span class="n">key_descriptions</span> <span class="o">=</span> \
+        <span class="p">{</span>
+            <span class="s1">&#39;bs_soc&#39;</span><span class="p">:</span> <span class="s1">&#39;Bandstructure data with spin-orbit coupling.&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bs_nosoc&#39;</span><span class="p">:</span> <span class="s1">&#39;Bandstructure data without spin-orbit coupling.&#39;</span>
+        <span class="p">}</span>
+
+    <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
+
+
+
+<span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.bandstructure&#39;</span><span class="p">,</span>
+         <span class="n">requires</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;bs.gpw&#39;</span><span class="p">,</span> <span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;results-asr.structureinfo.json&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;results-asr.magnetic_anisotropy.json&#39;</span><span class="p">],</span>
+         <span class="n">dependencies</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;asr.bandstructure@calculate&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.gs&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;asr.structureinfo&#39;</span><span class="p">,</span> <span class="s1">&#39;asr.magnetic_anisotropy&#39;</span><span class="p">],</span>
+         <span class="n">returns</span><span class="o">=</span><span class="n">Result</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
+    <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">get_band_structure</span>
+    <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">BandPath</span>
+    <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">read_json</span>
+    <span class="kn">import</span> <span class="nn">copy</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">gpw2eigs</span>
+    <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span><span class="p">,</span> <span class="n">get_spin_index</span>
+
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">get_fermi_level</span><span class="p">()</span>
+    <span class="n">calc</span> <span class="o">=</span> <span class="n">GPAW</span><span class="p">(</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">,</span> <span class="n">txt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">kpts</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">BandPath</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;kpts&#39;</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="c1"># In this case path comes from a bandpath object</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">BandPath</span><span class="p">(</span><span class="n">kpts</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="s1">&#39;kpts&#39;</span><span class="p">],</span> <span class="n">cell</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">],</span>
+                            <span class="n">special_points</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="s1">&#39;special_points&#39;</span><span class="p">],</span>
+                            <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="s1">&#39;labelseq&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bandpath</span><span class="p">(</span><span class="n">pbc</span><span class="o">=</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">,</span>
+                                            <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span>
+                                            <span class="n">npoints</span><span class="o">=</span><span class="n">path</span><span class="p">[</span><span class="s1">&#39;npoints&#39;</span><span class="p">])</span>
+    <span class="n">bs</span> <span class="o">=</span> <span class="n">get_band_structure</span><span class="p">(</span><span class="n">calc</span><span class="o">=</span><span class="n">calc</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">ref</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">bsresults</span> <span class="o">=</span> <span class="n">bs</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span>
+
+    <span class="c1"># Save Fermi levels</span>
+    <span class="n">gsresults</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s1">&#39;results-asr.gs.json&#39;</span><span class="p">)</span>
+    <span class="n">efermi_nosoc</span> <span class="o">=</span> <span class="n">gsresults</span><span class="p">[</span><span class="s1">&#39;gaps_nosoc&#39;</span><span class="p">][</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+    <span class="n">bsresults</span><span class="p">[</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">efermi_nosoc</span>
+
+    <span class="c1"># We copy the bsresults dict because next we will add SOC</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bsresults</span><span class="p">)</span>  <span class="c1"># BS with no SOC</span>
+
+    <span class="c1"># Add spin orbit correction</span>
+    <span class="n">bsresults</span> <span class="o">=</span> <span class="n">bs</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span>
+
+    <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">get_spin_axis</span><span class="p">()</span>
+
+    <span class="c1"># We use a larger symmetry tolerance because we want to correctly</span>
+    <span class="c1"># color spins which doesn&#39;t always happen due to slightly broken</span>
+    <span class="c1"># symmetries, hence tolerance=1e-2.</span>
+    <span class="n">e_km</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">s_kvm</span> <span class="o">=</span> <span class="n">gpw2eigs</span><span class="p">(</span>
+        <span class="s1">&#39;bs.gpw&#39;</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span>
+        <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+    <span class="n">bsresults</span><span class="p">[</span><span class="s1">&#39;energies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e_km</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">efermi</span> <span class="o">=</span> <span class="n">gsresults</span><span class="p">[</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span>
+    <span class="n">bsresults</span><span class="p">[</span><span class="s1">&#39;efermi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">efermi</span>
+
+    <span class="c1"># Get spin projections for coloring of bandstructure</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">bsresults</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span>
+    <span class="n">npoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">kpts</span><span class="p">)</span>
+    <span class="n">s_mvk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">s_kvm</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">s_mvk</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">sz_mk</span> <span class="o">=</span> <span class="n">s_mvk</span><span class="p">[:,</span> <span class="n">get_spin_index</span><span class="p">(),</span> <span class="p">:]</span>  <span class="c1"># take x, y or z component</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sz_mk</span> <span class="o">=</span> <span class="n">s_mvk</span>
+
+    <span class="k">assert</span> <span class="n">sz_mk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">npoints</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;sz_mk has wrong dims, </span><span class="si">{</span><span class="n">npoints</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="n">bsresults</span><span class="p">[</span><span class="s1">&#39;sz_mk&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sz_mk</span>
+
+    <span class="k">return</span> <span class="n">Result</span><span class="o">.</span><span class="n">fromdata</span><span class="p">(</span>
+        <span class="n">bs_soc</span><span class="o">=</span><span class="n">singleprec_dict</span><span class="p">(</span><span class="n">bsresults</span><span class="p">),</span>
+        <span class="n">bs_nosoc</span><span class="o">=</span><span class="n">singleprec_dict</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;bs_nosoc&#39;</span><span class="p">])</span>
+    <span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="o">.</span><span class="n">cli</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

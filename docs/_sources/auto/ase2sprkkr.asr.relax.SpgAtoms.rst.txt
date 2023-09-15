@@ -1,0 +1,36 @@
+SpgAtoms
+========
+
+
+.. currentmodule:: ase2sprkkr.asr.relax
+
+.. autoclass:: SpgAtoms
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.asr.relax.SpgAtoms
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

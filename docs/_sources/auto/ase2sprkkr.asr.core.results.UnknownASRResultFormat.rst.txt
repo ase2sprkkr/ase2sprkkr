@@ -1,0 +1,6 @@
+ase2sprkkr.asr.core.results.UnknownASRResultFormat
+==================================================
+
+.. currentmodule:: ase2sprkkr.asr.core.results
+
+.. autoexception:: UnknownASRResultFormat

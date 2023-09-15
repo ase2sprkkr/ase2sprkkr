@@ -1,0 +1,44 @@
+strains
+=======
+
+Full name: **ase2sprkkr.asr.setup.strains**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.setup.strains
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_relevant_strains
+      get_strained_folder_name
+      setup_strains
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

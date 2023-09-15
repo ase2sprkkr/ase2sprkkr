@@ -1,0 +1,87 @@
+test
+====
+
+Full name: **ase2sprkkr.asr.test**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.test
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.asr.test.acceptance
+     ase2sprkkr.asr.test.conftest
+     ase2sprkkr.asr.test.fixtures
+     ase2sprkkr.asr.test.materials
+     ase2sprkkr.asr.test.mocks
+     ase2sprkkr.asr.test.test_bandstructure
+     ase2sprkkr.asr.test.test_berry
+     ase2sprkkr.asr.test.test_borncharges
+     ase2sprkkr.asr.test.test_bse
+     ase2sprkkr.asr.test.test_cli
+     ase2sprkkr.asr.test.test_convex_hull
+     ase2sprkkr.asr.test.test_core
+     ase2sprkkr.asr.test.test_core_material
+     ase2sprkkr.asr.test.test_core_results
+     ase2sprkkr.asr.test.test_database_duplicates
+     ase2sprkkr.asr.test.test_database_fromtree
+     ase2sprkkr.asr.test.test_database_rmsd
+     ase2sprkkr.asr.test.test_database_totree
+     ase2sprkkr.asr.test.test_dimensionality
+     ase2sprkkr.asr.test.test_emasses
+     ase2sprkkr.asr.test.test_fixtures
+     ase2sprkkr.asr.test.test_formalpolarization
+     ase2sprkkr.asr.test.test_gs
+     ase2sprkkr.asr.test.test_gw
+     ase2sprkkr.asr.test.test_hse
+     ase2sprkkr.asr.test.test_pdos
+     ase2sprkkr.asr.test.test_phonons
+     ase2sprkkr.asr.test.test_phonopy
+     ase2sprkkr.asr.test.test_piezoelectrictensor
+     ase2sprkkr.asr.test.test_plasmafrequency
+     ase2sprkkr.asr.test.test_polarizability
+     ase2sprkkr.asr.test.test_projected_bandstructure
+     ase2sprkkr.asr.test.test_raman
+     ase2sprkkr.asr.test.test_recipes
+     ase2sprkkr.asr.test.test_relax
+     ase2sprkkr.asr.test.test_setinfo
+     ase2sprkkr.asr.test.test_setup_decorate
+     ase2sprkkr.asr.test.test_setup_displacements
+     ase2sprkkr.asr.test.test_setup_magnetize
+     ase2sprkkr.asr.test.test_setup_materials
+     ase2sprkkr.asr.test.test_setup_params
+     ase2sprkkr.asr.test.test_setup_scanparams
+     ase2sprkkr.asr.test.test_setup_strains
+     ase2sprkkr.asr.test.test_setup_symmetrize
+     ase2sprkkr.asr.test.test_stiffness
+  
+  

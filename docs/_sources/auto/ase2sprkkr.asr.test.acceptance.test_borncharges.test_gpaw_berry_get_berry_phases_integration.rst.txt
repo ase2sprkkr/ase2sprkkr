@@ -1,0 +1,8 @@
+test\_gpaw\_berry\_get\_berry\_phases\_integration
+==================================================
+
+Full name: **ase2sprkkr.asr.test.acceptance.test\_borncharges.test\_gpaw\_berry\_get\_berry\_phases\_integration**
+
+.. currentmodule:: ase2sprkkr.asr.test.acceptance.test_borncharges
+
+.. autofunction:: test_gpaw_berry_get_berry_phases_integration

@@ -1,0 +1,60 @@
+material
+========
+
+Full name: **ase2sprkkr.asr.core.material**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.asr.core.material.Material 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.core.material
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      get_material_from_folder
+      get_webpanels_from_material
+      make_panel_figures
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Material
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

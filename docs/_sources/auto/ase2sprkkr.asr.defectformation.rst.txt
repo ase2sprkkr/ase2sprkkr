@@ -1,0 +1,48 @@
+defectformation
+===============
+
+Full name: **ase2sprkkr.asr.defectformation**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.defectformation
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      check_and_get_general_inputs
+      collect_data
+      find_file_in_folder
+      intersection
+      line
+      line_intersection
+      plot_formation_and_transitions
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

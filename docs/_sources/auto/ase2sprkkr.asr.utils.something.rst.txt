@@ -1,0 +1,45 @@
+something
+=========
+
+Full name: **ase2sprkkr.asr.utils.something**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.utils.something
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      calculate_something
+      collect_data
+      create_plot
+      webpanel
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

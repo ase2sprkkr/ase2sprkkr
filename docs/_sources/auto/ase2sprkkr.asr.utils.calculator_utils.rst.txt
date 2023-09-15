@@ -1,0 +1,43 @@
+calculator\_utils
+=================
+
+Full name: **ase2sprkkr.asr.utils.calculator\_utils**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.asr.utils.calculator_utils
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      fermi_level
+      get_eigenvalues
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  
