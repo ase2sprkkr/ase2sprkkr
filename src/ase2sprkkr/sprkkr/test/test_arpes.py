@@ -39,9 +39,9 @@ class CalculatorTest(TestCase):
       out = xx.calculate()
       calc = out.calculator
       calc.change_task('arpes')
-      calc.set('NE', 5)
-      calc.set('NKTAB', 5)
-      calc.set('NKTAB2D', 5)
-      calc.set('NKTAB3D', 5)
+      calc.set('NE', 10)
+      calc.set('NKTAB', 10)
+      calc.set('NKTAB2D', 10)
+      calc.set('NKTAB3D', 10)
       out2 = out.calculator.calculate()
       self.assertTrue(isinstance(out2.spc.ENERGY(), np.ndarray))
