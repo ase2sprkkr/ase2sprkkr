@@ -207,7 +207,7 @@ def create_definition():
                 "Density of states, the leading dimension iterates: "
                 "1..n_atoms, 1..n_spins, 1..n_orbitals(atoms) "
     ),
-    ], cls=DOSDefinition)
+    ], cls=DOSDefinition, info='Result of a DOS (density of states) calculation.')
     return definition
 
 definition = create_definition()

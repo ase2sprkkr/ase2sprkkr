@@ -68,7 +68,7 @@ def create_definition():
         ),
       NV('K', 'RAW_DATA', i(6), ('NE', 'NT'), info='K_parallel (pi/A)'),
       NV('DETERMINANT', 'RAW_DATA', i(7), ('NE', 'NT')),
-    ], cls=ARPESDefinition)
+    ], cls=ARPESDefinition, info='ARPES (Angle-resolved photoemission spectroscopy) output.')
     return definition
 
 definition = create_definition()

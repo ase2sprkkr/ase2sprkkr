@@ -227,7 +227,7 @@ def create_definition():
       }),
       NV('I', 'RAW_DATA', i(-1), reorder=reorder, plot=plot(negative=False, colormap=mymap, title='Total') ),
 
-    ], cls=BSFDefinition, name='BSF')
+    ], cls=BSFDefinition, name='BSF', info='BSF output file')
 
     return definition
 
