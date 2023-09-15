@@ -36,12 +36,10 @@ class CalculatorTest(TestCase):
       a.pbc=True
       xx=SPRKKR(atoms=a)
       xx.input_parameters.SCF.NITER=1
+      xx.set('NE', 10)
+      xx.set('NKTAB', 10)
       out = xx.calculate()
       calc = out.calculator
       calc.change_task('arpes')
-      calc.set('NE', 10)
-      calc.set('NKTAB', 10)
-      calc.set('NKTAB2D', 10)
-      calc.set('NKTAB3D', 10)
       out2 = out.calculator.calculate()
       self.assertTrue(isinstance(out2.spc.ENERGY(), np.ndarray))
