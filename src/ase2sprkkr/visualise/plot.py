@@ -156,6 +156,9 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
    """
    set_up_common_plot(axis, **kwargs)
    autonorm = False
+   if 'cmap' in kwargs:
+      colormap = kwargs['cmap']
+
    if mode == 'centered':
        if norm == 'log':
            colormap = colormap or 'RdBu_r'
