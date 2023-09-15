@@ -14,7 +14,7 @@ input_parameters = InputParameters(
     ENERGY.copy([
         V('EMINEV', -10., info='Minimum of the energy window in eV with respect to the Fermi level'),
         V('EMAXEV', -10., info='Maximum of the energy window in eV with respect to the Fermi level'),
-        V('EWORKEV', 4.2, info='Inner potential of the bulk crystal in eV'),
+        V('EWORK_EV', 4.2, info='Inner potential of the bulk crystal in eV'),
         V('IMV_INI_EV', 0.05, info='Imaginary part of the potential in eV (initial state)'), # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
         V('IMV_FIN_EV', 5., info='Imaginary part of the potential in eV (final state)'), # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
       ],
