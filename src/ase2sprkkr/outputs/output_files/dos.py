@@ -1,6 +1,7 @@
 from ..output_files_definitions import OutputFileValueDefinition as V, create_output_file_definition, OutputFileDefinition
 from typing import Optional
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 from ..output_files import CommonOutputFile, Arithmetic
@@ -11,6 +12,7 @@ from ...common.generated_configuration_definitions import \
 from ...visualise.plot import Multiplot
 
 from ase.units import Rydberg
+from packaging.version import Version
 
 class DOS(Arithmetic):
 
@@ -77,7 +79,8 @@ class DOS(Arithmetic):
                    plot_l(np.sum(data, axis=0), spin, 'total')
                  )
             if legend and not self.l:
-               axis.legend(handles=handles,loc='best',fontsize=legend_fontsize, ncols=legend_ncols, handleheight=legend_height)
+                ncols = 'ncols' if Version(matplotlib.__version__) >= Version("3.6") else 'ncol'
+                axis.legend(handles=handles,loc='best',fontsize=legend_fontsize, **{ncols : legend_ncols }, handleheight=legend_height)
 
         if self.spin is not None:
            plot_spin(self.dos, self.spin or 1, True)

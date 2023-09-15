@@ -29,6 +29,7 @@ requirements:
     - pyparsing
     - mendeleev
     - platformdirs
+    - packaging
 
 test:
   source_files:
