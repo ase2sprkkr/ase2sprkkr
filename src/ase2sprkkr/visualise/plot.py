@@ -1,6 +1,6 @@
 """ In this file the general plotting routines are present. """
 import copy
-
+import matplotlib
 from matplotlib import rc_context
 import matplotlib.pyplot as plt
 from matplotlib.colors import SymLogNorm, CenteredNorm, LogNorm, Normalize
@@ -149,8 +149,8 @@ def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=N
 
 
 @plotting_function
-@add_to_signature(set_up_common_plot, prepend=True)
-def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=False, axis=None, mode=False, norm=None, vmax=None, **kwargs):
+@add_to_signature(set_up_common_plot, prepend=True, kwargs=True)
+def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=False, axis=None, mode=False, norm=None, vmin=None, vmax=None, colorbar=False, **kwargs):
    """
    Plot 3D data by assigning colors to 2D grid. See matplotlib.pyplot.pcolormesh
    """
@@ -172,10 +172,20 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
 
    axis.set_xlim(auto_range(xrange, x))
    axis.set_ylim(auto_range(yrange, y))
-   axis.pcolormesh(x,y,c,cmap=colormap,shading='gouraud', norm=norm)
+   axis.pcolormesh(x,y,c,cmap=colormap,shading='gouraud', norm=norm, vmin=None, vmax=None)
    if show_zero_line:
-       axis.plot(axis.get_xlim(),[0,0],color='black',lw=1)
+       opts = {
+           'lw' : 1.,
+           'color' : 'black'
+       }
+       if isinstance(show_zero_line, dict):
+          opts.update(show_zero_line)
+       elif show_zero_line is not True:
+          opts['lw'] = show_zero_line
+       axis.plot(axis.get_xlim(),[0,0],**opts)
 
+   if colorbar:
+     axis.figure.colorbar(plt.cm.ScalarMappable(matplotlib.colors.Normalize(vmin=vmin, vmax=vmax), cmap=colormap), ax=axis)
 
 class Multiplot:
   """ This class can be used for plotting more plots into one resulting image/window. """
