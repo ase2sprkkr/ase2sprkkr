@@ -483,6 +483,7 @@ class ValueDefinition(RealItemDefinition):
   is_generated = False
 
   def __init__(self, name, type=None, default_value=None,
+               default_value_from_container=None,
                written_name=None, alternative_names=None,
                fixed_value=None, required=None, init_by_default=False,
                result_is_visible=False, info=None, description=None,
@@ -602,6 +603,8 @@ class ValueDefinition(RealItemDefinition):
     result_class
        Redefine the class that holds data for this option/section
     """
+    if default_value_from_container:
+       default_value = lambda o: default_value_from_container(o._container)
     if expert is not None:
        if type is None:
           type = expert
@@ -1009,7 +1012,7 @@ class ValueDefinition(RealItemDefinition):
            out['fixed_value'] = out['default_value']
        return out
 
-  _copy_excluded_args = RealItemDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible']
+  _copy_excluded_args = RealItemDefinition._copy_excluded_args + ['fixed_value', 'result_is_visible', 'default_value_from_container']
 
   def copy_value(self, value, all_values=False):
       """ Creates copy of the value
