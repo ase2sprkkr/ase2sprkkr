@@ -7,14 +7,15 @@ Version 2.2.0-beta
 * ARPES task fix
 * Arithmetic can be done with DOS result
 * executable_postfix argument of calculator renamed to executable_suffix to make it consistent with the name of the environment variable
+* User-defined input parameters for repeatedly used task
 
 Internals
 ~~~~~~~~~
-* Generated type improvement.
-* Switch grammar element: format of a parsed file can depend on the previously parsed values.
+* Generated type improvement
+* Switch grammar element: format of a parsed file can depend on the previously parsed values
 * Gather grammar element for ``NAME1 NAME2 = VALUE1 VALUE2`` syntax
-* Routines for plotting the results are (i hope) stabilized.
-* Various small improvements and fixies.
+* Routines for plotting the results are (i hope) stabilized
+* Various small improvements and fixies
 
 Version 2.1.1
 -------------
