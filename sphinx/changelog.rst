@@ -6,14 +6,15 @@ Version 2.2.0-beta
 * a2s_plot_output can handle DOS and BSF output files
 * ARPES task fix
 * Arithmetic can be done with DOS result
+* executable_postfix argument of calculator renamed to executable_suffix to make it consistent with the name of the environment variable
 
 Internals
 ~~~~~~~~~
 * Generated type improvement.
 * Switch grammar element: format of a parsed file can depend on the previously parsed values.
-* Various small improvements and fixies.
+* Gather grammar element for ``NAME1 NAME2 = VALUE1 VALUE2`` syntax
 * Routines for plotting the results are (i hope) stabilized.
-
+* Various small improvements and fixies.
 
 Version 2.1.1
 -------------
@@ -36,6 +37,7 @@ User interface
 Internals
 ~~~~~~~~~
 * GrammmarTypes refactorized (splitted to more files)
+* NumpyArray and RestOfTheFile grammar types for output files
 * Generated grammar types and values for easy access to output files
 * Calculator.save_input refactored
 
