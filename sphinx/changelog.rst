@@ -1,18 +1,70 @@
 Changelog
 =========
 
-Version 1.0.6
+Version 2.2.0-beta
+------------------
+* a2s_plot_output can handle DOS and BSF output files
+* ARPES task fix
+* Arithmetic can be done with DOS result
+
+Internals
+~~~~~~~~~
+* Generated type improvement.
+* Switch grammar element: format of a parsed file can depend on the previously parsed values.
+* Various small improvements and fixies.
+* Routines for plotting the results are (i hope) stabilized.
+
+
+Version 2.1.1
 -------------
 
-* Sites data moved to ASE arrays to allow merging two Atoms structures
-* Testing switched to pytest
-* ARPES task fixies
+User interface
+~~~~~~~~~~~~~~
+* ARPES and SCF task definition improved
+* ARPES SPC results can be parsed and plotted
+* DOS results parsing
+* FULLPOT mode for SCF calculation
+* a2s_plot_output script to plot SPC results
+* Better naming of input and potential files
+* Gilbert TASK added (experimental, not tested)
+* input_parameters.change_task method fixed
+* [] access to array options/values (no need for VARIABLE()[] notation)
+* Numbered arrays (e.g. CONTROL.MDIR) can be set using arrays
+* Better formating of input parameters
+* Some minor tweaks and corrections of input parameters
 
-Version 1.0.7
+Internals
+~~~~~~~~~
+* GrammmarTypes refactorized (splitted to more files)
+* Generated grammar types and values for easy access to output files
+* Calculator.save_input refactored
+
+Version 2.0.4
 -------------
-* a2s_visualise_in_struct script fixed
-* a2s_visualise_in_struct accepts scale-radii argument to control the size of visualised atoms
-* make now by default install the ase2sprkkr even if the version number have not been changed
+* Some fixies
+* ASR repcipies available as ase2sprkkr.asr subpackage
+
+Version 2.0.1
+-------------
+* Fix of sys-file generation
+* Hastily written ASE2SPRKKR slides included
+
+Version 2.0.0-beta2
+-------------------
+
+User interface
+~~~~~~~~~~~~~~
+* es_finder integration for empty spheres finding
+* Support for 2D problems
+* Routines for building 2D problem
+* change_task method for InputParameters
+* calculate(..., directory=False) runs the calculation in a temporary directory
+
+Internals
+~~~~~~~~~
+* Sections validation
+* LatticeData class refactored
+* Brackets in value names are allowed
 
 Version 2.0.0-beta1
 -------------------
@@ -40,67 +92,20 @@ Architecture changes
 * Python 3.11 support added.
 
 
-Version 2.0.0-beta2
--------------------
-
-User interface
-~~~~~~~~~~~~~~
-* es_finder integration for empty spheres finding
-* Support for 2D problems
-* Routines for building 2D problem
-* change_task method for InputParameters
-* calculate(..., directory=False) runs the calculation in a temporary directory
-
-Internals
-~~~~~~~~~
-* Sections validation
-* LatticeData class refactored
-* Brackets in value names are allowed
-
-Version 2.0.1
+Version 1.0.7
 -------------
-* Fix of sys-file generation
-* Hastily written ASE2SPRKKR slides included
+* a2s_visualise_in_struct script fixed
+* a2s_visualise_in_struct accepts scale-radii argument to control the size of visualised atoms
+* make now by default install the ase2sprkkr even if the version number have not been changed
 
-Version 2.0.4
--------------
-* Some fixies
-* ASR repcipies available as ase2sprkkr.asr subpackage
 
-Version 2.1.1
+Version 1.0.6
 -------------
 
-User interface
-~~~~~~~~~~~~~~
-* ARPES and SCF task definition improved
-* ARPES SPC results can be parsed and plotted
-* DOS results parsing
-* FULLPOT mode for SCF calculation
-* a2s_plot_output script to plot SPC results
-* Better naming of input and potential files
-* Gilbert TASK added (experimental, not tested)
-* input_parameters.change_task method fixed
-* [] access to array options/values (no need for VARIABLE()[] notation)
-* Numbered arrays (e.g. CONTROL.MDIR) can be set using arrays
-* Better formating of input parameters
-* Some minor tweaks and corrections of input parameters
+* Sites data moved to ASE arrays to allow merging two Atoms structures
+* Testing switched to pytest
+* ARPES task fixies
 
-Internals
-~~~~~~~~~
-* GrammmarTypes refactorized (splitted to more files)
-* Generated grammar types and values for easy access to output files
-* Calculator.save_input refactored
 
-Version 2.2.0-beta
-------------------
-* a2s_plot_output can handle DOS and BSF output files
-* ARPES task fix
-* Arithmetic can be done with DOS result
-* Some basic preparation for ASR (Atomic Simulation Recipies) interoperability.
 
-Internals
-~~~~~~~~~
-* Generated type improvement.
-* Switch grammar element: format of a parsed file can depend on the previously parsed values.
-* Various small improvements and fixies.
-* Routines for plotting the results are (i hope) stabilized.
+
