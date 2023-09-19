@@ -90,3 +90,17 @@ Internals
 * GrammmarTypes refactorized (splitted to more files)
 * Generated grammar types and values for easy access to output files
 * Calculator.save_input refactored
+
+Version 2.2.0-beta
+------------------
+* a2s_plot_output can handle DOS and BSF output files
+* ARPES task fix
+* Arithmetic can be done with DOS result
+* Some basic preparation for ASR (Atomic Simulation Recipies) interoperability.
+
+Internals
+~~~~~~~~~
+* Generated type improvement.
+* Switch grammar element: format of a parsed file can depend on the previously parsed values.
+* Various small improvements and fixies.
+* Routines for plotting the results are (i hope) stabilized.
