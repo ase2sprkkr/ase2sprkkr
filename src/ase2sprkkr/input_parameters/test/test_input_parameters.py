@@ -336,6 +336,37 @@ XSITES NR=3 FLAG
     self.assertEqual('sss', ips.ENERGY.NE())
     self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
 
+
+  def test_set_values(self):
+    input_parameters_def = cd.InputParametersDefinition.from_dict({
+        'ENERGY' : [
+          V('GRID', gt.SetOf(int, length=1), fixed_value=3),
+          V('NE', gt.SetOf(int, min_length=1)),
+          V('Ime', float, 0.0),
+          V('ENERGY', float, 0.0),
+        ],
+        'SITES' : [
+          V('NL', int)
+        ]
+      })
+    ips=input_parameters_def.create_object()
+
+    ips.set({'ENERGY.Ime' : 5., 'NE' : 10, 'ENERGY': 7. })
+    self.assertEqual(ips.ENERGY.Ime(), 5.)
+    self.assertEqual(ips.ENERGY.NE(), 10)
+    self.assertEqual(ips.ENERGY.ENERGY(), 7.)
+    ips.set({'ENERGY.ENERGY': 4. })
+    self.assertEqual(ips.ENERGY.ENERGY(), 4.)
+    ips.set('ENERGY.ENERGY', 5. )
+    self.assertEqual(ips.ENERGY.ENERGY(), 5.)
+    ips.set('ENERGY', 6. )
+    self.assertEqual(ips.ENERGY.ENERGY(), 6.)
+    ips.set('ENERGY.ENERGYY', 7.,  unknown='ignore')
+    self.assertFalse('ENERGYY' in ips.ENERGY)
+    self.assertRaises(KeyError, lambda:  ips.set('ENERGY.ENERGYY', 7.,  unknown='fail'))
+    ips.set('ENERGY.ENERGYY', 7.,  unknown='add')
+    self.assertEqual(ips.ENERGY.ENERGYY(), 7.)
+
   def test_numbered_array(self):
     input_parameters_def = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [

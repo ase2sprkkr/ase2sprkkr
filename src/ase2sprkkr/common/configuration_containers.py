@@ -7,7 +7,7 @@ and that are results of parsing of a configuration file.
 """
 
 from ..common.grammar_types import mixed
-from .options import Option
+from .options import Option, BaseOption
 import pyparsing as pp
 from .configuration import Configuration
 import itertools
@@ -235,9 +235,16 @@ class ConfigurationContainer(Configuration):
 
       def set_value(name, value):
         if '.' in name:
-          section, name = name.split('.', 1)
-          self._members[section].set({name:value}, unknown=unknown, error=error)
-        if name not in self._members:
+            section, name = name.split('.', 1)
+            if not section in self:
+               if unknown == 'add':
+                   self.add(section)
+               else:
+                   raise KeyError(f"There is no section {section} in {self} to set{section}.{name} to {value}")
+            self._members[section].set({name:value}, unknown=unknown, error=error)
+            return
+        option = self._members.get(name, None)
+        if not option or (not isinstance(option, BaseOption) and not isinstance(value, dict)):
            if unknown == 'find':
               option = self._find_value(name)
               if option:
@@ -250,7 +257,7 @@ class ConfigurationContainer(Configuration):
               return
            self.add(name, value)
         else:
-           self._members[name].set(value, unknown=unknown, error=error)
+           option.set(value, unknown=unknown, error=error)
 
       if values:
         try:
