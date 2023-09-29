@@ -1,6 +1,10 @@
 Changelog
 =========
 
+Version 2.2.1
+-------------
+* Fix of ConfigurationContainer.set_values
+
 Version 2.2.0-beta
 ------------------
 * a2s_plot_output can handle DOS and BSF output files
