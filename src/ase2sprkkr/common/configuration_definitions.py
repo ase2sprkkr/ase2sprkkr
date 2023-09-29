@@ -374,8 +374,11 @@ class RealItemDefinition(BaseDefinition):
          If the definition has no help specified and generic is True, return a (not saying much) generic help string
        """
        out = self._info
-       if not out and generic:
-          out = self._generic_info()
+       if not out:
+          if generic:
+             out = self._generic_info()
+          else:
+             out = ''
        return out
 
    _description_indentation = '    '
@@ -1178,6 +1181,9 @@ class ContainerDefinition(RealItemDefinition):
               if info:
                  s = s + (' ' * (max(40 - len(s), 0) + 2)) + info
            else:
+              ccprefix = cprefix + i._description_indentation
+              s+='\n\n'
+              s+= ccprefix + i.info(False).replace('\n', '\n' + ccprefix)
               s+='\n'
            out.append(s)
 
