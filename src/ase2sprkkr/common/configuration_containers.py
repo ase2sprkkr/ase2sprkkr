@@ -241,7 +241,7 @@ class ConfigurationContainer(Configuration):
                    self.add(section)
                else:
                    raise KeyError(f"There is no section {section} in {self} to set{section}.{name} to {value}")
-            self._members[section].set({name:value}, unknown=unknown, error=error)
+            self._members[section].set({name:value}, unknown='fail' if unknown == 'find' else unknown, error=error)
             return
         option = self._members.get(name, None)
         if not option or (not isinstance(option, BaseOption) and not isinstance(value, dict)):
