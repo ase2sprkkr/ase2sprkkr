@@ -3,12 +3,12 @@ with SPRKKR """
 
 
 from ase import Atoms
-from ..common.unique_values import UniqueValuesMapping
 from ..bindings.spglib import SpacegroupInfo
 import numpy as np
 from ..sprkkr.sites import Site
 from ..common.misc import numpy_index
-from typing import Optional, Dict, List, Union
+from typing import List, Union
+
 
 class SPRKKRAtoms(Atoms):
    """ ASE Atoms object extended by the data necessary for SPR-KKR calculations """
@@ -38,7 +38,7 @@ class SPRKKRAtoms(Atoms):
              obj.__class__ = SPRKKRAtoms
           else:
              if not isinstance(obj, Atoms):
-                raise(f'Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}')
+                raise ValueError(f'Can not promote class {obj} of class {obj.__class__} to {SPRKKRAtoms}')
 
              class SprKKrAtomsEx(obj.__class__, SPRKKRAtoms):
                    pass
@@ -98,7 +98,7 @@ class SPRKKRAtoms(Atoms):
        del self._regions[name]
 
    def set_regions(self, regions:List):
-       self._regions = { r.name : r for r in regions }
+       self._regions = { r.name: r for r in regions }
        for region in self._regions.values():
            region.set_atoms(self)
 
@@ -175,13 +175,13 @@ class SPRKKRAtoms(Atoms):
            old_sites=None
 
         if sg_info.spacegroup:
-          uniq, umap = np.unique(sg_info.equivalent_sites.mapping, return_inverse = True)
+          uniq, umap = np.unique(sg_info.equivalent_sites.mapping, return_inverse=True)
 
           for i in range(len(uniq)):
                index = umap == i
                if old_sites is not None:
-                  #first non-none of the given index
-                  possible =  (i for i in old_sites[index] if i)
+                  # first non-none of the given index
+                  possible = (i for i in old_sites[index] if i)
                   try:
                      site = next(filter(None, possible), None)
                      if site in used:
@@ -276,7 +276,7 @@ class SPRKKRAtoms(Atoms):
         If True, retain the current symmetry.
        """
 
-       an = np.zeros(len(sites), dtype= int)
+       an = np.zeros(len(sites), dtype=int)
        occ = {}
        for i,j in enumerate(sites):
            occ[i] = j.occupation.as_dict
@@ -285,14 +285,14 @@ class SPRKKRAtoms(Atoms):
        self.info['occupancy'] = occ
 
        if spacegroup_info is True:
-          #retain the current symmetry
+          # retain the current symmetry
           pass
        elif spacegroup_info is False:
           self.info['spacegroup_info'] = SpacegroupInfo(None)
        elif spacegroup_info:
           self.info['spacegroup_info'] = spacegroup_info
        elif 'spacegroup_info' in self.info:
-          #None have been given as spacegroup_info argument, delete any information about the symmetry
+          # None have been given as spacegroup_info argument, delete any information about the symmetry
           del self.info['spacegroup_info']
        self.set_array(SPRKKRAtoms.sites_array_name, sites)
 
@@ -312,7 +312,7 @@ class SPRKKRAtoms(Atoms):
        for i in self.sites:
            i.reset()
        if self._potential:
-          self._potential.reset(update_atoms = False)
+          self._potential.reset(update_atoms=False)
           self._potential.set_from_atoms()
 
    def extend(self, other):
@@ -347,5 +347,5 @@ class SPRKKRAtoms(Atoms):
        return super().__iadd__(other)
 
 
-#at the last - to avoid circular imports
-from ..potentials import potentials
+# at the last - to avoid circular imports
+from ..potentials import potentials   # NOQA: E402

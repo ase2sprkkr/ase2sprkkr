@@ -3,15 +3,14 @@ Wrapper for spglib for computing symmetry of a primitive cell
 """
 from __future__ import annotations
 
-from ase import Atoms
-from typing import Optional, List, Dict
-
+from typing import Optional, List, Dict, Tuple
 import spglib
 from ase import Atoms
 from ase.spacegroup import Spacegroup
 from ..common.unique_values import UniqueValuesMapping
 from ..sprkkr import sprkkr_atoms
 import numpy as np
+
 
 class SpacegroupInfo:
     """ Class, that carry information about spacegroup and symmetry of a structure """
@@ -190,6 +189,7 @@ class SpacegroupInfo:
         out = SpacegroupInfo.compute_spacegroup_info(**locals())
         return SpacegroupInfo(atoms, *out)
 
+
 def possibly_equivalent_sites(atoms: Atoms,
                        atomic_numbers : List=None,
                        consider_old   : bool=False) -> UniqueValuesMapping:
@@ -201,6 +201,7 @@ def possibly_equivalent_sites(atoms: Atoms,
         equivalent_sites = UniqueValuesMapping(atomic_numbers)
     else:
         equivalent_sites = UniqueValuesMapping(atoms.get_atomic_numbers())
+
     if consider_old:
         try:
            equivalent_sites = equivalent_sites.merge(atoms.get_array(atoms.sites_array_name))

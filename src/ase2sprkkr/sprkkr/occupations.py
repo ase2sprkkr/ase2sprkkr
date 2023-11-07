@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import numpy as np
 from .atomic_types import AtomicType
-from typing import Dict
+from typing import Dict, Union, Optional
 from collections.abc import Iterable
 from .sites import Site
 
@@ -16,11 +16,12 @@ class Occupation:
    alloys).
   """
 
-  def __init__(self, dct:Dict[AtomicType|str, float], site:Site|None=None, update_atoms=False):
+  def __init__(self, dct:Dict[Union[AtomicType,str], float],
+                     site:Optional[Site]=None, update_atoms=False):
       self._site = site
       self.set(dct, update_atoms)
 
-  def copy(self, site:Site|None=None) -> Occupation:
+  def copy(self, site:Optional[Site]=None) -> Occupation:
       """ Create a copy of the object, associated with a given site. """
       return Occupation({ a.copy(): v for a,v in self._occupation.items() }, site)
 
@@ -69,10 +70,6 @@ class Occupation:
       for i in self:
           if i.symbol == name: return i
       raise KeyError(f"No {name} in the occupation")
-
-  def atomic_types(self) -> Iterable[AtomicType]:
-      """ Returns the atomic types that can be present on the site. """
-      return self._occupation.keys()
 
   def atomic_type(self, name: str|int|AtomicType) -> AtomicType | None:
       """ Find the corresponding atomic type according to the provided argument.
@@ -239,5 +236,6 @@ class Occupation:
   def to_tuple(self):
       return zip(self.keys(), self.values())
 
-  def atomic_types(self):
+  def atomic_types(self) -> Iterable[AtomicType]:
+      """ Returns the atomic types that can be present on the site. """
       return self._occupation.keys()

@@ -3,6 +3,7 @@
 from ..common.decorators import cached_property
 import copy
 
+
 class AtomicType:
     """ Atomic type represent a type of atom, that could be placed at the atomic site.
 
