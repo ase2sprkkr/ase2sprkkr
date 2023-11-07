@@ -195,13 +195,18 @@ class Occupation:
       if none:
          for i in none:
              self._occupation[i] = (to - suma) / len(none)
-      else:
+      elif suma > 1:
          ratio = to / suma
 
          for i in self._occupation:
              if i != except_from:
                  self._occupation[i] *= ratio
-
+      else:
+         for i in self._occupation:
+            if i.is_vacuum():
+               self._occupation[i]+= to - suma
+         else:
+               self._occupation[AtomicType('Vc')] = to - suma
 
   @property
   def as_dict(self):
