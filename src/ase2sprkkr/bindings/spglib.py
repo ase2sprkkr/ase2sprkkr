@@ -212,7 +212,8 @@ def possibly_equivalent_sites(atoms: Atoms,
         if occupation:
             def gen_occ():
               for i in range(len(equivalent_sites)):
-                  val = occupation.get(i, None)
+                  val = occupation.get(i, None) or \
+                        occupation.get(str(i), None)
                   if val is None:
                       yield val
                   else:

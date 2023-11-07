@@ -162,7 +162,12 @@ class SPRKKRAtoms(Atoms):
         return SPRKKRAtoms._init_sites(**locals())
 
    def _init_sites(self, consider_old=False, symmetry_precision=1e-5):
-        """ See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property."""
+        """ See compute_sites_symmetry - this metod does just the same, but it does not set the symmetry property.
+
+        All the hard work: finding the sites symmetry and distinguishing which sites are equivalent
+        is done in SpacegroupInfo.from_atoms. Here are only the sites created according to the
+        infomation obtained from the method.
+        """
         sg_info = SpacegroupInfo.from_atoms(self, consider_old=consider_old, precision=symmetry_precision)
 
         sites = np.empty(len(self), dtype=object)
@@ -194,9 +199,13 @@ class SPRKKRAtoms(Atoms):
                   site = None
                if not site:
                   symbol = self.symbols[ numpy_index(umap,i)]
+                  occ = None
                   for ai in np.where(index)[0]:
-                      if ai in occupation and occupation[ai]:
-                         symbol = occupation[ai]
+                      occ = occupation.get(ai, None) or \
+                            occupation.get(str(ai), None)
+                      if occ:
+                         symbol = occ
+                         break
                   site = Site(self, symbol)
                sites[index] = site
           self.sites = sites
@@ -209,7 +218,8 @@ class SPRKKRAtoms(Atoms):
                   else:
                      used.add(site)
               else:
-                  symbol = occupation[i] if i in occupation and occupation[i] else \
+                  symbol = occupation.get(i, None) or \
+                           occupation.get(str(i), None) or \
                            self.symbols[i]
                   site = Site(self, symbol)
               sites[i] = site
