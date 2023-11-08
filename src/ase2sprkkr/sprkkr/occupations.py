@@ -34,7 +34,7 @@ class Occupation:
       if isinstance(dct, (int, str, AtomicType)):
          dct = {dct : 1.0}
       if hasattr(dct, 'items'):
-         iterator = dct.items() #dict
+         iterator = dct.items()  # dict
       else:
          iterator = dct
       self._occupation = dict( (AtomicType.to_atomic_type(i), j) for i,j in iterator )
@@ -52,9 +52,6 @@ class Occupation:
   def __str__(self):
       return f"Occupation {self._occupation}"
 
-  def __iter__(self):
-      return iter(self._oc/cupation)
-
   def _update_atoms(self):
       if self._site:
          self._site.update_atoms()
@@ -68,10 +65,11 @@ class Occupation:
       if isinstance(name, AtomicType):
           return name
       for i in self:
-          if i.symbol == name: return i
+          if i.symbol == name:
+              return i
       raise KeyError(f"No {name} in the occupation")
 
-  def atomic_type(self, name: str|int|AtomicType) -> AtomicType | None:
+  def atomic_type(self, name: Union[str,int,AtomicType]) -> AtomicType | None:
       """ Find the corresponding atomic type according to the provided argument.
 
       Parameters
@@ -89,7 +87,7 @@ class Occupation:
       name = self._find_key(name)
       return self._occupation[name]
 
-  def replace_type(self, name:str|int|AtomicType, to:str|AtomicType):
+  def replace_type(self, name:Union[str,int,AtomicType], to:Union[str,AtomicType]):
       """
       Replace the given atomic type (see :meth:`atomic_type<ase2sprkkr.sprkkr.occupations.Occupation.atomic_type>`, how
       it can be identified) by the new one (given either by AtomicType or by its chemical symbol)
@@ -113,7 +111,7 @@ class Occupation:
            self._occupation[name] = value
        except KeyError:
            if isinstance(name, int):
-              raise ValueError(f"Cannot add an atomic type using integer key. Please use a string (chemical symbol).")
+              raise ValueError(f"Cannot add an atomic type using an integer key {name}. Please use a string (chemical symbol).")
            self.add(name, value)
        self._update_atoms()
 
@@ -195,7 +193,7 @@ class Occupation:
       if none:
          for i in none:
              self._occupation[i] = (to - suma) / len(none)
-      elif suma > 1:
+      elif suma > to or except_from:
          ratio = to / suma
 
          for i in self._occupation:
