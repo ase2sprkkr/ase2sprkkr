@@ -1,11 +1,13 @@
 """ Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks) """
 
-from ...common.grammar_types  import DefKeyword, SetOf, flag, energy, Integer, Array, Keyword
+from ...common.grammar_types import DefKeyword, flag, energy, Integer, Array, Keyword
+
 from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
       InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
+
 
 def CONTROL(ADSI):
   """ Create the definition of the CONTROL section of the task input file.
@@ -40,16 +42,19 @@ class TauSection(Section):
             i.clear_result()
         if atoms is not None:
            pbc = atoms.pbc.sum()
-           #setting the dangerous value to the non-used options
-           #prevents them to use its default values and so to be
-           #writed to the output file
+           # setting the dangerous value to the non-used options
+           # prevents them to use its default values and so to be
+           # writed to the output file
            if pbc == 3:
                section.NKTAB2D.result = section.NKTAB2D._create_dangerous_value(None)
                section.NKTAB3D.result = section.NKTAB3D._create_dangerous_value(None)
            else:
                section.NKTAB.result = section.NKTAB._create_dangerous_value(None)
 
-_nktab_value = lambda option: option._container.NKTAB()
+
+def _nktab_value(option):
+    return option._container.NKTAB()
+
 
 TAU = TauSection('TAU',[
       V('BZINT', DefKeyword({'POINTS' : 'special points method',
@@ -75,7 +80,7 @@ regular mesh.
         is_optional=True, description='If it is not specified, NKTAB is used'),
       V('NKMIN', 300, info='Minimal number of k-points used for Weyl integration', write_condition= lambda o: o._container.BZINT() == 'WEYL'),
       V('NKMAX', 500, info='Maximal number of k-points used for Weyl integration', write_condition= lambda o: o._container.BZINT() == 'WEYL'),
-      #expert
+      # expert
       V('CLUSTER', flag, expert=False, info="""Do cluster type calculation.""", description=
         "Cluster type calculation calculate τ by inverting the real space KKR matrix. "
         "Specify cluster center using IQCNTR or ITCNTR and its size using NSHLCLU or CLURAD."
@@ -129,9 +134,9 @@ SCF = Section('SCF', [
 """The definition of the SCF section of the task input file """
 
 STRCONST = Section('STRCONST', [
-      V('ETA', float, is_optional=True, info='Ewald parameter'),
-      V('RMAX', float, is_optional=True, info='Convergency radius in real space'),
-      V('GMAX', float, is_optional=True, info='Convergency radius in reciprocal space'),
+        V('ETA', float, is_optional=True, info='Ewald parameter'),
+        V('RMAX', float, is_optional=True, info='Convergency radius in real space'),
+        V('GMAX', float, is_optional=True, info='Convergency radius in reciprocal space'),
       ], is_expert=True, is_optional=True, info=
       """The calculation of the ~k-dependent KKR structure constant matrix G(~k, E) is controlled by
 three convergence parameters. ETA determines the relative weight of the real and reciprocal
@@ -160,8 +165,8 @@ this implies that NL = 4 is used for all sites.""")
 
 
 CPA = Section('CPA', [
-  V('NITER', 20, info="Maximum number of CPA iterations"),
-  V('TOL', 0.0001, info="Threshold for stopping CPA-cycle"),
+    V('NITER', 20, info="Maximum number of CPA iterations"),
+    V('TOL', 0.0001, info="Threshold for stopping CPA-cycle"),
   ], is_expert=True, is_optional=True,
   info="""For a system with substitutional disorder, the CPA is used. The listed variables control the CPA cycle """,
 )
@@ -169,17 +174,17 @@ CPA = Section('CPA', [
 
 
 MODE = Section('MODE', [
-  V('MODE',
-    Keyword({
-    'NREL' : "work in the nonrelativistic mode",
-    'SREL' : "work in the spin-polarized scalar-relativistic mode",
-    'SP-SREL' : "work in the scalar-relativistic mode"}), None,
-            required=False, name_in_grammar=False,
-            info='Using this option you can switch on spin the polarization and relativistic mode. If it''s not set, the ''full'' relativity mode is used.'),
-  V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
-  V('MDIR', Array(float, length=3), [1.,0.,0.], required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True, is_always_added=False ),
-  V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True, required=False, is_always_added=False),
-  V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_numbered_array=True, required=False, is_always_added=False),
+    V('MODE',
+      Keyword({
+        'NREL' : "work in the nonrelativistic mode",
+        'SREL' : "work in the spin-polarized scalar-relativistic mode",
+        'SP-SREL' : "work in the scalar-relativistic mode"}), None,
+                required=False, name_in_grammar=False,
+                info='Using this option you can switch on spin the polarization and relativistic mode. If it''s not set, the ''full'' relativity mode is used.'),
+    V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
+    V('MDIR', Array(float, length=3), [1.,0.,0.], required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True, is_always_added=False ),
+    V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True, required=False, is_always_added=False),
+    V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_numbered_array=True, required=False, is_always_added=False),
   ], is_expert=True, is_optional=True, info=
       """This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
 )
@@ -204,6 +209,7 @@ def TASK(task, add = []):
   return Section('TASK', [
     V('TASK', task, name_in_grammar=False)
   ] + add)
+
 
 __all__ = [
     'CONTROL', 'TAU', 'ENERGY', 'SCF', 'SITES', 'TASK', 'STRCONST', 'CPA', 'MODE'
