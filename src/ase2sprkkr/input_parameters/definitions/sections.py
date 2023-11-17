@@ -27,7 +27,16 @@ def CONTROL(ADSI):
                                 info="The custom field for the description of the problem - the output files will have called 'DATASET.<ext>'."),
       V('ADSI', DefKeyword(ADSI), required = True, info="Type of the computation."),
       V('POTFIL', str, required=True, info="The potential file (see SPRKKR documentation for its format). It isn't necessary to set it, it will be set by the calculator."),
-      V('KRWS', int, required=False),
+      V('KRWS', Integer(min=0, max=1), 1, info='If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)'),
+      V('KRMT', {
+        '0' : 'RMT is taken from the potential file',
+        '1' : 'RMT = min( x*RWS )',
+        '2' : 'RMT = min( d_ij / 2 )',
+        '3' : 'RMT from atomic charge density (=> KRWS=1)',
+        '4' : 'RMT from atomic Hartree potential (=> KRWS=1)',
+        '5' : 'RMT from total atomic potential (=> KRWS=1)',
+        '6' : 'take average of 3 and 4 (=> KRWS=1)',
+      }, default_value=None, info='It controls how the muffin-tin radii are calculated.',required=False),
       V('PRINT', Integer(min=0, max=5), default_value=0, info="Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output."),
       V('NONMAG', False, info="Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation. ")
   ])
