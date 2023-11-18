@@ -10,14 +10,15 @@ from ..task_result import TaskResult, OutputReader
 from ...common.decorators import cached_property
 from ...potentials.potentials import Potential
 import os
-import copy
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
 
+
 class RealOrStars(Real):
   """ A real value, where ``****`` means ``NaN`` """
   _grammar = Real._grammar | replace_whitechars(pp.Word('*')).setParseAction(lambda x: float('NaN'))
+
 
 class ScfResult(TaskResult):
   """ Objects of this class holds the results of computed SCF class """
@@ -87,6 +88,7 @@ class ScfResult(TaskResult):
               count = len(self.iterations),
               dtype = self.iterations[0][name].__class__
             )
+
   @property
   def last_iteration(self):
       """ Return the data of the last iteration """
@@ -136,6 +138,7 @@ class ScfResult(TaskResult):
       else:
         pyplot.show()
 
+
 class ScfOutputReader(OutputReader):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
@@ -158,7 +161,7 @@ class ScfOutputReader(OutputReader):
         'B_val' : float,
         'B_val_desc': String(default_value = ''),
         'B_core' : Real(default_value = float('NaN'))
-        }, free_header=True, default_values=True)),
+      }, free_header=True, default_values=True)),
     V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
     V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
   ])
