@@ -9,6 +9,7 @@ import subprocess
 import os
 import numpy as np
 
+
 class BaseProcessOutputReader:
   """
   Class, that run a process, optionally saves all the output of the process to a file,
@@ -31,6 +32,7 @@ class BaseProcessOutputReader:
          os.chdir(dr)
 
       exception = None
+
       def replace_feed_data(stream_reader):
           nonlocal exception
           if stream_reader._buffer:
@@ -123,7 +125,7 @@ class BaseProcessOutputReader:
           print(line.decode('utf8'))
 
   async def read_output(self, stdout):
-      raise NotImplemented('Please, redefine BaseProcess.read_output coroutine')
+      raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
 
   def read_from_file(self, output, error=None, return_code=0, print_output=False):
 
@@ -136,7 +138,8 @@ class BaseProcessOutputReader:
               return loop.run_until_complete(task)
 
       def err():
-          if not error: return None
+          if not error:
+              return None
           with AsyncioFileReader(error) as air:
               task = loop.create_task(self.read_error(air))
               return loop.run_until_complete(task)
@@ -145,6 +148,7 @@ class BaseProcessOutputReader:
         return self.result(out(), err(), return_code)
       finally:
         loop.close()
+
 
 class AsyncioFileReader:
   """ File reader that mimics asyncio StreamReader.
@@ -179,9 +183,9 @@ class AsyncioFileReader:
       shifts = np.ones(len(sep) + 1, dtype=int)
       shift = 1
       for pos in range(len(sep)):
-        while shift <= pos and sep[pos] != sep[pos-shift]:
-            shift += shifts[pos-shift]
-        shifts[pos+1] = shift
+        while shift <= pos and sep[pos] != sep[pos - shift]:
+            shift += shifts[pos - shift]
+        shifts[pos + 1] = shift
       return shifts
 
   async def readuntil(self, sep=b'\n'):
@@ -189,12 +193,12 @@ class AsyncioFileReader:
       if lsep == 0:
           return b''
 
-      #https://stackoverflow.com/questions/14128763/how-to-find-the-overlap-between-2-sequences-and-return-it
+      # https://stackoverflow.com/questions/14128763/how-to-find-the-overlap-between-2-sequences-and-return-it
       shifts = self.separator_shifts(sep)
 
       # do the actual search
       # read the bytes into the array to avoid incrementing the array one by one
-      out =  b''
+      out = b''
       buffer = bytearray(self.buffersize + lsep)
       bufEnd = 0
       bufPos = 0
@@ -214,7 +218,7 @@ class AsyncioFileReader:
            n = lsep - matchLen
            data = self.file.read(n)
            ldata = len(data)
-           buffer[bufPos:bufPos+ldata] = data
+           buffer[bufPos:bufPos + ldata] = data
            bufEnd += ldata
            if len(data) < n:
               raise asyncio.IncompleteReadError(result(), sep)

@@ -7,13 +7,13 @@ grammar definition approach as for potential and input parameters
 files is used
 """
 
-import functools
 import pyparsing as pp
 from ..common.grammar import line_end
 from ..common.configuration_definitions import \
     ValueDefinition, \
     SectionDefinition
 from ..common.decorators import cached_class_property
+
 
 class OutputValueDefinition(ValueDefinition):
   """ Value in an output file, of a form 'NAME   VALUE' """
@@ -27,6 +27,7 @@ class OutputValueDefinition(ValueDefinition):
   def __init__(self, *args, required=True, **kwargs):
       super().__init__(*args, required=required, **kwargs)
 
+
 class OutputValueEqualDefinition(OutputValueDefinition):
   """ Value in an output file, of a form 'NAME=VALUE' (spaces possible) """
 
@@ -35,6 +36,7 @@ class OutputValueEqualDefinition(OutputValueDefinition):
   @cached_class_property
   def grammar_of_delimiter():
     return pp.Suppress("=").setName('=')
+
 
 class OutputNonameValueDefinition(OutputValueDefinition):
   """ Value in an output file, that has no name, there is just the value
