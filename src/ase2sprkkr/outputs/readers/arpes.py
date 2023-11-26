@@ -3,8 +3,10 @@
 from ..task_result import TaskResult, KkrProcess
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
-from ..output_files import OutputFile
+from ...output_files.output_files import OutputFile
 import os
+
+
 class ArpesResult(TaskResult):
   """ Objects of this class holds the results of computed SCF class """
 
