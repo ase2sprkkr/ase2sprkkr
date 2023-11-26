@@ -6,18 +6,18 @@ and other containers, and are able to write them to a configuration file,
 and that are results of parsing of a configuration file.
 """
 
-from ..common.grammar_types import mixed
-from .options import Option, BaseOption
-import pyparsing as pp
+from .options import BaseOption
 from .configuration import Configuration
 import itertools
 import re
 from typing import Union, Any, Dict
 
+
 class DisabledAttributeError(AttributeError):
       """ This exception is raised, if the attribute of a container exists,
       but it is disabled. E.g. because it has no sense for the current data.
       """
+
 
 class ConfigurationContainer(Configuration):
   """ A container for configuration (problem-definition) options and/or sections.
@@ -134,7 +134,7 @@ class ConfigurationContainer(Configuration):
       """
       def ok(member):
           d = member._defintion
-          return not d.condtion or d.condition(out)
+          return not d.condtion or d.condition(self)
       members = ( k.name for i,k in self._interactive_members.items() )
 
       return itertools.chain( members, super().__dir__())
@@ -198,7 +198,6 @@ class ConfigurationContainer(Configuration):
       if not val:
          raise ValueError(f"No {name} member of {self}")
       return val.get()
-
 
   def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
       """
@@ -291,7 +290,6 @@ class ConfigurationContainer(Configuration):
       if value is not None:
           self._members[name].set(value, unknown='add')
 
-
   def remove_member(self, name:str):
       """
       Remove a (previously added) custom value from the container
@@ -305,8 +303,8 @@ class ConfigurationContainer(Configuration):
       del self._members[name]
       iname = self._interactive_member_name(name)
       if iname in self._interactive_members and \
-          self._interactive_members[iname] == member:
-            del self._interactive_members[iname]
+           self._interactive_members[iname] == member:
+                del self._interactive_members[iname]
 
   def __iter__(self):
       """ Iterate over all members of the container """
@@ -377,7 +375,8 @@ class ConfigurationContainer(Configuration):
 
   def is_changed(self):
       for i in self:
-          if i.is_changed(): return True
+          if i.is_changed():
+              return True
       return False
 
   def _save_to_file(self, file, always=False)->bool:
@@ -428,13 +427,12 @@ class ConfigurationContainer(Configuration):
 
       return True
 
-
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member
       with a given name """
       if name[0]=='_' or name in self.__dict__ \
-          or hasattr(getattr(self.__class__, name, None),'__set__'):
-        super().__setattr__(name, value)
+         or hasattr(getattr(self.__class__, name, None),'__set__'):
+              super().__setattr__(name, value)
       else:
         val = self._get_member(name)
         val.set(value)
@@ -470,6 +468,7 @@ class ConfigurationContainer(Configuration):
            return True
       return False
 
+
 class DictAdaptor:
   """ This class wraps a container to behave as a read-only dict.
   It is used during validation of a container.
@@ -484,8 +483,10 @@ class DictAdaptor:
   def __getitem__(self, name):
       return self.container.__getitem__(name)()
 
+
 class BaseSection(ConfigurationContainer):
   """ A section of SPRKKR configuration - i.e. part of the configuration file. """
+
 
 class Section(BaseSection):
   """ A standard section of a task or potential (whose content is predefinded by SectionDefinition) """
@@ -532,6 +533,7 @@ class CustomSection(BaseSection):
           definition.removable = True
           return cls(definition, container)
       return create
+
 
 class RootConfigurationContainer(ConfigurationContainer):
   """ Base class for data of configuration/problem-definition files
