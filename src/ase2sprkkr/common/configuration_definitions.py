@@ -1439,6 +1439,11 @@ class ContainerDefinition(RealItemDefinition):
         out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
 
+    def from_dict(self, values, **kwargs):
+        out = self.result_class(definition = self, **kwargs)
+        out.set(values, unknown='add')
+        return out
+
     def read_from_string(self, string, allow_dangerous=False, **kwargs):
         return self.read_from_file(StringIO(string), allow_dangerous, **kwargs)
 
@@ -1492,7 +1497,7 @@ class ConfigurationRootDefinition(ContainerDefinition):
    """
 
    @classmethod
-   def from_dict(cls, name, defs=None):
+   def definition_from_dict(cls, name, defs=None):
        """
        Create instance of the definition from a dictionary, creating
        the sections (and values) definitions recursively.

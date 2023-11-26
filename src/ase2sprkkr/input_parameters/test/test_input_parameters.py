@@ -96,7 +96,7 @@ class TestInputParameters(TestCase):
      assertParseDangerous("aaa={2,3}", ('aaa', np.array([2,3])))
 
   def test_write_condition(self):
-    input_parameters_def = cd.InputParametersDefinition.from_dict({
+    input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('E', 1)
       ]})
@@ -114,7 +114,7 @@ class TestInputParameters(TestCase):
     #
 
   def test_input_parameters_definition(self):
-    input_parameters_def = cd.InputParametersDefinition.from_dict({
+    input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
         V('NE', gt.SetOf(int, min_length=1)),
@@ -337,7 +337,7 @@ XSITES NR=3 FLAG
 #
 
   def test_set_values(self):
-    input_parameters_def = cd.InputParametersDefinition.from_dict({
+    input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
         'ENERGY' : [
           V('GRID', gt.SetOf(int, length=1), fixed_value=3),
           V('NE', gt.SetOf(int, min_length=1)),
@@ -368,7 +368,7 @@ XSITES NR=3 FLAG
 #
 
   def test_numbered_array(self):
-    input_parameters_def = cd.InputParametersDefinition.from_dict({
+    input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
         V('NE', gt.SetOf(int, min_length=1)),
@@ -451,7 +451,7 @@ XSITES NR=3 FLAG
 
   def test_gather(self):
     assertParse = self.assertParse
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
         *gather( V('A', 1),
@@ -466,7 +466,7 @@ XSITES NR=3 FLAG
   def test_given_len_array(self):
     assertParse = self.assertParse
 
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('C', gt.NumpyArray(lines=3), name_in_grammar=False ),
       ]
@@ -477,7 +477,7 @@ XSITES NR=3 FLAG
     3 3
     """,{'ENERGY': {'C': ar([1,1,2,2,3,3]).reshape(3,2)}}, ipd.grammar())
 
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),
         V('B', 2),
@@ -500,7 +500,7 @@ XSITES NR=3 FLAG
     g = ipd.grammar()
     assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g)
 
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),
         V('B', 2),
@@ -517,7 +517,7 @@ XSITES NR=3 FLAG
     5 9 8
     E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar())
 
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),
         V('B', 2, is_repeated = True),
@@ -550,7 +550,7 @@ XSITES NR=3 FLAG
   def test_switch(self):
     assertParse = self.assertParse
     assertNotValid = self.assertNotValid
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),
         *switch('A', {
@@ -574,7 +574,7 @@ XSITES NR=3 FLAG
     assertNotValid('ENERGY A=3 C=3', grammar)
 
     print("\n\n\n***************\n\n")
-    ipd = cd.InputParametersDefinition.from_dict({
+    ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),
         *switch('A', {
