@@ -4,28 +4,30 @@ This is a sctipt to visualise in_struct.inp files. Run it to see the doc.
 """
 import argparse
 from pathlib import Path
+import sys
+
+from ..common.tools import parse_tuple_function, parse_named_option, append_id_to_filename
+from ..output_files.output_files import OutputFile
 
 if not __package__:
   __package__ = 'ase2sprkkr.tools'
-import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
-from ..common.tools import parse_tuple_function, parse_named_option
-from ..outputs.output_files import OutputFile
+
 
 def plot():
-  #READ IN COMAND LINE PARAMETERS
+  # READ IN COMAND LINE PARAMETERS
   description='This is a script for plotting SPR-KKR output files. The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n' + \
    '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].definition.info()}", OutputFile.definitions.items()))
 
   parser = argparse.ArgumentParser(
       description=description,
       formatter_class=argparse.RawDescriptionHelpFormatter
-      )
+  )
   parser.add_argument('output', help='SPR-KKR output file name (see the supported files above).')
   parser.add_argument('-o','--output_filename', dest='filename', type=str, help='The plot will be saved to a file with given name, instead of showing it on the screen', default=None, required=False)
   parser.add_argument('-v','--value', dest='value', type=str, help='Only the value of the given name will be plotted (option can be repeated)', action='append', default=[], required=False)
 
-  parser.add_argument('-s','--plot_size', dest='figsize', default=(6,4), type=parse_tuple_function(float,2),   help='The plot size', required=False)
+  parser.add_argument('-s','--plot_size', dest='figsize', default=(6,4), type=parse_tuple_function(float,2), help='The plot size', required=False)
   parser.add_argument('-c','--colormap', dest='colormap', type=str, help='Matplotlib colormap', required=False)
   parser.add_argument('-n','--norm', dest='norm', choices=['lin', 'log'], help='Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)', required=False)
 
@@ -58,6 +60,7 @@ def plot():
       val.plot(**kwargs)
   else:
     of.plot(**kwargs)
+
 
 if __name__ == "__main__":
    plot()
