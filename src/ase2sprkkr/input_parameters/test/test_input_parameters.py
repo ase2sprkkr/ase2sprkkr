@@ -1,24 +1,28 @@
+import pyparsing as pp
+import io
+import re
+import numpy as np
+import pytest
+from functools import partial
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-import unittest
-import pyparsing as pp
-from ...common import grammar_types as gt
-from .. import input_parameters_definitions as cd
-from .. import input_parameters as input_parameters
-from ...common.configuration_containers import Section, CustomSection
-from ...common.options import Option, CustomOption
-from ...common.configuration_definitions import gather, switch
-import io, re
-import numpy as np
-from ...common.grammar import generate_grammar
-import pytest
-from functools import partial
+if True:  # Just a linter worshiping
+    from ...common.grammar import generate_grammar
+    from ...common import grammar_types as gt
+    from .. import input_parameters_definitions as cd
+    from .. import input_parameters as input_parameters
+    from ...common.configuration_containers import Section, CustomSection
+    from ...common.options import Option, CustomOption
+    from ...common.configuration_definitions import gather, switch
 
 V = cd.InputValueDefinition
+
+
 def ar(x):
    return np.atleast_1d(x)
 
@@ -38,7 +42,6 @@ class TestInputParameters(TestCase):
   def assertNotValid(self, text, grammar=None):
       self.assertRaises(pp.ParseBaseException, lambda: self.parse(text, grammar))
 
-
   def test_section_delimiter_value(self):
      grammar = cd.InputParametersDefinition.grammar_of_delimiter()
      grammar = 'a' + grammar + 'b'
@@ -46,7 +49,7 @@ class TestInputParameters(TestCase):
          self.assertRaises(pp.ParseException, lambda: grammar.parseString(w, True))
      for w in ['a\nb','a \nb','a\n  \nb','a  \n \nb','a \n\t\nb', 'a\n\n\nb']:
          self.assertEqual(['a','b'], grammar.parseString(w, True).asList())
-
+#
 
   def test_custom_value(self):
      with generate_grammar():
@@ -73,6 +76,7 @@ class TestInputParameters(TestCase):
 
      assertParse = partial(self.assertParse, grammar=lambda: cv)
      assertNotValid = partial(self.assertNotValid, grammar=lambda: cv)
+
      def assertParseDangerous(text,result):
          out = cv.parseString(text, True)[0]
          assert out[0] == result[0]
@@ -107,7 +111,7 @@ class TestInputParameters(TestCase):
     self.assertEqual(id.to_string(), "ENERGY\n")
     input_parameters_def['ENERGY'].write_condition = lambda o: False
     self.assertEqual(id.to_string(), "")
-
+    #
 
   def test_input_parameters_definition(self):
     input_parameters_def = cd.InputParametersDefinition.from_dict({
@@ -143,9 +147,9 @@ class TestInputParameters(TestCase):
 
 NE={5}""")
 
-    #fixed value = 3
+    # fixed value = 3
     assertNotValid("""ENERGY GRID={1}""")
-    #no space before a section name
+    # no space before a section name
     assertNotValid(""" ENERGY GRID={3}""")
     assertParse("""ENERGY GRID={3}""", ('ENERGY', {'GRID':ar(3)}))
 
@@ -163,7 +167,7 @@ NE={5}""")
 
 SITES NL=2""", {'ENERGY': {'NE':300, 'GRID':3}, 'SITES':{'NL':2}} )
 
-    #custom values
+    # custom values
     with generate_grammar():
       grammar = input_parameters_def['ENERGY']._grammar_of_values()
     assertParse("""GRID={3}
@@ -184,7 +188,6 @@ SITES NL=2""", {'ENERGY': {'GRID':ar(3), 'NE':ar(300), 'NXXX': 5},
                               'SITES':{'NL':2}}
     )
 
-
     assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
@@ -195,7 +198,7 @@ SITES NL=2
                               'SITES':{'NL':2}}
     )
 
-    #SITES do not start on the begin of the line, so it is not the start of the section
+    # SITES do not start on the begin of the line, so it is not the start of the section
     assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
@@ -206,7 +209,6 @@ SITES NL=2
                               'SITES': True, 'NL':2 }}
     )
 
-
     assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
@@ -215,9 +217,6 @@ SITES NL=2
 
               """, {'ENERGY': {'GRID':ar(3), 'NE':ar(300), 'NXXX': True, 'SITES': True, 'NL': 2}}
     )
-
-
-
 
     assertNotValid("""ENERGY GRID={3}
                      NE={300}
@@ -229,7 +228,7 @@ SITES NL=2
 SITES NL=3
               """)
 
-    #custom section
+    # custom section
     assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
@@ -246,7 +245,7 @@ XSITES NR=3
                               'XSITES':{'NR':3}
       })
 
-    #multiline custom section
+    # multiline custom section
     assertParse("""ENERGY GRID={3}
                      NE={300}
                      NXXX
@@ -263,7 +262,7 @@ XSITES NR=3 NF=1
                               'XSITES':{'NR':3, 'NF':1,'NZ':5.5}
       })
 
-    #custom section with a flag
+    # a custom section with a flag
     assertParse("""ENERGY GRID={3}
                      NXXX
                      NE={300}
@@ -335,7 +334,7 @@ XSITES NR=3 FLAG
     ips2 = input_parameters_def.read_from_file(output, allow_dangerous=True)
     self.assertEqual('sss', ips.ENERGY.NE())
     self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
-
+#
 
   def test_set_values(self):
     input_parameters_def = cd.InputParametersDefinition.from_dict({
@@ -361,11 +360,12 @@ XSITES NR=3 FLAG
     self.assertEqual(ips.ENERGY.ENERGY(), 5.)
     ips.set('ENERGY', 6. )
     self.assertEqual(ips.ENERGY.ENERGY(), 6.)
-    ips.set('ENERGY.ENERGYY', 7.,  unknown='ignore')
+    ips.set('ENERGY.ENERGYY', 7., unknown='ignore')
     self.assertFalse('ENERGYY' in ips.ENERGY)
-    self.assertRaises(KeyError, lambda:  ips.set('ENERGY.ENERGYY', 7.,  unknown='fail'))
-    ips.set('ENERGY.ENERGYY', 7.,  unknown='add')
+    self.assertRaises(KeyError, lambda: ips.set('ENERGY.ENERGYY', 7., unknown='fail'))
+    ips.set('ENERGY.ENERGYY', 7., unknown='add')
     self.assertEqual(ips.ENERGY.ENERGYY(), 7.)
+#
 
   def test_numbered_array(self):
     input_parameters_def = cd.InputParametersDefinition.from_dict({
@@ -384,20 +384,20 @@ XSITES NR=3 FLAG
     assertParse = partial(self.assertParse, grammar=lambda: grammar)
     assertNotValid = partial(self.assertNotValid, grammar=lambda: grammar)
 
-    assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0");
-    assertParse("ENERGY NE=1 Ime=0.5", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : 0.5}});
+    assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0")
+    assertParse("ENERGY NE=1 Ime=0.5", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : 0.5}})
     input_parameters_def.sections['ENERGY']['Ime'].is_numbered_array = True
     with generate_grammar():
       grammar = input_parameters_def._grammar_of_values()
 
-    assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0");
-    assertParse("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {'def': 0.5,  1:0.4, 5:0.8} }, });
+    assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0")
+    assertParse("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {'def': 0.5, 1:0.4, 5:0.8} }, })
 
     ip=input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
     self.assertEqual(0.5, ip.ENERGY.Ime())
     self.assertEqual(0.8, ip.ENERGY.Ime[5])
     self.assertEqual([0.4,0.5,0.5,0.5,0.8], ip.ENERGY.Ime[:])
-    self.assertEqual({'def': 0.5, 1: 0.4, 5: 0.8}, ip.ENERGY.Ime.as_dict());
+    self.assertEqual({'def': 0.5, 1: 0.4, 5: 0.8}, ip.ENERGY.Ime.as_dict())
     self.assertEqual({'def': 0.5, 1: 0.4, 5: 0.8}, ip.ENERGY.Ime(all_values=True))
     ip.ENERGY.Ime[1] = 0.7
     ip.ENERGY.Ime[9] = 0.9
@@ -409,10 +409,12 @@ XSITES NR=3 FLAG
     ip.ENERGY.Ime[5:9] = 0.2
     self.assertEqual([0.2,0.2,0.2,0.2,0.3], ip.ENERGY.Ime[5:10])
     self.assertRaises(KeyError, lambda: ip.ENERGY.Ime[5.0])
+
     def e():
        ip.ENERGY.Ime[5.0]=1
     self.assertRaises(KeyError, e)
     self.assertRaises(KeyError, lambda: ip.ENERGY.Ime['5'])
+
     def e():
        ip.ENERGY.Ime['5']=1
     self.assertRaises(KeyError, e)
@@ -457,10 +459,9 @@ XSITES NR=3 FLAG
         V('C', 3)
       ]
     })
-    assertParse("ENERGY GRID={3} A B=1 2 C=3", {'ENERGY': { 'GRID': ar(3), 'A' : 1, 'B' : 2, 'C' : 3 }}, ipd.grammar());
+    assertParse("ENERGY GRID={3} A B=1 2 C=3", {'ENERGY': { 'GRID': ar(3), 'A' : 1, 'B' : 2, 'C' : 3 }}, ipd.grammar())
     out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
     self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
-
 
   def test_given_len_array(self):
     assertParse = self.assertParse
@@ -474,7 +475,7 @@ XSITES NR=3 FLAG
     1 1
     2 2
     3 3
-    """,{'ENERGY': {'C': ar([1,1,2,2,3,3]).reshape(3,2)}}, ipd.grammar());
+    """,{'ENERGY': {'C': ar([1,1,2,2,3,3]).reshape(3,2)}}, ipd.grammar())
 
     ipd = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
@@ -494,10 +495,10 @@ XSITES NR=3 FLAG
     E=77"""
 
     g = ipd.grammar()
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g);
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g)
     ipd['ENERGY'].force_order=True
     g = ipd.grammar()
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g);
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)),'E':77}}, g)
 
     ipd = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
@@ -508,13 +509,13 @@ XSITES NR=3 FLAG
         V('E', 3),
       ]
     })
-    assertParse("""ENERGY A=3 B=2 
+    assertParse("""ENERGY A=3 B=2
     1 1
     2 2
     3 3
     4 5 6
     5 9 8
-    E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar());
+    E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar())
 
     ipd = cd.InputParametersDefinition.from_dict({
       'ENERGY' : [
@@ -526,24 +527,24 @@ XSITES NR=3 FLAG
     B=2
     B=5
     B=8
-    C=77""";
+    C=77"""
     grammar = ipd.grammar()
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar);
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar)
     ip=ipd.read_from_string(data)
-    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict());
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict())
     self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
     ipd['ENERGY'].force_order=True
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar);
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar)
     ip=ipd.read_from_string(data)
-    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict());
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict())
     self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
 
     data="""ENERGY A=3
     B=2
-    C=77""";
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C':77}}, ipd.grammar());
+    C=77"""
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C':77}}, ipd.grammar())
     ip=ipd.read_from_string(data)
-    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2]), 'C':77}}, ip.to_dict());
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2]), 'C':77}}, ip.to_dict())
     self.assertEqual('ENERGY A=3 B=2 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
 
   def test_switch(self):
@@ -560,14 +561,12 @@ XSITES NR=3 FLAG
     ipd.custom_class=None
     ipd['ENERGY'].custom_class=None
     ipd['ENERGY'].force_order=True
-    #ipd['ENERGY']['C'].add_grammar_hook(lambda x:x.addParseAction(lambda x: breakpoint() or x))
-    #ipd['ENERGY']['B'].add_grammar_hook(lambda x:x.addParseAction(lambda x: breakpoint() or x))
     grammar = ipd.grammar()
-    assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar);
-    assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar);
+    assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar)
+    assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar)
     out=ipd.read_from_string('ENERGY A=2 C=4')
     self.assertEqual(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n')
-    assertParse('ENERGY A=1 B=2', {'ENERGY': {'A' : 1, 'B' : 2}}, grammar);
+    assertParse('ENERGY A=1 B=2', {'ENERGY': {'A' : 1, 'B' : 2}}, grammar)
     assertNotValid('ENERGY A=2 B=2', grammar)
     assertNotValid('ENERGY A=1 C=1', grammar)
     assertNotValid('ENERGY A=1 B=2 C=1', grammar)
@@ -584,19 +583,16 @@ XSITES NR=3 FLAG
        ]})
     ipd['ENERGY'].force_order = True
     grammar = ipd.grammar()
-    assertParse('ENERGY A=2 C=4 E=2 B=6', {'ENERGY': {'A':2, 'C':4, 'E':2, 'B':6 }}, grammar);
-    assertParse('ENERGY A=1 B=5 D=3 C=5', {'ENERGY': {'A':1, 'B':5, 'D':3, 'C':5 }}, grammar);
+    assertParse('ENERGY A=2 C=4 E=2 B=6', {'ENERGY': {'A':2, 'C':4, 'E':2, 'B':6 }}, grammar)
+    assertParse('ENERGY A=1 B=5 D=3 C=5', {'ENERGY': {'A':1, 'B':5, 'D':3, 'C':5 }}, grammar)
 
     grammar = ipd.grammar()
     assertNotValid('ENERGY A=2 B=2', grammar)
     assertNotValid('ENERGY A=1 B=2', grammar)
     assertNotValid('ENERGY A=1 B=2 D=3', grammar)
-    assertNotValid('ENERGY A=1 B=5 D=3 C=5 B=6', grammar);
-    assertNotValid('ENERGY A=1 B=5 D=3 C=5 E=6', grammar);
-    assertNotValid('ENERGY A=2 B=5 C=4 E=3', grammar);
+    assertNotValid('ENERGY A=1 B=5 D=3 C=5 B=6', grammar)
+    assertNotValid('ENERGY A=1 B=5 D=3 C=5 E=6', grammar)
+    assertNotValid('ENERGY A=2 B=5 C=4 E=3', grammar)
     out=ipd.read_from_string('ENERGY A=2 C=4 E=2 B=6')
     self.assertEqual(out['ENERGY'].to_dict(), {'A': 2, 'B': 6, 'C': 4, 'E':2})
     self.assertEqual(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n\tE=2\n\tB=6\n')
-
-
-
