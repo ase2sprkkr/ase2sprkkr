@@ -4,6 +4,7 @@ and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_
 
 from typing import Union
 
+
 class Configuration:
   """ The common base class for all configurations values and containers. I.e.
   for :class:`Options<ase2sprkkr.common.options.Option>` and :class:`Sections<ase2sprkkr.common.configuration_containers.Section>`.
@@ -78,7 +79,7 @@ class Configuration:
         The default value 'basic' means, return all non-expert values
         and all changed expert values.
       """
-      raise NotImplemented()
+      raise NotImplementedError()
 
   def to_dict(self, only_changed:Union[bool,str]='basic'):
       """ Alias of the method :meth:`as_dict`. """
@@ -109,11 +110,9 @@ class Configuration:
       global _help_warning_printed
       if not _help_warning_printed:
           import __main__ as main
-          if verbose is True and not hasattr(main, '__file__'): #I'm in repl
+          if verbose is True and not hasattr(main, '__file__'):  # I'm in repl
              print('\n You can use <Configuration>.help(True) for a more detailed description of the possible configuration options. Enjoy ASE2SPRKKR!\n')
           _help_warning_printed = True
-
-
 
   def __repr__(self):
       d = self._definition
@@ -165,7 +164,6 @@ class Configuration:
       s = StringIO()
       self._save_to_file(s)
       return s.getvalue()
-
 
 
 _help_warning_printed=False
