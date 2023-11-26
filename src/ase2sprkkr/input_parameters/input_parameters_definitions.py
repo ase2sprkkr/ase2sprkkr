@@ -6,7 +6,6 @@ structure, so they share common functionalities from
 sprkkr.common.configuration_definitions
 """
 
-import functools
 import pyparsing as pp
 from ..common.configuration_definitions import dict_from_parsed
 from ..sprkkr.configuration import \
@@ -20,6 +19,7 @@ from .input_parameters import InputParameters, InputSection
 with generate_grammar():
   section_line_ends = pp.ZeroOrMore(pp.ZeroOrMore(pp.LineEnd().setWhitespaceChars('')) + pp.White(' \t'))
 
+
 class InputValueDefinition(ConfigurationValueDefinition):
   """ This class describes the format of one value of
   a task configuration """
@@ -32,6 +32,7 @@ class InputValueDefinition(ConfigurationValueDefinition):
 
   type_from_type_map = { bool : flag }
   type_of_dangerous = mixed
+
 
 class InputSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one
@@ -55,6 +56,7 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
       return out
 
   do_not_skip_whitespaces_before_name = True
+
 
 class InputParametersDefinition(ConfigurationFileDefinition):
   """ This class describes the format of a task file. """
@@ -85,7 +87,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
   @classmethod
   @cache
   def custom_value_grammar(cls):
-      value  = cls.child_class.custom_member_grammar()
+      value = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).\
             setParseAction(lambda x: dict_from_parsed(x.asList(), lambda x: True))
@@ -119,6 +121,6 @@ class InputParametersDefinition(ConfigurationFileDefinition):
 
       super().__init__(name, members, **kwargs)
       if not 'TASK' in self:
-         self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name),  name_in_grammar=False) ] )
+         self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
       elif not 'TASK' in self['TASK']:
          self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)

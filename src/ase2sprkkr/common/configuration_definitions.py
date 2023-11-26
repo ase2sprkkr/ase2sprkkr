@@ -11,11 +11,11 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 """
 
 from ..common.misc import dict_first_item
-from ..common.grammar_types  import type_from_type, type_from_value, GrammarType, Array
-from ..common.grammar  import delimitedList, end_of_file, generate_grammar
+from ..common.grammar_types import type_from_type, type_from_value, GrammarType, Array
+from ..common.grammar import delimitedList, generate_grammar
 from .configuration_containers import Section
 from .options import Option, Dummy, DangerousValue
-from .decorators import cache, cached_class_property, cached_property
+from .decorators import cache, cached_class_property
 
 import numpy as np
 import pyparsing as pp
@@ -24,12 +24,13 @@ import itertools
 import builtins
 from io import StringIO
 from typing import Dict, Union
-import sys
 
-#:This serves just for dealing with various pyparsing versions
+
+# This serves just for dealing with various pyparsing versions
 _parse_all_name = 'parse_all' if \
   'parse_all' in inspect.getfullargspec(pp.Or.parseString).args \
   else 'parseAll'
+
 
 def dict_from_parsed(values, allowed_duplicates):
     """ Create a dictionary from the arguments.
@@ -203,7 +204,8 @@ class BaseDefinition:
 
        if not '_copy_args' in self.__class__.__dict__:
           args = inspect.getfullargspec(self.__class__.__init__).args[1:]
-          self.__class__._copy_args = { v: '_'+v if '_'+v in self.__dict__ else v for v in args if v not in self._copy_excluded_args }
+          self.__class__._copy_args = { v: '_' + v if '_' + v in self.__dict__ else v
+                                       for v in args if v not in self._copy_excluded_args }
        return self.__class__._copy_args
 
   def copy(self, **kwargs):
@@ -401,8 +403,8 @@ class RealItemDefinition(BaseDefinition):
           prefix + self.info().replace('\n', '\n' + prefix), prefix
        ]
 
-       #out.append(f"{prefix}Data description\n"
-       #           f"{prefix}----------------")
+       # out.append(f"{prefix}Data description\n"
+       #            f"{prefix}----------------")
        out.append(self.data_description(verbose, show_hidden, prefix))
        if self._description:
           out.append('\n')
@@ -477,6 +479,7 @@ class RealItemDefinition(BaseDefinition):
    do_not_skip_whitespaces_before_name = False
 
    _copy_excluded_args = BaseDefinition._copy_excluded_args + ['expert']
+
 
 class ValueDefinition(RealItemDefinition):
 
@@ -685,7 +688,7 @@ class ValueDefinition(RealItemDefinition):
 
     self.is_numbered_array = is_numbered_array
     if is_numbered_array and not self.name_in_grammar:
-       raise ValueException('Numbered_array value type has to have its name in the grammar')
+       raise ValueError('Numbered_array value type has to have its name in the grammar')
 
     self.name_format = name_format
 
@@ -765,7 +768,7 @@ class ValueDefinition(RealItemDefinition):
     if verbose:
        add = self.additional_data_description(prefix=prefix + self._description_indentation)
        if add:
-          out+= f'\n'
+          out+= '\n'
           out+= add
     return out
 
@@ -881,7 +884,6 @@ class ValueDefinition(RealItemDefinition):
        name_value_delimiter=self.grammar_of_delimiter
 
     body = self._grammar_of_value(name_value_delimiter, allow_dangerous)
-
 
     if name_in_grammar:
        nbody = self.formated_name.strip()
@@ -1030,11 +1032,8 @@ class ValueDefinition(RealItemDefinition):
       """
       if not all_values or not self.is_numbered_array:
           return self.type.copy_value(value)
-      return { k:self.type.copy_value(v) for v in values }
+      return { k:self.type.copy_value(v) for k,v in value.items() }
 
-  @property
-  def is_independent_on_the_predecessor(self):
-      return self.name_in_grammar or self.type.is_independent_on_the_predecessor
 
 def add_excluded_names_condition(element, names):
     """ Add the condition to the element, that
@@ -1043,6 +1042,7 @@ def add_excluded_names_condition(element, names):
        return
     names = set((i.upper() for i in names))
     element.addCondition(lambda x: x[0].upper() not in names)
+
 
 class ContainerDefinition(RealItemDefinition):
     """ Base class for a definition (of contained data, format, etc)
@@ -1149,8 +1149,8 @@ class ContainerDefinition(RealItemDefinition):
               verbose = verbose if verbose=='all' else False
            add = self.additional_data_description(verbose, show_hidden, prefix)
            if add:
-              out+=f' contains:'
-              under=prefix + "-"*len(out) + '\n'
+              out+=' contains:'
+              under=prefix + "-" * len(out) + '\n'
               out=f"{prefix}{out}\n{under}{add}"
         return out
 
@@ -1198,7 +1198,7 @@ class ContainerDefinition(RealItemDefinition):
 
         if expert:
           out.append(f'\n{cprefix}Expert options:')
-          out.append(cprefix +   '--------------')
+          out.append(cprefix + '--------------')
           cprefix+=self._description_indentation
 
           for i in self:
@@ -1290,6 +1290,7 @@ class ContainerDefinition(RealItemDefinition):
        if self.force_order:
 
            init = pp.Empty()
+
            def set_loc(loc, toks):
                init.location = loc
            init.setParseAction(set_loc)
@@ -1301,7 +1302,7 @@ class ContainerDefinition(RealItemDefinition):
            else:
               after = pp.Forward() << delimiter
            after.addCondition(lambda loc, toks: loc != init.location)
-           inter_cvs = (first | after).setName(f'<?DELIM>')
+           inter_cvs = (first | after).setName('<?DELIM>')
            inter = (first | delimiter.copy().addCondition(lambda loc, toks: loc != init.location))
 
            def sequence():
@@ -1318,7 +1319,7 @@ class ContainerDefinition(RealItemDefinition):
                    else:
                       yield g
 
-           values  = pp.And([ i for i in sequence()])
+           values = pp.And([ i for i in sequence()])
 
            if custom_value:
               if not self._first_section_has_to_be_first():
@@ -1328,21 +1329,21 @@ class ContainerDefinition(RealItemDefinition):
 
        else:
            it = grammars()
-           #store the first fixed "chain of sections"
+           # store the first fixed "chain of sections"
            first = self._first_section_has_to_be_first() and next(it)[1]
-           #the rest has any order
+           # the rest has any order
            values = pp.MatchFirst([i for head,i in it])
            if custom_value:
                values |= custom_value
            values = delimitedList(values, delimiter)
            if first:
-              values = first + pp.Optional(delimiter + values)
+               values = first + pp.Optional(delimiter + values)
 
        values.setParseAction(lambda x: dict_from_parsed(x.asList(), self._allow_duplicates_of))
 
        if self.validate:
           def _validate(s, loc, value):
-              #just pass the dict to the validate function
+              # just pass the dict to the validate function
               is_ok = self.validate(MergeDictAdaptor(value[0], self), 'parse')
               if is_ok is not True:
                 if is_ok is None:
@@ -1444,6 +1445,7 @@ class ContainerDefinition(RealItemDefinition):
     def validate(self, container, why:str='save'):
         return True
 
+
 class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 
@@ -1463,7 +1465,7 @@ class SectionDefinition(ContainerDefinition):
    @cache
    def delimited_custom_value_grammar(cls):
         gt = cls.custom_class.grammar_type
-        #here the child (Value) class delimiter should be used
+        # here the child (Value) class delimiter should be used
         out = cls.child_class.grammar_of_delimiter + gt.grammar()
         optional, df, _ = gt.missing_value()
         if optional:
@@ -1547,6 +1549,7 @@ class ConfigurationRootDefinition(ContainerDefinition):
        grammar = grammar.ignore("#" + pp.restOfLine + pp.LineEnd())
        return grammar
 
+
 class MergeDictAdaptor:
     """ This class returns a read-only dict-like class
     that merge values from a container and from the
@@ -1569,6 +1572,7 @@ class MergeDictAdaptor:
     def __repr__(self):
         return f'Section {self.definition.name} with values {self.values}'
 
+
 class VirtualDefinition(BaseDefinition):
      """ Base class for a definition, that do not have value, just control
      the flow of the parsing """
@@ -1589,11 +1593,13 @@ class VirtualDefinition(BaseDefinition):
      def all_names_in_grammar(self):
          return iter(())
 
+
 class ControlDefinition(VirtualDefinition):
      """ Control definitions has no grammar, they just modify the other items of the container """
 
      _grammar = None
      """ This object does not generate a grammar """
+
 
 class Stub(VirtualDefinition):
     """ Item that allows to reuse existing item on the other place
@@ -1614,6 +1620,7 @@ class Stub(VirtualDefinition):
          item = self.container[self.item]
          out=item._grammar(allow_dangerous)
          return pp.Forward() << out
+
 
 class Ignored:
     """ Output definition for an ignored option.
@@ -1685,9 +1692,9 @@ class Gather:
             val,write = i._written_value()
             if write:
                 if not i._definition.write_value(file, val, delimiter):
-                    raise NotImplemented('Gathered values have to be always written')
+                    raise NotImplementedError('Gathered values have to be always written')
             else:
-                raise NotImplemented('Gathered value names have to be always written')
+                raise NotImplementedError('Gathered value names have to be always written')
             delimiter = self.value_delimiter
 
         write(value, delimiter)
@@ -1695,10 +1702,6 @@ class Gather:
           write(value._container[i.name], self.value_delimiter)
         return True
 
-    def copy_for_value(self, new_value):
-        out = copy.copy()
-        parent = new_value._container
-        self.values = [ parent[i.name] for i in self.values ]
 
 def gather(first, *members):
     """ Modify the given option definitions, that they appears
@@ -1716,6 +1719,7 @@ def gather(first, *members):
 def switch(item, values, name=None):
     switch = Switch(item, values, name)
     return (switch, ) + tuple(switch.all_values())
+
 
 class Switch(ControlDefinition):
    """ Items of this class can control, which elements of grammar will be active and which not """
@@ -1782,7 +1786,7 @@ class Switch(ControlDefinition):
        super().__init__(name, template)
 
    def copy(self):
-       raise NotImplemented
+       raise NotImplementedError
 
    def __call__(self, option):
        return option._definition in self.values[option._container[self.item]()].values()
@@ -1792,7 +1796,8 @@ class Switch(ControlDefinition):
 
    def item_hook(self, grammar):
        if not self.container.force_order:
-          raise NotImplemented("Switch for custom-order containers have not yet been implemented")
+          raise NotImplementedError("Switch for custom-order containers have not yet been implemented")
+
        def item_value(value):
            ok = self.values.get(value, {})
            for i in ok.values():
@@ -1803,7 +1808,7 @@ class Switch(ControlDefinition):
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
 
-           #no.setParseAction(lambda x: breakpoint() or x)
+           # no.setParseAction(lambda x: breakpoint() or x)
            for i in set(self.all_values()).difference(ok.values()):
                tpl = grammar._prepared.get(i.name, None)
                if tpl:
@@ -1812,14 +1817,12 @@ class Switch(ControlDefinition):
                elif i.output_definition.has_grammar():
                   raise KeyError(f"In Switch, the item {i.name} for case {value} was not prepared")
        grammar._prepared = {}
-       #if getattr(sys, "hhh", None): breakpoint()
        self.grammar = grammar
        return grammar.addParseAction(lambda x: item_value(x[0][1]) and x)
 
    def prepare_grammar(self, definition, grammar):
        f = pp.Forward()
-       #if getattr(sys, "hhh", None): breakpoint()
-       #old pyparsing compatibility
+       # old pyparsing compatibility
        if hasattr(f, 'set_name'):
            f.set_name(f"<IF {self.item} THEN {grammar.name}>")
        self.grammar._prepared[definition.name] = (grammar, f)
@@ -1862,8 +1865,7 @@ class SeparatorDefinition(VirtualDefinition):
 
     def _save_to_file(self, file, value, always=False):
         if not always:
-            if self.condition and self.condition(container):
+            if self.condition and self.condition(value):
                     return False
             self.separator_type.write(file, None)
             return True
-import sys

@@ -5,27 +5,29 @@ This root package import a few most used objects to provide shortcuts to them.
 """
 
 """ SPRKKR calculator to be used to calculate electronic structure using ASE """
-from .sprkkr.calculator import SPRKKR
+from .sprkkr.calculator import SPRKKR  # NOQA: E402
 
 """ Input parameters object for SPRKKR calculation tasks """
-from .input_parameters.input_parameters import InputParameters
+from .input_parameters.input_parameters import InputParameters  # NOQA: F401, E402
 
 """ Potential file object for SPRKKR calcualtions """
-from .potentials.potentials import Potential
+from .potentials.potentials import Potential  # NOQA: F401, E402
 
 """ An extension of ASE atoms object """
-from .sprkkr.sprkkr_atoms import SPRKKRAtoms
+from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
 
 """ SPRKKR Output File """
-from .outputs.output_files import OutputFile
+from .output_files.output_files import OutputFile  # NOQA: F401, E402
 
 """ Version of the package """
-from .version import __version__
+from .version import __version__  # NOQA: F401, E402
+
 
 def _init():
-   import ase
-   from ase.calculators.calculator import register_calculator_class
-   register_calculator_class('sprkkr', SPRKKR)
+    import ase   # NOQA: F401
+    from ase.calculators.calculator import register_calculator_class
+    register_calculator_class('sprkkr', SPRKKR)
+
 
 _init()
 del _init

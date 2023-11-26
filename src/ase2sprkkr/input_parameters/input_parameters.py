@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import os
 import io
-import tempfile
 import pkgutil
 import importlib
 from . import definitions
@@ -277,7 +276,7 @@ class InputParameters(ConfigurationFile):
 
   @cached_class_property
   def definitions():
-      #user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
+      # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
       names = (i for i in pkgutil.iter_modules(definitions.__path__))
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
@@ -380,5 +379,6 @@ class InputParameters(ConfigurationFile):
       self._init_members_from_the_definition()
       self.set(vals, unknown = 'ignore', error='ignore')
 
-#at least, to avoid a circular import
-from ..sprkkr import calculator
+
+# at least, to avoid a circular import
+from ..sprkkr import calculator   # NOQA: E402

@@ -13,7 +13,7 @@ import numpy as np
 class BaseProcessOutputReader:
   """
   Class, that run a process, optionally saves all the output of the process to a file,
-  and pass the stdout and stderr of the process to its two asyn routines, read_error
+  and pass the stdout and stderr of the process to its two async routines, read_error
   and read_output.
 
   The descendant can redefine the routines to parse the output (or its parts).
