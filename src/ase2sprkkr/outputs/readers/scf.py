@@ -1,18 +1,21 @@
+import pyparsing as pp
+import numpy as np
+import os
+from ase.units import Rydberg
+
 from ..output_definitions import OutputSectionDefinition as Section, \
                                  OutputValueDefinition as V, \
                                  OutputValueEqualDefinition as VE, \
                                  OutputNonameValueDefinition as VN
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
-import pyparsing as pp
-import numpy as np
-from ase.units import Rydberg
-from ..task_result import TaskResult, OutputReader
+from ..task_result import TaskResult
+from ...common.process_output_reader import ProcessOutputReader
 from ...common.decorators import cached_property
 from ...potentials.potentials import Potential
-import os
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
+from ..task_result import KkrProcess
 
 
 class RealOrStars(Real):
@@ -139,7 +142,7 @@ class ScfResult(TaskResult):
         pyplot.show()
 
 
-class ScfOutputReader(OutputReader):
+class ScfOutputReader(ProcessOutputReader):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
   """
@@ -241,4 +244,8 @@ class ScfOutputReader(OutputReader):
         except EOFError:
           raise Exception('The output ends unexpectedly')
 
+
+class ScfProcess(KkrProcess):
+
   result_class = ScfResult
+  reader_class = ScfOutputReader

@@ -1,15 +1,16 @@
+import os
+from ..readers.scf import ScfOutputReader
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-import os
-from ..readers.scf import ScfOutputReader
 
 class TestOutput(TestCase):
 
-  def test_output(self):
+  def test_scf(self):
       ScfOutputReader.atoms_conf_type.parse(
 """  33 E= 0.6083 0.0000          IT=   1  Li_1
          DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
@@ -19,4 +20,15 @@ class TestOutput(TestCase):
   f    0.3427   0.0476    0.0000   0.0000   0.00000  0.00000    0.00
  sum   2.7279   0.2660    0.0000   0.0000   0.00000  0.00000    0.00 v+c    0.00
  E_band         0.11559127 [Ry]
-dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000""")
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000""")  # NOQA: E122
+
+  def test_output(self):
+      reader = ScfOutputReader()
+      out=reader.read_from_file(
+          os.path.join(
+              os.path.dirname(__file__),
+              '..', 'examples', 'scf.out'
+          )
+      )
+      self.assertIsNotNone(out)
+      self.assertEqual(out[0][-1]['energies']['EMIN'](), -0.5)

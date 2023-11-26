@@ -110,7 +110,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       mpi: bool
         Whether to run MPI version of the executable
 
-      result_reader: common.process_output_reader.BaseProcessOutputReader
+      result_reader: common.process_output_reader.ProcessOutputReader
         Class, that runs the process and read the results. Default NONE
         means, that the class is determined from the TASK name
         (see InputParameters.result_reader)

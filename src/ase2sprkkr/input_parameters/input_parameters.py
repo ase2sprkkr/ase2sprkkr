@@ -12,14 +12,16 @@ import pkgutil
 import importlib
 from . import definitions
 from ..outputs import readers
-from ..outputs.readers.default import DefaultOutputReader
+from ..outputs.readers.default import DefaultProcess
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 import shutil
 from typing import Union
 
+
 class InputSection(ConfigurationSection):
     """ Input parameters sections has nothing special, yet. """
+
 
 def resolve_executable_suffix(postfix:Union[str,bool]):
     """" Return the postfix, that is appended after the name of SPR-KKR executable.
@@ -36,6 +38,7 @@ def resolve_executable_suffix(postfix:Union[str,bool]):
     if postfix is True:
         return os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
     return postfix
+
 
 class InputParameters(ConfigurationFile):
   """ It holds the configuration values for a SPR-KKR task and run the task
@@ -234,13 +237,13 @@ class InputParameters(ConfigurationFile):
          task = self.TASK.TASK().lower()
          try:
             mod = importlib.import_module(f'.{task}', readers.__name__)
-            clsname = task.title() + 'OutputReader'
+            clsname = task.title() + 'Process'
             cls = getattr(mod, clsname)
             if not cls:
                raise Exception(f"Can not determine the class to read the results of task {task}"
                                 "No {clsname} class in the module {oo.__name__}.{task}")
          except ModuleNotFoundError:
-            cls = DefaultOutputReader
+            cls = DefaultProcess
       return cls(self, calculator, directory)
 
   def read_output_from_file(self, filename, directory=None):
@@ -267,7 +270,7 @@ class InputParameters(ConfigurationFile):
   def __str__(self):
       return f"<Configuration container {self._get_path()}>"
 
-  def set_option(name, value):
+  def set_option(self, name, value):
       for i in self._members:
           if name in i:
              self._members[i][name] = value

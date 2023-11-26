@@ -1,6 +1,6 @@
 """ The ARPES result: currently it """
 
-from ..task_result import TaskResult
+from ..task_result import TaskResult, KkrProcess
 from .default import DefaultOutputReader
 from ...common.decorators import cached_property
 from ..output_files import OutputFile
@@ -21,8 +21,10 @@ class ArpesResult(TaskResult):
       """ The new (output) potential - that contains the converged charge density etc. """
       return OutputFile.from_file(self.spc_filename)
 
-class ArpesOutputReader(DefaultOutputReader):
+
+class ArpesProcess(KkrProcess):
   """ ARPES task output reader currently do nothing, just have a special
   result, that allow easy acces to spc output file """
 
   result_class = ArpesResult
+  reader_class = DefaultOutputReader

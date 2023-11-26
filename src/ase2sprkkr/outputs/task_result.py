@@ -1,8 +1,7 @@
 """ This module contains classes, used by parsers of the output files """
-
-from ..common.decorators import cached_property, add_to_signature
-from ..common.process_output_reader import BaseProcessOutputReader
+from ..common.decorators import cached_property
 import os
+
 
 class TaskResult:
   """ A base class for a result of a runned task (kkrscf executable) """
@@ -19,12 +18,14 @@ class TaskResult:
       return self.potential.atoms
 
 
-class OutputReader(BaseProcessOutputReader):
+class KkrProcess:
+  """ Class, that run a process and read its output using underlined
+  process reader (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputReader`)
+  and return the appropriate TaskResult.
 
-  """ Process reader, that construct (a descendant of) InputParametersResult as a result.
-      Subclasses should specify result_class class property.
+  Descendants should define reader_class and result_class property.
   """
-  @add_to_signature(BaseProcessOutputReader.__init__)
+
   def __init__(self, input_parameters, calculator, directory):
       self.input_parameters = input_parameters
       """ Input parameters, that command to read the output (thus probably the ones, that
@@ -35,6 +36,14 @@ class OutputReader(BaseProcessOutputReader):
       """ Calculator, that can be used for further processing of the results. """
       self.directory = directory
       """ Directory, to wich are the relative paths in the output related. """
+      self.reader = self.reader_class()
 
-  def result(self, *args):
+  def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
+      breakpoint()
+      return self._wraps(*self.reader.run(cmd, outfile, print_output, directory, **kwargs))
+
+  def _wraps(self, *args):
       return self.result_class(self.input_parameters, self.calculator, self.directory, *args)
+
+  def read_from_file(self, output, error=None, return_code=0, print_output=False):
+      return self._wraps(self.reader.read_from_file(output, error, return_code, print_output))
