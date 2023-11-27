@@ -1615,6 +1615,7 @@ class ConfigurationRootDefinition(ContainerDefinition):
        return out
 
    def add_ignored(self, grammar):
+       grammar = pp.Suppress(pp.Regex(r'(\s*\n)*')) + grammar
        grammar = grammar.ignore("#" + pp.restOfLine + pp.LineEnd())
        return grammar
 
