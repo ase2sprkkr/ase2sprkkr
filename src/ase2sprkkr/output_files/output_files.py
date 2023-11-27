@@ -41,8 +41,8 @@ class OutputFile(ConfigurationFile):
       path = os.path.dirname(__file__)
       path = os.path.join( path, 'definitions')
       name = __name__
-      name = name.rsplit('.',1)[0] + '.'
-      for imp, module, ispackage in pkgutil.iter_modules(path=path, prefix=name):
+      name = name.rsplit('.',1)[0] + '.definitions.'
+      for imp, module, ispackage in pkgutil.iter_modules(path=[path], prefix=name):
            __import__(module)
            mod = sys.modules[module]
            out[mod.__name__.rsplit('.',1)[1]] = mod
