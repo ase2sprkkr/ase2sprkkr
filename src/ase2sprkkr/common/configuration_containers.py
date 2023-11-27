@@ -6,7 +6,6 @@ and other containers, and are able to write them to a configuration file,
 and that are results of parsing of a configuration file.
 """
 
-from .options import BaseOption
 from .configuration import Configuration
 import itertools
 import re
@@ -19,7 +18,54 @@ class DisabledAttributeError(AttributeError):
       """
 
 
-class ConfigurationContainer(Configuration):
+class BaseConfigurationContainer(Configuration):
+    """ Configuration container, that holds members, either in classical way
+    (see :class:ConfigurationContainer) or treat them in a special way
+    """
+
+    def copy(self, copy_values:bool=False):
+        """ Create a copy of the container
+
+        Parameters
+        ----------
+        copy_values
+          If true, the copy of values is done, so their modifications do not affects the container.
+          (e.g. for numpy arrays)
+        """
+        d=self._definition
+        vals=self.as_dict(copy=copy_values)
+        out =d.result_class(definition=d)
+        out.set(vals, unknown='add')
+        return out
+
+    def has_any_value(self) -> bool:
+        """
+        Return True if any member of the section has value.
+
+        Return
+        ------
+          has_any_value: bool
+              True, if no value in the container is set, False otherwise
+        """
+        for i in self.values():
+          if i.has_any_value():
+             return True
+        return False
+
+    @property
+    def definition(self):
+        """ The definition of the section.
+
+        Returns
+        -------
+        ase2sprkkr.common.configuration_definitions.ContainerDefinition
+        The definition of the section. I.e. the object that defines, which configuration values
+        are in the section, their default values etc.
+        """
+        return self._definition
+
+
+class ConfigurationContainer(BaseConfigurationContainer):
   """ A container for configuration (problem-definition) options and/or sections.
 
   Options in the configuration (problem-definition) files are grouped to
@@ -36,21 +82,6 @@ class ConfigurationContainer(Configuration):
       """
       self._init_members_from_the_definition()
 
-  def copy(self, copy_values:bool=False):
-      """ Create a copy of the container
-
-      Parameters
-      ----------
-      copy_values
-        If true, the copy of values is done, so their modifications do not affects the container.
-        (e.g. for numpy arrays)
-      """
-      d=self._definition
-      vals=self.as_dict(copy=copy_values)
-      out =d.result_class(definition=d)
-      out.set(vals, unknown='add')
-      return out
-
   def _init_members_from_the_definition(self):
       self._members = {}
       """
@@ -64,8 +95,8 @@ class ConfigurationContainer(Configuration):
           if v.create_object:
              self._add(v.create_object(self))
 
-  def members(self):
-      """ Members of the container. I.e. the option of the section, or sections
+  def items(self):
+      """ Members of the container. I.e. the options of the section, or sections
       of the configuration file e.t.c.
 
       Returns
