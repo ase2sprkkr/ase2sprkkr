@@ -1,42 +1,48 @@
+from ase.build import bulk
+import os
+import re
+import sys
+from pathlib import Path
+from ase import Atoms
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ase.build import bulk
-from ..calculator import SPRKKR
-from ...potentials.potentials import Potential
-import os
-import re
-import sys
-from pathlib import Path
+
+if True:
+    from ..calculator import SPRKKR
+    from ...potentials.potentials import Potential
+    from ..build import semiinfinite_system
+
 
 class CalculatorTest(TestCase):
 
- def test_2D(self):
-     if not self.run_sprkkr(): return
-     print_output = '-v' in sys.argv or '--verbose' in sys.argv
-     dirname = os.path.dirname(__file__)
+ print_output = '-v' in sys.argv or '--verbose' in sys.argv
+ dirname = os.path.dirname(__file__)
+ _calc_args = dict(
+     directory = dirname, input_file = 'output_test_calc.inp',  # empty_spheres=False,
+     output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
+     mpi = 'auto'
+ )
 
-     from ase import Atoms
+ def test_2D(self):
      a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
-     from ase2sprkkr.sprkkr.build import semiinfinite_system
      b=semiinfinite_system(a, repeat=3)
-     from ase2sprkkr import SPRKKR
      cal=SPRKKR(atoms=b)
      cal.input_parameters.set_from_atoms(b)
      self.assertTrue(bool(re.search('NKTAB3D=', cal.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', cal.input_parameters.to_string())))
-     out=SPRKKR().calculate(b, print_output=True, options={'NITER':2})
+     if not self.run_sprkkr():
+         return
+     out=SPRKKR().calculate(b, self._calc_args, options={'NITER':2})
      self.assertTrue(bool(re.search('NKTAB3D=', out.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', out.input_parameters.to_string())))
 
-
  def test_calculator(self):
-     print_output = '-v' in sys.argv or '--verbose' in sys.argv
-     dirname = os.path.dirname(__file__)
-     here = lambda x: os.path.join(dirname, x)
+     here = lambda x: os.path.join(self.dirname, x)
 
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
@@ -63,7 +69,6 @@ class CalculatorTest(TestCase):
 
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
 
-
      inp_file=here('output_test_calc.inp')
      pot_file=here('output_test_calc.pot')
      Path(inp_file).touch()
@@ -73,7 +78,7 @@ class CalculatorTest(TestCase):
         for ext, res in zip(('inp','pot'), args):
           fname = here('output_test_calc.' + ext)
           ntime = os.path.getmtime(fname)
-          changed = abs(ntime -  time[ext]) > 2.0
+          changed = abs(ntime - time[ext]) > 2.0
           self.assertEqual(res, changed)
           if changed:
             ntime -= 10
@@ -97,14 +102,6 @@ class CalculatorTest(TestCase):
      calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
- print_output = '-v' in sys.argv or '--verbose' in sys.argv
- dirname = os.path.dirname(__file__)
- _calc_args = dict(
-     directory = dirname, input_file = 'output_test_calc.inp', #empty_spheres=False,
-     output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
-     mpi = 'auto'
- )
-
  @classmethod
  def calc_args(cls, **kwargs):
      kwargs.update(cls._calc_args)
@@ -114,20 +111,21 @@ class CalculatorTest(TestCase):
      return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
 
  def test_run(self):
-     if not self.run_sprkkr(): return
+     if not self.run_sprkkr():
+         return
 
      here = lambda x: os.path.join(self.dirname, x)
 
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args(mpi=False))
-     #use methods of atoms
+     # use methods of atoms
      atoms.calc = calculator
      calculator.input_parameters.find('NITER').set(2)
      calculator.input_parameters.find('NKTAB').set(50)
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
      calculator.input_parameters.find('NITER').set(100)
 
-     #calculator options
+     # calculator options
      out = calculator.calculate(options = {'NITER' : 2 }, mpi=4)
      self.assertEqual(2, len(out.iterations))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
@@ -135,12 +133,12 @@ class CalculatorTest(TestCase):
      self.assertTrue(isinstance(out.potential, Potential))
      self.assertTrue(isinstance(out.calculator.potential_object, Potential))
 
-     #read again the output from a file - the results should be the same
+     # read again the output from a file - the results should be the same
      out = SPRKKR.InputParameters.create('scf').read_output_from_file(here('output_test_calc.out'))
-     self.assertEqual(2, len(out.iterations))
+     self.assertEqual(2, len(out.iterations ))
      out.plot(filename = here('output_test_calc.png'))
 
-     #use methods of atoms
+     # use methods of atoms
      atoms.calc = calculator
      self.assertTrue(isinstance(atoms.get_potential_energy(), float))
 
@@ -158,7 +156,8 @@ class CalculatorTest(TestCase):
      self.assertEqual(1, len(out.iterations))
 
  def test_phagen(self):
-     if not self.run_sprkkr(): return
+     if not self.run_sprkkr():
+         return
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
      ips = SPRKKR.InputParameters.create('scf')
