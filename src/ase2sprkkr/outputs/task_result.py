@@ -39,11 +39,10 @@ class KkrProcess:
       self.reader = self.reader_class()
 
   def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
-      breakpoint()
       return self._wraps(*self.reader.run(cmd, outfile, print_output, directory, **kwargs))
 
   def _wraps(self, *args):
       return self.result_class(self.input_parameters, self.calculator, self.directory, *args)
 
   def read_from_file(self, output, error=None, return_code=0, print_output=False):
-      return self._wraps(self.reader.read_from_file(output, error, return_code, print_output))
+      return self._wraps(*self.reader.read_from_file(output, error, return_code, print_output))
