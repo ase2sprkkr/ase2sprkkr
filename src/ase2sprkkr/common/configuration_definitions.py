@@ -1155,7 +1155,7 @@ class ContainerDefinition(RealItemDefinition):
         if self.is_expert:
            flags.append('expert')
         if self.is_repeated:
-           flags.append('repeadted')
+           flags.append('repeated')
         if flags:
            flags = ', '.join(flags)
            out+=f" ({flags})"
