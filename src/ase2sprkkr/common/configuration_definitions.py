@@ -238,6 +238,17 @@ class BaseDefinition:
         """ Set a special object for writing """
         self.__dict__['_output_definition'] = od
 
+  def accept_value(self, value) -> bool:
+      """
+      Return, whether a given value is accepted by this type of object.
+      Accepting does not mean that the value can be validated. It is a
+      base check, that a type of the value is suitable to be used here.
+      If it is not -- e.g. single value is assigned to a section -- then
+      the container can try to find another object (e.g. contained value
+      of the same name) where the value is accepted.
+      """
+      return True
+
 
 class RealItemDefinition(BaseDefinition):
    """ A base class for a configuration definition, either of an option, or of a container.

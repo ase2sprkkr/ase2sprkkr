@@ -274,7 +274,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
             self._members[section].set({name:value}, unknown='fail' if unknown == 'find' else unknown, error=error)
             return
         option = self._members.get(name, None)
-        if not option or (not isinstance(option, BaseOption) and not isinstance(value, dict)):
+        if not option or not option._definition.accept_value(value):
            if unknown == 'find':
               option = self._find_value(name)
               if option:
