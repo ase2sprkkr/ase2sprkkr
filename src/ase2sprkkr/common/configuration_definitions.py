@@ -1539,6 +1539,11 @@ class SectionDefinition(ContainerDefinition):
    def _generic_info(self):
       return f"Configuration section {self.name}"
 
+   def accept_value(self, value) -> bool:
+       if isinstance(value, dict):
+           return True
+       return self.is_repeated and isinstance(value, Iterable)
+
 
 class ConfigurationRootDefinition(ContainerDefinition):
    """ From this class, the definition of the format of a whole configuration file should be derived.
