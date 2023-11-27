@@ -1451,6 +1451,54 @@ class ContainerDefinition(RealItemDefinition):
         return True
 
 
+    def _save_to_file(self, file, value, always=False)->bool:
+        """ Save the content of the container to the file (according to the definition)
+
+        Parameters
+        ----------
+        file: file
+          File object (open for writing), where the data should be written
+
+        always:
+          Do not consider conditions
+
+        Returns
+        -------
+        something_have_been_written
+          If any value have been written return True, otherwise return False.
+        """
+        if not always:
+            if not self.write_condition(self) or (self.condition and not self.condition(self)):
+                return
+
+        if self.is_expert:
+            if not value.is_changed():
+                return False
+        else:
+            if not value.has_any_value():
+                return False
+        if self.name_in_grammar:
+           file.write(self.name)
+           file.write('\n')
+
+        members = iter(value)
+        if self.write_last_delimiter:
+           for o in members:
+               if o._save_to_file(file, always):
+                   file.write(self.delimiter)
+        else:
+           for o in members:
+               if o._save_to_file(file, always):
+                    break
+           write = True
+           for o in members:
+               if write:
+                   file.write(self.delimiter)
+               write=o._save_to_file(file, always)
+
+        return True
+
+
 class SectionDefinition(ContainerDefinition):
    """ Base class for definition of the sections in Pot or InputParameters files.
 

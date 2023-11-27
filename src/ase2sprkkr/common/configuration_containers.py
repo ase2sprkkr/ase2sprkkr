@@ -426,37 +426,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       something_have_been_written
         If any value have been written return True, otherwise return False.
       """
-      d = self._definition
-      if not always:
-          if not d.write_condition(self) or (d.condition and not d.condition(self)):
-              return
-
-      if d.is_expert:
-          if not self.is_changed():
-              return False
-      else:
-          if not self.has_any_value():
-              return False
-      if d.name_in_grammar:
-         file.write(self.name)
-         file.write('\n')
-
-      members = iter(self)
-      if d.write_last_delimiter:
-         for o in members:
-             if o._save_to_file(file, always):
-                 file.write(d.delimiter)
-      else:
-         for o in members:
-             if o._save_to_file(file, always):
-                  break
-         write = True
-         for o in members:
-             if write:
-                 file.write(d.delimiter)
-             write=o._save_to_file(file, always)
-
-      return True
+      return self._definition._save_to_file(file, self, always)
 
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member
