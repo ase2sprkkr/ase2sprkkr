@@ -44,7 +44,7 @@ class ProcessOutputReader:
               nonlocal exception
               try:
                 if self.print_output is True:
-                  print(data.decode('utf8'))
+                  print(data.decode('utf8'), end='')
                 self.outfile.write(data)
               except Exception as e:
                 if not exception:
@@ -90,7 +90,7 @@ class ProcessOutputReader:
       ------
 
       out: mixed
-        Currently, the tuple (output, error) is returned, however,
+        Currently, the tuple (output, error, return_code) is returned, however,
         subclasses can return anything they want.
       """
 
@@ -99,7 +99,7 @@ class ProcessOutputReader:
          e.output = output
          e.error = error
          raise e
-      return output, error
+      return output, error, wait
 
   def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
       self.cmd = cmd
