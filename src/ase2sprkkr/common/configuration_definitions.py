@@ -1144,10 +1144,10 @@ class ContainerDefinition(RealItemDefinition):
             out+=self.name
             return out
 
-        out = f"{container_name()}"
+        out = f"{prefix}{container_name()}"
         flags = []
         if self.force_order:
-           flags.append('order fixed')
+           flags.append('fixed-order')
         if self.is_hidden:
            flags.append('hidden')
         if self.is_optional:
