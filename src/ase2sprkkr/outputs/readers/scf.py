@@ -56,6 +56,13 @@ class ScfResult(TaskResult):
       else:
          SPRKKR(potential = self.potential_filename)
 
+  def new_task(self, task):
+      out = self._calculator.copy_with_potential(self.potential_filename)
+      out.input_parameters = task
+      if isinstance(task, str) and task.lower() == 'jxc':
+          out.input_parameters.set('EMIN', self.last_iteration.energies.EMIN())
+      return out
+
   @property
   def energy(self):
       """ Total energy of the last iteration """
