@@ -14,6 +14,7 @@ from ..common.misc import dict_first_item
 from ..common.grammar_types import type_from_type, type_from_value, GrammarType, Array
 from ..common.grammar import delimitedList, generate_grammar
 from .configuration_containers import Section
+from .repeated_configuration_containers import RepeatedConfigurationContainer
 from .options import Option, Dummy, DangerousValue
 from .decorators import cache, cached_class_property
 
@@ -24,6 +25,7 @@ import itertools
 import builtins
 from io import StringIO
 from typing import Dict, Union
+from collections.abc import Iterable
 
 
 # This serves just for dealing with various pyparsing versions
@@ -1082,7 +1084,9 @@ class ContainerDefinition(RealItemDefinition):
     def __init__(self, name, members=[], alternative_names=[], info=None, description=None,
                  is_optional=False, is_hidden=False, is_expert=False,
                  has_hidden_members=False, name_in_grammar=None, force_order=None,
-                 write_alternative_name:bool=False, result_class=None):
+                 write_alternative_name:bool=False, result_class=None,
+                 is_repeated=False
+                 ):
        super().__init__(
            name = name,
            alternative_names = alternative_names,
@@ -1110,6 +1114,7 @@ class ContainerDefinition(RealItemDefinition):
        self.has_hidden_members = has_hidden_members
        if force_order is not None:
           self.force_order = force_order
+       self.is_repeated = is_repeated
 
     configuration_type_name = 'SECTION'
     """ Name of the container type in the runtime documentation """
@@ -1149,6 +1154,8 @@ class ContainerDefinition(RealItemDefinition):
            flags.append('optional')
         if self.is_expert:
            flags.append('expert')
+        if self.is_repeated:
+           flags.append('repeadted')
         if flags:
            flags = ', '.join(flags)
            out+=f" ({flags})"
@@ -1164,6 +1171,9 @@ class ContainerDefinition(RealItemDefinition):
               under=prefix + "-" * len(out) + '\n'
               out=f"{prefix}{out}\n{under}{add}"
         return out
+
+    def allow_duplication(self):
+        return self.is_repeated
 
     def additional_data_description(self, verbose:Union[bool,str,int]=False, show_hidden=False, prefix:str=''):
         """
@@ -1362,7 +1372,8 @@ class ContainerDefinition(RealItemDefinition):
                 raise pp.ParseException(s, loc, is_ok)
               return value
           values.addParseAction(_validate)
-
+       if self.is_repeated:
+          values = pp.OneOrMore(values)
        return values
 
     def _allow_duplicates_of(self, name):
@@ -1461,6 +1472,21 @@ class ContainerDefinition(RealItemDefinition):
     def validate(self, container, why:str='save'):
         return True
 
+    def create_object(self, container=None, repeated:bool=True):
+        """ Create an instance (section)
+
+        container: BaseConfigurationContainer
+            To which container the created object will belong
+
+        repeated:
+            Has meaning only for a is_repeated section. Then, if it is True,
+            a Container for repeated values of the section is returned.
+            Otherwise, the container just for a one instance of a section is
+            returned.
+        """
+        if repeated and self.is_repeated:
+            return RepeatedConfigurationContainer(self, container)
+        return super().create_object(container)
 
     def _save_to_file(self, file, value, always=False)->bool:
         """ Save the content of the container to the file (according to the definition)
