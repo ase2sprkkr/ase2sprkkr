@@ -25,8 +25,23 @@ from .version import __version__  # NOQA: F401, E402
 
 def _init():
     import ase   # NOQA: F401
+    import platformdirs
+    import os
+
     from ase.calculators.calculator import register_calculator_class
     register_calculator_class('sprkkr', SPRKKR)
+
+    file = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), '__init__.py')
+    try:
+       if os.path.isfile(file):
+           import types
+           import importlib.machinery
+           loader = importlib.machinery.SourceFileLoader('ase2sprkkr.personal', file)
+           mod = types.ModuleType(loader.name)
+           loader.exec_module(mod)
+    except Exception as e:
+        import warnings
+        warnings.warn(f'Can not import {file} file with the user preferences: \n{e}')
 
 
 _init()
