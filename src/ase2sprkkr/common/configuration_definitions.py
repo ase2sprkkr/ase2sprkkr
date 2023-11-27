@@ -1450,7 +1450,7 @@ class ContainerDefinition(RealItemDefinition):
         out.read_from_file(file, allow_dangerous=allow_dangerous)
         return out
 
-    def from_dict(self, values, **kwargs):
+    def read_from_dict(self, values, **kwargs):
         out = self.result_class(definition = self, **kwargs)
         out.set(values, unknown='add')
         return out
