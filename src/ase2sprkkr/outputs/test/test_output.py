@@ -1,5 +1,5 @@
 import os
-from ..readers.scf import ScfOutputReader
+from ..readers.scf import ScfOutputReader, atomic_types_definition
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -11,7 +11,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 class TestOutput(TestCase):
 
   def test_scf(self):
-      ScfOutputReader.atoms_conf_type.parse(
+      atomic_types_definition.parse(
 """  33 E= 0.6083 0.0000          IT=   1  Li_1
          DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
   s    0.4387   0.0296    0.0000   0.0000   0.00000  0.00000    0.00 s      0.00
@@ -32,3 +32,4 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
       )
       self.assertIsNotNone(out)
       self.assertEqual(out[0][-1]['energies']['EMIN'](), -0.5)
+      self.assertEqual(len(out[0][-1]['atomic_types']), 2)

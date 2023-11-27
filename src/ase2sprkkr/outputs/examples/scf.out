@@ -1,0 +1,2795 @@
+ 
+
+          **************************************************************
+          *                                                            *
+          *        ****   *****   *****   *    *  *    *  *****        *
+          *       *    *  *    *  *    *  *   *   *   *   *    *       *
+          *       *       *    *  *    *  *  *    *  *    *    *       *
+          *        ****   *****   *****   * *     * *     *****        *
+          *            *  *       *  *    ** *    ** *    *  *         *
+          *       *    *  *       *   *   *   *   *   *   *   *        *
+          *        ****   *       *    *  *    *  *    *  *    *       *
+          *                                                            *
+          *------------------------------------------------------------*
+          *       KKRSCF  VERSION  8.5.aug08      (C) 2020  H. Ebert   *
+          **************************************************************
+
+
+          programm execution  on    24/03/2022    at   18:59:12
+
+          Compiled on      : Linux thsun72 5.0.3-1-default GNU/Linux
+          Date of compile  : Thu 24 Mar 2022 11:39:37 AM CET
+
+          MPI calculation with NPROCS = 1
+
+
+ *******************************************************************************
+                                 <GETLRECREAL>
+ *******************************************************************************
+
+          record length parameter for REAL's   LRECREAL8 =  8
+          a double precision real*8 is stored in 8 Bytes              
+
+
+
+ *******************************************************************************
+                                    <POTRD2>
+ *******************************************************************************
+
+
+          system dimension: 3D        
+          system type:      BULK                          
+          SCF status:       CONVERGED 
+
+
+
+ *******************************************************************************
+                               <INIT_MOD_LATTICE>
+ *******************************************************************************
+
+          initialize the module <MOD_LATTICE> according to SYSDIM = 3D
+
+          set up basis vectors for reciprocal space 
+
+
+          real space Bravais lattice: tetragonal  primitive      4/mmm  D_4h
+
+          primitive vectors for real space Bravais lattice
+
+            (   1.00000,   0.00000,   0.00000 )
+            (   0.00000,   1.00000,   0.00000 )
+            (   0.00000,   0.00000,   1.37654 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+            (   0.50000,   0.50000,   0.68827 )
+
+          primitive vectors of reciprocal space Bravais lattice
+                 in units of 2*pi/a
+
+            (   1.00000,   0.00000,   0.00000 )
+            (   0.00000,   1.00000,   0.00000 )
+            (   0.00000,   0.00000,   0.72646 )
+
+
+ *******************************************************************************
+                                   <SYMINIT>
+ *******************************************************************************
+
+          set up possible symmetry operations for the 
+          real space Bravais lattice: tetragonal  primitive      4/mmm  D_4h
+
+          crystal system   4     TET
+
+          symmetry operations to scan       NSYM  48
+          maximum possible symmetry operations    16
+
+           T T T T F F F F F F F F F F T F F T T T F F F F
+           T T T T F F F F F F F F F F T F F T T T F F F F
+
+
+ *******************************************************************************
+                                  <SYMLATTICE>
+ *******************************************************************************
+
+          find out symmetry properties of the lattice
+
+
+          crystal system accepted symmetry operations      16
+          accepted symmetry operations                     16
+
+
+       I    Euler angles  INV SYMBOL TIM     shift  ->DQ     Q' 
+       1     0    0    0       E           0.00  0.00  0.00   1   2
+       2     0  180  180       C2x    T    0.00  0.00  0.00   1   2
+       3     0  180    0       C2y    T    0.00  0.00  0.00   1   2
+       4     0    0  180       C2z         0.00  0.00  0.00   1   2
+      15     0    0   90       C+4z        0.00  0.00  0.00   1   2
+      18     0    0  270       C-4z        0.00  0.00  0.00   1   2
+      19     0  180   90       C2a    T    0.00  0.00  0.00   1   2
+      20     0  180  270       C2b    T    0.00  0.00  0.00   1   2
+      25     0    0    0   I   I           0.00  0.00  0.00   1   2
+      26     0  180  180   I   sx     T    0.00  0.00  0.00   1   2
+      27     0  180    0   I   sy     T    0.00  0.00  0.00   1   2
+      28     0    0  180   I   sz          0.00  0.00  0.00   1   2
+      39     0    0   90   I   S-4z        0.00  0.00  0.00   1   2
+      42     0    0  270   I   S+4z        0.00  0.00  0.00   1   2
+      43     0  180   90   I   sda    T    0.00  0.00  0.00   1   2
+      44     0  180  270   I   sdb    T    0.00  0.00  0.00   1   2
+
+          the detected  16 symmetry operations form a group
+
+
+          BZ-wedges to be treated  NWEDGE   1
+          created by operations  
+           1  E   
+
+
+ *******************************************************************************
+                                    <SYMROT>
+ *******************************************************************************
+
+          set up of rotation matrices  DROT  for IREL = 3
+
+          CHECK of rotation matrices   DROT  for COMPLEX spherical harmonics
+          comparison of analytical and numerical results
+          out of  6144 elements     0 deviate more than TOL =   1.0E-08
+          maximum deviation found:    2.0E-10
+
+
+
+ *******************************************************************************
+                                  <INIT_RADII>
+ *******************************************************************************
+
+
+                   muffin tin and Wigner-Seitz radii
+
+                   IM    RMT               RWS     final setting in  <INIT_RADII>
+                    1  2.41907815919382  2.70767634184782
+                    2  2.52939823570000  2.83115770190695
+
+
+ *******************************************************************************
+                                 <POTRDSPR>
+ *******************************************************************************
+
+          POTFMTINP =  8
+
+ SPR-KKR dataset created by KKRSCF                                               
+
+          radial mesh parameters:
+
+          IM    JRMT   R(JRMT)    RMT      JRWS    RWS       DX
+           1    715   2.39327   2.41908    721   2.70768   0.020571669
+           2    715   2.50148   2.52940    721   2.83116   0.020633606
+
+          Bravais lattice:                tetragonal  primitive    
+          lattice constant  ALAT               5.05880
+          number of sites   NQ                       2
+          average Wigner-Seitz radius          2.77079
+
+
+
+          potential data for IT =  1 ..   2
+          =================================
+
+    1    0.000001  -53.999806    0.000000   -155.999247    0.000000
+   31    0.000002  -53.999639    0.000000   -155.998545    0.000000
+   61    0.000003  -53.999329    0.000000   -155.997199    0.000000
+   91    0.000006  -53.998754    0.000000   -155.994626    0.000000
+  121    0.000012  -53.997685    0.000000   -155.989724    0.000000
+  151    0.000022  -53.995700    0.000000   -155.980405    0.000000
+  181    0.000041  -53.992011    0.000000   -155.962721    0.000000
+  211    0.000075  -53.985159    0.000000   -155.929224    0.000000
+  241    0.000139  -53.972425    0.000000   -155.865858    0.000000
+  271    0.000258  -53.948754    0.000000   -155.746128    0.000000
+  301    0.000479  -53.904729    0.000000   -155.520162    0.000000
+  331    0.000888  -53.822765    0.000000   -155.094512    0.000000
+  361    0.001646  -53.669953    0.000001   -154.296496    0.000000
+  391    0.003050  -53.384629    0.000001   -152.818208    0.000000
+  421    0.005654  -52.852125    0.000002   -150.150992    0.000000
+  451    0.010480  -51.866736    0.000003   -145.545847    0.000001
+  481    0.019427  -50.095942    0.000005   -137.974712    0.000001
+  511    0.036010  -47.104747    0.000007   -126.156068   -0.000007
+  541    0.066749  -42.434097   -0.000003   -108.882110   -0.000108
+  571    0.123729  -35.762626   -0.000427    -85.964034   -0.000179
+  601    0.229349  -27.279092   -0.005578    -59.461238   -0.000116
+  631    0.425130  -17.858621   -0.046877    -33.287684   -0.000548
+  661    0.788038   -8.656482   -0.064331    -14.948747   -0.004847
+  691    1.460737   -2.422453   -0.057029     -4.341873   -0.020641
+  721    2.707676    0.114192    0.011460      0.012257    0.008624
+  721    2.707676    0.114192    0.011460      0.012257    0.008624
+  
+
+                   spin-polarized calculation
+
+                   SELFENERGY applied:NONE      
+
+
+   number of lattice sites (NQ):   2
+
+   site NL mesh MGAM MTET MPHI   RWS  CPA NOQ IT ELMT VAL CONC QREP SYMG eq.sit.
+     1   4   1     0    0    0 2.7077  0   1                     1    1   1
+                                               1 Co     9 1.00
+     2   4   2     0    0    0 2.8312  0   1                     2    1   2
+                                               2 Pt    10 1.00
+   average                     2.7708          total   19.00
+
+   KMROT:     0   no M-rotation          MOMENTS_ROTATED:  F
+   QMVEC:   0.000  0.000  0.000
+
+
+
+   number of atomic types  (NT):   2
+
+   type TXTT   NL VAL COR mesh    RMT     RWS   NAT  CONC  on sites
+     1  Co      4   9  18   1   2.4191  2.7077   1  1.000   1
+     2  Pt      4  10  68   2   2.5294  2.8312   1  1.000   2
+
+
+
+
+ mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+
+          FULLY relativistic calculation 
+
+          the  BREIT interaction  will be ignored
+
+          the  ORBITAL POLARISATION  will be ignored
+
+          solver for     spherical Dirac equation: BS           TOL = 2.0E-08
+
+          solver for spherical equation:     BS        
+
+
+          SWS =  2.770793     ALAT =  5.058796
+
+          NQ =  2     NL =  4     NLM =  16   NQ*NLM =  32
+                      NK =  7     NKM =  32     NKKR =  64     NLIN =  56
+
+          POTFMTINP = 8     POTFMTOUT = 9
+          RDTAU     = F
+          WRTAU     = F
+          PLOTPOT   = F     PLOTRHO   = F     PLOTSFN   = F
+          PLOT2DPOT = F     PLOT2DRHO = F
+          IPRINT    = 0     ITEST     = 0     WRMAT     = F
+          INITELOOP = T     RUNELOOP  = T     SPLITSS   = F
+          adjusted          BRAVAIS   = F
+          symmetrized       BASIS     = F
+          optimized         BASIS     = F
+          NO_SYM for        HOST      = F     CLU       = F     LINRESP   = F
+          symmetrize        MSS       = T     TAU       = F
+                            RHO       = T     POT       = F
+          LLOYD      = F
+          GF_CONV_RH = F
+          TMATBORN   = F
+          NONMAG     = F
+          FULLPOT    = F
+          FULLCHARGE = F
+
+          TASK       = SCF       
+
+          SYSDIM     = 3D        
+          SYSTYPE    = BULK                          
+          SUBSYSTEM  = BULK                          
+          KKRMODE    = STANDARD-KKR                  
+          SEPARIMT  = F
+
+ eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+          energy path:  ARC IN COMPLEX PLANE                    
+          energies  :          16
+          E_min     :   -0.500000
+          E_max     :    0.721277
+          Im(E)     :    0.000000
+          E_Fermi   :    0.721277
+  
+
+
+          Smallest Im(ETAB(IE)) is   0.0101660  for IE = 16
+
+
+ *******************************************************************************
+                                   <STRINIT>
+ *******************************************************************************
+
+          parameters for calculation of structure constants:
+
+          primitive vectors for Bravais lattice
+
+            (   1.00000,   0.00000,   0.00000 )
+            (   0.00000,   1.00000,   0.00000 )
+            (   0.00000,   0.00000,   1.37654 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+            (   0.50000,   0.50000,   0.68827 )
+
+          primitive vectors of reciprocal space
+                 in units of 2*pi/a
+
+            (   1.00000,   0.00000,   0.00000 )
+            (   0.00000,   1.00000,   0.00000 )
+            (   0.00000,   0.00000,   0.72646 )
+
+          number of inequivalent QQP-block-matrices  NQQP_STR     =       3
+          reduced number of inequiv. block-matrices  NQQP_STR_RED =       2
+
+
+
+          RMAX  =    4.2590          GMAX  =    2.5813
+          RMAX1 =    0.9868          GMAX1 =    1.0000
+          RA    =    5.2468          GA    =    2.5813
+
+          NUMR  =        13          NUMG  =         9
+          NRDL  =       307          NGRL  =       261
+
+          for LMAX = 3   388 non-zero GAUNTS tabulated
+
+
+ *******************************************************************************
+            array sizes for calculation of structure constants
+ *******************************************************************************
+                                          used              available
+          G-vectors table       NGRL       261        NGRLMAX    1331
+          R-vectors table       NRDL       307        NRDLMAX    3375
+          R-vectors (max.)      SMAX       243        NSDL        243
+          R-vectors (min.)      SMAX       224
+          l-max + 1             NL           4        NLMAX         4
+          sites                 NQ_STR       2        NQMAX         2
+          q-q'-blocks           NQQP_STR     3        LIMIT         3
+          auxilary array        R123MAX      4
+          auxilary array        G123MAX      4
+          Davis eq. (13)        J13MAX     113        LIMIT       300
+          Davis eq. (22)        J22MAX      30        LIMIT       150
+          Gaunts                LRGNT12    136
+          Gaunts                LRGNT123   388
+          Ewald parameter       ETA       0.22
+ *******************************************************************************
+
+
+          <INIT_MOD_STR>: section 1 of module MOD_STR initialized
+          allocated        1597  integers        280488  reals (incl. complex)
+          corresp. to         0  Mbytes               2  Mbytes
+
+
+ ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+
+          parameters for k-space integration:
+          NWEDGE:   1  wedges:  1
+          regular k-mesh used for point sampling
+
+          number of k-vectors to start  NKPTS0        3200   NLIN        3072
+          mesh parameters               NBGL       16   16   12
+          number of k-vectors created   NKTAB          315
+          array size (NKTABMAX)                       3840
+
+
+
+          ****************************
+          no CPA-iteration required !!
+          ****************************
+
+
+ fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+
+          FILES:
+
+          potential :  ( 4) CoPt_mag001-bas.pot
+  
+
+ *******************************************************************************
+                                  <CALC_VOL_CHECK>
+              setting the volume VOL_AC for the atomic cells
+ *******************************************************************************
+
+           1        23.85523587     83.15317960
+           2        27.27002950     95.05627533
+          SUM                      178.20945493
+          VOLUC                    178.20945493
+
+
+
+ *******************************************************************************
+                            parameters for SCF-cycle
+ *******************************************************************************
+          pot-file  :  CoPt_mag001-bas.pot_new
+          XC-pot    :  PW92      
+          SCF-alg   :  PULAY     
+          SCF-niter :         150
+          SCF-mix   :          0.9000000000
+          SCF-tol   :          0.0000010000
+          BREIT-int :    F
+          OP-scheme :  NONE      
+          FULLPOT   :    F
+          LLOYD     :    F
+          NOCHKVAL  :    F
+          NFCOR     :    F
+          TETDEPPOT :    F
+          SEMICORE  :    F
+          MIXRHO    :    F
+
+
+ *******************************************************************************
+                                  <SCFMAD3D>
+ *******************************************************************************
+
+          set up Madelung matrix for 3D-bulk calculations
+
+          NLVMAD =   2     NLMVMAD =   4
+          NLQMAD =   2     NLMQMAD =   4
+
+
+
+ *******************************************************************************
+                                <SCFMAD3D_SMAT>
+ *******************************************************************************
+
+          calculate Madelung potential matrices 
+
+          relative tolerance imposed   1.0E-12
+
+
+          primitive vectors for Bravais lattice
+
+            (   1.00000,   0.00000,   0.00000 )
+            (   0.00000,   1.00000,   0.00000 )
+            (   0.00000,   0.00000,   1.37654 )
+
+          basis vectors in units of a
+
+            (   0.00000,   0.00000,   0.00000 )
+            (   0.50000,   0.50000,   0.68827 )
+
+          primitive vectors of reciprocal space
+                 in units of 2*pi/a
+
+            (   1.24203,   0.00000,   0.00000 )
+            (   0.00000,   1.24203,   0.00000 )
+            (   0.00000,   0.00000,   0.90228 )
+
+          summations converged after   1 updates for
+
+          lattice constant    ALAT:   5.058796471400000
+          RMAX:  20.23519     GMAX:   5.63375
+          NUMR:        11     NUMG:        15
+
+
+
+ *******************************************************************************
+                                 <SCFMAD_SETUP>
+ *******************************************************************************
+
+          for ASA   FINITE  dipole moments expected from AVMAD for sites IQ:
+
+            1 T     2 T
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.496
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.477784     2     2    core     -
+          Co     1  27   2  s  1/2     -64.637098     2     4    core     -
+          Co     1  27   2  p  1/2     -55.985141
+          Co     1  27   2  p  3/2     -54.898248     6    10    core     -
+          Co     1  27   3  s  1/2      -6.208663     2    12    core     -
+          Co     1  27   3  p  1/2      -3.632435
+          Co     1  27   3  p  3/2      -3.495950     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.394926     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.723448     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.951506
+          Pt     2  78   2  p  3/2    -839.993155     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.160737     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.392282
+          Pt     2  78   3  p  3/2    -189.489805     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.168911
+          Pt     2  78   3  d  5/2    -152.150849    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.944846     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.988138
+          Pt     2  78   4  p  3/2     -35.324446     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.277427
+          Pt     2  78   4  d  5/2     -21.038346    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.531108     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.980307
+          Pt     2  78   5  p  3/2      -2.866182     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.351462
+          Pt     2  78   4  f  7/2      -4.097264    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0101660  for IE = 16
+
+
+ *******************************************************************************
+                            ANDERSON-PULAY - mixing scheme
+
+          mixing coefficient: 0.900000
+          history extends to 40 iterations
+ INIT!!! T           1           0
+
+
+ *******************************************************************************
+                                 <THERMAL_INIT>:
+ *******************************************************************************
+
+     NO thermal lattice vibrations NOR spin fluctuations to deal with
+
+     setting of parameters and array dimensions
+
+     NVIBFLU  =     1      NT      =     2
+     NVT      =     2      NVTMAX  =     2
+     NFT      =     2      NFTMAX  =     2
+     NVFT     =     2      NVFTMAX =     2
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1002615801
+                  INT        9.1002615801     RAT   1.0000000000
+ IT   1  spin     DNS        1.8308493021
+                  INT        1.8308493021     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0940796763
+                  INT        0.0940796763     RAT   1.0000000000
+ IT   2  charge   DNS        9.8097220309
+                  INT        9.8097220309     RAT   1.0000000000
+ IT   2  spin     DNS        0.3696745234
+                  INT        0.3696745234     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0604598776
+                  INT        0.0604598776     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     18.9099836110
+ <SCF>:     TOTDOSEF    34.1871891095  TOTDOSEFX   34.1871891095
+
+ <CHRDNS>:  TOTNOS      18.9099836110  DQ          -0.0900163890
+ <CHRDNS>:  TOTDOS      34.1871891095  TOTDOSX     34.1871891095
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.09001639 els.
+ E_F CORRECTION      0.00263304
+ NEW FERMI ENERGY    0.72391012
+
+
+  17 E= 0.7239 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3212   0.6245    0.0997  -0.0014   0.00000  0.00000   17.29 s   -206.23
+  p    0.6915   0.7951   -0.0819  -0.0146   0.01614  0.00071    2.86 ns     0.90
+  d   22.9475   7.6300  -14.8522   1.8056  -0.61504  0.09326   62.61 cor -205.33
+  f    0.1565   0.1142   -0.0682   0.0019   0.00568 -0.00145   -0.05
+ sum  24.1168   9.1638  -14.9026   1.7916  -0.59323  0.09252   82.70 v+c -122.63
+ E_band         4.88473730 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7239 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2547   0.7910    0.1215  -0.0125  -0.00001  0.00000 -379.97 s   -364.60
+  p    0.9214   0.8124    0.0941  -0.0448  -0.03421  0.00094   -5.66 ns    22.65
+  d    8.5615   8.0909   -0.1447   0.4247   0.55195  0.06277   66.54 cor -341.95
+  f    0.3327   0.1418   -0.2146   0.0020   0.02889 -0.00181   -0.10
+ sum  10.0704   9.8362   -0.1437   0.3693   0.54662  0.06190 -319.19 v+c -661.14
+ E_band         4.38488763 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  34.1872  19.0000             2.1609            0.15442
+ E_band         9.26962493 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.163762221640255     
+ <SCF>:   QEL    77.836237778359731     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.16376   0.16376   0.00000    1   0.16376  -0.10640
+       2   721  78  77.83624  -0.16376   0.00000    2  -0.16376   0.10640
+
+     total energy      -39655.89766136
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.799042
+ *******************************************************************************
+
+     rms-error for type  1:  V =  8.8680D-02     B =  4.5289D-03
+     rms-error for type  2:  V =  6.5397D-02     B =  2.1077D-03
+     iter.   1     average:  V =  8.8680D-02     B =  4.5289D-03
+ INIT!!! F           1           1
+
+     execution time for last iteration        56.986 sec
+
+
+ *******************************************************************************
+   1 ERR 0.887E-01 0.453E-02 EF  0.72391  0.00263 D  34.187 M   2.1609   0.1544
+     ETOT     -39655.89766136    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.436
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.379193     2     2    core     -
+          Co     1  27   2  s  1/2     -64.542495     2     4    core     -
+          Co     1  27   2  p  1/2     -55.889512
+          Co     1  27   2  p  3/2     -54.802723     6    10    core     -
+          Co     1  27   3  s  1/2      -6.145709     2    12    core     -
+          Co     1  27   3  p  1/2      -3.571565
+          Co     1  27   3  p  3/2      -3.435688     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.385245     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.714092     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.942046
+          Pt     2  78   2  p  3/2    -839.983762     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152499     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.383959
+          Pt     2  78   3  p  3/2    -189.481610     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160486
+          Pt     2  78   3  d  5/2    -152.142467    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.938246     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.981552
+          Pt     2  78   4  p  3/2     -35.318083     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.271116
+          Pt     2  78   4  d  5/2     -21.032109    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.528128     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.977953
+          Pt     2  78   5  p  3/2      -2.864603     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.345501
+          Pt     2  78   4  f  7/2      -4.091352    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0101880  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        7.9384974773
+                  INT        7.9384974773     RAT   1.0000000000
+ IT   1  spin     DNS        2.4756131882
+                  INT        2.4756131882     RAT   1.0000000000
+ IT   1  orbital  DNS        0.1090253084
+                  INT        0.1090253084     RAT   1.0000000000
+ IT   2  charge   DNS        9.8113837157
+                  INT        9.8113837157     RAT   1.0000000000
+ IT   2  spin     DNS        0.2531034398
+                  INT        0.2531034398     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0105644044
+                  INT        0.0105644044     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     17.7498811930
+ <SCF>:     TOTDOSEF    37.1031014044  TOTDOSEFX   37.1031014044
+
+ <CHRDNS>:  TOTNOS      17.7498811930  DQ          -1.2501188070
+ <CHRDNS>:  TOTDOS      37.1031014044  TOTDOSX     37.1031014044
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -1.25011881 els.
+ E_F CORRECTION      0.03369311
+ NEW FERMI ENERGY    0.75760323
+
+
+  17 E= 0.7576 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2276   0.6274    0.0250  -0.0011   0.00000  0.00000   17.27 s   -200.76
+  p    0.6485   0.8168   -0.0774  -0.0128   0.02227  0.00061    1.82 ns     0.88
+  d   24.3456   7.2309   -0.6299   2.4622  -0.39404  0.09714   73.54 cor -199.88
+  f    0.1760   0.1192   -0.0309   0.0032  -0.00921 -0.00156   -0.08
+ sum  25.3977   8.7942   -0.7131   2.4516  -0.38098  0.09619   92.56 v+c -107.32
+ E_band         4.95902085 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7576 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2045   0.8110    0.0788  -0.0145  -0.00001  0.00000 -465.46 s   -361.20
+  p    0.9187   0.8716   -0.1841  -0.0498  -0.02015  0.00178   -8.61 ns    22.46
+  d   10.2892   8.3775    5.0561   0.4704   1.67580  0.06716   61.64 cor -338.73
+  f    0.2929   0.1456   -0.0878   0.0109  -0.01790 -0.00320   -0.23
+ sum  11.7054  10.2058    4.8630   0.4170   1.63774  0.06574 -412.66 v+c -751.39
+ E_band         4.63869475 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  37.1031  19.0000             2.8685            0.16193
+ E_band         9.59771560 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    26.794225048741758     
+ <SCF>:   QEL    78.205774951258249     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  26.79423  -0.20577   0.00000    1  -0.20577   0.13369
+       2   721  78  78.20577   0.20577   0.00000    2   0.20577  -0.13369
+
+     total energy      -39655.79151240
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.809649
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.1236D+00     B =  6.4468D-02
+     rms-error for type  2:  V =  1.0184D+00     B =  5.4742D-03
+     iter.   2     average:  V =  1.1236D+00     B =  6.4468D-02
+
+     execution time for last iteration        57.031 sec
+
+
+ *******************************************************************************
+   2 ERR 0.112E+01 0.645E-01 EF  0.75760  0.03369 D  37.103 M   2.8685   0.1619
+     ETOT     -39655.79151240    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.821
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -556.248441     2     2    core     -
+          Co     1  27   2  s  1/2     -65.367509     2     4    core     -
+          Co     1  27   2  p  1/2     -56.724721
+          Co     1  27   2  p  3/2     -55.636918     6    10    core     -
+          Co     1  27   3  s  1/2      -6.699780     2    12    core     -
+          Co     1  27   3  p  1/2      -4.110035
+          Co     1  27   3  p  3/2      -3.969278     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.067005     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.400138     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.626715
+          Pt     2  78   2  p  3/2    -839.669315     6    10    core     -
+          Pt     2  78   3  s  1/2    -235.852965     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.083342
+          Pt     2  78   3  p  3/2    -189.182602     6    18    core     -
+          Pt     2  78   3  d  3/2    -157.858564
+          Pt     2  78   3  d  5/2    -151.841091    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.658804     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.702284
+          Pt     2  78   4  p  3/2     -35.041585     6    36    core     -
+          Pt     2  78   4  d  3/2     -21.995298
+          Pt     2  78   4  d  5/2     -20.757213    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.296719     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.755916
+          Pt     2  78   5  p  3/2      -2.654605     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.074349
+          Pt     2  78   4  f  7/2      -3.820831    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0104684  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS       11.8847767888
+                  INT       11.8847767888     RAT   1.0000000000
+ IT   1  spin     DNS        0.1194398985
+                  INT        0.1194398985     RAT   1.0000000000
+ IT   1  orbital  DNS       -0.0046790075
+                  INT       -0.0046790075     RAT   1.0000000000
+ IT   2  charge   DNS        8.0989338646
+                  INT        8.0989338646     RAT   1.0000000000
+ IT   2  spin     DNS        0.3650173431
+                  INT        0.3650173431     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0709627193
+                  INT        0.0709627193     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.9837106533
+ <SCF>:     TOTDOSEF    30.8954239457  TOTDOSEFX   30.8954239457
+
+ <CHRDNS>:  TOTNOS      19.9837106533  DQ           0.9837106533
+ <CHRDNS>:  TOTDOS      30.8954239457  TOTDOSX     30.8954239457
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.98371065 els.
+ E_F CORRECTION     -0.03184001
+ NEW FERMI ENERGY    0.72576322
+
+
+  17 E= 0.7258 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3046   0.7598    0.0208   0.0139   0.00000  0.00000  136.06 s   -285.25
+  p    1.1921   0.9691    0.0421   0.0146   0.04229 -0.00116   -0.94 ns     1.18
+  d    2.1086   9.9336   -0.5518   0.1030   0.01242 -0.00351   -0.30 cor -284.07
+  f    0.4412   0.0934   -0.0451   0.0050  -0.00544 -0.00157   -0.08
+ sum   4.0464  11.7559   -0.5340   0.1364   0.04927 -0.00625  134.74 v+c -149.33
+ E_band         2.86360076 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7258 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.9312   0.7021   -0.0595   0.0140   0.00000  0.00000  620.37 s   -391.92
+  p    1.4413   0.6806    0.1004  -0.0028   0.02536 -0.00238  -39.03 ns    24.69
+  d   24.1552   5.7529   -1.7579   0.4099   0.31010  0.06446   83.86 cor -367.24
+  f    0.3213   0.1085   -0.0272  -0.0005   0.00413 -0.00193   -0.09
+ sum  26.8490   7.2441   -1.7443   0.4206   0.33959  0.06015  665.10 v+c  297.87
+ E_band         3.63640938 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  30.8954  19.0000             0.5570            0.05390
+ E_band         6.50001015 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    29.755939026661437     
+ <SCF>:   QEL    75.244060973338563     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  29.75594   2.75594   0.00000    1   2.75594  -1.79057
+       2   721  78  75.24406  -2.75594   0.00000    2  -2.75594   1.79057
+
+     total energy      -39647.51716591
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.758868
+ *******************************************************************************
+
+     rms-error for type  1:  V =  8.8199D+00     B =  1.7419D-01
+     rms-error for type  2:  V =  8.3764D+00     B =  6.5502D-02
+     iter.   3     average:  V =  8.8199D+00     B =  1.7419D-01
+
+     execution time for last iteration        57.064 sec
+
+
+ *******************************************************************************
+   3 ERR 0.882E+01 0.174E+00 EF  0.72576 -0.03184 D  30.895 M   0.5570   0.0539
+     ETOT     -39647.51716591    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.509
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.488213     2     2    core     -
+          Co     1  27   2  s  1/2     -64.648906     2     4    core     -
+          Co     1  27   2  p  1/2     -55.996781
+          Co     1  27   2  p  3/2     -54.909902     6    10    core     -
+          Co     1  27   3  s  1/2      -6.221610     2    12    core     -
+          Co     1  27   3  p  1/2      -3.645189
+          Co     1  27   3  p  3/2      -3.508691     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.410299     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.737602     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.965961
+          Pt     2  78   2  p  3/2    -840.007411     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.171786     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.403606
+          Pt     2  78   3  p  3/2    -189.500677     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.180503
+          Pt     2  78   3  d  5/2    -152.162306    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.948918     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.992158
+          Pt     2  78   4  p  3/2     -35.327553     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.280385
+          Pt     2  78   4  d  5/2     -21.041025    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.526565     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.975353
+          Pt     2  78   5  p  3/2      -2.860834     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.353639
+          Pt     2  78   4  f  7/2      -4.099287    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102034  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.2755298774
+                  INT        9.2755298774     RAT   1.0000000000
+ IT   1  spin     DNS        1.8019384404
+                  INT        1.8019384404     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0954186330
+                  INT        0.0954186330     RAT   1.0000000000
+ IT   2  charge   DNS        9.8012028000
+                  INT        9.8012028000     RAT   1.0000000000
+ IT   2  spin     DNS        0.3795456783
+                  INT        0.3795456783     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0651211247
+                  INT        0.0651211247     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0767326774
+ <SCF>:     TOTDOSEF    31.9738505296  TOTDOSEFX   31.9738505296
+
+ <CHRDNS>:  TOTNOS      19.0767326774  DQ           0.0767326774
+ <CHRDNS>:  TOTDOS      31.9738505296  TOTDOSX     31.9738505296
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.07673268 els.
+ E_F CORRECTION     -0.00239986
+ NEW FERMI ENERGY    0.72336336
+
+
+  17 E= 0.7234 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3487   0.6312    0.1466   0.0031  -0.00001  0.00000   48.71 s   -248.94
+  p    0.7210   0.8007   -0.0213  -0.0133   0.00895  0.00079    3.30 ns     1.07
+  d   21.0700   7.6762  -15.5506   1.8474  -0.71906  0.09785   65.62 cor -247.86
+  f    0.1550   0.1140   -0.0705   0.0019   0.00855 -0.00153   -0.05
+ sum  22.2947   9.2220  -15.4958   1.8391  -0.70157  0.09710  117.58 v+c -130.28
+ E_band         4.81509243 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7234 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2791   0.7878    0.1432  -0.0136  -0.00001  0.00000 -417.93 s   -389.54
+  p    0.9876   0.8090    0.1975  -0.0459  -0.02499  0.00069  -13.07 ns    24.08
+  d    8.0961   8.0405   -1.0212   0.4401   0.35886  0.06536   67.66 cor -365.46
+  f    0.3163   0.1407   -0.2045   0.0010   0.02833 -0.00180   -0.09
+ sum   9.6792   9.7780   -0.8851   0.3817   0.36218  0.06425 -363.43 v+c -728.88
+ E_band         4.38322670 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  31.9739  19.0000             2.2208            0.16135
+ E_band         9.19831913 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.222025782447673     
+ <SCF>:   QEL    77.777974217552341     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.22203   0.22203   0.00000    1   0.22203  -0.14425
+       2   721  78  77.77797  -0.22203   0.00000    2  -0.22203   0.14425
+
+     total energy      -39655.88869896
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.798404
+ *******************************************************************************
+
+     rms-error for type  1:  V =  3.1309D-01     B =  4.5221D-02
+     rms-error for type  2:  V =  2.5997D-01     B =  1.0745D-02
+     iter.   4     average:  V =  3.1309D-01     B =  4.5221D-02
+
+     execution time for last iteration        56.998 sec
+
+
+ *******************************************************************************
+   4 ERR 0.313E+00 0.452E-01 EF  0.72336 -0.00240 D  31.974 M   2.2208   0.1614
+     ETOT     -39655.88869896    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.494
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.473011     2     2    core     -
+          Co     1  27   2  s  1/2     -64.632180     2     4    core     -
+          Co     1  27   2  p  1/2     -55.980218
+          Co     1  27   2  p  3/2     -54.893326     6    10    core     -
+          Co     1  27   3  s  1/2      -6.206827     2    12    core     -
+          Co     1  27   3  p  1/2      -3.630813
+          Co     1  27   3  p  3/2      -3.494399     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.373187     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.702217     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.930132
+          Pt     2  78   2  p  3/2    -839.971875     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.141012     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.372435
+          Pt     2  78   3  p  3/2    -189.470147     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.148929
+          Pt     2  78   3  d  5/2    -152.130927    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.927578     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.970884
+          Pt     2  78   4  p  3/2     -35.307495     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.260527
+          Pt     2  78   4  d  5/2     -21.021541    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.517713     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.967573
+          Pt     2  78   5  p  3/2      -2.854300     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.334926
+          Pt     2  78   4  f  7/2      -4.080786    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0101834  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        8.9973643537
+                  INT        8.9973643537     RAT   1.0000000000
+ IT   1  spin     DNS        1.9892376629
+                  INT        1.9892376629     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0961952777
+                  INT        0.0961952777     RAT   1.0000000000
+ IT   2  charge   DNS        9.7530686231
+                  INT        9.7530686231     RAT   1.0000000000
+ IT   2  spin     DNS        0.3851500208
+                  INT        0.3851500208     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0608865461
+                  INT        0.0608865461     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     18.7504329768
+ <SCF>:     TOTDOSEF    33.8337931995  TOTDOSEFX   33.8337931995
+
+ <CHRDNS>:  TOTNOS      18.7504329768  DQ          -0.2495670232
+ <CHRDNS>:  TOTDOS      33.8337931995  TOTDOSX     33.8337931995
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.24956702 els.
+ E_F CORRECTION      0.00737626
+ NEW FERMI ENERGY    0.73073962
+
+
+  17 E= 0.7307 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3424   0.6313    0.0987   0.0009   0.00000  0.00000   33.97 s   -232.95
+  p    0.7110   0.8071   -0.0913  -0.0138   0.01954  0.00082    3.29 ns     1.01
+  d   22.6998   7.6200  -15.2936   1.8868  -0.45410  0.09376   64.88 cor -231.94
+  f    0.1619   0.1153   -0.0700   0.0020   0.00319 -0.00156   -0.05
+ sum  23.9152   9.1738  -15.3562   1.8760  -0.43137  0.09301  102.10 v+c -129.84
+ E_band         4.87870140 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7307 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2578   0.7921    0.1311  -0.0133  -0.00001  0.00000 -403.67 s   -383.05
+  p    0.9680   0.8213    0.0833  -0.0467  -0.03802  0.00081  -11.57 ns    23.76
+  d    8.3460   8.0703    0.0449   0.4434   0.54751  0.06601   67.87 cor -359.28
+  f    0.3469   0.1425   -0.2309   0.0019   0.03129 -0.00194   -0.11
+ sum   9.9186   9.8262    0.0285   0.3854   0.54076  0.06488 -347.48 v+c -706.76
+ E_band         4.44253934 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.8338  19.0000             2.2613            0.15789
+ E_band         9.32124075 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.173768937286088     
+ <SCF>:   QEL    77.826231062713916     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.17377   0.17377   0.00000    1   0.17377  -0.11290
+       2   721  78  77.82623  -0.17377   0.00000    2  -0.17377   0.11290
+
+     total energy      -39655.89807686
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.800915
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.2526D-01     B =  2.2508D-02
+     rms-error for type  2:  V =  1.2894D-01     B =  5.0261D-03
+     iter.   5     average:  V =  1.2894D-01     B =  2.2508D-02
+
+     execution time for last iteration        57.074 sec
+
+
+ *******************************************************************************
+   5 ERR 0.129E+00 0.225E-01 EF  0.73074  0.00738 D  33.834 M   2.2613   0.1579
+     ETOT     -39655.89807686    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.494
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.473797     2     2    core     -
+          Co     1  27   2  s  1/2     -64.632617     2     4    core     -
+          Co     1  27   2  p  1/2     -55.980716
+          Co     1  27   2  p  3/2     -54.893818     6    10    core     -
+          Co     1  27   3  s  1/2      -6.206339     2    12    core     -
+          Co     1  27   3  p  1/2      -3.630316
+          Co     1  27   3  p  3/2      -3.493893     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.375780     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.704701     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.932644
+          Pt     2  78   2  p  3/2    -839.974368     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.143221     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.374668
+          Pt     2  78   3  p  3/2    -189.472342     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.151186
+          Pt     2  78   3  d  5/2    -152.133172    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.929262     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.972565
+          Pt     2  78   4  p  3/2     -35.309113     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.262136
+          Pt     2  78   4  d  5/2     -21.023131    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.518801     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.968611
+          Pt     2  78   5  p  3/2      -2.855278     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.336480
+          Pt     2  78   4  f  7/2      -4.082329    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102448  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1801280953
+                  INT        9.1801280953     RAT   1.0000000000
+ IT   1  spin     DNS        1.8394419849
+                  INT        1.8394419849     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0955323878
+                  INT        0.0955323878     RAT   1.0000000000
+ IT   2  charge   DNS        9.8228830106
+                  INT        9.8228830106     RAT   1.0000000000
+ IT   2  spin     DNS        0.3723220104
+                  INT        0.3723220104     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0612215498
+                  INT        0.0612215498     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0030111059
+ <SCF>:     TOTDOSEF    32.6080277914  TOTDOSEFX   32.6080277914
+
+ <CHRDNS>:  TOTNOS      19.0030111059  DQ           0.0030111059
+ <CHRDNS>:  TOTDOS      32.6080277914  TOTDOSX     32.6080277914
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00301111 els.
+ E_F CORRECTION     -0.00009234
+ NEW FERMI ENERGY    0.73064728
+
+
+  17 E= 0.7306 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3431   0.6308    0.1322   0.0008  -0.00001  0.00000   33.00 s   -229.83
+  p    0.7100   0.8061   -0.0510  -0.0147   0.01005  0.00077    3.20 ns     1.00
+  d   21.7625   7.6260  -15.2722   1.8529  -0.61127  0.09631   64.26 cor -228.83
+  f    0.1548   0.1152   -0.0702   0.0018   0.00735 -0.00150   -0.05
+ sum  22.9704   9.1780  -15.2613   1.8409  -0.59387  0.09559  100.42 v+c -128.41
+ E_band         4.88809097 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7306 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2621   0.7920    0.1303  -0.0133  -0.00001  0.00000 -406.13 s   -382.03
+  p    0.9623   0.8205    0.1545  -0.0466  -0.02773  0.00081  -10.13 ns    23.71
+  d    8.0853   8.0668   -0.6779   0.4308   0.40643  0.06219   62.78 cor -358.32
+  f    0.3280   0.1427   -0.2140   0.0015   0.02919 -0.00181   -0.10
+ sum   9.6376   9.8220   -0.6071   0.3724   0.40788  0.06118 -353.58 v+c -711.90
+ E_band         4.43393964 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  32.6080  19.0000             2.2132            0.15677
+ E_band         9.32203062 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.178006952063587     
+ <SCF>:   QEL    77.821993047936417     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.17801   0.17801   0.00000    1   0.17801  -0.11565
+       2   721  78  77.82199  -0.17801   0.00000    2  -0.17801   0.11565
+
+     total energy      -39655.89637807
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.800717
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.3397D-01     B =  2.1694D-02
+     rms-error for type  2:  V =  1.3490D-01     B =  5.4481D-03
+     iter.   6     average:  V =  1.3490D-01     B =  2.1694D-02
+
+     execution time for last iteration        57.036 sec
+
+
+ *******************************************************************************
+   6 ERR 0.135E+00 0.217E-01 EF  0.73065 -0.00009 D  32.608 M   2.2132   0.1568
+     ETOT     -39655.89637807    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.490
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.468477     2     2    core     -
+          Co     1  27   2  s  1/2     -64.627588     2     4    core     -
+          Co     1  27   2  p  1/2     -55.975625
+          Co     1  27   2  p  3/2     -54.888734     6    10    core     -
+          Co     1  27   3  s  1/2      -6.202316     2    12    core     -
+          Co     1  27   3  p  1/2      -3.626380
+          Co     1  27   3  p  3/2      -3.489977     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.378615     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.707516     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.935466
+          Pt     2  78   2  p  3/2    -839.977186     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.145953     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.377407
+          Pt     2  78   3  p  3/2    -189.475070     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.153932
+          Pt     2  78   3  d  5/2    -152.135915    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.931837     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.975139
+          Pt     2  78   4  p  3/2     -35.311664     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.264682
+          Pt     2  78   4  d  5/2     -21.025669    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.521045     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.970795
+          Pt     2  78   5  p  3/2      -2.857383     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.338995
+          Pt     2  78   4  f  7/2      -4.084840    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102440  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1542608591
+                  INT        9.1542608591     RAT   1.0000000000
+ IT   1  spin     DNS        1.8299049908
+                  INT        1.8299049908     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0949332690
+                  INT        0.0949332690     RAT   1.0000000000
+ IT   2  charge   DNS        9.8385469383
+                  INT        9.8385469383     RAT   1.0000000000
+ IT   2  spin     DNS        0.3638569170
+                  INT        0.3638569170     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0593559451
+                  INT        0.0593559451     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     18.9928077974
+ <SCF>:     TOTDOSEF    33.0532103482  TOTDOSEFX   33.0532103482
+
+ <CHRDNS>:  TOTNOS      18.9928077974  DQ          -0.0071922026
+ <CHRDNS>:  TOTDOS      33.0532103482  TOTDOSX     33.0532103482
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00719220 els.
+ E_F CORRECTION      0.00021759
+ NEW FERMI ENERGY    0.73086488
+
+
+  17 E= 0.7309 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3324   0.6292    0.1202  -0.0001  -0.00001  0.00000   26.43 s   -218.83
+  p    0.6992   0.8049   -0.0621  -0.0146   0.01083  0.00073    3.06 ns     0.95
+  d   22.1671   7.6100  -15.0790   1.8395  -0.62083  0.09553   63.53 cor -217.87
+  f    0.1540   0.1153   -0.0691   0.0018   0.00689 -0.00146   -0.05
+ sum  23.3527   9.1593  -15.0900   1.8266  -0.60312  0.09480   92.96 v+c -124.91
+ E_band         4.90643715 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7309 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2558   0.7930    0.1246  -0.0132  -0.00001  0.00000 -406.50 s   -358.35
+  p    0.9379   0.8221    0.1302  -0.0462  -0.02862  0.00087   -8.03 ns    22.32
+  d    8.1765   8.0825   -0.5116   0.4214   0.45008  0.06037   60.83 cor -336.03
+  f    0.3304   0.1431   -0.2149   0.0018   0.02896 -0.00179   -0.10
+ sum   9.7005   9.8407   -0.4717   0.3638   0.45041  0.05945 -353.80 v+c -689.83
+ E_band         4.43358860 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.0532  19.0000             2.1904            0.15426
+ E_band         9.34002574 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.159342280162750     
+ <SCF>:   QEL    77.840657719837253     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.15934   0.15934   0.00000    1   0.15934  -0.10353
+       2   721  78  77.84066  -0.15934   0.00000    2  -0.15934   0.10353
+
+     total energy      -39655.89793843
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.800994
+ *******************************************************************************
+
+     rms-error for type  1:  V =  6.6319D-02     B =  1.2628D-02
+     rms-error for type  2:  V =  6.8772D-02     B =  1.7413D-03
+     iter.   7     average:  V =  6.8772D-02     B =  1.2628D-02
+
+     execution time for last iteration        56.986 sec
+
+
+ *******************************************************************************
+   7 ERR 0.688E-01 0.126E-01 EF  0.73086  0.00022 D  33.053 M   2.1904   0.1543
+     ETOT     -39655.89793843    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465478     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624231     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972316
+          Co     1  27   2  p  3/2     -54.885420     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198338     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622458
+          Co     1  27   3  p  3/2      -3.486055     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.385491     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.714116     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.942135
+          Pt     2  78   2  p  3/2    -839.983810     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.151852     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.383366
+          Pt     2  78   3  p  3/2    -189.480932     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.159953
+          Pt     2  78   3  d  5/2    -152.141906    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.936344     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.979638
+          Pt     2  78   4  p  3/2     -35.315996     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.268993
+          Pt     2  78   4  d  5/2     -21.029930    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524093     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.973736
+          Pt     2  78   5  p  3/2      -2.860194     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343174
+          Pt     2  78   4  f  7/2      -4.088991    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102458  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1572939242
+                  INT        9.1572939242     RAT   1.0000000000
+ IT   1  spin     DNS        1.7824649649
+                  INT        1.7824649649     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928432573
+                  INT        0.0928432573     RAT   1.0000000000
+ IT   2  charge   DNS        9.8612238373
+                  INT        9.8612238373     RAT   1.0000000000
+ IT   2  spin     DNS        0.3552766786
+                  INT        0.3552766786     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0578129443
+                  INT        0.0578129443     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0185177615
+ <SCF>:     TOTDOSEF    33.5932708853  TOTDOSEFX   33.5932708853
+
+ <CHRDNS>:  TOTNOS      19.0185177615  DQ           0.0185177615
+ <CHRDNS>:  TOTDOS      33.5932708853  TOTDOSX     33.5932708853
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.01851776 els.
+ E_F CORRECTION     -0.00055123
+ NEW FERMI ENERGY    0.73031364
+
+
+  17 E= 0.7303 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3192   0.6270    0.1115  -0.0012   0.00000  0.00000   17.81 s   -203.16
+  p    0.6826   0.8028   -0.0653  -0.0146   0.01143  0.00066    2.83 ns     0.89
+  d   22.5917   7.5991  -14.6422   1.8045  -0.70276  0.09397   62.08 cor -202.27
+  f    0.1525   0.1153   -0.0670   0.0019   0.00678 -0.00141   -0.05
+ sum  23.7459   9.1442  -14.6630   1.7905  -0.68455  0.09322   82.68 v+c -119.60
+ E_band         4.93088654 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7303 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2501   0.7939    0.1185  -0.0128  -0.00001  0.00000 -395.92 s   -336.99
+  p    0.9070   0.8229    0.1149  -0.0451  -0.02912  0.00095   -5.03 ns    21.04
+  d    8.3610   8.0954   -0.3626   0.4113   0.50694  0.05834   58.63 cor -315.95
+  f    0.3293   0.1436   -0.2112   0.0021   0.02821 -0.00175   -0.10
+ sum   9.8474   9.8558   -0.3404   0.3555   0.50602  0.05753 -342.42 v+c -658.37
+ E_band         4.42609445 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.5933  19.0000             2.1460            0.15075
+ E_band         9.35698099 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.144204361760071     
+ <SCF>:   QEL    77.855795638239940     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14420   0.14420   0.00000    1   0.14420  -0.09369
+       2   721  78  77.85580  -0.14420   0.00000    2  -0.14420   0.09369
+
+     total energy      -39655.89851433
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801120
+ *******************************************************************************
+
+     rms-error for type  1:  V =  6.1112D-03     B =  1.6837D-03
+     rms-error for type  2:  V =  7.7521D-03     B =  2.4799D-03
+     iter.   8     average:  V =  7.7521D-03     B =  2.4799D-03
+
+     execution time for last iteration        56.973 sec
+
+
+ *******************************************************************************
+   8 ERR 0.775E-02 0.248E-02 EF  0.73031 -0.00055 D  33.593 M   2.1460   0.1508
+     ETOT     -39655.89851433    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.485
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.464939     2     2    core     -
+          Co     1  27   2  s  1/2     -64.623661     2     4    core     -
+          Co     1  27   2  p  1/2     -55.971754
+          Co     1  27   2  p  3/2     -54.884857     6    10    core     -
+          Co     1  27   3  s  1/2      -6.197442     2    12    core     -
+          Co     1  27   3  p  1/2      -3.621568
+          Co     1  27   3  p  3/2      -3.485163     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386484     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715107     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943126
+          Pt     2  78   2  p  3/2    -839.984800     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152834     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384348
+          Pt     2  78   3  p  3/2    -189.481914     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160935
+          Pt     2  78   3  d  5/2    -152.142888    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937351     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980645
+          Pt     2  78   4  p  3/2     -35.317004     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.270000
+          Pt     2  78   4  d  5/2     -21.030937    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.525024     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974641
+          Pt     2  78   5  p  3/2      -2.861064     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.344172
+          Pt     2  78   4  f  7/2      -4.089989    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102413  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1432634258
+                  INT        9.1432634258     RAT   1.0000000000
+ IT   1  spin     DNS        1.7815746946
+                  INT        1.7815746946     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0925719797
+                  INT        0.0925719797     RAT   1.0000000000
+ IT   2  charge   DNS        9.8625013226
+                  INT        9.8625013226     RAT   1.0000000000
+ IT   2  spin     DNS        0.3552417060
+                  INT        0.3552417060     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0575375074
+                  INT        0.0575375074     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0057647484
+ <SCF>:     TOTDOSEF    33.8430713658  TOTDOSEFX   33.8430713658
+
+ <CHRDNS>:  TOTNOS      19.0057647484  DQ           0.0057647484
+ <CHRDNS>:  TOTDOS      33.8430713658  TOTDOSX     33.8430713658
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00576475 els.
+ E_F CORRECTION     -0.00017034
+ NEW FERMI ENERGY    0.73014330
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3155   0.6264    0.1065  -0.0016   0.00000  0.00000   15.31 s   -199.50
+  p    0.6810   0.8022   -0.0697  -0.0146   0.01194  0.00065    2.78 ns     0.87
+  d   22.7890   7.5953  -14.5303   1.7984  -0.70192  0.09344   61.73 cor -198.63
+  f    0.1527   0.1153   -0.0668   0.0019   0.00656 -0.00140   -0.05
+ sum  23.9383   9.1392  -14.5603   1.7841  -0.68343  0.09269   79.77 v+c -118.86
+ E_band         4.93533667 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2486   0.7942    0.1170  -0.0126  -0.00001  0.00000 -389.17 s   -339.06
+  p    0.9009   0.8232    0.1056  -0.0447  -0.02948  0.00097   -4.42 ns    21.15
+  d    8.4246   8.0998   -0.2728   0.4105   0.52988  0.05823   58.61 cor -317.90
+  f    0.3307   0.1437   -0.2114   0.0022   0.02806 -0.00176   -0.10
+ sum   9.9048   9.8608   -0.2615   0.3553   0.52846  0.05745 -335.07 v+c -652.98
+ E_band         4.42388522 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.8431  19.0000             2.1393            0.15014
+ E_band         9.35922189 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.139185839771059     
+ <SCF>:   QEL    77.860814160228941     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.13919   0.13919   0.00000    1   0.13919  -0.09043
+       2   721  78  77.86081  -0.13919   0.00000    2  -0.13919   0.09043
+
+     total energy      -39655.89859956
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801148
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.2398D-02     B =  1.2146D-03
+     rms-error for type  2:  V =  1.1883D-02     B =  1.9799D-03
+     iter.   9     average:  V =  1.2398D-02     B =  1.9799D-03
+
+     execution time for last iteration        56.956 sec
+
+
+ *******************************************************************************
+   9 ERR 0.124E-01 0.198E-02 EF  0.73014 -0.00017 D  33.843 M   2.1393   0.1501
+     ETOT     -39655.89859956    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465590     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624376     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972464
+          Co     1  27   2  p  3/2     -54.885568     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198029     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622143
+          Co     1  27   3  p  3/2      -3.485734     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386762     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715342     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943372
+          Pt     2  78   2  p  3/2    -839.985039     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152972     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384495
+          Pt     2  78   3  p  3/2    -189.482047     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.161090
+          Pt     2  78   3  d  5/2    -152.143040    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937290     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980584
+          Pt     2  78   4  p  3/2     -35.316919     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269911
+          Pt     2  78   4  d  5/2     -21.030841    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524774     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974388
+          Pt     2  78   5  p  3/2      -2.860810     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.344066
+          Pt     2  78   4  f  7/2      -4.089879    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102398  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1432109668
+                  INT        9.1432109668     RAT   1.0000000000
+ IT   1  spin     DNS        1.7864703393
+                  INT        1.7864703393     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0927649234
+                  INT        0.0927649234     RAT   1.0000000000
+ IT   2  charge   DNS        9.8587581631
+                  INT        9.8587581631     RAT   1.0000000000
+ IT   2  spin     DNS        0.3585419317
+                  INT        0.3585419317     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0581371205
+                  INT        0.0581371205     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0019691300
+ <SCF>:     TOTDOSEF    33.7539888344  TOTDOSEFX   33.7539888344
+
+ <CHRDNS>:  TOTNOS      19.0019691300  DQ           0.0019691300
+ <CHRDNS>:  TOTDOS      33.7539888344  TOTDOSX     33.7539888344
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00196913 els.
+ E_F CORRECTION     -0.00005834
+ NEW FERMI ENERGY    0.73008497
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3172   0.6266    0.1076  -0.0015   0.00000  0.00000   15.68 s   -201.01
+  p    0.6828   0.8023   -0.0698  -0.0148   0.01189  0.00067    2.81 ns     0.88
+  d   22.7204   7.5976  -14.5778   1.8018  -0.68901  0.09355   61.85 cor -200.13
+  f    0.1529   0.1153   -0.0672   0.0019   0.00663 -0.00141   -0.05
+ sum  23.8734   9.1418  -14.6073   1.7873  -0.67050  0.09280   80.30 v+c -119.83
+ E_band         4.93252369 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2492   0.7941    0.1176  -0.0126  -0.00001  0.00000 -385.12 s   -350.20
+  p    0.9045   0.8229    0.1069  -0.0448  -0.02939  0.00096   -4.76 ns    21.81
+  d    8.3964   8.0976   -0.3030   0.4138   0.51927  0.05891   59.32 cor -328.39
+  f    0.3305   0.1436   -0.2117   0.0021   0.02819 -0.00177   -0.10
+ sum   9.8806   9.8582   -0.2902   0.3586   0.51805  0.05811 -330.66 v+c -659.05
+ E_band         4.42371895 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7540  19.0000             2.1459            0.15091
+ E_band         9.35624264 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.141818250554287     
+ <SCF>:   QEL    77.858181749445706     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14182   0.14182   0.00000    1   0.14182  -0.09214
+       2   721  78  77.85818  -0.14182   0.00000    2  -0.14182   0.09214
+
+     total energy      -39655.89860660
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801100
+ *******************************************************************************
+
+     rms-error for type  1:  V =  2.6481D-03     B =  2.2652D-04
+     rms-error for type  2:  V =  2.6752D-03     B =  2.1729D-04
+     iter.  10     average:  V =  2.6752D-03     B =  2.2652D-04
+
+     execution time for last iteration        56.979 sec
+
+
+ *******************************************************************************
+  10 ERR 0.268E-02 0.227E-03 EF  0.73008 -0.00006 D  33.754 M   2.1459   0.1509
+     ETOT     -39655.89860660    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465837     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624587     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972679
+          Co     1  27   2  p  3/2     -54.885782     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198256     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622367
+          Co     1  27   3  p  3/2      -3.485959     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386498     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715080     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943109
+          Pt     2  78   2  p  3/2    -839.984777     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152717     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384239
+          Pt     2  78   3  p  3/2    -189.481792     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160834
+          Pt     2  78   3  d  5/2    -152.142783    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937044     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980338
+          Pt     2  78   4  p  3/2     -35.316675     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269668
+          Pt     2  78   4  d  5/2     -21.030599    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524564     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974184
+          Pt     2  78   5  p  3/2      -2.860615     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343826
+          Pt     2  78   4  f  7/2      -4.089640    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102394  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1423370466
+                  INT        9.1423370466     RAT   1.0000000000
+ IT   1  spin     DNS        1.7896852594
+                  INT        1.7896852594     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928870234
+                  INT        0.0928870234     RAT   1.0000000000
+ IT   2  charge   DNS        9.8568483861
+                  INT        9.8568483861     RAT   1.0000000000
+ IT   2  spin     DNS        0.3591341024
+                  INT        0.3591341024     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0582279608
+                  INT        0.0582279608     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     18.9991854326
+ <SCF>:     TOTDOSEF    33.7288646124  TOTDOSEFX   33.7288646124
+
+ <CHRDNS>:  TOTNOS      18.9991854326  DQ          -0.0008145674
+ <CHRDNS>:  TOTDOS      33.7288646124  TOTDOSX     33.7288646124
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00081457 els.
+ E_F CORRECTION      0.00002415
+ NEW FERMI ENERGY    0.73010912
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3179   0.6267    0.1079  -0.0015   0.00000  0.00000   16.11 s   -201.84
+  p    0.6837   0.8025   -0.0701  -0.0148   0.01189  0.00067    2.83 ns     0.88
+  d   22.6989   7.5985  -14.6005   1.8038  -0.68270  0.09362   61.92 cor -200.96
+  f    0.1531   0.1153   -0.0674   0.0019   0.00662 -0.00141   -0.05
+ sum  23.8536   9.1429  -14.6300   1.7893  -0.66419  0.09287   80.81 v+c -120.15
+ E_band         4.93132412 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2494   0.7940    0.1179  -0.0126  -0.00001  0.00000 -385.69 s   -351.60
+  p    0.9062   0.8229    0.1073  -0.0449  -0.02941  0.00096   -4.92 ns    21.89
+  d    8.3890   8.0967   -0.3070   0.4145   0.51687  0.05905   59.51 cor -329.70
+  f    0.3306   0.1436   -0.2120   0.0021   0.02822 -0.00177   -0.10
+ sum   9.8753   9.8571   -0.2938   0.3591   0.51568  0.05824 -331.21 v+c -660.91
+ E_band         4.42419245 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7289  19.0000             2.1485            0.15111
+ E_band         9.35551657 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.142913120674027     
+ <SCF>:   QEL    77.857086879325976     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14291   0.14291   0.00000    1   0.14291  -0.09285
+       2   721  78  77.85709  -0.14291   0.00000    2  -0.14291   0.09285
+
+     total energy      -39655.89860241
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801093
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.4546D-03     B =  3.0588D-04
+     rms-error for type  2:  V =  1.6086D-03     B =  1.3279D-04
+     iter.  11     average:  V =  1.6086D-03     B =  3.0588D-04
+
+     execution time for last iteration        57.020 sec
+
+
+ *******************************************************************************
+  11 ERR 0.161E-02 0.306E-03 EF  0.73011  0.00002 D  33.729 M   2.1485   0.1511
+     ETOT     -39655.89860241    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465821     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624564     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972658
+          Co     1  27   2  p  3/2     -54.885761     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198184     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622295
+          Co     1  27   3  p  3/2      -3.485886     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386600     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715182     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943211
+          Pt     2  78   2  p  3/2    -839.984878     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152816     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384338
+          Pt     2  78   3  p  3/2    -189.481891     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160934
+          Pt     2  78   3  d  5/2    -152.142883    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937142     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980436
+          Pt     2  78   4  p  3/2     -35.316772     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269765
+          Pt     2  78   4  d  5/2     -21.030696    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524651     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974269
+          Pt     2  78   5  p  3/2      -2.860696     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343922
+          Pt     2  78   4  f  7/2      -4.089736    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102396  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1427895286
+                  INT        9.1427895286     RAT   1.0000000000
+ IT   1  spin     DNS        1.7884515801
+                  INT        1.7884515801     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928424201
+                  INT        0.0928424201     RAT   1.0000000000
+ IT   2  charge   DNS        9.8576239898
+                  INT        9.8576239898     RAT   1.0000000000
+ IT   2  spin     DNS        0.3591717697
+                  INT        0.3591717697     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0582479912
+                  INT        0.0582479912     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0004135184
+ <SCF>:     TOTDOSEF    33.7311579417  TOTDOSEFX   33.7311579417
+
+ <CHRDNS>:  TOTNOS      19.0004135184  DQ           0.0004135184
+ <CHRDNS>:  TOTDOS      33.7311579417  TOTDOSX     33.7311579417
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00041352 els.
+ E_F CORRECTION     -0.00001226
+ NEW FERMI ENERGY    0.73009686
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3177   0.6267    0.1078  -0.0015   0.00000  0.00000   15.87 s   -201.53
+  p    0.6834   0.8024   -0.0699  -0.0148   0.01187  0.00067    2.82 ns     0.88
+  d   22.7026   7.5982  -14.5937   1.8031  -0.68474  0.09359   61.90 cor -200.65
+  f    0.1530   0.1153   -0.0674   0.0019   0.00664 -0.00141   -0.05
+ sum  23.8567   9.1425  -14.6232   1.7886  -0.66623  0.09285   80.54 v+c -120.11
+ E_band         4.93169240 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2493   0.7940    0.1177  -0.0126  -0.00001  0.00000 -384.94 s   -352.27
+  p    0.9057   0.8229    0.1072  -0.0449  -0.02939  0.00096   -4.86 ns    21.94
+  d    8.3889   8.0970   -0.3088   0.4145   0.51685  0.05905   59.48 cor -330.34
+  f    0.3305   0.1436   -0.2119   0.0021   0.02822 -0.00177   -0.10
+ sum   9.8744   9.8575   -0.2957   0.3592   0.51567  0.05824 -330.43 v+c -660.77
+ E_band         4.42394628 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7312  19.0000             2.1478            0.15109
+ E_band         9.35563868 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.142497063351954     
+ <SCF>:   QEL    77.857502936648046     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14250   0.14250   0.00000    1   0.14250  -0.09258
+       2   721  78  77.85750  -0.14250   0.00000    2  -0.14250   0.09258
+
+     total energy      -39655.89860433
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801094
+ *******************************************************************************
+
+     rms-error for type  1:  V =  9.2479D-05     B =  1.4986D-05
+     rms-error for type  2:  V =  7.8995D-05     B =  2.4555D-05
+     iter.  12     average:  V =  9.2479D-05     B =  2.4555D-05
+
+     execution time for last iteration        56.899 sec
+
+
+ *******************************************************************************
+  12 ERR 0.925E-04 0.246E-04 EF  0.73010 -0.00001 D  33.731 M   2.1478   0.1511
+     ETOT     -39655.89860433    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465833     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624575     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972669
+          Co     1  27   2  p  3/2     -54.885772     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198193     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622304
+          Co     1  27   3  p  3/2      -3.485895     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386597     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715178     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943207
+          Pt     2  78   2  p  3/2    -839.984874     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152812     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384334
+          Pt     2  78   3  p  3/2    -189.481887     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160929
+          Pt     2  78   3  d  5/2    -152.142879    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937138     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980432
+          Pt     2  78   4  p  3/2     -35.316768     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269761
+          Pt     2  78   4  d  5/2     -21.030692    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524647     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974265
+          Pt     2  78   5  p  3/2      -2.860692     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343918
+          Pt     2  78   4  f  7/2      -4.089732    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102395  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1426083183
+                  INT        9.1426083183     RAT   1.0000000000
+ IT   1  spin     DNS        1.7886289428
+                  INT        1.7886289428     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928454019
+                  INT        0.0928454019     RAT   1.0000000000
+ IT   2  charge   DNS        9.8574797696
+                  INT        9.8574797696     RAT   1.0000000000
+ IT   2  spin     DNS        0.3592347376
+                  INT        0.3592347376     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0582554937
+                  INT        0.0582554937     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0000880879
+ <SCF>:     TOTDOSEF    33.7319893697  TOTDOSEFX   33.7319893697
+
+ <CHRDNS>:  TOTNOS      19.0000880879  DQ           0.0000880879
+ <CHRDNS>:  TOTDOS      33.7319893697  TOTDOSX     33.7319893697
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00008809 els.
+ E_F CORRECTION     -0.00000261
+ NEW FERMI ENERGY    0.73009425
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3177   0.6267    0.1078  -0.0015   0.00000  0.00000   15.86 s   -201.55
+  p    0.6834   0.8024   -0.0700  -0.0148   0.01188  0.00067    2.82 ns     0.88
+  d   22.7030   7.5982  -14.5938   1.8032  -0.68433  0.09359   61.90 cor -200.66
+  f    0.1530   0.1153   -0.0674   0.0019   0.00664 -0.00141   -0.05
+ sum  23.8572   9.1425  -14.6233   1.7887  -0.66581  0.09285   80.54 v+c -120.13
+ E_band         4.93165753 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2493   0.7940    0.1178  -0.0126  -0.00001  0.00000 -384.86 s   -352.47
+  p    0.9057   0.8229    0.1072  -0.0449  -0.02939  0.00096   -4.87 ns    21.95
+  d    8.3892   8.0970   -0.3082   0.4146   0.51692  0.05907   59.49 cor -330.52
+  f    0.3306   0.1436   -0.2119   0.0021   0.02822 -0.00177   -0.10
+ sum   9.8748   9.8575   -0.2952   0.3592   0.51574  0.05825 -330.33 v+c -660.85
+ E_band         4.42393711 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7320  19.0000             2.1479            0.15110
+ E_band         9.35559464 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.142546017566378     
+ <SCF>:   QEL    77.857453982433626     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14255   0.14255   0.00000    1   0.14255  -0.09261
+       2   721  78  77.85745  -0.14255   0.00000    2  -0.14255   0.09261
+
+     total energy      -39655.89860507
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801093
+ *******************************************************************************
+
+     rms-error for type  1:  V =  8.1104D-05     B =  1.1674D-05
+     rms-error for type  2:  V =  8.5211D-05     B =  2.6669D-06
+     iter.  13     average:  V =  8.5211D-05     B =  1.1674D-05
+
+     execution time for last iteration        56.924 sec
+
+
+ *******************************************************************************
+  13 ERR 0.852E-04 0.117E-04 EF  0.73009  0.00000 D  33.732 M   2.1479   0.1511
+     ETOT     -39655.89860507    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465831     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624573     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972667
+          Co     1  27   2  p  3/2     -54.885770     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198189     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622300
+          Co     1  27   3  p  3/2      -3.485891     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386601     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715182     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943212
+          Pt     2  78   2  p  3/2    -839.984879     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152816     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384339
+          Pt     2  78   3  p  3/2    -189.481891     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160934
+          Pt     2  78   3  d  5/2    -152.142883    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937142     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980436
+          Pt     2  78   4  p  3/2     -35.316772     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269765
+          Pt     2  78   4  d  5/2     -21.030696    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524650     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974268
+          Pt     2  78   5  p  3/2      -2.860695     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343922
+          Pt     2  78   4  f  7/2      -4.089736    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102394  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1425328135
+                  INT        9.1425328135     RAT   1.0000000000
+ IT   1  spin     DNS        1.7886434011
+                  INT        1.7886434011     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928448557
+                  INT        0.0928448557     RAT   1.0000000000
+ IT   2  charge   DNS        9.8574809888
+                  INT        9.8574809888     RAT   1.0000000000
+ IT   2  spin     DNS        0.3592359831
+                  INT        0.3592359831     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0582543416
+                  INT        0.0582543416     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0000138023
+ <SCF>:     TOTDOSEF    33.7330772161  TOTDOSEFX   33.7330772161
+
+ <CHRDNS>:  TOTNOS      19.0000138023  DQ           0.0000138023
+ <CHRDNS>:  TOTDOS      33.7330772161  TOTDOSX     33.7330772161
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00001380 els.
+ E_F CORRECTION     -0.00000041
+ NEW FERMI ENERGY    0.73009384
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3177   0.6267    0.1078  -0.0015   0.00000  0.00000   15.85 s   -201.53
+  p    0.6834   0.8024   -0.0700  -0.0148   0.01188  0.00067    2.82 ns     0.88
+  d   22.7039   7.5982  -14.5934   1.8032  -0.68429  0.09359   61.90 cor -200.65
+  f    0.1530   0.1153   -0.0674   0.0019   0.00664 -0.00141   -0.05
+ sum  23.8580   9.1425  -14.6230   1.7886  -0.66578  0.09285   80.52 v+c -120.12
+ E_band         4.93167347 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2493   0.7940    0.1177  -0.0126  -0.00001  0.00000 -384.83 s   -352.48
+  p    0.9057   0.8229    0.1071  -0.0449  -0.02939  0.00096   -4.87 ns    21.95
+  d    8.3894   8.0970   -0.3078   0.4146   0.51702  0.05907   59.49 cor -330.53
+  f    0.3306   0.1436   -0.2119   0.0021   0.02822 -0.00177   -0.10
+ sum   9.8750   9.8575   -0.2948   0.3592   0.51583  0.05825 -330.30 v+c -660.84
+ E_band         4.42393058 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7331  19.0000             2.1479            0.15110
+ E_band         9.35560405 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.142523051644584     
+ <SCF>:   QEL    77.857476948355412     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14252   0.14252   0.00000    1   0.14252  -0.09260
+       2   721  78  77.85748  -0.14252   0.00000    2  -0.14252   0.09260
+
+     total energy      -39655.89860555
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801093
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.3663D-06     B =  2.0344D-07
+     rms-error for type  2:  V =  1.1920D-06     B =  1.5425D-07
+     iter.  14     average:  V =  1.3663D-06     B =  2.0344D-07
+
+     execution time for last iteration        57.040 sec
+
+
+ *******************************************************************************
+  14 ERR 0.137E-05 0.203E-06 EF  0.73009  0.00000 D  33.733 M   2.1479   0.1511
+     ETOT     -39655.89860555    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465831     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624573     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972667
+          Co     1  27   2  p  3/2     -54.885770     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198189     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622300
+          Co     1  27   3  p  3/2      -3.485891     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386601     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715182     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943212
+          Pt     2  78   2  p  3/2    -839.984879     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152816     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384339
+          Pt     2  78   3  p  3/2    -189.481891     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160934
+          Pt     2  78   3  d  5/2    -152.142883    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937142     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980436
+          Pt     2  78   4  p  3/2     -35.316772     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269765
+          Pt     2  78   4  d  5/2     -21.030696    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524650     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974268
+          Pt     2  78   5  p  3/2      -2.860695     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343922
+          Pt     2  78   4  f  7/2      -4.089736    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102394  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1425238540
+                  INT        9.1425238540     RAT   1.0000000000
+ IT   1  spin     DNS        1.7886504441
+                  INT        1.7886504441     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928450142
+                  INT        0.0928450142     RAT   1.0000000000
+ IT   2  charge   DNS        9.8574773226
+                  INT        9.8574773226     RAT   1.0000000000
+ IT   2  spin     DNS        0.3592364944
+                  INT        0.3592364944     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0582542590
+                  INT        0.0582542590     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     19.0000011766
+ <SCF>:     TOTDOSEF    33.7331571399  TOTDOSEFX   33.7331571399
+
+ <CHRDNS>:  TOTNOS      19.0000011766  DQ           0.0000011766
+ <CHRDNS>:  TOTDOS      33.7331571399  TOTDOSX     33.7331571399
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT       0.00000118 els.
+ E_F CORRECTION     -0.00000003
+ NEW FERMI ENERGY    0.73009380
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3177   0.6267    0.1078  -0.0015   0.00000  0.00000   15.85 s   -201.53
+  p    0.6834   0.8024   -0.0700  -0.0148   0.01188  0.00067    2.82 ns     0.88
+  d   22.7040   7.5982  -14.5934   1.8032  -0.68428  0.09359   61.90 cor -200.65
+  f    0.1530   0.1153   -0.0674   0.0019   0.00664 -0.00141   -0.05
+ sum  23.8581   9.1425  -14.6230   1.7887  -0.66576  0.09285   80.52 v+c -120.12
+ E_band         4.93167282 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2493   0.7940    0.1177  -0.0126  -0.00001  0.00000 -384.83 s   -352.48
+  p    0.9057   0.8229    0.1071  -0.0449  -0.02940  0.00096   -4.87 ns    21.95
+  d    8.3895   8.0970   -0.3078   0.4146   0.51702  0.05907   59.49 cor -330.53
+  f    0.3306   0.1436   -0.2119   0.0021   0.02822 -0.00177   -0.10
+ sum   9.8751   9.8575   -0.2948   0.3592   0.51584  0.05825 -330.30 v+c -660.84
+ E_band         4.42393065 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7332  19.0000             2.1479            0.15110
+ E_band         9.35560347 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.142523021859969     
+ <SCF>:   QEL    77.857476978140028     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14252   0.14252   0.00000    1   0.14252  -0.09260
+       2   721  78  77.85748  -0.14252   0.00000    2  -0.14252   0.09260
+
+     total energy      -39655.89860559
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801093
+ *******************************************************************************
+
+     rms-error for type  1:  V =  1.1541D-06     B =  1.5135D-07
+     rms-error for type  2:  V =  1.1627D-06     B =  8.7201D-08
+     iter.  15     average:  V =  1.1627D-06     B =  1.5135D-07
+
+     execution time for last iteration        56.923 sec
+
+
+ *******************************************************************************
+  15 ERR 0.116E-05 0.151E-06 EF  0.73009  0.00000 D  33.733 M   2.1479   0.1511
+     ETOT     -39655.89860559    SCF - cycle not converged  -  continue
+ *******************************************************************************
+
+
+
+ *******************************************************************************
+                                  <SCFCHKNVAL>
+ *******************************************************************************
+
+          fix core and semi-core states and lower boundary for valence band
+
+          bottom of energy contour for band states  EMIN   =  -0.500
+          lower limit for semi-core states          ESCBOT =  -0.500
+          upper limit for core states               ECTOP  =  -3.486
+
+          table of detected bound states  (ignoring exchange splitting)
+
+          elmt  IT   Z   n  l   j        E (Ry)      NSH  NSUM  state  changed
+
+          Co     1  27   1  s  1/2    -555.465831     2     2    core     -
+          Co     1  27   2  s  1/2     -64.624573     2     4    core     -
+          Co     1  27   2  p  1/2     -55.972667
+          Co     1  27   2  p  3/2     -54.885770     6    10    core     -
+          Co     1  27   3  s  1/2      -6.198189     2    12    core     -
+          Co     1  27   3  p  1/2      -3.622300
+          Co     1  27   3  p  3/2      -3.485891     6    18    core     -
+
+          Pt     2  78   1  s  1/2   -5750.386601     2     2    core     -
+          Pt     2  78   2  s  1/2   -1008.715182     2     4    core     -
+          Pt     2  78   2  p  1/2    -966.943212
+          Pt     2  78   2  p  3/2    -839.984879     6    10    core     -
+          Pt     2  78   3  s  1/2    -236.152816     2    12    core     -
+          Pt     2  78   3  p  1/2    -217.384339
+          Pt     2  78   3  p  3/2    -189.481891     6    18    core     -
+          Pt     2  78   3  d  3/2    -158.160934
+          Pt     2  78   3  d  5/2    -152.142883    10    28    core     -
+          Pt     2  78   4  s  1/2     -49.937142     2    30    core     -
+          Pt     2  78   4  p  1/2     -41.980436
+          Pt     2  78   4  p  3/2     -35.316772     6    36    core     -
+          Pt     2  78   4  d  3/2     -22.269765
+          Pt     2  78   4  d  5/2     -21.030696    10    46    core     -
+          Pt     2  78   5  s  1/2      -6.524650     2    48    core     -
+          Pt     2  78   5  p  1/2      -3.974268
+          Pt     2  78   5  p  3/2      -2.860695     6    54    core     -
+          Pt     2  78   4  f  5/2      -4.343922
+          Pt     2  78   4  f  7/2      -4.089736    14    68    core     -
+
+
+
+
+          Smallest Im(ETAB(IE)) is   0.0102394  for IE = 16
+
+
+
+ <CHRDNS>:     CHECK temporary densities 
+               for .NOT.EFCORRECT and IECURR = NETAB(IEPATH) 
+
+ IT   1  charge   DNS        9.1425228089
+                  INT        9.1425228089     RAT   1.0000000000
+ IT   1  spin     DNS        1.7886518390
+                  INT        1.7886518390     RAT   1.0000000000
+ IT   1  orbital  DNS        0.0928450626
+                  INT        0.0928450626     RAT   1.0000000000
+ IT   2  charge   DNS        9.8574767893
+                  INT        9.8574767893     RAT   1.0000000000
+ IT   2  spin     DNS        0.3592366858
+                  INT        0.3592366858     RAT   1.0000000000
+ IT   2  orbital  DNS        0.0582542771
+                  INT        0.0582542771     RAT   1.0000000000
+
+ <SCF>:     TOTNOS       0.0000000000  TOTNOSX     18.9999995982
+ <SCF>:     TOTDOSEF    33.7331565187  TOTDOSEFX   33.7331565187
+
+ <CHRDNS>:  TOTNOS      18.9999995982  DQ          -0.0000004018
+ <CHRDNS>:  TOTDOS      33.7331565187  TOTDOSX     33.7331565187
+
+
+ *******************************************************************************
+
+ SPRKKR-run for: CoPt
+
+ results extrapolated to corrected Fermi energy:
+ CHARGE MISFIT      -0.00000040 els.
+ E_F CORRECTION      0.00000001
+ NEW FERMI ENERGY    0.73009381
+
+
+  17 E= 0.7301 0.0000          IT=   1  Co      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.3177   0.6267    0.1078  -0.0015   0.00000  0.00000   15.85 s   -201.53
+  p    0.6834   0.8024   -0.0700  -0.0148   0.01188  0.00067    2.82 ns     0.88
+  d   22.7040   7.5982  -14.5934   1.8032  -0.68428  0.09359   61.90 cor -200.65
+  f    0.1530   0.1153   -0.0674   0.0019   0.00664 -0.00141   -0.05
+ sum  23.8581   9.1425  -14.6230   1.7887  -0.66576  0.09285   80.52 v+c -120.12
+ E_band         4.93167249 [Ry]
+dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+
+  17 E= 0.7301 0.0000          IT=   2  Pt      
+         DOS      NOS     P_spin   m_spin    P_orb    m_orb    B_val      B_core
+  s    0.2493   0.7940    0.1177  -0.0126  -0.00001  0.00000 -384.83 s   -352.48
+  p    0.9057   0.8229    0.1071  -0.0449  -0.02940  0.00096   -4.87 ns    21.95
+  d    8.3895   8.0970   -0.3078   0.4146   0.51702  0.05907   59.49 cor -330.53
+  f    0.3306   0.1436   -0.2119   0.0021   0.02822 -0.00177   -0.10
+ sum   9.8751   9.8575   -0.2948   0.3592   0.51584  0.05825 -330.30 v+c -660.84
+ E_band         4.42393079 [Ry]
+dipole moment   2      0.0000000000000000      0.0000000000000000      0.0000000000000000
+ -------------------------------------------------------------------------------
+ TOT  33.7332  19.0000             2.1479            0.15110
+ E_band         9.35560328 [Ry]
+ ===============================================================================
+ <SCF>:   QEL    27.142523093080328     
+ <SCF>:   QEL    77.857476906919672     
+
+          integrals in <CHRDNS> agree within   1.0E-10
+
+
+     charge neutrality      0.000000000000 els.
+
+
+ *******************************************************************************
+                     setting up new potential in <SCFNEWPOT>
+ *******************************************************************************
+
+      IT  JTOP   Z    QEL       DQT       DVCT     IQ    DQQ       VMAD  
+       1   721  27  27.14252   0.14252   0.00000    1   0.14252  -0.09260
+       2   721  78  77.85748  -0.14252   0.00000    2  -0.14252   0.09260
+
+     total energy      -39655.89860560
+
+ *******************************************************************************
+          shift of muffin-tin zero  VMTZ  -0.801093
+ *******************************************************************************
+
+     rms-error for type  1:  V =  7.6805D-07     B =  8.1709D-08
+     rms-error for type  2:  V =  7.5868D-07     B =  3.4835D-08
+     iter.  16     average:  V =  7.6805D-07     B =  8.1709D-08
+
+     execution time for last iteration        56.856 sec
+
+
+ *******************************************************************************
+  16 ERR 0.768E-06 0.817E-07 EF  0.73009  0.00000 D  33.733 M   2.1479   0.1511
+     ETOT     -39655.89860560    SCF - cycle converged !!!!!!!!! 
+ *******************************************************************************
+
+
+ *******************************************************************************
+ *******************************************************************************
+
+          MPI process number  0  out of   1 processes
+          calculation for task = SCF       
+          finished in subroutine <SCF>
+          SCF - cycle converged
+          run time info  CPU      949.965 sec
+                         WALL     947.002 sec
+
+ *******************************************************************************
+ *******************************************************************************
+
+          program stopped regularly via STOP_REGULAR
+

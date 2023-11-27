@@ -146,8 +146,8 @@ class CalculatorTest(TestCase):
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
      out = calculator.calculate(options = {'NITER' : 1, 'NE' : 12 })
      self.assertEqual(1, len(out.iterations))
-     self.assertEqual(3, len(out.iterations[-1]['atoms']))
-     for i in out.iterations[-1]['atoms']:
+     self.assertEqual(3, len(out.iterations[-1]['atomic_types']))
+     for i in out.iterations[-1]['atomic_types'].values():
         self.assertEqual(4, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
 

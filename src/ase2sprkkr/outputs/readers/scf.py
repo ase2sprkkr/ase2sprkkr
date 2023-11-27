@@ -59,12 +59,12 @@ class ScfResult(TaskResult):
   @property
   def energy(self):
       """ Total energy of the last iteration """
-      return self.last_iteration['ETOT']
+      return self.last_iteration['ETOT']()
 
   @property
   def converged(self):
       """ The calculation coverged or not? """
-      return self.last_iteration['converged']
+      return self.last_iteration['converged']()
 
   def iteration_values(self, name):
       """ Return the array of values of given name from the
@@ -87,7 +87,7 @@ class ScfResult(TaskResult):
          raise KeyError(f"No such iteration value: {name}")
 
       return np.fromiter(
-              (i[name] for i in self.iterations),
+              (i[name]() for i in self.iterations),
               count = len(self.iterations),
               dtype = self.iterations[0][name].__class__
             )
@@ -142,32 +142,61 @@ class ScfResult(TaskResult):
         pyplot.show()
 
 
+"""
+This definition parses the part of the output file that contains the datas
+about atoms and computed data associated with them.
+"""
+atomic_types_definition = Section('atoms', [
+  VN('IECURR', integer),
+  VE('E', RealOrStars()),
+  VN('L', float),
+  VE('IT', integer),
+  VN('symbol', string),
+  VN('orbitals', Table({
+      'l' : string,
+      'DOS': float,
+      'NOS': float,
+      'P_spin' : float,
+      'm_spin' : float,
+      'P_orb' : float,
+      'm_orb' : float,
+      'B_val' : float,
+      'B_val_desc': String(default_value = ''),
+      'B_core' : Real(default_value = float('NaN'))
+    }, free_header=True, default_values=True)),
+  V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
+  V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
+])
+
+
+"""
+This definition is not used for parsing, but just for the data returned
+from the reader.
+"""
+scf_section = Section('iteration', [
+  V('system_name', str),
+  V('iteration', int, info='Number of the iteration.'),
+  V('error', float),
+  V('EF', float, info='Fermi energy'),
+  V('ETOT', float, info='Total energy'),
+  V('converged', bool, info='True, if the SCF cycle converged this iteration.'),
+  Section('moment', [
+    V('spin', float),
+    V('orbital', float)
+  ]),
+  Section('energies' , [
+    V('EMIN', float, info='Bottom of energy contour for band states'),
+    V('ESCBOT', float, info='Lower limit for semi-core states'),
+    V('ECTOP', float, info='Upper limit for core states')
+  ]),
+  Section('atomic_types', atomic_types_definition.members(), is_repeated=True)
+])
+
+
 class ScfOutputReader(ProcessOutputReader):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
   """
-
-  atoms_conf_type = Section('atoms', [
-    VN('IECURR', integer),
-    VE('E', RealOrStars()),
-    VN('L', float),
-    VE('IT', integer),
-    VN('atom', string),
-    VN('orbitals', Table({
-        'l' : string,
-        'DOS': float,
-        'NOS': float,
-        'P_spin' : float,
-        'm_spin' : float,
-        'P_orb' : float,
-        'm_orb' : float,
-        'B_val' : float,
-        'B_val_desc': String(default_value = ''),
-        'B_core' : Real(default_value = float('NaN'))
-      }, free_header=True, default_values=True)),
-    V('E_band', RealWithUnits(units = {'[Ry]' : Rydberg }), is_optional=True),
-    V('dipole moment', Sequence(int, Array(float, length=3)), is_optional=True)
-  ])
 
   async def read_output(self, stdout):
         iterations = []
@@ -192,27 +221,37 @@ class ScfOutputReader(ProcessOutputReader):
           first = True
           while True:
             out = {}
-            line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
+            line = await readlinecond(lambda line: b'EMIN   = ' in line)
             if not line:
                 break
+
+            out['energies'] = {'EMIN' : float(line.split('=')[1]) }
+            line = await stdout.readline()
+            if b'ESCBOT' in line:
+                out['energies']['ESCBOT'] = float(line.split(b'=')[1])
+                line = await stdout.readline()
+            if b'ECTOP' in line:
+                out['energies']['ECTOP'] = float(line.split(b'=')[1])
+
+            line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
             line=line.strip()
             if first and self.print_output == 'info':
                print(line)
                first = False
             run = line.replace('SPRKKR-run for:', '')
-            out['run'] = run
+            out['system_name'] = run
 
             line = await readlinecond(lambda line: b' E=' in line)
             atoms = []
             while True:
-              atoms.append(await self.atoms_conf_type.parse_from_stream(stdout,
+              atoms.append(await atomic_types_definition.parse_from_stream(stdout,
                 up_to=b'\n -------------------------------------------------------------------------------',
                 start=line
               ))
               line = await readlinecond(lambda line: line!=b'\n')
               if not 'E=' in line:
                 break
-            out['atoms'] = atoms
+            out['atomic_types'] = atoms
 
             line = await readlinecond(lambda line: b' ERR' in line and b'EF' in line)
             items = line.split()
@@ -224,7 +263,8 @@ class ScfOutputReader(ProcessOutputReader):
             line = (await readline()).split()
             out['ETOT'] = float(line[1]) * Rydberg
             out['converged'] = line[5] == 'converged'
-            iterations.append(out)
+
+            iterations.append(scf_section.read_from_dict(out))
             if self.print_output == 'info':
                error = fortran_format(out['error'], ":>12e")
                print(f"Iteration {out['iteration']:>5} error {error} "
