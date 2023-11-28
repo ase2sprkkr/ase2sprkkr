@@ -3,15 +3,16 @@
 from ase.units import Rydberg
 import datetime
 import pyparsing as pp
-ppc = pp.pyparsing_common
-from typing import  Optional
+from typing import Optional
 import numpy as np
 
 from ..decorators import add_to_signature, cached_property
 from ..grammar import generate_grammar, separator_grammar, \
                      replace_whitechars, optional_quote
-
 from .grammar_type import TypedGrammarType, GrammarType, add_to_parent_validation
+
+ppc = pp.pyparsing_common
+
 
 class Number(TypedGrammarType):
   """ Base class for a number - descendants of this class can have minimal and/or maximal possible value. """
@@ -39,6 +40,7 @@ class Number(TypedGrammarType):
          return f"A value less than or equal to {self.max} is required, {value} have been given."
       return True
 
+
 class Unsigned(Number):
   """ Unsigned integer (zero is possible) """
 
@@ -53,6 +55,7 @@ class Unsigned(Number):
 
   numpy_type = int
   datatype_name = 'unsigned integer'
+
 
 class ObjectNumber(Unsigned):
   """ An abstract class, that describe an unsigned integer, that reffers to an object.
@@ -70,6 +73,7 @@ class ObjectNumber(Unsigned):
 
   def _validate(self, value, why='set'):
       return isinstance(value, self.type) or super()._validate(value, why=why)
+
 
 class Integer(Number):
   """ Signed integer """
@@ -99,7 +103,7 @@ class Bool(TypedGrammarType):
 class IntBool(TypedGrammarType):
   """ A bool type, whose value is represented by a letter (1 or 0) """
   _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).setParseAction( lambda x: x[0] == '1' )
-  _rev_grammar =  _grammar.copy().setParseAction( lambda x: x[0] == '0' )
+  _rev_grammar = _grammar.copy().setParseAction( lambda x: x[0] == '0' )
 
   @add_to_signature(TypedGrammarType.__init__)
   def __init__(self, reversed=True, *args, **kwargs):
@@ -130,10 +134,11 @@ class Real(Number):
           from .warnings import SuspiciousValueWarning
           SuspiciousValueWarning(value, 'An attemtp to set <float> value using an <integer>. I will do a conversion for you.').warn(
               stacklevel=6
-              )
+          )
           value=float(value)
 
       return super().convert(value)
+
 
 class Date(Number):
   """ A date value of the form 'DD.MM.YYYY' """
@@ -149,6 +154,7 @@ class Date(Number):
   numpy_type = datetime.date
   type_name = 'date'
 
+
 class BaseRealWithUnits(Real):
   """ The base class for float value, which can have units append.
       The value is converted automatically to the base units.
@@ -162,10 +168,10 @@ class BaseRealWithUnits(Real):
     if not i in self.grammar_cache:
       units = pp.Or(
         (pp.Empty() if v is None else pp.CaselessKeyword(v))
-                .setParseAction(lambda x,*args, u=u: u) for v,u in  units.items()
-        )
-      out =  Real.I.grammar() + pp.Or(units)
-      out.setParseAction(lambda x: x[0]*x[1])
+        .setParseAction(lambda x,*args, u=u: u) for v,u in units.items()
+      )
+      out = Real.I.grammar() + pp.Or(units)
+      out.setParseAction(lambda x: x[0] * x[1])
       self.grammar_cache[i] = out
       return out
     return self.grammar_cache[i]
@@ -181,12 +187,14 @@ class BaseRealWithUnits(Real):
 
   numpy_type = float
 
+
 class RealWithUnits(BaseRealWithUnits):
   """ A float value with user-defined units """
 
   def __init__(self, *args, units, **kwargs):
      self.units = units
      super().__init__(*args, **kwargs)
+
 
 class Energy(BaseRealWithUnits):
   """ The grammar type for energy. The default units are Rydberg, one can specify eV. """
@@ -200,6 +208,7 @@ class Energy(BaseRealWithUnits):
 
   def __str__(self):
       return "Energy (<Real> [Ry|eV])"
+
 
 class BaseString(TypedGrammarType):
   """ Base type for string grammar types """
@@ -215,6 +224,7 @@ class BaseString(TypedGrammarType):
       except pp.ParseException as e:
         return f"Forbidden character '{e.line[e.col-1]}' in the string"
     return True
+
 
 class String(BaseString):
   """ Just a string (without whitespaces and few special chars) """
@@ -283,6 +293,7 @@ class Keyword(GrammarType):
 
   is_independent_on_the_predecessor = True
 
+
 def DefKeyword(default, *others, **kwargs):
   """
   A value, that can take values from the predefined set of strings, the first one is the default value.
@@ -315,6 +326,7 @@ class Flag(TypedGrammarType):
   def _validate(self, value, why='set'):
       return value is True or value is False or value is None or "This is Flag with no value, please set to True to be present or to False/None to not"
 
+
 class BasicSeparator(GrammarType):
   """ Basic type for separators - fake items in
   input/output file, which has no value """
@@ -344,7 +356,8 @@ class Separator(BasicSeparator):
       return f'{self.char*4}...{self.char*4}\n'
 
   def _string(self, val=None):
-      return self.char*self.length
+      return self.char * self.length
+
 
 class BlankSeparator(BasicSeparator):
   """ Special class for a blank separator. In fact (with a delimiter) it is a blank line.
@@ -358,29 +371,28 @@ class BlankSeparator(BasicSeparator):
       return ''
 
 
-#commonly used types
+# commonly used types
 integer = Integer.I = Integer()
 """ A standard grammar type instance for (signed) integers """
-unsigned = Unsigned.I = Unsigned()
+unsigned = Unsigned.I = Unsigned()         # NOQA: E741
 """ A standard grammar type instance for unsigned integers """
-boolean = Bool.I = Bool()
+boolean = Bool.I = Bool()                  # NOQA: E741
 """ A standard grammar type instance for booleans in potential files """
-flag = Flag.I = Flag()
+flag = Flag.I = Flag()                     # NOQA: E741
 """ A standard grammar type instance for booleans in input files """
-real = Real.I = Real()
+real = Real.I = Real()                     # NOQA: E741
 """ A standard grammar type instance for reals"""
-date = Date.I = Date()
+date = Date.I = Date()                     # NOQA: E741
 """ A standard instance for the grammar type for dates """
-string = String.I = String()
+string = String.I = String()               # NOQA: E741
 """ A standard grammar type instance for strings """
-qstring = QString.I = QString()
+qstring = QString.I = QString()            # NOQA: E741
 """ A standard grammar type instance for quoted strings in input files """
-line_string = LineString.I = LineString()
+line_string = LineString.I = LineString()  # NOQA: E741
 """ A standard grammar type instance for one-line strings in potential files """
-energy = Energy.I = Energy()
+energy = Energy.I = Energy()               # NOQA: E741
 """ A standard grammar type instance for energy values (float) for potential files """
-separator = Separator.I = Separator()
+separator = Separator.I = Separator()      # NOQA: E741
 """ A standard grammar type instance for separators in potential files """
-int_bool = IntBool.I = IntBool()
+int_bool = IntBool.I = IntBool()           # NOQA: E741
 """ A standard grammar type instance for bool expressed as integer """
-

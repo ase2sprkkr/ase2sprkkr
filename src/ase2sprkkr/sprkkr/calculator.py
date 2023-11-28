@@ -12,20 +12,22 @@ view=article&id=8%3Asprkkr&catid=4%3Asoftware&Itemid=7&lang=en>`
 """
 from __future__ import annotations
 
-import os, sys
+import os
+import sys
 from ase.calculators.calculator import Calculator, all_changes
 
 from .sprkkr_atoms import SPRKKRAtoms
 from ..potentials.potentials import Potential
-from ..common.decorators import add_to_signature
 from ..common.directory import Directory
 from ..ase.symbols import filename_from_symbols
-import shutil
 import copy
 import subprocess
+import tempfile
+import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
+
 
 class SPRKKR(Calculator):
     """
@@ -48,7 +50,7 @@ class SPRKKR(Calculator):
                  mpi=False,
                  input_parameters=None, options={}, potential=None,
                  executable_suffix=True,
-                 empty_spheres : str|bool = False,
+                 empty_spheres : str | bool = False,
                  **kwargs):
         """
         Parameters
@@ -165,7 +167,7 @@ class SPRKKR(Calculator):
         runned SPR-KKR should be written to the standard ouput (in addition to the output file). """
 
         self._counter = 0
-        #For %c template in file names
+        # For %c template in file names
 
     @property
     def input_parameters(self):
@@ -282,7 +284,7 @@ class SPRKKR(Calculator):
     def atoms(self, atoms):
        atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
        self._atoms = atoms
-       if self._potential and not self._potential is True:
+       if self._potential and self._potential is not True:
           self._potential.atoms = atoms
 
     def _advance_counter(self):
@@ -348,7 +350,7 @@ class SPRKKR(Calculator):
     def save_input(self, atoms=None, input_parameters=None, potential=None,
                   input_file=None, potential_file=None, output_file=False,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
-                  empty_spheres: Optional[str|bool] = None,
+                  empty_spheres: Optional[str | bool] = None,
                   mpi=None,
                   options={}, task=None,
                   return_files=False,
@@ -471,7 +473,7 @@ class SPRKKR(Calculator):
             potential = potential if potential is not None else self.potential
             if potential is None:
                potential = bool(atoms or self._atoms)
-            #this is a bit tricky - both of them must not be defined - however, there is a mess with default values
+            # this is a bit tricky - both of them must not be defined - however, there is a mess with default values
             pot_specified = False
             if potential.__class__ is bool:
                pot_specified = not potential
@@ -500,8 +502,8 @@ class SPRKKR(Calculator):
                if potential_file:
                    potential = Potential.from_file(potential)
                else:
-                   #Set the potential file and clear the potential. Thus,
-                   #the potential will not be saved
+                   # Set the potential file and clear the potential. Thus,
+                   # the potential will not be saved
                    potential_file = potential
                    potential = False
                    save_input = True
@@ -512,7 +514,6 @@ class SPRKKR(Calculator):
               atoms = SPRKKRAtoms.promote_ase_atoms(atoms)
 
             return potential, atoms, potential_file, save_input
-
 
         def resolve_input_parameters(input_parameters, input_file, save_input):
             if input_parameters is None:
@@ -535,7 +536,6 @@ class SPRKKR(Calculator):
                 save_input = True
             return input_parameters, input_file, save_input
 
-
         def resolve_empty_spheres(empty_spheres):
             if empty_spheres is None:
                empty_spheres = self.empty_spheres
@@ -548,7 +548,6 @@ class SPRKKR(Calculator):
                from ..bindings.es_finder import add_empty_spheres
                add_empty_spheres(atoms)
 
-
         def save_potential_file():
              pf = from_input_name(potential_file or self.potential_file, '.pot', '%a.pot')
              pf = self._open_file(pf, directory, templator, True,
@@ -557,7 +556,6 @@ class SPRKKR(Calculator):
              potential.save_to_file(pf, atoms)
              pf.close()
              return pf.name
-
 
         def open_input_file():
             ifile = input_file or self.input_file
@@ -579,16 +577,15 @@ class SPRKKR(Calculator):
             if options:
               input_parameters.set(options, unknown = 'find')
             if potential_file:
-              #use the relative potential file name to avoid too-long-
-              #-potential-file-name problem
-              #dirr = os.path.dirname( input_file.name ) if input_file.name else directory
+              # use the relative potential file name to avoid too-long-
+              # -potential-file-name problem
+              # dirr = os.path.dirname( input_file.name ) if input_file.name else directory
               input_parameters.CONTROL.POTFIL = os.path.abspath(potential_file)
               input_parameters.CONTROL.POTFIL.result = os.path.relpath(potential_file, directory)
             if not input_parameters.CONTROL.DATASET.is_set():
               input_parameters.CONTROL.DATASET.result = Path(input_file.name).stem
             input_parameters.save_to_file(input_file, atoms)
             input_file.seek(0)
-
 
         def open_output_file():
             """ Get and open the output file """
@@ -609,17 +606,19 @@ class SPRKKR(Calculator):
             for i in (input_file, potential_file, self.input_file, self.potential_file):
                 if isinstance(i, str):
                    i=Path(i).stem
-                   if not '%' in i: #thus i is not template
+                   if not '%' in i:  # thus i is not template
                        return i
             return 'sprkkr'
 
         def taskname():
-            if task: return task
-            if input_parameters: return input_parameters.task_name
+            if task:
+                return task
+            if input_parameters:
+                return input_parameters.task_name
             return 'SPRKKR'
 
-        #ALL auxiliary procedures defined
-        #HERE starts the execution
+        # ALL auxiliary procedures defined
+        # HERE starts the execution
 
         potential, atoms, potential_file, save_input = \
                     resolve_potential_and_atoms(potential, atoms, potential_file)
@@ -636,14 +635,14 @@ class SPRKKR(Calculator):
           if save_input:
               save_input_file()
           else:
-              #This branch can occur if the potential have been explicitly set to False,
-              #which means not to create the potential (and take it from the input_parameters)
+              # This branch can occur if the potential have been explicitly set to False,
+              # which means not to create the potential (and take it from the input_parameters)
               dirr = os.path.dirname( input_file.name ) if input_file.name else directory
               potential_file = os.path.join(dirr, input_parameters.CONTROL.POTFIL.result)
           if output_file is not False:
               output_file = open_output_file()
 
-          #All is saved and opened - return the values
+          # All is saved and opened - return the values
           if not return_files:
             for f in input_file, output_file:
                 if hasattr(f,'close'):
@@ -660,7 +659,7 @@ class SPRKKR(Calculator):
     def run(self, atoms=None, input_parameters=None,
                   potential=None, input_file=None, potential_file=None, output_file=None,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
-                  empty_spheres : Optional[str|bool] = None,
+                  empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
                   print_output=None, executable_suffix=None):
@@ -693,7 +692,7 @@ class SPRKKR(Calculator):
         if print_output is None:
            print_output = self.print_output
 
-        if output_file==False:
+        if output_file is False:
            output_file = None
 
         with Directory.new(directory, default=self._directory) as directory:
@@ -713,7 +712,7 @@ class SPRKKR(Calculator):
                                 print_output=print_output,
                                 executable_suffix=executable_suffix,
                                 mpi=mpi,
-                                )
+                               )
 
     def value_or_default(self, name, value):
         """ Return the default value of the parameter, if the given value is None"""
@@ -725,7 +724,7 @@ class SPRKKR(Calculator):
                   input_parameters=None, potential=None,
                   input_file=None, potential_file=None, output_file=None,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
-                  empty_spheres : Optional[str|bool] = None,
+                  empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
                   print_output=None, executable_suffix=None):
@@ -767,8 +766,8 @@ class SPRKKR(Calculator):
                             'magmoms': np.zeros(len(atoms))}
 
         """
-        #There is no need to call this
-        #super().calculate(atoms, properties, system_changes)
+        # There is no need to call this
+        # super().calculate(atoms, properties, system_changes)
         out = self.run(
                   atoms, input_parameters, potential,
                   input_file, potential_file, output_file,
@@ -783,7 +782,6 @@ class SPRKKR(Calculator):
               'energy' : out.energy,
             })
         return out
-
 
     def scf(self, *args, **kwargs):
          """A shortcut for calculating a SCF task"""
@@ -864,10 +862,11 @@ class FilenameTemplator:
         template = template.replace('%_', '_')
         return template
 
-#at least, to avoid a circular import
-from ..input_parameters.input_parameters import InputParameters
 
-#is there a better way to not document an inner classes?
+# at least, to avoid a circular import
+from ..input_parameters.input_parameters import InputParameters  # NOQA: E402
+
+# is there a better way to not document an inner classes?
 if os.path.basename(sys.argv[0]) != 'sphinx-build':
     SPRKKR.InputParameters = InputParameters
     SPRKKR.Potential = Potential

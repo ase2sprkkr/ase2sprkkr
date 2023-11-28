@@ -9,10 +9,11 @@ import inspect
 from .. import grammar_types
 
 from ..decorators import cached_class_property, cache, \
-                        add_to_signature, add_called_class_as_argument, cached_property
+                         add_called_class_as_argument, cached_property
 from ..alternative_types import normalize_type, allowed_types
 from ..grammar import generate_grammar
 from ..formats import full_format_for_string
+
 
 class GrammarType:
   """ Base class for definition of configuration option types
@@ -182,7 +183,7 @@ class GrammarType:
     if self.has_value:
        def validate(s, loc, x):
            try:
-             out = self.validate(x[0], why='parse', param_name=param_name)
+             self.validate(x[0], why='parse', param_name=param_name)
            except ValueError as e:
              raise pp.ParseException(s, loc, str(e) + '\nValidating of the parsed value failed') from e
            return x
@@ -289,11 +290,6 @@ class GrammarType:
     else:
       raise ValueError("Value '{}' {} is not valid: {}".format(value, param, error_message))
 
-  def read(self, token, parameterName='<Unknown>'):
-    """ Transform pyparsing token to a validated value """
-    self.validate(val)
-    return val
-
   def convert(self, value):
     """ Convert a value from user to the "cannonical form" """
     return value
@@ -394,7 +390,8 @@ class GrammarType:
       message describing the error.
 
     """
-    if isinstance(value, types): return True
+    if isinstance(value, types):
+        return True
     if not typename:
        typename = types
     typename=str(typename)
@@ -410,6 +407,7 @@ class GrammarType:
   def added_to_container(self, definition):
       pass
 
+
 @add_called_class_as_argument
 def add_to_parent_validation(validation):
 
@@ -421,6 +419,7 @@ def add_to_parent_validation(validation):
         return validation(self, value, why)
 
     return wrapped
+
 
 class TypedGrammarType(GrammarType):
 
@@ -449,6 +448,7 @@ class TypedGrammarType(GrammarType):
 
   def _validate(self, value, why='set'):
       return self.type_validation(value, self.allowed_types, self.datatype_name)
+
 
 def type_from_type(type, format:Union[str,Dict]='', format_all:bool=False, type_map:Dict={}):
   """ Guess and return the grammar element (GrammarType class descendatnt) from a python type. E.g. int => Integer.
@@ -496,6 +496,7 @@ def type_from_type(type, format:Union[str,Dict]='', format_all:bool=False, type_
         type.format = format
   return type
 
+
 def type_from_value(value, type_map={}):
   """ Gues the grammar type from a python value.
 
@@ -510,19 +511,20 @@ def type_from_value(value, type_map={}):
   type_from_set_map = grammar_types.type_from_set_map
 
   if isinstance(value, recognized_set_types):
-     return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else Integer.I
+     return type_from_set_map[normalize_type(value[0].__class__)] if len(value) else grammar_types.Integer.I
   if isinstance(value, str):
      try:
-        String._grammar.parseString(value, True)
-        return String.I
+        grammar_types.String._grammar.parseString(value, True)
+        return grammar_types.String.I
      except Exception:
-        return QString.I
+        return grammar_types.QString.I
   if isinstance(value, dict):
       return grammar_types.Keyword(value)
   type = type_from_type(value.__class__, type_map=type_map)
   if type is value.__class__:
      raise ValueError(f'Cannot determine grammar type from value {value}')
   return type.__class__(default_value = value)
+
 
 def type_from_default_value(value, format='', format_all=False, type_map={}):
    """ Guess the grammar type from a value, that will become the default value of the grammar type.
@@ -539,12 +541,14 @@ def type_from_default_value(value, format='', format_all=False, type_map={}):
    gtype = type_from_type(value.__class__, type_map=type_map).__class__
    return gtype(default_value = value, format=format_for_type(format, ptype))
 
+
 def compare_numpy_values(a,b):
     """ The numpy arrays cannot be compared by =, that's why this method.
     However, the method is still far from to be perfect, it can not
     compare nested numpy arrays.
     """
     return np.array_equal(a,b)
+
 
 def format_for_type(format, type):
   """
@@ -561,6 +565,7 @@ def format_for_type(format, type):
         return format[type]
      return format[None]
   return format
+
 
 recognized_set_types = ( list, tuple, np.ndarray )
 """ The types, that are recognized as 'list of values' and so that will
