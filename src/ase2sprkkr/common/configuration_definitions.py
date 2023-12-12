@@ -11,7 +11,7 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 """
 
 from ..common.misc import dict_first_item
-from ..common.grammar_types import type_from_type, type_from_value, GrammarType, Array
+from ..common.grammar_types import type_from_type, type_from_value, GrammarType, Array, QString
 from ..common.grammar import delimitedList, generate_grammar
 from .configuration_containers import Section
 from .repeated_configuration_containers import RepeatedConfigurationContainer
@@ -978,6 +978,11 @@ class ValueDefinition(RealItemDefinition):
      """ Write given value and a given delimiter before the value to a file """
      if isinstance(value, DangerousValue):
         type = value.value_type
+        if not type:
+           if self._parent and hasattr(self, "type_of_dangerous"):
+              type = getattr(self.type_of_dangerous, "string_type", QString)
+           else:
+              type = QString
         value = value()
      else:
         type = self.is_repeated or self.type
