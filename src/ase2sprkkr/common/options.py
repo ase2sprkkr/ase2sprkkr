@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 from typing import Union
-from ..common.grammar_types import mixed
+from ..common.grammar_types import mixed, GrammarType
 from .configuration import Configuration
 from ..common.misc import as_integer
 from .decorators import warnings_from_here
+
 
 class DangerousValue:
   """ This class is used to store (encapsulate) a value, which should not be validated
   - to  overcame sometimes too strict enforment of the options values.
   """
 
-  def __init__(self, value, value_type:GrammarType|None=None, validate:bool=True):
+  def __init__(self, value, value_type:GrammarType | None=None, validate:bool=True):
       """
       Parameters
       ----------
@@ -58,6 +59,7 @@ class BaseOption(Configuration):
       """ Write the name-value pair to the given file, if the value
       is set. """
       return self._definition.output_definition._save_to_file(file, self, always)
+
   def _find_value(self, name):
       if self._definition.name == name:
          return self
@@ -70,6 +72,7 @@ class BaseOption(Configuration):
 
   def clear(self, do_not_check_required=False, call_hooks=True, generated=True):
       pass
+
 
 class Dummy(BaseOption):
 
@@ -203,7 +206,8 @@ class Option(BaseOption):
           try:
               return self.clear()
           except ValueError:
-              if not error=='ignore': raise
+              if not error=='ignore':
+                  raise
               return
       elif self._definition.is_numbered_array:
         if isinstance(value, dict):
@@ -215,12 +219,13 @@ class Option(BaseOption):
                self._set_item('def', value, error)
            except ValueError:
                for i,v in enumerate(value):
-                  self._set_item(i+1, v)
+                  self._set_item(i + 1, v)
       else:
          try:
              self._value = self._pack_value(value)
          except ValueError:
-             if not error=='ignore': raise
+             if not error=='ignore':
+                  raise
       self._post_set()
 
   def _post_set(self):
@@ -233,7 +238,7 @@ class Option(BaseOption):
   def _check_array_access(self):
       """ Check, whether the option is numbered array and thus it can be accessed as array using [] """
       if not self._definition.is_numbered_array and not self._definition.type.array_access:
-          raise TypeException('It is not allowed to access {self._get_path()} as array')
+          raise TypeError('It is not allowed to access {self._get_path()} as array')
 
   def __setitem__(self, name, value):
       """ Set an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
@@ -287,7 +292,8 @@ class Option(BaseOption):
          try:
             self._value[name] = self._pack_value(value)
          except ValueError:
-            if error!='ignore': raise
+            if error!='ignore':
+                raise
 
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
@@ -447,7 +453,6 @@ class Option(BaseOption):
           return value, False
       return value, True
 
-
   def validate(self, why='save'):
       d = self._definition
       if d.is_generated or self.is_dangerous():
@@ -472,7 +477,6 @@ class Option(BaseOption):
                   vali(i)
            else:
               vali(value)
-
 
   @property
   def name(self):
@@ -563,12 +567,13 @@ class Option(BaseOption):
         v=''
       else:
          o=''
-         v=' = '+str(v)
-         if(len(v)>20):
+         v=' = ' + str(v)
+         if len(v)>20:
            v=f'{v[:10]}...{v[-10:]}'
 
       type = '(generated)' if self._definition.is_generated else f'of type {self._definition.type}'
       return f"<Option {self._get_path()} {type} with{o} value{v}>"
+
 
 class CustomOption(Option):
   """ An user-added option (configuration value). It can be removed from the section. """

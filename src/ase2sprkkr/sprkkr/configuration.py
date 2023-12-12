@@ -12,6 +12,7 @@ from typing import Optional, Union
 
 from .sprkkr_atoms import SPRKKRAtoms
 
+
 class ConfigurationSectionTrait:
 
   def set_from_atoms(self, atoms:Union[Optional[Atoms]], io_data:Optional[WriteIoData]=None):
@@ -51,6 +52,7 @@ class ConfigurationSectionTrait:
 
 # Containers and values
 
+
 class ConfigurationFile(RootConfigurationContainer, ConfigurationSectionTrait):
   """ 'Root' configuration container for SPRKKR configuration file """
 
@@ -61,6 +63,7 @@ class ConfigurationFile(RootConfigurationContainer, ConfigurationSectionTrait):
          out = None
       super().save_to_file(file, validate=validate)
       return out
+
 
 class ConfigurationSection(Section, ConfigurationSectionTrait):
   """ Configuration section to be used in SPRKKR configuration files """

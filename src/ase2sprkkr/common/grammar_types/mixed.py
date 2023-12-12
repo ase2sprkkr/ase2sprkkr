@@ -60,6 +60,7 @@ class BaseMixed(GrammarType):
   def copy_value(self, value):
       return copy.deepcopy(value)
 
+
 class Range(BaseMixed):
   """ A range type - it accepts either one value or range of two values of a given type."""
 
@@ -77,7 +78,6 @@ class Range(BaseMixed):
 
   def get_type(self, value):
       return self.types[1 if isinstance(value, recognized_set_types) else 0]
-
 
 
 class Mixed(BaseMixed):
@@ -101,6 +101,7 @@ class Mixed(BaseMixed):
     return True, True, False
 
   is_the_same_value = staticmethod(compare_numpy_values)
+
 
 class PotMixed(BaseMixed):
   """ A variant value to be used in potential files (in unknown - custom - options) """
@@ -127,9 +128,8 @@ class PotMixed(BaseMixed):
 
   is_the_same_value = staticmethod(compare_numpy_values)
 
-mixed = Mixed.I = Mixed()
+
+mixed = Mixed.I = Mixed()   # NOQA: E741
 """ A standard grammar type instance for variant (mixed) in input files """
-pot_mixed = PotMixed.I = PotMixed()
+pot_mixed = PotMixed.I = PotMixed()    # NOQA: E741
 """ A standard grammar type instance for variant (mixed) values in potential files """
-
-
