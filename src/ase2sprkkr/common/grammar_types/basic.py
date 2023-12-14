@@ -255,8 +255,8 @@ class Keyword(GrammarType):
   A value, that can take values from the predefined set of strings.
   """
 
-  def __init__(self, *keywords, **kwargs):
-    super().__init__(**kwargs)
+  def __init__(self, *keywords, aliases=None, **kwargs):
+    self.aliases = aliases or {}
     if len(keywords)==1 and isinstance(keywords[0], dict):
        self.choices = keywords[0]
        keywords = self.choices.keys()
@@ -266,6 +266,8 @@ class Keyword(GrammarType):
     self.keywords = [ str(i).upper() for i in keywords ]
     with generate_grammar():
       self._grammar = optional_quote + pp.MatchFirst((pp.CaselessKeyword(i) for i in self.keywords)).setParseAction(lambda x: x[0].upper()) + optional_quote
+
+    super().__init__(**kwargs)
 
   def _validate(self, value, why='set'):
     return value in self.keywords or "Required one of [" + "|".join(self.keywords) + "]"
@@ -279,7 +281,8 @@ class Keyword(GrammarType):
       return self.grammar_name()
 
   def convert(self, value):
-      return str(value).upper()
+      out = str(value).upper()
+      return self.aliases.get(out, out)
 
   def additional_description(self, prefix=''):
       ad = super().additional_description(prefix)
