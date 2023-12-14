@@ -186,10 +186,11 @@ MODE = Section('MODE', [
     V('MODE',
       Keyword({
         'NREL' : "work in the nonrelativistic mode",
-        'SREL' : "work in the spin-polarized scalar-relativistic mode",
-        'SP-SREL' : "work in the scalar-relativistic mode"}), None,
+        'SREL' : "work in the scalar-relativistic mode",
+        'SP-SREL' : "work in the spin-polarized scalar-relativistic mode"}, aliases= {'FREL' : None }
+      ), None,
                 required=False, name_in_grammar=False,
-                info='Using this option you can switch on spin the polarization and relativistic mode. If it''s not set, the ''full'' relativity mode is used.'),
+                info='Using this option you can switch on the spin polarization and relativistic mode. If it''s not set (or set to ''FREL''), the ''full'' relativity mode is used.'),
     V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
     V('MDIR', Array(float, length=3), [1.,0.,0.], required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True, is_always_added=False ),
     V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True, required=False, is_always_added=False),
