@@ -46,9 +46,10 @@ class DangerousValue:
 
   def write_value(self, file):
       if self.value_type:
-         value_type.write(file, self.value)
+         self.value_type.write(file, self.value)
       else:
-         file.write(value)
+         file.write(self.value)
+
 
 class BaseOption(Configuration):
   """ A base placeholder for a leaf element of a grammar file,
