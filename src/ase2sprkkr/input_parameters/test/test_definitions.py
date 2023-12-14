@@ -24,6 +24,16 @@ class TestDefinitions(TestCase):
       with pytest.raises(AttributeError):
         ip.ENERGY.EMIN
 
+  def jxc(self):
+      ip=InputParameters.create_task('SCF')
+      ip.MODE.MODE = 'nrel'
+      with pytest.warns(UserWarning):
+          ip.change_task('jxc')
+      with pytest.warns(UserWarning):
+          ip.MODE.MODE = 'srel'
+      ip.MODE.MODE = 'frel'
+      ip.change_task('scf')
+
   def test_defaults(self):
       for i in InputParameters.definitions:
           ip=InputParameters.create_input_parameters(i)
