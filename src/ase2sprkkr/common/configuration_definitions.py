@@ -976,7 +976,8 @@ class ValueDefinition(RealItemDefinition):
 
   def write_value(self, file, value, delimiter=''):
      """ Write given value and a given delimiter before the value to a file """
-     if isinstance(value, DangerousValue):
+     dangerous = isinstance(value, DangerousValue)
+     if dangerous:
         type = value.value_type
         if not type:
            if self._parent and hasattr(self, "type_of_dangerous"):
@@ -984,15 +985,16 @@ class ValueDefinition(RealItemDefinition):
            else:
               type = QString
         value = value()
+
      else:
         type = self.is_repeated or self.type
 
      if type.has_value:
-         if value is None:
+         if value is None and not dangerous:
            value = self.get_value()
          if value is None:
            return False
-         missing, df, _ = self.type.missing_value()
+         missing, df, _ = type.missing_value()
          write_value = not ( missing and df == value )
      else:
         value=None
