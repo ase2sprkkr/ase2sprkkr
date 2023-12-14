@@ -443,13 +443,13 @@ class Option(BaseOption):
          return None, True
 
       if self.is_dangerous():
-         value = self._value
-      else:
-         value = self.result
-         missing,_, np = d.type.missing_value()
-         if np.__class__ is value.__class__ and np == value:
-           return value, False
-         if value is None or (not d.is_always_added and self.is_it_the_default_value(value)):
+         return self._value, self._value() is not None
+
+      value = self.result
+      missing,_, np = d.type.missing_value()
+      if np.__class__ is value.__class__ and np == value:
+          return value, False
+      if value is None or (not d.is_always_added and self.is_it_the_default_value(value)):
           return value, False
       return value, True
 
