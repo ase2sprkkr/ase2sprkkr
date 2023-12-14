@@ -1,14 +1,17 @@
+import os
+import tempfile
+import re
+import pytest
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-import os
-from ..input_parameters import InputParameters
-import tempfile
-import re
-import pytest
+if True:
+    from ..input_parameters import InputParameters
+
 
 class TestDefinitions(TestCase):
 

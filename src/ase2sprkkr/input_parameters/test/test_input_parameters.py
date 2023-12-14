@@ -581,7 +581,6 @@ XSITES NR=3 FLAG
     assertNotValid('ENERGY A=2 B=2 C=1', grammar)
     assertNotValid('ENERGY A=3 C=3', grammar)
 
-    print("\n\n\n***************\n\n")
     ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),
