@@ -199,6 +199,11 @@ MODE = Section('MODE', [
 )
 """MODE Section definition"""
 
+SPEC=Section('SPEC',[
+    V('FEGFINAL', flag, required=False)
+  ], is_expert=True, is_optional=True,
+)
+
 
 def TASK(task, add = []):
   """ Create the definition of the CONTROL section of the task input file.
