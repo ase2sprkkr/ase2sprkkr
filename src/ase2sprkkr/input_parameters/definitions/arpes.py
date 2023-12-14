@@ -78,6 +78,9 @@ input_parameters = InputParameters(
       V('POL_E', DefKeyword('PZ')),
       V('SPOL', int, required=False),
       V('PSPIN', SetOf(float, length=3), required=False),
+      V('BETA1', float, required=False, info='Begin of the rotation'),
+      V('BETA2', float, required=False, info='End of the rotation'),
+      V('ROTAXIS',SetOf(int, length=3),required=False, info='Axis of the rotation'),
       #expert
       V('TYP', Keyword({0: "i(e) diagram",
                         1: "rotation diagram -> phi scan",
