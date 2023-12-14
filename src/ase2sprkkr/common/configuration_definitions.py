@@ -21,6 +21,7 @@ from .decorators import cache, cached_class_property
 import numpy as np
 import pyparsing as pp
 import inspect
+import warnings
 import itertools
 import builtins
 from io import StringIO
@@ -278,7 +279,7 @@ class RealItemDefinition(BaseDefinition):
                 name_in_grammar=None, info=None, description=None,
                 write_alternative_name:bool=False,
                 condition=None, write_condition=None,
-                result_class=None
+                result_class=None, warning_condition=None,
                 ):
        """
        Parameters
@@ -326,13 +327,16 @@ class RealItemDefinition(BaseDefinition):
 
         condition
            If defined, the condition
-            - the condition.parse_condition() is invoked, when given grammar element
+            - the condition.parse_condition() is invoked, when a given grammar element
               should be parsed. If it is False, the element is skipped
             - the condition() is invoked, when the elements of the container is listed
               to hide the inactive members
 
         result_class
            Redefine the class that holds data for this option/section.
+
+        warning_condition
+           If this lambda returns a non-none during validation, a warning will be issued.
        """
        super().__init__(name, is_optional, condition)
        self.written_name = written_name
@@ -357,6 +361,13 @@ class RealItemDefinition(BaseDefinition):
        """ A longer help text describing the content for the users. """
        if result_class:
            self.result_class = result_class
+       self.warning_condition = None
+
+   def validate_warning(self, value):
+       if self.warning_condition:
+          out = self.warning_condition(value)
+          if out is not None:
+              warnings.warn(out)
 
    def all_names_in_grammar(self):
        if not self.name_in_grammar:
@@ -822,6 +833,7 @@ class ValueDefinition(RealItemDefinition):
     if self.is_fixed and not np.array_equal(self.default_value, value):
        raise ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
     self.type.validate(value, self.name, why=why)
+    self.validate_warning(value)
 
   def convert_and_validate(self, value, why='set'):
     value = self.type.convert(value)
@@ -980,7 +992,7 @@ class ValueDefinition(RealItemDefinition):
      if dangerous:
         type = value.value_type
         if not type:
-           if self._parent and hasattr(self, "type_of_dangerous"):
+           if hasattr(self, "type_of_dangerous"):
               type = getattr(self.type_of_dangerous, "string_type", QString)
            else:
               type = QString
@@ -1273,6 +1285,18 @@ class ContainerDefinition(RealItemDefinition):
         default['members'] = members
         return self.__class__(**default)
 
+    def copy_member(self, name) -> BaseDefinition:
+        """ Copy a member, allowing to redefine its properties.
+
+            Returns
+            ------mber:
+              The newly created member
+            new_mebere: BaseDefinition
+        """
+        out = self._members[name].copy()
+        self._members[name] = out
+        return out
+
     def all_member_names(self):
         return itertools.chain.from_iterable(
             i.all_names_in_grammar() for i in self
@@ -1477,6 +1501,7 @@ class ContainerDefinition(RealItemDefinition):
         return self.read_from_file(StringIO(string), allow_dangerous, **kwargs)
 
     def validate(self, container, why:str='save'):
+        self.validate_warning(container)
         return True
 
     def create_object(self, container=None, repeated:bool=True):
