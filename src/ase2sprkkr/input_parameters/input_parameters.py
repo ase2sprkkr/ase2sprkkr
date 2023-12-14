@@ -382,6 +382,14 @@ class InputParameters(ConfigurationFile):
       self._init_members_from_the_definition()
       self.set(vals, unknown = 'ignore', error='ignore')
 
+  def save_to_file(self, file, atoms=None, *, validate='save'):
+      if self._definition.save_hook:
+          self._definition.save_hook(
+             getattr(file, "name", None),
+             atoms
+          )
+      super().save_to_file(file, atoms, validate=validate)
+
 
 # at least, to avoid a circular import
 from ..sprkkr import calculator   # NOQA: E402

@@ -61,6 +61,10 @@ class InputSectionDefinition(ConfigurationSectionDefinition):
 class InputParametersDefinition(ConfigurationFileDefinition):
   """ This class describes the format of a task file. """
 
+  save_hook = None
+  """ Input parameters can have a save_hook defined, which is executed before saving the
+  parameters. The arguments of the hook are ``filename, atoms, self``. """
+
   child_class = InputSectionDefinition
   """ Sections of the :class:`InputParameters` are defined by :class:`InputSectionDefinition` """
 
