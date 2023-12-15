@@ -1,6 +1,5 @@
 """ Various decorators, mainly for class methods """
 import functools
-import itertools
 import inspect
 import heapq
 import asyncio
@@ -63,7 +62,7 @@ if hasattr(functools, 'cached_property'):
     Earlier versions of python do not have this decorator, so for these versions is implemented below, otherwise it is taken from functools.
     """
 else:
-    #https://github.com/pydanny/cached-property/blob/master/cached_property.py
+    # https://github.com/pydanny/cached-property/blob/master/cached_property.py
     class std_cached_property(object):
         """
         A property that is only computed once per instance and then replaces itself
@@ -86,13 +85,13 @@ else:
             return value
 
         def __set_name__(self, owner, name):
-            #for Py3.7, we need to use attrname and not self.func.__name__
-            #since in complex cases when nested decorators are used,
-            #this information can be lost
+            # for Py3.7, we need to use attrname and not self.func.__name__
+            # since in complex cases when nested decorators are used,
+            # this information can be lost
             self.attrname = name
 
         def _wrap_in_coroutine(self, obj):
-            @wraps(obj)
+            @functools.wraps(obj)
             @asyncio.coroutine
             def wrapper():
                 future = asyncio.ensure_future(self.func(obj))
@@ -100,6 +99,7 @@ else:
                 return future
 
             return wrapper()
+
 
 class cached_property(std_cached_property):
    """ Cached property, that allows setter and deleter """
@@ -127,8 +127,8 @@ class cached_property(std_cached_property):
    def deleter(self, fdel):
         return type(self)(self.func, self.fset, fdel)
 
-   #for some reason, in 3.7 and lower the attribute in the dict do not override the __get__
-   #in subclasses
+   # for some reason, in 3.7 and lower the attribute in the dict do not override the __get__
+   # in subclasses
    if sys.version_info < (3,8):
       def __get__(self, obj, cls):
           if self.attrname in obj.__dict__:
@@ -225,10 +225,11 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
                  arg_kw = i.name
                  break
 
-      #remove args/kwargs from the childs argument
+      # remove args/kwargs from the childs argument
       new_pars = { i.name:i for i in new_pars if (i.kind != P.VAR_KEYWORD or kwargs ) and i.kind != P.VAR_POSITIONAL }
 
       used = set()
+
       def use(i):
           nonlocal used
           used.add(i.name)
@@ -236,8 +237,9 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
 
       if prepend:
         old_names = set((i.name for i in pars if i.name not in excluding))
-        old_pars = [ use(i) for i in new_pars.values() \
+        old_pars = [ use(i) for i in new_pars.values()
                      if i.kind != P.KEYWORD_ONLY or i.name not in old_names ]
+
         def add_pars():
             for i in pars:
                 if i in excluding:
@@ -248,7 +250,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
                    n=new_pars[i.name]
                    if n.kind != P.KEYWORD_ONLY:
                        continue
-                   #keyword only parameters retain the old position, taken new default and annotation
+                   # keyword only parameters retain the old position, taken new default and annotation
                    P(i.name, i.kind, default=n.default, annotation=n.annotation)
                    yield n
         add_pars = [ i for i in add_pars() ]
@@ -256,8 +258,8 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
         old_pars = [ use(new_pars[i.name]) if i.name in new_pars else i for i in pars if i.name not in excluding ]
         add_pars = [ i for i in new_pars.values() if i.name not in used ]
 
-      #the easy and fast way - only keyword arguments are present, the function can be called as is,
-      #just make its signature pretty
+      # the easy and fast way - only keyword arguments are present, the function can be called as is,
+      # just make its signature pretty
       for i in add_pars:
         if i.kind != P.KEYWORD_ONLY:
            break
@@ -270,7 +272,6 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
       result = heapq.merge(old_pars, add_pars, key = lambda x: x.kind)
       result = list(result)
       result=new_sig.replace(parameters = result)
-
 
       @functools.wraps(mod_func)
       def wrapper(*args, **kwargs):
@@ -293,6 +294,7 @@ def add_to_signature(func, prepend=False, excluding=None, kwargs=False):
       return wrapper
 
   return modify
+
 
 def add_called_class_as_argument(decorator):
     """ If a decorator is used on a method, the information about the defining class is lost.
@@ -358,12 +360,12 @@ def add_called_class_as_argument(decorator):
            out = functools.partial(self.__call__, instance)
            return functools.update_wrapper(out, self.func)
 
-    #@functools.wraps(function)
     def wrapper(function):
         function = decorator(function)
         return AddCalledClassAsArgument(function)
 
     return wrapper
+
 
 def warnings_from_here(stacklevel=1):
     stacklevel+=1
