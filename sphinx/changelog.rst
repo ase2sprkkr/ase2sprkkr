@@ -1,6 +1,18 @@
 Changelog
 =========
 
+* The JXC task have been added
+* The possibility to define own tasks or modify the defaults of the tasks for the user have been added
+* The possibility to emit a warning to the options was added
+* Occupancies can now have string indices (since some other codes produce such occupancies)
+* Partial occupancy is not upnormalized, vacum pseudoatom is added instead
+* Repeated configuration allowed - for parsing output files (e.g. iterations of SCF cycle)
+* Parsing of the task outputs improved
+* Output files moved to the separate directory
+* Some fixies and code lininting
+* ARPES configuration improved
+* ProcessOutputReader.read_from_file can be called as classmethod
+
 Version 2.2.1
 -------------
 * Fix of ConfigurationContainer.set_values
