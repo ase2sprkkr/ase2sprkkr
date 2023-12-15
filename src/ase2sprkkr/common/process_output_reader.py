@@ -9,6 +9,7 @@ import subprocess
 import os
 import numpy as np
 
+from .decorators import maybeclassmethod
 
 class ProcessOutputReader:
   """
@@ -127,8 +128,11 @@ class ProcessOutputReader:
   async def read_output(self, stdout):
       raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
 
-  def read_from_file(self, output, error=None, return_code=0, print_output=False):
-
+  @maybeclassmethod
+  def read_from_file(self, cls, output, error=None, return_code=0, print_output=False):
+      """ Read the data from file."""
+      if not self:
+          self = cls()
       loop = asyncio.new_event_loop()
       self.print_output = print_output
 
@@ -145,9 +149,9 @@ class ProcessOutputReader:
               return loop.run_until_complete(task)
 
       try:
-        return self.result(out(), err(), return_code)
+          return self.result(out(), err(), return_code)
       finally:
-        loop.close()
+          loop.close()
 
 
 class AsyncioFileReader:

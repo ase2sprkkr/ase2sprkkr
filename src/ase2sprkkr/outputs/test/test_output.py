@@ -23,13 +23,12 @@ class TestOutput(TestCase):
 dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000000000000""")  # NOQA: E122
 
   def test_output(self):
-      reader = ScfOutputReader()
-      out=reader.read_from_file(
-          os.path.join(
+      path = os.path.join(
               os.path.dirname(__file__),
               '..', 'examples', 'scf.out'
-          )
       )
-      self.assertIsNotNone(out)
-      self.assertEqual(out[0][-1]['energies']['EMIN'](), -0.5)
-      self.assertEqual(len(out[0][-1]['atomic_types']), 2)
+      for reader in ScfOutputReader,ScfOutputReader():
+          out=reader.read_from_file(path)
+          self.assertIsNotNone(out)
+          self.assertEqual(out[0][-1]['energies']['EMIN'](), -0.5)
+          self.assertEqual(len(out[0][-1]['atomic_types']), 2)
