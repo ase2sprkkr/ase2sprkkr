@@ -1,5 +1,5 @@
 """ ARPES task input parameters definition """
-from ...common.grammar_types  import *
+from ...common.grammar_types import *
 from .sections import *
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
@@ -15,8 +15,8 @@ input_parameters = InputParameters(
         V('EMINEV', -10., info='Minimum of the energy window in eV with respect to the Fermi level'),
         V('EMAXEV', -10., info='Maximum of the energy window in eV with respect to the Fermi level'),
         V('EWORK_EV', 4.2, info='Inner potential of the bulk crystal in eV'),
-        V('IMV_INI_EV', 0.05, info='Imaginary part of the potential in eV (initial state)'), # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
-        V('IMV_FIN_EV', 5., info='Imaginary part of the potential in eV (final state)'), # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
+        V('IMV_INI_EV', 0.05, info='Imaginary part of the potential in eV (initial state)'),  # alternatively you can use VIL (in eV) or IMV_INI (in Ry)'),
+        V('IMV_FIN_EV', 5., info='Imaginary part of the potential in eV (final state)'),  # alternatively you can use VIH (in eV) or IMV_FIN (in Ry)'),
       ],
       remove = ['EMIN'],
       defaults = { 'GRID' : 1, 'NE' : 300 }
@@ -43,7 +43,7 @@ input_parameters = InputParameters(
       V('THETA', 45., info='Direction of the photon (the polar coordinate)'),
       V('PHI', 0., info='Direction of the photon (the azimuth coordinate)'),
       V('POL_P', DefKeyword('P', 'S', 'C+', 'C-'), info='Polarization of the light'),
-      V('EPHOT', 6675., info='Photon energy in eV'),
+      V('EPHOT', 25., info='Photon energy in eV'),
       #Expert
       V('ALQ', expert=45., info='Alignment of polarization vector or pol.ellipsis'),
       V('DELQ', expert=0., info='Phase shift between real and imaginary part of e-vector, delq=90 for circular polarized light'),
@@ -93,16 +93,16 @@ input_parameters = InputParameters(
       V('ISTR', Array(int, length=2), expert=[0,0], info="beam number (h,k)"),
       V('POL0', Array(int, length=3), expert=[0,0,0], info="initial pol."),
       V('POL0L', Array(int, length=3), expert=[0,0,0], info="initial pol. in the laboratory system"),
-      V('Q1', complex, expert=1.+0.j, info="Amplitude 1 of the photoelectron used in spin polarized calculations"),
-      V('Q2', complex, expert=0.+0.j, info="Amplitude 2 of the photoelectron used in spin polarized calculations"),
-      V('Q3', complex, expert=0.+0.j, info="Amplitude 3 of the photoelectron used in spin polarized calculations"),
-      V('Q4', complex, expert=1.+0.j, info="Amplitude 4 of the photoelectron used in spin polarized calculations"),
+      V('Q1', complex, expert=1. + 0.j, info="Amplitude 1 of the photoelectron used in spin polarized calculations"),
+      V('Q2', complex, expert=0. + 0.j, info="Amplitude 2 of the photoelectron used in spin polarized calculations"),
+      V('Q3', complex, expert=0. + 0.j, info="Amplitude 3 of the photoelectron used in spin polarized calculations"),
+      V('Q4', complex, expert=1. + 0.j, info="Amplitude 4 of the photoelectron used in spin polarized calculations"),
     ]),
 
     Section('SPEC_STR', [
       V('N_LAYDBL', SetOf(int), [10,10]),
       V('NLAT_G_VEC', 57),
-      V('N_LAYER', 120),
+      V('N_LAYER', 50),
       V('SURF_BAR', SetOf(float), [0.25,0.25]),
       V('TRANSP_BAR', flag, False)
     ]),

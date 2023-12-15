@@ -202,7 +202,7 @@ MODE = Section('MODE', [
 
 SPEC=Section('SPEC',[
     V('FEGFINAL', flag, required=False)
-  ], is_expert=True, is_optional=True,
+  ], is_expert=True, is_optional=True, info='Sets the final state as a free electron gas final state. By default it is TRLEED final state which is time reverse low energy electron diffraction final state.'
 )
 
 
