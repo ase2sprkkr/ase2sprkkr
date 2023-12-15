@@ -381,3 +381,18 @@ def warnings_from_here(stacklevel=1):
        return wrapped
 
     return wrapper
+
+
+class maybeclassmethod(object):
+    """ This decorator creates a method, that can behawes both as
+    classmethod and normal method - it provides both self and cls,
+    when self can be None """
+
+    def __init__(self, method):
+        self.method = method
+        self.wrapper = functools.wraps(method)
+
+    def __get__(self, instance, cls):
+        return self.wrapper(
+                  lambda *args, **kw: self.method(instance, cls, *args, **kw)
+               )
