@@ -3,7 +3,8 @@
 
 
 from ..common.configuration_containers import RootConfigurationContainer, Section, CustomSection
-from ..common.configuration_definitions import ConfigurationRootDefinition, SectionDefinition, ValueDefinition
+from ..common.container_definitions import ConfigurationRootDefinition, SectionDefinition
+from ..common.value_definitions import ValueDefinition
 from ..common.options import Option, CustomOption
 
 from .io_data import WriteIoData

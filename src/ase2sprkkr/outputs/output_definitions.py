@@ -9,9 +9,8 @@ files is used
 
 import pyparsing as pp
 from ..common.grammar import line_end
-from ..common.configuration_definitions import \
-    ValueDefinition, \
-    SectionDefinition
+from ..common.container_definitions import SectionDefinition
+from ..common.value_definitions import ValueDefinition
 from ..common.decorators import cached_class_property
 
 

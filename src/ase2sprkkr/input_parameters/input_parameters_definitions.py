@@ -7,7 +7,7 @@ sprkkr.common.configuration_definitions
 """
 
 import pyparsing as pp
-from ..common.configuration_definitions import dict_from_parsed
+from ..common.container_definitions import dict_from_parsed
 from ..sprkkr.configuration import \
          ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
          CustomConfigurationValue, CustomConfigurationSection

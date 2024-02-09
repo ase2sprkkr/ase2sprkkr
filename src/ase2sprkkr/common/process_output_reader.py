@@ -8,8 +8,8 @@ import functools
 import subprocess
 import os
 import numpy as np
-
 from .decorators import maybeclassmethod
+
 
 class ProcessOutputReader:
   """
@@ -127,6 +127,12 @@ class ProcessOutputReader:
 
   async def read_output(self, stdout):
       raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
+
+  @maybeclassmethod
+  def result_from_file(self, cls, output, error=None, return_code=0, print_output=False):
+      if not self:
+          self = cls()
+      return self.read_from_file(output, error, return_code, print_output)
 
   @maybeclassmethod
   def read_from_file(self, cls, output, error=None, return_code=0, print_output=False):
