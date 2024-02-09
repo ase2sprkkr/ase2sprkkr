@@ -6,6 +6,7 @@ from ..sprkkr.configuration import ConfigurationSection
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
+
 class PotentialSection(ConfigurationSection):
     """ A generic class for a section in a potential """
 
@@ -54,6 +55,7 @@ class PotentialSection(ConfigurationSection):
     def reset(self):
         self.clear(True)
 
+
 class UniqueListSection(PotentialSection):
     """ The section, whose data is list of something,
         e.g. of meshes, reference systems etc. The properties
@@ -73,7 +75,6 @@ class UniqueListSection(PotentialSection):
 
     _value_class : type = None
     """ The class, that should be created from the list of data """
-
 
     def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data: WriteIoData):
         """

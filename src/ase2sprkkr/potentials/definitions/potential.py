@@ -1,11 +1,19 @@
 """ Here, the format of the potential_file is defined """
 
-from .sections import *
+from .sections import \
+    GlobalSystemParameterDefinition, \
+    LatticeSectionDefinition, \
+    SitesSectionDefinition, \
+    OccupationSectionDefinition, \
+    ReferenceSystemSectionDefinition, \
+    MeshInformationSectionDefinition, \
+    TypesSectionDefinition
+
 
 def fce():
-  from  ...common.grammar_types import \
-        Keyword, DefKeyword, Table, Array, Sequence, \
-        integer, Date, boolean, line_string
+  from ...common.grammar_types import \
+        DefKeyword, Table, Array, Sequence, \
+        Date, line_string
   from ..potential_definitions import \
         PotSectionDefinition, \
         ASEArraySectionDefinition, \
@@ -15,6 +23,7 @@ def fce():
   import datetime
 
   sections = []
+
   def Section(*args, cls=PotSectionDefinition, **kwargs):
      x=cls(*args, **kwargs)
      sections.append(x)
@@ -65,23 +74,24 @@ def fce():
   ], )
 
   Section('LATTICE', cls = LatticeSectionDefinition)
-  Section('SITES',   cls = SitesSectionDefinition)
-  Section('OCCUPATION',   cls = OccupationSectionDefinition)
+  Section('SITES', cls = SitesSectionDefinition)
+  Section('OCCUPATION', cls = OccupationSectionDefinition)
   Section('REFERENCE SYSTEM', cls = ReferenceSystemSectionDefinition)
   Section('MAGNETISATION DIRECTION', [
-    V('KMROT', int, 0),
-    V('QMVEC', Array([0.,0.,0.])),
-    V('DATA', Table({'MTET_Q' : float, 'MPHI_Q' : float }, numbering='IQ', free_header = True)),
-    V('IT_DATA', Table({'IT': int, 'MTET_Q' : float, 'MPHI_T' : float, 'MGAM_T': float}, free_header = lambda x: '*' not in x),
-      is_optional=True),
+      V('KMROT', int, 0),
+      V('QMVEC', Array([0.,0.,0.])),
+      V('DATA', Table({'MTET_Q' : float, 'MPHI_Q' : float }, numbering='IQ', free_header = True)),
+      V('IT_DATA', Table({'IT': int, 'MTET_Q' : float, 'MPHI_T' : float, 'MGAM_T': float}, free_header = lambda x: '*' not in x),
+        is_optional=True),
     ],
     cls = ArraySection('magnetisation_direction')
   )
   Section('MESH INFORMATION', cls = MeshInformationSectionDefinition)
-  Section('OCCUPATION',   cls = OccupationSectionDefinition)
+  Section('OCCUPATION', cls = OccupationSectionDefinition)
   Section('TYPES', cls = TypesSectionDefinition)
 
   return PotentialDefinition(sections)
+
 
 potential_definition = fce()
 """ Potential file format definition """
