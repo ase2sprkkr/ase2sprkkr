@@ -427,8 +427,6 @@ class ValueDefinition(RealItemDefinition):
                                          is_numbered_array=self.is_numbered_array,
                                          name_in_grammar=name_in_grammar)
     out.setName(nbody)
-    if self.is_repeated:
-        out = out + pp.ZeroOrMore(self.container.grammar_of_delimiter + out)
     return out
 
   def get_value(self, option=None):
@@ -535,7 +533,7 @@ class ValueDefinition(RealItemDefinition):
 
   @property
   def can_be_repeated(self):
-      return self.is_numbered_array
+      return self.is_numbered_array or bool(self.is_repeated)
 
   def _get_copy_args(self)->Dict[str, str]:
        """
