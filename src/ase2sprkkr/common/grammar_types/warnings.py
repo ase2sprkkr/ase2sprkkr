@@ -6,5 +6,4 @@ class SuspiciousValueWarning(UserWarning):
 
    def warn(self, stacklevel=1):
        import warnings
-       warnings.warn(self, stacklevel=stacklevel+1)
-
+       warnings.warn(self, stacklevel=stacklevel + 1)

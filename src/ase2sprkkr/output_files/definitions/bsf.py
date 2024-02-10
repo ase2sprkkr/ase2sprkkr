@@ -3,8 +3,8 @@ from typing import Optional
 import numpy as np
 
 from ..output_files import Arithmetic, CommonOutputFile
-from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray, Keyword
-from ...common.generated_configuration_definitions import NumpyViewDefinition as NV, GeneratedValueDefinition as GV
+from ...common.grammar_types import Array, NumpyArray, Keyword
+from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
 from ...common.configuration_definitions import gather,switch
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -47,6 +47,7 @@ class BSFOutputFile(CommonOutputFile, Arithmetic):
          if self.MODE() == 'EK_REL':
              assert np.allclose(self.K(), other.K())
 
+
 class BSFDefinition(OutputFileDefinition):
 
     result_class = BSFOutputFile
@@ -55,7 +56,7 @@ class BSFDefinition(OutputFileDefinition):
 def create_definition():
     cmap1 = plt.cm.bone_r(np.linspace(0.,1.,256))
     cmap2 = plt.cm.hot(np.linspace(0.,1.,256))
-    cmap =  np.vstack((cmap1,cmap2))
+    cmap = np.vstack((cmap1,cmap2))
     mymap = mcolors.LinearSegmentedColormap.from_list('my_colormap',cmap)
 
     def plot(title, colormap='bwr', negative=True):
@@ -76,7 +77,7 @@ def create_definition():
               'vmin' : vmin,
               'vmax' : vmax,
               'colormap' : colormap,
-              'xticks' : np.insert(k[[x-1 for x in c.INDKDIR()]], 0, 0),
+              'xticks' : np.insert(k[[x - 1 for x in c.INDKDIR()]], 0, 0),
               'xticklabels' : [],
               'xlabel' : r'K',
               'colorbar' : True,
@@ -86,7 +87,7 @@ def create_definition():
           if c.MODE()=='CONST-E':
             kw.update({
               'ylabel' : r'$E-E_{\rm F}$ (eV)',
-              'yrange' : (c.E[0], cE[-1]),
+              'yrange' : (c.E[0], c.E[-1]),
               'show_zero_line' : 0.5,
             })
           else:
@@ -96,7 +97,7 @@ def create_definition():
 
           def callback(ax):
               for index in c.INDKDIR()[:-1]:
-                  ax.plot([k[index-1],k[index-1]],[mesh[1,0,1], mesh[1,-1,1]],color='black',lw=0.5)
+                  ax.plot([k[index - 1],k[index - 1]],[mesh[1,0,1], mesh[1,-1,1]],color='black',lw=0.5)
 
           kw.update(kwargs)
           colormesh(*mesh, data, callback=callback, **kw)
@@ -117,7 +118,7 @@ def create_definition():
 
     @lru_cache(maxsize=2)
     def energy_points(start, end, fermi, num):
-        return np.linspace(start-fermi, end-fermi, num)*Rydberg
+        return np.linspace(start - fermi, end - fermi, num) * Rydberg
 
     def i(type):
         def index(data, c):
@@ -143,7 +144,7 @@ def create_definition():
           nk2=c.NK2()
           if c.KEYWORD() == 'BSF':
              nk1 = c.NE() if c.MODE() == 'EK-REL' else c.NK1()
-             limit = nq*nk1*nk2*2
+             limit = nq * nk1 * nk2 * 2
              if type >= 0:
                 return data[:limit].reshape(nk1, 2, nq, nk2)[:,type]
              else:
@@ -154,7 +155,6 @@ def create_definition():
              else:
                 return data.reshape(4, c.NK1(), nq, nk2)[:,type]
         return index
-
 
     norm = np.linalg.norm
 
@@ -184,7 +184,7 @@ def create_definition():
               V('E', Array(float), default_value_from_container=lambda o:
                  energy_points(o.EMIN(),o.EMAX(),o.EFERMI(), o.NE()), is_stored=False, info='Energy (relative to Fermi energy)'),
             ],
-         'CONST-E' : [
+          'CONST-E' : [
               V('NK1', int, info='Number of K points (the first axis)'),
               V('NK2', int, info='Number of K points (the first axis)'),
               V('ERYD', Array(float, length=2)),
@@ -230,5 +230,6 @@ def create_definition():
     ], cls=BSFDefinition, name='BSF', info='BSF output file')
 
     return definition
+
 
 definition = create_definition()
