@@ -471,7 +471,7 @@ XSITES NR=3 FLAG
     out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
     self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
 
-  def test_given_len_array(self):
+  def test_numpy_array(self):
     assertParse = self.assertParse
 
     ipd = cd.InputParametersDefinition.definition_from_dict({
@@ -525,6 +525,15 @@ XSITES NR=3 FLAG
     5 9 8
     E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar())
 
+    self.assertEqual(gt.NumpyArray(item_format='%2.0f').string([[1,2,3],[4,5,6]]),
+                                                      " 1  2  3\n 4  5  6\n")
+    self.assertEqual(gt.NumpyArray(indented=2, item_format='%2.0f').string([[1,2,3],[4,5,6]]),
+                                                      "   1  2  3\n   4  5  6\n")
+    self.assertEqual(gt.NumpyArray(indented=(8, 2), item_format='%2.0f').string([[1,2,3,4,5,6],[4,5,6,7,8,9]]),
+                                                      " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9\n")
+
+  def test_repeated_value(self):
+    assertParse = self.assertParse
     ipd = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('A', 1),

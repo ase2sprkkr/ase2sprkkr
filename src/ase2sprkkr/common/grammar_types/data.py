@@ -8,6 +8,7 @@ import io
 import numpy as np
 import copy
 
+
 class RestOfTheFile(GrammarType):
     """ Match anything up to the end of the file """
 
@@ -18,6 +19,7 @@ class RestOfTheFile(GrammarType):
 
     def grammar_name(self):
       return '<the rest of the file>'
+
 
 class Prefixed(GrammarType):
     """ This value consists from a few lines, each prefixed with a given prefix """
@@ -47,7 +49,7 @@ class NumpyArray(GrammarType):
 
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
-                              lines=None, item_format=None, indented=False,
+                              lines=None, item_format='%.18e', indented=False,
                               dtype=None,
                               **kwargs):
         """
@@ -85,7 +87,7 @@ class NumpyArray(GrammarType):
              ............
 
           Pass a tuple with two integers into this argument.
-          The first number of tuple is the number of characters on on line max,
+          The first number of tuple is the max. number of characters on a line,
           longer lines will be splitted.
           The second number is the number of spaces placed on the begining of the
           new lines created by splitting the old.
@@ -99,7 +101,7 @@ class NumpyArray(GrammarType):
         self.delimiter=delimiter
         self.written_shape=written_shape
         self.item_format=item_format
-        self.indented=' '*indented if isinstance(indented, int) else indented
+        self.indented=' ' * indented if isinstance(indented, int) else indented
         self.lines=lines
         self.shape=shape
         self.dtype=dtype
@@ -119,29 +121,28 @@ class NumpyArray(GrammarType):
            delimiter = ''
        if self.written_shape:
           out=out.reshape(self.written_shape)
-       np.savetxt(out, value, delimiter=delimiter, format=self.item_format)
-       np.savetxt(io)
-       out=io.getvalue()
+       np.savetxt(out, value, delimiter=' ' if delimiter is None else delimiter, fmt=self.item_format)
+       out=out.getvalue()
        indented = self.indented
        if indented:
           if isinstance(indented, tuple):
             first = indented[0]
             nexts = first - indented[1]
-            prefix = ' '*indented[1]
-            def g():
-                for i in '\n'.split(''):
-                    yield i[:first]
-                    s=firsts
-                    l=len(i)
-                    while s<l:
-                      e=firsts+nexts
-                      yield prefix+i[s:e]
-                      s=e
-            out = '\n'.join(g)
-          else:
-            out=re.sub('(^|\n)',r'\1' + indented, out)
-       return out
+            prefix = ' ' * indented[1]
 
+            def g():
+                for i in out.split('\n'):
+                    yield i[:first]
+                    s=first
+                    ln=len(i)
+                    while s<ln:
+                      e=s + nexts
+                      yield prefix + i[s:e]
+                      s=e
+            out = '\n'.join(g())
+          else:
+            out=re.sub('(^|\n(?!$))',r'\1' + indented, out)
+       return out
 
     is_the_same_value = staticmethod(compare_numpy_values)
 
@@ -149,7 +150,6 @@ class NumpyArray(GrammarType):
          """ return a grammar for n lines of text """
          out=pp.Regex(f"([^\n]*\n){{{lines-1}}}[^\n]*(?=\n|$)", re.S)
          out.leaveWhitespace()
-         #out.addParseAction(lambda x: breakpoint() or x)
          out=self._parse_numpy_array_grammar(out)
          return out
 
@@ -159,7 +159,7 @@ class NumpyArray(GrammarType):
          def parse(v):
              if self.indented:
                 if isinstance(self.indented, tuple):
-                  v=v.replace('\n'+' '*self.indented[1], '')
+                  v=v.replace('\n' + ' ' * self.indented[1], '')
                 else:
                   v=re.sub(f'(^|\n){self.indented}',r'\1', v)
              if self.dtype=='line':
@@ -196,6 +196,7 @@ class NumpyArray(GrammarType):
         if container:
            self.forward=pp.Forward()
            obj = container[self.lines]
+
            def paction(parsed):
                self.forward << self._n_lines_grammar(parsed[0][1])
                return parsed
