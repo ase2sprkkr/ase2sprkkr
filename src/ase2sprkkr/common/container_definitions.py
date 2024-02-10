@@ -118,6 +118,21 @@ class ContainerDefinition(RealItemDefinition):
                  write_alternative_name:bool=False, result_class=None,
                  is_repeated=False
                  ):
+       """
+       Definition of container (e.g. section of an input file).
+       For the rest of the parameters see the :class:`RealItemDefinition`.
+
+       Parameters
+       ----------
+       has_hidden_members: bool
+         If true, this section is not intended for a direct editing
+       is_repeated: bool or Separator
+         The section can be repeated. The name of the section appears only once on the beginning (this differs from ValueDefinition.is_repeated #TODO - merge the meaning of the swtich)
+
+       force_order: bool
+         If True, the items has to retain the order, if False, the items can be in the input file in any order.
+       """
+
        super().__init__(
            name = name,
            alternative_names = alternative_names,
@@ -131,7 +146,6 @@ class ContainerDefinition(RealItemDefinition):
            result_class = result_class
        )
 
-       self.is_hidden = is_hidden
        if not isinstance(members, dict):
           members = self._dict_from_named_values(members)
 
