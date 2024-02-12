@@ -176,7 +176,7 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
                 return True
         return False
 
-    def _save_to_file(self, file, always=False)->bool:
+    def _save_to_file(self, file, always=False, name_in_grammar=None)->bool:
         """ Save the content of the container to the file (according to the definition)
 
         Parameters
@@ -194,8 +194,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         """
         out = False
         for i in self.values():
-            self._definition._save_to_file(file, i, always)
-            out = True
+            # TODO: separator should be written conditionally
+            if out and self._definition.is_repeated is not True:
+                file.write(self._definition.is_repeated)
+            if self._definition._save_to_file(file, i, always, name_in_grammar):
+                name_in_grammar=False
+                out=True
         return out
 
     def validate(self, why:str='save'):

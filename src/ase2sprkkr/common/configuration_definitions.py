@@ -469,11 +469,11 @@ class Stub(VirtualDefinition):
         self.item=item
         self.condition=None
 
-    def _save_to_file(self, file, value, always=True):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
          item = value._container[self.item]
          if not always and self.condition and not self.condition(value):
              return
-         return item._save_to_file(file, always=True)
+         return item._save_to_file(file, always=True, name_in_grammar=name_in_grammar)
 
     def _create_grammar(self, allow_dangerous=False, **kwargs):
          item = self.container[self.item]
@@ -498,7 +498,7 @@ class Ignored:
     def has_grammar(self):
         return False
 
-    def _save_to_file(self, file, value, always=False):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
         return
 
 
@@ -539,8 +539,11 @@ class Gather:
         out.setParseAction(discard_names)
         return out
 
-    def _save_to_file(self, file, value, always=False):
-        names = self.name_delimiter.join(i.formated_name for i in self.items if i.name_in_grammar)
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
+        if name_in_grammar is not False:
+            names = self.name_delimiter.join(i.formated_name for i in self.items if i.name_in_grammar)
+        else:
+            names = None
         if names:
             value._definition.write_name(file, names)
             delimiter = self.items[0].name_value_delimiter
@@ -722,9 +725,9 @@ class SeparatorDefinition(VirtualDefinition):
     def _create_grammar(self, allow_dangerous=False):
         return pp.Suppress(self.separator_type.grammar())
 
-    def _save_to_file(self, file, value, always=False):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
         if not always:
             if self.condition and self.condition(value):
                     return False
-            self.separator_type.write(file, None)
-            return True
+        self.separator_type.write(file, None)
+        return True

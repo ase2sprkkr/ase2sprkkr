@@ -547,7 +547,7 @@ class ContainerDefinition(RealItemDefinition):
             return RepeatedConfigurationContainer(self, container)
         return super().create_object(container)
 
-    def _save_to_file(self, file, value, always=False)->bool:
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None)->bool:
         """ Save the content of the container to the file (according to the definition)
 
         Parameters
@@ -573,7 +573,9 @@ class ContainerDefinition(RealItemDefinition):
         else:
             if not value.has_any_value():
                 return False
-        if self.name_in_grammar:
+        if name_in_grammar is None:
+           name_in_grammar = self.name_in_grammar
+        if name_in_grammar:
            file.write(self.name)
            file.write('\n')
 

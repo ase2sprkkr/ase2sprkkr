@@ -442,14 +442,14 @@ class ValueDefinition(RealItemDefinition):
         return self.default_value
      return None
 
-  def _save_to_file(self, file, option, always=False):
+  def _save_to_file(self, file, option, always=False, name_in_grammar=None):
       value, write = option._written_value(always)
       if write:
-          return self.write(file, value)
+          return self.write(file, value, name_in_grammar)
       else:
           return
 
-  def write(self, file, value):
+  def write(self, file, value, name_in_grammar=None):
      """
      Write the option to the open file
 
@@ -462,8 +462,11 @@ class ValueDefinition(RealItemDefinition):
       The value to write. It can be instance of DangerousValue, in such case
       It's own type is used to write the value.
      """
+     if name_in_grammar is None:
+         name_in_grammar = self.name_in_grammar
+
      def write(name, value):
-         if self.name_in_grammar:
+         if name_in_grammar:
             self.write_name(file, name)
             return self.write_value(file, value, self.name_value_delimiter)
          else:
