@@ -12,10 +12,10 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 import pyparsing as pp
 import inspect
-import warnings
 from typing import Dict
 import itertools
 
+from .warnings import DataValidityWarning
 from .options import Dummy
 from .decorators import cached_class_property
 from ..common.grammar import generate_grammar
@@ -294,7 +294,7 @@ class RealItemDefinition(BaseDefinition):
        if self.warning_condition:
           out = self.warning_condition(value)
           if out is not None:
-              warnings.warn(out)
+              DataValidityWarning.warn(out)
 
    def all_names_in_grammar(self):
        if not self.name_in_grammar:
