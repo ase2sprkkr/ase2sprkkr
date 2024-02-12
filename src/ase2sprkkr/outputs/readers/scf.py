@@ -60,13 +60,13 @@ class ScfResult(TaskResult):
       out = self._calculator.copy_with_potential(self.potential_filename)
       out.input_parameters = task
       if isinstance(task, str) and task.lower() == 'jxc':
-          out.input_parameters.set('EMIN', self.last_iteration.energies.EMIN())
+          out.input_parameters.set('EMIN', self.last_iteration.energy.EMIN())
       return out
 
   @property
   def energy(self):
       """ Total energy of the last iteration """
-      return self.last_iteration['ETOT']()
+      return self.last_iteration.energy.ETOT()
 
   @property
   def converged(self):
@@ -106,7 +106,11 @@ class ScfResult(TaskResult):
           raise AttributeError('No iteration has been finished')
       return self.iterations[-1]
 
-  def plot(self, what=['error', 'ETOT'], filename=None, logscale = set(['err']), **kwargs):
+  @property
+  def energies(self):
+      return self.last_iteration.energy()
+
+  def plot(self, what=['error', ('energy','ETOT'), ('energy', 'EMIN')], filename=None, logscale = set(['err']), **kwargs):
       """ Plot the development of the given value(s) during iterations.
 
       Parameters
@@ -184,17 +188,17 @@ scf_section = Section('iteration', [
   V('system_name', str),
   V('iteration', int, info='Number of the iteration.'),
   V('error', float),
-  V('EF', float, info='Fermi energy'),
-  V('ETOT', float, info='Total energy'),
   V('converged', bool, info='True, if the SCF cycle converged this iteration.'),
   Section('moment', [
     V('spin', float),
     V('orbital', float)
   ]),
-  Section('energies' , [
-    V('EMIN', float, info='Bottom of energy contour for band states'),
-    V('ESCBOT', float, info='Lower limit for semi-core states'),
-    V('ECTOP', float, info='Upper limit for core states')
+  Section('energy' , [
+    V('EF', float, info='Fermi energy', alternative_names='fermi'),
+    V('ETOT', float, info='Total energy', alternative_names='total'),
+    V('EMIN', float, info='Bottom of energy contour for band states', alternative_names='band_states_min'),
+    V('ESCBOT', float, info='Lower limit for semi-core states', alternative_names='semi_core_min'),
+    V('ECTOP', float, info='Upper limit for core states', alternative_names='core_max')
   ]),
   Section('atomic_types', atomic_types_definition.members(), is_repeated=True)
 ])
@@ -232,13 +236,13 @@ class ScfOutputReader(ProcessOutputReader):
             if not line:
                 break
 
-            out['energies'] = {'EMIN' : float(line.split('=')[1]) }
+            out['energy'] = {'EMIN' : float(line.split('=')[1]) }
             line = await stdout.readline()
             if b'ESCBOT' in line:
-                out['energies']['ESCBOT'] = float(line.split(b'=')[1])
+                out['energy']['ESCBOT'] = float(line.split(b'=')[1])
                 line = await stdout.readline()
             if b'ECTOP' in line:
-                out['energies']['ECTOP'] = float(line.split(b'=')[1])
+                out['energy']['ECTOP'] = float(line.split(b'=')[1])
 
             line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
             line=line.strip()
@@ -264,11 +268,11 @@ class ScfOutputReader(ProcessOutputReader):
             items = line.split()
             out['iteration'] = int(items[0])
             out['error']=float(items[2])
-            out['EF']=float(items[5])
+            out['energy']['EF']=float(items[5])
             out['moment'] = {'spin' : float(items[10]),
                              'orbital' : float(items[11]) }
             line = (await readline()).split()
-            out['ETOT'] = float(line[1]) * Rydberg
+            out['energy']['ETOT'] = float(line[1]) * Rydberg
             out['converged'] = line[5] == 'converged'
 
             iterations.append(scf_section.read_from_dict(out))
