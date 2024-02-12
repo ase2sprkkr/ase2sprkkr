@@ -153,6 +153,17 @@ class ConfigurationContainer(BaseConfigurationContainer):
       """
       The members of the container are accesible using ``container["member name"]`` notation.
       """
+      if isinstance(name, tuple):
+         if not name:
+             raise KeyError('An empty tuple not allowed as a key.')
+         out = self._members[name[0]]
+         ll = len(name)
+         if ll == 1:
+             return out
+         if ll == 2:
+             return out[name[1]]
+         return out[name[1:]]
+
       return self._members[name]
 
   def _get(self, name, default=None):
