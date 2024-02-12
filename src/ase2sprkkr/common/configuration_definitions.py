@@ -470,11 +470,11 @@ class Stub(VirtualDefinition):
         self.item=item
         self.condition=None
 
-    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
          item = value._container[self.item]
          if not always and self.condition and not self.condition(value):
-             return
-         return item._save_to_file(file, always=True, name_in_grammar=name_in_grammar)
+             return False
+         return item._save_to_file(file, always=True, name_in_grammar=name_in_grammar, delimiter=delimiter)
 
     def _create_grammar(self, allow_dangerous=False, **kwargs):
          item = self.container[self.item]
@@ -499,8 +499,8 @@ class Ignored:
     def has_grammar(self):
         return False
 
-    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
-        return
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
+        return False
 
 
 class Gather:
@@ -540,29 +540,29 @@ class Gather:
         out.setParseAction(discard_names)
         return out
 
-    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
         if name_in_grammar is not False:
             names = self.name_delimiter.join(i.formated_name for i in self.items if i.name_in_grammar)
         else:
             names = None
         if names:
-            value._definition.write_name(file, names)
+            value._definition.write_name(file, names, delimiter)
             delimiter = self.items[0].name_value_delimiter
         else:
             delimiter = ''
 
-        def write(i, delimiter):
+        def write(i):
             val,write = i._written_value()
             if write:
                 if not i._definition.write_value(file, val, delimiter):
                     raise NotImplementedError('Gathered values have to be always written')
             else:
-                raise NotImplementedError('Gathered value names have to be always written')
-            delimiter = self.value_delimiter
+                raise NotImplementedError('Gathered values have to be always written')
 
-        write(value, delimiter)
+        write(value)
+        delimiter = self.value_delimiter
         for i in self.items[1:]:
-          write(value._container[i.name], self.value_delimiter)
+             write(value._container[i.name])
         return True
 
 
@@ -730,9 +730,11 @@ class SeparatorDefinition(VirtualDefinition):
     def _create_grammar(self, allow_dangerous=False):
         return pp.Suppress(self.separator_type.grammar())
 
-    def _save_to_file(self, file, value, always=False, name_in_grammar=None):
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
         if not always:
             if self.condition and self.condition(value):
                     return False
+        if delimiter:
+            file.write(delimiter)
         self.separator_type.write(file, None)
         return True

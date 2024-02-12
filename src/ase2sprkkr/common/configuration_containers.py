@@ -435,7 +435,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
               return True
       return False
 
-  def _save_to_file(self, file, always=False, name_in_grammar=None)->bool:
+  def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter='')->bool:
       """ Save the content of the container to the file (according to the definition)
 
       Parameters
@@ -451,7 +451,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       something_have_been_written
         If any value have been written return True, otherwise return False.
       """
-      return self._definition._save_to_file(file, self, always, name_in_grammar)
+      return self._definition._save_to_file(file, self, always, name_in_grammar, delimiter)
 
   def __setattr__(self, name, value):
       """ Setting the (unknown) attribute of a section sets the value of the member

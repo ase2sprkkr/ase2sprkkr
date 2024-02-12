@@ -442,14 +442,14 @@ class ValueDefinition(RealItemDefinition):
         return self.default_value
      return None
 
-  def _save_to_file(self, file, option, always=False, name_in_grammar=None):
+  def _save_to_file(self, file, option, always=False, name_in_grammar=None, delimiter=''):
       value, write = option._written_value(always)
       if write:
-          return self.write(file, value, name_in_grammar)
+          return self.write(file, value, name_in_grammar, delimiter=delimiter)
       else:
           return
 
-  def write(self, file, value, name_in_grammar=None):
+  def write(self, file, value, name_in_grammar=None, delimiter=''):
      """
      Write the option to the open file
 
@@ -467,10 +467,17 @@ class ValueDefinition(RealItemDefinition):
 
      def write(name, value):
          if name_in_grammar:
+            if delimiter:
+                file.write(delimiter)
             self.write_name(file, name)
-            return self.write_value(file, value, self.name_value_delimiter)
+            self.write_value(file, value, self.name_value_delimiter)
+            return True
          else:
-            return self.write_value(file, value, self.prefix)
+            if delimiter:
+                deli = delimiter + self.prefix
+            else:
+                deli = self.prefix
+            return self.write_value(file, value, deli)
 
      name = self.formated_name
      if self.is_numbered_array or self.is_repeated:
@@ -481,12 +488,10 @@ class ValueDefinition(RealItemDefinition):
             written = ( (name, v) for v in value )
         out = False
         for mname, val in written:
-            if out:
-               file.write(self.container.delimiter)
-            out = write(mname, val) or out
+            if write(mname, val):
+                delimiter = self.container.delimiter
+                out = True
         return out
-
-        out = False
      else:
         return write(name, value)
 
@@ -523,8 +528,8 @@ class ValueDefinition(RealItemDefinition):
      else:
          return False
 
-  def write_name(self, file, name):
-      file.write(self.prefix)
+  def write_name(self, file, name, delimiter=''):
+      file.write(delimiter + self.prefix)
       file.write(name)
 
   def remove(self, name):

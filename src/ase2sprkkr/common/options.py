@@ -56,10 +56,10 @@ class BaseOption(Configuration):
   both the a-value-holding ones (:class:`Option`) and
   dummy ones (Dummy)
   """
-  def _save_to_file(self, file, always=False, name_in_grammar=None):
+  def _save_to_file(self, file, always=False, name_in_grammar=None, delimiter=''):
       """ Write the name-value pair to the given file, if the value
       is set. """
-      return self._definition.output_definition._save_to_file(file, self, always, name_in_grammar)
+      return self._definition.output_definition._save_to_file(file, self, always, name_in_grammar, delimiter)
 
   def _find_value(self, name):
       if self._definition.name == name:

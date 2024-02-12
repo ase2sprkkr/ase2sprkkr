@@ -555,7 +555,7 @@ class ContainerDefinition(RealItemDefinition):
             return self.repeated_class(self, container)
         return super().create_object(container)
 
-    def _save_to_file(self, file, value, always=False, name_in_grammar=None)->bool:
+    def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter='')->bool:
         """ Save the content of the container to the file (according to the definition)
 
         Parameters
@@ -583,6 +583,9 @@ class ContainerDefinition(RealItemDefinition):
                 return False
         if name_in_grammar is None:
            name_in_grammar = self.name_in_grammar
+
+        if delimiter:
+           file.write(delimiter)
         if name_in_grammar:
            file.write(self.name)
            file.write('\n')
@@ -593,14 +596,10 @@ class ContainerDefinition(RealItemDefinition):
                if o._save_to_file(file, always):
                    file.write(self.delimiter)
         else:
+           delimiter = ''
            for o in members:
-               if o._save_to_file(file, always):
-                    break
-           write = True
-           for o in members:
-               if write:
-                   file.write(self.delimiter)
-               write=o._save_to_file(file, always)
+               if o._save_to_file(file, always, delimiter=delimiter):
+                   delimiter=self.delimiter
 
         return True
 
