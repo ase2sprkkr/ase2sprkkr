@@ -5,6 +5,7 @@ from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..common.decorators import class_property, cache
 from io import StringIO
 
+
 class Potential(ConfigurationFile):
   """ It holds data form SPR-KKR potential file
 
@@ -81,7 +82,7 @@ class Potential(ConfigurationFile):
   @class_property
   @cache
   def potential_definition(cls):
-      #import here to avoid circular import issues
+      # import here to avoid circular import issues
       from .definitions import potential as definition
       return definition.potential_definition
 
@@ -118,5 +119,5 @@ class Potential(ConfigurationFile):
       return "SPRKKR POTENTIAL"
 
 
-#At last - to avoid circular import problem
-from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
+# At last - to avoid circular import problem
+from ..sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: E402
