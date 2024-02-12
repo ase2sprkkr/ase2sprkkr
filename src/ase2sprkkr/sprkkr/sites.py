@@ -1,6 +1,7 @@
 """ The site class define the properties of an atom. """
 
 from .radial_meshes import Mesh
+from .radial import RadialPotential, RadialCharge
 from .reference_systems import ReferenceSystem
 import numpy as np
 from ..common.decorators import cached_property
@@ -36,13 +37,29 @@ class Site:
       mesh: Mesh
           Default ExponentialMesh is used if None is given
       """
-      self.mesh = mesh or Mesh.default()
+      self.atoms = atoms
       self.reference_system = reference_system or ReferenceSystem.default()
+      self._mesh = mesh or Mesh.default()
       self._potential = None
       self._charge = None
       self._occupation = Occupation.to_occupation(occupation, None)
       self._occupation._site = self
-      self.atoms = atoms
+
+  def _clear_data(self):
+      self._potential = None
+      self._charge = None
+
+  @property
+  def mesh(self):
+      return self._mesh
+
+  @mesh.setter
+  def mesh(self, mesh):
+      self._mesh = mesh
+      if self._potential:
+          self._potential = self._potential.recompute_for_mesh(mesh)
+      if self._charge:
+          self._charge = self._charge.recompute_for_mesh(mesh)
 
   @property
   def potential(self):
@@ -51,6 +68,8 @@ class Site:
 
   @potential.setter
   def potential(self, value):
+      if isinstance(value, np.ndarray):
+          value = RadialPotential(value, self._mesh, self.primary_atomic_number)
       self._potential = value
 
   @property
@@ -60,6 +79,8 @@ class Site:
 
   @charge.setter
   def charge(self, value):
+      if isinstance(value, np.ndarray):
+          value = RadialCharge(value, self._mesh)
       self._charge = value
 
   def copy(self):
@@ -107,8 +128,9 @@ class Site:
 
       Currently, it resets the mesh.
       """
-
       self.mesh = Mesh.default()
+      self.potential = None
+      self.charge = None
 
   @occupation.setter
   def occupation(self, x):
@@ -119,6 +141,11 @@ class Site:
   def primary_symbol(self):
       """ Symbol of the most important (most probable) chemical element present on the site. """
       return self.occupation.primary_symbol
+
+  @property
+  def primary_atomic_number(self):
+      """ Atomic symbol of the most important (most probable) chemical element present on the site. """
+      return self.occupation.primary_atomic_number
 
   def index(self):
       """ Return the the sites-array (of the owning atoms object) index for this site. """
@@ -131,7 +158,10 @@ class Site:
       if not len(index):
          return
       an = self.atoms.get_atomic_numbers()
-      an[ index ] = self.occupation.primary_atomic_number
+      pan = self.occupation.primary_atomic_number
+      an[ index ] = pan
+      if self._potential:
+          self._potential.z = pan
       self.atoms.set_atomic_numbers(an)
       occ = self.atoms.info.get('occupancy', {})
       for i in index:

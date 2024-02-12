@@ -68,5 +68,7 @@ class ReadIoData(BaseIoData):
 
     def update_atoms(self, atoms):
         """ Replay are the stored handlers on the given atoms object """
+        for i in atoms.sites:
+            i._clear_data()
         for handler in self._postponed:
-             handler(atoms)
+            handler(atoms)

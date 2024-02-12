@@ -1,6 +1,5 @@
 import os
 import io
-import numpy as np
 from ase.spacegroup import crystal
 from datetime import datetime
 
@@ -61,7 +60,8 @@ class TestPotential(TestCase):
   def test_potential_data(self):
     path = os.path.join(os.path.dirname(__file__), '..','examples','FePt.new.pot')
     p=Potential.from_file(path)
-    self.assertTrue(isinstance(p.atoms.sites[0].potential, np.ndarray))
+    self.assertTrue(p.atoms.sites[0].potential is not None)
+    self.assertTrue(p.atoms.sites[0].charge is not None)
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
       SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True)
 
