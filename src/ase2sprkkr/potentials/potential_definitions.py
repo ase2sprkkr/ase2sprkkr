@@ -6,20 +6,19 @@ structure, so they share common functionalities from
 sprkkr.common.configuration_definitions
 """
 
-import functools
 import pyparsing as pp
 from ..common.grammar import line_end
 from ..common.grammar_types import separator, pot_mixed
-from ..common.options import CustomOption
 from ..common.configuration_definitions import SeparatorDefinition
 from ..sprkkr.configuration import \
-         ConfigurationValueDefinition, ConfigurationSectionDefinition, ConfigurationFileDefinition, \
-         CustomConfigurationValue
-from .custom_potential_section import CustomPotentialSection, CustomPotentialSectionDefinition, SectionString
+         ConfigurationValueDefinition, ConfigurationSectionDefinition, \
+         ConfigurationFileDefinition, CustomConfigurationValue
+from .custom_potential_section import CustomPotentialSection, SectionString
 from .potentials import Potential
 from .potential_sections import PotentialSection, ASEArraySection
 from ..common.decorators import cached_class_property, cache
 from ..common.decorators import add_to_signature
+
 
 class PotValueDefinition(ConfigurationValueDefinition):
   """
@@ -37,13 +36,15 @@ class PotValueDefinition(ConfigurationValueDefinition):
 
   type_of_dangerous = pot_mixed
 
+
 class Separator(SeparatorDefinition):
   """
   A special (hidden) value, that appears in a potential header section.
 
   The separator is a line of doublecross
   """
-  separator_type =  separator
+  separator_type = separator
+
 
 class PotSectionDefinition(ConfigurationSectionDefinition):
   """ This class describes the format of one
@@ -77,7 +78,7 @@ class PotSectionDefinition(ConfigurationSectionDefinition):
 
   result_class = PotentialSection
 
-  def __init__(self, *args, mandatory:bool=True,  **kwargs):
+  def __init__(self, *args, mandatory:bool=True, **kwargs):
       """
       For the documentation of the other parameters, see
       :meth:`ase2sprkkr.common.SectionDefinition`
@@ -90,6 +91,7 @@ class PotSectionDefinition(ConfigurationSectionDefinition):
       """
       self.mandatory = mandatory
       super().__init__(*args, **kwargs)
+
 
 class ASEArraySectionDefinition(PotSectionDefinition):
   """
@@ -118,6 +120,7 @@ class ASEArraySectionDefinition(PotSectionDefinition):
 
   result_class = ASEArraySection
 
+
 class PotentialDefinition(ConfigurationFileDefinition):
   """ This class describes the format of a potential file """
 
@@ -133,7 +136,7 @@ class PotentialDefinition(ConfigurationFileDefinition):
   force_order = True
   """ The order of items in potential file is fixed """
 
-  delimiter="*"*79 + "\n"
+  delimiter="*" * 79 + "\n"
   """ Sections delimiter """
 
   @cached_class_property
@@ -145,7 +148,7 @@ class PotentialDefinition(ConfigurationFileDefinition):
   """ Unknown sections will be of this type """
 
   def _generic_info(self):
-      return f"Definition of the format of SPRKKR potential file"
+      return "Definition of the format of SPRKKR potential file"
 
   @classmethod
   @cache

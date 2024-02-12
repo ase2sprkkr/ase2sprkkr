@@ -5,6 +5,7 @@ from ..common.decorators import cached_property
 from ..common.unique_values import UniqueValuesMapping
 from functools import wraps
 
+
 def unique_mapping(fce):
     """
     Create function (with a cached result), that returns UniqueValuesMapping from a given iterator
@@ -15,10 +16,12 @@ def unique_mapping(fce):
         return UniqueValuesMapping.from_values(lst)
     return cached_property(get_unique_mapping)
 
+
 class BaseIoData(dict):
     """ Base class for object used during reading/writing.
         For a potential future use. """
     pass
+
 
 class WriteIoData(BaseIoData):
     """ During writing of potential file, some lists are needed in more sections,
@@ -41,11 +44,11 @@ class WriteIoData(BaseIoData):
 
     @unique_mapping
     def reference_systems(self):
-        return (s.reference_system for s in  self.sites.iter_unique())
+        return (s.reference_system for s in self.sites.iter_unique())
 
     @unique_mapping
     def meshes(self):
-        return (s.mesh for s in  self.sites.iter_unique())
+        return (s.mesh for s in self.sites.iter_unique())
 
 
 class ReadIoData(BaseIoData):

@@ -1,6 +1,7 @@
 """ Definitions of radial meshes used by SPR-KKR. """
 import copy
 
+
 class Mesh:
   """
   A base class for SPR-KKR radial meshes.
@@ -9,6 +10,7 @@ class Mesh:
   def default():
       """ SPR-KKR computes the mesh itself, if zeros are given """
       return ExponentialMesh(1e-6,2e-2,0,0.,721, 0.)
+
 
 class ExponentialMesh(Mesh):
   """

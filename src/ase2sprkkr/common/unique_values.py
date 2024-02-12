@@ -1,10 +1,9 @@
 """ UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. """
 from __future__ import annotations
 
-from collections import namedtuple, defaultdict
 from collections.abc import Iterable
 import numpy as np
-from typing import Union, Dict
+from typing import Union, Dict, List, Optional
 
 
 class UniqueValuesMapping:
@@ -65,7 +64,7 @@ class UniqueValuesMapping:
 
       indexes = {}
       for i,ec in enumerate(self.mapping):
-          indexes.setdefault(ec, []).append(i+start_from)
+          indexes.setdefault(ec, []).append(i + start_from)
       return indexes
 
   def iter_unique(self):

@@ -5,6 +5,7 @@ from .reference_systems import ReferenceSystem
 import numpy as np
 from ..common.decorators import cached_property
 
+
 class Site:
   """
   Definition of an atomic site.

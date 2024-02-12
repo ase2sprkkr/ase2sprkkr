@@ -6,6 +6,7 @@ from contextlib import contextmanager
 import pyparsing as pp
 from .decorators import cache
 
+
 @contextmanager
 def generate_grammar():
     """ Set the pyparsing newline handling
@@ -26,6 +27,7 @@ def generate_grammar():
       if kchars is not None:
         pp.Keyword.DEFAULT_KEYWORD_CHARS = kchars
 
+
 def replace_whitechars(expr):
     expr = expr.copy()
     expr.setWhitespaceChars(' \t\r')
@@ -43,8 +45,10 @@ with generate_grammar():
   optional_quote = pp.Optional("'").suppress()
   """ Grammar for an optional quote """
 
+
 def separator_pattern(char):
-  return f'[{char}]'*11+'*'
+  return f'[{char}]' * 11 + '*'
+
 
 @cache
 def separator_grammar(char):
@@ -52,9 +56,11 @@ def separator_grammar(char):
   separator = pp.Regex(separator_pattern(char)).setName(f"{char*10}[{char*4}....]").suppress()
   return separator
 
+
 def delimitedList(expr, delim):
   """ Delimited list with already suppressed delimiter (or with a in-results-wanted one) """
   return expr + pp.ZeroOrMore(delim + expr)
+
 
 def addConditionEx(self, condition, message):
   """ Add check condition to the pyparsing ParseElement,
@@ -69,6 +75,7 @@ def addConditionEx(self, condition, message):
       raise pp.ParseException(s, loc, m)
   self.addParseAction(check_condition)
   return self
+
 
 def addParseActionEx(self, pa, message = None):
   """
@@ -88,6 +95,7 @@ def addParseActionEx(self, pa, message = None):
 
   self.addParseAction(parse_action)
 
+
 class White(pp.White):
   """ Fix for whitechars in pp.White
 
@@ -98,6 +106,7 @@ class White(pp.White):
   def __init__(self, white):
       super().__init__(white)
       self.setWhitespaceChars('')
+
 
 pp.ParserElement.addConditionEx = addConditionEx
 pp.ParserElement.addParseActionEx = addParseActionEx
