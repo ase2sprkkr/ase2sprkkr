@@ -217,5 +217,5 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
             self._definition.validate(DictAdaptor(i), why)
             if why == 'save' and not self._definition.is_optional and not self.has_any_value():
                 raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
-        for o in self:
+        for o in self.values():
             o.validate(why)
