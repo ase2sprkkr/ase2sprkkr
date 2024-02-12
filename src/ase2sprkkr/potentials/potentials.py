@@ -31,7 +31,7 @@ class Potential(ConfigurationFile):
 
   @property
   def atoms(self):
-      if not self._atoms and self._complete:
+      if self._atoms is None and self._complete:
          self._atoms = self.update_atoms()
       return self._atoms
 
