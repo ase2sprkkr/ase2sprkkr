@@ -273,7 +273,7 @@ class ValueDefinition(RealItemDefinition):
     else:
         value = self.get_value()
     if value is not None:
-       out+=f" ≝ {value}"
+        out+=f" ≝ {value}"
 
     flags = []
     if self.is_optional:
