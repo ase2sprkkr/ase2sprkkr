@@ -50,7 +50,7 @@ class NumpyArray(GrammarType):
 
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
-                              lines=None, item_format='%.18e', indented=False,
+                              lines=None, item_format='% .18e', indented=False,
                               dtype=None,
                               **kwargs):
         """
