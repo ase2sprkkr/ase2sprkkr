@@ -536,6 +536,9 @@ class ContainerDefinition(RealItemDefinition):
         self.validate_warning(container)
         return True
 
+    repeated_class = RepeatedConfigurationContainer
+    """ Class for the repeated sections """
+
     def create_object(self, container=None, repeated:bool=True):
         """ Create an instance (section)
 
@@ -549,7 +552,7 @@ class ContainerDefinition(RealItemDefinition):
             returned.
         """
         if repeated and self.is_repeated:
-            return RepeatedConfigurationContainer(self, container)
+            return self.repeated_class(self, container)
         return super().create_object(container)
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None)->bool:
