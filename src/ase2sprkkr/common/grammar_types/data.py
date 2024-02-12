@@ -51,7 +51,7 @@ class NumpyArray(GrammarType):
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
                               lines=None, item_format='% .18e', indented=False,
-                              dtype=None,
+                              line_length=None, dtype=None, ends_with=None,
                               **kwargs):
         """
         Parameters
@@ -69,7 +69,7 @@ class NumpyArray(GrammarType):
 
         lines
           Number of lines to read. Can be given as string - then
-          the value of given option determine the number of lines.
+          the value of the given option determines the number of lines.
 
         item_format
           Output format of the array (just for writing).
@@ -93,17 +93,27 @@ class NumpyArray(GrammarType):
           The second number is the number of spaces placed on the begining of the
           new lines created by splitting the old.
 
+        line_length
+          Wrap the lines longer than a given number
+
         dtype
           Type of the resulting data. Pass ``'line'`` to get array of whole lines
+
+        ends_with
+          The data ends with a given string. The string is parsed and ignored/writen
+          to the output, too.
 
         **kwargs
           Any other arguments are passed to the :meth:`GrammarType constructor<GrammarType.__init__>`
         """
         self.delimiter=delimiter
+        self.written_delimiter = delimiter or ' '
         self.written_shape=written_shape
         self.item_format=item_format
+        self.ends_with = ends_with
         self.indented=' ' * indented if isinstance(indented, int) else indented
         self.lines=lines
+        self.line_length = line_length
         self.shape=shape
         self.dtype=dtype
         self.remove_forward=None
@@ -122,8 +132,12 @@ class NumpyArray(GrammarType):
            delimiter = ''
        if self.written_shape:
           out=out.reshape(self.written_shape)
-       np.savetxt(out, value, delimiter=' ' if delimiter is None else delimiter, fmt=self.item_format)
+       np.savetxt(out, value, delimiter=self.written_delimiter, fmt=self.item_format)
        out=out.getvalue()
+
+       if self.line_length:
+          out=re.sub(f'([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*){self.written_delimiter}','\\1\n', out)
+
        indented = self.indented
        if indented:
           if isinstance(indented, tuple):
@@ -143,6 +157,8 @@ class NumpyArray(GrammarType):
             out = '\n'.join(g())
           else:
             out=re.sub('(^|\n(?!$))',r'\1' + indented, out)
+       if self.ends_with:
+           out+=self.ends_with
        return out
 
     is_the_same_value = staticmethod(compare_numpy_values)
@@ -163,6 +179,8 @@ class NumpyArray(GrammarType):
                   v=v.replace('\n' + ' ' * self.indented[1], '')
                 else:
                   v=re.sub(f'(^|\n){self.indented}',r'\1', v)
+             if self.line_length:
+                v=re.sub(f'([^\n]{{{self.line_length}}}[^{self.written_delimiter}\n]*)\n',f'\\1{self.written_delimiter}', v)
              if self.dtype=='line':
                 v=np.array([ i.rstrip() for i in v.split('\n')], dtype=object)
              else:
@@ -182,9 +200,12 @@ class NumpyArray(GrammarType):
                 return self._n_lines_grammar(self.lines)
              else:
                 return self.forward
+         elif self.ends_with:
+             out=pp.SkipTo(pp.Suppress(self.ends_with), include=True)
+             out.setParseAction(lambda x: breakpoint() or x[0])
          else:
              out = RestOfTheFile._grammar.copy()
-             return self._parse_numpy_array_grammar(out)
+         return self._parse_numpy_array_grammar(out)
 
     def copy_value(self, value):
          return copy.deepcopy(value)
