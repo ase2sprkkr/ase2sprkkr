@@ -1,17 +1,29 @@
 Changelog
 =========
 
+User interface
+~~~~~~~~~~~~~~
 * The JXC task have been added
+* ARPES configuration improved
 * The possibility to define own tasks or modify the defaults of the tasks for the user have been added
-* The possibility to emit a warning to the options was added
+* Parsing of the task outputs improved
+* Energies in SCF output refactored
+* Parsing of POTENTIAL and CHARGE sections of potential file
+* ProcessOutputReader.read_from_file can be called as classmethod
 * Occupancies can now have string indices (since some other codes produce such occupancies)
 * Partial occupancy is not upnormalized, vacum pseudoatom is added instead
-* Repeated configuration allowed - for parsing output files (e.g. iterations of SCF cycle)
-* Parsing of the task outputs improved
-* Output files moved to the separate directory
+
+Internals
+~~~~~~~~~
+* NumpyArray grammar type improved
 * Some fixies and code lininting
-* ARPES configuration improved
-* ProcessOutputReader.read_from_file can be called as classmethod
+* Repeated configuration allowed - for parsing output files (e.g. iterations of SCF cycle)
+* The possibility to emit a warning to the options was added
+
+Refactoring
+~~~~~~~~~~~
+* Output files moved to the separate directory
+* Configuration definitions splitted to several files
 
 Version 2.2.1
 -------------
