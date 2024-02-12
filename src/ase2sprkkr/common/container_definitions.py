@@ -126,8 +126,9 @@ class ContainerDefinition(RealItemDefinition):
        ----------
        has_hidden_members: bool
          If true, this section is not intended for a direct editing
-       is_repeated: bool or Separator
-         The section can be repeated. The name of the section appears only once on the beginning (this differs from ValueDefinition.is_repeated #TODO - merge the meaning of the swtich)
+       is_repeated: bool or string
+         The section can be repeated. The name of the section appears only once on the beginning (this differs from ValueDefinition.is_repeated #TODO - merge the meaning of the swtich).
+         If a non-empty string is given, the values are divided by the string.
 
        force_order: bool
          If True, the items has to retain the order, if False, the items can be in the input file in any order.
@@ -431,7 +432,11 @@ class ContainerDefinition(RealItemDefinition):
               return value
           values.addParseAction(_validate)
        if self.is_repeated:
-          values = pp.OneOrMore(values)
+          rdelim = delimiter
+          if self.is_repeated is not True:
+              rdelim = rdelim + pp.Literal(self.is_repeated)
+          values = pp.delimited_list(values, rdelim)
+          values.addParseAction(lambda x: [x.asList()])
        return values
 
     def _allow_duplicates_of(self, name):
