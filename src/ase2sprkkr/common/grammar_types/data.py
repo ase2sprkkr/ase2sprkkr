@@ -16,6 +16,7 @@ class RestOfTheFile(GrammarType):
     datatype_name = 'string'
 
     _grammar = pp.Regex('.*$', re.M | re.S).setParseAction(lambda x:x[0])
+    _grammar.skipWhitespace=False
 
     def grammar_name(self):
       return '<the rest of the file>'
