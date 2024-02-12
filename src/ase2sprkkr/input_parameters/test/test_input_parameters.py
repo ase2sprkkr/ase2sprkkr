@@ -525,12 +525,19 @@ XSITES NR=3 FLAG
     5 9 8
     E=77""",{'ENERGY': {'A' : 3, 'B' : 2, 'C': ar([1.,1,2,2,3,3]).reshape(3,2), 'D': ar([4.,5,6,5,9,8]).reshape((2,3)), 'E':77}}, ipd.grammar())
 
-    self.assertEqual(gt.NumpyArray(item_format='%2.0f').string([[1,2,3],[4,5,6]]),
-                                                      " 1  2  3\n 4  5  6\n")
-    self.assertEqual(gt.NumpyArray(indented=2, item_format='%2.0f').string([[1,2,3],[4,5,6]]),
-                                                      "   1  2  3\n   4  5  6\n")
-    self.assertEqual(gt.NumpyArray(indented=(8, 2), item_format='%2.0f').string([[1,2,3,4,5,6],[4,5,6,7,8,9]]),
-                                                      " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9\n")
+    def test(na, val, str):
+        self.assertEqual(na.string(val), str)
+        with generate_grammar():
+          self.assertEqual(np.asarray(val), na.parse(str))
+
+    test(gt.NumpyArray(item_format='%2.0f'),[[1,2,3],[4,5,6]], " 1  2  3\n 4  5  6\n")
+    test(gt.NumpyArray(indented=2, item_format='%2.0f'), [[1,2,3],[4,5,6]],
+                       "   1  2  3\n   4  5  6\n")
+    test(gt.NumpyArray(indented=(8, 2), item_format='%2.0f'),[[1,2,3,4,5,6],[4,5,6,7,8,9]],
+                       " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9\n")
+    test(gt.NumpyArray(line_length=8, item_format='%2.0f', shape=(2,-1)),
+                       [[1,2,3,4,5,6],[4,5,6,7,8,9]],
+                       " 1  2  3\n 4  5  6\n 4  5  6\n 7  8  9\n")
 
   def test_repeated_value(self):
     assertParse = self.assertParse
