@@ -471,7 +471,7 @@ class Stub(VirtualDefinition):
 
     def _save_to_file(self, file, value, always=True):
          item = value._container[self.item]
-         if self.condition and not self.condition(value):
+         if not always and self.condition and not self.condition(value):
              return
          return item._save_to_file(file, always=True)
 
