@@ -18,7 +18,8 @@ import itertools
 from .warnings import DataValidityWarning
 from .options import Dummy
 from .decorators import cached_class_property
-from ..common.grammar import generate_grammar
+from .grammar import generate_grammar
+from .grammar_types.basic import Separator
 
 
 class BaseDefinition:
@@ -719,8 +720,12 @@ class SeparatorDefinition(VirtualDefinition):
     def __repr__(self):
         return "<SEPARATOR>"
 
-    def __init__(self):
+    def __init__(self, separator_type=None, length=None):
         super().__init__(template='SEPARATOR')
+        if separator_type is not None:
+            if length is not None:
+                separator_type = Separator(char=separator_type,length=length)
+            self.separator_type = separator_type
 
     def _create_grammar(self, allow_dangerous=False):
         return pp.Suppress(self.separator_type.grammar())
