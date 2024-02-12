@@ -7,7 +7,9 @@ from .sections import \
     OccupationSectionDefinition, \
     ReferenceSystemSectionDefinition, \
     MeshInformationSectionDefinition, \
-    TypesSectionDefinition
+    TypesSectionDefinition, \
+    PotentialSectionDefinition, \
+    ChargeSectionDefinition
 
 
 def fce():
@@ -89,6 +91,8 @@ def fce():
   Section('MESH INFORMATION', cls = MeshInformationSectionDefinition)
   Section('OCCUPATION', cls = OccupationSectionDefinition)
   Section('TYPES', cls = TypesSectionDefinition)
+  Section('POTENTIAL', cls = PotentialSectionDefinition)
+  Section('CHARGE', cls = ChargeSectionDefinition)
 
   return PotentialDefinition(sections)
 

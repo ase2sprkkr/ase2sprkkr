@@ -38,9 +38,29 @@ class Site:
       """
       self.mesh = mesh or Mesh.default()
       self.reference_system = reference_system or ReferenceSystem.default()
+      self._potential = None
+      self._charge = None
       self._occupation = Occupation.to_occupation(occupation, None)
       self._occupation._site = self
       self.atoms = atoms
+
+  @property
+  def potential(self):
+      """ The radial potential data of the site """
+      return self._potential
+
+  @potential.setter
+  def potential(self, value):
+      self._potential = value
+
+  @property
+  def charge(self):
+      """ The radial charge data of the site """
+      return self._charge
+
+  @charge.setter
+  def charge(self, value):
+      self._charge = value
 
   def copy(self):
       """ Create a copy of the site. """
@@ -62,6 +82,7 @@ class Site:
          ids = self.index()
          if not len(ids):
             raise ValueError('This atomic site is not from the provided Atoms object')
+         atoms = self.atoms
          an = atoms.get_atomic_numbers()
          oc = atoms.info.get('occupancy', {})
          for i in ids:
@@ -142,6 +163,7 @@ class Site:
       class AtomicTypesLookup:
           def __getitem__(_self, name):
               return self.occupation.atomic_type[name]
+
           def __setitem__(_self, name, value):
               return self.occupation.replace_type(name, value)
 
@@ -150,10 +172,12 @@ class Site:
   @staticmethod
   def copy_sites(sites):
       cache = {}
+
       def site(x):
           if not x in cache:
              cache[x] = x.copy()
           return cache[x]
       return np.array([site(i) for i in sites], dtype=object)
 
-from .occupations import Occupation
+
+from .occupations import Occupation  # NOQA: E402

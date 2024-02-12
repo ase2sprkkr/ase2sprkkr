@@ -2,13 +2,13 @@
 there are a generic classes for these sections.
 """
 
-from ..sprkkr.configuration import ConfigurationSection
+from ..sprkkr.configuration import ConfigurationSection, RepeatedConfigurationSection
 from ..sprkkr.io_data import ReadIoData, WriteIoData
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
 
-class PotentialSection(ConfigurationSection):
-    """ A generic class for a section in a potential """
+class PotentialSectionTrait:
+    """ A trait class for a section in a potential """
 
     def _set_from_atoms(self, atoms:SPRKKRAtoms, write_io_data:WriteIoData):
         """ This function should be called before potential file writing to set the propper values to the section.
@@ -54,6 +54,14 @@ class PotentialSection(ConfigurationSection):
 
     def reset(self):
         self.clear(True)
+
+
+class PotentialSection(PotentialSectionTrait, ConfigurationSection):
+    """ A base class for all potential sections """
+
+
+class RepeatedPotentialSection(PotentialSectionTrait, RepeatedConfigurationSection):
+    """ A base class for all repeated sections in potentials """
 
 
 class UniqueListSection(PotentialSection):

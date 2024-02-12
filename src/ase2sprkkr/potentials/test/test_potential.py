@@ -1,5 +1,6 @@
 import os
 import io
+import numpy as np
 from ase.spacegroup import crystal
 from datetime import datetime
 
@@ -57,6 +58,13 @@ class TestPotential(TestCase):
     else:
       SPRKKR().save_input(potential=p, options={'NITER':1}, directory=False)
 
+  def test_potential_data(self):
+    path = os.path.join(os.path.dirname(__file__), '..','examples','FePt.new.pot')
+    p=Potential.from_file(path)
+    self.assertTrue(isinstance(p.atoms.sites[0].potential, np.ndarray))
+    if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
+      SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True)
+
   def test_examples(self):
     path = os.path.join(os.path.dirname(__file__), '..','examples')
     i = 0
@@ -97,8 +105,8 @@ class TestPotential(TestCase):
     pot.reset()
     self.assertEqual(2., pot.atoms.sites[0].mesh.r1)
     self.assertEqual(2., pot.MESH_INFORMATION.DATA()[0][0])
-    self.assertRaises(AttributeError, lambda: pot.CHARGE)
-    self.assertRaises(AttributeError, lambda: pot.POTENTIAL)
+    self.assertEqual(len(pot.CHARGE), 6)
+    self.assertEqual(len(pot.POTENTIAL), 6)
     self.assertTrue(isinstance(pot.LATTICE, PotentialSection))
     self.assertEqual(pot.SCF_INFO.SCFSTATUS(), 'START')
     # a more hard version - it resets all the informations
