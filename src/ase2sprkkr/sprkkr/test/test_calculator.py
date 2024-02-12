@@ -18,6 +18,12 @@ if True:
     from ..build import semiinfinite_system
 
 
+def _fast_atoms(b, jrws=20,r1=2e-6):
+     for i in b.sites:
+         i.mesh.jrws = jrws
+         i.mesh.r1 =r1
+
+
 class CalculatorTest(TestCase):
 
  print_output = '-v' in sys.argv or '--verbose' in sys.argv
@@ -25,19 +31,31 @@ class CalculatorTest(TestCase):
  _calc_args = dict(
      directory = dirname, input_file = 'output_test_calc.inp',  # empty_spheres=False,
      output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
-     mpi = 'auto'
+     mpi = 'auto', options = {'NKTAB': 5, 'NE': 20}
  )
+
+ def _calc_args_ex(self, **kwargs):
+     if 'options' in kwargs:
+        o = kwargs['options']
+     else:
+        o = None
+     kwargs.update(self._calc_args)
+     if o:
+        kwargs['options'].update(o)
+     return kwargs
 
  def test_2D(self):
      a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
-     b=semiinfinite_system(a, repeat=3)
-     cal=SPRKKR(atoms=b)
+     b=semiinfinite_system(a, repeat=2)
+     cal=SPRKKR(atoms=b, **self._calc_args)
+     _fast_atoms(b)
      cal.input_parameters.set_from_atoms(b)
-     self.assertTrue(bool(re.search('NKTAB3D=', cal.input_parameters.to_string())))
+     self.assertTrue(bool(re.search('NKTAB3D=5', cal.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', cal.input_parameters.to_string())))
      if not self.run_sprkkr():
          return
-     out=SPRKKR().calculate(b, self._calc_args, options={'NITER':2})
+     out=SPRKKR()
+     out=out.calculate(b, **self._calc_args_ex(options={'EMIN': 8., 'NITER':2, 'NKTAB3D':2}))
      self.assertTrue(bool(re.search('NKTAB3D=', out.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', out.input_parameters.to_string())))
 
@@ -46,6 +64,7 @@ class CalculatorTest(TestCase):
 
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
+     _fast_atoms(atoms)
      calculator.input_parameters.set(NE=21111)
      self.assertEqual(calculator.input_parameters.get('NE'),21111)
      calculator.set(NE=31111)
@@ -118,6 +137,7 @@ class CalculatorTest(TestCase):
 
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args(mpi=False))
+     _fast_atoms(atoms)
      # use methods of atoms
      atoms.calc = calculator
      calculator.input_parameters.find('NITER').set(2)
@@ -126,7 +146,7 @@ class CalculatorTest(TestCase):
      calculator.input_parameters.find('NITER').set(100)
 
      # calculator options
-     out = calculator.calculate(options = {'NITER' : 2 }, mpi=4)
+     out = calculator.calculate(options={'NITER' : 2 }, mpi=4)
      self.assertEqual(2, len(out.iterations))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertFalse(out.converged)
@@ -144,7 +164,8 @@ class CalculatorTest(TestCase):
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
-     out = calculator.calculate(options = {'NITER' : 1, 'NE' : 12 })
+     #_fast_atoms(atoms, jrws=50, r1=1e-6)
+     out = calculator.calculate(options = {'EMIN': -1., 'NITER' : 1, 'NKTAB': 40, 'NE' :  20})
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(3, len(out.iterations[-1]['atomic_types']))
      for i in out.iterations[-1]['atomic_types'].values():
@@ -160,9 +181,10 @@ class CalculatorTest(TestCase):
          return
      atoms = bulk('Li')
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
+     _fast_atoms(atoms)
      ips = SPRKKR.InputParameters.create('scf')
      ips.SCF.NITER = 1
-     ips.TAU.NKTAB=50
+     ips.TAU.NKTAB=20
      out = calculator.calculate(input_parameters=ips)
      self.assertEqual(out.atoms, out.potential.atoms)
      self.assertEqual(1, len(out.iterations))
@@ -174,5 +196,5 @@ class CalculatorTest(TestCase):
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 
-     calculator.calculate(input_parameters='PHAGEN', potential=out.potential_filename, options={'NKTAB' : 50})
-     out.calculator.calculate(input_parameters='PHAGEN', options={'NKTAB' : 50})
+     calculator.calculate(input_parameters='PHAGEN', potential=out.potential_filename, options={'NKTAB' : 30})
+     out.calculator.calculate(input_parameters='PHAGEN', options={'NKTAB' : 10})
