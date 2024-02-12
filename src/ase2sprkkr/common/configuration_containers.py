@@ -183,6 +183,20 @@ class ConfigurationContainer(BaseConfigurationContainer):
 
   def __contains__(self, name):
       """ The check for existence of a member with the given name."""
+      if isinstance(name, tuple):
+          ll=len(name)
+          if ll==0:
+              return False
+          n = name[0]
+          if not n in self._members:
+              return False
+          if ll==1:
+              return True
+          member = self._members[n]
+          if ll==2:
+              return name[1] in member
+          else:
+              return name[1:] in member
       return name in self._members
 
   def clear(self, do_not_check_required=False, call_hooks=True, generated=None):
