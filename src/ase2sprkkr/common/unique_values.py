@@ -70,6 +70,9 @@ class UniqueValuesMapping:
   def iter_unique(self):
       return self.value_to_class_id.keys()
 
+  def unique_items(self):
+      return self.value_to_class_id.items()
+
   def len_of_unique(self):
       return len(self.value_to_class_id)
 
@@ -114,7 +117,6 @@ class UniqueValuesMapping:
              reverse[v] = tag
           mapping[i] = tag
       return mapping, reverse
-
 
   def merge(self, other):
       """ Merge two sets. Resulting UniqueValues uses integers as keys"""
