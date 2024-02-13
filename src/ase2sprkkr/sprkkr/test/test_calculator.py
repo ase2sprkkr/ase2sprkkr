@@ -164,8 +164,8 @@ class CalculatorTest(TestCase):
 
      atoms=bulk('LiCl', 'rocksalt', a=5.64) * (2, 1, 1)
      calculator = SPRKKR(atoms = atoms, **self.calc_args())
-     #_fast_atoms(atoms, jrws=50, r1=1e-6)
-     out = calculator.calculate(options = {'EMIN': -1., 'NITER' : 1, 'NKTAB': 40, 'NE' :  20})
+     # _fast_atoms(atoms, jrws=50, r1=1e-6)
+     out = calculator.calculate(options = {'EMIN': -1., 'NITER' : 1, 'NKTAB': 40, 'NE' : 20})
      self.assertEqual(1, len(out.iterations))
      self.assertEqual(3, len(out.iterations[-1]['atomic_types']))
      for i in out.iterations[-1]['atomic_types'].values():
