@@ -2,6 +2,7 @@ import os
 import io
 from ase.spacegroup import crystal
 from datetime import datetime
+import numpy as np
 
 if __package__:
    from .init_tests import TestCase, patch_package
@@ -65,10 +66,11 @@ class TestPotential(TestCase):
     p.atoms.sites[1].potential.bt = -p.atoms.sites[1].potential.bt
     s=io.StringIO()
     p.save_to_file(s)
+    s.seek(0)
     pp = Potential.from_file(s)
     p=Potential.from_file(path)
     self.assertEqual(pp.atoms.sites[1].potential.bt, -p.atoms.sites[1].potential.bt)
-    self.assertNotEqual(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt)
+    self.assertFalse(np.allclose(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt))
 
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
       SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True)
