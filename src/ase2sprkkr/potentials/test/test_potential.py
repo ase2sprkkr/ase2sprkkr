@@ -62,6 +62,14 @@ class TestPotential(TestCase):
     p=Potential.from_file(path)
     self.assertTrue(p.atoms.sites[0].potential is not None)
     self.assertTrue(p.atoms.sites[0].charge is not None)
+    p.atoms.sites[1].potential.bt = -p.atoms.sites[1].potential.bt
+    s=io.StringIO()
+    p.save_to_file(s)
+    pp = Potential.from_file(s)
+    p=Potential.from_file(path)
+    self.assertEqual(pp.atoms.sites[1].potential.bt, -p.atoms.sites[1].potential.bt)
+    self.assertNotEqual(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt)
+
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
       SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True)
 
