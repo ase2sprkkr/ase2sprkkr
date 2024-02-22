@@ -1,6 +1,7 @@
 """ Definitions of radial meshes used by SPR-KKR. """
 import copy
 import numpy as np
+import math
 
 
 class Mesh:
@@ -84,8 +85,9 @@ class ExponentialMesh(Mesh):
       if self._coors is None:
           self._coors = np.empty(self.jrws)
           self._coors[0] = r = self.r1
+          dx = math.exp(self.dx)
           for i in range(1, self.jrws):
-              self._coors[i] = r = r * self.dx
+              self._coors[i] = r = r * dx
       return self._coors
 
   def to_tuple(self):
