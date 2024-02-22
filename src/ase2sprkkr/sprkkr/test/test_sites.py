@@ -4,8 +4,10 @@ else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..sites import Site
-from ..sprkkr_atoms import SPRKKRAtoms
+if True:
+    from ..sites import Site
+    from ..sprkkr_atoms import SPRKKRAtoms
+
 
 class SitesTest(TestCase):
 
@@ -44,10 +46,10 @@ class SitesTest(TestCase):
       self.assertEqual('N', a.symbols)
       site.occupation[0] = 0.
       self.assertEqual(0., site.occupation[0])
-      self.assertAlmostEqual(0.3*5./4., site.occupation[1])
-      self.assertAlmostEqual(0.5*5./4., site.occupation[2])
+      self.assertAlmostEqual(0.3 * 5. / 4., site.occupation[1])
+      self.assertAlmostEqual(0.5 * 5. / 4., site.occupation[2])
       self.assertEqual(3, len(site.occupation))
       site.occupation.clean()
       self.assertEqual(2, len(site.occupation))
-      self.assertAlmostEqual(0.3*5./4., site.occupation[0])
-      self.assertAlmostEqual(0.5*5./4., site.occupation[1])
+      self.assertAlmostEqual(0.3 * 5. / 4., site.occupation[0])
+      self.assertAlmostEqual(0.5 * 5. / 4., site.occupation[1])
