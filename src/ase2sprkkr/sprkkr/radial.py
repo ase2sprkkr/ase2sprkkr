@@ -7,15 +7,64 @@ from ..common.decorators import cached_property
 class RadialValue:
 
   def __init__(self, value, mesh):
-      self._value = value
+      self._value = np.asarray(value)
       self._mesh = mesh
 
-  def recompute_for_mesh(self, mesh):
+  @cached_property
+  def interpolator(self):
+
+      def inter(x):
+          return self._mesh.interpolator(x)
+      ndim = self._value.ndim
+      if ndim == 1:
+          return inter(self._value)
+
+      shape = self._value.shape[0]
+
+      inters = [ inter(self._value[i]) for i in range(shape) ]
+
+      def multiinter(x):
+          if isinstance(x, np.ndarray):
+              sx = (shape, ) + x.shape
+          else:
+              sx = (shape, )
+          out = np.empty(sx)
+          for i in range(shape):
+              out[i] = inters[i](x)
+          return out
+
+      return multiinter
+
+  @property
+  def mesh(self):
+      return self._mesh
+
+  @mesh.setter
+  def mesh(self, mesh):
+      if mesh is self._mesh:
+          return
+      value = self.interpolate(mesh.coors)
+      self._mesh=mesh
+      self._value = value
+
+  def copy(self, mesh=None):
       out = copy.copy(self)
-      out._mesh = mesh
-      out._value = np.empty_like(out._value)
-      out._value[0] = np.interp(mesh.coors, self._mesh.coors, self._value[0])
-      out._value[1] = np.interp(mesh.coors, self._mesh.coors, self._value[1])
+      if mesh is None or self._mesh is mesh:
+          out._value = np.copy(self._value)
+      else:
+          out.mesh = mesh
+      return out
+
+  def for_mesh(self, mesh):
+      if mesh is self.mesh:
+          return self
+      return self.copy(mesh)
+
+  def interpolate(self, coors):
+      return self.interpolator(coors)
+
+  def __call__(self, at):
+      return self.interpolate(at)
 
 
 class RadialCharge(RadialValue):
@@ -46,6 +95,7 @@ class RadialPotential(RadialValue):
   @vt.setter
   def vt(self, val):
       self._value[0,:]=val
+      self._clear()
 
   @property
   def bt(self):
@@ -54,6 +104,7 @@ class RadialPotential(RadialValue):
   @bt.setter
   def bt(self, val):
       self._value[1,:]=val
+      self._clear()
 
   @property
   def munchen(self):
@@ -63,6 +114,7 @@ class RadialPotential(RadialValue):
   @munchen.setter
   def munchen(self, value):
       self._value = value
+      self._clear()
 
   @property
   def julich(self):
@@ -75,6 +127,7 @@ class RadialPotential(RadialValue):
   def julich(self, value):
       self._value[0] = 0.5 * (value[0] + value[1]) - 2 * self.zr
       self._value[1] = 0.5 * (value[0] - value[1])
+      self._clear()
 
   @property
   def up(self):
@@ -83,6 +136,11 @@ class RadialPotential(RadialValue):
   @property
   def down(self):
       return self._value[0] - self._value[1] + 2 * self.zr
+
+  def _clear(self):
+      """ Clear cache on a value change """
+      if 'interpolator' in self.__dict__['interpolator']:
+          del self.__dict__['interpolator']
 
   @cached_property
   def zr(self):

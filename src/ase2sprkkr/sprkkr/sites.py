@@ -57,9 +57,9 @@ class Site:
   def mesh(self, mesh):
       self._mesh = mesh
       if self._potential:
-          self._potential = self._potential.recompute_for_mesh(mesh)
+          self._potential = self._potential.for_mesh(mesh)
       if self._charge:
-          self._charge = self._charge.recompute_for_mesh(mesh)
+          self._charge = self._charge.for_mesh(mesh)
 
   @property
   def potential(self):
@@ -68,9 +68,10 @@ class Site:
 
   @potential.setter
   def potential(self, value):
-      if isinstance(value, np.ndarray):
+      if not isinstance(value, RadialPotential):
           value = RadialPotential(value, self._mesh, self.primary_atomic_number)
       self._potential = value
+      self.mesh = value.mesh
 
   @property
   def charge(self):
@@ -79,9 +80,10 @@ class Site:
 
   @charge.setter
   def charge(self, value):
-      if isinstance(value, np.ndarray):
+      if not isinstance(value, RadialCharge):
           value = RadialCharge(value, self._mesh)
       self._charge = value
+      self.mesh = value.mesh
 
   def copy(self):
       """ Create a copy of the site. """

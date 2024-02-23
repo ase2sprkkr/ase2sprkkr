@@ -2,6 +2,7 @@
 import copy
 import numpy as np
 import math
+from scipy.interpolate import CubicSpline
 
 
 class Mesh:
@@ -12,6 +13,36 @@ class Mesh:
   def default():
       """ SPR-KKR computes the mesh itself, if zeros are given """
       return ExponentialMesh(1e-6,2e-2,0,0.,721, 0.)
+
+  def interpolate(self, coors, value):
+      """ Interpolate values in the given coors to the mesh coors.
+      """
+      return self.interpolator(self.coors, value)(coors)
+
+  def interpolator(self, values):
+      return self.interpolator_for_coors(self.coors, values)
+
+  @staticmethod
+  def interpolator_for_coors(coors, values):
+      v1 = abs(values[0])
+      v2 = abs(values[-1])
+
+      if v1 == 0.:
+          r_method = False
+      elif v2 == 0.:
+          r_method = True
+      else:
+          c1 = coors[0]
+          c2 = coors[-1]
+          d = (v1 - v2)
+          dr = (v1 * c1 - v2 * c2)
+          r_method = abs(d) > abs(dr)
+
+      if r_method:
+          spl = CubicSpline(coors, values * coors, extrapolate=True)
+          return lambda x: spl(x) / x
+
+      return CubicSpline(coors, values)
 
 
 def _clearing_property(name):

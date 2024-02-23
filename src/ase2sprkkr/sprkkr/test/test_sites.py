@@ -1,3 +1,4 @@
+import numpy as np
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
@@ -6,10 +7,63 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
     from ..sites import Site
+    from ..radial_meshes import ExponentialMesh
+    from ..radial import RadialPotential, RadialCharge
     from ..sprkkr_atoms import SPRKKRAtoms
 
 
 class SitesTest(TestCase):
+
+  def test_potential(self):
+      a=SPRKKRAtoms('NaCl')
+      m1 = ExponentialMesh(1.,0.005,None,None,200, None)
+      m2 = ExponentialMesh(0.9,0.005,None,None,200, None)
+      s0 = a.sites[0]
+      s1 = a.sites[1]
+
+      s0.potential = RadialPotential(m1.coors, m1, 2)
+      s1.potential = s0.potential.copy()
+      self.assertEqual(s0.potential(2.), 2.)
+      self.assertEqual(s0.potential(1.), 1.)
+      self.assertEqual(s0.potential(1.5), 1.5)
+      self.assertEqual(s1.potential(2.), 2.)
+
+      s1.potential = s0.potential.copy()
+      self.assertEqual(s0.mesh, s1.mesh)
+
+      s0.potential = p2 = RadialPotential(m2.coors * 2, m2, 2)
+      self.assertEqual(s0.potential(2.), 4.)
+      self.assertNotEqual(s0.mesh, s1.mesh)
+
+      s0.mesh = m1
+      self.assertEqual(s0.potential(2.), 4.)
+      self.assertEqual(s0.potential(1.), 2.)
+      self.assertEqual(s0.potential(1.5), 3.)
+
+      self.assertEqual(s0.potential(2.), 4.)
+      self.assertEqual(s0.mesh, s1.mesh)
+      self.assertEqual(s0.potential.mesh, s1.mesh)
+      s0.charge = m1.coors * 3
+      self.assertEqual(s0.mesh, s1.mesh)
+      self.assertEqual(s0.charge(2.), 6.)
+      self.assertEqual(s0.charge(1.), 3.)
+      s0.potential = p2
+      self.assertEqual(s0.mesh, m2)
+      self.assertEqual(s0.potential.mesh, m2)
+      self.assertEqual(s0.charge.mesh, m2)
+      self.assertEqual(s0.charge(2.), 6.)
+      self.assertEqual(s0.charge(1.), 3.)
+      s0.charge = RadialCharge(s1.potential._value, m1)
+      self.assertEqual(s0.mesh, m1)
+      self.assertEqual(s0.potential.mesh, m1)
+      self.assertEqual(s0.charge.mesh, m1)
+
+      s0.potential = [ m1.coors, m1.coors * 2 ]
+      self.assertEqual(s0.potential.interpolate(1.5), np.asarray([1.5,3]))
+
+      # test 1/r interpolation
+      s0.potential = [ 1 / m1.coors, 1 / m1.coors * 2 ]
+      self.assertEqual(s0.potential.interpolate(1.5), np.asarray([1 / 1.5,1 / 1.5 * 2]))
 
   def test_vacuum(self):
       a=SPRKKRAtoms('NaCl')
