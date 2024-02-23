@@ -139,7 +139,7 @@ class RadialPotential(RadialValue):
 
   def _clear(self):
       """ Clear cache on a value change """
-      if 'interpolator' in self.__dict__['interpolator']:
+      if 'interpolator' in self.__dict__:
           del self.__dict__['interpolator']
 
   @cached_property
