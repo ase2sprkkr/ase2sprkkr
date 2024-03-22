@@ -1,6 +1,7 @@
 """ Here, the format of the potential_file is defined """
 
 from .sections import \
+    ScfInfoSectionDefinition, \
     GlobalSystemParameterDefinition, \
     LatticeSectionDefinition, \
     SitesSectionDefinition, \
@@ -14,7 +15,7 @@ from .sections import \
 
 def fce():
   from ...common.grammar_types import \
-        DefKeyword, Table, Array, Sequence, \
+        Table, Array, Sequence, \
         Date, line_string
   from ..potential_definitions import \
         PotSectionDefinition, \
@@ -48,33 +49,7 @@ def fce():
   ], name_in_grammar = False)
 
   Section('GLOBAL SYSTEM PARAMETER', cls = GlobalSystemParameterDefinition)
-
-  Section('SCF-INFO', [
-    V('INFO', line_string, 'NONE'),
-    V('SCFSTATUS', DefKeyword('START', 'CONVERGED', 'ITR-BULK')),
-    V('FULLPOT', False),
-    V('BREITINT', False),
-    V('NONMAG', False, alternative_names='NOMAG'),
-    V('ORBPOL', str, 'NONE'),
-    V('EXTFIELD', False),
-    V('BLCOUPL', False),
-    V('BEXT', 0.0),
-    V('SEMICORE', False),
-    V('LLOYD', False),
-    V('NE', Array(int), is_optional = True),
-    V('IBZINT', int, is_optional = True),
-    V('NKTAB', int, is_optional = True),
-    V('XC-POT', str, is_optional = True),
-    V('SCF-ALG', str, is_optional = True),
-    V('SCF-ITER', 0),
-    V('SCF-MIX', 0.2),
-    V('SCF-TOL', 1e-5),
-    V('RMSAVV', 999999.),
-    V('RMSAVB', 999999.),
-    V('EF', 999999.),
-    V('VMTZ', 0.7),
-  ], )
-
+  Section('SCF-INFO', cls = ScfInfoSectionDefinition)
   Section('LATTICE', cls = LatticeSectionDefinition)
   Section('SITES', cls = SitesSectionDefinition)
   Section('OCCUPATION', cls = OccupationSectionDefinition)
