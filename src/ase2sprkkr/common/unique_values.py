@@ -167,6 +167,42 @@ class UniqueValuesMapping:
              mp[i]=j
       return True
 
+  def normalized(self, start_from=1, strict:bool=True, dtype=None):
+      """ Map the class ids to integers
+
+      Parameters
+      ----------
+      strict
+         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),
+         where n is the number of equivalence classes.
+         If False and the names are already integers in a numpy array, do nothing.
+
+      start_from
+         Number the equivalent classes starting from.
+
+      Returns
+      -------
+      mapping : np.ndarray
+         Array of integer starting from start_from, denotes the equivalence classes for the values,
+         It holds, that ``mappind[index] == equivalence_class``
+      reverse : dict
+         Dict ``{ equivalence_class : value }``
+
+      .. doctest::
+
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()
+        array([1, 2, 1])
+        >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)
+        array([0, 1, 0])
+      """
+
+      if not strict and isinstance(self.mapping, np.ndarray):
+          ttype = np.integer if dtype is None else dtype
+          if np.issubdtype(ttype, self.mapping.dtype):
+              return
+      mapping, reverse = self._create_mapping(self.mapping, start_from=start_from, dtype=dtype or np.int32)
+      return mapping, reverse
+
   def normalize(self, start_from=1, strict:bool=False):
       """ Replace the names of equivalent classes by the integers.
 
@@ -194,10 +230,8 @@ class UniqueValuesMapping:
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
         array([0, 1, 0])
       """
-      if not strict and isinstance(self.mapping, np.ndarray) and np.issubdtype(np.integer, self.mapping.dtype):
-           return
-      mapping, reverse = self._create_mapping(self.mapping, start_from=start_from)
+      self.mapping, self.reverse = self.normalized()
+
       if self.value_to_class_id is not None:
-         self.value_to_class_id = { k: reverse[v] for k,v in self.value_to_class_id.items() }
-      self.mapping = mapping
+         self.value_to_class_id = { k: self.reverse[v] for k,v in self.value_to_class_id.items() }
       return self
