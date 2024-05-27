@@ -1,6 +1,31 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+build-backend = 'mesonpy'
+requires = ['meson-python', 'cython' ]
+
+[project.scripts]
+a2s_visualise_in_struct = "ase2sprkkr.tools.a2s_visualise_in_struct:visualise"
+a2s_plot_output = "ase2sprkkr.tools.a2s_plot_output:plot"
+
+[project]
+name = "ase2sprkkr"
+version = "3.0.0b"
+requires-python = ">= 3.7"
+dependencies = [
+  "ase",
+  "asr",
+  "spglib",
+  "pyparsing",
+  "mendeleev",
+  "platformdirs",
+  "packaging",
+  "cython",
 ]
-build-backend = "setuptools.build_meta"
+authors = [
+  { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
+  { name = "Jano Minár" },
+  { email = "ase2sprkkr@ntc.zcu.cz" }
+]
+readme = "README.md"
+
+[project.urls]
+Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
