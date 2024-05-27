@@ -46,7 +46,7 @@ class SpacegroupInfo:
         self._equivalent_sites = equivalent_sites
 
     def __repr__(self):
-        return f"{self.spacegroup or Spacegroup(0)}"
+        return str(self.spacegroup) or 'No spacegroup'
 
     def __str__(self):
         return self.__repr__()
