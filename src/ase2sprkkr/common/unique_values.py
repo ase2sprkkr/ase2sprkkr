@@ -105,8 +105,21 @@ class UniqueValuesMapping:
       return UniqueValuesMapping(mapping, reverse)
 
   @staticmethod
-  def _create_mapping(values, length=None, start_from=1):
-      mapping = np.empty(length or len(values), int)
+  def _create_mapping(values, length=None, start_from=1, dtype=np.int32):
+      """
+      Returns
+      -------
+      mapping : np.ndarray
+            maps the value indexes to equivalence class id
+
+      reverse : dict
+            maps equivalence classes to value indexes
+
+      .. doctest::
+        >>> UniqueValuesMapping._create_mapping([1.,4.,1.])
+        array([1, 2, 1]), { 1 : 1, 2 : 4 }
+      """
+      mapping = np.empty(length or len(values), dtype=dtype)
       reverse = {}
 
       for i,v in enumerate(values):
