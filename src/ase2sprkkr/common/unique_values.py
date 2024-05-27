@@ -34,7 +34,7 @@ class UniqueValuesMapping:
         Array of equivalence class members
         members[id] = <eq class id>
 
-      reverse: dict
+      value_to_class_id: dict
         Mapping { value: <eq class id> }
       """
 
@@ -66,6 +66,23 @@ class UniqueValuesMapping:
       for i,ec in enumerate(self.mapping):
           indexes.setdefault(ec, []).append(i + start_from)
       return indexes
+
+  def unique_indexes(self):
+      """
+      Returns the dictionary that maps equivalence class id to the list
+      of class members indexes.
+
+      ..doctest::
+        >>> UniqueValuesMapping([1,1,4]).unique_indexes()
+        [0, 2]
+      """
+      out = []
+      done = set()
+      for i, cid in enumerate(self.mapping):
+          if cid not in done:
+              done.add(cid)
+              out.append(i)
+      return out
 
   def iter_unique(self):
       return self.value_to_class_id.keys()
