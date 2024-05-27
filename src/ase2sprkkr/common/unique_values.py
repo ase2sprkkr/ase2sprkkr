@@ -17,13 +17,13 @@ class UniqueValuesMapping:
       .. doctest::
 
         >>> UniqueValuesMapping.from_values([1,4,1]).mapping
-        array([1, 2, 1])
+        array([1, 2, 1], dtype=int32)
         >>> UniqueValuesMapping.from_values([int, int, str]).mapping
-        array([1, 1, 2])
+        array([1, 1, 2], dtype=int32)
         >>> UniqueValuesMapping.from_values([1,4,1]).value_to_class_id
         {1: 1, 4: 2}
         >>> UniqueValuesMapping.from_values([1,4,1,1]).merge([1,1,2,1]).mapping
-        array([1, 2, 3, 1])
+        array([1, 2, 3, 1], dtype=int32)
   """
 
   def __init__(self, mapping:List, value_to_class_id:Dict=None):
@@ -114,7 +114,7 @@ class UniqueValuesMapping:
 
       .. doctest::
         >>> UniqueValuesMapping.from_values([1.,4.,1.]).mapping
-        array([1, 2, 1])
+        array([1, 2, 1], dtype=int32)
         >>> UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id
         {1.0: 1, 4.0: 2}
       """
@@ -134,7 +134,7 @@ class UniqueValuesMapping:
 
       .. doctest::
         >>> UniqueValuesMapping._create_mapping([1.,4.,1.])
-        array([1, 2, 1]), { 1 : 1, 2 : 4 }
+        (array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})
       """
       mapping = np.empty(length or len(values), dtype=dtype)
       reverse = {}
@@ -221,9 +221,9 @@ class UniqueValuesMapping:
       .. doctest::
 
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()
-        array([1, 2, 1])
+        (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)
-        array([0, 1, 0])
+        (array([0, 1, 0], dtype=int32), {1: 0, 2: 1})
       """
 
       if not strict and isinstance(self.mapping, np.ndarray):
@@ -233,7 +233,7 @@ class UniqueValuesMapping:
       mapping, reverse = self._create_mapping(self.mapping, start_from=start_from, dtype=dtype or np.int32)
       return mapping, reverse
 
-  def normalize(self, start_from=1, strict:bool=False):
+  def normalize(self, start_from=1, strict:bool=False, dtype=None):
       """ Replace the names of equivalent classes by the integers.
 
       Parameters
@@ -246,6 +246,10 @@ class UniqueValuesMapping:
       start_from
          Number the equivalent classes starting from.
 
+      dtype
+         dtype of the normalized values. None means ``numpy.int32``, however if not strict,
+         any integer type will be sufficient.
+
       Returns
       -------
       unique_values_mapping
@@ -254,13 +258,13 @@ class UniqueValuesMapping:
       .. doctest::
 
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping
-        array([1, 2, 1])
+        array([1, 2, 1], dtype=int32)
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]
         2
         >>> UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping
-        array([0, 1, 0])
+        array([0, 1, 0], dtype=int32)
       """
-      self.mapping, self.reverse = self.normalized()
+      self.mapping, self.reverse = self.normalized(start_from, strict, dtype)
 
       if self.value_to_class_id is not None:
          self.value_to_class_id = { k: self.reverse[v] for k,v in self.value_to_class_id.items() }
