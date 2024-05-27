@@ -31,7 +31,8 @@ class CalculatorTest(TestCase):
  _calc_args = dict(
      directory = dirname, input_file = 'output_test_calc.inp',  # empty_spheres=False,
      output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
-     mpi = 'auto', options = {'NKTAB': 5, 'NE': 20}
+     mpi = 'auto', options = {'NKTAB': 5, 'NE': 20},
+     empty_spheres = False
  )
 
  def _calc_args_ex(self, **kwargs):

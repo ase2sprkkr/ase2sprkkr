@@ -1,4 +1,4 @@
-project('ase2sprkkr', [] )
+project('ase2sprkkr', ['c', 'fortran', 'cython'] )
 
 python = import('python')
 py = python.find_installation(pure: false)

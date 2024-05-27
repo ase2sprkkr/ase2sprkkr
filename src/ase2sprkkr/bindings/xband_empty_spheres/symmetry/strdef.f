@@ -1,7 +1,27 @@
-     IMPLICIT DOUBLE PRECISION
-     $ (A-H,O-Z)
+      subroutine find_symmetry(n_operations, operations, slen,
+     >   spacegrp, cell,
+     >   angles, n, positions, align, Magnetic, verbose)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+c     spacegroup, either number or identifier, see the symdata.f
+      integer slen
+      byte, dimension(slen) :: spacegrp
+c     primitive cell
+      double precision :: cell(3)
+c     angles
+      double precision :: angles(3)
+c     number of the atoms
+      integer :: n
+c     positions of the atoms
+      double precision :: positions(3, n)
+c     correct the atom positions by aligning them to a grid
+      integer :: align
+c     magnetic field direction
+      double precision :: Magnetic(3)
+c     do an output to stdout
+      integer :: verbose
+      INTEGER, intent(out) :: n_operations
+      INTEGER :: operations(64, 2)
 
-     subroutine find_symmetry(n, w)
 
       parameter (MAXDIM=1 000 000)
       integer W(MAXDIM)
@@ -11,7 +31,21 @@ C      include 'W.H'
      >  ,GEN(3,3,64),ANG(3),v(3,64)
       LOGICAL EQW,exist
       character buf*78
+      COMMON /TAU/ boa,coa,alat,alfa,beta,gamma,nsort
+      COMMON /output/ output
+      integer output
       call wkinit(MAXDIM)
+
+      if (verbose .ne. 0 ) then
+          output = 6
+      else
+#ifdef _WIN32
+          open(unit=20, file='NUL', action='write')
+#else
+          open(unit=20, file='/dev/null', action='write')
+#endif
+          output = 20
+      end if
 c
 c Definitions of all possible turn matrixes.
 c
@@ -24,36 +58,54 @@ C                              !DEF TURN MATRIX
         IF(IG.NE.IGA)THEN
 C                              !ADD INVERSION IF NEED
           DO I=1,3
-            DO J=1,3
+           DO J=1,3
               GEN(I,J,IG)=-GEN(I,J,IG)
-            END DO
+           END DO
           END DO
         ENDIF
 20    CONTINUE
 
       call defrr(itau,3*NSMAX)
       call multable(in)
+      !READ(11,*)BOA,COA,alfa,beta,gamma
 !     call readin(num,w(itau),buf)
+
+      buf=""
+      buf = transfer(spacegrp(:MIN(78,slen)), buf(:MIN(78,slen)))
+
+      boa = cell(2) / cell(1)
+      boa = cell(3) / cell(1)
+      alpha = angles(1)
+      beta = angles(2)
+      gamma = angles(3)
+      nsort = n
+
+      call init_in(num,w(itau),buf, positions, align .ne. 0)
       if(num.eq.0)then
         call read_dst(W,GEN)
-        stop
+        n_operations = -1
       else
         call genvec
         call gener(W,in,it,n,gen,v,inv,iad,num,buf)
-        CALL QAT(W,GEN,V,IT,N,inv,iad,w(itau))
+        CALL QAT(MAGNETIC, W,GEN,V,IT,N,inv,iad,w(itau),
+     >           n_operations, operations)
+        call rlse(itau)
       endif
-      call rlse(itau)
-      end
 
-      subroutine readin(num,tau,buf)
-      IMPLICIT DOUBLE PRECISION
-     $ (A-H,O-Z)
+      end subroutine
+
+
+      subroutine init_in(num,tau,buf, positions, align)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      double precision :: positions(nsort,3)
+      logical :: align
       include 'param.fi'
+      integer num
       character*2 F*1,ac*9,bc*9,cc*9
      1,sc*6 ,lat(7),lattic*8,buf*78,TMP*10
       DIMENSION  A(3),B(3),C(3)
       DIMENSION  A0(3),B0(3),C0(3)
-      dimension TAU(3,NSMAX),VV(3)
+      dimension TAU(3,NSMAX)
       common /u/u(3,3),a,b,c,um1(3,3),IDATASTR
       common /lat/ lattic
       COMMON /TAU/ boa,coa,alat,alfa,beta,gamma,nsort
@@ -70,9 +122,8 @@ c 6 - monoclinic
 c 7 - triclinic
 
       IDATASTR=1
-      read(11,'(A)')buf
       if(ichar(buf(1:1)).lt.ichar('9'))then
-        read(BUF,*)NUMA
+        read(buf,*) NUMA
         NUM=numa
         if(num.eq.0)return
         iorig=0
@@ -81,23 +132,23 @@ c 7 - triclinic
           iorig=1
         endif
         call spacegroup(buf,num,iorig)
-      else 
+      else
         iorig=1
-        buf(11:)=' '
-        do i=1,10
-          ic=ichar(buf(i:i))
-          if(ic.lt.32.or.ic.gt.122)goto 201 ! if not digit or letter
-          if(ic.ge.97)buf(i:i)=char(ic-32) ! to upper case
-          num=-i
-        enddo
- 201    continue
+        !spacegroup(11:)=' '
+        !do i=1,10
+        !  ic=ichar(spacegroup(i:i))
+        !  if(ic.lt.32.or.ic.gt.122)goto 201 ! if not digit or letter
+        !  if(ic.ge.97) buf(i:i)=char(ic-32) ! to upper case
+        !  num=-i
+        !enddo
+        ! 201    !continue
         call spacegroup(buf,num,iorig)
       endif
 c      iorig=2
 c      if(buf(4:4).eq.'*')iorig=1
-      write(17,*)NUM,' / International group :',
+      write(ilun(11),*)NUM,' / International group :',
      $     buf(5:13),' ORIGIN SET:',iorig
-      print*,NUM,' ',buf(5:13)
+      write(ilun(6), *) NUM,' ',buf(5:13)
       numa=num
       parlat=1.D0
       alfa=0
@@ -106,15 +157,15 @@ c      if(buf(4:4).eq.'*')iorig=1
       F=buf(5:5)
       itrig=0
       READ(buf,16)NUMG,INVERSION,IADDPARAM,Icub
-      READ(11,*)BOA,COA,alfa,beta,gamma
+      !READ(11,*)BOA,COA,alfa,beta,gamma
       if(boa.lt.0.d0)boa=abs(boa/alat)
       if(coa.lt.0.d0)coa=abs(coa/alat)
       IF( BOA.eq.0.or.icub.lt.4) BOA = 1 !***************************
-      IF( COA.eq.0.or.icub.eq.1) COA = 1      
+      IF( COA.eq.0.or.icub.eq.1) COA = 1
       if(icub.eq.-4)then
 c      if(F.eq.'R'.and.
 c     $     abs(COA-1d0).lt.1.e-8.and.abs(alfa).gt.1.e-10)then
-        print*,'Trigonal axis'
+        write(ilun(6), *) 'Trigonal axis'
         itrig=1
         ca=cos(PI/180*alfa)
         coa=sqrt((3*ca+1.5d0)/(1d0-ca))
@@ -141,7 +192,7 @@ c
         if(buf(39:40).eq.'02'.or.buf(39:40).eq.'34'
      $       .or.buf(45:46).eq.'34')then
 c  UNIQ AXIS B
-          print*,'UNIQ AXIS B'
+          write(ilun(6),*),'UNIQ AXIS B'
           if(abs(beta-90.).lt.0.001)then
             print*,' ***** WARNING ******'
             print*,' You did not put correct beta'
@@ -151,7 +202,7 @@ c  UNIQ AXIS B
           endif
         else
 c  UNIQ AXIS C
-          print*,'UNIQ AXIS C'
+          write(ilun(6),*),'UNIQ AXIS C'
           beta=90
         endif
       endif
@@ -326,7 +377,7 @@ c!
       write(ilun(16),11)'B',b,b0
       write(ilun(16),11)'C',c,c0
 11     format(' ',a,' ',3f21.15,' <--> ',3f21.15)
-       write(17,17)a,b,c
+!       write(ilun(11),17)a,b,c
  17    format(3f21.15,' / A in lat.par'/3f21.15,' / B in lat.par'/
      $      3f21.15,' / C in lat.par')
 c      write(14)a(1),a(2)/boa,a(3)/coa,b(1),b(2)/boa,b(3)/coa,
@@ -336,19 +387,23 @@ c
 c Atomic positions:
 c
 
-      READ(11,*)nsort
+c      READ(11,*)nsort
 c      READ(11,*)
       DO  I=1,nsort
-          READ(11,*)vv
-        do k=1,3
-          DumA=vv(k)*24         
-          IDumA=nint(DumA)
-          if(abs(DumA-IDumA).lt.1.e-3)vv(k)=IDumA/24.d0
-        enddo
+c         READ(11,*)vv
+        if( align )then
+          do k=1,3
+            DumA=positions(k,i)*24
+            IDumA=nint(DumA)
+            if(abs(DumA-IDumA).lt.1.e-3) then
+              positions(k,i)=IDumA/24.d0
+            end if
+          enddo
+        end if
         do k=1,3
           tau(k,i)=0
             do j=1,3
-              tau(k,i)=tau(k,i)+vv(j)*u(j,k)
+              tau(k,i)=tau(k,i)+positions(j, i)*u(j,k)
             enddo
         enddo
       enddo
@@ -370,15 +425,15 @@ C      include 'W.H'
       common /u/u(3,3),a,b,c,UM1(3,3),IDATASTR
       data lat/'C ','H ','T ','TG','O ','M ','TC'/
       DATA EPS/1.d-5/
-c      call spacegroup(buf,num)
-	do i=1,65
-	it(i)=-100
-	enddo
+c     call spacegroup(buf,num)
+      do i=1,65
+         it(i)=-100
+      enddo
       READ(buf,11)NUMG,INVERSION,IADDPARAM,Icub,n,
      1 (it(i),(ivv(j,i),j=1,3),i=1,n)
 c      print*,NUMG,INVERSION,IADDPARAM,Icub,n,
 c     1 (it(i),(ivv(j,i),j=1,3),i=1,n)
-      print*,buf
+      write(ilun(6),*) buf
 
 11    format(i3,24x,i1,i3,i2,i4,3(i3,i1,i1,i1))
       do i=1,n
@@ -411,8 +466,8 @@ c          print*,'(=):',v(1,it(n1)),v(2,it(n1)),v(3,it(n1))
                 glm=glm+g(l,k,it(i))*g(k,mw,it(j))
               enddo
               if(abs(glm-g(l,mw,it(n1))).gt.1.e-5)then
-                print*,i,j,n1,'(',it(i),it(j),it(n1),')'
-                print*,l,mw,glm,g(l,mw,it(n1))
+                write(ilun(6),*) i,j,n1,'(',it(i),it(j),it(n1),')'
+                write(ilun(6),*) l,mw,glm,g(l,mw,it(n1))
               endif
             enddo
           enddo
@@ -525,13 +580,17 @@ C
       END
 
 c
-      SUBROUTINE QAT(W,Gm,VC,IT,NG,inversion,iadop,tau)
+      SUBROUTINE QAT(Magnetic, W,Gm,VC,IT,NG,inversion,iadop,tau,
+     $ ng_all, operations)
       IMPLICIT DOUBLE PRECISION
      $ (A-H,O-Z)
+      DOUBLE PRECISION :: Magnetic(3)
 C      INCLUDE 'W.H'
-        INTEGER W(*)
+      INTEGER W(*)
       INCLUDE 'param.fi'
 c      parameter(a00=0.529177d0)
+      INTEGER :: ng_all
+      INTEGER, DIMENSION(64, 2) :: operations
       parameter(max2sort=1000)
       parameter(EPSMIS=1d-6)
       character *80 tnam(max2sort)
@@ -664,8 +723,9 @@ c      write(14) alat,boa,coa,alfa,beta,gamma
       write(ilun(16),*)' Atomic positions in lat.par: '
       write(ilun(16),*)NAMAX,'    -   NATOMS'
       call defrr(i_alcs,NAMAX*3)
-      CALL DEFTAU(W(iTAUX),W(iTAUY),W(iTAUZ),W(ISS),NSORT,W(i_alcs))
-	close(unit=3,status='delete')
+      CALL DEFTAU(Magnetic, W(iTAUX),W(iTAUY),W(iTAUZ),W(ISS),NSORT,
+     $W(i_alcs))
+      close(unit=3,status='delete')
       call defi(i_KK,NAMAX*NG)
       call KTO_KYDA(W(iTAUX),W(iTAUY),W(iTAUZ),
      $     Gm,It,VC,namax,ng,W(i_KK))
@@ -679,12 +739,13 @@ c      write(14) alat,boa,coa,alfa,beta,gamma
       call check_sym(NG,NG,NATOM,w(i_kk),w(i_alcs),w(i_isnew)
      $       ,it,nsort,w(i_iatpos),w(i_newis),w(iss),w(i_nwt),w(i_ntw),
      $     w(i_itg),ng_all,nsortnew,ier,W(iTAUX),W(iTAUY),W(iTAUZ),Gm
-     $     ,tnam,ioldnum)
+     $     ,tnam,ioldnum, operations)
       END
 
-      SUBROUTINE DEFTAU(TAUX,TAUY,TAUZ,ISS,NSORT,euler)
+      SUBROUTINE DEFTAU(Magnetic, TAUX,TAUY,TAUZ,ISS,NSORT,euler)
       IMPLICIT DOUBLE PRECISION
      $ (A-H,O-Z)
+      double precision, dimension(3) :: magnetic
       dimension taux(*)     ! - x - sites of atoms
       dimension tauy(*)     ! - y - sites of atoms
       dimension tauz(*)     ! - z - sites of atoms
@@ -694,10 +755,13 @@ c      write(14) alat,boa,coa,alfa,beta,gamma
       ijatom=0
       Hx=0
       Hy=0
-      Hz=0      
-      read(11,*)HX,HY,HZ
+      Hz=0
+      !read(11,*)HX,HY,HZ
+      Hx=Magnetic(1)
+      Hy=Magnetic(2)
+      Hz=Magnetic(3)
       if(Hx**2+Hy**2+Hz**2.gt.1.d-7)then
-        write(17,17)HX,HY,HZ
+        write(ilun(11),17)HX,HY,HZ
  17     format(/3f21.15,' / Magnetic field direction'/)
         anorm=sqrt(hx*hx+hy*hy+hz*hz)
         beth=acos(hz/anorm)
@@ -831,10 +895,12 @@ c      write(14)(IT(iG),(KK(IG,iatom),iatom=1,natom),IG=1,ng)
 
       subroutine check_sym(NGD,NG,NATOM,kto_kyda,a,is,
      $     it,nsort0,iat_pos,newis,is0,ntw,nwt,
-     $     itg,NG_ALL,NSORT,ier,TAUX,TAUY,TAUZ,Gm,tnam,ioldnum)
+     $     itg,NG_ALL,NSORT,ier,TAUX,TAUY,TAUZ,Gm,tnam,ioldnum,
+     $     operations)
 c
 C      INCLUDE 'PREC.H'
         implicit double precision (a-h,o-z)
+        integer :: operations(64, 2)
 
       dimension taux(*)     ! - x - sites of atoms
       dimension tauy(*)     ! - y - sites of atoms
@@ -1008,22 +1074,28 @@ c       enddo
           is(iatom)=is0(iatom)
         enddo
       endif
-      write(17,'(2I5,3A)')nsort,natom,' / nsort,natom      ',
+      write(ilun(11),'(2I5,3A)')nsort,natom,' / nsort,natom      ',
      $     '    taus         ','          ICL  IQ(inp) CL(inp) '
       do i=1,nsort
         do iatom=1,natom
           if(is(iatom).eq.i)then
-            write(17,17)taux(iatom),tauy(iatom),tauz(iatom),i
+            !write 17
+            write(ilun(17),17)taux(iatom),tauy(iatom),tauz(iatom),i
      $           ,ioldnum(iatom),tnam(is0(iatom))!,is0(iatom)
           endif
         enddo
  17     format(3f21.15,i6,2x,i6,'  ',a12)
 c#'  olst #:',i4,'-',i4)
       enddo
-      write(17,*)NG_ALL,
+      !write 17
+      write(ilun(17),*)NG_ALL,
      $     ' / Point symmetry operations for reciprocal sums'
-      write(17,22)(it(itg(i)),i=1,ng_all)
-      write(17,22) (KTO_KYDA(itg(I),1),i=1,ng_all)
+      write(ilun(17),22)(it(itg(i)),i=1,ng_all)
+      write(ilun(17),22) (KTO_KYDA(itg(I),1),i=1,ng_all)
+      do i=1, ng_all
+          operations(i,1) = it(itg(i))
+          operations(i,2) = KTO_KYDA(itg(I),1)
+      end do
  22   format(24i3)
       do i=1,NG_ALL
        iop=it(itg(i))
@@ -1047,155 +1119,11 @@ c$$$       endif
          endif
        endif
        call EILNAM(angs,Iop)
-       write(17,*)znak,' ',angs,' / ',it(itg(i)),KTO_KYDA(itg(I),1)
+       !write 17
+       write(ilun(17),*)znak,' ',angs,' / ',
+     >       it(itg(i)),KTO_KYDA(itg(I),1)
  177   format(3f21.15)
       enddo
-      end
-
-      subroutine inif
-      implicit double precision (a-h,o-z)
-      character char*80,buf*80,yes*1
-      dimension vec(3)
-      rewind(11)
-      char=' '
-      print 5
- 100  read(*,'(a)') char
-      if(char.eq.' ')then
-        print 5
-        goto 100
-      endif
- 1    format(a30:,30x,a)
- 2    format(2f21.15,1x,3f21.15,' /b/a,c/a,a,b,g')
- 3    format(i5,35x,'/NSORT',/)
- 4    format(3f21.15,2x,'''',a8,'''',2x,'/')
- 5    format(' Enter SPACE GROUP (group number or name:)',
-     $     ' [0 - unknown] ==> ',$)
- 6    format(' Enter compaund name: ',$)
- 7    format(' b/a,c/a,alf,bet,gam: ',$)
- 8    format(' number of sorts: ',$)
- 9    format(' for ',A,i4,/,' taux, tauy tauz: ',$)
- 10   format(' atomic name: ',$)
- 11   format(a,' ',$)
- 17   format(a,' ',$)
-
- 50   buf=char
-      ierr=-100
-      call spacegroup(buf,num,ierr)
-c     print*,'BUF:',buf!,num,ierr
-      if(num.ne.0)then
-        if(ierr.eq.0)then
-          print*,' Such group is absent'
-          print 5
-          goto 100
-        elseif(ierr.gt.1)then
-          print *,' There are ',ierr, ' definitions for #',num
-          print 11,' Would you like to define with letters? ==>'
-          read(*,'(a)')buf
-          if(buf.eq.' ')then
-            print *,'OK, it was your choice'
-          else
-            char=buf 
-            goto 50
-          endif
-        else if (ierr.lt.0)then
-          print *,' There are 2 origin sets for this group'
-          print 11,' Please, specify 1 or 2 ==>'
-          iset=2
-          read(*,*)iset
-          char=' '
-          write(char,'(a,a,i1)')buf(5:13),':',iset
-          goto 50
-        endif
-c     print*,'CHAR=',char(:30)     
-        write(11,1)char                 !,' '
-c        print 6
-c        read(*,'(a)')char
-c        write(11,1)char                 !,'/ Compaund Name'
-        boa=1
-        coa=1
-        alf=0
-        bet=0
-        gam=0
-        read(buf(32:33),'(i2)')icub
-C      print*,'ICUB=',icub
-        if(icub.eq.7)then
-          print 7
-          read(*,*)boa,coa,alf,bet,gam
-        else if(icub.eq.6)then
-          print 17,'BOA,COA,angle '
-          read(*,*)boa,coa,alf     !bet,gam
-        else if(icub.eq.5)then
-          print 17,'BOA,COA'
-          read(*,*)boa,coa         !,alf!bet,gam
-        else if(icub.eq.-4)then
-          print 17,'angle'
-          read(*,*)alf             !bet,gam
-        else if(icub.eq.4.or.icub.eq.3.or.icub.eq.2)then
-          print 17,'COA'
-          read(*,*)coa             !,alf!bet,gam
-        else
-c          print 17, ' '
-c          read(*,*)alat
-        endif
-        
-c$$$      if(boa.lt.0)boa=abs(boa/alat)
-c$$$      if(coa.lt.0)coa=abs(coa/alat)
-        write(11,2)boa,coa,alf,bet,gam
-        print 8
-        read(*,*)nsort
-        write(11,3)nsort
-        do i=1,nsort
-          taux=0.d0
-          tauy=0.d0
-          tauz=0.d0
-          print 9,' sort',i
-          read(*,*)taux,tauy,tauz
-c          print 10
-c          read(*,'(a)')char
-          write(char,'(i2)')i
-c         print*,i,char
-          write(11,4)taux,tauy,tauz,char
-        enddo
-      else
-        print*,' Automatic symmetry detection '
-        write(11,*)'0'
-c        print 6
-c        read(*,'(a)')char
-c        write(11,1)char                 !,'/ Compaund Name'
-c        print 17,'BOA,COA '
-c        read(*,*)alat,boa,coa       !bet,gam
-c        write(11,2)alat,boa,coa,90.,90.,90.
-c        write(11,'(A)')'STRUCTURE'
-        print*,' Now you have to enter translations vectors'
-        print*,' Please, use cartesian coordinates: '
-        print*,' (x coords in units a, y in boa*a, z in coa*a) '
-        print11,'A: '
-        read*,vec
-        write(11,*)vec
-        print11,'B: '
-        read*,vec
-        write(11,*)vec
-        print11,'C: '
-        read*,vec
-        write(11,*)vec
-        print11,'Number of atoms: '
-        read*,NATOM
-        write(11,*)natom
-        do i=1,natom
-          print 9,' atom',i
-          read(*,*)taux,tauy,tauz
-          print 10
-          read(*,'(a)')char
-          write(11,4)taux,tauy,tauz,char
-        enddo
-      endif
-      hx=0
-      hy=0
-      hz=0
-      print 11,' Magnetic field directions: (/ -for paramagnet) ==>'
-      read*,hx,hy,hz
-      write(11,*)' '
-      write(11,4)hx,hy,hz,' /Magnetic field'
       end
 
       subroutine namesym(ig,icub,nam,vv)

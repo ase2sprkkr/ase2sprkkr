@@ -1,0 +1,2 @@
+        parameter( NVCMAX0=343)
+        COMMON /ATPAR/ NAMAX,NSMAX

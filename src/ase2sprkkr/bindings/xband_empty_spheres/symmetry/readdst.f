@@ -103,15 +103,15 @@ C
       inversion=0               ! no inversion
       iaddparam=0               ! we will not use it
       icb=0                     ! not cubic
-      write(17,*)0,' / No group information'
-      write(*,*)' Primitive lattice vectors:'
-       write(17,17)a,b,c
+      write(ilun(17),*)0,' / No group information'
+      write(ilun(6),*)' Primitive lattice vectors:'
+       write(ilun(17),17)a,b,c
  17    format(3f21.15,' / A in lat.par'/3f21.15,' / B in lat.par'/
      $      3f21.15,' / C in lat.par')
 
-      write(*,11)'A',A
-      write(*,11)'B',B
-      write(*,11)'C',C
+      write(ilun(6),11)'A',A
+      write(ilun(6),11)'B',B
+      write(ilun(6),11)'C',C
  11   format(' ',a,' ',3f21.15)
 
       W=A(1)*F(1)+A(2)*F(2)+A(3)*F(3)
@@ -124,10 +124,10 @@ C
         H(I)=H(I)*W1
       ENDDO
 
-      write(*,*)' Primitive reciprocal vectors:'
-      write(*,11)'F',F
-      write(*,11)'G',G
-      write(*,11)'H',H
+      write(ilun(6),*)' Primitive reciprocal vectors:'
+      write(ilun(6),11)'F',F
+      write(ilun(6),11)'G',G
+      write(ilun(6),11)'H',H
       natom_input=natom
       do i=1,natom
         read(11,*)(tau0(k,i),k=1,3),tnam(i)
@@ -145,7 +145,7 @@ C
       read(11,*)HX,HY,HZ
       if(Hx**2+Hy**2+Hz**2.gt.1.d-7)then
 c        read(11,*)HX,HY,HZ
-        write(17,172)HX,HY,HZ
+        write(ilun(17),172)HX,HY,HZ
  172    format(/3f21.15,' / Magnetic field direction'/)
         anorm=sqrt(hx*hx+hy*hy+hz*hz)
         beth=acos(hz/anorm)
@@ -176,11 +176,11 @@ c        read(11,*)HX,HY,HZ
       enddo
       call check_uniq(is,tau0,a,b,c,f,g,h,natom,ioldnum)
       if(natom.ne.natom_input)then
-        print*,'*** NEW BASIS: ***'
-        write(*,11)'A',A
-        write(*,11)'B',B
-        write(*,11)'C',C
-        print*,'*** NEW ATOMS: ***',natom
+        write(ilun(6),*) '*** NEW BASIS: ***'
+        write(ilun(6),11)'A',A
+        write(ilun(6),11)'B',B
+        write(ilun(6),11)'C',C
+        write(ilun(6),*) '*** NEW ATOMS: ***',natom
         do iatom=1,natom
           print18,(tau0(i,iatom),i=1,3),is(iatom)
         enddo
@@ -288,8 +288,8 @@ c     exit
               enddo
  104          continue
               inversion=ismtr
-              write(*,*)'Inversion center:'
-              write(*,17)orig
+              write(ilun(6),*)'Inversion center:'
+              write(ilun(6),17)orig
             endif
           endif
         ENDIF
@@ -304,10 +304,10 @@ c$$$      call pntgrp(0,IPG,N,TI,OP)
 c$$$      ng=n
 
       call group_by_ind(igid,ti,6)
-      write(6,*)'============================================'
-      write(6,*)'Group:',TI
-      write(6,*)'============================================'
-      write(6,*)
+      write(ilun(6),*)'============================================'
+      write(ilun(6),*)'Group:',TI
+      write(ilun(6),*)'============================================'
+      write(ilun(6),*)
       ng=ismtr
 C     print*,OP
       do iat=1,natom
@@ -371,7 +371,7 @@ c        print*,iat,ioldnum(iat)
             isort=isort+1
           endif
         endif
-        write(*,174)tau0(1,iat),tau0(2,iat),tau0(3,iat)
+        write(ilun(6),174)tau0(1,iat),tau0(2,iat),tau0(3,iat)
      $       ,isort,iat,is1(iat)
         is(iat)=isort
  174    format(3g14.6,4i6)
@@ -383,8 +383,8 @@ c        print*,iat,ioldnum(iat)
 
       inv=0
       if(inversion.eq.0)inv=1
-      write(*,*)' Symmetry operations:',ismtr
-      write(*,116)(it(i),i=1,ismtr)
+      write(ilun(6),*)' Symmetry operations:',ismtr
+      write(ilun(6),116)(it(i),i=1,ismtr)
 
  116  format(24i3)
       nsort=isort
@@ -398,7 +398,8 @@ c        print*,iat,ioldnum(iat)
 c          print*,'-->',taux(iat),tauy(iat),tauz(iat),is(iat),is1(iat)
         enddo
       else
-        write(17,'(2I5,3A)')nsort,natom_input,' / nsort,natom      '
+        write(ilun(17),'(2I5,3A)')nsort,natom_input,
+     $        ' / nsort,natom      '
      $       ,'    taus         ','          ICL  IQ(inp) CL(inp) '
 
         do iat=1,natom_input
@@ -409,31 +410,31 @@ c          print*,'-->',taux(iat),tauy(iat),tauz(iat),is(iat),is1(iat)
           do j=1,natom
             if(dist_s(tau00(1,iat),tau0(1,j)).lt.1d-5)is1(iat)=is(j)
           enddo
-          write(17,317)taux(iat),tauy(iat),tauz(iat),is1(iat)
+          write(ilun(17),317)taux(iat),tauy(iat),tauz(iat),is1(iat)
      $         ,iat,name(is1(iat)) !,is0(iatom)
  317      format(3f21.15,i6,2x,i6,'  ',a12)
 c          print*,'-->',taux(iat),tauy(iat),tauz(iat),is1(iat)
         enddo
-        write(17,*)NG,
+        write(ilun(17),*)NG,
      $       ' / Point symmetry operations for reciprocal sums'
-        write(17,22)(it(i),i=1,ng)
+        write(ilun(17),22)(it(i),i=1,ng)
  22   format(24i3)
-        write(17,*)' !!! NON-PRIMITIVE SET !!! '
-        write(17,17)a,b,c
-        write(17,172)0.,0.,0.
-        write(17,*)nsort,natom,' / nsort,natom '
+        write(ilun(17),*)' !!! NON-PRIMITIVE SET !!! '
+        write(ilun(17),17)a,b,c
+        write(ilun(17),172)0.,0.,0.
+        write(ilun(17),*)nsort,natom,' / nsort,natom '
         do j=1,natom
           iat=ioldnum(j)
-          write(17,317)taux(iat),tauy(iat),tauz(iat),is(j)
+          write(ilun(17),317)taux(iat),tauy(iat),tauz(iat),is(j)
      $         ,iat,name(is(j)) !,is0(iatom)
         enddo       
       endif
 
-      write(*,*)'==========================='
-      write(*,*)nsort,'          /nsort'
+      write(ilun(6),*)'==========================='
+      write(ilun(6),*)nsort,'          /nsort'
       do isort=1,nsort
  18     format(3f21.15,'   ''',i4,'''  /')
-        write(*,18)tau1(1,isort),tau1(2,isort),
+        write(ilun(6),18)tau1(1,isort),tau1(2,isort),
      $       tau1(3,isort),isort
       enddo
 c
@@ -607,9 +608,9 @@ c       print*,'i=',i,is(i),'   ',tnam(i)
  92           continue
               if(iok.eq.1)then
                 inew=1
-c$$$                write(*,*)'*********Warning!*********'
-c$$$                write(*,*)'There is an extra trans. vector:'
-c$$$                write(*,*) (tau0(ii,i)-tau0(ii,j),ii=1,3)
+c$$$                write(ilun(6),*)'*********Warning!*********'
+c$$$                write(ilun(6),*)'There is an extra trans. vector:'
+c$$$                write(ilun(6),*) (tau0(ii,i)-tau0(ii,j),ii=1,3)
 Cabc                DLENGTH=dist_s(tau0(ii,i),tau0(ii,j))
                 DLENGTH=dist_s(tau0(1,i),tau0(1,j))         ! OS fix
                 if(DLENGTH.lt.DLENGTHMIN)then

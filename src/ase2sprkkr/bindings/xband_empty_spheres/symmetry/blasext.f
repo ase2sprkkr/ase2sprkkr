@@ -256,10 +256,13 @@ C Dummy arguments
 C
       INTEGER I
       INTEGER ILUN
+
+      COMMON /output/ output
+      integer output
 C
 C*** End of declarations rewritten by SPAG
 C
-      ILUN = 6
+      ILUN = output
       END
 C*==endjob.f    processed by SPAG 6.05Rc at 10:56 on  6 Mar 2001
       SUBROUTINE ENDJOB(J,TEXT)

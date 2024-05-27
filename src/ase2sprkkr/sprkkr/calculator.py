@@ -20,6 +20,7 @@ from .sprkkr_atoms import SPRKKRAtoms
 from ..potentials.potentials import Potential
 from ..common.directory import Directory
 from ..ase.symbols import filename_from_symbols
+from ..bindings.empty_spheres import add_empty_spheres
 import copy
 import subprocess
 import tempfile
@@ -545,7 +546,6 @@ class SPRKKR(Calculator):
                    if site.is_vacuum():
                       empty_spheres = False
             if empty_spheres:
-               from ..bindings.es_finder import add_empty_spheres
                add_empty_spheres(atoms)
 
         def save_potential_file():

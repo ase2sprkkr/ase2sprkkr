@@ -19,3 +19,5 @@ foreach current : sources
        dir = current
      endif
 endforeach
+
+subdir('ase2sprkkr/bindings/xband_empty_spheres')

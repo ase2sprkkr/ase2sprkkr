@@ -3,7 +3,6 @@ Binding for the es_finder package, that can determine the ideal positions
 of empty spheres to fill the gaps in the primitive cell.
 """
 from __future__ import annotations
-from collections import namedtuple
 
 import numpy as np
 
@@ -23,13 +22,12 @@ except ImportError as error:
 from ase import Atoms
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 from ..physics.winger_seitz_radii import winger_seitz_radii
-from typing import Dict
-
-EmptySpheresResult =  namedtuple('EmptySpheresResult', 'positions radii')
+from typing import Dict, Union
+from .empty_spheres import EmptySpheresResult
 
 
 def empty_spheres(atoms: Atoms, *,
-                  overlap_matrix:float|np.ndarray=0.18,
+                  overlap_matrix:Union[float,np.ndarray]=0.18,
                   radii_ratios_map: Dict[str, float]=None,
                   max_es_overlap:float = 0.24,  # Maximum overlap of ES
                   adjust_overlap:float = 0.28,  # Overlap that will be adjusted to max. overlap
@@ -39,7 +37,7 @@ def empty_spheres(atoms: Atoms, *,
                   max_iterations: int = 100,  # Number of iterations for the sphere search
                   grid: np.ndarray = np.array([[48, 0, 0], [0, 48, 0], [0, 0, 48]]),
                   verbosity: int = 0,  # Verbosity of output
-    ):
+  ):
   """
   Compute the best coverage of the primitive cell with spheres.
 
@@ -134,22 +132,4 @@ def empty_spheres(atoms: Atoms, *,
   with NoOutput(suppress=verbosity<=0):
     res = run_finder(params, structure, symmetry)
 
-  return EmptySpheresResult(res.es_positions, res.es_radii)
-
-def add_empty_spheres(atoms, **kwargs):
-  """
-  Update the structure of the (SPRKKR) ASE atoms, adding the empty
-  spheres and updating the shpheres radii of the atomic sites, according
-  to an :func:`empty_spheres` result.
-  """
-  res = empty_spheres(atoms, **kwargs)
-  num = len(res.radii)
-  if num == 0:
-     return None
-
-  empty = SPRKKRAtoms(symbols='X'*len(res.radii), symmetry = False)
-  empty.set_positions(res.positions @ atoms.cell)
-  #for i,radius in zip(empty.sites, res.radii):
-      #TODO set the radius of the sphere
-  #    next(iter(i.occupation)).radius=radius
-
+  return EmptySpheresResult(res.es_positions, res.es_radii @ atoms.cell)
