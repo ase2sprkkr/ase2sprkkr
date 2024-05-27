@@ -233,7 +233,9 @@ class ConfigurationContainer(BaseConfigurationContainer):
 
       unknown: str or None
         If unknown == 'find' and there is no member with a given name,
-        try to find the first such in descendant conainers.
+        try to find the first such-named item (case insensitive)
+        in the descendant conainers.
+        unknown == 'find_exact' do the same, case sensitive.
 
       Return
       ------
@@ -248,6 +250,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
       if name in self._members:
          val = self._members[name]
       elif unknown=='find':
+         val = self._find_value(name.lower(), True)
+      elif unknown=='find_exact':
          val = self._find_value(name)
       else:
          val = None
@@ -301,7 +305,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         option = self._members.get(name, None)
         if not option or not option._definition.accept_value(value):
            if unknown == 'find':
-              option = self._find_value(name)
+              option = self._find_value(name.lower(), True)
               if option:
                  option.set(value, error=error)
                  return
@@ -390,7 +394,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
               out[i.name] = value
       return out or None
 
-  def _find_value(self, name):
+  def _find_value(self, name:str, lower:bool=False):
       """
       Find a value of a given name in self or in any
       of owned subcontainers.
@@ -400,6 +404,9 @@ class ConfigurationContainer(BaseConfigurationContainer):
       name: str
       A name of the sought options
 
+      lower:bool
+      If true, find an option with given lowercased name (case insensitive)
+
       Returns
       -------
       value:typing.Optional[ase2sprkkr.common.options.Option]
@@ -408,7 +415,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       for i in self:
           if i._definition.is_hidden:
              continue
-          out = i._find_value(name)
+          out = i._find_value(name, lower)
           if out:
              return out
 
@@ -588,6 +595,8 @@ class RootConfigurationContainer(ConfigurationContainer):
          self.clear(True)
       self.set(values, unknown='add')
 
-  def find(self, name):
+  def find(self, name, lower_case=True):
       """ Find a configuration value of a given name in the owned sections """
-      return self._find_value(name)
+      if lower_case:
+         name=name.lower()
+      return self._find_value(name, lower_case)

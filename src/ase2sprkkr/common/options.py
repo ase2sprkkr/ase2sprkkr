@@ -61,8 +61,8 @@ class BaseOption(Configuration):
       is set. """
       return self._definition.output_definition._save_to_file(file, self, always, name_in_grammar, delimiter)
 
-  def _find_value(self, name):
-      if self._definition.name == name:
+  def _find_value(self, name, lower_case=True):
+      if self._definition.has_name(name, lower_case):
          return self
 
   def get_path(self):

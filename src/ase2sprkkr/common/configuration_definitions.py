@@ -46,10 +46,14 @@ class BaseDefinition:
 
   def __init__(self, name, is_optional=False, condition=None):
        self.name = name
+       self.name_lcase = name.lower()
        self.is_optional=is_optional
        self.condition = condition
        self.grammar_hooks = []
        self.condition = condition
+
+  def has_name(self, name, lower_case=False):
+       return name == ( self.name_lcase if lower_case else self.name )
 
   def add_grammar_hook(self, hook):
        """ Added hooks process the grammar of the option/container.
@@ -270,8 +274,12 @@ class RealItemDefinition(BaseDefinition):
        self.written_name = written_name
        """ The name of the option/section """
        if isinstance(alternative_names, str):
-          alternative_names = [ alternative_names ]
+           alternative_names = [ alternative_names ]
        self.alternative_names = alternative_names
+       if alternative_names:
+           self.alternative_names_lcase = [ i.lower() for i in alternative_names ]
+       else:
+           self.alternative_names_lcase = self.alternative_names
        """ Alternative names of the option/section. The option/section can
        be "denoted" in the configuration file by either by its name or any
        of the alternative names.
@@ -290,6 +298,14 @@ class RealItemDefinition(BaseDefinition):
        if result_class:
            self.result_class = result_class
        self.warning_condition = None
+
+   def has_name(self, name, lower_case=False):
+       if super().has_name(name, lower_case):
+           return True
+       if self.alternative_names:
+         if name in (self.alternative_names_lcase if lower_case else self.alternative_names):
+           return True
+       return False
 
    def validate_warning(self, value):
        if self.warning_condition:
