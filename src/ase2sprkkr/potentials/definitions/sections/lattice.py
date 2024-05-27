@@ -1,7 +1,6 @@
 import numpy as np
 
 from ase.units import Bohr
-from ase.lattice import bravais_classes
 from ase.cell import Cell
 
 from ...potential_definitions import PotSectionDefinition, \
@@ -25,13 +24,13 @@ class LatticeSection(PotentialSection):
           self.SYSDIM = '3D'
           bcell = atoms.cell
       elif pbc == 2:
-          if not('left' in atoms.regions and 'right' in atoms.regions and 'central' in atoms.regions):
+          if not ('left' in atoms.regions and 'right' in atoms.regions and 'central' in atoms.regions):
               raise ValueError("To run a 2D calculation, an atoms object have to have defined "
               "'left', 'right' and 'central' region.")
           for i in ('left', 'right'):
               check_symmetry(atoms.regions[i].pbc, True, lambda x: f'{i.capitalize()} region of a 2D calculations have to be symmetric in all dimensions')
-          check_symmetry(atoms.regions['central'].pbc, [True, True, False], lambda x: f'Central region of a 2D calculations have to be symmetric just in X and Y axis.')
-          check_symmetry(atoms.pbc, [True, True, False], lambda x: f'For a 2D calculation, atoms have to be periodic in X and Y axes.')
+          check_symmetry(atoms.regions['central'].pbc, [True, True, False], lambda x: 'Central region of a 2D calculations have to be symmetric just in X and Y axis.')
+          check_symmetry(atoms.pbc, [True, True, False], lambda x: 'For a 2D calculation, atoms have to be periodic in X and Y axes.')
           self.SYSDIM = '2D'
           bcell = atoms.regions['left'].cell
       else:
@@ -78,9 +77,10 @@ class LatticeSection(PotentialSection):
 
          write_io_data['sites_order'] = np.concatenate(list(map(order,['left', 'central', 'right'])))
          for i,j in zip(range(len(atoms)), write_io_data['sites_order']):
-             if i!=j: break
+             if i!=j:
+                break
          else:
-             #optimalization - do not reorder
+             # optimalization - do not reorder
              write_io_data['sites_order'] = slice(None)
       else:
          raise ValueError(f'{self.SISDIM()} problem periodicity type not implemented')
@@ -103,9 +103,9 @@ class LatticeSection(PotentialSection):
           cc = cell.copy()
           cc[2] -= lc[2] + rc[2]
           regions = [
-              AtomsRegion('left',   slice(None,self.NQ_L()),            lc, [True, True, True]),
-              AtomsRegion('central',slice(self.NQ_L(), -self.NQ_R()),   cc, [True, True, False]),
-              AtomsRegion('right',  slice(-self.NQ_R(), None),          rc, [True, True, True])
+              AtomsRegion('left',   slice(None,self.NQ_L()),            lc, [True, True, True]),       # NOQA E241
+              AtomsRegion('central',slice(self.NQ_L(), -self.NQ_R()),   cc, [True, True, False]),      # NOQA E241
+              AtomsRegion('right',  slice(-self.NQ_R(), None),          rc, [True, True, True])        # NOQA E241
           ]
           pbc = [True, True, False]
           cell[2]+=lc[2] + rc[2]
@@ -119,6 +119,7 @@ class LatticeSection(PotentialSection):
 
       read_io_data.apply_on_atoms(update, atoms)
 
+
 class LatticeSectionDefinition(PotSectionDefinition):
 
   def __init__(self, name='LATTICE', **kwargs):
@@ -128,8 +129,8 @@ class LatticeSectionDefinition(PotSectionDefinition):
           V('SYSTYPE', DefKeyword('BULK', 'LIV', 'LIR')),
           V('BRAVAIS', Sequence(int, str, str, str, str, allowed_values = (i.xband_data() for i in Pearson.pearsons.values()))),
           V('ALAT', float),
-          #Keywords and thus the numbering has just (or at least) 10 char long
-          V('SCALED_PRIMITIVE_CELL', Table([float]*3, numbering=Integer(prefix='A(', postfix=')', after_format='<10'),length=3, format='>22.14f')),
+          # Keywords and thus the numbering has just (or at least) 10 char long
+          V('SCALED_PRIMITIVE_CELL', Table([float] * 3, numbering=Integer(prefix='A(', postfix=')', after_format='<10'),length=3, format='>22.14f')),
           V('NQ_L', int, is_optional=True),
           V('A_L(3)', Array(float, length=3, format='<10'), is_optional=True),
           V('NQ_R', int, is_optional=True),
@@ -153,5 +154,6 @@ class LatticeSectionDefinition(PotSectionDefinition):
       return True
 
   result_class = LatticeSection
+
 
 section = LatticeSectionDefinition
