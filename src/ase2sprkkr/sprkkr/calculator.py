@@ -51,7 +51,7 @@ class SPRKKR(Calculator):
                  mpi=False,
                  input_parameters=None, options={}, potential=None,
                  executable_suffix=True,
-                 empty_spheres : str | bool = False,
+                 empty_spheres : str | bool = 'auto',
                  **kwargs):
         """
         Parameters
@@ -413,8 +413,9 @@ class SPRKKR(Calculator):
 
         empty_spheres
             Whether to add empty spheres to the structure or not.
-            Default 'auto' means add if no empty sphere is present.
-            None means use for this parameter the default value from the calculator.
+            'auto' means add if no empty sphere is present.
+            Default None means use the default value from the calculator for this parameter
+            (which is 'auto' by default).
 
         options: dict
             Options to set to the input_parameters. If input_parameters are given by a filename,
