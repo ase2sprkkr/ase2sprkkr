@@ -4,6 +4,7 @@ import numpy as np
 from ...sprkkr.sprkkr_atoms import SPRKKRAtoms
 from ase.spacegroup.spacegroup import Spacegroup
 from ..spglib import SpacegroupInfo
+from ...common.subprocess import in_subprocess
 
 cdef extern from "symmetry.h":
   cdef void find_symmetry_(int* n_operations, int* operations, int* ln, char* spacegroup, double* cell, double* angles, int* n, double* positions, cython.bint *align, double* magnetic, int* verbose)
@@ -40,19 +41,34 @@ def find_symmetry_ex(spacegroup,
     out = out[:,:n_out]
     return out
 
-def find_symmetry(atoms: ase.Atoms, align=False, verbose=False):
+def find_symmetry(atoms: ase.Atoms, align=False, verbose=False, subprocess=True):
+    """ Find point symmetry operations for a given cell,
+    in the numbering used in xband """
     SPRKKRAtoms.promote_ase_atoms(atoms)
     cp = atoms.cell.cellpar()
     es = atoms.spacegroup_info.equivalent_sites
     uniq = es.unique_indexes()
 
-    """ Find point symmetry operations for a given cell,
-    in the numbering used in xband """
+    sg = atoms.spacegroup_info.number() or 0
+    pos = atoms.get_scaled_positions()[uniq]
+
+    if subprocess:
+        return in_subprocess('find_symmetry_ex', __name__,(
+              sg,
+              cp[:3],
+              cp[3:],
+              len(pos),
+              pos
+              ), {
+                'align' :align,
+                'verbose': verbose
+              })
+
     return find_symmetry_ex(
-        atoms.spacegroup_info or 0,
+        sg,
         cp[:3],
         cp[3:],
-        len(uniq),
-        atoms.positions[uniq],
+        len(pos),
+        pos,
         align=align,
         verbose=verbose)
