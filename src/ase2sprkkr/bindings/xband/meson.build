@@ -7,7 +7,7 @@ py.extension_module(
            dependencies :  python_dep,
            link_with: symmetry_lib,
            install: true,
-           subdir: 'ase2sprkkr/bindings/xband_empty_spheres'
+           subdir: 'ase2sprkkr/bindings/xband'
 )
 
 py.extension_module(
@@ -16,5 +16,5 @@ py.extension_module(
            dependencies :  python_dep,
            link_with: spheres_lib,
            install: true,
-           subdir: 'ase2sprkkr/bindings/xband_empty_spheres'
+           subdir: 'ase2sprkkr/bindings/xband'
 )

@@ -44,4 +44,4 @@ def add_empty_spheres(atoms, **kwargs):
 
 
 from . import es_finder                   # NOQA
-from .xband_empty_spheres import spheres  # NOQA
+from .xband import spheres  # NOQA

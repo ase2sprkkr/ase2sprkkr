@@ -20,4 +20,4 @@ foreach current : sources
      endif
 endforeach
 
-subdir('ase2sprkkr/bindings/xband_empty_spheres')
+subdir('ase2sprkkr/bindings/xband')
