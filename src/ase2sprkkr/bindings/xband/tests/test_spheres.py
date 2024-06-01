@@ -32,5 +32,5 @@ class TestSpheres(TestCase):
       self.assertEqual(o.radii, np.asarray([1.44985909,1.44985909]))
       cu=ase.build.bulk('Cu')
       if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
-        out = SPRKKR().calculate(cu, empty_spheres=True, options={'niter': 1, 'ne' : 20, 'nktab' : 5 })
+        out = SPRKKR().calculate(cu, empty_spheres=True, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }, print_output=False)
         self.assertEqual(len(cu), 4)
