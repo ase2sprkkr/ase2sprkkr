@@ -1,2 +1,2 @@
 #!/bin/bash
-../../a2s_visualise_in_struct.py -p pot -i in_structur.inp -a
+../../ase2sprkkr show_structure pot -i in_structur.inp -a
