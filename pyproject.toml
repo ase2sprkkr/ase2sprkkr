@@ -19,6 +19,7 @@ dependencies = [
   "platformdirs",
   "packaging",
   "cython",
+  "setuptools",
 ]
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
