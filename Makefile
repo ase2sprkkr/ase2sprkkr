@@ -4,7 +4,9 @@ install:
 	pip install .
 
 editable_install:
-	python3 setup.py develop --user
+	pip install --no-deps --no-build-isolation --editable .
+
+ei: editable_install
 
 clean:
 	rm -rf ./dist
