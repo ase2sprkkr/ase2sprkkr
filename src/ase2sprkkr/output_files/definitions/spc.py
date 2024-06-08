@@ -3,10 +3,11 @@ from typing import Optional
 import numpy as np
 
 from ..output_files import Arithmetic, CommonOutputFile
-from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray, Prefixed
+from ...common.grammar_types import NumpyArray, Prefixed
 from ...common.generated_configuration_definitions import NumpyViewDefinition as NV
 from ...visualise.plot import change_default_kwargs, colormesh, Multiplot
 import matplotlib.pyplot as plt
+
 
 class ARPESOutputFile(CommonOutputFile, Arithmetic):
 
@@ -28,6 +29,7 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
          """ Check, that the file can be summed/subtracked from an other file """
          assert np.allclose(other.ENERGY(), self.ENERGY())
          assert np.allclose(other.THETA(), self.THETA())
+
 
 class ARPESDefinition(OutputFileDefinition):
 
@@ -70,5 +72,6 @@ def create_definition():
       NV('DETERMINANT', 'RAW_DATA', i(7), ('NE', 'NT')),
     ], cls=ARPESDefinition, info='ARPES (Angle-resolved photoemission spectroscopy) output.')
     return definition
+
 
 definition = create_definition()
