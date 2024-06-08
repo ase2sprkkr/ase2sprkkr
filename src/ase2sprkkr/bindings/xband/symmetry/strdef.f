@@ -1,18 +1,25 @@
       subroutine find_symmetry(n_operations, operations, slen,
-     >   spacegrp, cell,
-     >   angles, n, positions, align, Magnetic, verbose)
+     >   spacegrp, cell, angles, latvec,
+     >   n, cpositions, natoms, positions, align, Magnetic, verbose)
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
 c     spacegroup, either number or identifier, see the symdata.f
       integer slen
       byte, dimension(slen) :: spacegrp
-c     primitive cell
+c     primitive cell lengths
       double precision :: cell(3)
 c     angles
       double precision :: angles(3)
+c     cell vectors
+      double precision :: latvec(3,3)
 c     number of the atoms
       integer :: n
-c     positions of the atoms
+c     positions of the atoms ...lattice vectors
+      double precision :: cpositions(3, n)
+c     ...cartesian
+      integer natoms
       double precision :: positions(3, n)
+c     types
+      integer types(n)
 c     correct the atom positions by aligning them to a grid
       integer :: align
 c     magnetic field direction
@@ -82,8 +89,8 @@ C                              !ADD INVERSION IF NEED
 
       call init_in(num,w(itau),buf, positions, align .ne. 0)
       if(num.eq.0)then
-        call read_dst(W,GEN)
-        n_operations = -1
+        call read_dst(latvec, natoms, positions, types,
+     $                magnetic, W,GEN, n_operations, operations)
       else
         call genvec
         call gener(W,in,it,n,gen,v,inv,iad,num,buf)

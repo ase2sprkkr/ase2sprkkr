@@ -20,9 +20,14 @@ class TestSpheres(TestCase):
       a2 = ase.build.bulk('Cu', 'fcc', a=3.6, orthorhombic=True)
       sg = ase.spacegroup.get_spacegroup(a2)
       cp = a2.cell.cellpar()
-      sy.find_symmetry_ex(sg.no, cp[:3],cp[3:], len(a2), a2.positions, False)
-      out = sy.find_symmetry(a2)
+      sy.find_symmetry_ex(sg.no, cp[:3],cp[3:], a2.cell[:], len(a2), np.ascontiguousarray(a2.get_scaled_positions()), len(a2), np.arange(len(a2), dtype=np.int32), a2.positions, False)
+      out = sy.find_symmetry(a2, subprocess=False)
       self.assertEqual(out.shape, (2,48))
+      out = sy.find_symmetry(a2, subprocess=True)
+      self.assertEqual(out.shape, (2,48))
+      out2 = sy.find_symmetry(a2, use_spacegroup=False, subprocess=False)
+      self.assertEqual(out, out2)
+
       # these numbers should be returned, at least I hope so
       self.assertEqual(out[0,47], 56)
       self.assertEqual(out[1,47], 1)

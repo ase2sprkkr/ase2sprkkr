@@ -1,17 +1,26 @@
-      subroutine read_dst(W,GEN)
+      subroutine read_dst(vectors, natom,
+     >                    positions, types, magnetic,
+     >                     W,GEN, n_operations, operations)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+
+      DOUBLE PRECISION vectors(3,3)
+      INTEGER natom
+      DOUBLE PRECISION positions(3, natom)
+      INTEGER types(natom)
+      DOUBLE PRECISION magnetic(3)
 C      include 'W.H'
         INTEGER W(*)
       parameter(max2sort=1000)
 C      include 'LEWD.H'
       character*2 lattic*8,buf*78,text*60
-      character *80 tnam(max2sort)
       dimension  a(3),b(3),c(3)
       dimension gen(1),ioldnum(max2sort)
-      common /u/ u(3,3),idatastr
-      common/l2lat/a,b,c,fvc(3),pvc(3),hvc(3)
+      common /u/ u(3,3),a,b,c,um1(3,3),idatastr
+      common/l2lat/ fvc(3),pvc(3),hvc(3)
       dimension  it(64)
       common /lat/ lattic
+      character *40 tnam(max2sort)
+
 c
       do i=1,3
         do j=1,3
@@ -28,10 +37,13 @@ c      read(ilun(17),'(A)')text
 c      read(ilun(17),*)alat,boa,coa,alfa,beta,gamma
 c      if(boa.lt.0.d0)boa=abs(boa/alat)
 c      if(coa.lt.0.d0)coa=abs(coa/alat)
-      read(11,*)a
-      read(11,*)b
-      read(11,*)c
-      read(11,*)natom
+c      read(11,*)a
+c      read(11,*)b
+c      read(11,*)c
+c      read(11,*)natom
+      a = vectors(:,1)
+      b = vectors(:,2)
+      c = vectors(:,3)
       NAMAX=natom
       CALL GENVEC
 
@@ -45,7 +57,8 @@ c      if(coa.lt.0.d0)coa=abs(coa/alat)
       call defi(is1,NATOM)
       call defi(iss,64*NATOM)
       call defrr(i_alcs,NATOM*3)
-      call def_sorts(natom,nsort,a,b,c,W(itau0),W(itau1)
+      call def_sorts(natom,types,positions,magnetic,nsort,a,b,c
+     $     ,W(itau0),W(itau1)
      $     ,w(is),W(is1),W(iss),GEN,W(itaux),W(itauy),W(itauz),
      $     w(i_alcs),it,ng,tnam,ioldnum,w(itau00))
       call defi(i_iatpos,natom)
@@ -56,13 +69,15 @@ c      if(coa.lt.0.d0)coa=abs(coa/alat)
       call defi(i_itg,64)
       call check_sym(64,NG,NATOM,w(iss),w(i_alcs),w(i_isnew)
      $       ,it,nsort,w(i_iatpos),w(i_newis),w(is),w(i_nwt),w(i_ntw),
-     $       w(i_itg),ng_all,nsortnew,ier,W(iTAUX),W(iTAUY),W(iTAUZ)
-     $     ,Gen,tnam,ioldnum)
+     $       w(i_itg),n_operations,nsortnew,ier,W(iTAUX),W(iTAUY),
+     $       W(iTAUZ)
+     $     ,Gen,tnam,ioldnum, operations)
 
 
       end
 
-      subroutine def_sorts(natom,nsort,a,b,c,tau0,tau1,is,is1,iss,
+      subroutine def_sorts(natom,types,positions,magnetic, nsort,a,b,c
+     $     ,tau0,tau1,is,is1,iss,
      $     GEN,taux,tauy,tauz,euler,it,ng,name,ioldnum,tau00)
 C
 C     This subroutine checks all possible crystal symmetry operations
@@ -74,6 +89,10 @@ C
 C
 C     Adjustable arrays:
 C
+      integer types(natom)
+      double precision positions(3,natom)
+      double precision magnetic(3)
+
       dimension tau0(3,natom),tau1(3,natom),tau00(3,natom),
      $     is1(natom),is(natom),iss(64,natom),
      $     taux(*),tauy(*),tauz(*),euler(3,*)
@@ -88,8 +107,8 @@ C
 
 
       character*3 ti
-      character*80  name(max2sort)
-      character *80 tnam(max2sort)                    !,op*64
+      character*40  name(max2sort)
+      character *40 tnam(max2sort)                    !,op*64
       character lattic*8
 
 C------------------------------------------------
@@ -130,8 +149,10 @@ C
       write(ilun(6),11)'H',H
       natom_input=natom
       do i=1,natom
-        read(11,*)(tau0(k,i),k=1,3),tnam(i)
-        write(tnam(i)(61:),'(i4.4)')i
+        !read(11,*)(tau0(k,i),k=1,3),tnam(i)
+        tau0(:,i) = positions(:,i)
+        write(tnam(i)(:20),*) types(i)
+        write(tnam(i)(21:),'(i4.4)')i
         tau00(1,i)=tau0(1,i)
         tau00(2,i)=tau0(2,i)
         tau00(3,i)=tau0(3,i)
@@ -139,10 +160,10 @@ C
         ioldnum(i)=i
         is(i)=-1
       enddo
-      Hx=0
-      Hy=0
-      Hz=0      
-      read(11,*)HX,HY,HZ
+      Hx=magnetic(1)
+      Hy=magnetic(2)
+      Hz=magnetic(3)
+      !read(11,*)HX,HY,HZ
       if(Hx**2+Hy**2+Hz**2.gt.1.d-7)then
 c        read(11,*)HX,HY,HZ
         write(ilun(17),172)HX,HY,HZ
@@ -170,7 +191,7 @@ c        read(11,*)HX,HY,HZ
           nsort=nsort+1
           is(iatom)=nsort
           do jatom=iatom+1,natom
-            if(tnam(jatom)(1:60).eq.tnam(iatom)(1:60))is(jatom)=nsort
+            if(tnam(jatom)(:20) .eq. tnam(iatom)(:20))is(jatom)=nsort
           enddo
         endif
       enddo
@@ -359,8 +380,8 @@ c      call RESORTI4(Natom,IS1,tau0,tnam)
         ioldnum(iatom)=ioldnum(iatom)-is1(iatom)*1000
       enddo
       do iat=1,natom
-c        print*,tnam(iat)(61:)
-        if(natom.eq.natom_input)read(tnam(iat)(61:),*),ioldnum(iat)
+c        print*,tnam(iat)(21:)
+        if(natom.eq.natom_input)read(tnam(iat)(21:),*) ioldnum(iat)
 c        print*,iat,ioldnum(iat)
         if(iat.gt.1)then
           if(is1(iat).ne.is1(iat-1))then
@@ -495,7 +516,7 @@ C
       implicit double precision (a-h,o-z)
       integer IT(N),P
       dimension a1(3,*)
-      character*80 tnam(*),tn
+      character*40 tnam(*),tn
       DO II=2,N
         I=II-1
         K=I
