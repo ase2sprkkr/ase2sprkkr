@@ -2,7 +2,6 @@
 """
 This is a sctipt to visualise in_struct.inp files. Run it to see the doc.
 """
-import numpy as np
 import argparse
 from pathlib import Path
 
@@ -11,15 +10,13 @@ if not __package__:
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 
+from ..potentials.potentials import Potential          # NOQA
+from ..sprkkr.structure import structure_file_to_atoms # NOQA
+from ..ase.visualise import view                       # NOQA
 
-from ..potentials.potentials import Potential
-from ..sprkkr.structure import structure_file_to_atoms
-from ..ase.visualise import view
-
-__author__='JM'
 
 def visualise():
-  #READ IN COMAND LINE PARAMETERS
+  # READ IN COMAND LINE PARAMETERS
   description='This is a sctipt to visualise in_struct.inp files. '
   description+='     You can either use ase visualisation tools or export it to cif file'
   parser = argparse.ArgumentParser(description=description)
@@ -35,12 +32,12 @@ def visualise():
 
   args = parser.parse_args()
   ciffile=args.out
-  cifpotfile=ciffile+'_pot'
+  cifpotfile=ciffile + '_pot'
   outformat=args.format
   ase_vis=args.ase
   structure_filename=args.input
 
-  #read the potential
+  # read the potential
   potential = Potential.from_file(args.pot)
   pot_atoms = potential.atoms
 
@@ -51,7 +48,7 @@ def visualise():
       ase_view(pot_atoms)
   pot_atoms.write(cifpotfile, format = outformat)
 
-  #From here on visualisation of in_structure.inp
+  # From here on visualisation of in_structure.inp
   if not structure_filename:
      exit()
   # Extract data from structure file
@@ -61,6 +58,7 @@ def visualise():
 
   if (ase_vis):
       ase_view(structure)
+
 
 if __name__ == "__main__":
   visualise()
