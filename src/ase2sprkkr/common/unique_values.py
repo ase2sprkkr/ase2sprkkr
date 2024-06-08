@@ -26,6 +26,9 @@ class UniqueValuesMapping:
         array([1, 2, 3, 1], dtype=int32)
   """
 
+  def __repr__(self):
+      return f"<UniqueValuesMapping: {self.normalized(dtype=False)[0]}>"
+
   def __init__(self, mapping:List, value_to_class_id:Dict=None):
       """
       Parameters
@@ -230,7 +233,11 @@ class UniqueValuesMapping:
           ttype = np.integer if dtype is None else dtype
           if np.issubdtype(ttype, self.mapping.dtype):
               return
-      mapping, reverse = self._create_mapping(self.mapping, start_from=start_from, dtype=dtype or np.int32)
+      if dtype is False:
+          dtype = np.integer
+      elif dtype is None:
+          dtype = np.int32
+      mapping, reverse = self._create_mapping(self.mapping, start_from=start_from, dtype=dtype)
       return mapping, reverse
 
   def normalize(self, start_from=1, strict:bool=False, dtype=None):
