@@ -1,24 +1,31 @@
+import os
+import sys
+import numpy as np
+from ase.atoms import Atoms
+
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..calculator import SPRKKR
-from ...potentials.potentials import Potential
-import os
-import sys
-import numpy as np
-from ase.atoms import Atoms
+
+from ..calculator import SPRKKR   # NOQA
+from ...potentials.potentials import Potential  # NOQA
+
 
 class CalculatorTest(TestCase):
 
  print_output = '-v' in sys.argv or '--verbose' in sys.argv
  dirname = os.path.dirname(__file__)
  _calc_args = dict(
-     directory = dirname, input_file = 'output_test_calc.inp', #empty_spheres=False,
-     output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
-     mpi = 'auto'
+     directory = dirname, input_file = 'output_test_calc.inp',
+     output_file = 'output_test_calc.out',
+     potential_file ='output_test_calc.pot',
+     print_output=print_output,
+     mpi = 'auto',
+     empty_spheres=False,
  )
 
  @classmethod
@@ -30,11 +37,12 @@ class CalculatorTest(TestCase):
       return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
 
  def test_run(self):
-      if not self.run_sprkkr(): return
+      if not self.run_sprkkr():
+          return
 
-      a=Atoms(symbols='H',cell=np.array([(1.,0,0),(0,1,0),(0,0,1)]))
+      a=Atoms(symbols='Cu',cell=np.array([(1.,0,0),(0,1,0),(0,0,1)]))
       a.pbc=True
-      xx=SPRKKR(atoms=a)
+      xx=SPRKKR(atoms=a, **self.calc_args())
       xx.input_parameters.SCF.NITER=1
       xx.set('NE', 10)
       xx.set('NKTAB', 10)
