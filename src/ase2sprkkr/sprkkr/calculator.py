@@ -115,7 +115,8 @@ class SPRKKR(Calculator):
         executable_suffix: str or bool
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
-          True: use SPRKKR_EXECUTABLE_SUFFIX environment variable
+          True: use InputParameters.default_sprkkr_executable_suffix, by default initialized
+                by SPRKKR_EXECUTABLE_SUFFIX environment variable
           False: do not append anything (the same as '')
 
         empty_spheres

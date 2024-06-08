@@ -23,23 +23,6 @@ class InputSection(ConfigurationSection):
     """ Input parameters sections has nothing special, yet. """
 
 
-def resolve_executable_suffix(postfix:Union[str,bool]):
-    """" Return the postfix, that is appended after the name of SPR-KKR executable.
-
-    Parameters
-    ----------
-    postfix
-      - If str is given, it is left as is.
-      - If True, return the content of SPRKKR_EXECUTABLE_SUFFIX environment variable
-      - If False, return ''
-    """
-    if postfix is False:
-        return ''
-    if postfix is True:
-        return os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
-    return postfix
-
-
 class InputParameters(ConfigurationFile):
   """ It holds the configuration values for a SPR-KKR task and run the task
 
@@ -48,6 +31,27 @@ class InputParameters(ConfigurationFile):
   execute the executable with proper parameters - and instantiate the result class,
   which then parse the output of the task.
   """
+
+  default_sprkkr_executable_suffix = os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
+  """ This suffix is (if not stated otherwise) appended to the executable name. """
+
+  def resolve_executable_suffix(self, postfix:Union[str,bool]):
+      """" Return the postfix, that is appended after the name of SPR-KKR executable.
+
+      Parameters
+      ----------
+      postfix
+        - If str is given, it is left as is.
+        - If True, return the default value:
+                   default_sprkkr_executable_suffix
+                   (content of SPRKKR_EXECUTABLE_SUFFIX or a user_defined_value)
+        - If False, return ''
+      """
+      if postfix is False:
+          return ''
+      if postfix is True:
+          return self.default_sprkkr_executable_prefix
+      return postfix
 
   def __init__(self, definition, inputfile=None, outputfile=False):
       super().__init__(definition)
@@ -197,7 +201,7 @@ class InputParameters(ConfigurationFile):
 
       d = self._definition
       executable = d.executable
-      executable += resolve_executable_suffix(executable_suffix)
+      executable += self.resolve_executable_suffix(executable_suffix)
       process = self.result_reader(calculator)
       try:
         mpi = self.mpi_runner(mpi)
@@ -208,7 +212,7 @@ class InputParameters(ConfigurationFile):
              executable = [ executable ]
              return process.run(executable, output_file, stdin = input_file, print_output=print_output, directory=directory)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?\n' + \
+        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or InputParameters.default_sprkkr_executable_suffix attribute should be set?\n' + \
                      e.strerror
         raise
       finally:
