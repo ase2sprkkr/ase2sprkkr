@@ -96,7 +96,7 @@ class ProcessOutputReader:
       """
 
       if wait != 0:
-         e = ValueError("The process ended with return value {wait}")
+         e = ValueError(f"The process ended with return value {wait}")
          e.output = output
          e.error = error
          raise e
