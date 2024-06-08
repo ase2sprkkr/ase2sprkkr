@@ -24,7 +24,7 @@ def empty_spheres_atoms(atoms, **kwargs):
     res = empty_spheres(atoms, **kwargs)
     num = len(res.radii)
     if num == 0:
-       return atoms
+       return None
 
     empty = SPRKKRAtoms(symbols='X' * len(res.radii),
                         positions=res.positions,
@@ -40,7 +40,8 @@ def empty_spheres_atoms(atoms, **kwargs):
 
 def add_empty_spheres(atoms, **kwargs):
     empty = empty_spheres_atoms(atoms, **kwargs)
-    atoms+= empty
+    if empty:
+        atoms+= empty
 
 
 from . import es_finder                   # NOQA
