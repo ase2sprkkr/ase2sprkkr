@@ -3,7 +3,28 @@
 from pathlib import Path
 import pyparsing as pp
 import argparse
+from pint import UnitRegistry
 
+_unit_registry = None
+
+
+def parse_inches(string):
+    """
+    .. doctest::
+      >>> parse_inches(1)
+      1.0
+      >>> parse_inches('2cm')
+      0.7874015748031497
+    """
+    global _unit_registry
+    if isinstance(string, (int, float)):
+        return float(string)
+    if _unit_registry is None:
+        _unit_registry = UnitRegistry()
+    out = _unit_registry.parse_expression(string)
+    if isinstance(out, (int, float)):
+        return float(out)
+    return float(out.to(_unit_registry.inch).magnitude)
 
 
 def parse_tuple_function(type, length=None, max_length=True, delimiter=','):
