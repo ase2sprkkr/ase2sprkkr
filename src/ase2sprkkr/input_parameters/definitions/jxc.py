@@ -12,7 +12,6 @@ input_parameters = InputParameters(
           MODE,
           STRCONST,
           ENERGY,
-          SCF,
           TASK('JXC').copy([
               V('CLURAD', 2.2, info=
     """The radius of a sphere restricting the cluster
@@ -27,8 +26,6 @@ input_parameters = InputParameters(
 )
 """ DOS task input parameters definition"""
 
-input_parameters['SCF'].copy_member('FULLPOT').warning_condition = lambda x: \
-  "JXC task does not support FULLPOT computation, only ASA computation, the task will probably fail. Please disable the SCF.FULLPOT option." if x else None
 input_parameters['MODE'].copy_member('MODE').warning_condition = lambda x: \
   "JXC task does not support SREL (scalar relativity without spin) or NREL (no relativity at all) MODE. Please change SCF.MODE, or the computation will fail." if x in ('SREL', 'NREL') else None
 input_parameters['CONTROL'].copy_member('NONMAG').warning_condition = lambda x: \
