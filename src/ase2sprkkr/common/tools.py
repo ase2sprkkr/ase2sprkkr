@@ -5,19 +5,44 @@ import pyparsing as pp
 import argparse
 
 
-def parse_tuple_function(type, length=None, max_length=None, delimiter=','):
-    """ Returns a function, that can parse a comma delimited tuple of values """
-    if max_length is None:
+
+def parse_tuple_function(type, length=None, max_length=True, delimiter=','):
+    """ Returns a function, that can parse a comma delimited tuple of values
+
+    .. doctest ::
+    #+IGNORE_EXCEPTION_DETAIL
+
+    >>> parse_tuple_function(float, 2)("5,4.7")
+    (5.0, 4.7)
+
+    >>> parse_tuple_function(float, 3)("1,2")   # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ValueError: The given value "1,2" should contain at least 3 values, delimited by ","'
+
+    >>> parse_tuple_function(float, 1)("1,2")   # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ValueError: The given value "1,2" should contain no more than 1 values, delimited by ","'
+
+    >>> parse_tuple_function(float, 1,3)("1,2")
+    (1.0, 2.0)
+
+    >>> parse_tuple_function(float, 1,1)("1,2")   # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ValueError: The given value "1,2" should contain no more than 1 values, delimited by ","'
+    """
+    if max_length is True:
        max_length = length
 
     def parse(string):
         out=string.split(delimiter)
         if length and len(out) < length:
-           raise ValueError(f"The given value '{string}' should contain at least {length} values, delimited by '{delimiter}")
-        if max_length and len(out) > length:
-           raise ValueError(f"The given value '{string}' should contain no more than {max_length} values, delimited by '{delimiter}")
+           raise ValueError(f'The given value "{string}" should contain at least {length} values, delimited by "{delimiter}"')
+        if max_length and len(out) > max_length:
+           raise ValueError(f'The given value "{string}" should contain no more than {max_length} values, delimited by "{delimiter}"')
         out = tuple([type(i) for i in out])
         return out
+
+    return parse
 
 
 def append_id_to_filename(filename, id, connector='_'):
