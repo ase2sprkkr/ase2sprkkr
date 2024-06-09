@@ -47,7 +47,7 @@ def parse_tuple_function(type, length=None, max_length=True, delimiter=','):
 
 def append_id_to_filename(filename, id, connector='_'):
     p = Path(filename)
-    return f"{Path.joinpath(p.parent, p.stem)}{p.stem}{connector}{id}{p.suffix}"
+    return f"{Path.joinpath(p.parent, p.stem)}{connector}{id}{p.suffix}"
 
 
 string = pp.Regex('"([^"]|"")*"').set_parse_action(lambda x: x[0][1:-1].replace('""','"')) |\
