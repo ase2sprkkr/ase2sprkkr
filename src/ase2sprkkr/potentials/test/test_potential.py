@@ -54,9 +54,9 @@ class TestPotential(TestCase):
     path = os.path.join(os.path.dirname(__file__), '..','examples','GeTe.pot')
     p=Potential.from_file(path)
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
-      SPRKKR().calculate(potential=p, options={'NITER':1}, directory=False)
+      SPRKKR().calculate(potential=p, options={'NITER':1}, directory=False, empty_spheres=False)
     else:
-      SPRKKR().save_input(potential=p, options={'NITER':1}, directory=False)
+      SPRKKR().save_input(potential=p, options={'NITER':1}, directory=False, empty_spheres=False)
 
   def test_potential_data(self):
     path = os.path.join(os.path.dirname(__file__), '..','examples','FePt.new.pot')
@@ -73,7 +73,7 @@ class TestPotential(TestCase):
     self.assertFalse(np.allclose(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt))
 
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
-      SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True)
+      SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True, empty_spheres=False)
 
   def test_examples(self):
     path = os.path.join(os.path.dirname(__file__), '..','examples')
