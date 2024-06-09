@@ -26,6 +26,7 @@ def parser(parser):
 
     parser.add_argument('-s','--plot_size', dest='figsize', default=(6,4), type=parse_tuple_function(parse_inches,2), help='The plot size. Example: "5cm,5cm", "6,4". The default units are inches.', required=False)
     parser.add_argument('-c','--colormap', dest='colormap', type=str, help='Matplotlib colormap', required=False)
+    parser.add_argument('-d','--dpi', dest='dpi', type=float, help='DPI of the resulting image (default 600)', required=False)
     parser.add_argument('-n','--norm', dest='norm', choices=['lin', 'log'], help='Matplotlib colormap will use linear or logarithmic scale (the default behavior depends on the plotted data)', required=False)
 
     parser.add_argument('-L','--do_not_use_latex', dest='latex', action='store_false', default=True, help='Do not use LaTex for captions generating', required=False)
