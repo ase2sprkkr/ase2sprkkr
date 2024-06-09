@@ -138,7 +138,7 @@ def plotting_function(func):
            if callback:
              callback(axis)
         else:
-           single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, callback=None, *args, **kwargs)
+           single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, callback=None, figsize=figsize, *args, **kwargs)
     return plot_function
 
 
@@ -201,7 +201,7 @@ class Multiplot:
   """ This class can be used for plotting more plots into one resulting image/window. """
 
   def __init__(self, layout, figsize=(6,4), latex=True, updown_layout=False):
-      self.fig, self.axes = plt.subplots(figsize=(6,4), nrows=layout[0], ncols=layout[1])
+      self.fig, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
       plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
       self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
       self.free_axes = [ i for i in self.free_axes[::-1] ]
