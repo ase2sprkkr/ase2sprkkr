@@ -47,7 +47,7 @@ def run(args):
   if value:
     fn = kwargs.get('filename', None)
     for name in value:
-      if fn is not None:
+      if fn is not None and len(value) > 1:
          kwargs['filename'] = append_id_to_filename(fn, name)
       try:
          val = of[name.upper()]
