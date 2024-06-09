@@ -1,7 +1,7 @@
 """ Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks) """
 
-from ...common.grammar_types import DefKeyword, flag, energy, Integer, Array, Keyword
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Array, Keyword
 
 from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
