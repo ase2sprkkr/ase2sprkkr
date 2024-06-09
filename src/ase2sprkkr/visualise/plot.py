@@ -1,5 +1,4 @@
 """ In this file the general plotting routines are present. """
-import copy
 import matplotlib
 from matplotlib import rc_context
 import matplotlib.pyplot as plt
@@ -7,8 +6,10 @@ from matplotlib.colors import SymLogNorm, CenteredNorm, LogNorm, Normalize
 from typing import Optional, Callable
 import numpy as np
 import functools
+from matplotlib.colors import ListedColormap
 
 from ..common.decorators import add_to_signature
+
 
 def normalize_rc_params(params):
     out = {}
@@ -16,10 +17,11 @@ def normalize_rc_params(params):
         if isinstance(v, dict):
            v=normalize_rc_params(v)
            for kk,vv in v.items():
-               out[k+'.'+kk] = vv
+               out[k + '.' + kk] = vv
         else:
            out[k]=v
     return out
+
 
 rc_params = normalize_rc_params({
     'font' : {'family' :'serif',
@@ -30,7 +32,6 @@ rc_params = normalize_rc_params({
 })
 
 
-from matplotlib.colors import ListedColormap
 def combine_colormaps(cmap1, cmap2, n1, n2, index1, index2):
 
     # Get the selected colors from each colormap
@@ -44,6 +45,7 @@ def combine_colormaps(cmap1, cmap2, n1, n2, index1, index2):
     combined_cmap = ListedColormap(combined_colors)
 
     return combined_cmap
+
 
 def combined_colormap(range1=(0.5, 0), range2=(0.15, 1), n1=8000, n2=15000, cmap1=plt.cm.bwr, cmap2=plt.cm.jet):
     # Create the new colormap
@@ -59,6 +61,7 @@ def create_rc_context(latex:bool=True):
        params['text.usetex'] = False
 
     return rc_context(params)
+
 
 def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600, latex=True, figsize=(6,4), callback=None, **kwargs):
     """
@@ -81,8 +84,10 @@ def single_plot(fn:Callable, *args, filename:Optional[str]=None, show:Optional[b
       fig, ax = plt.subplots(figsize=figsize)
       plt.subplots_adjust(left=0.15,right=0.95,bottom=0.17,top=0.93)
       fn(*args, **kwargs, axis=ax)
-      if callback: callback(ax)
+      if callback:
+          callback(ax)
       finish_plot(filename, show, dpi)
+
 
 def finish_plot(filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
      """
@@ -110,9 +115,10 @@ def auto_range(rng, data):
     if rng is None:
        return ( np.min(data), np.max(data) )
     return (
-        rng[0] if rng[0] is not None else np.min(data),
-        rng[1] if rng[1] is not None else np.max(data),
-        )
+           rng[0] if rng[0] is not None else np.min(data),
+           rng[1] if rng[1] is not None else np.max(data),
+    )
+
 
 def plotting_function(func):
     """ Decorator, that 'completes' the given function that just draw into a
@@ -135,17 +141,18 @@ def plotting_function(func):
            single_plot(func, filename=filename, show=show, dpi=dpi, latex=latex, callback=None, *args, **kwargs)
     return plot_function
 
+
 def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, xticks=None, yticks=None):
-   l = locals()
+   loc = locals()
    """
    This functions just set the properties of an matplotlib axis, that are common across various plots.
    """
-   args = { n: l[n]
+   args = { n: loc[n]
             for n in ('xlabel', 'ylabel', 'xticks', 'yticks', 'xticklabels', 'yticklabels', 'title')
-            if l[n] is not None }
+            if loc[n] is not None }
    for name in args:
        if args[name] is not None:
-           getattr(axis, 'set_'+name)(args[name])
+           getattr(axis, 'set_' + name)(args[name])
 
 
 @plotting_function
@@ -155,14 +162,13 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
    Plot 3D data by assigning colors to 2D grid. See matplotlib.pyplot.pcolormesh
    """
    set_up_common_plot(axis, **kwargs)
-   autonorm = False
    if 'cmap' in kwargs:
       colormap = kwargs['cmap']
 
    if mode == 'centered':
        if norm == 'log':
            colormap = colormap or 'RdBu_r'
-           norm = SymLogNorm(linthresh=1e-12,vmax=vmax) #, vmin=c.min(), vmax=c.max())
+           norm = SymLogNorm(linthresh=1e-12,vmax=vmax)  # vmin=c.min(), vmax=c.max())
        elif norm =='lin':
            colormap = colormap or 'seismic'
            norm = CenteredNorm(vmax=vmax)
@@ -189,6 +195,7 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
 
    if colorbar:
      axis.figure.colorbar(plt.cm.ScalarMappable(matplotlib.colors.Normalize(vmin=vmin, vmax=vmax), cmap=colormap), ax=axis)
+
 
 class Multiplot:
   """ This class can be used for plotting more plots into one resulting image/window. """
@@ -230,6 +237,7 @@ class Multiplot:
       for i in self.free_axes:
           i.set_visible(False)
       finish_plot(filename, show, dpi)
+
 
 def change_default_kwargs(f, **kwargs):
     """ Return the same function, with default kwargs changed """
