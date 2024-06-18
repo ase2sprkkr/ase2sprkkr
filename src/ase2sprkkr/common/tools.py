@@ -31,7 +31,6 @@ def parse_tuple_function(type, length=None, max_length=True, delimiter=','):
     """ Returns a function, that can parse a comma delimited tuple of values
 
     .. doctest ::
-    #+IGNORE_EXCEPTION_DETAIL
 
     >>> parse_tuple_function(float, 2)("5,4.7")
     (5.0, 4.7)
