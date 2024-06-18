@@ -4,7 +4,9 @@ else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-import os, glob, re
+
+import os, glob, re  # NOQA
+
 
 class CommonTest(TestCase):
 

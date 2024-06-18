@@ -39,11 +39,12 @@ def empty_spheres(
     int[:,:] point_symmetry=None,
     verbose=False,
     int max_spheres=256,
-    return_atom_rws=False
+    return_atom_rws=False,
+    use_spacegroup=True
     ):
 
     if point_symmetry is None:
-        point_symmetry = find_symmetry(atoms)
+        point_symmetry = find_symmetry(atoms, use_spacegroup=use_spacegroup)
     else:
         SPRKKRAtoms.promote_ase_atoms(atoms)
 
