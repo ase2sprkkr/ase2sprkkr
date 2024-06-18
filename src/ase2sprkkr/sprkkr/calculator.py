@@ -25,6 +25,7 @@ import copy
 import subprocess
 import tempfile
 import datetime
+import ase2sprkkr.config as config
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
@@ -51,7 +52,7 @@ class SPRKKR(Calculator):
                  mpi=False,
                  input_parameters=None, options={}, potential=None,
                  executable_suffix=True,
-                 empty_spheres : str | bool = 'auto',
+                 empty_spheres : str | bool = None,
                  **kwargs):
         """
         Parameters
@@ -542,6 +543,8 @@ class SPRKKR(Calculator):
         def resolve_empty_spheres(empty_spheres):
             if empty_spheres is None:
                empty_spheres = self.empty_spheres
+            if empty_spheres is None:
+               empty_spheres = config.empty_spheres
             if empty_spheres == 'auto':
                empty_spheres = True
                for site in atoms.sites:
