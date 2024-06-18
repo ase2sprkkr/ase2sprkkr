@@ -74,7 +74,7 @@ def empty_spheres(
             eq_classes[type_no] = i+1
             type_no += 1
 
-    cdef int n_symops=len(point_symmetry)
+    cdef int n_symops=point_symmetry.shape[1]
     cdef double[:,:] cell = atoms.cell[:]
     cdef double[:,:] positions = atoms.positions
     cdef int _verbose
@@ -107,8 +107,8 @@ def empty_spheres(
                    &occupations[0],
                    &eq_classes[0],
                    &n_symops,
-                   &point_symmetry[0,0],
-                   &point_symmetry[1,0],
+                   &point_symmetry[0,0] if n_symops else NULL,
+                   &point_symmetry[1,0] if n_symops else NULL,
                    &_verbose
                   )
     out = EmptySpheresResult(centres[:max_spheres], radii[:max_spheres])
