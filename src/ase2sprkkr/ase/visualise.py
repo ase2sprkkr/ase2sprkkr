@@ -4,6 +4,7 @@ from io import BytesIO
 import sys
 import subprocess
 
+
 def view(atoms,
          repeat:Union[int,Tuple[int,int,int]]=None,
          scale_radii:float=0.5,
@@ -36,12 +37,10 @@ def view(atoms,
       Run the viewer in a subprocess to achieve nonblocking viewing.
     """
     from ase.gui.images import Images
-    from ase.atoms import Atoms
 
-    if repeat != None:
+    if repeat is not None:
         if isinstance(repeat, int):
-            repeat = [repeat]*3
-
+            repeat = [repeat] * 3
 
     if not blocking:
       buf = BytesIO()
