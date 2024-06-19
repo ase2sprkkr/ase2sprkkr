@@ -3,8 +3,7 @@ build-backend = 'mesonpy'
 requires = ['meson-python', 'cython' ]
 
 [project.scripts]
-a2s_visualise_in_struct = "ase2sprkkr.tools.ase2sprkkr:ase2sprkkr"
-a2s_plot_output = "ase2sprkkr.tools.a2s_plot_output:plot"
+ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
 
 [project]
 name = "ase2sprkkr"
