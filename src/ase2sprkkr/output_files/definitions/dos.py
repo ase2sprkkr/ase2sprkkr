@@ -5,18 +5,18 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from ..output_files import CommonOutputFile, Arithmetic
-from ...common.grammar_types  import unsigned, Array, Table, RestOfTheFile, NumpyArray
+from ...common.grammar_types import NumpyArray
 from ...common.generated_configuration_definitions import \
-    NumpyViewDefinition as NV, \
-    GeneratedValueDefinition as GV
+    NumpyViewDefinition as NV
 from ...visualise.plot import Multiplot
 
 from ase.units import Rydberg
 from packaging.version import Version
 
+
 class DOS(Arithmetic):
 
-    def __init__(self, energy, dos, type=None, id=None, spin=None, l=None):
+    def __init__(self, energy, dos, type=None, id=None, spin=None, l=None):  # NOQA
         """ Object, that holds DOS for one atom
         (given type and corresponding id id DOS file)
         spin, l (s,p,d,f...) """
@@ -25,7 +25,7 @@ class DOS(Arithmetic):
         self.energy = energy
 
         self.spin = spin
-        self.l = l
+        self.l = l    # NOQA
         self.dos = dos
 
     @property
@@ -37,7 +37,7 @@ class DOS(Arithmetic):
 
     def plot(self, axis=None, legend_ncols=1, legend_height=0.3, legend_fontsize=10, **kwargs):
         axis.set_xlabel(r'$E-E_{\rm F}$ (eV)')
-        axis.set_ylabel(r'DOS')
+        axis.set_ylabel(r'DOS (states/eV)')
 
         title = []
         if self.type:
@@ -58,9 +58,9 @@ class DOS(Arithmetic):
             'total' : {'color': 'black' }
         }
 
-        def plot_l(data, spin, l):
+        def plot_l(data, spin, l):  # NOQA
             i = l if l in params else 'total'
-            args =  params[i]
+            args = params[i]
             line, = axis.plot(self.energy, data, label=l, **args)
             return line
 
@@ -71,9 +71,9 @@ class DOS(Arithmetic):
                handles = [ plot_l(data, spin, self.l) ]
             else:
                handles = [
-                   plot_l(d, spin, l)
-                          for d,l in zip(data, ('s','p','d','f'))
-                   ]
+                   plot_l(d, spin, l) for
+                   d,l in zip(data, ('s','p','d','f'))
+               ]
                if len(handles):
                  handles.append(
                    plot_l(np.sum(data, axis=0), spin, 'total')
@@ -98,7 +98,6 @@ class DOS(Arithmetic):
     def _check_arithmetic(self, other):
         assert np.allclose(self.energy, other.energy)
 
-
     def __repr__(self):
         if self.type:
            return f'<DOS of {self.type}>'
@@ -108,12 +107,12 @@ class DOS(Arithmetic):
 
 class DOSOutputFile(CommonOutputFile):
 
-    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=True,
+    def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=True,  # NOQA
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
         if isinstance(layout, int):
-          layout = ( (self.n_types()-1) // layout +1, layout)
+          layout = ( (self.n_types() - 1) // layout +1, layout)
         mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
         plt.subplots_adjust(left=0.12,right=0.95,bottom=0.1,top=0.9, hspace=0.6, wspace=0.4)
         for dos, axis in zip(self.iterate_site_types(spin, l), mp):
@@ -129,31 +128,30 @@ class DOSOutputFile(CommonOutputFile):
             return {'up': 0, 'down':1}[spin.lower()]
         return spin
 
-    def iterate_site_types(self, spin=None, l=None):
-        spin = self._resolve_spin(spin)
+    def iterate_data_slices(self):  # NOQA
         spins = self.n_spins()
-        c=0
+        end=0
 
-        for i,t in enumerate(self.TYPES()):
-            s=c
-            orbitals=self.ORBITALS[t['IQAT'][0]]
-            c+=orbitals*spins
-            yield self._create_dos( slice(s,c), i, spin, l)
+        for t in self.TYPES():
+            start=end
+            orbitals=self.n_orbitals_for(t)
+            end+=orbitals * spins
+            yield slice(start,end)
+
+    def iterate_site_types(self, spin=None, l=None):  # NOQA
+        spin = self._resolve_spin(spin)
+        for i,slic in enumerate(self.iterate_data_slices()):
+            yield self._create_dos( slic, i, spin, l)
 
     def index_of_dos_for_site_type(self, atom):
         """ Return slice to the DOS array selecting the datas for a given site type """
         if isinstance(atom, str):
             atom=self.site_type_index(atom)
-        spins = self.n_spins()
-        c=0
-        for i,t in enumerate(self.TYPES()):
-            s=c
-            orbitals=self.ORBITALS[t['IQAT'][0]]
-            c+=orbitals*spins
+        for i,slic in enumerate(self.iterate_data_slices()):
             if i==atom:
-               return slice(s,c)
+               return slic
 
-    def dos_for_site_type(self, atom, spin=None, l=None):
+    def dos_for_site_type(self, atom, spin=None, l=None):  # NOQA
         """ Return density of states for a given atom,
         indexed either by integer index, or a string type.
 
@@ -166,19 +164,33 @@ class DOSOutputFile(CommonOutputFile):
         key = self.index_of_dos_for_site_type(atom)
         return self._create_dos(key, atom, spin, l)
 
-    def _create_dos(self, key, id, spin=None, l=None):
+    def _create_dos(self, key, id, spin=None, l=None):  # NOQA
         type = self.TYPES[id]['TXT_T']
         out = self.DOS[key]
-        out = out.reshape((-1, self.ORBITALS[self.TYPES[id]['IQAT'][0]], out.shape[1]))
-        #out = np.moveaxis(out, 1, 0)
+        out = out.reshape((-1, self.n_orbitals_for(self.TYPES[id]), out.shape[1]))
+        # out = np.moveaxis(out, 1, 0)
         if l is not None:
            out=out[:,l]
         if spin is not None:
            out=out[spin]
-        return DOS( (self.ENERGY() - self.EFERMI())*Rydberg, out / Rydberg, type, id, spin, l)
+        return DOS( (self.ENERGY() - self.EFERMI()) * Rydberg, out / Rydberg, type, id, spin, l)
+
+    def n_orbitals_for(self, type):
+        """
+        Return the number of orbitals for the given type record
+        """
+        return max(
+            self.ORBITALS[iq - 1] for iq in type['IQAT']
+        )
 
     def n_spins(self):
-        return len(self.DOS()) // sum( (t['IQAT'][0] for t in self.TYPES()) )
+        """
+        Return the number of spins for each orbital
+        """
+        ln = len(self.DOS())
+        orbitals = sum( self.n_orbitals_for(t) for t in self.TYPES() )
+        return ln // orbitals
+
 
 class DOSDefinition(OutputFileDefinition):
 
@@ -201,13 +213,14 @@ def create_definition():
       NV('Y', 'RAW_DATA', i(1), info='Y'),
       NV('DOS', 'RAW_DATA', i(slice(2,None)), ('NE', -1),
                 transpose=True,
-                transform_key= lambda k,dos: dos.index_of_dos_for_site_type(k)\
-                                             if isinstance(k, str) else k,
+                transform_key=lambda k,dos: dos.index_of_dos_for_site_type(k) if
+                                            isinstance(k, str) else k,
                 info='Desntity of states', description=
                 "Density of states, the leading dimension iterates: "
                 "1..n_atoms, 1..n_spins, 1..n_orbitals(atoms) "
     ),
     ], cls=DOSDefinition, info='Result of a DOS (density of states) calculation.')
     return definition
+
 
 definition = create_definition()
