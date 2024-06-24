@@ -50,7 +50,7 @@ class InputParameters(ConfigurationFile):
       if postfix is False:
           return ''
       if postfix is True:
-          return self.default_sprkkr_executable_prefix
+          return self.default_sprkkr_executable_suffix
       return postfix
 
   def __init__(self, definition, inputfile=None, outputfile=False):
