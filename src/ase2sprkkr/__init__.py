@@ -4,6 +4,9 @@ ase2sprkkr - ASE interface to SPR-KKR electron structure calculation.
 This root package import a few most used objects to provide shortcuts to them.
 """
 
+""" Configuration """
+from . import config
+
 """ SPRKKR calculator to be used to calculate electronic structure using ASE """
 from .sprkkr.calculator import SPRKKR  # NOQA: E402
 

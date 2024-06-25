@@ -25,10 +25,10 @@ import copy
 import subprocess
 import tempfile
 import datetime
-import ase2sprkkr.config as config
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
+from .. import config as config
 
 
 class SPRKKR(Calculator):
