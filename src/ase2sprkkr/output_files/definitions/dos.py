@@ -168,8 +168,11 @@ class DOSOutputFile(CommonOutputFile):
             raise KeyError(f"There is no {name}th atomic type"
                            " in the DOS file") from ke
 
+    def total_dos(self, spin=None, ll=None):
+        return [i for i in self.iterate_dos(spin, ll, total=True) ][-1]
+
     def __iter__(self):
-        return self.iterate_site_types()
+        return self.iterate_dos(total=False)
 
     @staticmethod
     def _resolve_spin(spin):

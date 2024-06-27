@@ -40,6 +40,8 @@ class TestOutput(TestCase):
                self.assertEqual((2,3,1200), out.dos_for_site_type('Ta').shape)
                self.assertEqual(out.DOS['Ta'][5] / Ry, out.dos_for_site_type('Ta',1,2)[:])
                self.assertEqual(out['Ta'].dos, out[0].dos)
+               self.assertEqual(out['Ta'].dos, out[0].dos)
+               self.assertEqual(out.total_dos().dos, (out[0] * 2 + out[1] * 2 + out[2] * 4).dos)
 
             elif ext=='bsf':
                self.assertEqual(out.I().shape, (out.NQ_EFF(), out.NE(), out.NK()))
