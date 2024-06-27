@@ -312,6 +312,12 @@ class SPRKKRAtoms(Atoms):
           self._init_sites()
        return self.info['spacegroup_info']
 
+   def __getitem__(self, i):
+       out = super().__getitem__(i)
+       if isinstance(out, Atoms) and 'spacegroup_info' in out.info:
+          del out.info['spacegroup_info']
+       return out
+
    @property
    def potential(self):
        if self._potential is None:
