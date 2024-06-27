@@ -435,7 +435,7 @@ class ContainerDefinition(RealItemDefinition):
           rdelim = delimiter
           if self.is_repeated is not True:
               rdelim = rdelim + pp.Literal(self.is_repeated)
-          values = pp.delimited_list(values, rdelim)
+          values = pp.delimitedList(values, rdelim)
           values.addParseAction(lambda x: [x.asList()])
        return values
 
