@@ -24,6 +24,7 @@ from ..bindings.empty_spheres import add_empty_spheres
 import copy
 import subprocess
 import tempfile
+import collections
 import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
@@ -52,7 +53,7 @@ class SPRKKR(Calculator):
                  mpi=False,
                  input_parameters=None, options={}, potential=None,
                  executable_suffix=True,
-                 empty_spheres : str | bool = None,
+                 empty_spheres : Union[str, bool, Dict] = None,
                  **kwargs):
         """
         Parameters
@@ -123,6 +124,8 @@ class SPRKKR(Calculator):
         empty_spheres
           Whether to add empty spheres to the structure or not.
           Default 'auto' means add if no empty sphere is present.
+          Dict means True, and the dict is passed as kwargs to the
+          ``ase.bindings.empty_spheres.add_empty_spheres`` method.
         """
 
         if kwargs:
@@ -551,7 +554,9 @@ class SPRKKR(Calculator):
                    if site.is_vacuum():
                       empty_spheres = False
             if empty_spheres:
-               add_empty_spheres(atoms)
+                if not isinstance(empty_spheres, collections.abc.Mapping):
+                    empty_spheres = {}
+                add_empty_spheres(atoms, **empty_spheres)
 
         def save_potential_file():
              pf = from_input_name(potential_file or self.potential_file, '.pot', '%a.pot')
