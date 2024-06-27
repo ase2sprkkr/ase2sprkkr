@@ -3,6 +3,7 @@ from typing import Optional
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import copy
 
 from ..output_files import CommonOutputFile, Arithmetic
 from ...common.grammar_types import NumpyArray
@@ -27,6 +28,12 @@ class DOS(Arithmetic):
         self.spin = spin
         self.l = l    # NOQA
         self.dos = dos
+
+    def copy(self, copy_values=True):
+        out = copy.copy(self)
+        if copy_values:
+            out.dos = out.dos.copy()
+        return out
 
     @property
     def shape(self):
@@ -91,11 +98,15 @@ class DOS(Arithmetic):
                legend=False
 
     def _do_arithmetic(self, func, other):
-        getattr(self.dos, func)(other.dos)
+        if isinstance(other, DOS):
+            other = other.dos
+        getattr(self.dos, func)(other)
         self.id = None
         self.type = None
 
     def _check_arithmetic(self, other):
+        if self.energy is other.energy:
+            return
         assert np.allclose(self.energy, other.energy)
 
     def __repr__(self):
