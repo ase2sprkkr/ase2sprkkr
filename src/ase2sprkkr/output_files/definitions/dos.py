@@ -144,6 +144,30 @@ class DOSOutputFile(CommonOutputFile):
             dos.plot(axis)
         mp.finish(filename, show, dpi)
 
+    def __getitem__(self, name):
+        """
+        In addition to the general Container __getitem__, the following
+        is possible>
+        ``dos[0].plot()`` - plot the first atom
+        ``dos['Te'].plot()`` - plot Te atom
+        """
+        try:
+            return super().__getitem__(name)
+        except KeyError as ke:
+            if not np.issubdtype(name.__class__, np.integer):
+                for i, type in enumerate(self.TYPES):
+                  if type[0] == name:
+                      name = i
+                      break
+                else:
+                  raise KeyError(f"There is no atomic type {name} nor such value"
+                                 " in the DOS file") from ke
+            for i,slc in enumerate(self.iterate_data_slices()):
+                if i == name:
+                     return self._create_dos(slc, i)
+            raise KeyError(f"There is no {name}th atomic type"
+                           " in the DOS file") from ke
+
     def __iter__(self):
         return self.iterate_site_types()
 
@@ -163,10 +187,21 @@ class DOSOutputFile(CommonOutputFile):
             end+=orbitals * spins
             yield slice(start,end)
 
-    def iterate_site_types(self, spin=None, l=None):  # NOQA
+    def iterate_dos(self, spin=None, l=None, total=True):  # NOQA
         spin = self._resolve_spin(spin)
+        total = bool(total)
         for i,slic in enumerate(self.iterate_data_slices()):
-            yield self._create_dos( slic, i, spin, l)
+            out = self._create_dos( slic, i, spin, l)
+            yield out
+            if not total:
+                continue
+            if total is True:
+                total = out * self.TYPES[i][2]
+            else:
+                total.dos += out.dos * self.TYPES[i][2]
+        if total:
+            total.type = 'total'
+            yield total
 
     def index_of_dos_for_site_type(self, atom):
         """ Return slice to the DOS array selecting the datas for a given site type """
@@ -198,7 +233,7 @@ class DOSOutputFile(CommonOutputFile):
            out=out[:,l]
         if spin is not None:
            out=out[spin]
-        return DOS( (self.ENERGY() - self.EFERMI()) * Rydberg, out / Rydberg, type, id, spin, l)
+        return DOS( self.energy, out / Rydberg, type, id, spin, l)
 
     def n_orbitals_for(self, type):
         """
