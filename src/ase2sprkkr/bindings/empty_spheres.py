@@ -1,5 +1,6 @@
 from collections import namedtuple
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
+import numpy as np
 
 
 class EmptySpheresResult(namedtuple('EmptySpheresResult', 'positions radii')):
