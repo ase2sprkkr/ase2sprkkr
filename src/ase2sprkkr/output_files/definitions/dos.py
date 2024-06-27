@@ -137,10 +137,11 @@ class DOSOutputFile(CommonOutputFile):
              **kwargs
              ):
         if isinstance(layout, int):
-          layout = ( (self.n_types() - 1) // layout +1, layout)
+          layout = ( (self.n_types() ) // layout +1, layout)
         mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
         plt.subplots_adjust(left=0.12,right=0.95,bottom=0.1,top=0.9, hspace=0.6, wspace=0.4)
-        for dos, axis in zip(self.iterate_site_types(spin, l), mp):
+        to_plot = self.iterate_dos(spin, l, total=True)
+        for dos, axis in zip(to_plot, mp):
             dos.plot(axis)
         mp.finish(filename, show, dpi)
 
