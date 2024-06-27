@@ -156,7 +156,7 @@ class Arithmetic:
 
     def __sub__(self, other):
         out = self.copy(copy_values=True)
-        out+=other
+        out-=other
         return out
 
     def __mul__(self, other):
@@ -170,7 +170,6 @@ class Arithmetic:
         return out
 
     def __rmul__(self, other):
-        self._check_arithmetic(other)
         out = self.copy()
         out*=other
         return out
