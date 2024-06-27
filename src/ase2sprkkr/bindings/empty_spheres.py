@@ -15,7 +15,7 @@ def empty_spheres(atoms, method='auto', **kwargs):
         return spheres.empty_spheres(atoms, **kwargs)
 
 
-def empty_spheres_atoms(atoms, **kwargs):
+def empty_spheres_atoms(atoms, round_zero=True, **kwargs):
     """
     Update the structure of the (SPRKKR) ASE atoms, adding the empty
     spheres and updating the shpheres radii of the atomic sites, according
@@ -32,6 +32,8 @@ def empty_spheres_atoms(atoms, **kwargs):
                         cell = atoms.cell,
                         symmetry = False)
     empty.positions = empty.get_scaled_positions(True) @ empty.cell
+    if round_zero:
+        empty.positions[np.abs(empty.positions) < 1e-15] = 0
     return empty
     # for i,radius in zip(empty.sites, res.radii):
     # not TO DO: set the radius of the sphere, since SPRKKR make it itself
