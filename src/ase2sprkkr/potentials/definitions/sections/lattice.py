@@ -34,7 +34,7 @@ class LatticeSection(PotentialSection):
           self.SYSDIM = '2D'
           bcell = atoms.regions['left'].cell
       else:
-          raise ValueError("I don't know which calculation I should run with the periodicity of type: {atoms.pbc}.")
+          raise ValueError(f"I don't know which calculation I should run with the periodicity of type: {atoms.pbc}.")
 
       bravais_lattice = bcell.get_bravais_lattice()
       alat = bravais_lattice.a
