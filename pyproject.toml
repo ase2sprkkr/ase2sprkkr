@@ -33,4 +33,4 @@ readme = "README.md"
 Homepage = "https://ase2sprkkr.github.io/ase2sprkkr/"
 
 [project.entry-points."ase.plugins"]
-ase2sprkkr="ase2sprkkr.ase.register"
+ase2sprkkr = "ase2sprkkr.ase.register"
