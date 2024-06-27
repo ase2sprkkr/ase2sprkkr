@@ -2,6 +2,7 @@ import ase
 import ase.build
 import numpy as np
 from ase2sprkkr import SPRKKR
+from ase.units import Bohr
 import os
 
 if __package__:
@@ -12,9 +13,43 @@ __package__, __name__ = patch_package(__package__, __name__)
 
 from .. import symmetry as sy   # NOQA E402
 from .. import spheres as sph   # NOQA E402
+from ...empty_spheres import add_empty_spheres, empty_spheres # NOQA E402
+from .... import Potential       # NOQA E402
 
 
 class TestSpheres(TestCase):
+
+  def test_xband(self):
+      dir = os.path.dirname(__file__)
+      pot = Potential.from_file(os.path.join(dir, 'MnTi3.pot'))
+      mnti= pot.atoms
+      sym = sy.find_symmetry(mnti)
+      sym2 = sy.find_symmetry(mnti, use_spacegroup=False)
+      self.assertEqual(sym, sym2)
+
+      pot = Potential.from_file(os.path.join(dir, 'Cu.pot'))
+      full = pot.atoms
+      cu = pot.atoms[:2]
+      sym = sy.find_symmetry(cu)
+      should = np.array([[
+        1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,
+        33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56],[
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]],
+        dtype=np.int32)
+      self.assertEqual(sym, should)
+      sym = sy.find_symmetry(cu, use_spacegroup=False)
+      self.assertEqual(sym, should)
+      add_empty_spheres(cu, method='xband')
+      sort = lambda x: np.asarray(sorted(tuple(i) for i in x))
+      self.assertEqual(sort(cu.get_scaled_positions()), sort(full.get_scaled_positions()))
+
+      pot = Potential.from_file(os.path.join(dir, 'V.pot'))
+      v = pot.atoms
+      sym = sy.find_symmetry(v)
+      sym2 = sy.find_symmetry(v, subprocess=False, use_spacegroup=False)
+      self.assertEqual(sym, sym2)
+      self.assertEqual(len(empty_spheres(v, method='xband')), 0)
 
   def test(self):
       a2 = ase.build.bulk('Cu', 'fcc', a=3.6, orthorhombic=True)
@@ -32,10 +67,12 @@ class TestSpheres(TestCase):
       self.assertEqual(out[0,47], 56)
       self.assertEqual(out[1,47], 1)
 
-      o = sph.empty_spheres(a2, point_symmetry =out)
-      self.assertEqual(o.positions, np.asarray([[1.27279221,1.27279221,0.],[0,0,1.8]]))
-      self.assertEqual(o.radii, np.asarray([1.44985909,1.44985909]))
+      o = sph.empty_spheres(a2, point_symmetry=out, min_radius = 0.7)
+      self.assertEqual(len(o), 0)
+      o = sph.empty_spheres(a2, point_symmetry=out, min_radius = 0.5)
+      self.assertEqual(len(o), 10)
+      self.assertEqual(o.radii, np.asarray([0.995084964973998 * Bohr] * 10))
       cu=ase.build.bulk('Cu')
       if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
-        out = SPRKKR().calculate(cu, empty_spheres=True, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }, print_output=False)
+        out = SPRKKR().calculate(cu, empty_spheres={'min_radius': 0.25}, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }, print_output=False)
         self.assertEqual(len(cu), 4)

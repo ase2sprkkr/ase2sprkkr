@@ -1,7 +1,11 @@
       subroutine find_symmetry(n_operations, operations, slen,
      >   spacegrp, cell, angles, latvec,
-     >   n, cpositions, natoms, positions, align, Magnetic, verbose)
+     >   n, cpositions, natoms, types, positions, align, Magnetic,
+     >   verbose)
       IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+
+      INTEGER :: n_operations
+      INTEGER :: operations(64, 2)
 c     spacegroup, either number or identifier, see the symdata.f
       integer slen
       byte, dimension(slen) :: spacegrp
@@ -11,24 +15,23 @@ c     angles
       double precision :: angles(3)
 c     cell vectors
       double precision :: latvec(3,3)
-c     number of the atoms
+c     number of the atoms (only the equivalent)
       integer :: n
 c     positions of the atoms ...lattice vectors
       double precision :: cpositions(3, n)
 c     ...cartesian
       integer natoms
-      double precision :: positions(3, n)
+      double precision :: positions(3, natoms)
 c     types
-      integer types(n)
+      integer types(natoms)
 c     correct the atom positions by aligning them to a grid
       integer :: align
 c     magnetic field direction
       double precision :: Magnetic(3)
 c     do an output to stdout
       integer :: verbose
-      INTEGER, intent(out) :: n_operations
-      INTEGER :: operations(64, 2)
 
+      integer num
 
       parameter (MAXDIM=1 000 000)
       integer W(MAXDIM)
@@ -87,7 +90,7 @@ C                              !ADD INVERSION IF NEED
       gamma = angles(3)
       nsort = n
 
-      call init_in(num,w(itau),buf, positions, align .ne. 0)
+      call init_in(num,w(itau),buf, cpositions, align .ne. 0)
       if(num.eq.0)then
         call read_dst(latvec, natoms, positions, types,
      $                magnetic, W,GEN, n_operations, operations)
@@ -104,12 +107,13 @@ C                              !ADD INVERSION IF NEED
 
       subroutine init_in(num,tau,buf, positions, align)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)
-      double precision :: positions(nsort,3)
+      integer num
+      double precision :: positions(3, nsort)
       logical :: align
       include 'param.fi'
-      integer num
       character*2 F*1,ac*9,bc*9,cc*9
      1,sc*6 ,lat(7),lattic*8,buf*78,TMP*10
+      integer numa
       DIMENSION  A(3),B(3),C(3)
       DIMENSION  A0(3),B0(3),C0(3)
       dimension TAU(3,NSMAX)

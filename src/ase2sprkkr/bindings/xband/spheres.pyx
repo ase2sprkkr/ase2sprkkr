@@ -7,6 +7,8 @@ from ase.spacegroup.spacegroup import Spacegroup
 from ..spglib import SpacegroupInfo
 from .symmetry import find_symmetry
 from ..empty_spheres import EmptySpheresResult
+from ase.units import Bohr
+
 
 cdef extern from "spheres.h":
   cdef void find_empty_spheres_(
@@ -32,10 +34,11 @@ cdef extern from "spheres.h":
               int* verbose
   );
 
+
 def empty_spheres(
     atoms,
-    double min_radius=1.0,
-    double max_radius=3.0,
+    double min_radius=0.65,
+    double max_radius=2.,
     int[:,:] point_symmetry=None,
     verbose=False,
     int max_spheres=256,
@@ -48,7 +51,10 @@ def empty_spheres(
     else:
         SPRKKRAtoms.promote_ase_atoms(atoms)
 
-    cdef double alat = atoms.cell.get_bravais_lattice().a
+    cdef double to_bohr = 1 / Bohr
+    min_radius *= to_bohr
+    max_radius *= to_bohr
+    cdef double alat = atoms.cell.get_bravais_lattice().a * to_bohr
     cdef int n = len(atoms)
 
     es = atoms.spacegroup_info.equivalent_sites
@@ -75,9 +81,11 @@ def empty_spheres(
             type_no += 1
 
     cdef int n_symops=point_symmetry.shape[1]
-    cdef double[:,:] cell = atoms.cell[:]
-    cdef double[:,:] positions = atoms.positions
+    cdef double ratio = to_bohr / alat
+    cdef double[:,:] cell = atoms.cell[:] * ratio
+    cdef double[:,:] positions = atoms.positions * ratio
     cdef int _verbose
+
     if isinstance(verbose, bool):
         _verbose = 1 if verbose else 0
     else:
@@ -111,6 +119,9 @@ def empty_spheres(
                    &point_symmetry[1,0] if n_symops else NULL,
                    &_verbose
                   )
+    ratio = 1 / ratio
+    centres[:max_spheres] *= ratio
+    radii[:max_spheres + len(atoms)] *= Bohr
     out = EmptySpheresResult(centres[:max_spheres], radii[:max_spheres])
     if return_atom_rws:
       return out, radii[max_spheres:max_spheres+len(atoms)]
