@@ -7,6 +7,7 @@ import copy
 
 from ..output_files import CommonOutputFile, Arithmetic
 from ...common.grammar_types import NumpyArray
+from ...common.decorators import cached_property
 from ...common.generated_configuration_definitions import \
     NumpyViewDefinition as NV
 from ...visualise.plot import Multiplot
@@ -117,6 +118,19 @@ class DOS(Arithmetic):
 
 
 class DOSOutputFile(CommonOutputFile):
+
+    def __init__(self, definition, container=None):
+        super().__init__(definition, container)
+        self.ENERGY.add_hook(self._clear_computed)
+        self.EFERMI.add_hook(self._clear_computed)
+
+    def _clear_computed(self, _):
+        if 'energy' in self.__dict__:
+            del self.energy
+
+    @cached_property
+    def energy(self):
+        return (self.ENERGY() - self.EFERMI()) * Rydberg
 
     def plot(self, spin=None, l=None, layout=2, figsize=(6,4), latex=True,  # NOQA
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
