@@ -20,6 +20,7 @@ dependencies = [
   "cython",
   "setuptools",
   "pint",
+  'importlib_metadata;python_version<"3.8"'
 ]
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },

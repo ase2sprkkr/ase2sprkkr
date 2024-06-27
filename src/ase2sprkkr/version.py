@@ -4,10 +4,13 @@ Module version
 
 Just the version of the ASE2SPRKKR package.
 """
-#: Version number of the ASE2SPRKKR package
-import pkg_resources
-
 try:
-    __version__ = pkg_resources.get_distribution('ase2sprkkr').version
-except pkg_resources.DistributionNotFound:
+  from importlib.metadata import version, PackageNotFoundError
+except ImportError:
+  from importlib_metadata import version, PackageNotFoundError
+
+#: Version number of the ASE2SPRKKR package
+try:
+    __version__ = version('ase2sprkkr')
+except PackageNotFoundError:
     __version__ = None
