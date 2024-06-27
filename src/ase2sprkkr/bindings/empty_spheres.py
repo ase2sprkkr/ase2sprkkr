@@ -13,8 +13,8 @@ def empty_spheres(atoms, method='auto', **kwargs):
     """ Returns centres of empty spheres to add """
     if method == 'auto':
         if es_finder.is_enabled:
-            method = 'esfinder'
-    if method == 'esfinder':
+            method = 'es_finder'
+    if method == 'es_finder':
         return es_finder.empty_spheres(atoms, **kwargs)
     else:
         return spheres.empty_spheres(atoms, **kwargs)
