@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OutputFileValueDefinition &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Separator" href="ase2sprkkr.output_files.output_files_definitions.Separator.html" />
+    <link rel="prev" title="OutputFileDefinition" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.output_files.html">output_files</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.html">output_files_definitions</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.create_output_file_definition.html">create_output_file_definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.output_file_header.html">output_file_header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.BlankSeparator.html">BlankSeparator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html">OutputFileDefinition</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">OutputFileValueDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.output_files.output_files_definitions.Separator.html">Separator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.definitions.html">definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.output_files.test.html">test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.html">ase2sprkkr</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.output_files.html">output_files</a></li>
+          <li class="breadcrumb-item"><a href="ase2sprkkr.output_files.output_files_definitions.html">output_files_definitions</a></li>
+      <li class="breadcrumb-item active">OutputFileValueDefinition</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/auto/ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="outputfilevaluedefinition">
+<h1>OutputFileValueDefinition<a class="headerlink" href="#outputfilevaluedefinition" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.output_files.output_files_definitions.</span></span><span class="sig-name descname"><span class="pre">OutputFileValueDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value_from_container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">written_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_by_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_is_visible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_stored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_numbered_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_always_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/output_files/output_files_definitions.html#OutputFileValueDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition" title="Link to this definition"></a></dt>
+<dd><p>This class describes the format of one value of
+a header of an output file</p>
+<p class="rubric">Class hierarchy</p>
+<div class="graphviz"><img src="../_images/inheritance-3e4b79d7ce1e13e96d6d8450c7a59a16ec4a49ca.png" alt="Inheritance diagram of ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition" usemap="#inheritance4a64255085" class="inheritance graphviz" /></div>
+<map id="inheritance4a64255085" name="inheritance4a64255085">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationValueDefinition" target="_top" title="Definition o a configuration value, used in SPRKKR configuration file." alt="" coords="554,3,733,18"/>
+<area shape="rect" id="node5" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition" target="_top" title="This class describes the format of one value of" alt="" coords="750,3,957,18"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="value_definitions.ValueDefinition" alt="" coords="394,3,536,18"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,173,18"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="190,3,376,18"/>
+</map><div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p class="rubric">Constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_numbered_array</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>is_always_added</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>write_alternative_name</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value_from_container</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">written_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_by_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_is_visible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_stored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_optional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_numbered_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_repeated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_always_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_in_grammar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_alternative_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.__init__" title="Link to this definition"></a></dt>
+<dd><p>Definition of a configuration value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the configuration value</p></li>
+<li><p><strong>type</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.common.grammar_types.grammar_type.GrammarType" title="ase2sprkkr.common.grammar_types.grammar_type.GrammarType"><em>GrammarType</em></a><em>|</em><em>mixed</em><em>]</em>) – Configuration value data type.
+If it is set to anyting what is not derived from GrammarType, the given value is used as the default value
+and the data type is derived from it.
+If it is None, the default value have to be set using <code class="docutils literal notranslate"><span class="pre">expert</span></code> parameter.</p></li>
+<li><p><strong>default</strong> (<em>mixed</em>) – Default value for the configuration option.
+Can accept callable (with option instance as an argument) - then the value will be determined
+at ‘runtime’ (possibly according to the other values of the section)</p></li>
+<li><p><strong>written_name</strong> (<em>str</em>) – Name of the configuration value in the input file</p></li>
+<li><p><strong>alternative_names</strong> (<em>str</em><em> or </em><em>[</em><em>str</em><em>]</em>) – Value can have an alternative name (that alternativelly denotes the value)</p></li>
+<li><p><strong>fixed_value</strong> (<em>mixed</em>) – If it is given, this option have a fixed_value value (provided by this parameter),
+that can not be changed by an user.
+#TODO - currently, callback (as in default_value) is not supported</p></li>
+<li><p><strong>required</strong> (<em>bool</em>) – <p>Required option can not be set to None (however, a required one
+can be still be optional, if it has a default values).
+If required = None, it is set to True if both the conditions are met:</p>
+<blockquote>
+<div><ul>
+<li><p>the value is not expert</p></li>
+<li><p>the optional is not True and the option has not a default_value</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>init_by_default</strong> (<em>bool</em>) – If the value is not set, init it by default</p></li>
+<li><p><strong>result_is_visible</strong> (<em>bool</em>) – <p>If True, the result (see the result property of <code class="xref py py-class docutils literal notranslate"><span class="pre">Option</span></code>) assigned to the
+option is visible if the value is get as its default value - in this mode the result
+can be used as a kind of default value, specific for given configuration object.</p>
+<p>If False, the result is visible to the user just using the result property
+and it should be some transformation of the value of the object (e.g.
+relative path of the given absolute path, id of assigned object etc.)</p>
+</p></li>
+<li><p><strong>is_stored</strong> (<em>bool</em>) – If True, the value is readed/writed from the output file.
+If None, set to False if the value is Generated.</p></li>
+<li><p><strong>is_optional</strong> (<em>bool</em><em> or </em><em>None</em>) – If True, the value can be omited, if fixed order in the section is required
+None means True just if required is False (or it is determined to be False),
+see the <code class="docutils literal notranslate"><span class="pre">required</span></code> parameter.</p></li>
+<li><p><strong>is_hidden</strong> (<em>bool</em>) – The value is hidden from the user (no container.name access to the value).</p></li>
+<li><p><strong>is_expert</strong> (<em>Union</em><em>[</em><em>bool</em><em>,</em><em>mixed</em><em>]</em>) – Expert values are somewhat hidden (e.g. listed at end) from the user.
+Expert values are not exported to the result, if they are set to the
+default value.</p></li>
+<li><p><strong>is_numbered_array</strong> (<em>bool</em>) – Such values can contains (sparse) arrays. In the resulting ouput, the
+members of the array are in the form NAME1=…, NAME2=…, … The default
+value for missing number can appear in the form NAME=…</p></li>
+<li><p><strong>is_repeated</strong> – If True, the real type of the Value is array of values of the given type.
+The name-value pair is repeated for each value of the array.</p></li>
+<li><p><strong>is_always_added</strong> (<em>bool</em>) – If False, add the value, only if its value is not the default value.
+Default None means False for expert values, True for the others.</p></li>
+<li><p><strong>name_in_grammar</strong> (<em>bool</em><em> or </em><em>None</em>) – The value in the conf file is prefixed by &lt;name&gt;&lt;name_value_delimiter&gt;
+If None, the default type value (type.name_in_grammar) is used</p></li>
+<li><p><strong>name_format</strong> (<em>str</em><em> or </em><em>None</em>) – The way how the name is written</p></li>
+<li><p><strong>expert</strong> (<em>Optional</em><em>[</em><em>mixed</em><em>]</em>) – If not None, set <code class="docutils literal notranslate"><span class="pre">is_expert</span></code> to True, <code class="docutils literal notranslate"><span class="pre">default_value</span></code> to the given value and
+<code class="docutils literal notranslate"><span class="pre">required</span></code> to False. Note, that also <code class="docutils literal notranslate"><span class="pre">type</span></code> can be determined from such given
+<code class="docutils literal notranslate"><span class="pre">default_value</span></code>.</p></li>
+<li><p><strong>write_alternative_name</strong> (<em>bool</em>) – Wheter use the name or the (first) alternative name in the output.</p></li>
+<li><p><strong>write_condition</strong> – If defined, write the value, only if write_condition(the option) is True.</p></li>
+<li><p><strong>condition</strong> – <dl class="simple">
+<dt>If defined, the condition</dt><dd><ul>
+<li><p>the condition.parse_condition() is invoked, when given grammar element
+should be parsed. If it is False, the element is skipped</p></li>
+<li><p>the condition() is invoked, when the elements of the container is listed
+to hide the inactive members</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>result_class</strong> – Redefine the class that holds data for this option/section</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.grammar_of_delimiter">
+<span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.grammar_of_delimiter" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ParserElement</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.prefix">
+<span class="sig-name descname"><span class="pre">prefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">'</span></em><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.prefix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.name_value_delimiter">
+<span class="sig-name descname"><span class="pre">name_value_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\t'</span></em><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.name_value_delimiter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.type_from_type_map">
+<span class="sig-name descname"><span class="pre">type_from_type_map</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{&lt;class</span> <span class="pre">'str'&gt;:</span> <span class="pre">&lt;LineString&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.type_from_type_map" title="Link to this definition"></a></dt>
+<dd><p>Redefine this in descendants, if you need to create different types that the defaults to be
+‘guessed’ from the default values</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.type_of_dangerous">
+<span class="sig-name descname"><span class="pre">type_of_dangerous</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;PotMixed&gt;</span></em><a class="headerlink" href="#ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition.type_of_dangerous" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition.html" class="btn btn-neutral float-left" title="OutputFileDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.output_files.output_files_definitions.Separator.html" class="btn btn-neutral float-right" title="Separator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

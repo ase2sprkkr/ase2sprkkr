@@ -90,11 +90,13 @@
   <h1>Source code for ase2sprkkr.outputs.readers.arpes</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; The ARPES result: currently it &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span>
+<span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">TaskResult</span><span class="p">,</span> <span class="n">KkrProcess</span>
 <span class="kn">from</span> <span class="nn">.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
 <span class="kn">from</span> <span class="nn">...common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
-<span class="kn">from</span> <span class="nn">..output_files</span> <span class="kn">import</span> <span class="n">OutputFile</span>
+<span class="kn">from</span> <span class="nn">...output_files.output_files</span> <span class="kn">import</span> <span class="n">OutputFile</span>
 <span class="kn">import</span> <span class="nn">os</span>
+
+
 <div class="viewcode-block" id="ArpesResult">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult">[docs]</a>
 <span class="k">class</span> <span class="nc">ArpesResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
@@ -114,13 +116,15 @@
       <span class="k">return</span> <span class="n">OutputFile</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spc_filename</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ArpesOutputReader">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader">[docs]</a>
-<span class="k">class</span> <span class="nc">ArpesOutputReader</span><span class="p">(</span><span class="n">DefaultOutputReader</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ArpesProcess">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.arpes.ArpesProcess.html#ase2sprkkr.outputs.readers.arpes.ArpesProcess">[docs]</a>
+<span class="k">class</span> <span class="nc">ArpesProcess</span><span class="p">(</span><span class="n">KkrProcess</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; ARPES task output reader currently do nothing, just have a special</span>
 <span class="sd">  result, that allow easy acces to spc output file &quot;&quot;&quot;</span>
 
-  <span class="n">result_class</span> <span class="o">=</span> <span class="n">ArpesResult</span></div>
+  <span class="n">result_class</span> <span class="o">=</span> <span class="n">ArpesResult</span>
+  <span class="n">reader_class</span> <span class="o">=</span> <span class="n">DefaultOutputReader</span></div>
 
 </pre></div>
 

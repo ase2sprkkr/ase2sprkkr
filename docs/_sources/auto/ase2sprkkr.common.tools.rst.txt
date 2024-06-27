@@ -23,6 +23,8 @@ Full name: **ase2sprkkr.common.tools**
       :template: custom-base-template.rst
    
       append_id_to_filename
+      main
+      parse_inches
       parse_named_option
       parse_tuple_function
    

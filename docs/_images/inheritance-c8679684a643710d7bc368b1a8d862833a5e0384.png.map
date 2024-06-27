@@ -1,0 +1,7 @@
+<map id="inheritancefa40296c4a" name="inheritancefa40296c4a">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="4,4,136,21"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="156,4,402,21"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="484,37,668,53"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.sprkkr.configuration.RepeatedConfigurationSection" target="_top" title="Configuration section to be used in SPRKKR configuration files" alt="" coords="751,21,956,37"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer.html#ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="422,4,731,21"/>
+</map>

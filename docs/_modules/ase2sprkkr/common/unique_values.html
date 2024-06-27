@@ -91,10 +91,9 @@
 <span></span><span class="sd">&quot;&quot;&quot; UniqueValuesMapping: the class for solving equivalence classes on a collection of objects. &quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">defaultdict</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 
 <div class="viewcode-block" id="UniqueValuesMapping">
@@ -110,14 +109,17 @@
 <span class="sd">      .. doctest::</span>
 
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).mapping</span>
-<span class="sd">        array([1, 2, 1])</span>
+<span class="sd">        array([1, 2, 1], dtype=int32)</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([int, int, str]).mapping</span>
-<span class="sd">        array([1, 1, 2])</span>
+<span class="sd">        array([1, 1, 2], dtype=int32)</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1]).value_to_class_id</span>
 <span class="sd">        {1: 1, 4: 2}</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1,4,1,1]).merge([1,1,2,1]).mapping</span>
-<span class="sd">        array([1, 2, 3, 1])</span>
+<span class="sd">        array([1, 2, 3, 1], dtype=int32)</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;UniqueValuesMapping: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
 <div class="viewcode-block" id="UniqueValuesMapping.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__">[docs]</a>
@@ -129,7 +131,7 @@
 <span class="sd">        Array of equivalence class members</span>
 <span class="sd">        members[id] = &lt;eq class id&gt;</span>
 
-<span class="sd">      reverse: dict</span>
+<span class="sd">      value_to_class_id: dict</span>
 <span class="sd">        Mapping { value: &lt;eq class id&gt; }</span>
 <span class="sd">      &quot;&quot;&quot;</span>
 
@@ -162,14 +164,40 @@
 
       <span class="n">indexes</span> <span class="o">=</span> <span class="p">{}</span>
       <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">ec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">):</span>
-          <span class="n">indexes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ec</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">start_from</span><span class="p">)</span>
+          <span class="n">indexes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">ec</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">start_from</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">indexes</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.unique_indexes">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.unique_indexes">[docs]</a>
+  <span class="k">def</span> <span class="nf">unique_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Returns the dictionary that maps equivalence class id to the list</span>
+<span class="sd">      of class members indexes.</span>
+
+<span class="sd">      ..doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping([1,1,4]).unique_indexes()</span>
+<span class="sd">        [0, 2]</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">done</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cid</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">cid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done</span><span class="p">:</span>
+              <span class="n">done</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cid</span><span class="p">)</span>
+              <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">out</span></div>
 
 
 <div class="viewcode-block" id="UniqueValuesMapping.iter_unique">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.iter_unique">[docs]</a>
   <span class="k">def</span> <span class="nf">iter_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.unique_items">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.unique_items">[docs]</a>
+  <span class="k">def</span> <span class="nf">unique_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="UniqueValuesMapping.len_of_unique">
@@ -201,7 +229,7 @@
 
 <span class="sd">      .. doctest::</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1.,4.,1.]).mapping</span>
-<span class="sd">        array([1, 2, 1])</span>
+<span class="sd">        array([1, 2, 1], dtype=int32)</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([1.,4.,1.]).value_to_class_id</span>
 <span class="sd">        {1.0: 1, 4.0: 2}</span>
 <span class="sd">      &quot;&quot;&quot;</span>
@@ -212,8 +240,21 @@
 <div class="viewcode-block" id="UniqueValuesMapping._create_mapping">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping._create_mapping">[docs]</a>
   <span class="nd">@staticmethod</span>
-  <span class="k">def</span> <span class="nf">_create_mapping</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-      <span class="n">mapping</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">_create_mapping</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
+<span class="sd">      mapping : np.ndarray</span>
+<span class="sd">            maps the value indexes to equivalence class id</span>
+
+<span class="sd">      reverse : dict</span>
+<span class="sd">            maps equivalence classes to value indexes</span>
+
+<span class="sd">      .. doctest::</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping._create_mapping([1.,4.,1.])</span>
+<span class="sd">        (array([1, 2, 1], dtype=int32), {1.0: 1, 4.0: 2})</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="n">mapping</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">length</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
       <span class="n">reverse</span> <span class="o">=</span> <span class="p">{}</span>
 
       <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
@@ -224,7 +265,6 @@
              <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
           <span class="n">mapping</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag</span>
       <span class="k">return</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span></div>
-
 
 
 <div class="viewcode-block" id="UniqueValuesMapping.merge">
@@ -285,10 +325,10 @@
       <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="UniqueValuesMapping.normalize">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.normalize">[docs]</a>
-  <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Replace the names of equivalent classes by the integers.</span>
+<div class="viewcode-block" id="UniqueValuesMapping.normalized">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.normalized">[docs]</a>
+  <span class="k">def</span> <span class="nf">normalized</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Map the class ids to integers</span>
 
 <span class="sd">      Parameters</span>
 <span class="sd">      ----------</span>
@@ -302,24 +342,69 @@
 
 <span class="sd">      Returns</span>
 <span class="sd">      -------</span>
+<span class="sd">      mapping : np.ndarray</span>
+<span class="sd">         Array of integer starting from start_from, denotes the equivalence classes for the values,</span>
+<span class="sd">         It holds, that ``mappind[index] == equivalence_class``</span>
+<span class="sd">      reverse : dict</span>
+<span class="sd">         Dict ``{ equivalence_class : value }``</span>
+
+<span class="sd">      .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized()</span>
+<span class="sd">        (array([1, 2, 1], dtype=int32), {1: 1, 2: 2})</span>
+<span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalized(start_from=0)</span>
+<span class="sd">        (array([0, 1, 0], dtype=int32), {1: 0, 2: 1})</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">strict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+          <span class="n">ttype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
+          <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">ttype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
+              <span class="k">return</span>
+      <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+          <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span>
+      <span class="k">elif</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span>
+      <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_mapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="n">start_from</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span></div>
+
+
+<div class="viewcode-block" id="UniqueValuesMapping.normalize">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.normalize">[docs]</a>
+  <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Replace the names of equivalent classes by the integers.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      strict</span>
+<span class="sd">         If True, the resulting integer names will be from range (start_from)..(n+start_from-1),</span>
+<span class="sd">         where n is the number of equivalence classes.</span>
+<span class="sd">         If False and the names are already integers in a numpy array, do nothing.</span>
+
+<span class="sd">      start_from</span>
+<span class="sd">         Number the equivalent classes starting from.</span>
+
+<span class="sd">      dtype</span>
+<span class="sd">         dtype of the normalized values. None means ``numpy.int32``, however if not strict,</span>
+<span class="sd">         any integer type will be sufficient.</span>
+
+<span class="sd">      Returns</span>
+<span class="sd">      -------</span>
 <span class="sd">      unique_values_mapping</span>
 <span class="sd">         Return self.</span>
 
 <span class="sd">      .. doctest::</span>
 
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().mapping</span>
-<span class="sd">        array([1, 2, 1])</span>
+<span class="sd">        array([1, 2, 1], dtype=int32)</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize().value_to_class_id[(0,3)]</span>
 <span class="sd">        2</span>
 <span class="sd">        &gt;&gt;&gt; UniqueValuesMapping.from_values([(0,2),(0,3),(0,2)]).normalize(start_from=0).mapping</span>
-<span class="sd">        array([0, 1, 0])</span>
+<span class="sd">        array([0, 1, 0], dtype=int32)</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">if</span> <span class="ow">not</span> <span class="n">strict</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
-           <span class="k">return</span>
-      <span class="n">mapping</span><span class="p">,</span> <span class="n">reverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_mapping</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="n">start_from</span><span class="o">=</span><span class="n">start_from</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">start_from</span><span class="p">,</span> <span class="n">strict</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reverse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_to_class_id</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
       <span class="k">return</span> <span class="bp">self</span></div>
 </div>
 

@@ -88,17 +88,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.input_parameters.test.test_definitions</h1><div class="highlight"><pre>
-<span></span><span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="k">else</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">..input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="k">if</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">..input_parameters</span> <span class="kn">import</span> <span class="n">InputParameters</span>
+
 
 <div class="viewcode-block" id="TestDefinitions">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions">[docs]</a>
@@ -114,6 +117,19 @@
       <span class="k">assert</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span> <span class="o">==</span> <span class="mi">2</span>
       <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
         <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">EMIN</span></div>
+
+
+<div class="viewcode-block" id="TestDefinitions.jxc">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.html#ase2sprkkr.input_parameters.test.test_definitions.TestDefinitions.jxc">[docs]</a>
+  <span class="k">def</span> <span class="nf">jxc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">ip</span><span class="o">=</span><span class="n">InputParameters</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="s1">&#39;SCF&#39;</span><span class="p">)</span>
+      <span class="n">ip</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span> <span class="o">=</span> <span class="s1">&#39;nrel&#39;</span>
+      <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">warns</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+          <span class="n">ip</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="s1">&#39;jxc&#39;</span><span class="p">)</span>
+      <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">warns</span><span class="p">(</span><span class="ne">UserWarning</span><span class="p">):</span>
+          <span class="n">ip</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span> <span class="o">=</span> <span class="s1">&#39;srel&#39;</span>
+      <span class="n">ip</span><span class="o">.</span><span class="n">MODE</span><span class="o">.</span><span class="n">MODE</span> <span class="o">=</span> <span class="s1">&#39;frel&#39;</span>
+      <span class="n">ip</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="s1">&#39;scf&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TestDefinitions.test_defaults">

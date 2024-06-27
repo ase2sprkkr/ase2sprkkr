@@ -1,0 +1,41 @@
+warnings
+========
+
+Full name: **ase2sprkkr.common.warnings**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.warnings
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      DataValidityWarning
+   
+   
+
+
+  
+  
+  

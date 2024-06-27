@@ -98,40 +98,22 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">pkgutil</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">definitions</span>
 <span class="kn">from</span> <span class="nn">..outputs</span> <span class="kn">import</span> <span class="n">readers</span>
-<span class="kn">from</span> <span class="nn">..outputs.readers.default</span> <span class="kn">import</span> <span class="n">DefaultOutputReader</span>
+<span class="kn">from</span> <span class="nn">..outputs.readers.default</span> <span class="kn">import</span> <span class="n">DefaultProcess</span>
 <span class="kn">from</span> <span class="nn">..sprkkr.configuration</span> <span class="kn">import</span> <span class="n">ConfigurationFile</span><span class="p">,</span> <span class="n">ConfigurationSection</span>
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
 
 <div class="viewcode-block" id="InputSection">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputSection.html#ase2sprkkr.input_parameters.input_parameters.InputSection">[docs]</a>
 <span class="k">class</span> <span class="nc">InputSection</span><span class="p">(</span><span class="n">ConfigurationSection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Input parameters sections has nothing special, yet. &quot;&quot;&quot;</span></div>
 
-
-<div class="viewcode-block" id="resolve_executable_suffix">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.resolve_executable_suffix.html#ase2sprkkr.input_parameters.input_parameters.resolve_executable_suffix">[docs]</a>
-<span class="k">def</span> <span class="nf">resolve_executable_suffix</span><span class="p">(</span><span class="n">postfix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot; Return the postfix, that is appended after the name of SPR-KKR executable.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    postfix</span>
-<span class="sd">      - If str is given, it is left as is.</span>
-<span class="sd">      - If True, return the content of SPRKKR_EXECUTABLE_SUFFIX environment variable</span>
-<span class="sd">      - If False, return &#39;&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SPRKKR_EXECUTABLE_SUFFIX&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">postfix</span></div>
 
 
 <div class="viewcode-block" id="InputParameters">
@@ -144,6 +126,30 @@
 <span class="sd">  execute the executable with proper parameters - and instantiate the result class,</span>
 <span class="sd">  which then parse the output of the task.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">default_sprkkr_executable_suffix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SPRKKR_EXECUTABLE_SUFFIX&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; This suffix is (if not stated otherwise) appended to the executable name. &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="InputParameters.resolve_executable_suffix">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.resolve_executable_suffix">[docs]</a>
+  <span class="k">def</span> <span class="nf">resolve_executable_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postfix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">]):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;&quot; Return the postfix, that is appended after the name of SPR-KKR executable.</span>
+
+<span class="sd">      Parameters</span>
+<span class="sd">      ----------</span>
+<span class="sd">      postfix</span>
+<span class="sd">        - If str is given, it is left as is.</span>
+<span class="sd">        - If True, return the default value:</span>
+<span class="sd">                   default_sprkkr_executable_suffix</span>
+<span class="sd">                   (content of SPRKKR_EXECUTABLE_SUFFIX or a user_defined_value)</span>
+<span class="sd">        - If False, return &#39;&#39;</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+          <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+      <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_sprkkr_executable_suffix</span>
+      <span class="k">return</span> <span class="n">postfix</span></div>
+
 
 <div class="viewcode-block" id="InputParameters.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.__init__">[docs]</a>
@@ -307,7 +313,7 @@
 
       <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span>
       <span class="n">executable</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">executable</span>
-      <span class="n">executable</span> <span class="o">+=</span> <span class="n">resolve_executable_suffix</span><span class="p">(</span><span class="n">executable_suffix</span><span class="p">)</span>
+      <span class="n">executable</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_executable_suffix</span><span class="p">(</span><span class="n">executable_suffix</span><span class="p">)</span>
       <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_reader</span><span class="p">(</span><span class="n">calculator</span><span class="p">)</span>
       <span class="k">try</span><span class="p">:</span>
         <span class="n">mpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">)</span>
@@ -318,7 +324,7 @@
              <span class="n">executable</span> <span class="o">=</span> <span class="p">[</span> <span class="n">executable</span> <span class="p">]</span>
              <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span> <span class="o">=</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
       <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable should be set?</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
+        <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or InputParameters.default_sprkkr_executable_suffix attribute should be set?</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
                      <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>
         <span class="k">raise</span>
       <span class="k">finally</span><span class="p">:</span>
@@ -350,13 +356,13 @@
          <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TASK</span><span class="o">.</span><span class="n">TASK</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
          <span class="k">try</span><span class="p">:</span>
             <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">readers</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-            <span class="n">clsname</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;OutputReader&#39;</span>
+            <span class="n">clsname</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;Process&#39;</span>
             <span class="bp">cls</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">clsname</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="p">:</span>
                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Can not determine the class to read the results of task </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span>
                                 <span class="s2">&quot;No </span><span class="si">{clsname}</span><span class="s2"> class in the module </span><span class="si">{oo.__name__}</span><span class="s2">.</span><span class="si">{task}</span><span class="s2">&quot;</span><span class="p">)</span>
          <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
-            <span class="bp">cls</span> <span class="o">=</span> <span class="n">DefaultOutputReader</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="n">DefaultProcess</span>
       <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span></div>
 
 
@@ -392,7 +398,7 @@
 
 <div class="viewcode-block" id="InputParameters.set_option">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.set_option">[docs]</a>
-  <span class="k">def</span> <span class="nf">set_option</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">set_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">:</span>
           <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
@@ -402,7 +408,7 @@
 
   <span class="nd">@cached_class_property</span>
   <span class="k">def</span> <span class="nf">definitions</span><span class="p">():</span>
-      <span class="c1">#user = os.path.join(platformdirs.user_config_dir(&#39;ase2sprkkr&#39;, &#39;ase2sprkkr&#39;), &#39;input_parameters&#39;)</span>
+      <span class="c1"># user = os.path.join(platformdirs.user_config_dir(&#39;ase2sprkkr&#39;, &#39;ase2sprkkr&#39;), &#39;input_parameters&#39;)</span>
       <span class="n">names</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">definitions</span><span class="o">.</span><span class="n">__path__</span><span class="p">))</span>
       <span class="n">im</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span>
       <span class="n">modules</span> <span class="o">=</span> <span class="p">(</span> <span class="n">im</span><span class="p">(</span><span class="s1">&#39;.definitions.&#39;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">__package__</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">)</span>
@@ -527,11 +533,23 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_definition</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputParameters.save_to_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.save_to_file">[docs]</a>
+  <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">save_hook</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">save_hook</span><span class="p">(</span>
+             <span class="nb">getattr</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+             <span class="n">atoms</span>
+          <span class="p">)</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="p">)</span></div>
 </div>
 
 
-<span class="c1">#at least, to avoid a circular import</span>
-<span class="kn">from</span> <span class="nn">..sprkkr</span> <span class="kn">import</span> <span class="n">calculator</span>
+
+<span class="c1"># at least, to avoid a circular import</span>
+<span class="kn">from</span> <span class="nn">..sprkkr</span> <span class="kn">import</span> <span class="n">calculator</span>   <span class="c1"># NOQA: E402</span>
 </pre></div>
 
            </div>

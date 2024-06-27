@@ -1,0 +1,7 @@
+<map id="inheritance398434237c" name="inheritance398434237c">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="3,3,124,19"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="142,3,365,19"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="383,3,587,19"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.common.configuration_containers.BaseSection" target="_top" title="A section of SPRKKR configuration &#45; i.e. part of the configuration file." alt="" coords="605,3,767,19"/>
+<area shape="rect" id="node5" href="#ase2sprkkr.common.configuration_containers.CustomSection" target="_top" title="Custom task section. Section created by user with no definition" alt="" coords="784,3,957,19"/>
+</map>

@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html" />
-    <link rel="prev" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.arpes.input_parameters.html" /> 
+    <link rel="prev" title="definitions" href="ase2sprkkr.input_parameters.definitions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -64,33 +64,36 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">dos</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 </ul>
 </li>
 </ul>
@@ -132,17 +135,32 @@
 
 INPUT PARAMETERS dos contains:
 ------------------------------
-    SECTION CONTROL contains:
-    -------------------------
+        SECTION CONTROL contains:
+    -----------------------------
         DATASET : String                  The custom field for the description of the problem - the output files will have called &#39;DATASET.&lt;ext&gt;&#39;.
         ADSI : FixedValue(DOS) ≝ DOS      Type of the computation.
         POTFIL : String                   The potential file (see SPRKKR documentation for its format). It isn&#39;t necessary to set it, it will be set by the calculator.
-        KRWS : Integer  (optional)
+        KRWS : Integer ≝ 1  (optional)    If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)
+        KRMT : AnyOf(0,1,2,3,4,5,6)  (optional)
+
+            Possible values:
+              0         RMT is taken from the potential file
+              1         RMT = min( x*RWS )
+              2         RMT = min( d_ij / 2 )
+              3         RMT from atomic charge density (=&gt; KRWS=1)
+              4         RMT from atomic Hartree potential (=&gt; KRWS=1)
+              5         RMT from total atomic potential (=&gt; KRWS=1)
+              6         take average of 3 and 4 (=&gt; KRWS=1)
+
+            It controls how the muffin-tin radii are calculated.
+
         PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
         NONMAG : Flag ≝ False             Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
 
-    SECTION TAU contains:
-    ---------------------
+
+
+        SECTION TAU contains:
+    -------------------------
         BZINT : AnyOf(POINTS,WEYL) ≝ POINTS
 
             Possible values:
@@ -160,6 +178,8 @@ INPUT PARAMETERS dos contains:
             regular mesh.
 
 
+            The mode of BZ-integration used for calculation of the scattering  path operator τ
+
         NKTAB : Integer ≝ 250  (optional)  Number of points for the special points method
         NKTAB2D : Integer  (optional)     Number of points for the special points method for 2D region of 2D problem
         NKTAB3D : Integer  (optional)     Number of points for the special points method for 3D region of 2D problem
@@ -176,20 +196,26 @@ INPUT PARAMETERS dos contains:
             NLOUT : Integer ≝ 3  (optional, expert)  The calculated τ -matrix is printed up to lmax=NLOUT.
             MOL : Flag ≝ False  (optional, expert)  Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.
 
-    SECTION ENERGY contains:
-    ------------------------
+
+
+        SECTION ENERGY contains:
+    ----------------------------
         GRID : Array(of Integer) ≝ [3]
         NE : Array(of Integer) ≝ [300]    Number of points in energy-mesh
         ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.01  (optional)
         EMIN : Real ≝ -0.2                The real part of the lowest E-value
         EMAX : Real ≝ 1.0
 
-    SECTION TASK contains:
-    ----------------------
+
+
+        SECTION TASK contains:
+    --------------------------
         TASK : FixedValue(DOS) ≝ DOS
 
-    SECTION SITES contains:
-    -----------------------
+
+
+        SECTION SITES contains:
+    ---------------------------
         NL : Array(of Integer) ≝ [3]      Angula momentum cutoff (the first discarded l-space)
 </pre></div>
 </div>
@@ -207,7 +233,7 @@ INPUT PARAMETERS dos contains:
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.input_parameters.definitions.arpes.input_parameters.html" class="btn btn-neutral float-left" title="input_parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.definitions.html" class="btn btn-neutral float-left" title="definitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.input_parameters.definitions.dos.input_parameters.html" class="btn btn-neutral float-right" title="input_parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

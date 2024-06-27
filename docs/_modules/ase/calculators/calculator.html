@@ -88,20 +88,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase.calculators.calculator</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
-<span class="kn">import</span> <span class="nn">pathlib</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">ase.calculators.abc</span> <span class="kn">import</span> <span class="n">GetPropertiesMixin</span>
 <span class="kn">from</span> <span class="nn">ase.cell</span> <span class="kn">import</span> <span class="n">Cell</span>
+<span class="kn">from</span> <span class="nn">ase.config</span> <span class="kn">import</span> <span class="n">cfg</span> <span class="k">as</span> <span class="n">_cfg</span>
 <span class="kn">from</span> <span class="nn">ase.outputs</span> <span class="kn">import</span> <span class="n">Properties</span><span class="p">,</span> <span class="n">all_outputs</span>
 <span class="kn">from</span> <span class="nn">ase.utils</span> <span class="kn">import</span> <span class="n">jsonable</span>
-<span class="kn">from</span> <span class="nn">ase.calculators.abc</span> <span class="kn">import</span> <span class="n">GetPropertiesMixin</span>
+
+<span class="kn">from</span> <span class="nn">.names</span> <span class="kn">import</span> <span class="n">names</span>
 
 
 <span class="k">class</span> <span class="nc">CalculatorError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
@@ -111,7 +117,7 @@
 <span class="k">class</span> <span class="nc">CalculatorSetupError</span><span class="p">(</span><span class="n">CalculatorError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculation cannot be performed with the given parameters.</span>
 
-<span class="sd">    Reasons to raise this errors are:</span>
+<span class="sd">    Reasons to raise this error are:</span>
 <span class="sd">      * The calculator is not properly configured</span>
 <span class="sd">        (missing executable, environment variables, ...)</span>
 <span class="sd">      * The given atoms object is not supported</span>
@@ -183,8 +189,9 @@
         <span class="k">for</span> <span class="n">prop</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cell&#39;</span><span class="p">,</span> <span class="s1">&#39;pbc&#39;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">prop</span> <span class="ow">in</span> <span class="n">properties_to_check</span><span class="p">:</span>
                 <span class="n">properties_to_check</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">equal</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">prop</span><span class="p">),</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">atoms2</span><span class="p">,</span> <span class="n">prop</span><span class="p">),</span>
-                             <span class="n">atol</span><span class="o">=</span><span class="n">tol</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">equal</span><span class="p">(</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">atoms1</span><span class="p">,</span> <span class="n">prop</span><span class="p">),</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">atoms2</span><span class="p">,</span> <span class="n">prop</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="n">tol</span>
+                <span class="p">):</span>
                     <span class="n">system_changes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
 
         <span class="n">arrays1</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">atoms1</span><span class="o">.</span><span class="n">arrays</span><span class="p">)</span>
@@ -206,55 +213,66 @@
     <span class="k">return</span> <span class="n">system_changes</span>
 
 
-<span class="n">all_properties</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;forces&#39;</span><span class="p">,</span> <span class="s1">&#39;stress&#39;</span><span class="p">,</span> <span class="s1">&#39;stresses&#39;</span><span class="p">,</span> <span class="s1">&#39;dipole&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;charges&#39;</span><span class="p">,</span> <span class="s1">&#39;magmom&#39;</span><span class="p">,</span> <span class="s1">&#39;magmoms&#39;</span><span class="p">,</span> <span class="s1">&#39;free_energy&#39;</span><span class="p">,</span> <span class="s1">&#39;energies&#39;</span><span class="p">]</span>
+<span class="n">all_properties</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;energy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;forces&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;stress&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;stresses&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dipole&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;charges&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;magmom&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;magmoms&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;free_energy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;energies&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dielectric_tensor&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;born_effective_charges&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;polarization&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 
-<span class="n">all_changes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;positions&#39;</span><span class="p">,</span> <span class="s1">&#39;numbers&#39;</span><span class="p">,</span> <span class="s1">&#39;cell&#39;</span><span class="p">,</span> <span class="s1">&#39;pbc&#39;</span><span class="p">,</span>
-               <span class="s1">&#39;initial_charges&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_magmoms&#39;</span><span class="p">]</span>
+<span class="n">all_changes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;positions&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;numbers&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;cell&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pbc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;initial_charges&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;initial_magmoms&#39;</span><span class="p">,</span>
+<span class="p">]</span>
 
 
-<span class="c1"># Recognized names of calculators sorted alphabetically:</span>
-<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abinit&#39;</span><span class="p">,</span> <span class="s1">&#39;ace&#39;</span><span class="p">,</span> <span class="s1">&#39;aims&#39;</span><span class="p">,</span> <span class="s1">&#39;amber&#39;</span><span class="p">,</span> <span class="s1">&#39;asap&#39;</span><span class="p">,</span> <span class="s1">&#39;castep&#39;</span><span class="p">,</span> <span class="s1">&#39;cp2k&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;crystal&#39;</span><span class="p">,</span> <span class="s1">&#39;demon&#39;</span><span class="p">,</span> <span class="s1">&#39;demonnano&#39;</span><span class="p">,</span> <span class="s1">&#39;dftb&#39;</span><span class="p">,</span> <span class="s1">&#39;dftd3&#39;</span><span class="p">,</span> <span class="s1">&#39;dmol&#39;</span><span class="p">,</span> <span class="s1">&#39;eam&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;elk&#39;</span><span class="p">,</span> <span class="s1">&#39;emt&#39;</span><span class="p">,</span> <span class="s1">&#39;espresso&#39;</span><span class="p">,</span> <span class="s1">&#39;exciting&#39;</span><span class="p">,</span> <span class="s1">&#39;ff&#39;</span><span class="p">,</span> <span class="s1">&#39;fleur&#39;</span><span class="p">,</span> <span class="s1">&#39;gamess_us&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;gpaw&#39;</span><span class="p">,</span> <span class="s1">&#39;gromacs&#39;</span><span class="p">,</span> <span class="s1">&#39;gulp&#39;</span><span class="p">,</span> <span class="s1">&#39;hotbit&#39;</span><span class="p">,</span> <span class="s1">&#39;kim&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;lammpslib&#39;</span><span class="p">,</span> <span class="s1">&#39;lammpsrun&#39;</span><span class="p">,</span> <span class="s1">&#39;lj&#39;</span><span class="p">,</span> <span class="s1">&#39;mopac&#39;</span><span class="p">,</span> <span class="s1">&#39;morse&#39;</span><span class="p">,</span> <span class="s1">&#39;nwchem&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;octopus&#39;</span><span class="p">,</span> <span class="s1">&#39;onetep&#39;</span><span class="p">,</span> <span class="s1">&#39;openmx&#39;</span><span class="p">,</span> <span class="s1">&#39;orca&#39;</span><span class="p">,</span> <span class="s1">&#39;psi4&#39;</span><span class="p">,</span> <span class="s1">&#39;qchem&#39;</span><span class="p">,</span> <span class="s1">&#39;siesta&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;tip3p&#39;</span><span class="p">,</span> <span class="s1">&#39;tip4p&#39;</span><span class="p">,</span> <span class="s1">&#39;turbomole&#39;</span><span class="p">,</span> <span class="s1">&#39;vasp&#39;</span><span class="p">]</span>
-
-
-<span class="n">special</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cp2k&#39;</span><span class="p">:</span> <span class="s1">&#39;CP2K&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;demonnano&#39;</span><span class="p">:</span> <span class="s1">&#39;DemonNano&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;dftd3&#39;</span><span class="p">:</span> <span class="s1">&#39;DFTD3&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;dmol&#39;</span><span class="p">:</span> <span class="s1">&#39;DMol3&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;eam&#39;</span><span class="p">:</span> <span class="s1">&#39;EAM&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;elk&#39;</span><span class="p">:</span> <span class="s1">&#39;ELK&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;emt&#39;</span><span class="p">:</span> <span class="s1">&#39;EMT&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;crystal&#39;</span><span class="p">:</span> <span class="s1">&#39;CRYSTAL&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;ff&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceField&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;fleur&#39;</span><span class="p">:</span> <span class="s1">&#39;FLEUR&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;gamess_us&#39;</span><span class="p">:</span> <span class="s1">&#39;GAMESSUS&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;gulp&#39;</span><span class="p">:</span> <span class="s1">&#39;GULP&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;kim&#39;</span><span class="p">:</span> <span class="s1">&#39;KIM&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;lammpsrun&#39;</span><span class="p">:</span> <span class="s1">&#39;LAMMPS&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;lammpslib&#39;</span><span class="p">:</span> <span class="s1">&#39;LAMMPSlib&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;lj&#39;</span><span class="p">:</span> <span class="s1">&#39;LennardJones&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;mopac&#39;</span><span class="p">:</span> <span class="s1">&#39;MOPAC&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;morse&#39;</span><span class="p">:</span> <span class="s1">&#39;MorsePotential&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;nwchem&#39;</span><span class="p">:</span> <span class="s1">&#39;NWChem&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;openmx&#39;</span><span class="p">:</span> <span class="s1">&#39;OpenMX&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;orca&#39;</span><span class="p">:</span> <span class="s1">&#39;ORCA&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;qchem&#39;</span><span class="p">:</span> <span class="s1">&#39;QChem&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;tip3p&#39;</span><span class="p">:</span> <span class="s1">&#39;TIP3P&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;tip4p&#39;</span><span class="p">:</span> <span class="s1">&#39;TIP4P&#39;</span><span class="p">}</span>
+<span class="n">special</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;cp2k&#39;</span><span class="p">:</span> <span class="s1">&#39;CP2K&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;demonnano&#39;</span><span class="p">:</span> <span class="s1">&#39;DemonNano&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dftd3&#39;</span><span class="p">:</span> <span class="s1">&#39;DFTD3&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;dmol&#39;</span><span class="p">:</span> <span class="s1">&#39;DMol3&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;eam&#39;</span><span class="p">:</span> <span class="s1">&#39;EAM&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;elk&#39;</span><span class="p">:</span> <span class="s1">&#39;ELK&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;emt&#39;</span><span class="p">:</span> <span class="s1">&#39;EMT&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;exciting&#39;</span><span class="p">:</span> <span class="s1">&#39;ExcitingGroundStateCalculator&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;crystal&#39;</span><span class="p">:</span> <span class="s1">&#39;CRYSTAL&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;ff&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceField&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gamess_us&#39;</span><span class="p">:</span> <span class="s1">&#39;GAMESSUS&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gulp&#39;</span><span class="p">:</span> <span class="s1">&#39;GULP&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;kim&#39;</span><span class="p">:</span> <span class="s1">&#39;KIM&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;lammpsrun&#39;</span><span class="p">:</span> <span class="s1">&#39;LAMMPS&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;lammpslib&#39;</span><span class="p">:</span> <span class="s1">&#39;LAMMPSlib&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;lj&#39;</span><span class="p">:</span> <span class="s1">&#39;LennardJones&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mopac&#39;</span><span class="p">:</span> <span class="s1">&#39;MOPAC&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;morse&#39;</span><span class="p">:</span> <span class="s1">&#39;MorsePotential&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;nwchem&#39;</span><span class="p">:</span> <span class="s1">&#39;NWChem&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;openmx&#39;</span><span class="p">:</span> <span class="s1">&#39;OpenMX&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;orca&#39;</span><span class="p">:</span> <span class="s1">&#39;ORCA&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;qchem&#39;</span><span class="p">:</span> <span class="s1">&#39;QChem&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tip3p&#39;</span><span class="p">:</span> <span class="s1">&#39;TIP3P&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;tip4p&#39;</span><span class="p">:</span> <span class="s1">&#39;TIP4P&#39;</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <span class="n">external_calculators</span> <span class="o">=</span> <span class="p">{}</span>
 
 
 <span class="k">def</span> <span class="nf">register_calculator_class</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Add the class into the database. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add the class into the database.&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">external_calculators</span>
     <span class="n">external_calculators</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
     <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -293,8 +311,9 @@
     <span class="k">if</span> <span class="n">tol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Use `equal(a, b, rtol=..., atol=...)` instead of `tol=...`&#39;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">rtol</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">atol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> \
-            <span class="s1">&#39;Do not use deprecated `tol` with `atol` and/or `rtol`&#39;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">rtol</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">atol</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s1">&#39;Do not use deprecated `tol` with `atol` and/or `rtol`&#39;</span>
         <span class="n">rtol</span> <span class="o">=</span> <span class="n">tol</span>
         <span class="n">atol</span> <span class="o">=</span> <span class="n">tol</span>
 
@@ -337,7 +356,7 @@
     <span class="n">kpts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-            <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">recipcell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">*</span> <span class="n">kptdensity</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">recipcell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">*</span> <span class="n">kptdensity</span>
             <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
                 <span class="n">kpts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)))</span>
             <span class="k">else</span><span class="p">:</span>
@@ -356,8 +375,9 @@
         <span class="k">return</span> <span class="n">kpts</span>
 
 
-<span class="k">def</span> <span class="nf">kpts2sizeandoffsets</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">even</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">kpts2sizeandoffsets</span><span class="p">(</span>
+    <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">even</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function for selecting k-points.</span>
 
 <span class="sd">    Use either size or density.</span>
@@ -378,11 +398,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">density</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot specify k-point mesh size and &#39;</span>
-                         <span class="s1">&#39;density simultaneously&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Cannot specify k-point mesh size and &#39;</span> <span class="s1">&#39;density simultaneously&#39;</span>
+        <span class="p">)</span>
     <span class="k">elif</span> <span class="n">density</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot set k-points from &quot;density&quot; unless &#39;</span>
-                         <span class="s1">&#39;Atoms are provided (need BZ dimensions).&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Cannot set k-points from &quot;density&quot; unless &#39;</span>
+            <span class="s1">&#39;Atoms are provided (need BZ dimensions).&#39;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">density</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -398,7 +421,7 @@
         <span class="k">if</span> <span class="n">even</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">+=</span> <span class="n">remainder</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Round up to odd numbers</span>
-            <span class="n">size</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">remainder</span><span class="p">)</span>
+            <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">remainder</span>
 
     <span class="n">offsets</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -462,23 +485,21 @@
 <span class="sd">    Classes must implement the old-fashioned get_eigenvalues and</span>
 <span class="sd">    get_occupations methods.&quot;&quot;&quot;</span>
 
+    <span class="c1"># We should maybe deprecate this and rely on the new</span>
+    <span class="c1"># Properties object for eigenvalues/occupations.</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">eigenvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_eig_occ_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_eigenvalues</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_propwrapper</span><span class="p">()</span><span class="o">.</span><span class="n">eigenvalues</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">occupations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_eig_occ_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_occupation_numbers</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_propwrapper</span><span class="p">()</span><span class="o">.</span><span class="n">occupations</span>
 
-    <span class="k">def</span> <span class="nf">build_eig_occ_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">getter</span><span class="p">):</span>
-        <span class="n">nspins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_spins</span><span class="p">()</span>
-        <span class="n">nkpts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_ibz_k_points</span><span class="p">())</span>
-        <span class="n">nbands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_bands</span><span class="p">()</span>
-        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nspins</span><span class="p">,</span> <span class="n">nkpts</span><span class="p">,</span> <span class="n">nbands</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nspins</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nkpts</span><span class="p">):</span>
-                <span class="n">arr</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">getter</span><span class="p">(</span><span class="n">spin</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">kpt</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">arr</span>
+    <span class="k">def</span> <span class="nf">_propwrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ase.calculator.singlepoint</span> <span class="kn">import</span> <span class="n">OutputPropertyWrapper</span>
+
+        <span class="k">return</span> <span class="n">OutputPropertyWrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Parameters</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
@@ -502,6 +523,7 @@
         <span class="c1"># We use ast to evaluate literals, avoiding eval()</span>
         <span class="c1"># for security reasons.</span>
         <span class="kn">import</span> <span class="nn">ast</span>
+
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
             <span class="n">txt</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="k">assert</span> <span class="n">txt</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;dict(&#39;</span><span class="p">)</span>
@@ -525,14 +547,120 @@
 
     <span class="k">def</span> <span class="nf">tostring</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">keys</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s1">&#39;dict(&#39;</span> <span class="o">+</span> <span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">     &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">=</span><span class="si">{!r}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;)</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s1">&#39;dict(&#39;</span>
+            <span class="o">+</span> <span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">     &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">!r}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s1">&#39;)</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tostring</span><span class="p">())</span>
 
 
-<span class="k">class</span> <span class="nc">Calculator</span><span class="p">(</span><span class="n">GetPropertiesMixin</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BaseCalculator</span><span class="p">(</span><span class="n">GetPropertiesMixin</span><span class="p">):</span>
+    <span class="n">implemented_properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="s1">&#39;Properties calculator can handle (energy, forces, ...)&#39;</span>
+
+    <span class="c1"># Placeholder object for deprecated arguments.  Let deprecated keywords</span>
+    <span class="c1"># default to _deprecated and then issue a warning if the user passed</span>
+    <span class="c1"># any other object (such as None).</span>
+    <span class="n">_deprecated</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span> <span class="o">=</span> <span class="n">use_cache</span>
+
+    <span class="k">def</span> <span class="nf">calculate_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is experimental; currently for internal use.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_outputs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No such property: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># We ignore system changes for now.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">)</span>
+
+        <span class="n">props</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_properties</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">props</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PropertyNotPresent</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">props</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">check_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for any system changes since last calculation.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">compare_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">all_changes</span>
+
+    <span class="k">def</span> <span class="nf">get_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_calculation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">implemented_properties</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PropertyNotImplementedError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> property not implemented&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
+            <span class="n">system_changes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">system_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_state</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">system_changes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_calculation</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">system_changes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+            <span class="c1"># For some reason the calculator was not able to do what we want,</span>
+            <span class="c1"># and that is OK.</span>
+            <span class="k">raise</span> <span class="n">PropertyNotImplementedError</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> not present in this &#39;</span> <span class="s1">&#39;calculation&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">calculation_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">properties</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">system_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_state</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">system_changes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">export_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Properties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># child class can override this</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_name</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Calculator</span><span class="p">(</span><span class="n">BaseCalculator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base-class for all ASE calculators.</span>
 
 <span class="sd">    A calculator must raise PropertyNotImplementedError if asked for a</span>
@@ -545,9 +673,6 @@
 <span class="sd">    &#39;magmom&#39; and &#39;magmoms&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">implemented_properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="s1">&#39;Properties calculator can handle (energy, forces, ...)&#39;</span>
-
     <span class="n">default_parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="s1">&#39;Default parameters&#39;</span>
 
@@ -559,11 +684,15 @@
     <span class="s1">&#39;Whether we purge the results following any change in the set() method.  &#39;</span>
     <span class="s1">&#39;Most (file I/O) calculators will probably want this.&#39;</span>
 
-    <span class="n">_deprecated</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_bad_restart_file</span><span class="o">=</span><span class="n">_deprecated</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ignore_bad_restart_file</span><span class="o">=</span><span class="n">BaseCalculator</span><span class="o">.</span><span class="n">_deprecated</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Basic calculator implementation.</span>
 
 <span class="sd">        restart: str</span>
@@ -595,14 +724,16 @@
         <span class="k">if</span> <span class="n">ignore_bad_restart_file</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deprecated</span><span class="p">:</span>
             <span class="n">ignore_bad_restart_file</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="ne">FutureWarning</span><span class="p">(</span>
-                <span class="s1">&#39;The keyword &quot;ignore_bad_restart_file&quot; is deprecated and &#39;</span>
-                <span class="s1">&#39;will be removed in a future version of ASE.  Passing more &#39;</span>
-                <span class="s1">&#39;than one positional argument to Calculator is also &#39;</span>
-                <span class="s1">&#39;deprecated and will stop functioning in the future.  &#39;</span>
-                <span class="s1">&#39;Please pass arguments by keyword (key=value) except &#39;</span>
-                <span class="s1">&#39;optionally the &quot;restart&quot; keyword.&#39;</span>
-            <span class="p">))</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="ne">FutureWarning</span><span class="p">(</span>
+                    <span class="s1">&#39;The keyword &quot;ignore_bad_restart_file&quot; is deprecated and &#39;</span>
+                    <span class="s1">&#39;will be removed in a future version of ASE.  Passing more &#39;</span>
+                    <span class="s1">&#39;than one positional argument to Calculator is also &#39;</span>
+                    <span class="s1">&#39;deprecated and will stop functioning in the future.  &#39;</span>
+                    <span class="s1">&#39;Please pass arguments by keyword (key=value) except &#39;</span>
+                    <span class="s1">&#39;optionally the &quot;restart&quot; keyword.&#39;</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">restart</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -617,17 +748,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">==</span> <span class="s1">&#39;.&#39;</span> <span class="ow">and</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
-                <span class="c1"># We specified directory in label, and nothing in the diretory key</span>
+                <span class="c1"># We specified directory in label, and nothing in the diretory</span>
+                <span class="c1"># key</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
             <span class="k">elif</span> <span class="s1">&#39;/&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
                 <span class="c1"># We specified our directory in the directory keyword</span>
                 <span class="c1"># or not at all</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Directory redundantly specified though &#39;</span>
-                                 <span class="s1">&#39;directory=&quot;</span><span class="si">{}</span><span class="s1">&quot; and label=&quot;</span><span class="si">{}</span><span class="s1">&quot;.  &#39;</span>
-                                 <span class="s1">&#39;Please omit &quot;/&quot; in label.&#39;</span>
-                                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Directory redundantly specified though &#39;</span>
+                    <span class="s1">&#39;directory=&quot;</span><span class="si">{}</span><span class="s1">&quot; and label=&quot;</span><span class="si">{}</span><span class="s1">&quot;.  &#39;</span>
+                    <span class="s1">&#39;Please omit &quot;/&quot; in label.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+                <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Use default parameters if they were not read from file:</span>
@@ -637,27 +770,31 @@
             <span class="n">atoms</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="bp">self</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># Atoms were read from file.  Update atoms:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">equal</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">)</span> <span class="ow">and</span>
-                        <span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
+                    <span class="n">equal</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">numbers</span><span class="p">)</span>
+                    <span class="ow">and</span> <span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">pbc</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                <span class="p">):</span>
                     <span class="k">raise</span> <span class="n">CalculatorError</span><span class="p">(</span><span class="s1">&#39;Atoms not compatible with file&#39;</span><span class="p">)</span>
                 <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span>
                 <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;get_spin_polarized&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_spin_polarized</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deprecated_get_spin_polarized</span>
+        <span class="c1"># XXX We are very naughty and do not call super constructor!</span>
+
+        <span class="c1"># For historical reasons we have a particular caching protocol.</span>
+        <span class="c1"># We disable the superclass&#39; optional cache.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_cache</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">directory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span>
 
     <span class="nd">@directory</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">PurePath</span><span class="p">]):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>  <span class="c1"># Normalize path.</span>
+    <span class="k">def</span> <span class="nf">directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">PathLike</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>  <span class="c1"># Normalize path.</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -672,7 +809,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
 
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="nd">@label</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
@@ -792,63 +929,16 @@
 
     <span class="k">def</span> <span class="nf">check_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-15</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for any system changes since last calculation.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">compare_atoms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
-                             <span class="n">excluded_properties</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignored_changes</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">compare_atoms</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span>
+            <span class="n">atoms</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+            <span class="n">excluded_properties</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ignored_changes</span><span class="p">),</span>
+        <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_potential_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_consistent</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_property</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="n">atoms</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">force_consistent</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;free_energy&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
-                <span class="c1"># XXX but we don&#39;t know why the energy is not there.</span>
-                <span class="c1"># We should raise PropertyNotPresent.  Discuss</span>
-                <span class="k">raise</span> <span class="n">PropertyNotImplementedError</span><span class="p">(</span>
-                    <span class="s1">&#39;Force consistent/free energy (&quot;free_energy&quot;) &#39;</span>
-                    <span class="s1">&#39;not provided by </span><span class="si">{0}</span><span class="s1"> calculator&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;free_energy&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">energy</span>
-
-    <span class="k">def</span> <span class="nf">get_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_calculation</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">implemented_properties</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">PropertyNotImplementedError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> property not implemented&#39;</span>
-                                              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
-            <span class="n">system_changes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">system_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_state</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">system_changes</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_calculation</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">system_changes</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
-            <span class="c1"># For some reason the calculator was not able to do what we want,</span>
-            <span class="c1"># and that is OK.</span>
-            <span class="k">raise</span> <span class="n">PropertyNotImplementedError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> not present in this &#39;</span>
-                                              <span class="s1">&#39;calculation&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">def</span> <span class="nf">calculation_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">properties</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-        <span class="n">system_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_state</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">system_changes</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span>
-
-    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span>
-                  <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Do the calculation.</span>
 
 <span class="sd">        properties: list of str</span>
@@ -877,72 +967,51 @@
 <span class="sd">        implementation to set the atoms attribute and create any missing</span>
 <span class="sd">        directories.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_directory</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_directory</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_directory</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileExistsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># We can only end up here in case of a race condition if</span>
+                <span class="c1"># multiple Calculators are running concurrently *and* use the</span>
+                <span class="c1"># same _directory, which cannot be expected to work anyway.</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s1">&#39;Concurrent use of directory &#39;</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span>
+                    <span class="o">+</span> <span class="s1">&#39;by multiple Calculator instances detected. Please &#39;</span>
+                    <span class="s1">&#39;use one directory per instance.&#39;</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">def</span> <span class="nf">calculate_numerical_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">0.001</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate numerical forces using finite difference.</span>
 
 <span class="sd">        All atoms will be displaced by +d and -d in all directions.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ase.calculators.test</span> <span class="kn">import</span> <span class="n">numeric_forces</span>
 
-        <span class="kn">from</span> <span class="nn">ase.calculators.test</span> <span class="kn">import</span> <span class="n">numeric_force</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">numeric_force</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
-                          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">))])</span>
+        <span class="k">return</span> <span class="n">numeric_forces</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">calculate_numerical_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate numerical stress using finite difference.&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ase.calculators.test</span> <span class="kn">import</span> <span class="n">numeric_stress</span>
 
-        <span class="n">stress</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-
-        <span class="n">cell</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">d</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">eplus</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">(</span><span class="n">force_consistent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">eminus</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">(</span><span class="n">force_consistent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="n">stress</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">eplus</span> <span class="o">-</span> <span class="n">eminus</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">d</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">d</span>
-
-            <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">2</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">eplus</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">(</span><span class="n">force_consistent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">d</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">d</span>
-            <span class="n">atoms</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">eminus</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_potential_energy</span><span class="p">(</span><span class="n">force_consistent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="n">stress</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">eplus</span> <span class="o">-</span> <span class="n">eminus</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">d</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span>
-            <span class="n">stress</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stress</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
-        <span class="n">atoms</span><span class="o">.</span><span class="n">set_cell</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">scale_atoms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">voigt</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">stress</span><span class="o">.</span><span class="n">flat</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">stress</span>
+        <span class="k">return</span> <span class="n">numeric_stress</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="n">voigt</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_deprecated_get_spin_polarized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;This calculator does not implement get_spin_polarized().  &#39;</span>
-               <span class="s1">&#39;In the future, calc.get_spin_polarized() will work only on &#39;</span>
-               <span class="s1">&#39;calculator classes that explicitly implement this method or &#39;</span>
-               <span class="s1">&#39;inherit the method via specialized subclasses.&#39;</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;This calculator does not implement get_spin_polarized().  &#39;</span>
+            <span class="s1">&#39;In the future, calc.get_spin_polarized() will work only on &#39;</span>
+            <span class="s1">&#39;calculator classes that explicitly implement this method or &#39;</span>
+            <span class="s1">&#39;inherit the method via specialized subclasses.&#39;</span>
+        <span class="p">)</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">FutureWarning</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">band_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create band-structure object for plotting.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">ase.spectrum.band_structure</span> <span class="kn">import</span> <span class="n">get_band_structure</span>
+
         <span class="c1"># XXX This calculator is supposed to just have done a band structure</span>
         <span class="c1"># calculation, but the calculator may not have the correct Fermi level</span>
         <span class="c1"># if it updated the Fermi level after changing k-points.</span>
@@ -951,83 +1020,247 @@
         <span class="c1"># from the selfconsistent calculation.</span>
         <span class="k">return</span> <span class="n">get_band_structure</span><span class="p">(</span><span class="n">calc</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">calculate_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is experimental; currently for internal use.&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_outputs</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No such property: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1"># We ignore system changes for now.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">OldShellProfile</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configvars</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="n">props</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">export_properties</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span>
+                <span class="s1">&#39;Please set $</span><span class="si">{}</span><span class="s1"> environment variable &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">&#39;ASE_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_COMMAND&#39;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="s1">&#39;or supply the command keyword&#39;</span>
+            <span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span>
+        <span class="k">if</span> <span class="s1">&#39;PREFIX&#39;</span> <span class="ow">in</span> <span class="n">command</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;PREFIX&#39;</span><span class="p">,</span> <span class="n">calc</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">props</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">PropertyNotPresent</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">props</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="c1"># Actually this may never happen with shell=True, since</span>
+            <span class="c1"># probably the shell launches successfully.  But we soon want</span>
+            <span class="c1"># to allow calling the subprocess directly, and then this</span>
+            <span class="c1"># distinction (failed to launch vs failed to run) is useful.</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Failed to execute &quot;</span><span class="si">{</span><span class="n">command</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+            <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
 
-    <span class="k">def</span> <span class="nf">export_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Properties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
+        <span class="n">errorcode</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">errorcode</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s1">&#39;Calculator &quot;</span><span class="si">{}</span><span class="s1">&quot; failed with command &quot;</span><span class="si">{}</span><span class="s1">&quot; failed in &#39;</span>
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> with error code </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">calc</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">errorcode</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">CalculationFailed</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">FileIORules</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rules for controlling streams options to external command.</span>
+
+<span class="sd">    FileIOCalculator will direct stdin and stdout and append arguments</span>
+<span class="sd">    to the calculator command using the specifications on this class.</span>
+
+<span class="sd">    Currently names can contain &quot;{prefix}&quot; which will be substituted by</span>
+<span class="sd">    calc.prefix.  This will go away if/when we can remove prefix.&quot;&quot;&quot;</span>
+    <span class="n">extend_argv</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+    <span class="n">stdin_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">stdout_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">configspec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+        <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">configspec</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">section</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">dct</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">dct</span>
+
+
+<span class="k">class</span> <span class="nc">BadConfiguration</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_command</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="c1"># We like to store commands as strings (and call shlex.split() later),</span>
+    <span class="c1"># but we also like to validate them early.  This will error out if</span>
+    <span class="c1"># command contains syntax problems and will also normalize e.g.</span>
+    <span class="c1"># multiple spaces:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">command</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BadConfiguration</span><span class="p">(</span><span class="s1">&#39;Cannot parse command string&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">StandardProfile</span><span class="p">:</span>
+    <span class="n">command</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">configvars</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">_validate_command</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Calculator </span><span class="si">{</span><span class="n">calc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> failed with args </span><span class="si">{</span><span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="si">}</span><span class="s1"> &#39;</span>
+                   <span class="sa">f</span><span class="s1">&#39;in directory </span><span class="si">{</span><span class="n">directory</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">CalculationFailed</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
+
+    <span class="k">def</span> <span class="nf">execute_nonblocking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_split_command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># XXX Unduplicate common stuff between StandardProfile and</span>
+        <span class="c1"># that of GenericFileIO</span>
+        <span class="k">return</span> <span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span> <span class="n">subprocess_function</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">ExitStack</span>
+
+        <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="n">fileio_rules</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">fileio_rules</span>
+
+        <span class="k">with</span> <span class="n">ExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">stack</span><span class="p">:</span>
+
+            <span class="k">def</span> <span class="nf">_maybe_open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
+                <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">stack</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">directory</span> <span class="o">/</span> <span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="p">))</span>
+
+            <span class="n">stdout_fd</span> <span class="o">=</span> <span class="n">_maybe_open</span><span class="p">(</span><span class="n">fileio_rules</span><span class="o">.</span><span class="n">stdout_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+            <span class="n">stdin_fd</span> <span class="o">=</span> <span class="n">_maybe_open</span><span class="p">(</span><span class="n">fileio_rules</span><span class="o">.</span><span class="n">stdin_name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+
+            <span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_split_command</span><span class="p">,</span> <span class="o">*</span><span class="n">fileio_rules</span><span class="o">.</span><span class="n">extend_argv</span><span class="p">]</span>
+            <span class="n">argv</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">subprocess_function</span><span class="p">(</span>
+                <span class="n">argv</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+                <span class="n">stdout</span><span class="o">=</span><span class="n">stdout_fd</span><span class="p">,</span>
+                <span class="n">stdin</span><span class="o">=</span><span class="n">stdin_fd</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">FileIOCalculator</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for calculators that write/read input/output files.&quot;&quot;&quot;</span>
 
-    <span class="n">command</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="s1">&#39;Command used to start calculation&#39;</span>
+    <span class="c1"># Static specification of rules for this calculator:</span>
+    <span class="n">fileio_rules</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FileIORules</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">ignore_bad_restart_file</span><span class="o">=</span><span class="n">Calculator</span><span class="o">.</span><span class="n">_deprecated</span><span class="p">,</span>
-                 <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># command: Optional[str] = None</span>
+    <span class="c1"># &#39;Command used to start calculation&#39;</span>
+
+    <span class="c1"># Fallback command when nothing else is specified.</span>
+    <span class="c1"># There will be no fallback in the future; it must be explicitly</span>
+    <span class="c1"># configured.</span>
+    <span class="n">_legacy_default_command</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_cfg</span>  <span class="c1"># Ensure easy access to config for subclasses</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">ruleset</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper for subclasses to define FileIORules.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">FileIORules</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ignore_bad_restart_file</span><span class="o">=</span><span class="n">Calculator</span><span class="o">.</span><span class="n">_deprecated</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;File-IO calculator.</span>
 
 <span class="sd">        command: str</span>
 <span class="sd">            Command used to start calculation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">Calculator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="p">,</span> <span class="n">ignore_bad_restart_file</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span>
-                            <span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">restart</span><span class="p">,</span> <span class="n">ignore_bad_restart_file</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+        <span class="k">if</span> <span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_profile</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># XXX deprecate me</span>
+        <span class="c1">#</span>
+        <span class="c1"># This is for calculators that invoke Popen directly on</span>
+        <span class="c1"># self.command instead of letting us (superclass) do it.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">command</span>
+
+    <span class="nd">@command</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load_argv_profile</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">section_name</span><span class="p">):</span>
+        <span class="c1"># Helper method to load configuration.</span>
+        <span class="c1"># This is used by the tests, do not rely on this as it will change.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">section</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">parser</span><span class="p">[</span><span class="n">section_name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadConfiguration</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No </span><span class="si">{</span><span class="n">section_name</span><span class="si">!r}</span><span class="s1"> section&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">fileio_rules</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">configvars</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">fileio_rules</span><span class="o">.</span><span class="n">load_config</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ASE_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_COMMAND&#39;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span>
-                  <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span><span class="p">):</span>
-        <span class="n">Calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">write_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CalculatorSetupError</span><span class="p">(</span>
-                <span class="s1">&#39;Please set $</span><span class="si">{}</span><span class="s1"> environment variable &#39;</span>
-                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;ASE_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_COMMAND&#39;</span><span class="p">)</span> <span class="o">+</span>
-                <span class="s1">&#39;or supply the command keyword&#39;</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">command</span>
-        <span class="k">if</span> <span class="s1">&#39;PREFIX&#39;</span> <span class="ow">in</span> <span class="n">command</span><span class="p">:</span>
-            <span class="n">command</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;PREFIX&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
+            <span class="n">configvars</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cwd</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="c1"># Actually this may never happen with shell=True, since</span>
-            <span class="c1"># probably the shell launches successfully.  But we soon want</span>
-            <span class="c1"># to allow calling the subprocess directly, and then this</span>
-            <span class="c1"># distinction (failed to launch vs failed to run) is useful.</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Failed to execute &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="s1">&#39;command&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadConfiguration</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;No command field in </span><span class="si">{</span><span class="n">section_name</span><span class="si">!r}</span><span class="s1"> section&#39;</span><span class="p">)</span>
 
-        <span class="n">errorcode</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">StandardProfile</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">configvars</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">errorcode</span><span class="p">:</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Calculator &quot;</span><span class="si">{}</span><span class="s1">&quot; failed with command &quot;</span><span class="si">{}</span><span class="s1">&quot; failed in &#39;</span>
-                   <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> with error code </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span>
-                                                  <span class="n">path</span><span class="p">,</span> <span class="n">errorcode</span><span class="p">))</span>
-            <span class="k">raise</span> <span class="n">CalculationFailed</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_initialize_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ASE_&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_COMMAND&#39;</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">parser</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_argv_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># XXX issue a FutureWarning if this causes the command</span>
+            <span class="c1"># to no longer be None</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legacy_default_command</span>
+
+        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">EnvironmentError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;No configuration of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.  &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;Missing section [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">] in configuration&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">OldShellProfile</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;energy&#39;</span><span class="p">],</span> <span class="n">system_changes</span><span class="o">=</span><span class="n">all_changes</span>
+    <span class="p">):</span>
+        <span class="n">Calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_input</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="p">,</span> <span class="n">system_changes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">read_results</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">write_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">system_changes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Write input file(s).</span>
@@ -1041,7 +1274,6 @@
 
     <span class="k">def</span> <span class="nf">read_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Read energy, forces, ... from output file(s).&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
 </pre></div>
 
            </div>

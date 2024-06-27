@@ -94,6 +94,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 
+
 <div class="viewcode-block" id="view">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.ase.visualise.view.html#ase2sprkkr.ase.visualise.view">[docs]</a>
 <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span>
@@ -128,12 +129,10 @@
 <span class="sd">      Run the viewer in a subprocess to achieve nonblocking viewing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">ase.gui.images</span> <span class="kn">import</span> <span class="n">Images</span>
-    <span class="kn">from</span> <span class="nn">ase.atoms</span> <span class="kn">import</span> <span class="n">Atoms</span>
 
-    <span class="k">if</span> <span class="n">repeat</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">repeat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">repeat</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">repeat</span> <span class="o">=</span> <span class="p">[</span><span class="n">repeat</span><span class="p">]</span><span class="o">*</span><span class="mi">3</span>
-
+            <span class="n">repeat</span> <span class="o">=</span> <span class="p">[</span><span class="n">repeat</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">blocking</span><span class="p">:</span>
       <span class="n">buf</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>

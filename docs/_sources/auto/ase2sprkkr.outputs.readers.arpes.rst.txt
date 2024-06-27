@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.arpes**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.arpes.ArpesOutputReader  ase2sprkkr.outputs.readers.arpes.ArpesResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.arpes.ArpesProcess  ase2sprkkr.outputs.readers.arpes.ArpesResult 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.outputs.readers.arpes**
       :toctree:
       :template: custom-class-template.rst
    
-      ArpesOutputReader
+      ArpesProcess
       ArpesResult
    
    

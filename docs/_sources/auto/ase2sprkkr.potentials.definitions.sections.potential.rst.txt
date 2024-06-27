@@ -1,0 +1,53 @@
+potential
+=========
+
+Full name: **ase2sprkkr.potentials.definitions.sections.potential**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.potential.PotentialSection  ase2sprkkr.potentials.definitions.sections.potential.PotentialSectionDefinition  ase2sprkkr.potentials.definitions.sections.potential.PotentialsSection  ase2sprkkr.potentials.definitions.sections.potential.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.potential
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PotentialSection
+      PotentialSectionDefinition
+      PotentialsSection
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

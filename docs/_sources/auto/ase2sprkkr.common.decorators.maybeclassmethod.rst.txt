@@ -1,0 +1,36 @@
+maybeclassmethod
+================
+
+
+.. currentmodule:: ase2sprkkr.common.decorators
+
+.. autoclass:: maybeclassmethod
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.decorators.maybeclassmethod
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

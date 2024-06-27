@@ -1,0 +1,62 @@
+output\_files\_definitions
+==========================
+
+Full name: **ase2sprkkr.output\_files.output\_files\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.output_files.output_files_definitions.BlankSeparator  ase2sprkkr.output_files.output_files_definitions.OutputFileDefinition  ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition  ase2sprkkr.output_files.output_files_definitions.Separator 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.output_files_definitions
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_output_file_definition
+      output_file_header
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BlankSeparator
+      OutputFileDefinition
+      OutputFileValueDefinition
+      Separator
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

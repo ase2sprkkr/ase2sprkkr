@@ -91,9 +91,10 @@
 <span></span><span class="sd">&quot;&quot;&quot; In this module the base classes for SPR-KKR configuration sections and files are present.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-
 <span class="kn">from</span> <span class="nn">..common.configuration_containers</span> <span class="kn">import</span> <span class="n">RootConfigurationContainer</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">CustomSection</span>
-<span class="kn">from</span> <span class="nn">..common.configuration_definitions</span> <span class="kn">import</span> <span class="n">ConfigurationRootDefinition</span><span class="p">,</span> <span class="n">SectionDefinition</span><span class="p">,</span> <span class="n">ValueDefinition</span>
+<span class="kn">from</span> <span class="nn">..common.repeated_configuration_containers</span> <span class="kn">import</span> <span class="n">RepeatedConfigurationContainer</span>
+<span class="kn">from</span> <span class="nn">..common.container_definitions</span> <span class="kn">import</span> <span class="n">ConfigurationRootDefinition</span><span class="p">,</span> <span class="n">SectionDefinition</span>
+<span class="kn">from</span> <span class="nn">..common.value_definitions</span> <span class="kn">import</span> <span class="n">ValueDefinition</span>
 <span class="kn">from</span> <span class="nn">..common.options</span> <span class="kn">import</span> <span class="n">Option</span><span class="p">,</span> <span class="n">CustomOption</span>
 
 <span class="kn">from</span> <span class="nn">.io_data</span> <span class="kn">import</span> <span class="n">WriteIoData</span>
@@ -101,6 +102,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
+
 
 <div class="viewcode-block" id="ConfigurationSectionTrait">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait">[docs]</a>
@@ -150,6 +152,7 @@
 
 <span class="c1"># Containers and values</span>
 
+
 <div class="viewcode-block" id="ConfigurationFile">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile">[docs]</a>
 <span class="k">class</span> <span class="nc">ConfigurationFile</span><span class="p">(</span><span class="n">RootConfigurationContainer</span><span class="p">,</span> <span class="n">ConfigurationSectionTrait</span><span class="p">):</span>
@@ -167,9 +170,17 @@
 </div>
 
 
+
 <div class="viewcode-block" id="ConfigurationSection">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.ConfigurationSection.html#ase2sprkkr.sprkkr.configuration.ConfigurationSection">[docs]</a>
 <span class="k">class</span> <span class="nc">ConfigurationSection</span><span class="p">(</span><span class="n">Section</span><span class="p">,</span> <span class="n">ConfigurationSectionTrait</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; Configuration section to be used in SPRKKR configuration files &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="RepeatedConfigurationSection">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.configuration.RepeatedConfigurationSection.html#ase2sprkkr.sprkkr.configuration.RepeatedConfigurationSection">[docs]</a>
+<span class="k">class</span> <span class="nc">RepeatedConfigurationSection</span><span class="p">(</span><span class="n">RepeatedConfigurationContainer</span><span class="p">,</span> <span class="n">ConfigurationSectionTrait</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Configuration section to be used in SPRKKR configuration files &quot;&quot;&quot;</span></div>
 
 

@@ -1,0 +1,52 @@
+scf\_info
+=========
+
+Full name: **ase2sprkkr.potentials.definitions.sections.scf\_info**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection  ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSectionDefinition  ase2sprkkr.potentials.definitions.sections.scf_info.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.scf_info
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ScfInfoSection
+      ScfInfoSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

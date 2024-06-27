@@ -5,14 +5,6 @@ Full name: **ase2sprkkr.bindings.es\_finder**
 
 
 
-.. rubric:: Module class hierarchy
-
-.. inheritance-diagram::  ase2sprkkr.bindings.es_finder.EmptySpheresResult 
-      :parts: 1
-
-|
-
-
 .. rubric:: Description
 
 .. automodule:: ase2sprkkr.bindings.es_finder
@@ -30,21 +22,12 @@ Full name: **ase2sprkkr.bindings.es\_finder**
       :toctree:
       :template: custom-base-template.rst
    
-      add_empty_spheres
       empty_spheres
    
    
 
 
    
-   
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :template: custom-class-template.rst
-   
-      EmptySpheresResult
    
    
 

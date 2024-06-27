@@ -223,7 +223,7 @@
 <div class="viewcode-block" id="NumpyViewDefinition.source">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html#ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.source">[docs]</a>
    <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
-       <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">):</span>
+       <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">):</span>
           <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">(</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">](),</span> <span class="n">container</span><span class="p">)</span>
        <span class="k">else</span><span class="p">:</span>
           <span class="n">selector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span>

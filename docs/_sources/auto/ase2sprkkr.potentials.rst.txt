@@ -39,10 +39,10 @@ Full name: **ase2sprkkr.potentials**
      :recursive:
   
      ase2sprkkr.potentials.custom_potential_section
-     ase2sprkkr.potentials.definitions
      ase2sprkkr.potentials.potential_definitions
      ase2sprkkr.potentials.potential_sections
      ase2sprkkr.potentials.potentials
+     ase2sprkkr.potentials.definitions
      ase2sprkkr.potentials.test
   
   

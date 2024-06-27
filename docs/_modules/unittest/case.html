@@ -201,7 +201,7 @@
         <span class="n">exit</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__exit__</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&#39; object does &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;not support the context manager protocol&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+                        <span class="sa">f</span><span class="s2">&quot;not support the context manager protocol&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">enter</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span>
     <span class="n">addcleanup</span><span class="p">(</span><span class="n">exit</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
@@ -659,7 +659,7 @@
             <span class="c1"># We need to pass an actual exception and traceback to addFailure,</span>
             <span class="c1"># otherwise the legacy result can choke.</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">_UnexpectedSuccess</span> <span class="kn">from</span> <span class="bp">None</span>
+                <span class="k">raise</span> <span class="n">_UnexpectedSuccess</span> <span class="kn">from</span> <span class="kc">None</span>
             <span class="k">except</span> <span class="n">_UnexpectedSuccess</span><span class="p">:</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">addFailure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>

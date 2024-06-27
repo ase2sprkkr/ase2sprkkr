@@ -1,7 +1,0 @@
-<map id="inheritance20504d551a" name="inheritance20504d551a">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,171,18"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="188,3,372,18"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="configuration_definitions.ValueDefinition" alt="" coords="389,3,559,18"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.output_definitions.OutputValueDefinition.html#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="576,3,747,18"/>
-<area shape="rect" id="node5" href="#ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition" target="_top" title="Value in an output file, of a form &#39;NAME=VALUE&#39; (spaces possible)" alt="" coords="765,3,957,18"/>
-</map>

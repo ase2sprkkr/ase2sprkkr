@@ -1,0 +1,44 @@
+subprocess
+==========
+
+Full name: **ase2sprkkr.common.subprocess**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.subprocess
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      _call_function
+      ignore_signal
+      in_subprocess
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

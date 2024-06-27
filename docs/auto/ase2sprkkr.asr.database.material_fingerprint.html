@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="get_hash_of_atoms" href="ase2sprkkr.asr.database.material_fingerprint.get_hash_of_atoms.html" />
-    <link rel="prev" title="key_descriptions" href="ase2sprkkr.asr.database.key_descriptions.html" /> 
+    <link rel="prev" title="parse_filter_string" href="ase2sprkkr.asr.database.duplicates.parse_filter_string.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -64,6 +64,15 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.asr.html">asr</a></li>
@@ -77,13 +86,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.convex_hull.html">convex_hull</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.core.html">core</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.asr.database.html">database</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.app.html">app</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.browser.html">browser</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.check.html">check</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.clonetree.html">clonetree</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.duplicates.html">duplicates</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.fromtree.html">fromtree</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.key_descriptions.html">key_descriptions</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">material_fingerprint</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.merge.html">merge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.asr.database.rmsd.html">rmsd</a></li>
@@ -125,16 +131,9 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.asr.workflow.html">workflow</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 </ul>
 </li>
 </ul>
@@ -191,7 +190,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.asr.database.key_descriptions.html" class="btn btn-neutral float-left" title="key_descriptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.asr.database.duplicates.parse_filter_string.html" class="btn btn-neutral float-left" title="parse_filter_string" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.asr.database.material_fingerprint.get_hash_of_atoms.html" class="btn btn-neutral float-right" title="get_hash_of_atoms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

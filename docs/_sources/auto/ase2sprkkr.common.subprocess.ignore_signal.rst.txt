@@ -1,0 +1,8 @@
+ignore\_signal
+==============
+
+Full name: **ase2sprkkr.common.subprocess.ignore\_signal**
+
+.. currentmodule:: ase2sprkkr.common.subprocess
+
+.. autofunction:: ignore_signal

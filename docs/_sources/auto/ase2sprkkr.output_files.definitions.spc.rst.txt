@@ -1,0 +1,59 @@
+spc
+===
+
+Full name: **ase2sprkkr.output\_files.definitions.spc**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.output_files.definitions.spc.ARPESDefinition  ase2sprkkr.output_files.definitions.spc.ARPESOutputFile 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.definitions.spc
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      create_definition
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ARPESDefinition
+      ARPESOutputFile
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

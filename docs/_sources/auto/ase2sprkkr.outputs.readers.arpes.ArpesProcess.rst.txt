@@ -1,0 +1,36 @@
+ArpesProcess
+============
+
+
+.. currentmodule:: ase2sprkkr.outputs.readers.arpes
+
+.. autoclass:: ArpesProcess
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.outputs.readers.arpes.ArpesProcess
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

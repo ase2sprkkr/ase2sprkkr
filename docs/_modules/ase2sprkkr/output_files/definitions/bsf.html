@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.output_files.definitions.bsf &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../definitions.html">ase2sprkkr.output_files.definitions</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.output_files.definitions.bsf</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.output_files.definitions.bsf</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">..output_files_definitions</span> <span class="kn">import</span> <span class="n">OutputFileValueDefinition</span> <span class="k">as</span> <span class="n">V</span><span class="p">,</span> <span class="n">create_output_file_definition</span><span class="p">,</span> <span class="n">OutputFileDefinition</span><span class="p">,</span><span class="n">Separator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">..output_files</span> <span class="kn">import</span> <span class="n">Arithmetic</span><span class="p">,</span> <span class="n">CommonOutputFile</span>
+<span class="kn">from</span> <span class="nn">...common.grammar_types</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">,</span> <span class="n">Keyword</span>
+<span class="kn">from</span> <span class="nn">...common.generated_configuration_definitions</span> <span class="kn">import</span> <span class="n">NumpyViewDefinition</span> <span class="k">as</span> <span class="n">NV</span>
+<span class="kn">from</span> <span class="nn">...common.configuration_definitions</span> <span class="kn">import</span> <span class="n">gather</span><span class="p">,</span><span class="n">switch</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
+<span class="kn">from</span> <span class="nn">...visualise.plot</span> <span class="kn">import</span> <span class="n">colormesh</span><span class="p">,</span> <span class="n">Multiplot</span>
+
+
+<div class="viewcode-block" id="BSFOutputFile">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.bsf.BSFOutputFile.html#ase2sprkkr.output_files.definitions.bsf.BSFOutputFile">[docs]</a>
+<span class="k">class</span> <span class="nc">BSFOutputFile</span><span class="p">(</span><span class="n">CommonOutputFile</span><span class="p">,</span> <span class="n">Arithmetic</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Output file for Bloch spectral functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BSFOutputFile.plot">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.bsf.BSFOutputFile.html#ase2sprkkr.output_files.definitions.bsf.BSFOutputFile.plot">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="n">latex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+             <span class="n">filename</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">kwargs</span>
+             <span class="p">):</span>
+        <span class="n">mp</span><span class="o">=</span><span class="n">Multiplot</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">latex</span><span class="o">=</span><span class="n">latex</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span><span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.17</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="mf">0.90</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">KEYWORD</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;BSF-SPOL&#39;</span><span class="p">:</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_Y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_Z</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_UP</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">mp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">I_DOWN</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">mp</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">show</span><span class="p">,</span> <span class="n">dpi</span><span class="p">)</span></div>
+
+
+    <span class="n">_arithmetic_values</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">))]</span>
+
+<div class="viewcode-block" id="BSFOutputFile._assert_arithmetic">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.bsf.BSFOutputFile.html#ase2sprkkr.output_files.definitions.bsf.BSFOutputFile._assert_arithmetic">[docs]</a>
+    <span class="k">def</span> <span class="nf">_assert_arithmetic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot; Check, that the file can be summed/subtracked from an other file &quot;&quot;&quot;</span>
+         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span>
+         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">KEYWORD</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">KEYWORD</span><span class="p">()</span>
+         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;SHAPE&#39;</span><span class="p">,</span><span class="s1">&#39;NQ_EFF&#39;</span><span class="p">,</span> <span class="s1">&#39;NK2&#39;</span><span class="p">]:</span>
+             <span class="k">assert</span> <span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]()</span> <span class="o">==</span> <span class="n">other</span><span class="p">[</span><span class="n">i</span><span class="p">]()</span>
+         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EK_REL&#39;</span><span class="p">:</span>
+             <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">K</span><span class="p">())</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BSFDefinition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.bsf.BSFDefinition.html#ase2sprkkr.output_files.definitions.bsf.BSFDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">BSFDefinition</span><span class="p">(</span><span class="n">OutputFileDefinition</span><span class="p">):</span>
+
+    <span class="n">result_class</span> <span class="o">=</span> <span class="n">BSFOutputFile</span></div>
+
+
+
+<div class="viewcode-block" id="create_definition">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.output_files.definitions.bsf.create_definition.html#ase2sprkkr.output_files.definitions.bsf.create_definition">[docs]</a>
+<span class="k">def</span> <span class="nf">create_definition</span><span class="p">():</span>
+    <span class="n">cmap1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bone_r</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">256</span><span class="p">))</span>
+    <span class="n">cmap2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">hot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mi">256</span><span class="p">))</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">cmap1</span><span class="p">,</span><span class="n">cmap2</span><span class="p">))</span>
+    <span class="n">mymap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s1">&#39;my_colormap&#39;</span><span class="p">,</span><span class="n">cmap</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;bwr&#39;</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">option</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+          <span class="n">c</span> <span class="o">=</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span>
+          <span class="n">mesh</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">MESH</span><span class="p">()</span>
+          <span class="n">data</span> <span class="o">=</span> <span class="n">option</span><span class="p">()</span>
+          <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">negative</span><span class="p">:</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">vmax</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+          <span class="n">k</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+          <span class="n">kw</span> <span class="o">=</span> <span class="p">{</span>
+              <span class="s1">&#39;vmin&#39;</span> <span class="p">:</span> <span class="n">vmin</span><span class="p">,</span>
+              <span class="s1">&#39;vmax&#39;</span> <span class="p">:</span> <span class="n">vmax</span><span class="p">,</span>
+              <span class="s1">&#39;colormap&#39;</span> <span class="p">:</span> <span class="n">colormap</span><span class="p">,</span>
+              <span class="s1">&#39;xticks&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">k</span><span class="p">[[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">INDKDIR</span><span class="p">()]],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+              <span class="s1">&#39;xticklabels&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+              <span class="s1">&#39;xlabel&#39;</span> <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;K&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;colorbar&#39;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+              <span class="s1">&#39;title&#39;</span> <span class="p">:</span> <span class="n">title</span>
+          <span class="p">}</span>
+
+          <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;CONST-E&#39;</span><span class="p">:</span>
+            <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+              <span class="s1">&#39;ylabel&#39;</span> <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$E-E_{\rm F}$ (eV)&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;yrange&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">.</span><span class="n">E</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+              <span class="s1">&#39;show_zero_line&#39;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+            <span class="p">})</span>
+          <span class="k">else</span><span class="p">:</span>
+            <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+              <span class="s1">&#39;ylabel&#39;</span> <span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$E-E_{\rm F}$ (eV)&#39;</span>
+            <span class="p">})</span>
+
+          <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+              <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">INDKDIR</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                  <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">k</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span><span class="n">k</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]],[</span><span class="n">mesh</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">mesh</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+          <span class="n">kw</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+          <span class="n">colormesh</span><span class="p">(</span><span class="o">*</span><span class="n">mesh</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">plot</span>
+
+    <span class="n">reorder</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_veck_start</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;VECK_START attribute was not set! It should be set to the KA attribute &quot;</span>
+        <span class="s2">&quot;of the input file, however, this value is not available in the BSF file, so it is inited &quot;</span>
+        <span class="s2">&quot;to the [0,0,0] vector. K-point coordinates for CONST-E mode will can be wrong.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">k_points</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+
+    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">energy_points</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">fermi</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span> <span class="o">-</span> <span class="n">fermi</span><span class="p">,</span> <span class="n">end</span> <span class="o">-</span> <span class="n">fermi</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span> <span class="o">*</span> <span class="n">Rydberg</span>
+
+    <span class="k">def</span> <span class="nf">i</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<span class="w">          </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          Returns data in the shape</span>
+<span class="sd">          (&#39;NE/NK1&#39;,&#39;NQ_EFF&#39;, &#39;NK2&#39;)</span>
+<span class="sd">          for a given type.</span>
+<span class="sd">          Reorder parameter then change the order of the axes to</span>
+<span class="sd">          (&#39;NQ_EFF&#39;, &#39;NE/NK1&#39;, &#39;NK2&#39;)</span>
+
+<span class="sd">          Data structure:</span>
+<span class="sd">            IX,Y,Z (BSF-SPOL)</span>
+<span class="sd">                k-e: NE, type, NQ, NK  types(I,x,y,z)</span>
+<span class="sd">                k-k: type, K1, NQ, K2, types(I,x,y,z)</span>
+
+<span class="sd">           Iup,dn (BSF) two sets</span>
+<span class="sd">                k-e: NE, type, NQ, NK   types(u,d)</span>
+<span class="sd">                     NE, type, NQ, NK   types(I)</span>
+<span class="sd">                k-k: NK, type, NQ, NK   types(u,d)</span>
+<span class="sd">                     NK, NQ, NK   types(I)</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+          <span class="n">nq</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">NQ_EFF</span><span class="p">()</span>
+          <span class="n">nk2</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">NK2</span><span class="p">()</span>
+          <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">KEYWORD</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;BSF&#39;</span><span class="p">:</span>
+             <span class="n">nk1</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">NE</span><span class="p">()</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EK-REL&#39;</span> <span class="k">else</span> <span class="n">c</span><span class="o">.</span><span class="n">NK1</span><span class="p">()</span>
+             <span class="n">limit</span> <span class="o">=</span> <span class="n">nq</span> <span class="o">*</span> <span class="n">nk1</span> <span class="o">*</span> <span class="n">nk2</span> <span class="o">*</span> <span class="mi">2</span>
+             <span class="k">if</span> <span class="nb">type</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">data</span><span class="p">[:</span><span class="n">limit</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nk1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">nq</span><span class="p">,</span> <span class="n">nk2</span><span class="p">)[:,</span><span class="nb">type</span><span class="p">]</span>
+             <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">limit</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nk1</span><span class="p">,</span><span class="n">nq</span><span class="p">,</span><span class="n">nk2</span><span class="p">)</span>
+          <span class="k">else</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EK-REL&#39;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">NE</span><span class="p">(),</span> <span class="mi">4</span><span class="p">,</span> <span class="n">nq</span><span class="p">,</span> <span class="n">nk2</span><span class="p">)[:,</span><span class="nb">type</span><span class="p">]</span>
+             <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">NK1</span><span class="p">(),</span> <span class="n">nq</span><span class="p">,</span> <span class="n">nk2</span><span class="p">)[:,</span><span class="nb">type</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">index</span>
+
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">create_output_file_definition</span><span class="p">(</span><span class="n">Keyword</span><span class="p">(</span><span class="s1">&#39;BSF&#39;</span><span class="p">,</span> <span class="s1">&#39;BSF-SPOL&#39;</span><span class="p">),</span> <span class="p">[</span>
+      <span class="n">Separator</span><span class="p">(),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;DATASET&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s1">&#39;#DATASET&#39;</span><span class="p">),</span>
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MODE&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">(</span><span class="s1">&#39;EK-REL&#39;</span><span class="p">,</span> <span class="s1">&#39;CONST-E&#39;</span><span class="p">)),</span>
+      <span class="o">*</span><span class="n">switch</span><span class="p">(</span><span class="s1">&#39;MODE&#39;</span><span class="p">,</span> <span class="p">{</span>
+          <span class="s1">&#39;EK-REL&#39;</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NE2&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of energies (the second axis)&quot;</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of K points (the same as NK2)&quot;</span><span class="p">),</span>
+              <span class="n">Separator</span><span class="p">(),</span>
+              <span class="o">*</span><span class="n">gather</span><span class="p">(</span>
+                <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EMIN&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">),</span>
+                <span class="n">V</span><span class="p">(</span><span class="s1">&#39;EMAX&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+              <span class="p">),</span>
+              <span class="n">Separator</span><span class="p">(),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NKDIR&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;LBLKDIR&#39;</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,),</span> <span class="n">lines</span><span class="o">=</span><span class="s1">&#39;NKDIR&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">),</span>
+                           <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+              <span class="n">Separator</span><span class="p">(),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;INDKDIR&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_repeated</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+              <span class="n">Separator</span><span class="p">(),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK2&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s1">&#39;NK&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s2">&quot;Number of K points (the last axis)&quot;</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,),</span> <span class="n">lines</span><span class="o">=</span><span class="s1">&#39;NK&#39;</span><span class="p">),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+              <span class="n">Separator</span><span class="p">(),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">default_value_from_container</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span>
+                 <span class="n">energy_points</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">EMIN</span><span class="p">(),</span><span class="n">o</span><span class="o">.</span><span class="n">EMAX</span><span class="p">(),</span><span class="n">o</span><span class="o">.</span><span class="n">EFERMI</span><span class="p">(),</span> <span class="n">o</span><span class="o">.</span><span class="n">NE</span><span class="p">()),</span> <span class="n">is_stored</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Energy (relative to Fermi energy)&#39;</span><span class="p">),</span>
+            <span class="p">],</span>
+          <span class="s1">&#39;CONST-E&#39;</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK1&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of K points (the first axis)&#39;</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK2&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Number of K points (the first axis)&#39;</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;ERYD&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">2</span><span class="p">)),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;VECK_START&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">is_stored</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="n">init_veck_start</span><span class="p">,</span> <span class="n">init_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK1_1&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s1">&#39;NK1&#39;</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;VECK1&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">)),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;NK2_1&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="s1">&#39;NK2&#39;</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;VECK2&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">)),</span>
+              <span class="n">Separator</span><span class="p">(),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">init_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_value_from_container</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span>
+                 <span class="n">k_points</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">VECK_START</span><span class="p">()),</span>
+                          <span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">VECK1</span><span class="p">()),</span>
+                          <span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">NK1</span><span class="p">()),</span>
+                 <span class="p">),</span> <span class="n">is_stored</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;First axis for the data&#39;</span><span class="p">),</span>
+              <span class="n">V</span><span class="p">(</span><span class="s1">&#39;K2&#39;</span><span class="p">,</span> <span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">init_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_value_from_container</span><span class="o">=</span><span class="k">lambda</span> <span class="n">o</span><span class="p">:</span>
+                 <span class="n">k_points</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">VECK_START</span><span class="p">()),</span>
+                          <span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">VECK2</span><span class="p">()),</span>
+                          <span class="n">norm</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">NK2</span><span class="p">()),</span>
+                 <span class="p">),</span> <span class="n">is_stored</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;Second axis for the data&#39;</span><span class="p">),</span>
+          <span class="p">]}</span>
+      <span class="p">),</span>
+
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;MESH&#39;</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">is_stored</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">init_by_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">default_value_from_container</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">K1</span><span class="p">(),</span><span class="n">c</span><span class="o">.</span><span class="n">K2</span><span class="p">())</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">MODE</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;CONST-E&#39;</span> <span class="k">else</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">K</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">E</span><span class="p">())</span>
+      <span class="p">),</span>
+
+      <span class="n">V</span><span class="p">(</span><span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">NumpyArray</span><span class="p">(</span><span class="n">written_shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,)),</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+      <span class="o">*</span><span class="n">switch</span><span class="p">(</span><span class="s1">&#39;KEYWORD&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;BSF&#39;</span> <span class="p">:</span> <span class="p">[</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;I_UP&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">reorder</span><span class="o">=</span><span class="n">reorder</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spin up&#39;</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="n">mymap</span><span class="p">)</span> <span class="p">),</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;I_DOWN&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">reorder</span><span class="o">=</span><span class="n">reorder</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Spin down&#39;</span><span class="p">,</span> <span class="n">negative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="n">mymap</span><span class="p">)</span> <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="s1">&#39;BSF-SPOL&#39;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;I_X&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">reorder</span><span class="o">=</span><span class="n">reorder</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\sigma_x$&#39;</span><span class="p">)</span> <span class="p">),</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;I_Y&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">reorder</span><span class="o">=</span><span class="n">reorder</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\sigma_y$&#39;</span><span class="p">)),</span>
+            <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;I_Z&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">reorder</span><span class="o">=</span><span class="n">reorder</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\sigma_z$&#39;</span><span class="p">)</span> <span class="p">),</span>
+        <span class="p">]</span>
+      <span class="p">}),</span>
+      <span class="n">NV</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;RAW_DATA&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">reorder</span><span class="o">=</span><span class="n">reorder</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">(</span><span class="n">negative</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="n">mymap</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Total&#39;</span><span class="p">)</span> <span class="p">),</span>
+
+    <span class="p">],</span> <span class="bp">cls</span><span class="o">=</span><span class="n">BSFDefinition</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;BSF&#39;</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="s1">&#39;BSF output file&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<span class="n">definition</span> <span class="o">=</span> <span class="n">create_definition</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+<map id="inheritancec4458b6c29" name="inheritancec4458b6c29">
+<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="DefaultOutputReader" alt="" coords="197,104,357,129"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.process_output_reader.ProcessOutputReader.html#ase2sprkkr.common.process_output_reader.ProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,104,168,129"/>
+<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.default.DefaultProcess.html#ase2sprkkr.outputs.readers.default.DefaultProcess" target="_top" title="DefaultProcess" alt="" coords="217,55,337,80"/>
+<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.task_result.KkrProcess" target="_top" title="Class, that run a process and read its output using underlined" alt="" coords="39,55,134,80"/>
+<area shape="rect" id="node5" href="ase2sprkkr.outputs.readers.default.DefaultResult.html#ase2sprkkr.outputs.readers.default.DefaultResult" target="_top" title="DefaultResult" alt="" coords="222,5,333,31"/>
+<area shape="rect" id="node6" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="41,5,133,31"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="inheritancef06c53c2da" name="inheritancef06c53c2da">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="131,50,316,73"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="343,50,499,73"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="5,50,104,73"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="525,50,709,73"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="736,28,856,51"/>
+<area shape="rect" id="node7" href="ase2sprkkr.potentials.potentials.Potential.html#ase2sprkkr.potentials.potentials.Potential" target="_top" title="It holds data form SPR&#45;KKR potential file" alt="" coords="883,28,955,51"/>
+<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="ConfigurationSectionTrait" alt="" coords="533,5,702,28"/>
+</map>

@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.default**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.default.DefaultOutputReader  ase2sprkkr.outputs.readers.default.DefaultResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.default.DefaultOutputReader  ase2sprkkr.outputs.readers.default.DefaultProcess  ase2sprkkr.outputs.readers.default.DefaultResult 
       :parts: 1
 
 |
@@ -36,6 +36,7 @@ Full name: **ase2sprkkr.outputs.readers.default**
       :template: custom-class-template.rst
    
       DefaultOutputReader
+      DefaultProcess
       DefaultResult
    
    

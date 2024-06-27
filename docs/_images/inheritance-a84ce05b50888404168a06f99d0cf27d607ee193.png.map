@@ -1,8 +1,0 @@
-<map id="inheritance2c693d2732" name="inheritance2c693d2732">
-<area shape="rect" id="node1" href="ase2sprkkr.outputs.readers.arpes.ArpesOutputReader.html#ase2sprkkr.outputs.readers.arpes.ArpesOutputReader" target="_top" title="ARPES task output reader currently do nothing, just have a special" alt="" coords="560,55,709,80"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.readers.default.DefaultOutputReader.html#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="DefaultOutputReader" alt="" coords="371,55,531,80"/>
-<area shape="rect" id="node3" href="ase2sprkkr.outputs.readers.arpes.ArpesResult.html#ase2sprkkr.outputs.readers.arpes.ArpesResult" target="_top" title="Objects of this class holds the results of computed SCF class" alt="" coords="235,5,335,31"/>
-<area shape="rect" id="node4" href="ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.task_result.TaskResult" target="_top" title="A base class for a result of a runned task (kkrscf executable)" alt="" coords="57,5,149,31"/>
-<area shape="rect" id="node5" href="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,55,200,80"/>
-<area shape="rect" id="node6" href="ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.task_result.OutputReader" target="_top" title="Process reader, that construct (a descendant of) InputParametersResult as a result." alt="" coords="229,55,341,80"/>
-</map>

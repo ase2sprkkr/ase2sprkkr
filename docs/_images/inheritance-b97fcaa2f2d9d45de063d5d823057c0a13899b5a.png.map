@@ -1,5 +1,0 @@
-<map id="inheritance202c142523" name="inheritance202c142523">
-<area shape="rect" id="node1" href="#ase2sprkkr.outputs.readers.default.DefaultOutputReader" target="_top" title="default.DefaultOutputReader" alt="" coords="597,5,808,31"/>
-<area shape="rect" id="node2" href="ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.task_result.OutputReader" target="_top" title="Process reader, that construct (a descendant of) InputParametersResult as a result." alt="" coords="380,5,568,31"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.process_output_reader.BaseProcessOutputReader.html#ase2sprkkr.common.process_output_reader.BaseProcessOutputReader" target="_top" title="Class, that run a process, optionally saves all the output of the process to a file," alt="" coords="5,5,351,31"/>
-</map>

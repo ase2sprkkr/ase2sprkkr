@@ -1,0 +1,10 @@
+<map id="inheritance5041c10542" name="inheritance5041c10542">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" target="_top" title="The common base class for all configurations values and containers. I.e." alt="" coords="2,2,96,14"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" target="_top" title="Configuration container, that holds members, either in classical way" alt="" coords="109,2,282,14"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.configuration.ConfigurationFile.html#ase2sprkkr.sprkkr.configuration.ConfigurationFile" target="_top" title="&#39;Root&#39; configuration container for SPRKKR configuration file" alt="" coords="652,14,756,26"/>
+<area shape="rect" id="node8" href="ase2sprkkr.output_files.output_files.CommonOutputFile.html#ase2sprkkr.output_files.output_files.CommonOutputFile" target="_top" title="output_files.CommonOutputFile" alt="" coords="769,14,876,26"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.common.configuration_containers.RootConfigurationContainer" target="_top" title="Base class for data of configuration/problem&#45;definition files" alt="" coords="467,2,638,14"/>
+<area shape="rect" id="node4" href="ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait.html#ase2sprkkr.sprkkr.configuration.ConfigurationSectionTrait" target="_top" title="configuration.ConfigurationSectionTrait" alt="" coords="488,26,617,37"/>
+<area shape="rect" id="node6" href="ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.common.configuration_containers.ConfigurationContainer" target="_top" title="A container for configuration (problem&#45;definition) options and/or sections." alt="" coords="295,2,453,14"/>
+<area shape="rect" id="node7" href="#ase2sprkkr.output_files.definitions.dos.DOSOutputFile" target="_top" title="dos.DOSOutputFile" alt="" coords="890,14,958,26"/>
+</map>

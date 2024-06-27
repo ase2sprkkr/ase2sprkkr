@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.common.container_definitions &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.common.container_definitions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.common.container_definitions</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.configuration_definitions</span> <span class="kn">import</span> <span class="n">RealItemDefinition</span><span class="p">,</span> <span class="n">BaseDefinition</span>
+<span class="kn">from</span> <span class="nn">.grammar</span> <span class="kn">import</span> <span class="n">delimitedList</span>
+<span class="kn">from</span> <span class="nn">.misc</span> <span class="kn">import</span> <span class="n">dict_first_item</span>
+<span class="kn">from</span> <span class="nn">.repeated_configuration_containers</span> <span class="kn">import</span> <span class="n">RepeatedConfigurationContainer</span>
+<span class="kn">from</span> <span class="nn">.configuration_containers</span> <span class="kn">import</span> <span class="n">Section</span>
+<span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">cache</span>
+
+<span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="c1"># This serves just for dealing with various pyparsing versions</span>
+<span class="n">_parse_all_name</span> <span class="o">=</span> <span class="s1">&#39;parse_all&#39;</span> <span class="k">if</span> \
+  <span class="s1">&#39;parse_all&#39;</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="o">.</span><span class="n">parseString</span><span class="p">)</span><span class="o">.</span><span class="n">args</span> \
+  <span class="k">else</span> <span class="s1">&#39;parseAll&#39;</span>
+
+
+<div class="viewcode-block" id="dict_from_parsed">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.dict_from_parsed.html#ase2sprkkr.potentials.potential_definitions.dict_from_parsed">[docs]</a>
+<span class="k">def</span> <span class="nf">dict_from_parsed</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">allowed_duplicates</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Create a dictionary from the arguments.</span>
+<span class="sd">    From duplicate arguments create numpy arrays.</span>
+<span class="sd">    Moreover, if there is key of type (a,b), it will be transformed to subdictionary.</span>
+<span class="sd">    Such a keys do not allow duplicates.</span>
+
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, &#39;y&#39;), ((&#39;a&#39;,&#39;b&#39;), 1 ), ((&#39;a&#39;, &#39;c&#39;), 2) ], [] )</span>
+<span class="sd">    {&#39;x&#39;: &#39;y&#39;, &#39;a&#39;: {&#39;b&#39;: 1, &#39;c&#39;: 2}}</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, 1), (&#39;x&#39;, &#39;2&#39;) ], [] ) # doctest: +IGNORE_EXCEPTION_DETAIL</span>
+<span class="sd">    Traceback (most recent call last):</span>
+<span class="sd">    pyparsing.exceptions.ParseException: There are non-unique keys: x</span>
+<span class="sd">    &gt;&gt;&gt; dict_from_parsed( [ (&#39;x&#39;, 1), (&#39;x&#39;, 2) ], [&#39;x&#39;] )</span>
+<span class="sd">    {&#39;x&#39;: array([1, 2])}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">duplicates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">allowed_duplicates</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+       <span class="n">_allowed_duplicates</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">allowed_duplicates</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="n">_allowed_duplicates</span> <span class="o">=</span> <span class="n">allowed_duplicates</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">check</span><span class="p">):</span>
+         <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+               <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+               <span class="k">if</span> <span class="ow">not</span> <span class="n">_allowed_duplicates</span><span class="p">(</span><span class="n">check</span><span class="p">):</span>
+                   <span class="k">return</span> <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check</span><span class="p">)</span>
+               <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">v</span> <span class="p">]</span>
+               <span class="n">duplicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+         <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+           <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+              <span class="n">o</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+           <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="nb">dict</span><span class="p">):</span>
+              <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is duplicate key </span><span class="si">{</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, however, I should created &quot;</span>
+                                <span class="s2">&quot;both arrays and dict from the data, which is not possible&quot;</span><span class="p">)</span>
+           <span class="k">else</span><span class="p">:</span>
+              <span class="n">o</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+           <span class="n">add</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="n">add</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">duplicates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">o</span><span class="o">=</span><span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">=</span><span class="n">out</span>
+        <span class="n">o</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+       <span class="n">errors</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+       <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are non-unique keys: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="add_excluded_names_condition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.add_excluded_names_condition.html#ase2sprkkr.potentials.potential_definitions.add_excluded_names_condition">[docs]</a>
+<span class="k">def</span> <span class="nf">add_excluded_names_condition</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Add the condition to the element, that</span>
+<span class="sd">    its value is not any of given names &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
+       <span class="k">return</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">names</span><span class="p">))</span>
+    <span class="n">element</span><span class="o">.</span><span class="n">addCondition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ContainerDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ContainerDefinition</span><span class="p">(</span><span class="n">RealItemDefinition</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for a definition (of contained data, format, etc)</span>
+<span class="sd">    of either a whole configuration file</span>
+<span class="sd">    (e.g. :class:`InputParameters&lt;ase2sprkkr.input_parameters.input_parameters.InputParameters&gt;` or</span>
+<span class="sd">    e.g. :class:`Potential&lt;ase2sprkkr.potentials.potentials.Potential&gt;`) or</span>
+<span class="sd">    its :class:`Section&lt;ase2sprkkr.common.configuration_containers.Section&gt;`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">force_order</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Force order of its members &quot;&quot;&quot;</span>
+
+    <span class="n">value_name_format</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; The (print) format, how the name is written &quot;&quot;&quot;</span>
+
+    <span class="n">write_last_delimiter</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="ContainerDefinition._dict_from_named_values">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition._dict_from_named_values">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_dict_from_named_values</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">items</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;auxiliary method that creates dictionary from the arguments&quot;&quot;&quot;</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">items</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+           <span class="n">items</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="n">items</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="n">alternative_names</span><span class="o">=</span><span class="p">[],</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">has_hidden_members</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">write_alternative_name</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">is_repeated</span><span class="o">=</span><span class="kc">False</span>
+                 <span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Definition of container (e.g. section of an input file).</span>
+<span class="sd">       For the rest of the parameters see the :class:`RealItemDefinition`.</span>
+
+<span class="sd">       Parameters</span>
+<span class="sd">       ----------</span>
+<span class="sd">       has_hidden_members: bool</span>
+<span class="sd">         If true, this section is not intended for a direct editing</span>
+<span class="sd">       is_repeated: bool or string</span>
+<span class="sd">         The section can be repeated. The name of the section appears only once on the beginning (this differs from ValueDefinition.is_repeated #TODO - merge the meaning of the swtich).</span>
+<span class="sd">         If a non-empty string is given, the values are divided by the string.</span>
+
+<span class="sd">       force_order: bool</span>
+<span class="sd">         If True, the items has to retain the order, if False, the items can be in the input file in any order.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+           <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span>
+           <span class="n">alternative_names</span> <span class="o">=</span> <span class="n">alternative_names</span><span class="p">,</span>
+           <span class="n">is_optional</span> <span class="o">=</span> <span class="n">is_optional</span><span class="p">,</span>
+           <span class="n">is_hidden</span> <span class="o">=</span> <span class="n">is_hidden</span><span class="p">,</span>
+           <span class="n">is_expert</span> <span class="o">=</span> <span class="n">is_expert</span><span class="p">,</span>
+           <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="n">name_in_grammar</span><span class="p">,</span>
+           <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="p">,</span>
+           <span class="n">description</span> <span class="o">=</span> <span class="n">description</span><span class="p">,</span>
+           <span class="n">write_alternative_name</span> <span class="o">=</span> <span class="n">write_alternative_name</span><span class="p">,</span>
+           <span class="n">result_class</span> <span class="o">=</span> <span class="n">result_class</span>
+       <span class="p">)</span>
+
+       <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">members</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+          <span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dict_from_named_values</span><span class="p">(</span><span class="n">members</span><span class="p">)</span>
+
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_name_format</span><span class="p">:</span>
+          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+              <span class="n">i</span><span class="o">.</span><span class="n">value_name_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_name_format</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">_members</span> <span class="o">=</span> <span class="n">members</span>
+       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+           <span class="n">i</span><span class="o">.</span><span class="n">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+       <span class="bp">self</span><span class="o">.</span><span class="n">has_hidden_members</span> <span class="o">=</span> <span class="n">has_hidden_members</span>
+       <span class="k">if</span> <span class="n">force_order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">force_order</span> <span class="o">=</span> <span class="n">force_order</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span> <span class="o">=</span> <span class="n">is_repeated</span></div>
+
+
+    <span class="n">configuration_type_name</span> <span class="o">=</span> <span class="s1">&#39;SECTION&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Name of the container type in the runtime documentation &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContainerDefinition.data_description">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.data_description">[docs]</a>
+    <span class="k">def</span> <span class="nf">data_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the runtime documentation for the configuration described by this object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        verbose</span>
+<span class="sd">          If ``False``, only one line with the section name and basic info is returned.</span>
+<span class="sd">          If ``True``, the items contained in the section are listed.</span>
+<span class="sd">          If ``&#39;all&#39;``, add also detailed info about all descendants.</span>
+<span class="sd">          If an ``int`` is given, print detailed informations about n levels. I.e. ``1`` is the same as ``True``</span>
+
+<span class="sd">        show_hidden</span>
+<span class="sd">          If False, do not show hidden members.</span>
+
+<span class="sd">        prefix</span>
+<span class="sd">          The string, with with each line will begin (commonly the spaces for the indentation).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">container_name</span><span class="p">():</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration_type_name</span>
+            <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+               <span class="n">out</span><span class="o">+=</span><span class="s1">&#39; &#39;</span>
+            <span class="n">out</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">container_name</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
+           <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fixed-order&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_hidden</span><span class="p">:</span>
+           <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;hidden&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
+           <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;optional&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_expert</span><span class="p">:</span>
+           <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;expert&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">:</span>
+           <span class="n">flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;repeated&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">flags</span><span class="p">:</span>
+           <span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+           <span class="n">out</span><span class="o">+=</span><span class="sa">f</span><span class="s2">&quot; (</span><span class="si">{</span><span class="n">flags</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+           <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+              <span class="n">verbose</span><span class="o">-=</span><span class="mi">1</span>
+           <span class="k">else</span><span class="p">:</span>
+              <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="k">if</span> <span class="n">verbose</span><span class="o">==</span><span class="s1">&#39;all&#39;</span> <span class="k">else</span> <span class="kc">False</span>
+           <span class="n">add</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_data_description</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">show_hidden</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+           <span class="k">if</span> <span class="n">add</span><span class="p">:</span>
+              <span class="n">out</span><span class="o">+=</span><span class="s1">&#39; contains:&#39;</span>
+              <span class="n">under</span><span class="o">=</span><span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+              <span class="n">out</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}{</span><span class="n">out</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">under</span><span class="si">}{</span><span class="n">add</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.allow_duplication">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.allow_duplication">[docs]</a>
+    <span class="k">def</span> <span class="nf">allow_duplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.additional_data_description">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.additional_data_description">[docs]</a>
+    <span class="k">def</span> <span class="nf">additional_data_description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="nb">int</span><span class="p">]</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the description (documentation for runtime) of the items in the container.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        verbose</span>
+<span class="sd">          If ``True``, include detailed description of the children.</span>
+<span class="sd">          If ``&#39;all&#39;``, include even detailed description.</span>
+<span class="sd">          If ``int`` is given, print detailed informations up to n levels.</span>
+
+<span class="sd">        show_hidden</span>
+<span class="sd">          If False, do not show hidden members.</span>
+
+<span class="sd">        prefix</span>
+<span class="sd">          The string, with with each line will begin (commonly the spaces for the indentation).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cprefix</span><span class="o">=</span><span class="n">prefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description_indentation</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+           <span class="n">s</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">data_description</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="n">show_hidden</span><span class="p">,</span> <span class="n">cprefix</span><span class="p">)</span>
+           <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+              <span class="n">info</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+              <span class="k">if</span> <span class="n">info</span><span class="p">:</span>
+                 <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">40</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">info</span>
+           <span class="k">else</span><span class="p">:</span>
+              <span class="n">ccprefix</span> <span class="o">=</span> <span class="n">cprefix</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">_description_indentation</span>
+              <span class="n">s</span><span class="o">+=</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+              <span class="n">s</span><span class="o">+=</span> <span class="n">ccprefix</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">ccprefix</span><span class="p">)</span>
+              <span class="n">s</span><span class="o">+=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+           <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">expert</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_hidden</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">show_hidden</span><span class="p">:</span>
+               <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">is_expert</span><span class="p">:</span>
+               <span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+               <span class="n">expert</span><span class="o">=</span><span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">expert</span><span class="p">:</span>
+          <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">cprefix</span><span class="si">}</span><span class="s1">Expert options:&#39;</span><span class="p">)</span>
+          <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cprefix</span> <span class="o">+</span> <span class="s1">&#39;--------------&#39;</span><span class="p">)</span>
+          <span class="n">cprefix</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">_description_indentation</span>
+
+          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+              <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_expert</span><span class="p">:</span>
+                 <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_hidden</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">show_hidden</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                 <span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<div class="viewcode-block" id="ContainerDefinition.members">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.members">[docs]</a>
+    <span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.names">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.names">[docs]</a>
+    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
+
+<div class="viewcode-block" id="ContainerDefinition.remove">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.remove">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.copy">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.copy">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[],</span> <span class="n">items</span><span class="o">=</span><span class="p">[],</span> <span class="n">remove</span><span class="o">=</span><span class="p">[],</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Copy the section with the contained values modified by the arguments.&quot;&quot;&quot;</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">i</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">remove</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">members</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">members</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dict_from_named_values</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">items</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">members</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">members</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="n">default</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_copy_args</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+        <span class="n">default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">default</span><span class="p">[</span><span class="s1">&#39;members&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">members</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">**</span><span class="n">default</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.copy_member">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.copy_member">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseDefinition</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Copy a member, allowing to redefine its properties.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            ------mber:</span>
+<span class="sd">              The newly created member</span>
+<span class="sd">            new_mebere: BaseDefinition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.all_member_names">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.all_member_names">[docs]</a>
+    <span class="k">def</span> <span class="nf">all_member_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
+            <span class="n">i</span><span class="o">.</span><span class="n">all_names_in_grammar</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition._grammar_of_values">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition._grammar_of_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">_grammar_of_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_class</span><span class="p">:</span>
+          <span class="n">custom_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">custom_member_grammar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_member_names</span><span class="p">())</span>
+       <span class="k">else</span><span class="p">:</span>
+          <span class="n">custom_value</span> <span class="o">=</span> <span class="kc">None</span>
+       <span class="n">delimiter</span> <span class="o">=</span> <span class="n">delimiter</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span>
+
+       <span class="k">def</span> <span class="nf">repeated_grammars</span><span class="p">():</span>
+<span class="w">           </span><span class="sd">&quot;&quot;&quot; If the item can be repeated, do it here - we don&#39;t know, whether there is a fixed order in any way</span>
+<span class="sd">           (e.g. the item is followed by the items without name in grammar)</span>
+<span class="sd">           &quot;&quot;&quot;</span>
+           <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+               <span class="n">g</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">_grammar</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">_grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span>
+               <span class="k">if</span> <span class="ow">not</span> <span class="n">g</span><span class="p">:</span>
+                   <span class="k">continue</span>
+               <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">can_be_repeated</span><span class="p">:</span>
+                   <span class="n">dlmtr</span> <span class="o">=</span> <span class="n">delimiter</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">can_be_repeated</span> <span class="ow">is</span> <span class="kc">True</span> <span class="k">else</span> <span class="n">i</span><span class="o">.</span><span class="n">can_be_repeated</span>
+                   <span class="n">g</span> <span class="o">=</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">dlmtr</span><span class="p">)</span>
+               <span class="k">yield</span> <span class="n">i</span><span class="p">,</span><span class="n">g</span>
+
+       <span class="k">def</span> <span class="nf">grammars</span><span class="p">():</span>
+<span class="w">         </span><span class="sd">&quot;&quot;&quot; This function iterates over the items of the container, joining all the without name_in_grammar with the previous ones. &quot;&quot;&quot;</span>
+         <span class="n">it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">repeated_grammars</span><span class="p">())</span>
+         <span class="n">head_item</span><span class="p">,</span> <span class="n">grammar_chain</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+         <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">grammar</span> <span class="ow">in</span> <span class="n">it</span><span class="p">:</span>
+             <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_independent_on_the_predecessor</span><span class="p">:</span>
+               <span class="k">yield</span> <span class="n">head_item</span><span class="p">,</span> <span class="n">grammar_chain</span>
+               <span class="n">head_item</span><span class="p">,</span> <span class="n">grammar_chain</span> <span class="o">=</span> <span class="n">item</span><span class="p">,</span> <span class="n">grammar</span>
+             <span class="k">else</span><span class="p">:</span>
+               <span class="n">add</span> <span class="o">=</span> <span class="n">delimiter</span> <span class="o">+</span> <span class="n">grammar</span>
+               <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
+                  <span class="n">add</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
+                  <span class="n">add</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">prepare_grammar</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span>
+               <span class="n">grammar_chain</span> <span class="o">=</span> <span class="n">grammar_chain</span> <span class="o">+</span> <span class="n">add</span>
+         <span class="k">yield</span> <span class="n">head_item</span><span class="p">,</span> <span class="n">grammar_chain</span>
+
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
+
+           <span class="n">init</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span>
+
+           <span class="k">def</span> <span class="nf">set_loc</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">toks</span><span class="p">):</span>
+               <span class="n">init</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">loc</span>
+           <span class="n">init</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="n">set_loc</span><span class="p">)</span>
+
+           <span class="n">first</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">addCondition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">loc</span><span class="p">,</span> <span class="n">toks</span><span class="p">:</span> <span class="n">loc</span> <span class="o">==</span> <span class="n">init</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+           <span class="k">if</span> <span class="n">custom_value</span><span class="p">:</span>
+              <span class="n">cvs</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">custom_value</span> <span class="o">+</span> <span class="n">delimiter</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;&lt;custom...&gt;&#39;</span><span class="p">)</span>
+              <span class="n">after</span> <span class="o">=</span> <span class="n">delimiter</span> <span class="o">+</span> <span class="n">cvs</span>
+           <span class="k">else</span><span class="p">:</span>
+              <span class="n">after</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">delimiter</span>
+           <span class="n">after</span><span class="o">.</span><span class="n">addCondition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">loc</span><span class="p">,</span> <span class="n">toks</span><span class="p">:</span> <span class="n">loc</span> <span class="o">!=</span> <span class="n">init</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+           <span class="n">inter_cvs</span> <span class="o">=</span> <span class="p">(</span><span class="n">first</span> <span class="o">|</span> <span class="n">after</span><span class="p">)</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s1">&#39;&lt;?DELIM&gt;&#39;</span><span class="p">)</span>
+           <span class="n">inter</span> <span class="o">=</span> <span class="p">(</span><span class="n">first</span> <span class="o">|</span> <span class="n">delimiter</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">addCondition</span><span class="p">(</span><span class="k">lambda</span> <span class="n">loc</span><span class="p">,</span> <span class="n">toks</span><span class="p">:</span> <span class="n">loc</span> <span class="o">!=</span> <span class="n">init</span><span class="o">.</span><span class="n">location</span><span class="p">))</span>
+
+           <span class="k">def</span> <span class="nf">sequence</span><span class="p">():</span>
+               <span class="k">for</span> <span class="n">head</span><span class="p">,</span><span class="n">g</span> <span class="ow">in</span> <span class="n">repeated_grammars</span><span class="p">():</span>
+                   <span class="k">if</span> <span class="n">head</span><span class="o">.</span><span class="n">is_independent_on_the_predecessor</span><span class="p">:</span>
+                      <span class="n">delim</span> <span class="o">=</span> <span class="n">inter_cvs</span>
+                   <span class="k">else</span><span class="p">:</span>
+                      <span class="n">delim</span> <span class="o">=</span> <span class="n">inter</span>
+                   <span class="n">g</span> <span class="o">=</span> <span class="n">delim</span> <span class="o">+</span> <span class="n">g</span>
+                   <span class="k">if</span> <span class="n">head</span><span class="o">.</span><span class="n">is_optional</span><span class="p">:</span>
+                      <span class="n">g</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+                   <span class="k">if</span> <span class="n">head</span><span class="o">.</span><span class="n">condition</span><span class="p">:</span>
+                      <span class="k">yield</span> <span class="n">head</span><span class="o">.</span><span class="n">condition</span><span class="o">.</span><span class="n">prepare_grammar</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+                   <span class="k">else</span><span class="p">:</span>
+                      <span class="k">yield</span> <span class="n">g</span>
+
+           <span class="n">values</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">And</span><span class="p">([</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">()])</span>
+
+           <span class="k">if</span> <span class="n">custom_value</span><span class="p">:</span>
+              <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_section_has_to_be_first</span><span class="p">():</span>
+                  <span class="n">values</span> <span class="o">=</span> <span class="n">cvs</span> <span class="o">+</span> <span class="n">values</span>
+              <span class="n">values</span> <span class="o">+=</span> <span class="n">pp</span><span class="o">.</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">delimiter</span> <span class="o">+</span> <span class="n">custom_value</span><span class="p">)</span>
+           <span class="n">values</span> <span class="o">=</span> <span class="n">init</span> <span class="o">+</span> <span class="n">values</span>
+
+       <span class="k">else</span><span class="p">:</span>
+           <span class="n">it</span> <span class="o">=</span> <span class="n">grammars</span><span class="p">()</span>
+           <span class="c1"># store the first fixed &quot;chain of sections&quot;</span>
+           <span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_section_has_to_be_first</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">next</span><span class="p">(</span><span class="n">it</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+           <span class="c1"># the rest has any order</span>
+           <span class="n">values</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">MatchFirst</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">head</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="n">it</span><span class="p">])</span>
+           <span class="k">if</span> <span class="n">custom_value</span><span class="p">:</span>
+               <span class="n">values</span> <span class="o">|=</span> <span class="n">custom_value</span>
+           <span class="n">values</span> <span class="o">=</span> <span class="n">delimitedList</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span>
+           <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+               <span class="n">values</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Optional</span><span class="p">(</span><span class="n">delimiter</span> <span class="o">+</span> <span class="n">values</span><span class="p">)</span>
+
+       <span class="n">values</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">dict_from_parsed</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_duplicates_of</span><span class="p">))</span>
+
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">:</span>
+          <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+              <span class="c1"># just pass the dict to the validate function</span>
+              <span class="n">is_ok</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">MergeDictAdaptor</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="p">),</span> <span class="s1">&#39;parse&#39;</span><span class="p">)</span>
+              <span class="k">if</span> <span class="n">is_ok</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_ok</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                   <span class="n">is_ok</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Validation of parsed data of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> section failed&#39;</span>
+                <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">is_ok</span><span class="p">)</span>
+              <span class="k">return</span> <span class="n">value</span>
+          <span class="n">values</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">_validate</span><span class="p">)</span>
+       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">:</span>
+          <span class="n">rdelim</span> <span class="o">=</span> <span class="n">delimiter</span>
+          <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
+              <span class="n">rdelim</span> <span class="o">=</span> <span class="n">rdelim</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">)</span>
+          <span class="n">values</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">delimitedList</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">rdelim</span><span class="p">)</span>
+          <span class="n">values</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">asList</span><span class="p">()])</span>
+       <span class="k">return</span> <span class="n">values</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition._allow_duplicates_of">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition._allow_duplicates_of">[docs]</a>
+    <span class="k">def</span> <span class="nf">_allow_duplicates_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Can a given element (identified by name) have more values in the parsed results?</span>
+<span class="sd">            (However, not all definitions have to specify allow_duplicates, just the ones</span>
+<span class="sd">            that have a value). For the others, this function raises an error.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">allow_duplication</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition._create_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition._create_grammar">[docs]</a>
+    <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+       <span class="n">delimiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_of_delimiter</span>
+       <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar_of_values</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tuple_with_my_name</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span>
+       <span class="n">out</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">out</span></div>
+
+
+    <span class="n">validate</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A function for validation of just the parsed result (not the user input) &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContainerDefinition.delimited_custom_value_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.delimited_custom_value_grammar">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="nd">@cache</span>
+    <span class="k">def</span> <span class="nf">delimited_custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return the grammar for the custom child with delimiter.</span>
+<span class="sd">        The delimiter can delimite it either from the previous child or from the section name.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">grammar_of_delimiter</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">custom_value_grammar</span><span class="p">()</span></div>
+
+
+    <span class="n">custom_name_characters</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">alphanums</span> <span class="o">+</span> <span class="s1">&#39;_-()&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Which characters can appears in an unknown child (value/section) name &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContainerDefinition.custom_member_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.custom_member_grammar">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">custom_member_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value_names</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Grammar for the custom - unknown - child &quot;&quot;&quot;</span>
+       <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">custom_name_characters</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+       <span class="n">add_excluded_names_condition</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value_names</span><span class="p">)</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="bp">cls</span><span class="o">.</span><span class="n">delimited_custom_value_grammar</span><span class="p">())</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+       <span class="n">out</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">custom_value_name</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition._first_section_has_to_be_first">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition._first_section_has_to_be_first">[docs]</a>
+    <span class="k">def</span> <span class="nf">_first_section_has_to_be_first</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Has/ve the first child(s) in an unordered sequence fixed position? &quot;&quot;&quot;</span>
+       <span class="k">return</span> <span class="ow">not</span> <span class="n">dict_first_item</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">)</span><span class="o">.</span><span class="n">is_independent_on_the_predecessor</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.parse_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.parse_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Parse the file, return the parsed data as dictionary &quot;&quot;&quot;</span>
+       <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span> <span class="n">_parse_all_name</span><span class="p">:</span> <span class="kc">True</span> <span class="p">}</span> <span class="p">)</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_return</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">return_value_only</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.parse">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.parse">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">whole_string</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Parse the string, return the parsed data as dictionary &quot;&quot;&quot;</span>
+       <span class="n">grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span> <span class="n">_parse_all_name</span><span class="p">:</span> <span class="n">whole_string</span> <span class="p">}</span> <span class="p">)</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_return</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">return_value_only</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.parse_return">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.parse_return">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">return_value_only</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Clean up the parsed values (unpack then from unnecessary containers)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        return_value_only</span>
+<span class="sd">          Return only value, not name - value tuple</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">return_value_only</span><span class="p">:</span>
+           <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.parse_from_stream">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.parse_from_stream">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">parse_from_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">up_to</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">whole_string</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse string readed from asyncio stream.</span>
+<span class="sd">        The stream is readed up to the given delimiter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">readuntil</span><span class="p">(</span><span class="n">up_to</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">up_to</span><span class="p">)]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+           <span class="n">result</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">whole_string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.read_from_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.read_from_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Read a configuration file and return the parsed Configuration object &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="n">allow_dangerous</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.read_from_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.read_from_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="n">definition</span> <span class="o">=</span> <span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.read_from_string">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.read_from_string">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_from_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">string</span><span class="p">),</span> <span class="n">allow_dangerous</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition.validate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_warning</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="n">repeated_class</span> <span class="o">=</span> <span class="n">RepeatedConfigurationContainer</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class for the repeated sections &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ContainerDefinition.create_object">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition.create_object">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">repeated</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create an instance (section)</span>
+
+<span class="sd">        container: BaseConfigurationContainer</span>
+<span class="sd">            To which container the created object will belong</span>
+
+<span class="sd">        repeated:</span>
+<span class="sd">            Has meaning only for a is_repeated section. Then, if it is True,</span>
+<span class="sd">            a Container for repeated values of the section is returned.</span>
+<span class="sd">            Otherwise, the container just for one instance of a section is</span>
+<span class="sd">            returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">repeated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repeated_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="n">container</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ContainerDefinition._save_to_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.potentials.potential_definitions.ContainerDefinition._save_to_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Save the content of the container to the file (according to the definition)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        file: file</span>
+<span class="sd">          File object (open for writing), where the data should be written</span>
+
+<span class="sd">        always:</span>
+<span class="sd">          Do not consider conditions</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        something_have_been_written</span>
+<span class="sd">          If any value have been written return True, otherwise return False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+                <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_expert</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">is_changed</span><span class="p">():</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">name_in_grammar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span>
+
+        <span class="k">if</span> <span class="n">delimiter</span><span class="p">:</span>
+           <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name_in_grammar</span><span class="p">:</span>
+           <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+           <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">members</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_last_delimiter</span><span class="p">:</span>
+           <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+               <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="p">):</span>
+                   <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+           <span class="n">delimiter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+           <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">members</span><span class="p">:</span>
+               <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">):</span>
+                   <span class="n">delimiter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delimiter</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SectionDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.potentials.potential_definitions.SectionDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">SectionDefinition</span><span class="p">(</span><span class="n">ContainerDefinition</span><span class="p">):</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Base class for definition of the sections in Pot or InputParameters files.</span>
+
+<span class="sd">       It just redefine a few properties/methods to values/behavior typical for the sections</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+
+   <span class="n">result_class</span> <span class="o">=</span> <span class="n">Section</span>
+
+   <span class="nd">@property</span>
+   <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
+
+   <span class="n">custom_value_name</span> <span class="o">=</span> <span class="s1">&#39;CUSTOM_VALUE&#39;</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Just the name that appears in the grammar, when it is printed.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SectionDefinition.delimited_custom_value_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.potentials.potential_definitions.SectionDefinition.delimited_custom_value_grammar">[docs]</a>
+   <span class="nd">@classmethod</span>
+   <span class="nd">@cache</span>
+   <span class="k">def</span> <span class="nf">delimited_custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">gt</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">custom_class</span><span class="o">.</span><span class="n">grammar_type</span>
+        <span class="c1"># here the child (Value) class delimiter should be used</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="o">.</span><span class="n">grammar_of_delimiter</span> <span class="o">+</span> <span class="n">gt</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span>
+        <span class="n">optional</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">gt</span><span class="o">.</span><span class="n">missing_value</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">optional</span><span class="p">:</span>
+           <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">df</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="SectionDefinition._generic_info">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.potentials.potential_definitions.SectionDefinition._generic_info">[docs]</a>
+   <span class="k">def</span> <span class="nf">_generic_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Configuration section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="SectionDefinition.accept_value">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.SectionDefinition.html#ase2sprkkr.potentials.potential_definitions.SectionDefinition.accept_value">[docs]</a>
+   <span class="k">def</span> <span class="nf">accept_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+           <span class="k">return</span> <span class="kc">True</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_repeated</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ConfigurationRootDefinition">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition">[docs]</a>
+<span class="k">class</span> <span class="nc">ConfigurationRootDefinition</span><span class="p">(</span><span class="n">ContainerDefinition</span><span class="p">):</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; From this class, the definition of the format of a whole configuration file should be derived.</span>
+
+<span class="sd">   &quot;&quot;&quot;</span>
+   <span class="n">write_last_delimiter</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Do not print additional newline after the last section &quot;&quot;&quot;</span>
+
+   <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; The configuration files has commonly no &quot;name&quot; of its content, they</span>
+<span class="sd">   just contains their content.</span>
+
+<span class="sd">   However, in some cases the name_in_grammar could be used for some kind of</span>
+<span class="sd">   prefix in the file, however, it is better to use a fixed value for this purpose.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigurationRootDefinition.definition_from_dict">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition.definition_from_dict">[docs]</a>
+   <span class="nd">@classmethod</span>
+   <span class="k">def</span> <span class="nf">definition_from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">defs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">       Create instance of the definition from a dictionary, creating</span>
+<span class="sd">       the sections (and values) definitions recursively.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+           <span class="n">section</span> <span class="o">=</span> <span class="n">defs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+           <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">defs</span><span class="p">,</span> <span class="n">SectionDefinition</span><span class="p">):</span>
+              <span class="n">section</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">child_class</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+           <span class="k">return</span> <span class="n">section</span>
+
+       <span class="k">if</span> <span class="n">defs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="n">defs</span> <span class="o">=</span> <span class="n">name</span>
+          <span class="n">name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+
+       <span class="k">return</span> <span class="bp">cls</span><span class="p">((</span> <span class="n">gen</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">defs</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationRootDefinition.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition.__init__">[docs]</a>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+       <span class="k">if</span> <span class="ow">not</span> <span class="n">members</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+          <span class="n">members</span> <span class="o">=</span> <span class="n">name</span>
+          <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+   <span class="nd">@property</span>
+   <span class="k">def</span> <span class="nf">sections</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
+
+   <span class="n">custom_value_name</span> <span class="o">=</span> <span class="s1">&#39;CUSTOM_SECTION&#39;</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Just the name that appears in the grammar, when it is printed.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ConfigurationRootDefinition._tuple_with_my_name">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition._tuple_with_my_name">[docs]</a>
+   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot; Do not create tuple (name, value) for the root class. &quot;&quot;&quot;</span>
+       <span class="k">return</span> <span class="n">expr</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationRootDefinition.parse_return">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition.parse_return">[docs]</a>
+   <span class="k">def</span> <span class="nf">parse_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">return_value_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Clean up the parsed values (unpack then from unnecessary containers)</span>
+
+<span class="sd">            There is no name in the parsed results (see how</span>
+<span class="sd">            ConfigurationRootDefinition._tuple_with_my_name is redefined).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationRootDefinition._create_grammar">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition._create_grammar">[docs]</a>
+   <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">       </span><span class="sd">&quot;&quot;&quot;Returns the grammar to parse the configuration file.</span>
+
+<span class="sd">       This method just tweaks the grammar (generated by the common container implementation) to ignore comments,</span>
+<span class="sd">       so the comments would be ignored just once.</span>
+<span class="sd">       &quot;&quot;&quot;</span>
+       <span class="n">out</span><span class="o">=</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_create_grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span>
+       <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_ignored</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationRootDefinition.add_ignored">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.potentials.potential_definitions.ConfigurationRootDefinition.add_ignored">[docs]</a>
+   <span class="k">def</span> <span class="nf">add_ignored</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+       <span class="n">grammar</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\s*\n)*&#39;</span><span class="p">))</span> <span class="o">+</span> <span class="n">grammar</span>
+       <span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span><span class="o">.</span><span class="n">ignore</span><span class="p">(</span><span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">restOfLine</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">LineEnd</span><span class="p">())</span>
+       <span class="k">return</span> <span class="n">grammar</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MergeDictAdaptor">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.MergeDictAdaptor.html#ase2sprkkr.potentials.potential_definitions.MergeDictAdaptor">[docs]</a>
+<span class="k">class</span> <span class="nc">MergeDictAdaptor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This class returns a read-only dict-like class</span>
+<span class="sd">    that merge values from a container and from the</span>
+<span class="sd">    definition of a section &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MergeDictAdaptor.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.container_definitions.MergeDictAdaptor.html#ase2sprkkr.potentials.potential_definitions.MergeDictAdaptor.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">definition</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">definition</span> <span class="o">=</span> <span class="n">definition</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__hasitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">__hasitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> \
+               <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">__hasitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Section </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> with values </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

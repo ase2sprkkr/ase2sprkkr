@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.outputs.readers.scf**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.outputs.readers.scf.RealOrStars  ase2sprkkr.outputs.readers.scf.ScfOutputReader  ase2sprkkr.outputs.readers.scf.ScfResult 
+.. inheritance-diagram::  ase2sprkkr.outputs.readers.scf.RealOrStars  ase2sprkkr.outputs.readers.scf.ScfOutputReader  ase2sprkkr.outputs.readers.scf.ScfProcess  ase2sprkkr.outputs.readers.scf.ScfResult 
       :parts: 1
 
 |
@@ -18,6 +18,14 @@ Full name: **ase2sprkkr.outputs.readers.scf**
 .. automodule:: ase2sprkkr.outputs.readers.scf
 
    
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      atomic_types_definition
    
    
 
@@ -37,6 +45,7 @@ Full name: **ase2sprkkr.outputs.readers.scf**
    
       RealOrStars
       ScfOutputReader
+      ScfProcess
       ScfResult
    
    

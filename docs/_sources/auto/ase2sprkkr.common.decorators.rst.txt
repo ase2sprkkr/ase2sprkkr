@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.decorators**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.decorators.cached_class_property  ase2sprkkr.common.decorators.cached_property  ase2sprkkr.common.decorators.class_property 
+.. inheritance-diagram::  ase2sprkkr.common.decorators.cached_class_property  ase2sprkkr.common.decorators.cached_property  ase2sprkkr.common.decorators.class_property  ase2sprkkr.common.decorators.maybeclassmethod 
       :parts: 1
 
 |
@@ -57,6 +57,7 @@ Full name: **ase2sprkkr.common.decorators**
       cached_class_property
       cached_property
       class_property
+      maybeclassmethod
    
    
 

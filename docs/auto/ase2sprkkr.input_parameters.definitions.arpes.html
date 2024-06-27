@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.arpes.input_parameters.html" />
-    <link rel="prev" title="definitions" href="ase2sprkkr.input_parameters.definitions.html" /> 
+    <link rel="prev" title="input_parameters" href="ase2sprkkr.input_parameters.definitions.phagen.input_parameters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -64,33 +64,36 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">arpes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.test.html">test</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 </ul>
 </li>
 </ul>
@@ -132,17 +135,32 @@
 
 INPUT PARAMETERS arpes contains:
 --------------------------------
-    SECTION CONTROL contains:
-    -------------------------
+        SECTION CONTROL contains:
+    -----------------------------
         DATASET : String                  The custom field for the description of the problem - the output files will have called &#39;DATASET.&lt;ext&gt;&#39;.
         ADSI : FixedValue(ARPES) ≝ ARPES  Type of the computation.
         POTFIL : String                   The potential file (see SPRKKR documentation for its format). It isn&#39;t necessary to set it, it will be set by the calculator.
-        KRWS : Integer  (optional)
+        KRWS : Integer ≝ 1  (optional)    If it is 0, RWS is taken from the potential file and scaled. If 1, RWS is calculated by scaling the muffin-tin radii by a common scaling factor. (This setting is forced in the case of FULLPOT.)
+        KRMT : AnyOf(0,1,2,3,4,5,6)  (optional)
+
+            Possible values:
+              0         RMT is taken from the potential file
+              1         RMT = min( x*RWS )
+              2         RMT = min( d_ij / 2 )
+              3         RMT from atomic charge density (=&gt; KRWS=1)
+              4         RMT from atomic Hartree potential (=&gt; KRWS=1)
+              5         RMT from total atomic potential (=&gt; KRWS=1)
+              6         take average of 3 and 4 (=&gt; KRWS=1)
+
+            It controls how the muffin-tin radii are calculated.
+
         PRINT : Integer ≝ 0  (optional)   Verbosity of the output (0-5). Do not affect the results in any way, just the amount of the printed output.
         NONMAG : Flag ≝ False             Set this flag, if it is known that the system considered is non-magnetic. This leads to a higher symmetry and a faster calculation.
 
-    SECTION TAU contains:
-    ---------------------
+
+
+        SECTION TAU contains:
+    -------------------------
         BZINT : AnyOf(POINTS,WEYL) ≝ POINTS
 
             Possible values:
@@ -160,6 +178,8 @@ INPUT PARAMETERS arpes contains:
             regular mesh.
 
 
+            The mode of BZ-integration used for calculation of the scattering  path operator τ
+
         NKTAB : Integer ≝ 250  (optional)  Number of points for the special points method
         NKTAB2D : Integer  (optional)     Number of points for the special points method for 2D region of 2D problem
         NKTAB3D : Integer  (optional)     Number of points for the special points method for 3D region of 2D problem
@@ -176,23 +196,29 @@ INPUT PARAMETERS arpes contains:
             NLOUT : Integer ≝ 3  (optional, expert)  The calculated τ -matrix is printed up to lmax=NLOUT.
             MOL : Flag ≝ False  (optional, expert)  Cluster type calculation but for a molecular system. The system is specified as for CLUSTER.
 
-    SECTION ENERGY contains:
-    ------------------------
+
+
+        SECTION ENERGY contains:
+    ----------------------------
         GRID : Array(of Integer) ≝ [1]
         NE : Array(of Integer) ≝ [300]    Number of points in energy-mesh
         ImE : Energy (&lt;Real&gt; [Ry|eV]) ≝ 0.0  (optional)
         EMINEV : Real ≝ -10.0             Minimum of the energy window in eV with respect to the Fermi level
         EMAXEV : Real ≝ -10.0             Maximum of the energy window in eV with respect to the Fermi level
-        EWORKEV : Real ≝ 4.2              Inner potential of the bulk crystal in eV
+        EWORK_EV : Real ≝ 4.2             Inner potential of the bulk crystal in eV
         IMV_INI_EV : Real ≝ 0.05          Imaginary part of the potential in eV (initial state)
         IMV_FIN_EV : Real ≝ 5.0           Imaginary part of the potential in eV (final state)
 
-    SECTION SITES contains:
-    -----------------------
+
+
+        SECTION SITES contains:
+    ---------------------------
         NL : Array(of Integer) ≝ [4]      Angula momentum cutoff (the first discarded l-space)
 
-    SECTION TASK contains:
-    ----------------------
+
+
+        SECTION TASK contains:
+    --------------------------
         TASK : AnyOf(ARPES,AIPES,SPLEED,BAND) ≝ ARPES
 
             Possible values:
@@ -200,6 +226,8 @@ INPUT PARAMETERS arpes contains:
               AIPES     Angle integrated photoemission spectroscopy
               SPLEED    Spin polarized LEED (experimental feature)
               BAND      band structure calculations (experimental feature)
+
+            Type of the calculation
 
         IQ_AT_SURF : Site ≝ 1  (optional)
         MILLER_HKL : Array(of Integer of length 3) ≝ [0 0 1]  (optional)
@@ -210,12 +238,14 @@ INPUT PARAMETERS arpes contains:
             STRVER : Integer ≝ 1  (optional, expert, always add)  Set to 0 to supply the ARPES input file &#39;struc.inp&#39; manually (and do not generate it).
             INPVER : Integer ≝ 1  (optional, expert, always add)  Set to 0 to use an old input.inp from old rslab
 
-    SECTION SPEC_PH contains:
-    -------------------------
+
+
+        SECTION SPEC_PH contains:
+    -----------------------------
         THETA : Real ≝ 45.0               Direction of the photon (the polar coordinate)
         PHI : Real ≝ 0.0                  Direction of the photon (the azimuth coordinate)
         POL_P : AnyOf(P,S,C+,C-) ≝ P      Polarization of the light
-        EPHOT : Real ≝ 6675.0             Photon energy in eV
+        EPHOT : Real ≝ 25.0               Photon energy in eV
 
         Expert options:
         --------------
@@ -229,12 +259,16 @@ INPUT PARAMETERS arpes contains:
                   2         s-pol or lcp or elliptical (depends on icirc, etc.)
                   3         dichroism (ddad, ldad)
 
+                Controls the polarization and dichroism
+
             ICIRC : AnyOf(0,1,2) ≝ 1  (optional, expert)
 
                 Possible values:
                   0         elliptically pol. light: alq, delq arbitrary
                   1         linear pol. light: alq arbitrary, delq=0
                   2         circular pol. light: alq=45, delq = 90
+
+                controls the polarization and dichroism
 
             IDREH : AnyOf(0,1,-1) ≝ 0  (optional, expert)
 
@@ -243,16 +277,22 @@ INPUT PARAMETERS arpes contains:
                   1         right circular polarization
                   -1        left circular polarization
 
+                Helicity of the photons
+
             IFSP : AnyOf(0,1)  (optional, expert)
 
                 Possible values:
                   0         fixed
                   1         variable
 
+                Photon azimuth angle type
+
             THETA_FIX : Real  (optional, expert)  Light and electrons are at fixed polarization angle
 
-    SECTION SPEC_EL contains:
-    -------------------------
+
+
+        SECTION SPEC_EL contains:
+    -----------------------------
         THETA : Range ≝ 45.0  (optional)  (A range of) scattering angle(s) (the azimuth coordinate)
         PHI : Range ≝ 0.0  (optional)     (A range of) scattering angle(s) (the polar coordinate)
         NT : Integer ≝ 1                  Number of angular values for a rotation in the polar coordinate.
@@ -260,6 +300,9 @@ INPUT PARAMETERS arpes contains:
         POL_E : FixedValue(PZ) ≝ PZ
         SPOL : Integer  (optional)
         PSPIN : Array(of Real of length 3)  (optional)
+        BETA1 : Real  (optional)          Begin of the rotation
+        BETA2 : Real  (optional)          End of the rotation
+        ROTAXIS : Array(of Integer of length 3)  (optional)  Axis of the rotation
 
         Expert options:
         --------------
@@ -275,6 +318,8 @@ INPUT PARAMETERS arpes contains:
                 3,4 only for angular resolved
                 pe (ups, xps) note: nt=np-&gt; nx,ny
 
+                Crystal coordinats in splout, xpsrun, or upsrun
+
             ISTR : Array(of Integer of length 2) ≝ [0 0]  (optional, expert)  beam number (h,k)
             POL0 : Array(of Integer of length 3) ≝ [0 0 0]  (optional, expert)  initial pol.
             POL0L : Array(of Integer of length 3) ≝ [0 0 0]  (optional, expert)  initial pol. in the laboratory system
@@ -283,11 +328,13 @@ INPUT PARAMETERS arpes contains:
             Q3 : Complex ≝ 0j  (optional, expert)  Amplitude 3 of the photoelectron used in spin polarized calculations
             Q4 : Complex ≝ (1+0j)  (optional, expert)  Amplitude 4 of the photoelectron used in spin polarized calculations
 
-    SECTION SPEC_STR contains:
-    --------------------------
+
+
+        SECTION SPEC_STR contains:
+    ------------------------------
         N_LAYDBL : Array(of Integer) ≝ [10 10]  (optional)
         NLAT_G_VEC : Integer ≝ 57
-        N_LAYER : Integer ≝ 120
+        N_LAYER : Integer ≝ 50
         SURF_BAR : Array(of Real) ≝ [0.25 0.25]  (optional)
         TRANSP_BAR : Flag ≝ False  (optional)
 </pre></div>
@@ -306,7 +353,7 @@ INPUT PARAMETERS arpes contains:
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.input_parameters.definitions.html" class="btn btn-neutral float-left" title="definitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.input_parameters.definitions.phagen.input_parameters.html" class="btn btn-neutral float-left" title="input_parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.input_parameters.definitions.arpes.input_parameters.html" class="btn btn-neutral float-right" title="input_parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

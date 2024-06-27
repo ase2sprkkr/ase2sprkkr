@@ -1,0 +1,6 @@
+<map id="inheritance55e740a030" name="inheritance55e740a030">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="5,5,81,31"/>
+<area shape="rect" id="node2" title="Mixin class which provides get_forces(), get_stress() and so on." alt="" coords="111,5,285,31"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.asr.test.mocks.gpaw.calculator.ASRCalculator" target="_top" title="Mock of a generic ASE calculator." alt="" coords="715,5,896,31"/>
+<area shape="rect" id="node4" title="Base&#45;class for all ASE calculators." alt="" coords="531,5,685,31"/>
+</map>

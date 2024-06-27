@@ -1,0 +1,36 @@
+DOSDefinition
+=============
+
+
+.. currentmodule:: ase2sprkkr.output_files.definitions.dos
+
+.. autoclass:: DOSDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.definitions.dos.DOSDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

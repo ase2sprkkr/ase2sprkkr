@@ -1,0 +1,36 @@
+MergeDictAdaptor
+================
+
+
+.. currentmodule:: ase2sprkkr.common.container_definitions
+
+.. autoclass:: MergeDictAdaptor
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.container_definitions.MergeDictAdaptor
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

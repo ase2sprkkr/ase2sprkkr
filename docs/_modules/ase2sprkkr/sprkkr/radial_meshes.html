@@ -90,31 +90,94 @@
   <h1>Source code for ase2sprkkr.sprkkr.radial_meshes</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; Definitions of radial meshes used by SPR-KKR. &quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CubicSpline</span>
+
 
 <div class="viewcode-block" id="Mesh">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh">[docs]</a>
 <span class="k">class</span> <span class="nc">Mesh</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  A base class for SPR-KKR radial meshes.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Mesh.default">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.sprkkr.radial_meshes.Mesh.default">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.default">[docs]</a>
   <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">default</span><span class="p">():</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; SPR-KKR computes the mesh itself, if zeros are given &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">ExponentialMesh</span><span class="p">(</span><span class="mf">1e-6</span><span class="p">,</span><span class="mf">2e-2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mi">721</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Mesh.interpolate">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.interpolate">[docs]</a>
+  <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coors</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Interpolate values in the given coors to the mesh coors.</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coors</span><span class="p">,</span> <span class="n">value</span><span class="p">)(</span><span class="n">coors</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Mesh.interpolator">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.interpolator">[docs]</a>
+  <span class="k">def</span> <span class="nf">interpolator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator_for_coors</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coors</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Mesh.interpolator_for_coors">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.Mesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.Mesh.interpolator_for_coors">[docs]</a>
+  <span class="nd">@staticmethod</span>
+  <span class="k">def</span> <span class="nf">interpolator_for_coors</span><span class="p">(</span><span class="n">coors</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+      <span class="n">v1</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+      <span class="n">v2</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+      <span class="k">if</span> <span class="n">v1</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+          <span class="n">r_method</span> <span class="o">=</span> <span class="kc">False</span>
+      <span class="k">elif</span> <span class="n">v2</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+          <span class="n">r_method</span> <span class="o">=</span> <span class="kc">True</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">c1</span> <span class="o">=</span> <span class="n">coors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="n">c2</span> <span class="o">=</span> <span class="n">coors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+          <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span><span class="p">)</span>
+          <span class="n">dr</span> <span class="o">=</span> <span class="p">(</span><span class="n">v1</span> <span class="o">*</span> <span class="n">c1</span> <span class="o">-</span> <span class="n">v2</span> <span class="o">*</span> <span class="n">c2</span><span class="p">)</span>
+          <span class="n">r_method</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">r_method</span><span class="p">:</span>
+          <span class="n">spl</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">coors</span><span class="p">,</span> <span class="n">values</span> <span class="o">*</span> <span class="n">coors</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">spl</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">x</span>
+
+      <span class="k">return</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">coors</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span></div>
 </div>
 
 
+
+<div class="viewcode-block" id="_clearing_property">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes._clearing_property.html#ase2sprkkr.potentials.definitions.sections.mesh_information._clearing_property">[docs]</a>
+<span class="k">def</span> <span class="nf">_clearing_property</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+
+    <span class="n">attr</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">reader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">writer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear</span><span class="p">()</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">setter</span><span class="p">(</span><span class="n">writer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
 <div class="viewcode-block" id="ExponentialMesh">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh">[docs]</a>
 <span class="k">class</span> <span class="nc">ExponentialMesh</span><span class="p">(</span><span class="n">Mesh</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Radial mesh definition for an atomic site.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ExponentialMesh.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">jrmt</span><span class="p">,</span> <span class="n">rmt</span><span class="p">,</span> <span class="n">jrws</span><span class="p">,</span> <span class="n">rws</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Parameters</span>
@@ -133,22 +196,55 @@
 
 <span class="sd">      rws: float</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">r1</span> <span class="o">=</span> <span class="n">r1</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">dx</span> <span class="o">=</span> <span class="n">dx</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">jrmt</span> <span class="o">=</span> <span class="n">jrmt</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">rmt</span> <span class="o">=</span> <span class="n">rmt</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span> <span class="o">=</span> <span class="n">jrws</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">rws</span> <span class="o">=</span> <span class="n">rws</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_r1</span> <span class="o">=</span> <span class="n">r1</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_dx</span> <span class="o">=</span> <span class="n">dx</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_jrmt</span> <span class="o">=</span> <span class="n">jrmt</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_rmt</span> <span class="o">=</span> <span class="n">rmt</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_jrws</span> <span class="o">=</span> <span class="n">jrws</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_rws</span> <span class="o">=</span> <span class="n">rws</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span> <span class="o">=</span> <span class="kc">None</span></div>
 
+
+  <span class="n">r1</span> <span class="o">=</span> <span class="n">_clearing_property</span><span class="p">(</span><span class="s1">&#39;r1&#39;</span><span class="p">)</span>
+  <span class="n">dx</span> <span class="o">=</span> <span class="n">_clearing_property</span><span class="p">(</span><span class="s1">&#39;dx&#39;</span><span class="p">)</span>
+  <span class="n">jrmt</span> <span class="o">=</span> <span class="n">_clearing_property</span><span class="p">(</span><span class="s1">&#39;jrmt&#39;</span><span class="p">)</span>
+  <span class="n">rmt</span> <span class="o">=</span> <span class="n">_clearing_property</span><span class="p">(</span><span class="s1">&#39;rmt&#39;</span><span class="p">)</span>
+  <span class="n">jrws</span> <span class="o">=</span> <span class="n">_clearing_property</span><span class="p">(</span><span class="s1">&#39;jrws&#39;</span><span class="p">)</span>
+  <span class="n">rws</span> <span class="o">=</span> <span class="n">_clearing_property</span><span class="p">(</span><span class="s1">&#39;rws&#39;</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span>
+
+  <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="kc">True</span>
+
+  <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ExponentialMesh._clear">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh._clear">[docs]</a>
+  <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">coors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jrws</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r1</span>
+          <span class="n">dx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">)</span>
+          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span><span class="p">):</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">dx</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coors</span>
 
 <div class="viewcode-block" id="ExponentialMesh.to_tuple">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.to_tuple">[docs]</a>
   <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">jrws</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rws</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ExponentialMesh.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.copy">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html#ase2sprkkr.potentials.definitions.sections.mesh_information.ExponentialMesh.copy">[docs]</a>
   <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>

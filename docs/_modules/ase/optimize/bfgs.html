@@ -89,19 +89,32 @@
              
   <h1>Source code for ase.optimize.bfgs</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">eigh</span>
 
-<span class="kn">from</span> <span class="nn">ase.optimize.optimize</span> <span class="kn">import</span> <span class="n">Optimizer</span>
+<span class="kn">from</span> <span class="nn">ase</span> <span class="kn">import</span> <span class="n">Atoms</span>
+<span class="kn">from</span> <span class="nn">ase.parallel</span> <span class="kn">import</span> <span class="n">world</span>
+<span class="kn">from</span> <span class="nn">ase.optimize.optimize</span> <span class="kn">import</span> <span class="n">Optimizer</span><span class="p">,</span> <span class="n">UnitCellFilter</span>
 
 
 <span class="k">class</span> <span class="nc">BFGS</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
     <span class="c1"># default parameters</span>
     <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">Optimizer</span><span class="o">.</span><span class="n">defaults</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="mf">70.0</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">maxstep</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+        <span class="n">restart</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">logfile</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">IO</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
+        <span class="n">trajectory</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">append_trajectory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">maxstep</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">master</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">comm</span><span class="o">=</span><span class="n">world</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;BFGS optimizer.</span>
 
 <span class="sd">        Parameters:</span>
@@ -110,12 +123,12 @@
 <span class="sd">            The Atoms object to relax.</span>
 
 <span class="sd">        restart: string</span>
-<span class="sd">            Pickle file used to store hessian matrix. If set, file with</span>
+<span class="sd">            JSON file used to store hessian matrix. If set, file with</span>
 <span class="sd">            such a name will be searched and hessian matrix stored will</span>
 <span class="sd">            be used, if the file exists.</span>
 
 <span class="sd">        trajectory: string</span>
-<span class="sd">            Pickle file used to store trajectory of atomic movement.</span>
+<span class="sd">            Trajectory file used to store optimisation path.</span>
 
 <span class="sd">        logfile: file object or str</span>
 <span class="sd">            If *logfile* is a string, a file with that name will be opened.</span>
@@ -127,7 +140,11 @@
 
 <span class="sd">        master: boolean</span>
 <span class="sd">            Defaults to None, which causes only rank 0 to save files.  If</span>
-<span class="sd">            set to true,  this rank will save files.</span>
+<span class="sd">            set to true, this rank will save files.</span>
+
+<span class="sd">        comm: Communicator object</span>
+<span class="sd">            Defaults to world. Communicator to handle parallel file reading</span>
+<span class="sd">            and writing, set by ase.parallel.world.</span>
 
 <span class="sd">        alpha: float</span>
 <span class="sd">            Initial guess for the Hessian (curvature of energy surface). A</span>
@@ -142,41 +159,51 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;You are using a *very* large value for &#39;</span>
-                          <span class="s1">&#39;the maximum step size: </span><span class="si">%.1f</span><span class="s1"> Å&#39;</span> <span class="o">%</span> <span class="n">maxstep</span><span class="p">)</span>
+                          <span class="s1">&#39;the maximum step size: </span><span class="si">%.1f</span><span class="s1"> Å&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">alpha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
-
-        <span class="n">Optimizer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">restart</span><span class="p">,</span> <span class="n">logfile</span><span class="p">,</span> <span class="n">trajectory</span><span class="p">,</span> <span class="n">master</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="o">.</span><span class="n">todict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;maxstep&#39;</span><span class="p">):</span>
-            <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">maxstep</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">d</span>
+        <span class="n">Optimizer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="n">restart</span><span class="p">,</span>
+                           <span class="n">logfile</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> <span class="n">trajectory</span><span class="o">=</span><span class="n">trajectory</span><span class="p">,</span>
+                           <span class="n">master</span><span class="o">=</span><span class="n">master</span><span class="p">,</span> <span class="n">append_trajectory</span><span class="o">=</span><span class="n">append_trajectory</span><span class="p">,</span>
+                           <span class="n">comm</span><span class="o">=</span><span class="n">comm</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># initial hessian</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizable</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">r0</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">f0</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">orig_cell</span><span class="p">)</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="n">file</span>
 
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">optimizable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizable</span>
 
-        <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">forces</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">forces</span> <span class="o">=</span> <span class="n">optimizable</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">optimizable</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span>
+        <span class="n">dpos</span><span class="p">,</span> <span class="n">steplengths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_step</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">forces</span><span class="p">)</span>
+        <span class="n">dpos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determine_step</span><span class="p">(</span><span class="n">dpos</span><span class="p">,</span> <span class="n">steplengths</span><span class="p">)</span>
+        <span class="n">optimizable</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="n">dpos</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">,</span> <span class="n">UnitCellFilter</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">orig_cell</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">prepare_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">forces</span><span class="p">):</span>
+        <span class="n">forces</span> <span class="o">=</span> <span class="n">forces</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pos</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">forces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span><span class="p">)</span>
         <span class="n">omega</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">eigh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span>
 
         <span class="c1"># FUTURE: Log this properly</span>
@@ -191,19 +218,17 @@
         <span class="c1">#         self.logfile.write(msg)</span>
         <span class="c1">#         self.logfile.flush()</span>
 
-        <span class="n">dr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">omega</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="n">steplengths</span> <span class="o">=</span> <span class="p">(</span><span class="n">dr</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
-        <span class="n">dr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">determine_step</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">steplengths</span><span class="p">)</span>
-        <span class="n">atoms</span><span class="o">.</span><span class="n">set_positions</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">dr</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">r0</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">flat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">f0</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">f0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">))</span>
+        <span class="n">dpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">forces</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">omega</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">steplengths</span> <span class="o">=</span> <span class="p">(</span><span class="n">dpos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">flat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span> <span class="o">=</span> <span class="n">forces</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">dpos</span><span class="p">,</span> <span class="n">steplengths</span>
 
-    <span class="k">def</span> <span class="nf">determine_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dr</span><span class="p">,</span> <span class="n">steplengths</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">determine_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dpos</span><span class="p">,</span> <span class="n">steplengths</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine step to take according to maxstep</span>
 
 <span class="sd">        Normalize all steps as the largest step. This way</span>
-<span class="sd">        we still move along the eigendirection.</span>
+<span class="sd">        we still move along the direction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">maxsteplength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">steplengths</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">maxsteplength</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">:</span>
@@ -214,25 +239,24 @@
             <span class="c1"># )</span>
             <span class="c1"># print(msg, flush=True)</span>
 
-            <span class="n">dr</span> <span class="o">*=</span> <span class="n">scale</span>
+            <span class="n">dpos</span> <span class="o">*=</span> <span class="n">scale</span>
+        <span class="k">return</span> <span class="n">dpos</span>
 
-        <span class="k">return</span> <span class="n">dr</span>
-
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">f0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">forces</span><span class="p">,</span> <span class="n">pos0</span><span class="p">,</span> <span class="n">forces0</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H0</span>
             <span class="k">return</span>
-        <span class="n">dr</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="n">r0</span>
+        <span class="n">dpos</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">-</span> <span class="n">pos0</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dpos</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
             <span class="c1"># Same configuration again (maybe a restart):</span>
             <span class="k">return</span>
 
-        <span class="n">df</span> <span class="o">=</span> <span class="n">f</span> <span class="o">-</span> <span class="n">f0</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-        <span class="n">dg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">dr</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dr</span><span class="p">,</span> <span class="n">dg</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span> <span class="o">/</span> <span class="n">a</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">dg</span><span class="p">,</span> <span class="n">dg</span><span class="p">)</span> <span class="o">/</span> <span class="n">b</span>
+        <span class="n">dforces</span> <span class="o">=</span> <span class="n">forces</span> <span class="o">-</span> <span class="n">forces0</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dpos</span><span class="p">,</span> <span class="n">dforces</span><span class="p">)</span>
+        <span class="n">dg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="n">dpos</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dpos</span><span class="p">,</span> <span class="n">dg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">dforces</span><span class="p">,</span> <span class="n">dforces</span><span class="p">)</span> <span class="o">/</span> <span class="n">a</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">dg</span><span class="p">,</span> <span class="n">dg</span><span class="p">)</span> <span class="o">/</span> <span class="n">b</span>
 
     <span class="k">def</span> <span class="nf">replay_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">traj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize hessian from old trajectory.&quot;&quot;&quot;</span>
@@ -241,29 +265,29 @@
             <span class="n">traj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">traj</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">traj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">r0</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">f0</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">pos0</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">forces0</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="n">traj</span><span class="p">:</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">f0</span><span class="p">)</span>
-            <span class="n">r0</span> <span class="o">=</span> <span class="n">r</span>
-            <span class="n">f0</span> <span class="o">=</span> <span class="n">f</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_positions</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">forces</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">forces</span><span class="p">,</span> <span class="n">pos0</span><span class="p">,</span> <span class="n">forces0</span><span class="p">)</span>
+            <span class="n">pos0</span> <span class="o">=</span> <span class="n">pos</span>
+            <span class="n">forces0</span> <span class="o">=</span> <span class="n">forces</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">r0</span> <span class="o">=</span> <span class="n">r0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">f0</span> <span class="o">=</span> <span class="n">f0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos0</span> <span class="o">=</span> <span class="n">pos0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forces0</span> <span class="o">=</span> <span class="n">forces0</span>
 
 
 <span class="k">class</span> <span class="nc">oldBFGS</span><span class="p">(</span><span class="n">BFGS</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">determine_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dr</span><span class="p">,</span> <span class="n">steplengths</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">determine_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dpos</span><span class="p">,</span> <span class="n">steplengths</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Old BFGS behaviour for scaling step lengths</span>
 
 <span class="sd">        This keeps the behaviour of truncating individual steps. Some might</span>
 <span class="sd">        depend of this as some absurd kind of stimulated annealing to find the</span>
 <span class="sd">        global minimum.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dr</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">steplengths</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dr</span>
+        <span class="n">dpos</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">steplengths</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dpos</span>
 </pre></div>
 
            </div>

@@ -1,0 +1,36 @@
+OutputFileValueDefinition
+=========================
+
+
+.. currentmodule:: ase2sprkkr.output_files.output_files_definitions
+
+.. autoclass:: OutputFileValueDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.output_files_definitions.OutputFileValueDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

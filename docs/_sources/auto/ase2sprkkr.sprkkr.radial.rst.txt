@@ -1,0 +1,52 @@
+radial
+======
+
+Full name: **ase2sprkkr.sprkkr.radial**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.sprkkr.radial.RadialCharge  ase2sprkkr.sprkkr.radial.RadialPotential  ase2sprkkr.sprkkr.radial.RadialValue 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.sprkkr.radial
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      RadialCharge
+      RadialPotential
+      RadialValue
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

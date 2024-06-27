@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.configuration\_containers**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.configuration_containers.BaseSection  ase2sprkkr.common.configuration_containers.ConfigurationContainer  ase2sprkkr.common.configuration_containers.CustomSection  ase2sprkkr.common.configuration_containers.DictAdaptor  ase2sprkkr.common.configuration_containers.RootConfigurationContainer  ase2sprkkr.common.configuration_containers.Section 
+.. inheritance-diagram::  ase2sprkkr.common.configuration_containers.BaseConfigurationContainer  ase2sprkkr.common.configuration_containers.BaseSection  ase2sprkkr.common.configuration_containers.ConfigurationContainer  ase2sprkkr.common.configuration_containers.CustomSection  ase2sprkkr.common.configuration_containers.DictAdaptor  ase2sprkkr.common.configuration_containers.RootConfigurationContainer  ase2sprkkr.common.configuration_containers.Section 
       :parts: 1
 
 |
@@ -35,6 +35,7 @@ Full name: **ase2sprkkr.common.configuration\_containers**
       :toctree:
       :template: custom-class-template.rst
    
+      BaseConfigurationContainer
       BaseSection
       ConfigurationContainer
       CustomSection

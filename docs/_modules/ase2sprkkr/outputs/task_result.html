@@ -89,17 +89,16 @@
              
   <h1>Source code for ase2sprkkr.outputs.task_result</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; This module contains classes, used by parsers of the output files &quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">add_to_signature</span>
-<span class="kn">from</span> <span class="nn">..common.process_output_reader</span> <span class="kn">import</span> <span class="n">BaseProcessOutputReader</span>
+<span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
+
 <div class="viewcode-block" id="TaskResult">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.arpes.TaskResult">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskResult</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A base class for a result of a runned task (kkrscf executable) &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="TaskResult.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.scf.TaskResult.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.TaskResult.html#ase2sprkkr.outputs.readers.arpes.TaskResult.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span> <span class="o">=</span> <span class="n">calculator</span>
@@ -115,16 +114,18 @@
 
 
 
-<div class="viewcode-block" id="OutputReader">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.readers.scf.OutputReader">[docs]</a>
-<span class="k">class</span> <span class="nc">OutputReader</span><span class="p">(</span><span class="n">BaseProcessOutputReader</span><span class="p">):</span>
+<div class="viewcode-block" id="KkrProcess">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.arpes.KkrProcess">[docs]</a>
+<span class="k">class</span> <span class="nc">KkrProcess</span><span class="p">:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot; Class, that run a process and read its output using underlined</span>
+<span class="sd">  process reader (see :class:`ase2sprkkr.common.process_output_reader.ProcessOutputReader`)</span>
+<span class="sd">  and return the appropriate TaskResult.</span>
 
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; Process reader, that construct (a descendant of) InputParametersResult as a result.</span>
-<span class="sd">      Subclasses should specify result_class class property.</span>
+<span class="sd">  Descendants should define reader_class and result_class property.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="OutputReader.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.readers.scf.OutputReader.__init__">[docs]</a>
-  <span class="nd">@add_to_signature</span><span class="p">(</span><span class="n">BaseProcessOutputReader</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KkrProcess.__init__">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.arpes.KkrProcess.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_parameters</span><span class="p">,</span> <span class="n">calculator</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Input parameters, that command to read the output (thus probably the ones, that</span>
@@ -134,13 +135,26 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span> <span class="o">=</span> <span class="n">calculator</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Calculator, that can be used for further processing of the results. &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
-<span class="w">      </span><span class="sd">&quot;&quot;&quot; Directory, to wich are the relative paths in the output related. &quot;&quot;&quot;</span></div>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot; Directory, to wich are the relative paths in the output related. &quot;&quot;&quot;</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader_class</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="OutputReader.result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.OutputReader.html#ase2sprkkr.outputs.readers.scf.OutputReader.result">[docs]</a>
-  <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="KkrProcess.run">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.arpes.KkrProcess.run">[docs]</a>
+  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wraps</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">print_output</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="KkrProcess._wraps">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.arpes.KkrProcess._wraps">[docs]</a>
+  <span class="k">def</span> <span class="nf">_wraps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KkrProcess.read_from_file">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.outputs.task_result.KkrProcess.html#ase2sprkkr.outputs.readers.arpes.KkrProcess.read_from_file">[docs]</a>
+  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_code</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wraps</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">return_code</span><span class="p">,</span> <span class="n">print_output</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

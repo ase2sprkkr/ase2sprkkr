@@ -1,0 +1,36 @@
+test
+====
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.test.test_occupation
+
+.. autoclass:: test
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.test.test_occupation.test
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

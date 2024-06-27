@@ -1,0 +1,6 @@
+<map id="inheritance4038a18758" name="inheritance4038a18758">
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,218,23"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.common.configuration_definitions.VirtualDefinition" target="_top" title="Base class for a definition, that do not have value, just control" alt="" coords="241,4,463,23"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.common.configuration_definitions.SeparatorDefinition" target="_top" title="Basic class for separators" alt="" coords="485,4,723,23"/>
+<area shape="rect" id="node4" href="#ase2sprkkr.output_files.output_files_definitions.BlankSeparator" target="_top" title="A special (hidden) value, that appears in a output file header" alt="" coords="745,4,956,23"/>
+</map>

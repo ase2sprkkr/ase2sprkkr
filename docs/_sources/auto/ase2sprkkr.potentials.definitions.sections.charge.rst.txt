@@ -1,0 +1,53 @@
+charge
+======
+
+Full name: **ase2sprkkr.potentials.definitions.sections.charge**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.charge.ChargeSection  ase2sprkkr.potentials.definitions.sections.charge.ChargeSectionDefinition  ase2sprkkr.potentials.definitions.sections.charge.ChargesSection  ase2sprkkr.potentials.definitions.sections.charge.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.charge
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ChargeSection
+      ChargeSectionDefinition
+      ChargesSection
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

@@ -150,6 +150,7 @@
   <span class="k">def</span> <span class="nf">copy_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
+
 <span class="k">class</span> <span class="nc">Range</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A range type - it accepts either one value or range of two values of a given type.&quot;&quot;&quot;</span>
 
@@ -167,7 +168,6 @@
 
   <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="mi">1</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">]</span>
-
 
 
 <span class="k">class</span> <span class="nc">Mixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
@@ -191,6 +191,7 @@
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span>
 
   <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">PotMixed</span><span class="p">(</span><span class="n">BaseMixed</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A variant value to be used in potential files (in unknown - custom - options) &quot;&quot;&quot;</span>
@@ -217,12 +218,11 @@
 
   <span class="n">is_the_same_value</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">compare_numpy_values</span><span class="p">)</span>
 
-<span class="n">mixed</span> <span class="o">=</span> <span class="n">Mixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Mixed</span><span class="p">()</span>
+
+<span class="n">mixed</span> <span class="o">=</span> <span class="n">Mixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Mixed</span><span class="p">()</span>   <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for variant (mixed) in input files &quot;&quot;&quot;</span>
-<span class="n">pot_mixed</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="p">()</span>
+<span class="n">pot_mixed</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">PotMixed</span><span class="p">()</span>    <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for variant (mixed) values in potential files &quot;&quot;&quot;</span>
-
-
 </pre></div>
 
            </div>

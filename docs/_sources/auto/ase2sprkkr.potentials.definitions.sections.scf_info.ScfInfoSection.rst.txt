@@ -1,0 +1,36 @@
+ScfInfoSection
+==============
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.scf_info
+
+.. autoclass:: ScfInfoSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.scf_info.ScfInfoSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

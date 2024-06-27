@@ -38,8 +38,9 @@ Full name: **ase2sprkkr.tools**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.tools.a2s_plot_output
-     ase2sprkkr.tools.a2s_visualise_in_struct
+     ase2sprkkr.tools.ase2sprkkr
+     ase2sprkkr.tools.shared
      ase2sprkkr.tools.test
+     ase2sprkkr.tools.commands
   
   

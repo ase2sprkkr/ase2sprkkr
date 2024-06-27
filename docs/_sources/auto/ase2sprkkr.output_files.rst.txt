@@ -1,0 +1,46 @@
+output\_files
+=============
+
+Full name: **ase2sprkkr.output\_files**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.output_files.output_files
+     ase2sprkkr.output_files.output_files_definitions
+     ase2sprkkr.output_files.definitions
+     ase2sprkkr.output_files.test
+  
+  

@@ -1,0 +1,7 @@
+<map id="inheritancee5a6d15eb2" name="inheritancee5a6d15eb2">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="43,55,115,80"/>
+<area shape="rect" id="node3" title="Mixin class which provides get_forces(), get_stress() and so on." alt="" coords="181,55,328,80"/>
+<area shape="rect" id="node4" title="Base&#45;class for all ASE calculators." alt="" coords="507,55,595,80"/>
+<area shape="rect" id="node6" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html#ase2sprkkr.sprkkr.calculator.SPRKKR" target="_top" title="ASE calculator for SPR&#45;KKR." alt="" coords="624,55,699,80"/>
+<area shape="rect" id="node5" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html#ase2sprkkr.sprkkr.calculator.FilenameTemplator" target="_top" title="Class that replaces the placeholders in filenames with propper values," alt="" coords="5,5,152,31"/>
+</map>

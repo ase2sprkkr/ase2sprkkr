@@ -1,0 +1,36 @@
+TestOutput
+==========
+
+
+.. currentmodule:: ase2sprkkr.output_files.test.test_files
+
+.. autoclass:: TestOutput
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.test.test_files.TestOutput
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

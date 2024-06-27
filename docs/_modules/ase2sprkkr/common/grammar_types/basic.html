@@ -93,15 +93,16 @@
 <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Rydberg</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
-<span class="n">ppc</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">pyparsing_common</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span>  <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">add_to_signature</span><span class="p">,</span> <span class="n">cached_property</span>
 <span class="kn">from</span> <span class="nn">..grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span><span class="p">,</span> <span class="n">separator_grammar</span><span class="p">,</span> \
                      <span class="n">replace_whitechars</span><span class="p">,</span> <span class="n">optional_quote</span>
-
 <span class="kn">from</span> <span class="nn">.grammar_type</span> <span class="kn">import</span> <span class="n">TypedGrammarType</span><span class="p">,</span> <span class="n">GrammarType</span><span class="p">,</span> <span class="n">add_to_parent_validation</span>
+
+<span class="n">ppc</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">pyparsing_common</span>
+
 
 <div class="viewcode-block" id="Number">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Number.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Number">[docs]</a>
@@ -138,6 +139,7 @@
 </div>
 
 
+
 <div class="viewcode-block" id="Unsigned">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Unsigned">[docs]</a>
 <span class="k">class</span> <span class="nc">Unsigned</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
@@ -160,6 +162,7 @@
 
   <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">int</span>
   <span class="n">datatype_name</span> <span class="o">=</span> <span class="s1">&#39;unsigned integer&#39;</span></div>
+
 
 
 <div class="viewcode-block" id="ObjectNumber">
@@ -186,6 +189,7 @@
   <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
       <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="n">why</span><span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="Integer">
@@ -233,7 +237,7 @@
 <span class="k">class</span> <span class="nc">IntBool</span><span class="p">(</span><span class="n">TypedGrammarType</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A bool type, whose value is represented by a letter (1 or 0) &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span> <span class="p">)</span>
-  <span class="n">_rev_grammar</span> <span class="o">=</span>  <span class="n">_grammar</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span> <span class="p">)</span>
+  <span class="n">_rev_grammar</span> <span class="o">=</span> <span class="n">_grammar</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="IntBool.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.IntBool.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.IntBool.__init__">[docs]</a>
@@ -281,11 +285,12 @@
           <span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">SuspiciousValueWarning</span>
           <span class="n">SuspiciousValueWarning</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;An attemtp to set &lt;float&gt; value using an &lt;integer&gt;. I will do a conversion for you.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
               <span class="n">stacklevel</span><span class="o">=</span><span class="mi">6</span>
-              <span class="p">)</span>
+          <span class="p">)</span>
           <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
       <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="Date">
@@ -311,6 +316,7 @@
   <span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;date&#39;</span></div>
 
 
+
 <div class="viewcode-block" id="BaseRealWithUnits">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BaseRealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BaseRealWithUnits">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseRealWithUnits</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
@@ -328,10 +334,10 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_cache</span><span class="p">:</span>
       <span class="n">units</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span>
         <span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-                <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">u</span> <span class="ow">in</span>  <span class="n">units</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="p">)</span>
-      <span class="n">out</span> <span class="o">=</span>  <span class="n">Real</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
-      <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="n">u</span><span class="p">:</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span><span class="n">u</span> <span class="ow">in</span> <span class="n">units</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+      <span class="p">)</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">grammar</span><span class="p">()</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
+      <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">grammar_cache</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
       <span class="k">return</span> <span class="n">out</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_cache</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
@@ -358,6 +364,7 @@
   <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">float</span></div>
 
 
+
 <div class="viewcode-block" id="RealWithUnits">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.RealWithUnits.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.RealWithUnits">[docs]</a>
 <span class="k">class</span> <span class="nc">RealWithUnits</span><span class="p">(</span><span class="n">BaseRealWithUnits</span><span class="p">):</span>
@@ -369,6 +376,7 @@
      <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="Energy">
@@ -385,6 +393,7 @@
 
   <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="s2">&quot;Energy (&lt;Real&gt; [Ry|eV])&quot;</span></div>
+
 
 
 <div class="viewcode-block" id="BaseString">
@@ -406,6 +415,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Forbidden character &#39;</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">line</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">col</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; in the string&quot;</span>
     <span class="k">return</span> <span class="kc">True</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="String">
@@ -459,8 +469,8 @@
 
 <div class="viewcode-block" id="Keyword.__init__">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">keywords</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">keywords</span><span class="p">,</span> <span class="n">aliases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span> <span class="o">=</span> <span class="n">aliases</span> <span class="ow">or</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">choices</span> <span class="o">=</span> <span class="n">keywords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
        <span class="n">keywords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choices</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -469,7 +479,9 @@
 
     <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">keywords</span> <span class="p">]</span>
     <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">=</span> <span class="n">optional_quote</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">MatchFirst</span><span class="p">((</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> <span class="o">+</span> <span class="n">optional_quote</span></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">=</span> <span class="n">optional_quote</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">MatchFirst</span><span class="p">((</span><span class="n">pp</span><span class="o">.</span><span class="n">CaselessKeyword</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> <span class="o">+</span> <span class="n">optional_quote</span>
+
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Keyword._validate">
@@ -492,7 +504,8 @@
 <div class="viewcode-block" id="Keyword.convert">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Keyword.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Keyword.convert">[docs]</a>
   <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-      <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span></div>
+      <span class="n">out</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">aliases</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Keyword.additional_description">
@@ -509,6 +522,7 @@
 
 
   <span class="n">is_independent_on_the_predecessor</span> <span class="o">=</span> <span class="kc">True</span></div>
+
 
 
 <div class="viewcode-block" id="DefKeyword">
@@ -561,6 +575,7 @@
 </div>
 
 
+
 <div class="viewcode-block" id="BasicSeparator">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.BasicSeparator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.BasicSeparator">[docs]</a>
 <span class="k">class</span> <span class="nc">BasicSeparator</span><span class="p">(</span><span class="n">GrammarType</span><span class="p">):</span>
@@ -606,8 +621,9 @@
 <div class="viewcode-block" id="Separator._string">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Separator.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Separator._string">[docs]</a>
   <span class="k">def</span> <span class="nf">_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="BlankSeparator">
@@ -631,32 +647,31 @@
 
 
 
-<span class="c1">#commonly used types</span>
+<span class="c1"># commonly used types</span>
 <span class="n">integer</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">()</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for (signed) integers &quot;&quot;&quot;</span>
-<span class="n">unsigned</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="p">()</span>
+<span class="n">unsigned</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Unsigned</span><span class="p">()</span>         <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for unsigned integers &quot;&quot;&quot;</span>
-<span class="n">boolean</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>
+<span class="n">boolean</span> <span class="o">=</span> <span class="n">Bool</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">()</span>                  <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for booleans in potential files &quot;&quot;&quot;</span>
-<span class="n">flag</span> <span class="o">=</span> <span class="n">Flag</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Flag</span><span class="p">()</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="n">Flag</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Flag</span><span class="p">()</span>                     <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for booleans in input files &quot;&quot;&quot;</span>
-<span class="n">real</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Real</span><span class="p">()</span>
+<span class="n">real</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Real</span><span class="p">()</span>                     <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for reals&quot;&quot;&quot;</span>
-<span class="n">date</span> <span class="o">=</span> <span class="n">Date</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Date</span><span class="p">()</span>
+<span class="n">date</span> <span class="o">=</span> <span class="n">Date</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Date</span><span class="p">()</span>                     <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard instance for the grammar type for dates &quot;&quot;&quot;</span>
-<span class="n">string</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>
+<span class="n">string</span> <span class="o">=</span> <span class="n">String</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">String</span><span class="p">()</span>               <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for strings &quot;&quot;&quot;</span>
-<span class="n">qstring</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">QString</span><span class="p">()</span>
+<span class="n">qstring</span> <span class="o">=</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">QString</span><span class="p">()</span>            <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for quoted strings in input files &quot;&quot;&quot;</span>
-<span class="n">line_string</span> <span class="o">=</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">()</span>
+<span class="n">line_string</span> <span class="o">=</span> <span class="n">LineString</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">()</span>  <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for one-line strings in potential files &quot;&quot;&quot;</span>
-<span class="n">energy</span> <span class="o">=</span> <span class="n">Energy</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Energy</span><span class="p">()</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="n">Energy</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Energy</span><span class="p">()</span>               <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for energy values (float) for potential files &quot;&quot;&quot;</span>
-<span class="n">separator</span> <span class="o">=</span> <span class="n">Separator</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Separator</span><span class="p">()</span>
+<span class="n">separator</span> <span class="o">=</span> <span class="n">Separator</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Separator</span><span class="p">()</span>      <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for separators in potential files &quot;&quot;&quot;</span>
-<span class="n">int_bool</span> <span class="o">=</span> <span class="n">IntBool</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">IntBool</span><span class="p">()</span>
+<span class="n">int_bool</span> <span class="o">=</span> <span class="n">IntBool</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">IntBool</span><span class="p">()</span>           <span class="c1"># NOQA: E741</span>
 <span class="sd">&quot;&quot;&quot; A standard grammar type instance for bool expressed as integer &quot;&quot;&quot;</span>
-
 </pre></div>
 
            </div>

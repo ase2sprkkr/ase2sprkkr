@@ -1931,14 +1931,14 @@
             <span class="n">date_components</span> <span class="o">=</span> <span class="n">_parse_isoformat_date</span><span class="p">(</span><span class="n">dstr</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Invalid isoformat string: </span><span class="si">{</span><span class="n">date_string</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+                <span class="sa">f</span><span class="s1">&#39;Invalid isoformat string: </span><span class="si">{</span><span class="n">date_string</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">tstr</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">time_components</span> <span class="o">=</span> <span class="n">_parse_isoformat_time</span><span class="p">(</span><span class="n">tstr</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;Invalid isoformat string: </span><span class="si">{</span><span class="n">date_string</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+                    <span class="sa">f</span><span class="s1">&#39;Invalid isoformat string: </span><span class="si">{</span><span class="n">date_string</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">time_components</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 

@@ -1,0 +1,36 @@
+RepeatedConfigurationContainer
+==============================
+
+
+.. currentmodule:: ase2sprkkr.common.repeated_configuration_containers
+
+.. autoclass:: RepeatedConfigurationContainer
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.common.repeated_configuration_containers.RepeatedConfigurationContainer
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

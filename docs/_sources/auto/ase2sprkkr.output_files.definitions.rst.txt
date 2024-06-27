@@ -1,0 +1,64 @@
+definitions
+===========
+
+Full name: **ase2sprkkr.output\_files.definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.output_files.definitions.Arithmetic  ase2sprkkr.output_files.definitions.CommonOutputFile  ase2sprkkr.output_files.definitions.OutputFile  ase2sprkkr.output_files.definitions.UnknownDataValue 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      Arithmetic
+      CommonOutputFile
+      OutputFile
+      UnknownDataValue
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.output_files.definitions.bsf
+     ase2sprkkr.output_files.definitions.dos
+     ase2sprkkr.output_files.definitions.spc
+  
+  

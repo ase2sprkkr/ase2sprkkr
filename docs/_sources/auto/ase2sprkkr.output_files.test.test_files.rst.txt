@@ -1,0 +1,50 @@
+test\_files
+===========
+
+Full name: **ase2sprkkr.output\_files.test.test\_files**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.output_files.test.test_files.TestOutput 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.test.test_files
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TestOutput
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

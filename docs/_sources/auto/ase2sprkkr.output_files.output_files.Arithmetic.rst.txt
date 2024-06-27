@@ -1,0 +1,36 @@
+Arithmetic
+==========
+
+
+.. currentmodule:: ase2sprkkr.output_files.output_files
+
+.. autoclass:: Arithmetic
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.output_files.output_files.Arithmetic
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

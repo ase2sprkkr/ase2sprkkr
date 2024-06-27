@@ -99,10 +99,11 @@
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">grammar_types</span>
 
 <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span><span class="p">,</span> <span class="n">cache</span><span class="p">,</span> \
-                        <span class="n">add_to_signature</span><span class="p">,</span> <span class="n">add_called_class_as_argument</span><span class="p">,</span> <span class="n">cached_property</span>
+                         <span class="n">add_called_class_as_argument</span><span class="p">,</span> <span class="n">cached_property</span>
 <span class="kn">from</span> <span class="nn">..alternative_types</span> <span class="kn">import</span> <span class="n">normalize_type</span><span class="p">,</span> <span class="n">allowed_types</span>
 <span class="kn">from</span> <span class="nn">..grammar</span> <span class="kn">import</span> <span class="n">generate_grammar</span>
 <span class="kn">from</span> <span class="nn">..formats</span> <span class="kn">import</span> <span class="n">full_format_for_string</span>
+
 
 <div class="viewcode-block" id="GrammarType">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.potentials.custom_potential_section.GrammarType">[docs]</a>
@@ -282,7 +283,7 @@
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_value</span><span class="p">:</span>
        <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
            <span class="k">try</span><span class="p">:</span>
-             <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;parse&#39;</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="n">param_name</span><span class="p">)</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;parse&#39;</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="n">param_name</span><span class="p">)</span>
            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
              <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Validating of the parsed value failed&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
            <span class="k">return</span> <span class="n">x</span>
@@ -399,7 +400,7 @@
 <div class="viewcode-block" id="GrammarType._valueError">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.potentials.custom_potential_section.GrammarType._valueError">[docs]</a>
   <span class="k">def</span> <span class="nf">_valueError</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">param_name</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">param_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">param_name</span><span class="p">):</span>
        <span class="n">param_name</span> <span class="o">=</span> <span class="n">param_name</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">param_name</span><span class="p">:</span>
        <span class="n">param</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;for paramater </span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s1"> of type </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -412,14 +413,6 @@
       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Value &#39;</span><span class="si">{}</span><span class="s2">&#39; </span><span class="si">{}</span><span class="s2"> is not valid: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">error_message</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">error_message</span>
     <span class="k">else</span><span class="p">:</span>
       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Value &#39;</span><span class="si">{}</span><span class="s2">&#39; </span><span class="si">{}</span><span class="s2"> is not valid: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">error_message</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="GrammarType.read">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.GrammarType.html#ase2sprkkr.potentials.custom_potential_section.GrammarType.read">[docs]</a>
-  <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">parameterName</span><span class="o">=</span><span class="s1">&#39;&lt;Unknown&gt;&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Transform pyparsing token to a validated value &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">val</span></div>
 
 
 <div class="viewcode-block" id="GrammarType.convert">
@@ -554,7 +547,8 @@
 <span class="sd">      message describing the error.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">types</span><span class="p">):</span> <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">types</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">typename</span><span class="p">:</span>
        <span class="n">typename</span> <span class="o">=</span> <span class="n">types</span>
     <span class="n">typename</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">typename</span><span class="p">)</span>
@@ -581,6 +575,7 @@
 </div>
 
 
+
 <span class="nd">@add_called_class_as_argument</span>
 <span class="k">def</span> <span class="nf">add_to_parent_validation</span><span class="p">(</span><span class="n">validation</span><span class="p">):</span>
 
@@ -592,6 +587,7 @@
         <span class="k">return</span> <span class="n">validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">wrapped</span>
+
 
 <div class="viewcode-block" id="TypedGrammarType">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.TypedGrammarType.html#ase2sprkkr.potentials.custom_potential_section.TypedGrammarType">[docs]</a>
@@ -628,6 +624,7 @@
   <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_validation</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed_types</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datatype_name</span><span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="type_from_type">
@@ -679,6 +676,7 @@
   <span class="k">return</span> <span class="nb">type</span></div>
 
 
+
 <div class="viewcode-block" id="type_from_value">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.type_from_value.html#ase2sprkkr.potentials.custom_potential_section.type_from_value">[docs]</a>
 <span class="k">def</span> <span class="nf">type_from_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="p">{}):</span>
@@ -695,19 +693,20 @@
   <span class="n">type_from_set_map</span> <span class="o">=</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">type_from_set_map</span>
 
   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">recognized_set_types</span><span class="p">):</span>
-     <span class="k">return</span> <span class="n">type_from_set_map</span><span class="p">[</span><span class="n">normalize_type</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="n">Integer</span><span class="o">.</span><span class="n">I</span>
+     <span class="k">return</span> <span class="n">type_from_set_map</span><span class="p">[</span><span class="n">normalize_type</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">else</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">Integer</span><span class="o">.</span><span class="n">I</span>
   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
      <span class="k">try</span><span class="p">:</span>
-        <span class="n">String</span><span class="o">.</span><span class="n">_grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="n">I</span>
+        <span class="n">grammar_types</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">_grammar</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">String</span><span class="o">.</span><span class="n">I</span>
      <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">QString</span><span class="o">.</span><span class="n">I</span>
+        <span class="k">return</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">QString</span><span class="o">.</span><span class="n">I</span>
   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">grammar_types</span><span class="o">.</span><span class="n">Keyword</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
   <span class="nb">type</span> <span class="o">=</span> <span class="n">type_from_type</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">type_map</span><span class="o">=</span><span class="n">type_map</span><span class="p">)</span>
   <span class="k">if</span> <span class="nb">type</span> <span class="ow">is</span> <span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot determine grammar type from value </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
   <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="type_from_default_value">
@@ -728,6 +727,7 @@
    <span class="k">return</span> <span class="n">gtype</span><span class="p">(</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">format_for_type</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="n">ptype</span><span class="p">))</span></div>
 
 
+
 <div class="viewcode-block" id="compare_numpy_values">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.grammar_type.compare_numpy_values.html#ase2sprkkr.potentials.custom_potential_section.compare_numpy_values">[docs]</a>
 <span class="k">def</span> <span class="nf">compare_numpy_values</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
@@ -736,6 +736,7 @@
 <span class="sd">    compare nested numpy arrays.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="format_for_type">
@@ -755,6 +756,7 @@
         <span class="k">return</span> <span class="nb">format</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span>
      <span class="k">return</span> <span class="nb">format</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
   <span class="k">return</span> <span class="nb">format</span></div>
+
 
 
 <span class="n">recognized_set_types</span> <span class="o">=</span> <span class="p">(</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="p">)</span>

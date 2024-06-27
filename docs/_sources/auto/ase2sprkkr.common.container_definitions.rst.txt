@@ -1,0 +1,62 @@
+container\_definitions
+======================
+
+Full name: **ase2sprkkr.common.container\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.container_definitions.ConfigurationRootDefinition  ase2sprkkr.common.container_definitions.ContainerDefinition  ase2sprkkr.common.container_definitions.MergeDictAdaptor  ase2sprkkr.common.container_definitions.SectionDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.container_definitions
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      add_excluded_names_condition
+      dict_from_parsed
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ConfigurationRootDefinition
+      ContainerDefinition
+      MergeDictAdaptor
+      SectionDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

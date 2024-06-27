@@ -38,17 +38,19 @@ Full name: **ase2sprkkr**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.ase
-     ase2sprkkr.asr
      ase2sprkkr.bindings
-     ase2sprkkr.common
-     ase2sprkkr.input_parameters
-     ase2sprkkr.outputs
-     ase2sprkkr.physics
-     ase2sprkkr.potentials
+     ase2sprkkr.config
+     ase2sprkkr.version
      ase2sprkkr.sprkkr
      ase2sprkkr.tools
-     ase2sprkkr.version
+     ase2sprkkr.input_parameters
+     ase2sprkkr.outputs
+     ase2sprkkr.potentials
+     ase2sprkkr.physics
+     ase2sprkkr.ase
+     ase2sprkkr.asr
      ase2sprkkr.visualise
+     ase2sprkkr.output_files
+     ase2sprkkr.common
   
   

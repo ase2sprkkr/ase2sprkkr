@@ -1,0 +1,8 @@
+<map id="inheritance635629d395" name="inheritance635629d395">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition.html#ase2sprkkr.sprkkr.configuration.ConfigurationFileDefinition" target="_top" title="The class for the configuration files (the root nodes of the configuration)." alt="" coords="664,3,804,15"/>
+<area shape="rect" id="node6" href="#ase2sprkkr.potentials.potential_definitions.PotentialDefinition" target="_top" title="This class describes the format of a potential file" alt="" coords="819,3,957,15"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html#ase2sprkkr.common.container_definitions.ConfigurationRootDefinition" target="_top" title="From this class, the definition of the format of a whole configuration file should be derived." alt="" coords="480,3,649,15"/>
+<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="3,3,142,15"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="156,3,309,15"/>
+<area shape="rect" id="node5" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html#ase2sprkkr.common.container_definitions.ContainerDefinition" target="_top" title="Base class for a definition (of contained data, format, etc)" alt="" coords="323,3,465,15"/>
+</map>

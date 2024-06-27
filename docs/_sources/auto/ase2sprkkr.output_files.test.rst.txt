@@ -1,0 +1,44 @@
+test
+====
+
+Full name: **ase2sprkkr.output\_files.test**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.output_files.test
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.output_files.test.init_tests
+     ase2sprkkr.output_files.test.test_files
+  
+  

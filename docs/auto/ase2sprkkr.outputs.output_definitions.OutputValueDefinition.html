@@ -64,10 +64,11 @@
 <p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.html">output_definitions</a><ul class="current">
@@ -77,19 +78,18 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.outputs.output_definitions.OutputValueEqualDefinition.html">OutputValueEqualDefinition</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files.html">output_files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.output_files_definitions.html">output_files_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.task_result.html">task_result</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.readers.html">readers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.outputs.test.html">test</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.physics.html">physics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.ase.html">ase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.asr.html">asr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
 </ul>
 </li>
 </ul>
@@ -128,12 +128,12 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.outputs.output_definitions.</span></span><span class="sig-name descname"><span class="pre">OutputValueDefinition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/outputs/output_definitions.html#OutputValueDefinition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" title="Link to this definition"></a></dt>
 <dd><p>Value in an output file, of a form ‘NAME   VALUE’</p>
 <p class="rubric">Class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-2f23b3d41bd32670aa9d380235c1312aca5cde85.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_definitions.OutputValueDefinition" usemap="#inheritance4b691c2b86" class="inheritance graphviz" /></div>
+<div class="graphviz"><img src="../_images/inheritance-2bbf78259a4da7f7a93b696b9ea5d7c6d289fd13.png" alt="Inheritance diagram of ase2sprkkr.outputs.output_definitions.OutputValueDefinition" usemap="#inheritance4b691c2b86" class="inheritance graphviz" /></div>
 <map id="inheritance4b691c2b86" name="inheritance4b691c2b86">
-<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,218,23"/>
-<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="241,4,475,23"/>
-<area shape="rect" id="node3" href="ase2sprkkr.common.configuration_definitions.ValueDefinition.html#ase2sprkkr.common.configuration_definitions.ValueDefinition" target="_top" title="configuration_definitions.ValueDefinition" alt="" coords="498,4,715,23"/>
-<area shape="rect" id="node4" href="#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="738,4,956,23"/>
+<area shape="rect" id="node1" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.common.configuration_definitions.BaseDefinition" target="_top" title="This class is a member of definition of configuration, that can be both" alt="" coords="4,4,227,24"/>
+<area shape="rect" id="node2" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.common.configuration_definitions.RealItemDefinition" target="_top" title="A base class for a configuration definition, either of an option, or of a container." alt="" coords="251,4,495,24"/>
+<area shape="rect" id="node4" href="ase2sprkkr.common.value_definitions.ValueDefinition.html#ase2sprkkr.common.value_definitions.ValueDefinition" target="_top" title="value_definitions.ValueDefinition" alt="" coords="518,4,705,24"/>
+<area shape="rect" id="node3" href="#ase2sprkkr.outputs.output_definitions.OutputValueDefinition" target="_top" title="Value in an output file, of a form &#39;NAME &#160;&#160;VALUE&#39;" alt="" coords="728,4,956,24"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -188,7 +188,7 @@ default value.</p></li>
 <li><p><strong>is_numbered_array</strong> – Such values can contains (sparse) arrays. In the resulting ouput, the
 members of the array are in the form NAME1=…, NAME2=…, … The default
 value for missing number can appear in the form NAME=…</p></li>
-<li><p><strong>is_repeated</strong> – If True, the real type of the Value is array of values of given type.
+<li><p><strong>is_repeated</strong> – If True, the real type of the Value is array of values of the given type.
 The name-value pair is repeated for each value of the array.</p></li>
 <li><p><strong>is_always_added</strong> – If False, add the value, only if its value is not the default value.
 Default None means False for expert values, True for the others.</p></li>
@@ -221,7 +221,7 @@ to hide the inactive members</p></li>
 <span class="sig-name descname"><span class="pre">grammar_of_delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">WordStart</span></em><a class="headerlink" href="#ase2sprkkr.outputs.output_definitions.OutputValueDefinition.grammar_of_delimiter" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – </p>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em> | </em><em>None</em>) – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ParserElement</p>

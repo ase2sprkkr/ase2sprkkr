@@ -1,0 +1,50 @@
+value\_definitions
+==================
+
+Full name: **ase2sprkkr.common.value\_definitions**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.common.value_definitions.ValueDefinition 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.common.value_definitions
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ValueDefinition
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  
