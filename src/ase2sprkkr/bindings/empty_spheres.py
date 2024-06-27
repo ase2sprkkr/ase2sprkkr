@@ -1,7 +1,11 @@
 from collections import namedtuple
 from ..sprkkr.sprkkr_atoms import SPRKKRAtoms
 
-EmptySpheresResult = namedtuple('EmptySpheresResult', 'positions radii')
+
+class EmptySpheresResult(namedtuple('EmptySpheresResult', 'positions radii')):
+
+    def __len__(self):
+        return len(self.radii)
 
 
 def empty_spheres(atoms, method='auto', **kwargs):
