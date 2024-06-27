@@ -40,10 +40,13 @@ def empty_spheres_atoms(atoms, round_zero=True, **kwargs):
     #    next(iter(i.occupation)).radius=radius
 
 
-def add_empty_spheres(atoms, **kwargs):
+def add_empty_spheres(atoms, *, copy=False, **kwargs):
     empty = empty_spheres_atoms(atoms, **kwargs)
     if empty:
+        if copy:
+            atoms = atoms.copy()
         atoms+= empty
+    return atoms
 
 
 from . import es_finder                   # NOQA
