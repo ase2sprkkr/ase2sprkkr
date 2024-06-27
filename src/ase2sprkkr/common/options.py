@@ -236,6 +236,9 @@ class Option(BaseOption):
       if self._hook:
         self._hook(self)
 
+  def add_hook(self, hook):
+      self._hook = hook
+
   def _check_array_access(self):
       """ Check, whether the option is numbered array and thus it can be accessed as array using [] """
       if not self._definition.is_numbered_array and not self._definition.type.array_access:
