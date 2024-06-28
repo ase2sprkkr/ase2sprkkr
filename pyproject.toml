@@ -1,6 +1,6 @@
 [build-system]
 build-backend = 'mesonpy'
-requires = ['meson-python', 'cython' ]
+requires = ['meson-python', 'cython', 'numpy' ]
 
 [project.scripts]
 ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"

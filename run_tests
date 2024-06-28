@@ -11,8 +11,10 @@ import os
 try:
         import ase2sprkkr
         print(os.path.dirname(ase2sprkkr.__file__))
-except:
-        print(os.path.join(os.getcwd(), "src"))
+except Exception as e:
+        print(e)
+        print(os.path.join(os.getcwd(), "src/ase2sprkkr"))
 '`"
 
+echo $DIR
 PY_IGNORE_IMPORTMISMATCH=1 py.test  --doctest-modules "$DIR" $@
