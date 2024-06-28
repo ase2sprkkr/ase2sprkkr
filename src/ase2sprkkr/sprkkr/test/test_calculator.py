@@ -1,7 +1,6 @@
 from ase.build import bulk
 import os
 import re
-import sys
 from pathlib import Path
 from ase import Atoms
 
@@ -24,28 +23,9 @@ def _fast_atoms(b, jrws=20,r1=2e-6):
          i.mesh.r1 =r1
 
 
-class CalculatorTest(TestCase):
+class TestCalculator(TestCase):
 
- print_output = '-v' in sys.argv or '--verbose' in sys.argv
- dirname = os.path.dirname(__file__)
- _calc_args = dict(
-     directory = dirname, input_file = 'output_test_calc.inp',  # empty_spheres=False,
-     output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=print_output,
-     mpi = 'auto', options = {'NKTAB': 5, 'NE': 20},
-     empty_spheres = False
- )
-
- def _calc_args_ex(self, **kwargs):
-     if 'options' in kwargs:
-        o = kwargs['options']
-     else:
-        o = None
-     kwargs.update(self._calc_args)
-     if o:
-        kwargs['options'].update(o)
-     return kwargs
-
- def test_2D(self):
+ def test_2D(self, temporary_dir):
      a=Atoms(symbols="C", positions=[[0,0,0]], cell=[[1,0,0],[0,1,0], [0,0,1]], pbc=[1,1,1])
      b=semiinfinite_system(a, repeat=2)
      cal=SPRKKR(atoms=b, **self._calc_args)
@@ -56,11 +36,11 @@ class CalculatorTest(TestCase):
      if not self.run_sprkkr():
          return
      out=SPRKKR()
-     out=out.calculate(b, **self._calc_args_ex(options={'EMIN': 8., 'NITER':2, 'NKTAB3D':2}))
+     out=out.calculate(b, **self._calc_args(options={'EMIN': 8., 'NITER':2, 'NKTAB3D':2}))
      self.assertTrue(bool(re.search('NKTAB3D=', out.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', out.input_parameters.to_string())))
 
- def test_calculator(self):
+ def test_calculator(self, temporary_dir):
      here = lambda x: os.path.join(self.dirname, x)
 
      atoms = bulk('Li')
@@ -122,15 +102,10 @@ class CalculatorTest(TestCase):
      calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
- @classmethod
- def calc_args(cls, **kwargs):
-     kwargs.update(cls._calc_args)
-     return kwargs
-
  def run_sprkkr(self):
      return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
 
- def test_run(self):
+ def test_run(self, temporary_dir):
      if not self.run_sprkkr():
          return
 
@@ -177,7 +152,7 @@ class CalculatorTest(TestCase):
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 
- def test_phagen(self):
+ def test_phagen(self, temporary_dir):
      if not self.run_sprkkr():
          return
      atoms = bulk('Li')

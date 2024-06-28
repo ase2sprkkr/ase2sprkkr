@@ -1,15 +1,17 @@
 """ Routines and classes used in tests """
 
 import sys
-import os
 from pathlib import Path
-import unittest
 import numpy as np
 import inspect
-import sys
 import asyncio
 from ase.cell import Cell
 from contextlib import contextmanager
+import pytest
+import tempfile
+import unittest
+
+
 def patch_package(package, name):
     """ Set the package name for the tests, to make the relative imports working.
 
@@ -33,90 +35,157 @@ def patch_package(package, name):
     while file.name != 'ase2sprkkr':
       file = file.parent
     top = str(file.parent)
-    sys.path.append(top)
-    package=str(current)[len(top)+1:].replace('/','.')
+    try:
+        import ase2sprkkr # NOQA
+    except ImportError:
+        sys.path.append(top)
+    package=str(current)[len(top) + 1:].replace('/','.')
     return package, package + '.' + name.rsplit('.', 1)[-1]
+
 
 __package__, __name__ = patch_package(__package__,__name__)
 
-class TestCase(unittest.TestCase):
+
+class extdict(dict):
+
+    def __call__(self, **kwargs):
+        out = self.copy()
+        out.update(kwargs)
+        return out
+
+
+class TestCase:
   """ A testcase class with some usefull assertions and a better numpy
   arrays comparison """
+
+  _print_output = '-v' in sys.argv or '--verbose' in sys.argv
+  _calc_args = extdict(
+       directory = False, input_file = 'output_test_calc.inp',  # empty_spheres=False,
+       output_file = 'output_test_calc.out', potential_file ='output_test_calc.pot', print_output=_print_output,
+       mpi = 'auto', options = {'NKTAB': 5, 'NE': 20},
+       empty_spheres = False
+  )
+
+  @pytest.fixture
+  def temporary_dir(self):
+      with tempfile.TemporaryDirectory() as d:
+          TestCase._calc_args['directory'] = d
+          self.dirname = d
+          yield
+          TestCase._calc_args['directory'] = False
+          del self.dirname
+
+  @classmethod
+  def calc_args(cls, **kwargs):
+      if 'options' in kwargs:
+          o = kwargs['options']
+      else:
+          o = None
+      kwargs.update(cls._calc_args)
+      if o:
+          kwargs['options'].update(o)
+      return kwargs
 
   def assertAsyncEqual(self, a, b):
       return self.assertEqual(a, self.runAsync(b))
 
   def assertAsyncRaises(self, a, b):
-      return self.assertRaises(a, self.runAsync(b))
+      with pytest.raises(a):
+          self.runAsync(b)
+
+  def assertRaises(self, a, b):
+      with pytest.raises(a):
+          b()
 
   def assertAlmostEqual(self, a, b, **kwargs):
       np.testing.assert_almost_equal(a,b, **kwargs)
+
+  def assertIsNone(self, a):
+      assert a is None
 
   @staticmethod
   def runAsync(corr):
       return asyncio.run(corr)
 
+  def assertTrue(self, val):
+      assert val
+
+  def assertFalse(self, val):
+      assert not val
+
+  def assertEqual(self, a, b):
+      assertion.assertEqual(a,b)
+
+  def assertNotEqual(self, a, b):
+      with pytest.raises(AssertionError):
+          assertion.assertEqual(a,b)
+
   @classmethod
   @contextmanager
   def almost_equal_precision(cls, **kwargs):
-      tmp = cls._almost_equal_precision
-      cls._almost_equal_precision = kwargs
+      tmp = assertion._almost_equal_precision
+      assertion._almost_equal_precision = kwargs
       yield
-      cls._almost_equal_precision = tmp
-
-  _almost_equal_precision = {}
-
-  def assertDictEqual(self, a, b, msg=''):
-      if a.__class__ != b.__class__:
-         if msg: msg+='\n'
-         raise ValueError(msg + f'Classes {a.__class__} and {b.__class__} are not equal')
-      if len(a) != len(b):
-         super().assertDictEqual(dict(a), dict(b), msg)
-      for (ai, av),(bi, bv) in zip(a.items(), b.items()):
-         self.assertEqual(ai, bi, 'Dict keys are not equal')
-         self.assertEqual(av, bv, 'Dict values are not equal')
-
-  def setUp(self):
-      """ Register numpy array for the equality """
-
-      def testfce(fce, msg='', **kwargs):
-        def np_array_equal(a, b, msg=msg, **kwar):
-          try:
-            fce(a,b, **kwargs, **kwar)
-          except AssertionError as e:
-            if msg:
-               msg = msg + '\n' + str(e)
-               raise self.failureException(msg)
-            else:
-               raise
-        return np_array_equal
-
-      assert_equals = testfce(np.testing.assert_equal)
-      assert_almost_equals = testfce(np.testing.assert_almost_equal)
-
-      def arr_testfce(a,b,msg, **kwargs):
-         """ assert_almost_equal does not work for non-numeric dtypes """
-         if a.dtype == 'O':
-            return assert_equals(a,b,msg)
-         if a.dtype.names:
-            for i in range(len(a.dtype)):
-                if a.dtype[1] == 'O':
-                   return assert_equals(a,b,msg)
-         kwargs.update(self._almost_equal_precision)
-         return assert_almost_equals(a,b,msg, **kwargs)
-
-      self.addTypeEqualityFunc(
-         np.ndarray,
-         arr_testfce
-      )
-
-      self.addTypeEqualityFunc(
-         dict,
-         self.assertDictEqual
-      )
+      assertion._almost_equal_precision = tmp
 
 
-      self.addTypeEqualityFunc(
-         Cell,
-         lambda a,b,msg: arr_testfce(np.array(a), np.array(b), msg)
-      )
+assertion = unittest.TestCase('__init__')
+assertion._almost_equal_precision = {}
+
+
+def testfce(fce, msg='', **kwargs):
+    def np_array_equal(a, b, msg=msg, **kwar):
+        try:
+          fce(a,b, **kwargs, **kwar)
+        except AssertionError as e:
+          if msg:
+             msg = msg + '\n' + str(e)
+             raise assertion.failureException(msg)
+          else:
+             raise
+    return np_array_equal
+
+
+assert_equals = testfce(np.testing.assert_equal)
+assert_almost_equals = testfce(np.testing.assert_almost_equal)
+
+
+def arr_testfce(a,b,msg, **kwargs):
+    """ assert_almost_equal does not work for non-numeric dtypes """
+    if a.dtype == 'O':
+        return assert_equals(a,b,msg)
+    if a.dtype.names:
+        for i in range(len(a.dtype)):
+            if a.dtype[1] == 'O':
+                return assert_equals(a,b,msg)
+    kwargs.update(assertion._almost_equal_precision)
+    return assert_almost_equals(a,b,msg, **kwargs)
+
+
+assertion.addTypeEqualityFunc(
+    np.ndarray,
+    arr_testfce
+)
+
+
+def assertDictEqual(a, b, msg=''):
+    if a.__class__ != b.__class__:
+       if msg:
+           msg+='\n'
+       raise ValueError(msg + f'Classes {a.__class__} and {b.__class__} are not equal')
+    if len(a) != len(b):
+       super().assertDictEqual(dict(a), dict(b), msg)
+    for (ai, av),(bi, bv) in zip(a.items(), b.items()):
+       assertion.assertEqual(ai, bi, 'Dict keys are not equal')
+       assertion.assertEqual(av, bv, 'Dict values are not equal')
+
+
+assertion.addTypeEqualityFunc(
+    dict,
+    assertDictEqual
+)
+
+assertion.addTypeEqualityFunc(
+    Cell,
+    lambda a,b,msg: arr_testfce(np.array(a), np.array(b), msg)
+)

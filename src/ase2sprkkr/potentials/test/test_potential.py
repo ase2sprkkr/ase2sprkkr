@@ -43,7 +43,7 @@ class TestPotential(TestCase):
     sio.seek(0)
     p2 = Potential.from_file(sio)
 
-    self.assertIsNotNone(p2.atoms)
+    assert p2.atoms is not None
     a1 = p1.atoms
     a2 = p2.atoms
     self.assertEqual(a2.cell * 1, a1.cell * 1)
