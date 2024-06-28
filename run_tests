@@ -5,4 +5,14 @@ if [[ $1 == '--no-kkr' ]] ; then
 fi
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-py.test  --doctest-modules ase2sprkkr $@
+
+DIR="`python3 -c '
+try:
+        import ase2sprkkr
+        import os
+        print(os.path.dirname(ase2sprkkr.__file__))
+except:
+        print(os.path.join(os.getcwd(), "src"))
+'`"
+
+PY_IGNORE_IMPORTMISMATCH=1 py.test  --doctest-modules "$DIR" $@
