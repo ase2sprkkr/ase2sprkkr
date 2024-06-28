@@ -19,7 +19,7 @@ description='You can either use ase visualisation tools or export it to cif file
 
 
 def parser(parser):
-  parser.add_argument('pot', help='SPRKKR potential file (.pot)')
+  parser.add_argument('potential_file', help='SPRKKR potential file (.pot)')
   parser.add_argument('-i','--input', help='in_struct.inp file name (if not specified, only pot file will be ploted)',required=False)
 
   parser.add_argument('-o','--out',type=str,help='Output file name for structure (default structure.cif)', default='structure.cif',required=False)
@@ -38,7 +38,7 @@ def run(args):
   structure_filename=args.input
 
   # read the potential
-  potential = Potential.from_file(args.pot)
+  potential = Potential.from_file(args.potential_file)
   pot_atoms = potential.atoms
 
   def ase_view(atoms):
