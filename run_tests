@@ -7,9 +7,9 @@ fi
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 DIR="`python3 -c '
+import os
 try:
         import ase2sprkkr
-        import os
         print(os.path.dirname(ase2sprkkr.__file__))
 except:
         print(os.path.join(os.getcwd(), "src"))
