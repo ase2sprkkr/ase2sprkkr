@@ -7,6 +7,7 @@ py.extension_module(
            dependencies :  python_dep,
            link_with: symmetry_lib,
            install: true,
+           include_directories: numpy_include,
            subdir: 'ase2sprkkr/bindings/xband'
 )
 
@@ -16,5 +17,6 @@ py.extension_module(
            dependencies :  python_dep,
            link_with: spheres_lib,
            install: true,
+           include_directories: numpy_include,
            subdir: 'ase2sprkkr/bindings/xband'
 )
