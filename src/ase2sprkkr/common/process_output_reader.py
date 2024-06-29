@@ -167,6 +167,7 @@ class AsyncioFileReader:
   """
 
   def __init__(self, filename, buffersize=8192):
+      self.file = None   # just to set it in case the open fail
       self.file = open(filename, 'rb') if isinstance(filename, str) else filename
       self.buffersize = buffersize
 
