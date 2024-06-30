@@ -27,15 +27,25 @@ def run():
   im = importlib.import_module
   modules = ( im(commands.__name__ + '.' + i.name, __package__) for i in names )
   modules = { m.__name__.rsplit('.',1)[1]: m for m in modules if hasattr(m, 'parser') }
+  unknowns = {}
 
   for name, m in modules.items():
       sub = subs.add_parser( name,
                              help=m.help,
                              formatter_class=argparse.RawDescriptionHelpFormatter,
                             description = m.help + '\n' + m.description )
+      if hasattr(m, 'unknowns'):
+          unknowns[name] = m.unknowns
       m.parser( sub )
 
-  args = parser.parse_args()
+  args, remainder = parser.parse_known_args()
+  if remainder:
+      where = unknowns.get(args.ase2sprkkr_command, None)
+      if where is None:
+          parser.parse_args()
+      else:
+          where = getattr(args, where)
+          where += remainder
 
   if args.ase2sprkkr_command is None:
       parser.print_help()
