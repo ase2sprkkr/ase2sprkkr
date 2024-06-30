@@ -155,6 +155,7 @@ class SpacegroupInfo:
        except AssertionError:
            tags = np.arange(len(spositions))
        equivalent_sites = equivalent_sites.merge(tags)
+       equivalent_sites.normalize(start_from=0)
        return spacegroup, sg_dataset, equivalent_sites
 
     @staticmethod
@@ -222,5 +223,5 @@ def possibly_equivalent_sites(atoms: Atoms,
                   else:
                       yield tuple((k, val[k]) for k in val)
             equivalent_sites = equivalent_sites.merge(gen_occ())
-    equivalent_sites.normalize()
+    equivalent_sites.normalize(start_from=0)
     return equivalent_sites
