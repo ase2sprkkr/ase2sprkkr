@@ -1,9 +1,17 @@
 Changelog
 =========
 
+Version 3.0.0-beta
+------------------
+
 User interface
 ~~~~~~~~~~~~~~
+* Empty spheres finding has been added
+* SiteType class added: sites are now always distinct, site_types can be shared between sites
+  due to symmetry
 * The JXC task have been added
+* Total DOS for DOS plotting added
+
 * ARPES configuration improved
 * The possibility to define own tasks or modify the defaults of the tasks for the user have been added
 * Parsing of the task outputs improved
@@ -13,16 +21,25 @@ User interface
 * Occupancies can now have string indices (since some other codes produce such occupancies)
 * Partial occupancy is not upnormalized, vacum pseudoatom is added instead
 
+Tools
+~~~~~
+* Tools (``a2s_...``) have been integrated into one ase2sprkkr tool
+* Test tool introduced to test the ase2sprkkr installation
+* Run tool for running the calculations using prepared .pot files
+* Various tools and plotting fixies
+
 Internals
 ~~~~~~~~~
 * NumpyArray grammar type improved
 * Some fixies and code lininting
 * Repeated configuration allowed - for parsing output files (e.g. iterations of SCF cycle)
 * The possibility to emit a warning to the options was added
+* Build backend changed to meson to allow build cython empty spheres
+* Testing fully switched to pytest, the unittest dependency has been dropped
 
 Refactoring
 ~~~~~~~~~~~
-* Output files moved to the separate directory
+* Output files moved to a separate directory
 * Configuration definitions splitted to several files
 
 Version 2.2.1
