@@ -4,9 +4,9 @@ else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..build import semiinfinite_system
-from ase.build import bulk
-import numpy as np
+from ..build import semiinfinite_system  # NOQA E402
+from ase.build import bulk               # NOQA E402
+
 
 class BuildTest(TestCase):
 
@@ -17,5 +17,4 @@ class BuildTest(TestCase):
         self.assertEqual(sum(si.symbols == 'Li'), 6)
         self.assertEqual(sum(si.symbols == 'Cl'), 5)
         self.assertEqual(sum(si.symbols == 'X'), 11)
-        self.assertEqual(si.positions, (atoms*(1,1,11)).positions)
-
+        self.assertEqual(si.positions, (atoms * (1,1,11)).positions)

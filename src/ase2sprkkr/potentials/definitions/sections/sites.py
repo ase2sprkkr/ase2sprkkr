@@ -2,9 +2,10 @@ from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
 from ...potential_sections import PotentialSection
 
-from ....common.grammar_types import DefKeyword, Array, Table, Integer
+from ....common.grammar_types import Array, Table
 from ....sprkkr.sprkkr_atoms import SPRKKRAtoms
 import numpy as np
+
 
 class SitesSection(PotentialSection):
   """ This section retrieves the atomic positions and
@@ -28,13 +29,14 @@ class SitesSection(PotentialSection):
       read_io_data.update_atoms(atoms)
       return atoms
 
+
 class SitesSectionDefinition(PotSectionDefinition):
 
   def __init__(self, name='SITES', **kwargs):
       V = PotValueDefinition
       members = [
           V('CARTESIAN', bool, fixed_value=True),
-          #V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),
+          # V('BASSCALE', Array(float, length=3), fixed_value=[1.,1.,1.]),
           V('BASSCALE', default_value=[1.,1.,1.], type=Array(float, length=3,
                   after_convert = lambda s,v: np.ones((3)) if np.all(v==0.) else v,
                   condition = lambda v: True if np.all(v!=0.) else "BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]"
@@ -44,5 +46,6 @@ class SitesSectionDefinition(PotSectionDefinition):
       super().__init__(name, members, has_hidden_members=True)
 
   result_class = SitesSection
+
 
 section = SitesSectionDefinition

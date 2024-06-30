@@ -7,6 +7,7 @@ from .sprkkr_atoms import SPRKKRAtoms
 from ..physics.lattice_data import LatticeData
 from ..common.unique_values import UniqueValuesMapping
 
+
 def sysfile_content(atoms, filename='<unknown>'):
     """ Return the content of the xband sysfile for the given atoms object.
 
@@ -19,8 +20,8 @@ def sysfile_content(atoms, filename='<unknown>'):
     class SiteData(object):
 
         def __init__(self, iq, icl, site, coors):
-            self.iq =iq     #id of the site
-            self.icl = icl  #id of the unique site
+            self.iq =iq     # id of the site
+            self.icl = icl  # id of the unique site
             self.site = site
             self.coors = coors
             self.occupancy = []
@@ -28,7 +29,6 @@ def sysfile_content(atoms, filename='<unknown>'):
         def __repr__(self):
             s = "<SiteData(iq={:d}, noq={:d})>".format(self.iq, len(self.site.occupation))
             return s
-
 
     class TypeData(object):
 
@@ -46,16 +46,16 @@ def sysfile_content(atoms, filename='<unknown>'):
 
     # create lattice site and types from ase.atoms
     ld = LatticeData(atoms)
-    atomic_types = []     #types
-    sites = []     #sites
+    atomic_types = []     # types
+    sites = []            # sites
 
-    #Use symmetry in order to find equivalet sites
     uv = UniqueValuesMapping.from_values(atoms.sites)
-    equivalent_sites=uv.indexes(start_from = 1)   #mapping unique_sites => sites
-    iqref=uv.mapping #mapping sites => unique_sites
+    # Use symmetry in order to find equivalet sites
+    equivalent_sites=uv.indexes(start_from = 1)   # mapping unique_sites => sites
+    iqref=uv.mapping  # mapping sites => unique_sites
 
     for i, (site, coors) in enumerate(zip(atoms.sites, atoms.positions)):
-        sd = SiteData(i+1, iqref[i], site, coors)
+        sd = SiteData(i + 1, iqref[i], site, coors)
         sites.append(sd)
 
     it = 0
@@ -66,10 +66,10 @@ def sysfile_content(atoms, filename='<unknown>'):
             td = TypeData(str(symbol), symbol.atomic_number, concentration,it=it, iqs=iqs)
             atomic_types.append(td)
             for iq in equivalent_sites[icl]:
-              sites[iq-1].occupancy.append(it)
+              sites[iq - 1].occupancy.append(it)
 
     filestring = "system data-file created by python ase2sprkkr \n"
-    filestring += filename+"\n"
+    filestring += filename + "\n"
     filestring += "xband-version\n"
     filestring += "5.0\n"
     # It would be really cool to support lower dimensions...one day.
@@ -78,52 +78,51 @@ def sysfile_content(atoms, filename='<unknown>'):
     filestring += "Bravais lattice\n"
     filestring += " ".join(map(str, ld.pearson.xband_data() )) + "\n"
     filestring += "space group number (ITXC and AP)\n"
-    filestring += "%5i%5i"%(ld.sgno,ld.apno)+"\n"
+    filestring += "%5i%5i" % (ld.sgno,ld.apno) + "\n"
     filestring += "structure type\n"
     filestring += "UNKNOWN\n"
     filestring += "lattice parameter A  [a.u.]\n"
-    filestring += "%18.12f\n"%ld.alat
+    filestring += "%18.12f\n" % ld.alat
     filestring += "ratio of lattice parameters  b/a  c/a\n"
-    filestring += "%18.12f%18.12f\n"%(ld.boa,ld.coa)
+    filestring += "%18.12f%18.12f\n" % (ld.boa,ld.coa)
     filestring += "lattice parameters  a b c  [a.u.]\n"
-    filestring += "%18.12f%18.12f%18.12f\n"%(ld.alat,ld.blat,ld.clat)
+    filestring += "%18.12f%18.12f%18.12f\n" % (ld.alat,ld.blat,ld.clat)
     filestring += "lattice angles  alpha beta gamma  [deg]\n"
-    filestring += "%18.12f%18.12f%18.12f\n"%(ld.alpha,ld.beta,ld.gamma)
+    filestring += "%18.12f%18.12f%18.12f\n" % (ld.alpha,ld.beta,ld.gamma)
     filestring += "primitive vectors     (cart. coord.) [A]\n"
     for vec in ld.rbas:
         for p in vec:
-            filestring += "%18.12f"%p
+            filestring += "%18.12f" % p
         filestring += "\n"
     # Get number of sites and fill out with empty spheres if the sites are not fully filled
     filestring += "number of sites NQ\n"
-    filestring += "%3i\n"%(len(sites))
+    filestring += "%3i\n" % (len(sites))
     filestring += " IQ ICL     basis vectors     (cart. coord.) [A]                      RWS [a.u.]  NLQ  NOQ ITOQ\n"
-    s=""
+
     rws=0.0
     angmom=4
     for sd in sites:
-        filestring += "%3i%4i%18.12f%18.12f%18.12f  %18.12f%4i%5i "%(sd.iq,sd.icl,sd.coors[0],sd.coors[1],sd.coors[2],rws,angmom,len(sd.occupancy))
+        filestring += "%3i%4i%18.12f%18.12f%18.12f  %18.12f%4i%5i " % (sd.iq,sd.icl,sd.coors[0],sd.coors[1],sd.coors[2],rws,angmom,len(sd.occupancy))
         for at in sd.occupancy:
-           filestring += "%3i"%(at)
+           filestring += "%3i" % (at)
         filestring+="\n"
     filestring+="number of sites classes NCL \n"
-    filestring += "%3i\n"%( len(equivalent_sites) )
+    filestring += "%3i\n" % ( len(equivalent_sites) )
     filestring+="ICL WYCK NQCL IQECL (equivalent sites)\n"
     for icl, iqs in equivalent_sites.items():
-        filestring += "%3i   %1s%5i"%(icl,'-',len(iqs))
+        filestring += "%3i   %1s%5i" % (icl,'-',len(iqs))
         for key in iqs:
-            filestring += "%3i"%(key)
+            filestring += "%3i" % (key)
         filestring+="\n"
 
     filestring += "number of atom types NT\n"
-    filestring += "%3i\n"%len(atomic_types)
+    filestring += "%3i\n" % len(atomic_types)
 
     filestring += " IT  ZT  TXTT  NAT  CONC  IQAT (sites occupied)\n"
-    itdone= [False for i in range(len(atomic_types))]
     for iat, at in enumerate(atomic_types):
-        filestring += " %2i%4i  %8s%5i%6.3f"%(at.it,at.atomic_number,at.symbol,len(at.iqs),at.concentration)
+        filestring += " %2i%4i  %8s%5i%6.3f" % (at.it,at.atomic_number,at.symbol,len(at.iqs),at.concentration)
         for key in at.iqs:
-            filestring += "%3i"%(key)
+            filestring += "%3i" % (key)
         filestring+="\n"
 
 # Average Wigner-Seitz radi
@@ -183,7 +182,7 @@ def sysfile_content(atoms, filename='<unknown>'):
 # =============================================================================
     return filestring
 
+
 def write_sysfile(atoms, filename:str):
     with open(filename, "w") as fd:
        fd.write(str(sysfile_content(atoms, filename)))
-
