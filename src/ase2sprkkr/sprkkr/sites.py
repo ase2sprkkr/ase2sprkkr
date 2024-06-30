@@ -239,7 +239,13 @@ class Site:
              cache[st] = n_st = st.copy(atoms=False)
           return x.copy(site_type = n_st)
 
-      return np.fromiter((site(i) for i in sites), dtype=object, count=len(sites))
+      try:
+          return np.fromiter((site(i) for i in sites), dtype=object, count=len(sites))
+      except ValueError:  # python 3.7 compatibility (or some old numpy version?)
+          out = np.empty_like(sites)
+          for i,s in enumerate(sites):
+              out[i] = s
+          return out
 
   def __init__(self, site_type):
       assert isinstance(site_type, SiteType)
