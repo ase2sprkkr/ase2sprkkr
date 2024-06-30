@@ -6,13 +6,25 @@ else:
 __package__, __name__ = patch_package(__package__, __name__)
 
 if True:
-    from ..sites import Site
+    from ..sites import SiteType
     from ..radial_meshes import ExponentialMesh
     from ..radial import RadialPotential, RadialCharge
     from ..sprkkr_atoms import SPRKKRAtoms
 
 
 class SitesTest(TestCase):
+
+  def test_adding(self):
+      atoms=SPRKKRAtoms(symbols='NK',pbc=True)
+      atoms.cell = [[1,0,0], [0,1,1],[0,0,1]]
+      assert atoms.sites[0].site_type != atoms.sites[1].site_type
+      out = atoms + atoms
+      assert len(out) == 4
+      assert id(out.sites[0]) != id(atoms.sites[0])
+      assert id(out.sites[0].site_type) != id(atoms.sites[0].site_type)
+      half = out[:2]
+      assert id(out.sites[0]) != id(half.sites[0])
+      assert id(out.sites[0].site_type) != id(half.sites[0].site_type)
 
   def test_potential(self):
       a=SPRKKRAtoms('NaCl')
@@ -67,13 +79,13 @@ class SitesTest(TestCase):
 
   def test_vacuum(self):
       a=SPRKKRAtoms('NaCl')
-      site=Site(a, { 'Na' : 1.0 })
+      site=SiteType(a, { 'Na' : 1.0 })
       self.assertFalse(site.is_vacuum())
-      site=Site(a, { 'Na' : 0.5, 'Cl': 0.5 })
+      site=SiteType(a, { 'Na' : 0.5, 'Cl': 0.5 })
       self.assertFalse(site.is_vacuum())
-      site=Site(a, { 'Na' : 0.5, 'Vc': 0.5 })
+      site=SiteType(a, { 'Na' : 0.5, 'Vc': 0.5 })
       self.assertFalse(site.is_vacuum())
-      site=Site(a, { 'Vc': 1.0 })
+      site=SiteType(a, { 'Vc': 1.0 })
       self.assertTrue(site.is_vacuum())
 
       a=SPRKKRAtoms('NaX')

@@ -50,7 +50,8 @@ class OccupationSection(PotentialSection):
                          mesh = read_io_data['meshes'][d['IMQ'] - 1])
              tags[ind] = site
              return site
-          return tags[ind]
+          else:
+             return Site(tags[ind].site_type)
 
       atoms.set_sites( np.array([ site(i,d) for i,d in enumerate(data()) ]), sg_info )
 

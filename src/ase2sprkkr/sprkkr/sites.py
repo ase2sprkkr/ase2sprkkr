@@ -5,9 +5,11 @@ from .radial import RadialPotential, RadialCharge
 from .reference_systems import ReferenceSystem
 import numpy as np
 from ..common.decorators import cached_property
+import copy
+from typing import Optional, Union
 
 
-class Site:
+class SiteType:
   """
   Definition of an atomic site.
   (By symmetry) equivalent sites should share the same definition.
@@ -44,6 +46,16 @@ class Site:
       self._charge = None
       self._occupation = Occupation.to_occupation(occupation, None)
       self._occupation._site = self
+      self.sites = set()
+
+  def register(self, site):
+      self.sites.add(site)
+
+  def unregister(self, site):
+      self.sites.remove(site)
+
+  def is_standalone(self):
+      return len(self.sites < 2)
 
   def _clear_data(self):
       self._potential = None
@@ -85,11 +97,18 @@ class Site:
       self._charge = value
       self.mesh = value.mesh
 
-  def copy(self):
+  def copy(self, atoms=False):
       """ Create a copy of the site. """
-      site = Site(self.atoms, self.occupation.copy(), self.reference_system.copy(), self.mesh.copy())
-      site._occupation._site = site
-      return site
+      site_type = SiteType(self.atoms, self.occupation.copy(),
+                           self.reference_system.copy(), self.mesh.copy())
+      site_type._occupation._site_type = site_type
+      if site_type.potential is not None:
+          site_type.potential = site_type.potential.copy()
+      if site_type.charge is not None:
+          site_type.charge = site_type.charge.copy()
+      if atoms is not False:
+          site_type.atoms = atoms
+      return site_type
 
   @property
   def occupation(self):
@@ -124,6 +143,11 @@ class Site:
 
       return self._occupation
 
+  @occupation.setter
+  def occupation(self, x):
+      self._occupation = Occupation.to_occupation(x, self)
+      self.update_atoms()
+
   def reset(self):
       """
       Set the properties of the site to the default.
@@ -133,11 +157,6 @@ class Site:
       self.mesh = Mesh.default()
       self.potential = None
       self.charge = None
-
-  @occupation.setter
-  def occupation(self, x):
-      self._occupation = Occupation.to_occupation(x, self)
-      self.update_atoms()
 
   @property
   def primary_symbol(self):
@@ -151,8 +170,8 @@ class Site:
 
   def index(self):
       """ Return the the sites-array (of the owning atoms object) index for this site. """
-      index = self.atoms.sites == self
-      return np.where(index)[0]
+      enum = enumerate(i.site_type for i in self.atoms.sites)
+      return [i[0] for i in enum if i[1] is self]
 
   def update_atoms(self):
       """ Update atomic numbers and occupation according to the sites data. """
@@ -171,10 +190,10 @@ class Site:
       self.atoms.info['occupancy'] = occ
 
   def __str__(self):
-      return f"Site:{self.occupation}"
+      return f"SiteType:{self.occupation}"
 
   def __repr__(self):
-      return f"Site:{self.occupation}"
+      return f"SiteType:{self.occupation}"
 
   def is_vacuum(self) -> bool:
       """ Is the site vacuum pseudoatom? """
@@ -201,15 +220,144 @@ class Site:
 
       return AtomicTypesLookup()
 
+
+class Site:
+
   @staticmethod
-  def copy_sites(sites):
+  def create(atoms, occupation, reference_system=None, mesh=None):
+      site_type = SiteType(atoms, occupation, reference_system, mesh)
+      return Site(site_type)
+
+  @staticmethod
+  def copy_sites(sites, atoms=False):
       cache = {}
 
       def site(x):
-          if not x in cache:
-             cache[x] = x.copy()
-          return cache[x]
-      return np.array([site(i) for i in sites], dtype=object)
+          st = x._site_type
+          n_st = cache.get(st, None)
+          if not n_st:
+             cache[st] = n_st = st.copy(atoms=False)
+          return x.copy(site_type = n_st)
+
+      return np.fromiter((site(i) for i in sites), dtype=object, count=len(sites))
+
+  def __init__(self, site_type):
+      assert isinstance(site_type, SiteType)
+      self._site_type = None
+      self.site_type = site_type
+
+  def __del__(self):
+      if self._site_type:
+          self._site_type.unregister(self)
+
+  @property
+  def site_type(self):
+      return self._site_type
+
+  @site_type.setter
+  def site_type(self, site_type):
+      if self._site_type:
+          self._site_type.unregister(self)
+      self._site_type = site_type
+      if site_type:
+          self._site_type.register(self)
+
+  @property
+  def is_standalone(self):
+      return self._site_type.is_standalone()
+
+  def make_standalone(self):
+      if not self.is_standalone():
+          self._site_type = self.site_type.copy()
+
+  @property
+  def mesh(self):
+      return self._site_type.mesh
+
+  @mesh.setter
+  def mesh(self, mesh):
+      self._site_type.mesh = mesh
+
+  @property
+  def potential(self):
+      return self._site_type.potential
+
+  @potential.setter
+  def potential(self, potential):
+      self._site_type.potential = potential
+
+  @property
+  def charge(self):
+      return self._site_type.charge
+
+  @charge.setter
+  def charge(self, charge):
+      self._site_type.charge = charge
+
+  @property
+  def occupation(self):
+      return self._site_type.occupation
+
+  @occupation.setter
+  def occupation(self, occupation):
+      self._site_type.occupation = occupation
+
+  @property
+  def reference_system(self):
+      return self._site_type.reference_system
+
+  @reference_system.setter
+  def reference_system(self, reference_system):
+      self._site_type.reference_system = reference_system
+
+  @property
+  def atomic_types(self):
+      return self._site_type.atomic_types
+
+  @property
+  def primary_symbol(self):
+      """ Symbol of the most important (most probable) chemical element present on the site. """
+      return self._site_type.primary_symbol
+
+  @property
+  def primary_atomic_number(self):
+      """ Atomic symbol of the most important (most probable) chemical element present on the site. """
+      return self._site_type.primary_atomic_number
+
+  @property
+  def is_vacuum(self):
+      return self._site_type.is_vacuum
+
+  def __str__(self):
+      return f"Site:{self.occupation}"
+
+  def __repr__(self):
+      return f"Site:{self.occupation}"
+
+  @property
+  def atoms(self):
+      return self._site_type.atoms
+
+  def copy(self, site_type: Optional[Union[bool,SiteType]]=False):
+      """
+      Copy the site, optionally setting the new site_type (possibly to None) or
+      copy the exiting one.
+      """
+      out = copy.copy(self)
+      if site_type:
+          if not isinstance(site_type, SiteType):
+              site_type = out._site_type.copy()
+      if site_type is not False:
+          out._site_type = site_type
+      if out._site_type:
+          out._site_type.register(out)
+      return out
+
+  def _clear_data(self):
+      return self._site_type._clear_data()
+
+  def reset(self):
+      return self._site_type.reset()
 
 
 from .occupations import Occupation  # NOQA: E402

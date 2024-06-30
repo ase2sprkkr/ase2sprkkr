@@ -5,7 +5,7 @@ with SPRKKR """
 from ase import Atoms
 from ..bindings.spglib import SpacegroupInfo
 import numpy as np
-from ..sprkkr.sites import Site
+from ..sprkkr.sites import Site, SiteType
 from ..common.misc import numpy_index
 from typing import List, Union
 
@@ -179,49 +179,73 @@ class SPRKKRAtoms(Atoms):
         except KeyError:
            old_sites=None
 
+        def copy_site_type(site, i):
+            site_type = site.site_type
+            if site_type in used:
+                site_type = site_type.copy(atoms=self)
+            else:
+                if site_type.atoms is not self:
+                    site_type = site_type.copy(atoms=self)
+                used.add(site_type)
+            return site_type
+
         if sg_info.spacegroup:
           uniq, umap = np.unique(sg_info.equivalent_sites.mapping, return_inverse=True)
+          stypes = np.empty(len(uniq), dtype=object)
+          smap = np.empty(len(uniq), dtype=object)
+          for i in uniq:
+              smap[i] = set()
+          for i,typ in enumerate(umap):
+              smap[typ].add(i)
 
-          for i in range(len(uniq)):
-               index = umap == i
-               if old_sites is not None:
+          stypes = np.empty(len(uniq), dtype=object)
+          for i in uniq:
+              if old_sites is not None:
                   # first non-none of the given index
-                  possible = (i for i in old_sites[index] if i)
+                  possible = (j for j in smap[i] if old_sites[j])
                   try:
-                     site = next(filter(None, possible), None)
-                     if site in used:
-                        site = site.copy()
-                     elif site:
-                        used.add(site)
+                     site = next(possible, None)
+                     site_type = copy_site_type(old_sites[site], site) \
+                                 if site is not None and old_sites[site] else None
                   except StopIteration:
-                     site = None
-               else:
-                  site = None
-               if not site:
+                     site_type = None
+              else:
+                  site_type = None
+              if not site_type:
                   symbol = self.symbols[ numpy_index(umap,i)]
                   occ = None
-                  for ai in np.where(index)[0]:
+                  for ai in smap[i]:
                       occ = occupation.get(ai, None) or \
                             occupation.get(str(ai), None)
                       if occ:
                          symbol = occ
                          break
-                  site = Site(self, symbol)
-               sites[index] = site
-          self.sites = sites
+                  site_type = SiteType(self, symbol)
+              stypes[i] = site_type
+          for i in range(len(umap)):
+              stype = stypes[umap[i]]
+              if old_sites is not None and old_sites[i]:
+                  if old_sites[i].atoms is self:
+                      sites[i] = old_sites[i]
+                      sites[i].site_type = stype
+                  else:
+                      sites[i] = old_sites[i].copy(site_type = stype)
+              else:
+                  sites[i] = Site(stype)
         else:
           for i in range(len(self)):
               if old_sites is not None and old_sites[i]:
                   site=old_sites[i]
-                  if site in used:
-                     site = site.copy()
+                  stype = copy_site_type(site, i)
+                  if site.atoms is self:
+                     site.site_type = stype
                   else:
-                     used.add(site)
+                     site = Site(stype)
               else:
                   symbol = occupation.get(i, None) or \
                            occupation.get(str(i), None) or \
                            self.symbols[i]
-                  site = Site(self, symbol)
+                  site = Site.create(self, symbol)
               sites[i] = site
         self.set_sites(sites, sg_info)
         return sites
@@ -316,6 +340,8 @@ class SPRKKRAtoms(Atoms):
        out = super().__getitem__(i)
        if isinstance(out, Atoms) and 'spacegroup_info' in out.info:
           del out.info['spacegroup_info']
+       if self.are_sites_inited():
+          out._init_sites(consider_old=True)
        return out
 
    @property
@@ -332,12 +358,18 @@ class SPRKKRAtoms(Atoms):
           self._potential.set_from_atoms()
 
    def extend(self, other):
+       ln = len(self)
        out = super().extend(other)
        if self.symmetry:
           try:
               self.get_array(SPRKKRAtoms.sites_array_name, copy=False)
           except KeyError:
               return out
+       if self.are_sites_inited():
+          if self is other:
+              print("COPY")
+              for i in range(ln, ln + ln):
+                  self.sites[i] = self.sites[i].copy()
           self._init_sites(consider_old=True)
        return out
 
@@ -345,7 +377,7 @@ class SPRKKRAtoms(Atoms):
        out = super().copy()
        SPRKKRAtoms.promote_ase_atoms(out)
        if self.are_sites_inited():
-           out.set_sites(Site.copy_sites(out.sites), True)
+           out.set_sites(Site.copy_sites(out.sites, self), True)
        return out
 
    def __add__(self, other):
@@ -353,7 +385,6 @@ class SPRKKRAtoms(Atoms):
            SPRKKRAtoms.promote_ase_atoms(other)
            other.sites
        out=super().__add__(other)
-       out.set_sites(Site.copy_sites(out.sites), True)
        return out
 
    def __iadd__(self, other):

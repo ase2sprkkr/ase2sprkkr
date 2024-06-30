@@ -20,16 +20,22 @@ from .... import Potential       # NOQA E402
 class TestSpheres(TestCase):
 
   def test_xband(self):
-      dir = os.path.dirname(__file__)
-      pot = Potential.from_file(os.path.join(dir, 'MnTi3.pot'))
+      dirr = os.path.dirname(__file__)
+      pot = Potential.from_file(os.path.join(dirr, 'MnTi3.pot'))
       mnti= pot.atoms
       sym = sy.find_symmetry(mnti)
       sym2 = sy.find_symmetry(mnti, use_spacegroup=False)
       self.assertEqual(sym, sym2)
 
-      pot = Potential.from_file(os.path.join(dir, 'Cu.pot'))
+      pot = Potential.from_file(os.path.join(dirr, 'Cu.pot'))
       full = pot.atoms
       cu = pot.atoms[:2]
+      assert full.sites[0].site_type is not full.sites[1].site_type
+      assert cu.sites[0].site_type is not cu.sites[1].site_type
+      cu.compute_sites_symmetry()
+      assert cu.sites[0].site_type is not cu.sites[1].site_type
+      assert cu.spacegroup_info.number() == 227
+
       sym = sy.find_symmetry(cu)
       should = np.array([[
         1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,
@@ -44,7 +50,7 @@ class TestSpheres(TestCase):
       sort = lambda x: np.asarray(sorted(tuple(i) for i in x))
       self.assertEqual(sort(cu.get_scaled_positions()), sort(full.get_scaled_positions()))
 
-      pot = Potential.from_file(os.path.join(dir, 'V.pot'))
+      pot = Potential.from_file(os.path.join(dirr, 'V.pot'))
       v = pot.atoms
       sym = sy.find_symmetry(v)
       sym2 = sy.find_symmetry(v, subprocess=False, use_spacegroup=False)

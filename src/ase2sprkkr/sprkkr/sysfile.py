@@ -49,8 +49,8 @@ def sysfile_content(atoms, filename='<unknown>'):
     atomic_types = []     # types
     sites = []            # sites
 
-    uv = UniqueValuesMapping.from_values(atoms.sites)
     # Use symmetry in order to find equivalet sites
+    uv = UniqueValuesMapping.from_values([ i.site_type for i in atoms.sites])
     equivalent_sites=uv.indexes(start_from = 1)   # mapping unique_sites => sites
     iqref=uv.mapping  # mapping sites => unique_sites
 
