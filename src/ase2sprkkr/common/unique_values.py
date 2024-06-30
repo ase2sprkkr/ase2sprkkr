@@ -27,7 +27,11 @@ class UniqueValuesMapping:
   """
 
   def __repr__(self):
-      return f"<UniqueValuesMapping: {self.normalized(dtype=False)[0]}>"
+      if np.issubdtype(self.mapping.dtype, np.integer):
+          v = self.normalized(dtype=False)[0]
+      else:
+          v = self.mapping
+      return f"<UniqueValuesMapping: {v}>"
 
   def __init__(self, mapping:List, value_to_class_id:Dict=None):
       """
