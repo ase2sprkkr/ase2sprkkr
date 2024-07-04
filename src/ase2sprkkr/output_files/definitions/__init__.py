@@ -76,7 +76,7 @@ class OutputFile(ConfigurationFile):
          if hasattr(filename, 'name'):
              fname = filename.name
          if isinstance(filename, str):
-             first_try = filename.rsplit('.',1)[1].lower()
+             first_try = fname.rsplit('.',1)[1].lower()
          else:
              first_try = ''
       if isinstance(first_try, str):
