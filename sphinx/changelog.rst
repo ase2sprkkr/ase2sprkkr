@@ -11,7 +11,7 @@ User interface
   due to symmetry
 * The JXC task have been added
 * Total DOS for DOS plotting added
-
+* DOS improved (arithmetics, access by atom type)
 * ARPES configuration improved
 * The possibility to define own tasks or modify the defaults of the tasks for the user have been added
 * Parsing of the task outputs improved
@@ -20,6 +20,9 @@ User interface
 * ProcessOutputReader.read_from_file can be called as classmethod
 * Occupancies can now have string indices (since some other codes produce such occupancies)
 * Partial occupancy is not upnormalized, vacum pseudoatom is added instead
+* Energies in SCF result are returned in more uniform way
+* Writing of modified output files is possible
+* KRMT and KRWS configuration values added
 
 Tools
 ~~~~~
@@ -34,7 +37,7 @@ Internals
 * Some fixies and code lininting
 * Repeated configuration allowed - for parsing output files (e.g. iterations of SCF cycle)
 * The possibility to emit a warning to the options was added
-* Build backend changed to meson to allow build cython empty spheres
+* Build backend changed to Meson to allow build cython empty spheres
 * Testing fully switched to pytest, the unittest dependency has been dropped
 
 Refactoring
@@ -46,6 +49,7 @@ Version 2.2.1
 -------------
 * Fix of ConfigurationContainer.set_values
 
+
 Version 2.2.0-beta
 ------------------
 * a2s_plot_output can handle DOS and BSF output files
@@ -53,6 +57,8 @@ Version 2.2.0-beta
 * Arithmetic can be done with DOS result
 * executable_postfix argument of calculator renamed to executable_suffix to make it consistent with the name of the environment variable
 * User-defined input parameters for repeatedly used task
+* Plotting improved
+* Better help values for output files
 
 Internals
 ~~~~~~~~~
@@ -61,6 +67,7 @@ Internals
 * Gather grammar element for ``NAME1 NAME2 = VALUE1 VALUE2`` syntax
 * Routines for plotting the results are (i hope) stabilized
 * Various small improvements and fixies
+
 
 Version 2.1.1
 -------------
