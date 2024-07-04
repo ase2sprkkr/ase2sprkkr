@@ -16,7 +16,7 @@ class UnknownDataValue(ConfigurationValue):
   def as_array(self):
       out = self()
       if not isinstance(out, np.ndarray):
-          out = np.genfromtxt( io.StringIO(val) )
+          out = np.genfromtxt( io.StringIO(out) )
       return out
 
 
