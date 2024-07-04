@@ -86,6 +86,15 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
     PlotInfo object that defines how the results are plotted
    """
 
+   def data_description(self, verbose:Union[bool,str]=False, show_hidden=False, prefix:str=''):
+        if self.shape:
+            shape=f"({self.shape})"
+        else:
+            shape=""
+
+        out = f"{prefix}{self.name} : view of {self.data}{shape}"
+        return out
+
    @add_to_signature(RealItemDefinition.__init__, prepend=True)
    def __init__(self, name, data, selector=slice(None),
                 shape=None, transpose=False, reorder=None,
