@@ -22,7 +22,7 @@ input_parameters = InputParameters(
   executable='kkrgen',
   mpi=True
 )
-""" DOS task input parameters definition"""
+""" DOS - density of states input parameters definition"""
 
 from ...common.doc import process_input_parameters_definition
 process_input_parameters_definition(__name__)

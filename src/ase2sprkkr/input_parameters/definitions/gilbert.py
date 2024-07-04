@@ -37,7 +37,7 @@ input_parameters = InputParameters(
 
  ],
   executable = 'kkrchi',
-  info = 'The Gilbert damping parameter calculation'
+  info = 'GILBERT - The Gilbert damping parameter calculation'
 )
 """ The Gilbert damping input parameters definition"""
 

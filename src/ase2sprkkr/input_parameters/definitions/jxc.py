@@ -25,7 +25,7 @@ input_parameters = InputParameters(
     executable='kkrgen',
     mpi=True
 )
-""" DOS task input parameters definition"""
+""" JXC -JXC task input parameters definition"""
 
 input_parameters['SCF'].copy_member('FULLPOT').warning_condition = lambda x: \
   "JXC task does not support FULLPOT computation, only ASA computation, the task will probably fail. Please disable the SCF.FULLPOT option." if x else None
