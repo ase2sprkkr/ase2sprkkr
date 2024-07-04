@@ -373,6 +373,7 @@ class RealItemDefinition(BaseDefinition):
 
        # out.append(f"{prefix}Data description\n"
        #            f"{prefix}----------------")
+
        out.append(self.data_description(verbose, show_hidden, prefix))
        if self._description:
           out.append('\n')

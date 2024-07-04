@@ -10,6 +10,7 @@ from ...common.decorators import cached_class_property
 from ...common.grammar_types.data import RestOfTheFile
 import io
 
+
 class UnknownDataValue(ConfigurationValue):
 
   def as_array(self):
@@ -36,7 +37,7 @@ class OutputFile(ConfigurationFile):
   def definitions(cls):
       """ Return all known definitions of the SPR-KKR output files """
       out = {}
-      for imp, module, ispackage in pkgutil.iter_modules(path=__path__, prefix=__name__+'.'):
+      for imp, module, ispackage in pkgutil.iter_modules(path=__path__, prefix=__name__ + '.'):
            __import__(module)
            mod = sys.modules[module]
            out[mod.__name__.rsplit('.',1)[1]] = mod
@@ -78,7 +79,7 @@ class OutputFile(ConfigurationFile):
              first_try = filename.rsplit('.',1)[1].lower()
          else:
              first_try = ''
-      if isinstance(first_try,str):
+      if isinstance(first_try, str):
           first_try=[ first_try ]
 
       first = None
@@ -88,7 +89,8 @@ class OutputFile(ConfigurationFile):
              out = cls.from_file(filename, first_try=False, try_only=first_try)
          except Exception as e:
              first = e
-         if out: return out
+         if out:
+             return out
       else:
          last = None
       for ext, i in cls.definitions.items():
@@ -110,6 +112,7 @@ class OutputFile(ConfigurationFile):
               raise Exception(f'Can not parse file: {filename}') from e
       raise first or last
 
+
 class CommonOutputFile(ConfigurationFile):
 
     def n_atoms(self):
@@ -129,6 +132,7 @@ class CommonOutputFile(ConfigurationFile):
     def n_orbitals(self, type):
         type = self.site_type_index(type)
         return self.ORBITALS[self.TYPES[type]['IQAT'][0]]
+
 
 class Arithmetic:
 
@@ -190,5 +194,5 @@ class Arithmetic:
         return self
 
 
-#at last, import this file that need this module
-from .. import output_files_definitions
+# at last, import this file that need this module
+from .. import output_files_definitions   # NOQA E402

@@ -3,10 +3,11 @@ that is generated from other values """
 
 from .configuration_definitions import RealItemDefinition
 from .decorators import add_to_signature
-from functools import partial
 from .options import Option
 import copy
 import numpy as np
+from typing import Union
+
 
 class BaseGeneratedValueDefinition(RealItemDefinition):
   """ Base class for all generated values. It just set
@@ -28,9 +29,9 @@ class BaseGeneratedValueDefinition(RealItemDefinition):
       its definition """
       pass
 
-
   def __repr__(self):
        return f"<{self.name} (generated)>"
+
 
 class GeneratedValueDefinition(BaseGeneratedValueDefinition):
 
@@ -45,6 +46,7 @@ class GeneratedValueDefinition(BaseGeneratedValueDefinition):
        if not self._setter:
            raise ValueError("Setting the value(s) of {self.name} is not allowed")
        return self._setter
+
 
 class NumpyViewDefinition(BaseGeneratedValueDefinition):
    """
@@ -114,7 +116,6 @@ class NumpyViewDefinition(BaseGeneratedValueDefinition):
        if callable(self.selector):
           out = self.selector(container[self.data](), container)
        else:
-          selector=self.selector
           out=container[self.data]()[self.selector]
        if self.shape:
           out.shape = self.determine_shape(container)
