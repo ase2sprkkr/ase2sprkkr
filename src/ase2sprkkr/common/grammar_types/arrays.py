@@ -9,7 +9,8 @@ from ..grammar import generate_grammar, delimitedList, \
                       line_end, White
 from .grammar_type import GrammarType, compare_numpy_values, type_from_type, type_from_default_value
 from ..decorators import add_to_signature, cached_property
-from .basic import Integer, Real, Unsigned
+from .basic import Integer, Real, Unsigned, real
+
 
 class Array(GrammarType):
   """ A (numpy) array of values of one type """
@@ -46,7 +47,7 @@ class Array(GrammarType):
     """
     if isinstance(type, (list, np.ndarray)):
         if default_value is not None:
-           raise ValueException("It is not possible for an Array to provide default_value both in 'default_value' and in 'type' argument")
+           raise ValueError("It is not possible for an Array to provide default_value both in 'default_value' and in 'type' argument")
         default_value = type
         type = type[0].__class__
     self.type = type_from_type(type)
@@ -86,7 +87,7 @@ class Array(GrammarType):
        else:
           length='n'
        if self.max_length is not None:
-          length+=f'<=self.max_length'
+          length+=f'<={self.max_length}'
        length=' with length '
     return f"Array(of {self.type}{length})"
 
@@ -138,13 +139,18 @@ class Array(GrammarType):
            ln=1
        else:
            ln=len(value)
-       value = [ self.type.convert(i) for i in value ]
-       out = np.asarray(value)
+       if np.__version__ >= '1.23' or self.type.numpy_type != object:
+           value = ( self.type.convert(i) for i in value )
+           out = np.fromiter(value, dtype = self.type.numpy_type, count=ln)
+       else:
+           value = [ self.type.convert(i) for i in value ]
+           out = np.asarray(value)
        return out
 
     return value
 
   is_the_same_value = staticmethod(compare_numpy_values)
+
 
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
@@ -164,6 +170,7 @@ class SetOf(Array):
   def copy_value(self, value):
       return copy.deepcopy(value)
 
+
 class Complex(SetOf):
   array_access = False
 
@@ -176,6 +183,7 @@ class Complex(SetOf):
 
   def _validate(self, value, why='set'):
     return isinstance(value, (complex, np.complexfloating)) or 'A complex value required, {value} given.'
+
   def _grammar_name(self):
     return '{complex (as 2 reals)}'
 
@@ -183,6 +191,7 @@ class Complex(SetOf):
     return real._string(val.real) + ' ' + real._string(val.imag)
 
   __str__ = GrammarType.__str__
+
 
 class Sequence(GrammarType):
   """ A sequence of values of given types """
@@ -225,7 +234,7 @@ class Sequence(GrammarType):
       if not isinstance(value, (self.value_type)) or len(value) != len(self.types):
           return f'A tuple of {len(self.types)} values is required'
       for i,j in zip(self.types, value):
-          out = i.validate(j, why=why)
+          i.validate(j, why=why)
       return True
 
   def convert(self, value):
@@ -238,7 +247,7 @@ class Sequence(GrammarType):
       return value
 
   def grammar_name(self):
-      return  " ".join( (f'{j.grammar_name()}' for j in self.types) )
+      return " ".join( (f'{j.grammar_name()}' for j in self.types) )
 
   def _string(self, val):
       out = []
@@ -275,6 +284,7 @@ class Sequence(GrammarType):
       option.__class__ = cls
 
   is_the_same_value = staticmethod(compare_numpy_values)
+
 
 class Table(GrammarType):
   """
@@ -355,7 +365,7 @@ class Table(GrammarType):
       def ensure_numbering(s, loc, x):
           numbers = x[::2]
           datas = x[1::2]
-          if not numbers == [*range(1, len(numbers)+1)]:
+          if not numbers == [*range(1, len(numbers) + 1)]:
              raise pp.ParseException(s, loc, 'First column should contain row numbering')
           return datas
 
@@ -372,9 +382,9 @@ class Table(GrammarType):
       if self.header:
          names = ((i[1] if isinstance(i, tuple) else i) for i in self.names)
          formated = (
-                 t.format_string(n) \
-                 for n,t in zip(self.names, self.sequence.types)
-                 )
+                 t.format_string(n)
+                 for n,t in zip(names, self.sequence.types)
+                    )
          header = ' '.join(formated)
          if self.numbering:
             header = self.numbering.format_string(self.numbering_label or '') + ' ' + header
@@ -449,11 +459,12 @@ class Table(GrammarType):
 
   is_the_same_value = staticmethod(compare_numpy_values)
 
+
 set_of_integers = SetOf(Integer.I)
 """ A standard grammar type instance for array of integers (of any length, used by variant types) """
 
 set_of_reals = SetOf(Real.I)
 """ A standard grammar type instance for array of reals (of any length, used by variant types) """
 
-complex_number = Complex.I = Complex()
+complex_number = Complex.I = Complex()        # NOQA E741
 """ A standard grammar type instance for complex numbers """
