@@ -300,11 +300,9 @@ class TestGrammar(TestCase):
         2 2 1 hat 2.5
         3 1 5 dog 3e-2
         3 2 6 cat 0.001 """,
-        [
-          np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
-          np.array([(1,'dog',2.5), (1,'hat', 2.5)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
-          np.array([(5,'dog',3e-2), (6,'cat', 0.001)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
-        ]
+        np.array([[(1,'dog',2.5), (3,'cat', 3e-2)],
+          [(1,'dog',2.5), (1,'hat', 2.5)],
+          [(5,'dog',3e-2), (6,'cat', 0.001)]], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
                     ),
         (
         """ X YY ZZZ
@@ -336,11 +334,9 @@ class TestGrammar(TestCase):
         2 1 hat 2.5
         1 5 dog 0.2
         2 6 cat 3e-2 """,
-        [
-          np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
-          np.array([(1,'dog',2.5), (1,'hat', 2.5)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
-          np.array([(5,'dog', 0.2), (6,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
-        ]
+        np.array([[(1,'dog',2.5), (3,'cat', 3e-2)],
+          [(1,'dog',2.5), (1,'hat', 2.5)],
+          [(5,'dog', 0.2), (6,'cat', 3e-2)]], dtype=[('X', int), ('YY', object), ('ZZZ', float)])
                     ),
         (
         """ X YY ZZZ
@@ -360,6 +356,24 @@ class TestGrammar(TestCase):
         1 5 dog 3e-2
         2 6 cat 3e-2""", Error),
                     ]:
+        test(val, res)
+
+    type = gt.Table(X=int, YY=str, ZZZ=float, grouping=True, group_size='GSIZE', groups_as_list=True)
+    for val, res in [(
+        """ X YY ZZZ
+        GSIZE       2
+        1 1 dog 2.5
+        2 3 cat 3e-2
+        1 1 dog 2.5
+        2 1 hat 2.5
+        1 5 dog 0.2
+        2 6 cat 3e-2 """,
+        [
+          np.array([(1,'dog',2.5), (3,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
+          np.array([(1,'dog',2.5), (1,'hat', 2.5)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
+          np.array([(5,'dog', 0.2), (6,'cat', 3e-2)], dtype=[('X', int), ('YY', object), ('ZZZ', float)]),
+        ]
+                   )]:
         test(val, res)
 
     type = gt.Table(X=int, numbering='Y')

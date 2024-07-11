@@ -368,7 +368,8 @@ class Table(GrammarType):
                      row_condition=None, flatten=False,
                      default_values=False,
                      named_result=None,
-                     group_size=None, group_size_format="{:<12}{}\n",
+                     group_size=None, group_size_format="{:<12}{}",
+                     groups_as_list=None,
                      **kwargs):
       """
       Parameters
@@ -419,6 +420,10 @@ class Table(GrammarType):
         The value is the number of rows, which all subtables are required to have.
       group_size_format
         Format for the group_size line.
+      groups_as_list
+        If True - groups are contained in list
+        If False - groups are contained in np.ndarray
+        If None - True if group_size is defined (and thus if it is possible)
       kwargs
         Columns and their names can be assigned as kwargs, e.g.
         ``column1_name = float, column2_name = int, ...``
@@ -450,6 +455,12 @@ class Table(GrammarType):
       self.length = length
       self.numbering = SpecialColumn(self, numbering, numbering_label, numbering_format)
       self.grouping = SpecialColumn(self, grouping, grouping_label, grouping_format)
+      self.groups_as_list = bool(self.grouping) and (
+          groups_as_list if groups_as_list is not None else not group_size
+      )
+      if self.grouping and not self.groups_as_list and not group_size:
+          raise ValueError("Groups have to be returned as list, if there is not fixed number"
+              " of items in a group")
 
   def special_columns(self):
       if self.grouping:
@@ -521,7 +532,10 @@ class Table(GrammarType):
                        f"{data[i]} encountered, {c} expected.")
                curr.append(data[i + 1])
            out.append(tabelize(curr))
-           return [ out ]
+           if self.groups_as_list:
+                return [ out ]
+           else:
+                return np.asarray(out, dtype = self._numpy_type)
 
       def data_numbering_grouping(s, loc, data):
            if len(data) == 0:
@@ -557,7 +571,10 @@ class Table(GrammarType):
                   if len(g) != grp_size.group_size:
                       raise pp.ParseException(s, loc, f"The group {i//3 + 1} should have "
                               f"{grp_size.group_size} members, it has {len(g)}.")
-           return [ out ]
+           if self.groups_as_list:
+                return [ out ]
+           else:
+                return np.asarray(out, dtype = self._numpy_type)
 
       def tabelize(x):
           out = np.array(x, dtype=self._numpy_type)
@@ -591,7 +608,7 @@ class Table(GrammarType):
          out.append(header)
 
       if self.group_size:
-         out.append(self.group_size_format.format(self.group_size, len(data[0]) if data else 1))
+         out.append(self.group_size_format.format(self.group_size, len(data[0]) if data is not None and len(data) else 1))
 
       def line(row, prefix):
           line = self.sequence.string(row)
@@ -599,12 +616,18 @@ class Table(GrammarType):
               line = prefix + line
           out.append(line)
 
+      def unflatten(val):
+          if val.ndim == 1 and not isinstance(self._numpy_type, list):
+              ln = len(self.sequence)
+              val = val.reshape(len(val) // ln, ln)
+          return val
+
       if self.grouping:
-          for n, group in enumerate(data):
-              for g, d in enumerate(group):
+          for n, group in enumerate(data, 1):
+              for g, d in enumerate(unflatten(group), 1):
                   line(d, self.grouping.format_string(n) + self.numbering.format_string(g))
       else:
-          for n, d in enumerate(data,1):
+          for n, d in enumerate(unflatten(data),1):
               line(d, self.numbering.format_string(n))
 
       return '\n'.join(out)
@@ -628,7 +651,7 @@ class Table(GrammarType):
           if out is not True:
               return out
       else:
-          if not isinstance(value, list):
+          if not isinstance(value, (list, np.ndarray)):
               return "The grouped table accepts list of table data as a value, "\
                      f"{value.__class__} have been given."
           for i,d in enumerate(value):
@@ -649,12 +672,14 @@ class Table(GrammarType):
       return True
 
   def convert(self, value):
-      return np.asarray(value, dtype = self.numpy_type)
+      if self.groups_as_list:
+          value = [ np.asarray(v, dtype = self._numpy_type) for v in value ]
+      return np.asarray(value, dtype = self._numpy_type)
 
   @cached_property
   def numpy_type(self):
-      if self.grouping:
-          return list
+      if self.groups_as_list:
+          return object
       return self._numpy_type
 
   @cached_property
