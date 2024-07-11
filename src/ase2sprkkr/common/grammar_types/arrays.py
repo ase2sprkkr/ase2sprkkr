@@ -4,6 +4,7 @@ import numpy as np
 import pyparsing as pp
 import itertools
 import copy
+from typing import List, Optional, Union
 
 from ..grammar import generate_grammar, delimitedList, \
                       line_end, White
@@ -296,6 +297,43 @@ class Sequence(GrammarType):
   is_the_same_value = staticmethod(compare_numpy_values)
 
 
+class SpecialColumn:
+    """ A special column for :class:`Table` """
+    def __init__(self, table, column, label, format, *, default_format='<4'):
+        if column.__class__ is str:
+           label=column
+           column=True
+        column = Unsigned.I if column is True else column
+        if column:
+           if format and not (format is True and column.format):
+               if format is True:
+                  format = default_format
+               column = column.copy()
+               column.format = format
+        self.column = column
+        self.label = label
+        self.format = format
+
+    def __bool__(self):
+        return bool(self.column)
+
+    def add_grammar(self, grammar):
+        return self.column.grammar() + grammar
+
+    def add_header_grammar(self, grammar):
+        if self.label:
+            grammar = pp.CaselessKeyword(self.label) + grammar
+        return grammar
+
+    def format_string(self, val):
+        if not self.column:
+            return ''
+        return self.column.format_string(val)
+
+    def header(self):
+        return self.format_string(self.label or '') + ' '
+
+
 class Table(GrammarType):
   """
   Table, optionaly with named columns, e.g.
@@ -310,14 +348,70 @@ class Table(GrammarType):
   array_access = True
   name_in_grammar = False
 
-  def __init__(self, columns=None,
-                     header=None, free_header=False,
+  def __init__(self, columns:List[GrammarType]=None,
+                     header:Optional[bool]=None, free_header=False,
                      format = {float: '>22.14', None: '>16'}, format_all=True,
-                     numbering=None, numbering_label=None, numbering_format=True,
+                     numbering:Union[str,bool,GrammarType]=None, numbering_label=None, numbering_format=True,
+                     grouping=False, grouping_label=None, grouping_format=True,
                      prefix=None, postfix=None, length=None,
                      row_condition=None, flatten=False,
                      default_values=False,
-                     named_result = False, **kwargs):
+                     named_result=None,
+                     group_size=None, group_size_format="{:<12}{}\n",
+                     **kwargs):
+      """
+      Parameters
+      ----------
+      columns
+        List of GrammarTypes that describes the columns of the table
+      header
+        Whether table will have header. Default None means True, if the names are specified
+      free_header
+        Do not require the exact content of the header, just skip one line during parsing
+      format
+        Pass this argument to the :class:`Sequence` describing the line
+      format_string
+        Pass this argument to the :class:`Sequence` describing the line
+      numbering
+        There will be one extra column on the begining of the table, with numbering starting from one.
+        String argument means the label of the column.
+      numbering_label
+        The label of the numbering column (if not given in numbering).
+      numbering_format
+        Format for the numering column
+      grouping
+        If True, the data are not one table, but list of tables.
+        Numbering then numbers the tables, not the rows of the tables.
+        There will be one extra column which numbers rows within the table.
+      grouping_label
+        Similiar as `numbering_label`
+      grouping_format
+        Similiard as `numbering_format`
+      prefix
+        Prints the prefix before the table
+      postfix
+        Prints the postfix after the table
+      length
+        The table length (or the number of groups)
+      row_condition
+        The condition, that each row of the table should have satisfied
+      flatten
+        The resulting table will have one dimension. Is meaningful for table without
+        named columns, with a same type of all columns
+      named_result
+        The resulting table will have numpy structured dtype with named columns.
+        Default None means autodetection: it behaves as True if necessary, i.e.:
+        if there are at least two columns with different types.
+      group_size
+        If grouping, there will be another line after the header (SPRKKR format of tables),
+        which contains ``{NAME}     {VALUE}``. The name should be specified in group_size.
+        The value is the number of rows, which all subtables are required to have.
+      group_size_format
+        Format for the group_size line.
+      kwargs
+        Columns and their names can be assigned as kwargs, e.g.
+        ``column1_name = float, column2_name = int, ...``
+      """
       if columns is None:
          columns = kwargs
          kwargs = {}
@@ -328,29 +422,51 @@ class Table(GrammarType):
       else:
          self.names = None
       if header is None:
-         header = self.names
-      self.sequence = Sequence( *columns, format=format, format_all=format_all, condition = row_condition, default_values=default_values )
+         header = bool(self.names)
       self.header = header
+
+      if group_size:
+          if not grouping:
+              grouping=True
+      self.group_size = group_size
+      self.group_size_format = group_size_format
+
+      self.sequence = Sequence(*columns, format=format, format_all=format_all, condition = row_condition, default_values=default_values)
       self.flatten = flatten
       self.free_header = free_header
-      if numbering.__class__ is str:
-         numbering_label=numbering
-         numbering=True
-      self.numbering = Unsigned.I if numbering is True else numbering
-      if self.numbering and numbering_format and not (numbering_format is True and self.numbering.format):
-         if numbering_format is True:
-            numbering_format = '<4'
-         self.numbering = self.numbering.copy()
-         self.numbering.format = numbering_format
-      self.numbering_label = numbering_label
+
       self.named_result = named_result
       self.length = length
+      self.numbering = SpecialColumn(self, numbering, numbering_label, numbering_format)
+      self.grouping = SpecialColumn(self, grouping, grouping_label, grouping_format)
+
+  def __repr__(self):
+      if not self.column:
+          return "<Special column not present>"
+      return f"<Special column{' ' if self.label else ''}{self.label} of type {self.column}>"
+
+  def special_columns(self):
+      if self.grouping:
+          yield self.grouping
+      if self.numbering:
+          yield self.numbering
 
   def _grammar(self, param_name=False):
       line = self.sequence.grammar(param_name)
-      if self.numbering:
-         line = self.numbering.grammar() + line # + pp.And._ErrorStop()
+      cols = 1
+      for i in self.special_columns():
+          cols+=1
+          line = i.add_grammar(line)
       grammar = delimitedList(line, line_end)
+
+      if self.group_size:
+
+          def set_g_size(x):
+              grp_size.group_size = x[0]
+
+          grp_size = Unsigned.I.grammar().copy().setParseAction(set_g_size)
+          grammar = pp.Suppress(pp.CaselessKeyword(self.group_size) + grp_size + "\n") + grammar
+
       if self.names:
          if self.free_header:
              fh = pp.SkipTo(line_end) + line_end
@@ -365,26 +481,94 @@ class Table(GrammarType):
                       """ multiple column headers for one column are allowed
                           -- see Occupation section"""
                       yield from map(pp.CaselessKeyword, n.split(' '))
-                    else:
+                    elif n != '':
                       yield pp.CaselessKeyword(n)
+             header = pp.And(list(names()))
+             for i in self.special_columns():
+                header = i.add_header_grammar(header)
+             grammar = pp.Suppress(header + pp.lineEnd) + grammar
 
-             grammar = pp.Suppress(pp.And(list(names())) + pp.lineEnd) + grammar
-             if self.numbering_label:
-               grammar = pp.CaselessKeyword(self.numbering_label).suppress() + grammar
-
-      def ensure_numbering(s, loc, x):
+      def data_numbering(s, loc, x):
           numbers = x[::2]
           datas = x[1::2]
           if not numbers == [*range(1, len(numbers) + 1)]:
-             raise pp.ParseException(s, loc, 'First column should contain row numbering')
-          return datas
+             raise pp.ParseException(s, loc, 'The first column should contain row numbering')
+          return tabelize(datas)
 
-      if self.numbering is not None:
-         grammar.addParseAction(ensure_numbering)
+      def data_grouping(s, loc, data):
 
-      grammar.addParseActionEx( lambda x: np.array(x.asList(), self.numpy_type), "Cannot retype to numpy array")
-      if self.flatten:
-          grammar.addParseAction(lambda x: x[0].ravel())
+           out = []
+           curr = []
+           c = 0
+           if len(data) % (2 * grp_size.group_size):
+              raise pp.ParseException(s, loc, "The data in the table should be grouped "
+                                           f"by groups of length {grp_size.group_size}.")
+           for i in range(0, len(data), 2):
+               c+=1
+               if c>grp_size.group_size:
+                   out.append(tabelize(curr))
+                   curr = []
+                   c = 1
+               if data[i] != c:
+                  raise pp.ParseException(s, loc, "The value in the first column should "
+                        "be a row numbering within a group of a length {grp_size.group_size}."
+                       f"{data[i]} encountered, {c} expected.")
+               curr.append(data[i + 1])
+           out.append(tabelize(curr))
+           return [ out ]
+
+      def data_numbering_grouping(s, loc, data):
+           if len(data) == 0:
+               return data
+
+           def numbering_error(i, expected):
+               raise pp.ParseException(s, loc, "The value in the first column should "
+                     "be a monotone numbering of a groups. "
+                     "On the {i//3+1}th row, {data[i]} encountered, {expected} expected.")
+           val = data[0]
+           if val != 1:
+                numbering_error(0, "1")
+           out = []
+           curr = []
+           grp = 0
+           for i in range(0, len(data), 3):
+               if data[i] !=val:
+                  if data[i] != val + 1:
+                       numbering_error(i, f"'{val}' or '{val+1}'")
+                  out.append(tabelize(curr))
+                  curr = []
+                  val = data[i]
+                  grp = 0
+               grp += 1
+               if data[i + 1] != grp:
+                  raise pp.ParseException(s, loc, "The value in the second column should "
+                        "be a row numbering within a group. "
+                       f"{data[1+1]} encountered, {grp} expected.")
+               curr.append(data[i + 2])
+           out.append(tabelize(curr))
+           if self.group_size:
+              for i,g in enumerate(out):
+                  if len(g) != grp_size.group_size:
+                      raise pp.ParseException(s, loc, f"The group {i//3 + 1} should have "
+                              f"{grp_size.group_size} members, it has {len(g)}.")
+           return [ out ]
+
+      def tabelize(x):
+          out = np.array(x, dtype=self._numpy_type)
+          if self.flatten:
+              out = out.ravel()
+          return out
+
+      if self.numbering:
+          if self.grouping:
+              grammar.addParseAction(data_numbering_grouping)
+          else:
+              grammar.addParseAction(data_numbering)
+      elif self.grouping:
+          grammar.addParseAction(data_grouping)
+      else:
+          grammar.addParseAction(tabelize)
+
       return grammar
 
   def _string(self, data):
@@ -396,37 +580,66 @@ class Table(GrammarType):
                  for n,t in zip(names, self.sequence.types)
                     )
          header = ' '.join(formated)
-         if self.numbering:
-            header = self.numbering.format_string(self.numbering_label or '') + ' ' + header
+         for i in self.special_columns():
+             header = i.header() + header
          out.append(header)
-         newline = True
-      else:
-         newline = False
 
-      line = 1
-      for i in data:
-         if newline:
-            out.append('\n')
-         newline = True
-         if self.numbering is not None:
-            out.append(self.numbering.string(line))
-            line+=1
-         out.append(self.sequence.string(i))
-      return ''.join(out)
+      if self.group_size:
+         out.append(self.group_size_format.format(self.group_size, len(data[0]) if data else 1))
+
+      def line(row, prefix):
+          line = self.sequence.string(row)
+          if prefix:
+              line = prefix + line
+          out.append(line)
+
+      if self.grouping:
+          for n, group in enumerate(data):
+              for g, d in enumerate(group):
+                  line(d, self.grouping.format_string(n) + self.numbering.format_string(g))
+      else:
+          for n, d in enumerate(data,1):
+              line(d, self.numbering.format_string(n))
+
+      return '\n'.join(out)
 
   def _validate(self, value, why='set'):
-      if not isinstance(value, np.ndarray):
-         return f"Numpy array as a value required {value.__class__} given"
-      dtype = self.numpy_type
-      dim = 1 if isinstance(dtype, list) or self.flatten else 2
-      if len(value.shape) != dim:
-         return f"The array should have dimension={dim}, it has dimension {len(value.shape)}"
-      if value.dtype != self.numpy_type:
-         return f"The data type of the value should be {dtype}, it is {value.dtype}"
-      if dim==2 and value.shape[1] != len(self.sequence.types):
-         return f"The array is required to have {len(self.sequence.types)} columns, it has {value.shape[1]}"
-      if self.length is not None and self.length != value.shape[0]:
-         return f"The array is required to have {self.length} rows, it has {value.shape[1]}"
+      def validate(value):
+          if not isinstance(value, np.ndarray):
+             return f"Numpy array as a value required {value.__class__} given"
+          dtype = self._numpy_type
+          dim = 1 if isinstance(dtype, list) or self.flatten else 2
+          if len(value.shape) != dim:
+             return f"The array should have dimension={dim}, it has dimension {len(value.shape)}"
+          if value.dtype != dtype:
+             return f"The data type of the value should be {dtype}, it is {value.dtype}"
+          if dim==2 and value.shape[1] != len(self.sequence.types):
+             return f"The array is required to have {len(self.sequence.types)} columns, it has {value.shape[1]}"
+          return True
+
+      if not self.grouping:
+          out = validate(value)
+          if out is not True:
+              return out
+      else:
+          if not isinstance(value, list):
+              return "The grouped table accepts list of table data as a value, "\
+                     f"{value.__class__} have been given."
+          for i,d in enumerate(value):
+              out = validate(d)
+              if out is not True:
+                  return f"The {i+1}th table has invalid data: {out}"
+          size = None
+          if self.group_size:
+              for i, d in enumerate(value):
+                  if size is None:
+                      size = len(d)
+                  else:
+                      if size != len(d):
+                         return f"Size of the {i+1}th table should be same as of the first one, i.e. {size}"
+
+      if self.length is not None and self.length != len(value):
+          return f"The array is required to have {self.length} rows, it has {len(value)}"
       return True
 
   def convert(self, value):
@@ -434,13 +647,19 @@ class Table(GrammarType):
 
   @cached_property
   def numpy_type(self):
+      if self.grouping:
+          return list
+      return self._numpy_type
+
+  @cached_property
+  def _numpy_type(self):
       types = self.sequence.types
-      nr = self.names and self.named_result
-      if not nr:
+      if not self.named_result:
          dtype = types[0].numpy_type
          for t in types[1:]:
              if t.numpy_type != dtype:
-                 nr = True
+                 if self.named_result is False:
+                      raise ValueError("The table should not have structured dtype, but has columns have different types")
                  break
          else:
              return dtype
