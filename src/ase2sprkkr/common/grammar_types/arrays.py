@@ -140,7 +140,12 @@ class Array(GrammarType):
        else:
            ln=len(value)
        if np.__version__ >= '1.23' or self.type.numpy_type != object:
-           value = ( self.type.convert(i) for i in value )
+
+           def validate(v):
+               self.type.validate(v)
+               return v
+
+           value = ( validate(self.type.convert(i)) for i in value)
            out = np.fromiter(value, dtype = self.type.numpy_type, count=ln)
        else:
            value = [ self.type.convert(i) for i in value ]
