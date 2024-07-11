@@ -41,7 +41,28 @@ class Number(TypedGrammarType):
       return True
 
 
-class Unsigned(Number):
+class FixedPointNumber(Number):
+
+  numpy_type = int
+
+  def convert(self, value):
+      if isinstance(value, float) and np.abs(int(value) - value) < 1e-15:
+          from .warnings import SuspiciousValueWarning
+          SuspiciousValueWarning(value, 'An attemtp to set <float> value using an <integer>. I will do a conversion for you.').warn(
+              stacklevel=6
+          )
+          value=int(value)
+
+      return super().convert(value)
+
+  @add_to_parent_validation
+  def _validate(self, value, why='set'):
+      if isinstance(value, float):
+          return "A float value is not allowed for integer."
+      return super()._validate(value, why)
+
+
+class Unsigned(FixedPointNumber):
   """ Unsigned integer (zero is possible) """
 
   _grammar = replace_whitechars(ppc.integer).setParseAction(lambda x:int(x[0]))
@@ -53,7 +74,6 @@ class Unsigned(Number):
   def grammar_name(self):
     return '<+int>'
 
-  numpy_type = int
   datatype_name = 'unsigned integer'
 
 
@@ -75,15 +95,13 @@ class ObjectNumber(Unsigned):
       return isinstance(value, self.type) or super()._validate(value, why=why)
 
 
-class Integer(Number):
+class Integer(FixedPointNumber):
   """ Signed integer """
 
   _grammar = replace_whitechars(ppc.signed_integer).setParseAction(lambda x:int(x[0]))
 
   def grammar_name(self):
     return '<int>'
-
-  numpy_type = int
 
 
 class Bool(TypedGrammarType):
