@@ -202,16 +202,21 @@ class Sequence(GrammarType):
   """ A sequence of values of given types """
 
   def __init__(self, *types, format='', format_all=False, allowed_values=None,
-               default_values=False, names=None, **kwargs):
+               default_values=False, names=None, as_list=False, **kwargs):
       super().__init__(**kwargs)
       if names:
          self.names = names if isinstance(names, dict) else {name:i for i,name in enumerate(names)}
          self.value_type = namedtuple("_".join(names), names)
          self.value_constructor = self.value_type
+         self.value_constructor = self.value_type
       else:
          self.names = None
-         self.value_type = tuple
-         self.value_constructor = lambda *x: tuple(x)
+         if as_list:
+            self.value_type = list
+            self.value_constructor = lambda *x: [[*x]]
+         else:
+            self.value_type = tuple
+            self.value_constructor = lambda *x: [ tuple(x) ]
       if isinstance(format, dict):
          format = { type_from_type(k):v for k,v in format.items() }
       if isinstance(format, (str, dict)):
