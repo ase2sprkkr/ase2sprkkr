@@ -18,8 +18,7 @@ from ...potentials.potentials import Potential  # NOQA
 class TestCalculator(TestCase):
 
  print_output = '-v' in sys.argv or '--verbose' in sys.argv
- # dirname = os.path.dirname(__file__)
- dirname = False
+ dirname = os.path.dirname(__file__)
  _calc_args = dict(
      directory = dirname, input_file = 'output_test_calc.inp',
      output_file = 'output_test_calc.out',

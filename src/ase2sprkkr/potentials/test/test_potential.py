@@ -73,7 +73,7 @@ class TestPotential(TestCase):
     self.assertFalse(np.allclose(pp.atoms.sites[1].potential.bt, p.atoms.sites[1].potential.bt))
 
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
-      SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False,print_output=True, empty_spheres=False)
+      SPRKKR().calculate(potential=p, options={'NITER':1,'NKTAB':5}, directory=False, empty_spheres=False)
 
   def test_examples(self):
     path = os.path.join(os.path.dirname(__file__), '..','examples')
