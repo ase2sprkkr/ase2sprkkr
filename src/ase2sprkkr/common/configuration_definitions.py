@@ -51,6 +51,7 @@ class BaseDefinition:
        self.condition = condition
        self.grammar_hooks = []
        self.condition = condition
+       self.container = None
 
   def has_name(self, name, lower_case=False):
        return name == ( self.name_lcase if lower_case else self.name )
@@ -118,6 +119,12 @@ class BaseDefinition:
        """ Hook called, when the object is assigned to the container (currently from the container
        constructor) """
        self.container=container
+
+  def get_path(self):
+      out = self.name
+      if self.container and self.container.container:
+          return self.container.get_path() + "." + out
+      return out
 
   def info(self, *args, **kwargs):
        return "This object is not intended for a direct use."
