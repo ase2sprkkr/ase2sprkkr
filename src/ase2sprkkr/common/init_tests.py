@@ -93,7 +93,9 @@ class TestCase:
       with pytest.raises(a):
           self.runAsync(b)
 
-  def assertRaises(self, a, b):
+  def assertRaises(self, a, b=None):
+      if b is None:
+          return pytest.raises(a)
       with pytest.raises(a):
           b()
 
