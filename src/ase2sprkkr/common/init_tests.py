@@ -180,12 +180,23 @@ def assertDictEqual(a, b, msg=''):
        assertion.assertEqual(av, bv, 'Dict values are not equal')
 
 
-assertion.addTypeEqualityFunc(
-    dict,
-    assertDictEqual
-)
+def assertListEqual(a, b, msg=''):
 
-assertion.addTypeEqualityFunc(
-    Cell,
+   def message(error):
+       return msg + ': ' + error if msg else error
+
+   assert a.__class__ is b.__class__, message('A list is expected')
+   assert len(a) == len(b), message('The lists should have the same lengths, they have '
+                                f'the lengths {len(a)} and {len(b)} respectivelly')
+   for i, vals in enumerate(zip(a,b)):
+       try:
+          assertion.assertEqual(vals[0], vals[1])
+       except Exception as e:
+          raise AssertionError(message(f'The {i}th value of the lists differs: {e}'))
+
+
+assertion.addTypeEqualityFunc(list, assertListEqual)
+assertion.addTypeEqualityFunc(dict, assertDictEqual)
+assertion.addTypeEqualityFunc(Cell,
     lambda a,b,msg: arr_testfce(np.array(a), np.array(b), msg)
 )
