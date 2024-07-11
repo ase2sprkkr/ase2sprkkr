@@ -88,7 +88,7 @@ def addParseActionEx(self, pa, message = None):
         return pa(x)
       except Exception as e:
         if message:
-           msg = '{message}\n{e}'
+           msg = f'{message}\n{e}'
         else:
            msg = str(e)
         raise pp.ParseException(s, loc, msg).with_traceback(e.__traceback__) from e
