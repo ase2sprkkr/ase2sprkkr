@@ -114,7 +114,7 @@ class ASEArraySection(PotentialSection):
 
     def has_any_value(self):
         """ Are there data in the section?"""
-        return self['DATA'] is not None
+        return self['DATA']() is not None
 
     def _depends_on(self):
         """ These sections can be processed after that the Atoms object
