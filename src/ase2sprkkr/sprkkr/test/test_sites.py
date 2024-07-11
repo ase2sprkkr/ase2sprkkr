@@ -12,7 +12,7 @@ if True:
     from ..sprkkr_atoms import SPRKKRAtoms
 
 
-class SitesTest(TestCase):
+class TestSites(TestCase):
 
   def test_adding(self):
       atoms=SPRKKRAtoms(symbols='NK',pbc=True)

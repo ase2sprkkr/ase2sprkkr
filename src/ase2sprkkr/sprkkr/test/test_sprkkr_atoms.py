@@ -10,7 +10,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 from ..sprkkr_atoms import SPRKKRAtoms  # NOQA: E402
 
 
-class SPRKKRAtomsTest(TestCase):
+class TestSPRKKRAtoms(TestCase):
 
  def test_extend(self):
      a = SPRKKRAtoms('NaCl')

@@ -8,7 +8,7 @@ __package__, __name__ = patch_package(__package__, __name__)
 import os, glob, re  # NOQA
 
 
-class CommonTest(TestCase):
+class TestCommon(TestCase):
 
   def test(self):
       dire = os.path.join( os.path.join(os.path.dirname(__file__), '..') )

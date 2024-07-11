@@ -1,22 +1,24 @@
+from ase.spacegroup import crystal
+import os
+import tempfile
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ase.build import bulk
-from ase.spacegroup import crystal
-from ..sysfile import sysfile_content, write_sysfile
-import os, tempfile
+from ..sysfile import sysfile_content, write_sysfile  # NOQA: E402
 
-class SysfileTest(TestCase):
+
+class TestSysfile(TestCase):
 
     def test(self):
         a = 4.6
         c = 2.95
         atoms = crystal(['Ti', 'O'], basis=[(0, 0, 0), (0.3, 0.3, 0.0)],
                     spacegroup=136, cellpar=[a, a, c, 90, 90, 90])
-        #atoms = bulk('Ag')
+        # atoms = bulk('Ag')
         x=sysfile_content(atoms)
         y="""
 system data-file created by python ase2sprkkr

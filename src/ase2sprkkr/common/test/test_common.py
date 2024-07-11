@@ -1,16 +1,18 @@
+import inspect
+import tempfile
+import asyncio
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..decorators import add_to_signature
-import inspect
-import tempfile
-import asyncio
-from ..process_output_reader import AsyncioFileReader
+from ..decorators import add_to_signature   # NOQA: E402
+from ..process_output_reader import AsyncioFileReader  # NOQA: E402
 
-class CommonTest(TestCase):
+
+class TestCommon(TestCase):
 
   def test_common(self):
 
@@ -34,12 +36,13 @@ class CommonTest(TestCase):
 
     self.assertEqual( ('c',('a',2, {'d':'d', 'e':'e'})),
                        ff('c', 'a', d='d', e='e'))
+
     def f(c=1, d=5):
         return c,d
 
     @add_to_signature(f, prepend=True)
     def ff(a=2, d='d', *args, **kwargs):
-        return a,  f(d=d, *args, **kwargs)
+        return a, f(d=d, *args, **kwargs)
 
     self.assertEqual( ('a', (1, 'c')),
                       ff('a', 'c')
@@ -47,12 +50,11 @@ class CommonTest(TestCase):
 
     @add_to_signature(f, prepend=True)
     def ff(a=2, *args, d='d', **kwargs):
-        return a,  f(d=d, *args, **kwargs)
+        return a, f(d=d, *args, **kwargs)
 
     self.assertEqual( ('a', ('c', 'd')),
                       ff('a', 'c')
                     )
-
 
     def f(*args):
        return args
@@ -80,12 +82,10 @@ class CommonTest(TestCase):
         return c, kwargs
     self.assertEqual((1,{'x':2}), ff(x=2,c=1) )
 
-
     @add_to_signature(lambda:None)
     def ff(a, *args, c, **kwargs):
         return a,c
     self.assertEqual((2,1), ff(2,c=1) )
-
 
     def f(a=1, b=2):
         return a,b
@@ -96,7 +96,6 @@ class CommonTest(TestCase):
     self.assertEqual((7,(3,5)), ff(3,7))
     self.assertEqual((7,(3,5)), ff(3,c=7))
     self.assertEqual((7,(3,5)), ff(a=3,c=7))
-
 
   def test_asyncio_file_reader(self):
     with tempfile.TemporaryFile(mode='w+b') as tfile:
@@ -114,8 +113,10 @@ class CommonTest(TestCase):
 
   def test_cached_property(self):
       from ..decorators import cached_property
+
       class A():
         u = 1
+
         @cached_property
         def a(self):
             self.__class__.u+=1
@@ -135,6 +136,7 @@ class CommonTest(TestCase):
 
       class A():
         u = 1
+
         @cached_property
         def a(self):
             self.__class__.u+=1
@@ -148,7 +150,6 @@ class CommonTest(TestCase):
         def a(self):
             self.__dict__['a'] = 25
 
-
       a=A()
       self.assertEqual(2, a.a)
       self.assertEqual(2, a.a)
@@ -162,7 +163,7 @@ class CommonTest(TestCase):
       self.assertEqual(3, a.a)
       self.assertEqual(3, a.a)
 
-      #test, that indirect decorator works
+      # test, that indirect decorator works
       def modifier(fce):
           def wrap(self):
               return fce(self)
@@ -170,10 +171,12 @@ class CommonTest(TestCase):
 
       class A():
         u = 1
+
         @modifier
         def a(self):
             self.__class__.u+=1
             return self.__class__.u
+
         @modifier
         def b(self):
             self.__class__.u+=1
@@ -185,7 +188,3 @@ class CommonTest(TestCase):
       self.assertEqual(3, a.b)
       self.assertEqual(3, a.b)
       self.assertEqual(2, a.a)
-
-
-
-

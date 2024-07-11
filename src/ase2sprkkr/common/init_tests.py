@@ -113,8 +113,8 @@ class TestCase:
   def assertFalse(self, val):
       assert not val
 
-  def assertEqual(self, a, b):
-      assertion.assertEqual(a,b)
+  def assertEqual(self, a, b, msg=None):
+      assertion.assertEqual(a,b, msg=msg)
 
   def assertNotEqual(self, a, b):
       with pytest.raises(AssertionError):

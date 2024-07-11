@@ -8,7 +8,7 @@ from ..build import semiinfinite_system  # NOQA E402
 from ase.build import bulk               # NOQA E402
 
 
-class BuildTest(TestCase):
+class TestBuild(TestCase):
 
     def test(self):
         atoms=bulk('LiCl', 'rocksalt', a=5.64)

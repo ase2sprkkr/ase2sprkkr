@@ -15,7 +15,7 @@ from ..calculator import SPRKKR   # NOQA
 from ...potentials.potentials import Potential  # NOQA
 
 
-class CalculatorTest(TestCase):
+class TestCalculator(TestCase):
 
  print_output = '-v' in sys.argv or '--verbose' in sys.argv
  # dirname = os.path.dirname(__file__)
