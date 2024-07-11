@@ -228,6 +228,12 @@ class Sequence(GrammarType):
       self.allowed_values=allowed_values
       self.default_values=default_values
 
+  def __len__(self):
+      return len(self.types)
+
+  def __bool__(self):
+      return True
+
   def _grammar(self, param_name = False):
       def grm(type):
           g = type.grammar(param_name)
