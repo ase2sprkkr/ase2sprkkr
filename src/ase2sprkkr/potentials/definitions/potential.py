@@ -10,7 +10,9 @@ from .sections import \
     MeshInformationSectionDefinition, \
     TypesSectionDefinition, \
     PotentialSectionDefinition, \
-    ChargeSectionDefinition
+    ChargeSectionDefinition, \
+    HostMadelungPotentialSectionDefinition, \
+    ChargeMomentsSectionDefinition
 
 
 def fce():
@@ -54,6 +56,8 @@ def fce():
   Section('SITES', cls = SitesSectionDefinition)
   Section('OCCUPATION', cls = OccupationSectionDefinition)
   Section('REFERENCE SYSTEM', cls = ReferenceSystemSectionDefinition)
+  Section('HOST MADELUNG POTENTIAL', cls = HostMadelungPotentialSectionDefinition)
+  Section('CHARGE MOMENTS', cls = ChargeMomentsSectionDefinition)
   Section('MAGNETISATION DIRECTION', [
       V('KMROT', int, 0),
       V('QMVEC', Array([0.,0.,0.])),
