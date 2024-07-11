@@ -148,8 +148,11 @@ class SPRKKR(Calculator):
         """ The default postfix for the names of executables. False means no postfix, True means
         to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. """
 
-        super().__init__(restart,
-                         label=label, atoms=atoms, directory=directory)
+        super().__init__(restart, label=label, atoms=atoms)
+        if directory is False:
+            self._directory = directory
+        else:
+            self.directory = directory
         self.atoms = atoms
         self.potential = potential
         self.mpi = mpi
