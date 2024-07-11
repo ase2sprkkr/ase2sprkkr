@@ -339,6 +339,11 @@ class SpecialColumn:
     def header(self):
         return self.format_string(self.label or '') + ' '
 
+    def __repr__(self):
+        if not self.column:
+            return "<Special column not present>"
+        return f"<Special column{' ' if self.label else ''}{self.label} of type {self.column}>"
+
 
 class Table(GrammarType):
   """
@@ -445,11 +450,6 @@ class Table(GrammarType):
       self.length = length
       self.numbering = SpecialColumn(self, numbering, numbering_label, numbering_format)
       self.grouping = SpecialColumn(self, grouping, grouping_label, grouping_format)
-
-  def __repr__(self):
-      if not self.column:
-          return "<Special column not present>"
-      return f"<Special column{' ' if self.label else ''}{self.label} of type {self.column}>"
 
   def special_columns(self):
       if self.grouping:
