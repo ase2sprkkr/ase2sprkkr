@@ -207,10 +207,11 @@ class InputParameters(ConfigurationFile):
         mpi = self.mpi_runner(mpi)
         if mpi:
              executable = mpi + [ executable + 'MPI', input_file.name ]
-             return process.run(executable, output_file, stdin = None, print_output=print_output, directory=directory)
+             stdin = None
         else:
              executable = [ executable ]
-             return process.run(executable, output_file, stdin = input_file, print_output=print_output, directory=directory)
+             stdin = input_file
+        return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or InputParameters.default_sprkkr_executable_suffix attribute should be set?\n' + \
                      e.strerror

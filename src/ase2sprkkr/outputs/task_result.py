@@ -5,13 +5,16 @@ import os
 
 class TaskResult:
   """ A base class for a result of a runned task (kkrscf executable) """
-  def __init__(self, input_parameters, calculator, directory, result, error, return_code):
+  def __init__(self, input_parameters, calculator, directory, result, error, return_code,
+                     output_file=None, input_file=None):
       self.input_parameters = input_parameters
       self._calculator = calculator
       self.directory = directory or os.getcwd()
       self.result = result
       self.error = error
       self.return_code = return_code
+      self.output_file = output_file
+      self.input_file = input_file
 
   @cached_property
   def atoms(self):
@@ -38,11 +41,21 @@ class KkrProcess:
       """ Directory, to wich are the relative paths in the output related. """
       self.reader = self.reader_class()
 
-  def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
-      return self._wraps(*self.reader.run(cmd, outfile, print_output, directory, **kwargs))
+  def run(self, cmd, outfile, print_output=False, directory=None, input_file=None, **kwargs):
+      return self._wraps(
+          getattr(outfile, "name", None),
+          *self.reader.run(cmd, outfile, print_output, directory, **kwargs),
+          input_file = input_file
+      )
 
-  def _wraps(self, *args):
-      return self.result_class(self.input_parameters, self.calculator, self.directory, *args)
+  def _wraps(self, output_file, *args, input_file=None):
+      return self.result_class(self.input_parameters, self.calculator, self.directory, *args,
+                               output_file = output_file,
+                               input_file = input_file
+                               )
 
   def read_from_file(self, output, error=None, return_code=0, print_output=False):
-      return self._wraps(*self.reader.read_from_file(output, error, return_code, print_output))
+      return self._wraps(
+          output,
+          *self.reader.read_from_file(output, error, return_code, print_output)
+      )
