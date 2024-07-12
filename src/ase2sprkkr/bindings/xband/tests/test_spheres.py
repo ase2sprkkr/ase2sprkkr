@@ -57,7 +57,7 @@ class TestSpheres(TestCase):
       self.assertEqual(sym, sym2)
       self.assertEqual(len(empty_spheres(v, method='xband')), 0)
 
-  def test(self):
+  def test(self, temporary_dir):
       a2 = ase.build.bulk('Cu', 'fcc', a=3.6, orthorhombic=True)
       sg = ase.spacegroup.get_spacegroup(a2)
       cp = a2.cell.cellpar()
@@ -80,5 +80,5 @@ class TestSpheres(TestCase):
       self.assertEqual(o.radii, np.asarray([0.995084964973998 * Bohr] * 10))
       cu=ase.build.bulk('Cu')
       if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
-        out = SPRKKR().calculate(cu, empty_spheres={'min_radius': 0.25}, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }, print_output=False)
+        out = SPRKKR().calculate(cu, **self.calc_args(empty_spheres={'min_radius': 0.25}, options={'niter': 1, 'ne' : 20, 'nktab' : 5 }))
         self.assertEqual(len(cu), 4)
