@@ -77,13 +77,12 @@ class TestCase:
 
   @classmethod
   def calc_args(cls, **kwargs):
+      if not kwargs:
+          return cls._calc_args
+      out = cls._calc_args.copy()
       if 'options' in kwargs:
-          o = kwargs['options']
-      else:
-          o = None
-      kwargs.update(cls._calc_args)
-      if o:
-          kwargs['options'].update(o)
+          kwargs['options'].update(cls._calc_args['options'])
+      out.update(kwargs)
       return kwargs
 
   def assertAsyncEqual(self, a, b):
