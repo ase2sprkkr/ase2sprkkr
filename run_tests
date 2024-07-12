@@ -1,19 +1,2 @@
 #!/bin/bash
-if [[ $1 == '--no-kkr' ]] ; then
-	 export DO_NOT_RUN_SPRKKR=1
-	 shift
-fi
-
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-DIR="`python3 -c '
-import os
-try:
-        import ase2sprkkr
-        print(os.path.dirname(ase2sprkkr.__file__))
-except Exception as e:
-        print(os.path.join(os.getcwd(), "src/ase2sprkkr"))
-'`"
-
-echo $DIR
-PY_IGNORE_IMPORTMISMATCH=1 py.test --import-mode=importlib --doctest-modules "$DIR" $@
+ase2sprkkr test $@
