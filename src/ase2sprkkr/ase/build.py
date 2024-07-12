@@ -1,6 +1,6 @@
 """ This module contains routines for building materials.
-Unlike ``ase.sprkkr.build``, this module contains generic routines,
-possible usable with plain ASE (with any calculator).
+Unlike ``ase2sprkkr.sprkkr.build``, this module contains generic
+routines, possible usable with plain ASE (with any calculator).
 """
 
 import numpy as np
