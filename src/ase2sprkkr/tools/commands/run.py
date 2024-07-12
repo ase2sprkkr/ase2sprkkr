@@ -19,12 +19,13 @@ description='You can pass the input parameters using the command line. However, 
 
 
 def parser(parser):
+    bool_arg = getattr(argparse, 'BooleanOptionalAction', 'store_true')
     parser.add_argument('pot', help='SPR-KKR potential file')
     parser.add_argument('-t','--task', dest='task', choices=InputParameters.definitions.keys(), type = str.lower, help='Task to compute')
-    parser.add_argument('--print-output', '-O', help='Print the output of SPRKKR', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--print-output', '-O', help='Print the output of SPRKKR', default='None', action=bool_arg)
     parser.add_argument('--output-file', '-o', help='Output file', type=str)
     parser.add_argument('--input-file', '-i', help='Input (parameters) file', type=str)
-    parser.add_argument('--empty-spheres', '-e', help='Try to add empty spheres (by default, they are added if the potential is not converged and no vacuum atom is present', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--empty-spheres', '-e', help='Try to add empty spheres (by default, they are added if the potential is not converged and no vacuum atom is present', action=bool_arg)
     parser.add_argument('options', nargs='*', help='Input parameters in the form <name>=<value>', type=parse_named_option)
 
 
