@@ -1,4 +1,8 @@
-python_exe = find_program('python3', 'python')
+python = import('python')
+
+py = python.find_installation(pure: false)
+python_dep = py.dependency()
+python_exe = py.full_path()
 glob = run_command(python_exe, 'sources.py', '[.](py|in)', check: true)
 
 sources = glob.stdout().strip().split('\n\n')
