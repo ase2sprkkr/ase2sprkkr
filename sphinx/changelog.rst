@@ -1,6 +1,12 @@
 Changelog
 =========
 
+Version 3.0.2-beta
+------------------
+* Host Madelung potential and Charge moments parsing
+* Various fixies
+* Test tool to run tests
+
 Version 3.0.0-beta
 ------------------
 
