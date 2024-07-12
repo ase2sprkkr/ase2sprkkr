@@ -14,8 +14,8 @@ sys.path.append(root_path)
 
 from ...common.tools import main  # NOQA
 
-help='Run the tests of ASE2SPRKKR'
-description='If something goes wrong, please send the output of this commands to developers'
+help='Run the tests of ASE2SPRKKR.'
+description='If something goes wrong, please send the output of this commands to developers to ase2sprkkr@ntc.zcu.cz'
 unknowns = 'pytest_arguments'
 
 

@@ -14,7 +14,7 @@ from ... import InputParameters, OutputFile  # NOQA
 from ...common.tools import main  # NOQA
 
 
-help='Run SPRKKR calculation.'
+help='Show capabilities of ase2sprkkr (known tasks, output files formats etc.).'
 description='You can pass the input parameters using the command line. However, due to limitation of argparse, pass them directly after the potential file.'
 
 always_options = [
