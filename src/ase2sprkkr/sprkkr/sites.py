@@ -54,8 +54,15 @@ class SiteType:
   def unregister(self, site):
       self.sites.remove(site)
 
-  def is_standalone(self):
-      return len(self.sites < 2)
+  def has_symmetry(self):
+      return len(self.sites > 1)
+
+  def break_symmetry(self):
+      if not self.sites:
+          return
+      itr = iter(self.sites)
+      for i in itr:
+          i.break_symmetry()
 
   def _clear_data(self):
       self._potential = None
@@ -269,11 +276,11 @@ class Site:
           self._site_type.register(self)
 
   @property
-  def is_standalone(self):
-      return self._site_type.is_standalone()
+  def has_symmetry(self):
+      return self._site_type.has_symmetry()
 
-  def make_standalone(self):
-      if not self.is_standalone():
+  def break_symmetry(self):
+      if self.has_symmetry():
           self._site_type = self.site_type.copy()
 
   @property
