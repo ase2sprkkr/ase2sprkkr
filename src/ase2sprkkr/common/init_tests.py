@@ -10,6 +10,7 @@ from contextlib import contextmanager
 import pytest
 import tempfile
 import unittest
+import os
 
 
 def patch_package(package, name):
@@ -83,7 +84,10 @@ class TestCase:
       if 'options' in kwargs:
           kwargs['options'].update(cls._calc_args['options'])
       out.update(kwargs)
-      return kwargs
+      return out
+
+  def run_sprkkr(self):
+     return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
 
   def assertAsyncEqual(self, a, b):
       return self.assertEqual(a, self.runAsync(b))

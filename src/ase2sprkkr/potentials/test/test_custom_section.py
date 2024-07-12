@@ -1,14 +1,16 @@
+import re
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..potential_definitions import PotentialDefinition
-from ..custom_potential_section import SectionString
-from ...common.grammar import generate_grammar
-import re
-from ...common.grammar import delimitedList
+from ..potential_definitions import PotentialDefinition    # NOQA: E402
+from ..custom_potential_section import SectionString       # NOQA: E402
+from ...common.grammar import generate_grammar             # NOQA: E402
+from ...common.grammar import delimitedList                # NOQA: E402
+
 
 class TestCustomSection(TestCase):
 
@@ -41,7 +43,6 @@ NLMTOP-POT         4
       cmgs = delimitedList(cmg, SectionString.grammar_of_delimiter())
     out = cmgs.parseString(sec + "\n************************\n" + sec, True)
     self.assertEqual(2, len(out))
-
 
     out = cmgs.parseString(sec +
                           "\n************************\n" +

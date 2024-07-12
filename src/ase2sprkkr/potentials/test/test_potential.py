@@ -50,7 +50,7 @@ class TestPotential(TestCase):
     self.assertEqual(a2.positions, a1.positions)
     self.assertEqual(str(a2.symbols), str(a1.symbols))
 
-  def test_2D(self):
+  def test_2D(self, temporary_dir):
     path = os.path.join(os.path.dirname(__file__), '..','examples','GeTe.pot')
     p=Potential.from_file(path)
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':

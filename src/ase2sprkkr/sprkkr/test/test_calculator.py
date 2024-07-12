@@ -102,9 +102,6 @@ class TestCalculator(TestCase):
      calculator.save_input(input_parameters = inp_file, potential = pot_file)
      assert_change(True, False)
 
- def run_sprkkr(self):
-     return os.environ.get('DO_NOT_RUN_SPRKKR', '') == ''
-
  def test_run(self, temporary_dir):
      if not self.run_sprkkr():
          return
@@ -130,8 +127,9 @@ class TestCalculator(TestCase):
      self.assertTrue(isinstance(out.calculator.potential_object, Potential))
 
      # read again the output from a file - the results should be the same
-     out = SPRKKR.InputParameters.create('scf').read_output_from_file(here('output_test_calc.out'))
-     self.assertEqual(2, len(out.iterations ))
+     out2 = SPRKKR.InputParameters.create('scf').read_output_from_file(out.output_file)
+     self.assertEqual(out.output_file, out2.output_file)
+     self.assertEqual(2, len(out2.iterations ))
      out.plot(filename = here('output_test_calc.png'))
 
      # use methods of atoms
@@ -148,7 +146,7 @@ class TestCalculator(TestCase):
         self.assertEqual(4, len(i['orbitals']))
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
 
-     out = SPRKKR.InputParameters.from_file(here('output_test_calc.inp')).read_output_from_file(here('output_test_calc.out'))
+     out = SPRKKR.InputParameters.from_file(out.input_file).read_output_from_file(out.output_file)
      self.assertEqual(str(atoms.symbols), str(out.atoms.symbols))
      self.assertEqual(1, len(out.iterations))
 

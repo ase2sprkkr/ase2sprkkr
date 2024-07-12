@@ -16,7 +16,7 @@ class test(TestCase):
         atoms = io.read(os.path.join(
             os.path.dirname(__file__),
             ciffile
-            ))
+        ))
         SPRKKRAtoms.promote_ase_atoms(atoms)
         self.assertEqual(atoms.sites[0].occupation['Hf'], 0.7025)
         self.assertEqual(atoms.sites[0].occupation['Ti'], 0.2975)

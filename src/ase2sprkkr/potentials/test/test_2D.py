@@ -1,18 +1,20 @@
+import os
+
 if __package__:
    from .init_tests import TestCase, patch_package
 else:
    from init_tests import TestCase, patch_package
 __package__, __name__ = patch_package(__package__, __name__)
 
-from ..potentials import Potential
-import os
+from ..potentials import Potential   # NOQA E402
+
 
 class Test2DPotential(TestCase):
 
     def test(self):
         p=Potential.from_file(os.path.join(os.path.dirname(__file__),'..','examples', 'GeTe.pot'))
         atoms = p.atoms
-        self.assertEqual(str(atoms.symbols), "GeXTeX"*8+"GeXTeX13")
+        self.assertEqual(str(atoms.symbols), "GeXTeX" * 8 + "GeXTeX13")
         self.assertEqual(len(atoms.regions['left']), 4)
         self.assertEqual(len(atoms.regions['right']), 4)
 
