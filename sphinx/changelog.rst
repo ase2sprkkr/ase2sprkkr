@@ -4,8 +4,10 @@ Changelog
 Version 3.0.2-beta
 ------------------
 * Host Madelung potential and Charge moments parsing
+* Sites ASE array
 * Various fixies
 * Test tool to run tests
+* has_symmetry and break_symmetry methods of Site and SiteType
 
 Version 3.0.0-beta
 ------------------
