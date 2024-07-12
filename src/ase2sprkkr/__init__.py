@@ -5,10 +5,10 @@ This root package import a few most used objects to provide shortcuts to them.
 """
 
 """ Configuration """
-from . import config
+from . import config   # NOQA: F401, E402
 
 """ SPRKKR calculator to be used to calculate electronic structure using ASE """
-from .sprkkr.calculator import SPRKKR  # NOQA: E402
+from .sprkkr.calculator import SPRKKR  # NOQA: F401, E402
 
 """ Input parameters object for SPRKKR calculation tasks """
 from .input_parameters.input_parameters import InputParameters  # NOQA: F401, E402
