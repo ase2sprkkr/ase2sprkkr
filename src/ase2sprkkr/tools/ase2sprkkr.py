@@ -49,11 +49,10 @@ def run():
 
   if args.ase2sprkkr_command is None:
       parser.print_help()
-      exit()
-
-  action = modules[ args.ase2sprkkr_command ].run
-  del args.ase2sprkkr_command
-  action(args)
+  else:
+      action = modules[ args.ase2sprkkr_command ].run
+      del args.ase2sprkkr_command
+      action(args)
 
 
 if __name__ == "__main__":
