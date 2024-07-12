@@ -34,7 +34,7 @@ def register():
     # fallback to the old way
     else:
         from ase.calculators.calculator import register_calculator_class
-        from .sprkkr.calculator import SPRKKR  # NOQA: E402
+        from ..sprkkr.calculator import SPRKKR  # NOQA: E402
         register_calculator_class('sprkkr', SPRKKR)
 
 
