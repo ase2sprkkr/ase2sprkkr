@@ -5,8 +5,6 @@ This command just run the tests
 from pathlib import Path
 import sys
 import argparse
-import os
-import subprocess
 
 if not __package__:
   __package__ = 'ase2sprkkr.tools.commands'
@@ -27,11 +25,17 @@ def parser(parser):
 
 
 def run(args):
+    import pytest
+    import os
+    import subprocess
     if not args.no_kkr:
        os.environ['DO_NOT_RUN_SPRKKR'] = '1'
     a2s_path = os.path.join(root_path, 'ase2sprkkr')
-    print(' '.join([sys.executable, '-m', 'pytest', '--doctest-modules', a2s_path] + args.pytest_arguments))
-    subprocess.run([sys.executable, '-m', 'pytest', '--doctest-modules', a2s_path] + args.pytest_arguments)
+    if pytest.version_tuple[0] <= 6:
+        print("Pytest version >= 6.0 is required. Please install it with pip install --upgrade 'pytest>=6'")
+        exit(-1)
+    subprocess.run([sys.executable, '-m', 'pytest', '--import-mode=importlib', '--doctest-modules', a2s_path] +
+                   args.pytest_arguments)
 
 
 if __name__ == "__main__":

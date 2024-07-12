@@ -17,4 +17,4 @@ except Exception as e:
 '`"
 
 echo $DIR
-PY_IGNORE_IMPORTMISMATCH=1 py.test  --doctest-modules "$DIR" $@
+PY_IGNORE_IMPORTMISMATCH=1 py.test --import-mode=importlib --doctest-modules "$DIR" $@
