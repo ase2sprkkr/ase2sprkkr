@@ -35,7 +35,7 @@ doc-readme:
 	cd sphinx; pandoc README.rst -o ../README.md
 
 package: | package_clean
-	python -m build
+	python -m build --sdist
 
 package_clean:
 	rm -rf dist/*
@@ -43,7 +43,7 @@ package_clean:
 publish: build_clean build pip
 
 pip: | package
-	twine upload dist/*
+	twine upload --username ase2sprkkr dist/*
 
 anaconda:
 	~/anaconda3/bin/anaconda login && ~/anaconda3/bin/anaconda upload "`ls ~/anaconda3/conda-bld/noarch/ase2sprkkr-* | tail -n 1`"
