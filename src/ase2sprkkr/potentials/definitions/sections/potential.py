@@ -1,10 +1,11 @@
 from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
 from ...potential_sections import PotentialSection as PotSection, RepeatedPotentialSection
-
-from ....common.grammar_types import NumpyArray
+from ....common.grammar_types import NumpyArray, RawData
 from ....common.unique_values import UniqueValuesMapping
 from ....common.warnings import DataValidityWarning
+from ....common.configuration_definitions import SeparatorDefinition
+import re
 
 
 class PotentialSection(PotSection):
@@ -14,12 +15,17 @@ class PotentialSection(PotSection):
 class PotentialsSection(RepeatedPotentialSection):
 
   def _set_from_atoms(self, atoms, write_io_data):
-      def data(i, site):
-          return {
-              'TYPE': i + 1,
-              'DATA': site.potential
-          }
-      return [ data(i, site) for site,i in write_io_data.sites.unique_items() if site.potential is not None ]
+      self.clear()
+      if self._container.SCF_INFO.FULLPOT():
+          return
+      for site, i in write_io_data.sites.unique_items():
+          if not site.potential:
+              return
+      for site, i in write_io_data.sites.unique_items():
+          pot = self.add(i)
+          pot.TYPE = i
+          pot.DATA = site.potential.raw_value
+          pot.FULLPOT = ''
 
   def _update_atoms(self, atoms, read_io_data):
       if len(self):
@@ -39,9 +45,11 @@ class PotentialSectionDefinition(PotSectionDefinition):
       V = PotValueDefinition
       members = [
           V('TYPE', int),
-          V('DATA', NumpyArray(line_length=100, shape=(2,-1), ends_with=79 * '=', item_format='% .14E', indented=1),
+          V('DATA', NumpyArray(line_length=100, shape=(2,-1), ends_with=re.compile("\n(={79}|-{79})"),
+                               ends_with_str = "=" * 79, item_format='% .14E', indented=1),
                     name_in_grammar=False,
-           )
+           ),
+          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, include_ends_with=True), name_in_grammar=False),
       ]
       super().__init__(name, members, has_hidden_members=True, is_repeated=True, is_optional=True)
 

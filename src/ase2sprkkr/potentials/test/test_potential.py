@@ -63,6 +63,8 @@ class TestPotential(TestCase):
     p=Potential.from_file(path)
     self.assertTrue(p.atoms.sites[0].potential is not None)
     self.assertTrue(p.atoms.sites[0].charge is not None)
+    assert p.atoms.sites[-1].potential is not None
+    assert p.atoms.sites[-1].charge is not None
     p.atoms.sites[1].potential.bt = -p.atoms.sites[1].potential.bt
     s=io.StringIO()
     p.save_to_file(s)

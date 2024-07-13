@@ -1,10 +1,10 @@
 from ...potential_definitions import PotSectionDefinition, \
                                    PotValueDefinition
 from ...potential_sections import PotentialSection as PotSection, RepeatedPotentialSection
-
-from ....common.grammar_types import NumpyArray
+from ....common.grammar_types import NumpyArray, RawData
 from ....common.unique_values import UniqueValuesMapping
 from ....common.warnings import DataValidityWarning
+import re
 
 
 class ChargeSection(PotSection):
@@ -14,12 +14,15 @@ class ChargeSection(PotSection):
 class ChargesSection(RepeatedPotentialSection):
 
   def _set_from_atoms(self, atoms, write_io_data):
-      def data(i, site):
-          return {
-              'TYPE': i + 1,
-              'DATA': site.charge
-          }
-      return [ data(i, site) for site,i in write_io_data.sites.unique_items() if site.potential is not None ]
+      self.clear()
+      for site, i in write_io_data.sites.unique_items():
+          if not site.charge:
+              return
+      for site, i in write_io_data.sites.unique_items():
+          charge = self.add(i)
+          charge.TYPE = i
+          charge.DATA = site.charge.raw_value
+          charge.FULLPOT = ''
 
   def _update_atoms(self, atoms, read_io_data):
       if len(self):
@@ -39,9 +42,12 @@ class ChargeSectionDefinition(PotSectionDefinition):
       V = PotValueDefinition
       members = [
           V('TYPE', int),
-          V('DATA', NumpyArray(line_length=100, shape=(2,-1), ends_with=79 * '=', item_format='% .14E', indented=1),
+          V('DATA', NumpyArray(line_length=100, shape=(2,-1), ends_with=re.compile("\n(={79}|-{79})"),
+                               ends_with_str = "=" * 79, item_format='% .14E', indented=1),
                     name_in_grammar=False,
-           )
+           ),
+          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, include_ends_with=True),
+                    name_in_grammar=False),
       ]
       super().__init__(name, members, has_hidden_members=True, is_repeated=True, is_optional=True)
 
