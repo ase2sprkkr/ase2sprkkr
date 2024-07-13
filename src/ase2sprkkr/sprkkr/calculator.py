@@ -532,8 +532,6 @@ class SPRKKR(Calculator):
         def resolve_input_parameters(input_parameters, input_file, save_input):
             if input_parameters is None:
                 input_parameters=self.input_parameters
-            if task or options:
-                input_parameters = input_parameters.copy()
             if input_parameters:
                if isinstance(input_parameters, str):
                   if InputParameters.is_it_a_input_parameters_name(input_parameters):
@@ -543,8 +541,12 @@ class SPRKKR(Calculator):
                        save_input = False
                        input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
                      input_parameters = InputParameters.from_file(input_parameters)
+               elif task or options:
+                    input_parameters = input_parameters.copy()
             else:
                input_parameters = self.input_parameters
+               if task or options:
+                   input_parameters = input_parameters.copy()
 
             if not input_parameters.CONTROL.POTFIL.result and not potential and not potential_file:
                 raise ValueError("Potential in the input parameters is not set and no Atoms nor Potential object have been given.")
