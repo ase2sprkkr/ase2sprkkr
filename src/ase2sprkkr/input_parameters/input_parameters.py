@@ -217,7 +217,7 @@ class InputParameters(ConfigurationFile):
              stdin = input_file
         return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or InputParameters.default_sprkkr_executable_suffix attribute should be set?\n' + \
+        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or ase2sprkkr.config.sprkkr_executable_suffix variable should be set?\n' + \
                      e.strerror
         raise
       finally:
