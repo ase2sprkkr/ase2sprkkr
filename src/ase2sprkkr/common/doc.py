@@ -3,6 +3,7 @@ Functionality for enriching docstrings.
 """
 import importlib
 
+
 def verbatim(s):
     return '.. code-block:: text\n\n ' + s.replace('\n', '\n ')
 
@@ -14,7 +15,7 @@ def process_input_parameters_definition(name):
     """
     m=importlib.import_module(name)
     ip = m.input_parameters
-    m.__doc__ = m.__doc__ +  """\n
+    m.__doc__ = m.__doc__ + """\n
 
 **Description of the sections and parameters**
 
