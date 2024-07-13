@@ -51,7 +51,7 @@ class SPRKKR(Calculator):
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
                  print_output=None,
-                 mpi=Optional[False],
+                 mpi:Optional[bool]=None,
                  input_parameters=None, options={}, potential=None,
                  executable_suffix=True,
                  empty_spheres : Optional[Union[str, bool, Dict]] = None,
