@@ -484,7 +484,9 @@ class SPRKKR(Calculator):
             potential - potential object (to be updated by atoms)
             """
             save_input = None
-            potential = potential if potential is not None else self.potential
+            if potential is None and atoms is None:
+                potential = self.potential
+
             if potential is None:
                potential = bool(atoms or self._atoms)
             # this is a bit tricky - both of them must not be defined - however, there is a mess with default values
