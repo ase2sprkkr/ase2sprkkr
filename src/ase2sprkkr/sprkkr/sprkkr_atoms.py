@@ -350,6 +350,9 @@ class SPRKKRAtoms(Atoms):
           self._potential = potentials.Potential.from_atoms(self)
        return self._potential
 
+   def has_potential(self):
+       return self._potential is not None
+
    def reset_sprkkr_potential(self):
        for i in self.sites:
            i.reset()

@@ -552,10 +552,15 @@ class SPRKKR(Calculator):
             if empty_spheres is None:
                empty_spheres = config.empty_spheres
             if empty_spheres == 'auto':
-               empty_spheres = True
-               for site in atoms.sites:
-                   if site.is_vacuum():
-                      empty_spheres = False
+               empty_spheres = atoms is not None and (
+                   not atoms.has_potential() or
+                   atoms.potential.SCF_INFO.SCFSTATUS() == 'START'
+               )
+               if empty_spheres:
+                   for site in atoms.sites:
+                       if site.is_vacuum():
+                           empty_spheres = False
+                           break
             if empty_spheres:
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
