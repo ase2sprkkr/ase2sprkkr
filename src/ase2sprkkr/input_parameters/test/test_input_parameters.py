@@ -571,6 +571,16 @@ XSITES NR=3 FLAG
     self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2]), 'C':77}}, ip.to_dict())
     self.assertEqual('ENERGY A=3 B=2 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
 
+  def test_copy(self):
+    ipd = cd.InputParametersDefinition.definition_from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('B', 2, is_repeated = True),
+        V('C', 3) ]})
+    ipd2 = ipd.copy()
+    ipd2['ENERGY']['A'].default_value = 5
+    assert ipd['ENERGY']['A'].default_value == 1
+
   def test_switch(self):
     assertParse = self.assertParse
     assertNotValid = self.assertNotValid
