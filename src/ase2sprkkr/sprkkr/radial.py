@@ -66,6 +66,10 @@ class RadialValue:
   def __call__(self, at):
       return self.interpolate(at)
 
+  @property
+  def raw_value(self):
+      return self._value
+
 
 class RadialCharge(RadialValue):
       pass
