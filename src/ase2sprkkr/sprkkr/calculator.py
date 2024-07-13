@@ -522,7 +522,7 @@ class SPRKKR(Calculator):
                    # the potential will not be saved
                    potential_file = potential
                    potential = False
-                   save_input = True
+                   save_input = 'check_potential'
 
             if isinstance(potential, Potential):
               atoms = potential.atoms
@@ -539,10 +539,13 @@ class SPRKKR(Calculator):
                   if InputParameters.is_it_a_input_parameters_name(input_parameters):
                      input_parameters = InputParameters.create_input_parameters(input_parameters)
                   else:
+                     ip = InputParameters.from_file(input_parameters)
+                     if save_input == 'check_potential':
+                         save_input = ip.CONTROL.POTFIL.result != potential_file
                      if not save_input and not options and not task and not potential and not input_file:
                        save_input = False
                        input_file = makepath(input_parameters, "'{path}' is not a task file nor a known name of input_parameters.")
-                     input_parameters = InputParameters.from_file(input_parameters)
+                     input_parameters = ip
                elif task or options:
                     input_parameters = input_parameters.copy()
             else:
@@ -645,7 +648,6 @@ class SPRKKR(Calculator):
 
         # ALL auxiliary procedures defined
         # HERE starts the execution
-
         potential, atoms, potential_file, save_input = \
                     resolve_potential_and_atoms(potential, atoms, potential_file)
         input_parameters, input_file, save_input = \
