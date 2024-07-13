@@ -1,0 +1,36 @@
+ChargeMomentsSection
+====================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.charge_moments
+
+.. autoclass:: ChargeMomentsSection
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSection
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

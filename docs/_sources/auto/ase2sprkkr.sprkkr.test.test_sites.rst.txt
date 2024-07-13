@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_sites**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_sites.SitesTest 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_sites.TestSites 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_sites**
       :toctree:
       :template: custom-class-template.rst
    
-      SitesTest
+      TestSites
    
    
 

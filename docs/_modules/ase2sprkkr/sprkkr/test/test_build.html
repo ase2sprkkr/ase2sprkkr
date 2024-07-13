@@ -94,16 +94,16 @@
    <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">..build</span> <span class="kn">import</span> <span class="n">semiinfinite_system</span>
-<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">..build</span> <span class="kn">import</span> <span class="n">semiinfinite_system</span>  <span class="c1"># NOQA E402</span>
+<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>               <span class="c1"># NOQA E402</span>
 
-<div class="viewcode-block" id="BuildTest">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_build.BuildTest.html#ase2sprkkr.sprkkr.test.test_build.BuildTest">[docs]</a>
-<span class="k">class</span> <span class="nc">BuildTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="BuildTest.test">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_build.BuildTest.html#ase2sprkkr.sprkkr.test.test_build.BuildTest.test">[docs]</a>
+<div class="viewcode-block" id="TestBuild">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_build.TestBuild.html#ase2sprkkr.sprkkr.test.test_build.TestBuild">[docs]</a>
+<span class="k">class</span> <span class="nc">TestBuild</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestBuild.test">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_build.TestBuild.html#ase2sprkkr.sprkkr.test.test_build.TestBuild.test">[docs]</a>
     <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">atoms</span><span class="o">=</span><span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;LiCl&#39;</span><span class="p">,</span> <span class="s1">&#39;rocksalt&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">5.64</span><span class="p">)</span>
         <span class="n">si</span><span class="o">=</span><span class="n">semiinfinite_system</span><span class="p">(</span><span class="n">atoms</span><span class="p">,(</span><span class="mf">4.2</span><span class="p">))</span>
@@ -111,9 +111,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">si</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s1">&#39;Li&#39;</span><span class="p">),</span> <span class="mi">6</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">si</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s1">&#39;Cl&#39;</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">si</span><span class="o">.</span><span class="n">symbols</span> <span class="o">==</span> <span class="s1">&#39;X&#39;</span><span class="p">),</span> <span class="mi">11</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">si</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="p">(</span><span class="n">atoms</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">))</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">si</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="p">(</span><span class="n">atoms</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">))</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span></div>
 </div>
-
 
 </pre></div>
 

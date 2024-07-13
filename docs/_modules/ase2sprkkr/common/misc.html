@@ -102,6 +102,7 @@
 <span class="sd">    the number of unique objects in the list is retained &quot;&quot;&quot;</span>
 
     <span class="n">mp</span> <span class="o">=</span> <span class="p">{}</span>
+
     <span class="k">def</span> <span class="nf">cpy</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">mp</span><span class="p">:</span>
            <span class="k">return</span> <span class="n">mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -109,6 +110,7 @@
         <span class="k">return</span> <span class="n">mp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="p">[</span> <span class="n">cpy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">src</span> <span class="p">]</span></div>
+
 
 
 <span class="k">try</span><span class="p">:</span>
@@ -136,6 +138,7 @@
     <span class="c1"># If no item was found return None, other return types might be a problem due to</span>
     <span class="c1"># numbas type inference.</span>
 
+
 <div class="viewcode-block" id="as_integer">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.as_integer.html#ase2sprkkr.common.misc.as_integer">[docs]</a>
 <span class="k">def</span> <span class="nf">as_integer</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -152,6 +155,7 @@
     <span class="k">return</span> <span class="n">operator</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="dict_first_item">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.dict_first_item.html#ase2sprkkr.common.misc.dict_first_item">[docs]</a>
 <span class="k">def</span> <span class="nf">dict_first_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -161,6 +165,16 @@
 <span class="sd">    4</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="p">))]</span></div>
+
+
+
+<div class="viewcode-block" id="first_non_none">
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.misc.first_non_none.html#ase2sprkkr.common.misc.first_non_none">[docs]</a>
+<span class="k">def</span> <span class="nf">first_non_none</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 </pre></div>
 

@@ -93,9 +93,10 @@
                                    <span class="n">PotValueDefinition</span>
 <span class="kn">from</span> <span class="nn">...potential_sections</span> <span class="kn">import</span> <span class="n">PotentialSection</span>
 
-<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">DefKeyword</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">....common.grammar_types</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Table</span>
 <span class="kn">from</span> <span class="nn">....sprkkr.sprkkr_atoms</span> <span class="kn">import</span> <span class="n">SPRKKRAtoms</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 
 <div class="viewcode-block" id="SitesSection">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSection.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSection">[docs]</a>
@@ -128,6 +129,7 @@
 </div>
 
 
+
 <div class="viewcode-block" id="SitesSectionDefinition">
 <a class="viewcode-back" href="../../../../../auto/ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition.html#ase2sprkkr.potentials.definitions.sections.sites.SitesSectionDefinition">[docs]</a>
 <span class="k">class</span> <span class="nc">SitesSectionDefinition</span><span class="p">(</span><span class="n">PotSectionDefinition</span><span class="p">):</span>
@@ -138,7 +140,7 @@
       <span class="n">V</span> <span class="o">=</span> <span class="n">PotValueDefinition</span>
       <span class="n">members</span> <span class="o">=</span> <span class="p">[</span>
           <span class="n">V</span><span class="p">(</span><span class="s1">&#39;CARTESIAN&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">fixed_value</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-          <span class="c1">#V(&#39;BASSCALE&#39;, Array(float, length=3), fixed_value=[1.,1.,1.]),</span>
+          <span class="c1"># V(&#39;BASSCALE&#39;, Array(float, length=3), fixed_value=[1.,1.,1.]),</span>
           <span class="n">V</span><span class="p">(</span><span class="s1">&#39;BASSCALE&#39;</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">],</span> <span class="nb">type</span><span class="o">=</span><span class="n">Array</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                   <span class="n">after_convert</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">))</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">v</span><span class="o">==</span><span class="mf">0.</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">,</span>
                   <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">v</span><span class="o">!=</span><span class="mf">0.</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;BASSCALE values should not be zero (with the exception that [0,0,0] is considered as valid and replaced by [1,1,1]&quot;</span>
@@ -149,6 +151,7 @@
 
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">SitesSection</span></div>
+
 
 
 <span class="n">section</span> <span class="o">=</span> <span class="n">SitesSectionDefinition</span>

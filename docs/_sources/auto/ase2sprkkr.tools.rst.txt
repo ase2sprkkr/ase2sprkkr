@@ -38,8 +38,8 @@ Full name: **ase2sprkkr.tools**
      :template: custom-module-template.rst
      :recursive:
   
-     ase2sprkkr.tools.ase2sprkkr
      ase2sprkkr.tools.shared
+     ase2sprkkr.tools.ase2sprkkr
      ase2sprkkr.tools.test
      ase2sprkkr.tools.commands
   

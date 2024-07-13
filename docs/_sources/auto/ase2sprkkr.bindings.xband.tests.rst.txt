@@ -1,0 +1,44 @@
+tests
+=====
+
+Full name: **ase2sprkkr.bindings.xband.tests**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.xband.tests
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.bindings.xband.tests.init_tests
+     ase2sprkkr.bindings.xband.tests.test_spheres
+  
+  

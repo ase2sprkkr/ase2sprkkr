@@ -1,0 +1,50 @@
+test\_spglib
+============
+
+Full name: **ase2sprkkr.bindings.tests.test\_spglib**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.tests.test_spglib.TestSpgilib 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.tests.test_spglib
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TestSpgilib
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

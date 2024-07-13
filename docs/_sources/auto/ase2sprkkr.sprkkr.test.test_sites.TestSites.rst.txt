@@ -1,0 +1,36 @@
+TestSites
+=========
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.test.test_sites
+
+.. autoclass:: TestSites
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.test.test_sites.TestSites
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

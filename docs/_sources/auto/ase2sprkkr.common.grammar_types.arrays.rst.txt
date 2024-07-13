@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.grammar\_types.arrays**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.grammar_types.arrays.Array  ase2sprkkr.common.grammar_types.arrays.Complex  ase2sprkkr.common.grammar_types.arrays.Sequence  ase2sprkkr.common.grammar_types.arrays.SetOf  ase2sprkkr.common.grammar_types.arrays.Table 
+.. inheritance-diagram::  ase2sprkkr.common.grammar_types.arrays.Array  ase2sprkkr.common.grammar_types.arrays.Complex  ase2sprkkr.common.grammar_types.arrays.Sequence  ase2sprkkr.common.grammar_types.arrays.SetOf  ase2sprkkr.common.grammar_types.arrays.SpecialColumn  ase2sprkkr.common.grammar_types.arrays.Table 
       :parts: 1
 
 |
@@ -49,6 +49,7 @@ Full name: **ase2sprkkr.common.grammar\_types.arrays**
       Complex
       Sequence
       SetOf
+      SpecialColumn
       Table
    
    

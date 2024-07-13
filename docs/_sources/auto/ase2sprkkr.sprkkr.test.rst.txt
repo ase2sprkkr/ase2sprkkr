@@ -40,11 +40,11 @@ Full name: **ase2sprkkr.sprkkr.test**
   
      ase2sprkkr.sprkkr.test.init_tests
      ase2sprkkr.sprkkr.test.test_build
+     ase2sprkkr.sprkkr.test.test_sites
      ase2sprkkr.sprkkr.test.test_sprkkr_atoms
      ase2sprkkr.sprkkr.test.test_sysfile
      ase2sprkkr.sprkkr.test.test_arpes
      ase2sprkkr.sprkkr.test.test_calculator
      ase2sprkkr.sprkkr.test.test_occupation
-     ase2sprkkr.sprkkr.test.test_sites
   
   

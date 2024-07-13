@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.test.test\_grammar\_types**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.test.test_grammar_types.GrammarTest 
+.. inheritance-diagram::  ase2sprkkr.common.test.test_grammar_types.TestGrammar 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.common.test.test\_grammar\_types**
       :toctree:
       :template: custom-class-template.rst
    
-      GrammarTest
+      TestGrammar
    
    
 

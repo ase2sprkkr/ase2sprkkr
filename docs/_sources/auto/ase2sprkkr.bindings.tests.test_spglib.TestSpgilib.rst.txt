@@ -1,0 +1,36 @@
+TestSpgilib
+===========
+
+
+.. currentmodule:: ase2sprkkr.bindings.tests.test_spglib
+
+.. autoclass:: TestSpgilib
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.tests.test_spglib.TestSpgilib
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

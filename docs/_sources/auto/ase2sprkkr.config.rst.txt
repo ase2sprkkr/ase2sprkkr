@@ -11,6 +11,15 @@ Full name: **ase2sprkkr.config**
 
    
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      calculator_parameters
+      sprkkr_executable_suffix
+   
    
 
 

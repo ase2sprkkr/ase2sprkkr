@@ -1,0 +1,36 @@
+TestsArgAction
+==============
+
+
+.. currentmodule:: ase2sprkkr.tools.commands.info
+
+.. autoclass:: TestsArgAction
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.tools.commands.info.TestsArgAction
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

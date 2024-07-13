@@ -88,9 +88,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.test.test_arpes</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ase.atoms</span> <span class="kn">import</span> <span class="n">Atoms</span>
 
 
@@ -105,38 +103,13 @@
 <span class="kn">from</span> <span class="nn">...potentials.potentials</span> <span class="kn">import</span> <span class="n">Potential</span>  <span class="c1"># NOQA</span>
 
 
-<div class="viewcode-block" id="CalculatorTest">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest">[docs]</a>
-<span class="k">class</span> <span class="nc">CalculatorTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCalculator">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_arpes.TestCalculator.html#ase2sprkkr.sprkkr.test.test_arpes.TestCalculator">[docs]</a>
+<span class="k">class</span> <span class="nc">TestCalculator</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
- <span class="n">print_output</span> <span class="o">=</span> <span class="s1">&#39;-v&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span> <span class="ow">or</span> <span class="s1">&#39;--verbose&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
- <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
- <span class="n">_calc_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-     <span class="n">directory</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">input_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.inp&#39;</span><span class="p">,</span>
-     <span class="n">output_file</span> <span class="o">=</span> <span class="s1">&#39;output_test_calc.out&#39;</span><span class="p">,</span>
-     <span class="n">potential_file</span> <span class="o">=</span><span class="s1">&#39;output_test_calc.pot&#39;</span><span class="p">,</span>
-     <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span>
-     <span class="n">mpi</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span><span class="p">,</span>
-     <span class="n">empty_spheres</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
- <span class="p">)</span>
-
-<div class="viewcode-block" id="CalculatorTest.calc_args">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.calc_args">[docs]</a>
- <span class="nd">@classmethod</span>
- <span class="k">def</span> <span class="nf">calc_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-      <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_calc_args</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">kwargs</span></div>
-
-
-<div class="viewcode-block" id="CalculatorTest.run_sprkkr">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.run_sprkkr">[docs]</a>
- <span class="k">def</span> <span class="nf">run_sprkkr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DO_NOT_RUN_SPRKKR&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span></div>
-
-
-<div class="viewcode-block" id="CalculatorTest.test_run">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.html#ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest.test_run">[docs]</a>
- <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCalculator.test_run">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_arpes.TestCalculator.html#ase2sprkkr.sprkkr.test.test_arpes.TestCalculator.test_run">[docs]</a>
+ <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_sprkkr</span><span class="p">():</span>
           <span class="k">return</span>
 
@@ -146,10 +119,10 @@
       <span class="n">xx</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">NITER</span><span class="o">=</span><span class="mi">1</span>
       <span class="n">xx</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;NE&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
       <span class="n">xx</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;NKTAB&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-      <span class="n">out</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_args</span><span class="p">())</span>
       <span class="n">calc</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">calculator</span>
       <span class="n">calc</span><span class="o">.</span><span class="n">change_task</span><span class="p">(</span><span class="s1">&#39;arpes&#39;</span><span class="p">)</span>
-      <span class="n">out2</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+      <span class="n">out2</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">calc_args</span><span class="p">())</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">out2</span><span class="o">.</span><span class="n">spc</span><span class="o">.</span><span class="n">ENERGY</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span></div>
 </div>
 

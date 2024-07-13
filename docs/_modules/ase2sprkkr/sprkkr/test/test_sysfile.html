@@ -88,29 +88,31 @@
            <div itemprop="articleBody">
              
   <h1>Source code for ase2sprkkr.sprkkr.test.test_sysfile</h1><div class="highlight"><pre>
-<span></span><span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
+<span></span><span class="kn">from</span> <span class="nn">ase.spacegroup</span> <span class="kn">import</span> <span class="n">crystal</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="k">if</span> <span class="n">__package__</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">.init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="k">else</span><span class="p">:</span>
    <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">from</span> <span class="nn">ase.spacegroup</span> <span class="kn">import</span> <span class="n">crystal</span>
-<span class="kn">from</span> <span class="nn">..sysfile</span> <span class="kn">import</span> <span class="n">sysfile_content</span><span class="p">,</span> <span class="n">write_sysfile</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">..sysfile</span> <span class="kn">import</span> <span class="n">sysfile_content</span><span class="p">,</span> <span class="n">write_sysfile</span>  <span class="c1"># NOQA: E402</span>
 
-<div class="viewcode-block" id="SysfileTest">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest.html#ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest">[docs]</a>
-<span class="k">class</span> <span class="nc">SysfileTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="SysfileTest.test">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest.html#ase2sprkkr.sprkkr.test.test_sysfile.SysfileTest.test">[docs]</a>
+<div class="viewcode-block" id="TestSysfile">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.html#ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile">[docs]</a>
+<span class="k">class</span> <span class="nc">TestSysfile</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestSysfile.test">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.html#ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.test">[docs]</a>
     <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="mf">4.6</span>
         <span class="n">c</span> <span class="o">=</span> <span class="mf">2.95</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">crystal</span><span class="p">([</span><span class="s1">&#39;Ti&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">],</span> <span class="n">basis</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)],</span>
                     <span class="n">spacegroup</span><span class="o">=</span><span class="mi">136</span><span class="p">,</span> <span class="n">cellpar</span><span class="o">=</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
-        <span class="c1">#atoms = bulk(&#39;Ag&#39;)</span>
+        <span class="c1"># atoms = bulk(&#39;Ag&#39;)</span>
         <span class="n">x</span><span class="o">=</span><span class="n">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
         <span class="n">y</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">system data-file created by python ase2sprkkr</span>

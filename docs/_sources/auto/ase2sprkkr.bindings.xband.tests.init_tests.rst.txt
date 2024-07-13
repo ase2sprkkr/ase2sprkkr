@@ -1,0 +1,65 @@
+init\_tests
+===========
+
+Full name: **ase2sprkkr.bindings.xband.tests.init\_tests**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.bindings.xband.tests.init_tests.TestCase  ase2sprkkr.bindings.xband.tests.init_tests.extdict 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.bindings.xband.tests.init_tests
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      arr_testfce
+      assertDictEqual
+      assertListEqual
+      assert_almost_equals
+      assert_equals
+      patch_package
+      testfce
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TestCase
+      extdict
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

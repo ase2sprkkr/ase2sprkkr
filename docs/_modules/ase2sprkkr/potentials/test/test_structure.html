@@ -94,13 +94,13 @@
    <span class="kn">from</span> <span class="nn">init_tests</span> <span class="kn">import</span> <span class="n">TestCase</span><span class="p">,</span> <span class="n">patch_package</span>
 <span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span> <span class="o">=</span> <span class="n">patch_package</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">..definitions.sections.lattice</span> <span class="kn">import</span> <span class="n">LatticeSection</span><span class="p">,</span> <span class="n">LatticeSectionDefinition</span>
-<span class="kn">from</span> <span class="nn">..definitions.sections.sites</span> <span class="kn">import</span> <span class="n">SitesSectionDefinition</span>
-<span class="kn">from</span> <span class="nn">..potentials</span> <span class="kn">import</span> <span class="n">Potential</span>
-<span class="kn">from</span> <span class="nn">..potential_definitions</span> <span class="kn">import</span> <span class="n">PotentialDefinition</span>
-<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
-<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">..definitions.sections.lattice</span> <span class="kn">import</span> <span class="n">LatticeSectionDefinition</span>  <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">..definitions.sections.sites</span> <span class="kn">import</span> <span class="n">SitesSectionDefinition</span>      <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">..potentials</span> <span class="kn">import</span> <span class="n">Potential</span>                                   <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">..potential_definitions</span> <span class="kn">import</span> <span class="n">PotentialDefinition</span>              <span class="c1"># NOQA: E402</span>
+<span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>                                           <span class="c1"># NOQA: E402</span>
+<span class="kn">import</span> <span class="nn">io</span>                                                            <span class="c1"># NOQA: E402</span>
+
 
 <div class="viewcode-block" id="TestStructure">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.potentials.test.test_structure.TestStructure.html#ase2sprkkr.potentials.test.test_structure.TestStructure">[docs]</a>
@@ -124,14 +124,11 @@
        <span class="n">s</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
        <span class="n">out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_from_file</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 
-       <span class="n">a</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">LATTICE</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-       <span class="n">b</span><span class="o">=</span><span class="n">sec</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
-
        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">almost_equal_precision</span><span class="p">(</span><span class="n">decimal</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">LATTICE</span><span class="o">.</span><span class="n">as_dict</span><span class="p">(),</span> <span class="n">sec</span><span class="o">.</span><span class="n">as_dict</span><span class="p">())</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span>
+       <span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
        <span class="n">new_cell</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">cell</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">new_cell</span><span class="p">)</span>
+       <span class="k">assert</span> <span class="n">new_cell</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">cell</span> <span class="ow">is</span> <span class="n">new_cell</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cell</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span> <span class="n">new_cell</span> <span class="o">*</span> <span class="mi">1</span><span class="p">)</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span></div>

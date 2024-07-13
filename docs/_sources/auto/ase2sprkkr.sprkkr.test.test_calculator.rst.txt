@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_calculator**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_calculator.CalculatorTest 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_calculator.TestCalculator 
       :parts: 1
 
 |
@@ -43,7 +43,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_calculator**
       :toctree:
       :template: custom-class-template.rst
    
-      CalculatorTest
+      TestCalculator
    
    
 

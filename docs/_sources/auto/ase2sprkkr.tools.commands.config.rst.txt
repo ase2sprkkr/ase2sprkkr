@@ -1,0 +1,43 @@
+config
+======
+
+Full name: **ase2sprkkr.tools.commands.config**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.tools.commands.config
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :template: custom-base-template.rst
+   
+      parser
+      run
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

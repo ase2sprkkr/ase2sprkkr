@@ -258,6 +258,7 @@
        <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
            <span class="n">tags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spositions</span><span class="p">))</span>
        <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+       <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">spacegroup</span><span class="p">,</span> <span class="n">sg_dataset</span><span class="p">,</span> <span class="n">equivalent_sites</span></div>
 
 
@@ -332,7 +333,7 @@
                   <span class="k">else</span><span class="p">:</span>
                       <span class="k">yield</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">val</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">val</span><span class="p">)</span>
             <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gen_occ</span><span class="p">())</span>
-    <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+    <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">equivalent_sites</span></div>
 
 </pre></div>

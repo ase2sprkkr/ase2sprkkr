@@ -140,9 +140,39 @@
 
 
 
+<div class="viewcode-block" id="FixedPointNumber">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.FixedPointNumber">[docs]</a>
+<span class="k">class</span> <span class="nc">FixedPointNumber</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
+
+  <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">int</span>
+
+<div class="viewcode-block" id="FixedPointNumber.convert">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.FixedPointNumber.convert">[docs]</a>
+  <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">:</span>
+          <span class="kn">from</span> <span class="nn">.warnings</span> <span class="kn">import</span> <span class="n">SuspiciousValueWarning</span>
+          <span class="n">SuspiciousValueWarning</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;An attemtp to set &lt;float&gt; value using an &lt;integer&gt;. I will do a conversion for you.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+              <span class="n">stacklevel</span><span class="o">=</span><span class="mi">6</span>
+          <span class="p">)</span>
+          <span class="n">value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+      <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FixedPointNumber._validate">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.FixedPointNumber.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.FixedPointNumber._validate">[docs]</a>
+  <span class="nd">@add_to_parent_validation</span>
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="o">=</span><span class="s1">&#39;set&#39;</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+          <span class="k">return</span> <span class="s2">&quot;A float value is not allowed for integer.&quot;</span>
+      <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">why</span><span class="p">)</span></div>
+</div>
+
+
+
 <div class="viewcode-block" id="Unsigned">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Unsigned.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Unsigned">[docs]</a>
-<span class="k">class</span> <span class="nc">Unsigned</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Unsigned</span><span class="p">(</span><span class="n">FixedPointNumber</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Unsigned integer (zero is possible) &quot;&quot;&quot;</span>
 
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">ppc</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -160,7 +190,6 @@
     <span class="k">return</span> <span class="s1">&#39;&lt;+int&gt;&#39;</span></div>
 
 
-  <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">int</span>
   <span class="n">datatype_name</span> <span class="o">=</span> <span class="s1">&#39;unsigned integer&#39;</span></div>
 
 
@@ -194,7 +223,7 @@
 
 <div class="viewcode-block" id="Integer">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Integer">[docs]</a>
-<span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">Number</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="n">FixedPointNumber</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Signed integer &quot;&quot;&quot;</span>
 
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">ppc</span><span class="o">.</span><span class="n">signed_integer</span><span class="p">)</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -203,9 +232,7 @@
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.grammar_types.basic.Integer.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Integer.grammar_name">[docs]</a>
   <span class="k">def</span> <span class="nf">grammar_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="s1">&#39;&lt;int&gt;&#39;</span></div>
-
-
-  <span class="n">numpy_type</span> <span class="o">=</span> <span class="nb">int</span></div>
+</div>
 
 
 

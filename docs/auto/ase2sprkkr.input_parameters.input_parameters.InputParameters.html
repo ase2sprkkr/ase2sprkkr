@@ -65,17 +65,17 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.html">input_parameters</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">InputParameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters.InputSection.html">InputSection</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.input_parameters_definitions.html">input_parameters_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.html">definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.input_parameters.test.html">test</a></li>
 </ul>
@@ -149,23 +149,22 @@ which then parse the output of the task.</p>
 <dd><p>Create the container and its members, according to the definition</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.default_sprkkr_executable_suffix">
-<span class="sig-name descname"><span class="pre">default_sprkkr_executable_suffix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'8.6'</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.default_sprkkr_executable_suffix" title="Link to this definition"></a></dt>
-<dd><p>This suffix is (if not stated otherwise) appended to the executable name.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.resolve_executable_suffix">
 <span class="sig-name descname"><span class="pre">resolve_executable_suffix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">postfix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/input_parameters/input_parameters.html#InputParameters.resolve_executable_suffix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.resolve_executable_suffix" title="Link to this definition"></a></dt>
 <dd><p>” Return the postfix, that is appended after the name of SPR-KKR executable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>postfix</strong> (<em>str</em><em> | </em><em>bool</em>) – <ul class="simple">
+<dd class="field-odd"><p><strong>postfix</strong> (<em>str</em><em> | </em><em>bool</em>) – <ul>
 <li><p>If str is given, it is left as is.</p></li>
-<li><dl class="simple">
-<dt>If True, return the default value:</dt><dd><p>default_sprkkr_executable_suffix
-(content of SPRKKR_EXECUTABLE_SUFFIX or a user_defined_value)</p>
+<li><dl>
+<dt>If True, return the default value:</dt><dd><blockquote>
+<div><p>config.sprkkr_executable_suffix</p>
+</div></blockquote>
+<dl class="simple">
+<dt>(content of SPRKKR_EXECUTABLE_SUFFIX env variable</dt><dd><p>or a user_defined_value)</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </li>
@@ -339,7 +338,7 @@ Default None means the directory, where the file is</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.input_parameters.input_parameters.InputParameters.definitions">
-<span class="sig-name descname"><span class="pre">definitions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ARPES':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'DOS':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'GILBERT':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'JXC':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'MARPES':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'PHAGEN':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;,</span> <span class="pre">'SCF':</span> <span class="pre">&lt;ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.definitions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">definitions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ARPES':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">arpes&gt;,</span> <span class="pre">'DOS':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">dos&gt;,</span> <span class="pre">'GILBERT':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">gilbert&gt;,</span> <span class="pre">'JXC':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">jxc&gt;,</span> <span class="pre">'MARPES':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">arpes&gt;,</span> <span class="pre">'PHAGEN':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">phagen&gt;,</span> <span class="pre">'SCF':</span> <span class="pre">&lt;INPUT</span> <span class="pre">PARAMETERS</span> <span class="pre">scf&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.input_parameters.input_parameters.InputParameters.definitions" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

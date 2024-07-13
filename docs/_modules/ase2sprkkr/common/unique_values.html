@@ -119,7 +119,11 @@
 <span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;UniqueValuesMapping: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+          <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalized</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span>
+      <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;UniqueValuesMapping: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
 <div class="viewcode-block" id="UniqueValuesMapping.__init__">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.common.unique_values.UniqueValuesMapping.html#ase2sprkkr.common.unique_values.UniqueValuesMapping.__init__">[docs]</a>

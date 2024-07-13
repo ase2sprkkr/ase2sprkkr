@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="version" href="ase2sprkkr.version.html" />
-    <link rel="prev" title="SpacegroupInfo" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html" /> 
+    <link rel="next" title="calculator_parameters" href="ase2sprkkr.config.calculator_parameters.html" />
+    <link rel="prev" title="version" href="ase2sprkkr.version.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -65,8 +65,12 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.calculator_parameters.html">calculator_parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.config.sprkkr_executable_suffix.html">sprkkr_executable_suffix</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.tools.html">tools</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
@@ -111,15 +115,27 @@
 <h1>config<a class="headerlink" href="#config" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.config</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.config">Default empty spheres value</p>
+<p id="module-ase2sprkkr.config">This module contains configuration, that could be changed, preferrably
+by .config/ase2sprkkr/__init__.py file</p>
+<p class="rubric">Module Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.config.calculator_parameters.html#ase2sprkkr.config.calculator_parameters" title="ase2sprkkr.config.calculator_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculator_parameters</span></code></a></p></td>
+<td><p>This suffix is appended (if not stated otherwise) the SPRKKR executable names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.config.sprkkr_executable_suffix.html#ase2sprkkr.config.sprkkr_executable_suffix" title="ase2sprkkr.config.sprkkr_executable_suffix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sprkkr_executable_suffix</span></code></a></p></td>
+<td><p>The executable to run MPI, given as list (with possible arguments).</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html" class="btn btn-neutral float-left" title="SpacegroupInfo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="ase2sprkkr.version.html" class="btn btn-neutral float-right" title="version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="ase2sprkkr.version.html" class="btn btn-neutral float-left" title="version" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.config.calculator_parameters.html" class="btn btn-neutral float-right" title="calculator_parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

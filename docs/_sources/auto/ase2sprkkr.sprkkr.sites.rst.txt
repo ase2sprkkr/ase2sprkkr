@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.sites**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.sites.Site 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.sites.Site  ase2sprkkr.sprkkr.sites.SiteType 
       :parts: 1
 
 |
@@ -36,6 +36,7 @@ Full name: **ase2sprkkr.sprkkr.sites**
       :template: custom-class-template.rst
    
       Site
+      SiteType
    
    
 

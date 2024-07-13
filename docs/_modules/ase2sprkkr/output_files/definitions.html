@@ -100,6 +100,7 @@
 <span class="kn">from</span> <span class="nn">...common.grammar_types.data</span> <span class="kn">import</span> <span class="n">RestOfTheFile</span>
 <span class="kn">import</span> <span class="nn">io</span>
 
+
 <div class="viewcode-block" id="UnknownDataValue">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.output_files.definitions.UnknownDataValue.html#ase2sprkkr.output_files.definitions.UnknownDataValue">[docs]</a>
 <span class="k">class</span> <span class="nc">UnknownDataValue</span><span class="p">(</span><span class="n">ConfigurationValue</span><span class="p">):</span>
@@ -109,7 +110,7 @@
   <span class="k">def</span> <span class="nf">as_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-          <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">)</span>
+          <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="p">)</span>
       <span class="k">return</span> <span class="n">out</span></div>
 </div>
 
@@ -134,7 +135,7 @@
   <span class="k">def</span> <span class="nf">definitions</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return all known definitions of the SPR-KKR output files &quot;&quot;&quot;</span>
       <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
-      <span class="k">for</span> <span class="n">imp</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">ispackage</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">__path__</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="vm">__name__</span><span class="o">+</span><span class="s1">&#39;.&#39;</span><span class="p">):</span>
+      <span class="k">for</span> <span class="n">imp</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">ispackage</span> <span class="ow">in</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">iter_modules</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">__path__</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">):</span>
            <span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
            <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span>
            <span class="n">out</span><span class="p">[</span><span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">mod</span>
@@ -175,10 +176,10 @@
          <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
              <span class="n">fname</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">name</span>
          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-             <span class="n">first_try</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+             <span class="n">first_try</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
          <span class="k">else</span><span class="p">:</span>
              <span class="n">first_try</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_try</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first_try</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
           <span class="n">first_try</span><span class="o">=</span><span class="p">[</span> <span class="n">first_try</span> <span class="p">]</span>
 
       <span class="n">first</span> <span class="o">=</span> <span class="kc">None</span>
@@ -188,7 +189,8 @@
              <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">first_try</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">try_only</span><span class="o">=</span><span class="n">first_try</span><span class="p">)</span>
          <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
              <span class="n">first</span> <span class="o">=</span> <span class="n">e</span>
-         <span class="k">if</span> <span class="n">out</span><span class="p">:</span> <span class="k">return</span> <span class="n">out</span>
+         <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+             <span class="k">return</span> <span class="n">out</span>
       <span class="k">else</span><span class="p">:</span>
          <span class="n">last</span> <span class="o">=</span> <span class="kc">None</span>
       <span class="k">for</span> <span class="n">ext</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">definitions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -210,6 +212,7 @@
               <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Can not parse file: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
       <span class="k">raise</span> <span class="n">first</span> <span class="ow">or</span> <span class="n">last</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="CommonOutputFile">
@@ -245,6 +248,7 @@
         <span class="nb">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">site_type_index</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ORBITALS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TYPES</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s1">&#39;IQAT&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="Arithmetic">
@@ -316,8 +320,8 @@
 
 
 
-<span class="c1">#at last, import this file that need this module</span>
-<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">output_files_definitions</span>
+<span class="c1"># at last, import this file that need this module</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">output_files_definitions</span>   <span class="c1"># NOQA E402</span>
 </pre></div>
 
            </div>

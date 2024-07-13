@@ -97,6 +97,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">pkgutil</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
@@ -107,6 +108,7 @@
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_class_property</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">config</span>
 
 
 <div class="viewcode-block" id="InputSection">
@@ -127,9 +129,6 @@
 <span class="sd">  which then parse the output of the task.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-  <span class="n">default_sprkkr_executable_suffix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;SPRKKR_EXECUTABLE_SUFFIX&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="sd">&quot;&quot;&quot; This suffix is (if not stated otherwise) appended to the executable name. &quot;&quot;&quot;</span>
-
 <div class="viewcode-block" id="InputParameters.resolve_executable_suffix">
 <a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters.InputParameters.html#ase2sprkkr.input_parameters.input_parameters.InputParameters.resolve_executable_suffix">[docs]</a>
   <span class="k">def</span> <span class="nf">resolve_executable_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postfix</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">bool</span><span class="p">]):</span>
@@ -140,14 +139,15 @@
 <span class="sd">      postfix</span>
 <span class="sd">        - If str is given, it is left as is.</span>
 <span class="sd">        - If True, return the default value:</span>
-<span class="sd">                   default_sprkkr_executable_suffix</span>
-<span class="sd">                   (content of SPRKKR_EXECUTABLE_SUFFIX or a user_defined_value)</span>
+<span class="sd">                    config.sprkkr_executable_suffix</span>
+<span class="sd">                   (content of SPRKKR_EXECUTABLE_SUFFIX env variable</span>
+<span class="sd">                    or a user_defined_value)</span>
 <span class="sd">        - If False, return &#39;&#39;</span>
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
           <span class="k">return</span> <span class="s1">&#39;&#39;</span>
       <span class="k">if</span> <span class="n">postfix</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_sprkkr_executable_suffix</span>
+          <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">sprkkr_executable_suffix</span>
       <span class="k">return</span> <span class="n">postfix</span></div>
 
 
@@ -188,16 +188,20 @@
 <span class="sd">          E.g. [ &#39;mpirun&#39; ]</span>
 <span class="sd">          If no suitable runner is found, return False.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="n">auto</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s1">&#39;sched_getaffinity&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+          <span class="k">return</span> <span class="kc">None</span>
+
+      <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">mpi_runner</span><span class="p">:</span>
+          <span class="k">return</span> <span class="n">config</span><span class="o">.</span><span class="n">mpi_runner</span>
+
       <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
          <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;mpirun&#39;</span><span class="p">,</span> <span class="s1">&#39;mpirun.opmpirun&#39;</span><span class="p">,</span> <span class="s1">&#39;mpirun.mpich&#39;</span> <span class="p">]:</span>
              <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
                 <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span> <span class="o">=</span> <span class="p">[</span> <span class="n">r</span> <span class="p">]</span>
                 <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span>
          <span class="k">if</span> <span class="ow">not</span> <span class="n">auto</span><span class="p">:</span>
-             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span>
+             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No MPI runner found. Disabling MPI!!!&quot;</span><span class="p">)</span>
          <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span><span class="o">=</span><span class="kc">False</span>
-      <span class="k">if</span> <span class="n">auto</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">os</span><span class="p">,</span> <span class="s1">&#39;sched_getaffinity&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sched_getaffinity</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-          <span class="k">return</span> <span class="kc">None</span>
       <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_default_mpi_runner</span></div>
 
 
@@ -319,10 +323,11 @@
         <span class="n">mpi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpi_runner</span><span class="p">(</span><span class="n">mpi</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mpi</span><span class="p">:</span>
              <span class="n">executable</span> <span class="o">=</span> <span class="n">mpi</span> <span class="o">+</span> <span class="p">[</span> <span class="n">executable</span> <span class="o">+</span> <span class="s1">&#39;MPI&#39;</span><span class="p">,</span> <span class="n">input_file</span><span class="o">.</span><span class="n">name</span> <span class="p">]</span>
-             <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
+             <span class="n">stdin</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
              <span class="n">executable</span> <span class="o">=</span> <span class="p">[</span> <span class="n">executable</span> <span class="p">]</span>
-             <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span> <span class="o">=</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
+             <span class="n">stdin</span> <span class="o">=</span> <span class="n">input_file</span>
+        <span class="k">return</span> <span class="n">process</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">executable</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">stdin</span> <span class="o">=</span> <span class="n">stdin</span><span class="p">,</span> <span class="n">print_output</span><span class="o">=</span><span class="n">print_output</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span> <span class="n">input_file</span><span class="o">=</span><span class="n">input_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
       <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">e</span><span class="o">.</span><span class="n">strerror</span> <span class="o">=</span> <span class="s1">&#39;Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or InputParameters.default_sprkkr_executable_suffix attribute should be set?</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> \
                      <span class="n">e</span><span class="o">.</span><span class="n">strerror</span>

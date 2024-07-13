@@ -1,0 +1,52 @@
+charge\_moments
+===============
+
+Full name: **ase2sprkkr.potentials.definitions.sections.charge\_moments**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSection  ase2sprkkr.potentials.definitions.sections.charge_moments.ChargeMomentsSectionDefinition  ase2sprkkr.potentials.definitions.sections.charge_moments.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.charge_moments
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ChargeMomentsSection
+      ChargeMomentsSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

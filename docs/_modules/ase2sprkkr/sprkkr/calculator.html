@@ -120,6 +120,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">config</span> <span class="k">as</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">..common.misc</span> <span class="kn">import</span> <span class="n">first_non_none</span>
 
 
 <div class="viewcode-block" id="SPRKKR">
@@ -143,11 +144,11 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
                  <span class="n">input_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">potential_file</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">print_output</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span>
-                 <span class="n">mpi</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">print_output</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">mpi</span><span class="o">=</span><span class="n">Optional</span><span class="p">[</span><span class="kc">False</span><span class="p">],</span>
                  <span class="n">input_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">potential</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">executable_suffix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">empty_spheres</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
@@ -176,7 +177,7 @@
 <span class="sd">        potential_file: str or file or bool</span>
 <span class="sd">          The template for the potential file name (see the input_file parameter).</span>
 
-<span class="sd">        print_output: Union[bool,str]</span>
+<span class="sd">        print_output: Optional[Union[bool,str]]</span>
 <span class="sd">          Write the output of runned executables to stdout (in addition to the output file)?</span>
 <span class="sd">          (Default value for the calculator)</span>
 <span class="sd">          If print_output = &#39;info&#39;, only a few info lines per iteration will be printed.</span>
@@ -208,10 +209,10 @@
 <span class="sd">          when calculate or save_input</span>
 <span class="sd">          methods are called (either directly, or via atoms, input_parameters etc.)</span>
 
-<span class="sd">        executable_suffix: str or bool</span>
+<span class="sd">        executable_suffix: str or bool or None</span>
 <span class="sd">          String to be added to the runned executable. In some environments, the version</span>
 <span class="sd">          and the hostname is added to the name of sprkkr executables.</span>
-<span class="sd">          True: use InputParameters.default_sprkkr_executable_suffix, by default initialized</span>
+<span class="sd">          True: use config.sprkkr_executable_suffix, by default initialized</span>
 <span class="sd">                by SPRKKR_EXECUTABLE_SUFFIX environment variable</span>
 <span class="sd">          False: do not append anything (the same as &#39;&#39;)</span>
 
@@ -242,11 +243,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; The default postfix for the names of executables. False means no postfix, True means</span>
 <span class="sd">        to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. &quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">restart</span><span class="p">,</span>
-                         <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="n">directory</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">restart</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">directory</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_directory</span> <span class="o">=</span> <span class="n">directory</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">directory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">potential</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">mpi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpi</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">mpi</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">calculator_parameters</span><span class="p">[</span><span class="s1">&#39;mpi&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Default value for mpi parameter of calculate - it determine the way whether and how</span>
 <span class="sd">        the mpi is employed. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_file</span> <span class="o">=</span> <span class="n">input_file</span>
@@ -259,9 +263,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">input_parameters</span>
         <span class="k">if</span> <span class="n">options</span><span class="p">:</span>
-          <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;find&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">print_output</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">empty_spheres</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">unknown</span> <span class="o">=</span> <span class="s1">&#39;find&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_output</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">print_output</span><span class="p">,</span>
+                                           <span class="n">config</span><span class="o">.</span><span class="n">calculator_parameters</span><span class="p">[</span><span class="s1">&#39;print_output&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">first_non_none</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span>
+                                            <span class="n">config</span><span class="o">.</span><span class="n">calculator_parameters</span><span class="p">[</span><span class="s1">&#39;empty_spheres&#39;</span><span class="p">],</span>
+                                            <span class="s1">&#39;auto&#39;</span><span class="p">)</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; The default parameter for the print_output arguments of</span>
 <span class="sd">        :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the</span>
 <span class="sd">        runned SPR-KKR should be written to the standard ouput (in addition to the output file). &quot;&quot;&quot;</span>
@@ -655,13 +662,16 @@
         <span class="k">def</span> <span class="nf">resolve_empty_spheres</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">empty_spheres</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                <span class="n">empty_spheres</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_spheres</span>
-            <span class="k">if</span> <span class="n">empty_spheres</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-               <span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">empty_spheres</span>
             <span class="k">if</span> <span class="n">empty_spheres</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
-               <span class="n">empty_spheres</span> <span class="o">=</span> <span class="kc">True</span>
-               <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
-                   <span class="k">if</span> <span class="n">site</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">():</span>
-                      <span class="n">empty_spheres</span> <span class="o">=</span> <span class="kc">False</span>
+               <span class="n">empty_spheres</span> <span class="o">=</span> <span class="n">atoms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+                   <span class="ow">not</span> <span class="n">atoms</span><span class="o">.</span><span class="n">has_potential</span><span class="p">()</span> <span class="ow">or</span>
+                   <span class="n">atoms</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">SCF_INFO</span><span class="o">.</span><span class="n">SCFSTATUS</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;START&#39;</span>
+               <span class="p">)</span>
+               <span class="k">if</span> <span class="n">empty_spheres</span><span class="p">:</span>
+                   <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
+                       <span class="k">if</span> <span class="n">site</span><span class="o">.</span><span class="n">is_vacuum</span><span class="p">():</span>
+                           <span class="n">empty_spheres</span> <span class="o">=</span> <span class="kc">False</span>
+                           <span class="k">break</span>
             <span class="k">if</span> <span class="n">empty_spheres</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">empty_spheres</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
                     <span class="n">empty_spheres</span> <span class="o">=</span> <span class="p">{}</span>

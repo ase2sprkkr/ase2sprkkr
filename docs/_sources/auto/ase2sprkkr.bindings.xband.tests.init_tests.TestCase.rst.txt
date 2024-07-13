@@ -1,0 +1,36 @@
+TestCase
+========
+
+
+.. currentmodule:: ase2sprkkr.bindings.xband.tests.init_tests
+
+.. autoclass:: TestCase
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.xband.tests.init_tests.TestCase
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

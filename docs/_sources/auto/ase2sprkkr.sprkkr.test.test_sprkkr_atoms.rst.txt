@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_sprkkr\_atoms**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_sprkkr_atoms.SPRKKRAtomsTest 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_sprkkr_atoms.TestSPRKKRAtoms 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_sprkkr\_atoms**
       :toctree:
       :template: custom-class-template.rst
    
-      SPRKKRAtomsTest
+      TestSPRKKRAtoms
    
    
 

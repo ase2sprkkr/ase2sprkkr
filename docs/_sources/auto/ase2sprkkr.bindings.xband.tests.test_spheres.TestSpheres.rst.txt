@@ -1,0 +1,36 @@
+TestSpheres
+===========
+
+
+.. currentmodule:: ase2sprkkr.bindings.xband.tests.test_spheres
+
+.. autoclass:: TestSpheres
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.bindings.xband.tests.test_spheres.TestSpheres
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

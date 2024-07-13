@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Site" href="ase2sprkkr.sprkkr.sites.Site.html" />
-    <link rel="prev" title="Mesh" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html" /> 
+    <link rel="prev" title="write_sysfile" href="ase2sprkkr.sprkkr.sysfile.write_sysfile.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -65,27 +65,28 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.bindings.html">bindings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.version.html">version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.config.html">config</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.sprkkr.html">sprkkr</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.reference_systems.html">reference_systems</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.structure.html">structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.build.html">build</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_grammar_types.html">sprkkr_grammar_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atoms_region.html">atoms_region</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">sites</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html">Site</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html">SiteType</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
@@ -133,9 +134,10 @@
 <h1>sites<a class="headerlink" href="#sites" title="Link to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.sprkkr.sites</strong></p>
 <p class="rubric">Module class hierarchy</p>
-<div class="graphviz"><img src="../_images/inheritance-6916f3622b09272150d26a6fd27771751893e7c0.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sites.Site" usemap="#inheritance9d93f0f954" class="inheritance graphviz" /></div>
-<map id="inheritance9d93f0f954" name="inheritance9d93f0f954">
-<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" target="_top" title="Definition of an atomic site." alt="" coords="5,5,77,31"/>
+<div class="graphviz"><img src="../_images/inheritance-51e39f0cd91ab210ca2170205a0971d258f32693.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.sites.Site, ase2sprkkr.sprkkr.sites.SiteType" usemap="#inheritance66ed0e6153" class="inheritance graphviz" /></div>
+<map id="inheritance66ed0e6153" name="inheritance66ed0e6153">
+<area shape="rect" id="node1" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" target="_top" title="Site" alt="" coords="8,55,80,80"/>
+<area shape="rect" id="node2" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" target="_top" title="Definition of an atomic site." alt="" coords="5,5,83,31"/>
 </map><div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -144,7 +146,10 @@
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Site</span></code></a>(atoms, occupation[, reference_system, mesh])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.Site.html#ase2sprkkr.sprkkr.sites.Site" title="ase2sprkkr.sprkkr.sites.Site"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Site</span></code></a>(site_type)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html#ase2sprkkr.sprkkr.sites.SiteType" title="ase2sprkkr.sprkkr.sites.SiteType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SiteType</span></code></a>(atoms, occupation[, ...])</p></td>
 <td><p>Definition of an atomic site.</p></td>
 </tr>
 </tbody>
@@ -155,7 +160,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html" class="btn btn-neutral float-left" title="Mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.sprkkr.sysfile.write_sysfile.html" class="btn btn-neutral float-left" title="write_sysfile" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.sprkkr.sites.Site.html" class="btn btn-neutral float-right" title="Site" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

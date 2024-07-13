@@ -1,0 +1,36 @@
+extdict
+=======
+
+
+.. currentmodule:: ase2sprkkr.sprkkr.test.init_tests
+
+.. autoclass:: extdict
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.sprkkr.test.init_tests.extdict
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

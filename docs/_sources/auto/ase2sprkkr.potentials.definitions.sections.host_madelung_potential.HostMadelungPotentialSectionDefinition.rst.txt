@@ -1,0 +1,36 @@
+HostMadelungPotentialSectionDefinition
+======================================
+
+
+.. currentmodule:: ase2sprkkr.potentials.definitions.sections.host_madelung_potential
+
+.. autoclass:: HostMadelungPotentialSectionDefinition
+   :members:
+   :inherited-members:
+
+   .. rubric:: Class hierarchy
+   .. inheritance-diagram:: ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSectionDefinition
+      :parts: 2
+
+   |
+
+   .. rubric:: Constructor
+   
+   .. automethod:: __init__
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   

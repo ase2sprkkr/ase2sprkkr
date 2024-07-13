@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_arpes**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_arpes.CalculatorTest 
+.. inheritance-diagram::  ase2sprkkr.sprkkr.test.test_arpes.TestCalculator 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.sprkkr.test.test\_arpes**
       :toctree:
       :template: custom-class-template.rst
    
-      CalculatorTest
+      TestCalculator
    
    
 

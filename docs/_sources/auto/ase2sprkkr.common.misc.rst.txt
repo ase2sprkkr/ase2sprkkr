@@ -25,6 +25,7 @@ Full name: **ase2sprkkr.common.misc**
       as_integer
       copy_list
       dict_first_item
+      first_non_none
       njit
       numpy_index
    

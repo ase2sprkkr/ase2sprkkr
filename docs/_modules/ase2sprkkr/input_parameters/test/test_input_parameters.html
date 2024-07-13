@@ -705,6 +705,19 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="s1">&#39;ENERGY A=3 B=2 C=77&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">ip</span><span class="o">.</span><span class="n">ENERGY</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="TestInputParameters.test_copy">
+<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_copy">[docs]</a>
+  <span class="k">def</span> <span class="nf">test_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">ipd</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">InputParametersDefinition</span><span class="o">.</span><span class="n">definition_from_dict</span><span class="p">({</span>
+      <span class="s1">&#39;ENERGY&#39;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">is_repeated</span> <span class="o">=</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">V</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">]})</span>
+    <span class="n">ipd2</span> <span class="o">=</span> <span class="n">ipd</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">ipd2</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">][</span><span class="s1">&#39;A&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">assert</span> <span class="n">ipd</span><span class="p">[</span><span class="s1">&#39;ENERGY&#39;</span><span class="p">][</span><span class="s1">&#39;A&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">==</span> <span class="mi">1</span></div>
+
+
 <div class="viewcode-block" id="TestInputParameters.test_switch">
 <a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.html#ase2sprkkr.input_parameters.test.test_input_parameters.TestInputParameters.test_switch">[docs]</a>
   <span class="k">def</span> <span class="nf">test_switch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

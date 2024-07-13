@@ -111,7 +111,7 @@
 
 
 <div class="viewcode-block" id="InputValueDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.InputValueDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputValueDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputValueDefinition">[docs]</a>
 <span class="k">class</span> <span class="nc">InputValueDefinition</span><span class="p">(</span><span class="n">ConfigurationValueDefinition</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This class describes the format of one value of</span>
 <span class="sd">  a task configuration &quot;&quot;&quot;</span>
@@ -128,7 +128,7 @@
 
 
 <div class="viewcode-block" id="InputSectionDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.InputSectionDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputSectionDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputSectionDefinition">[docs]</a>
 <span class="k">class</span> <span class="nc">InputSectionDefinition</span><span class="p">(</span><span class="n">ConfigurationSectionDefinition</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This class describes the format of one</span>
 <span class="sd">  value of a task section &quot;&quot;&quot;</span>
@@ -155,7 +155,7 @@
 
 
 <div class="viewcode-block" id="InputParametersDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersDefinition">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition">[docs]</a>
 <span class="k">class</span> <span class="nc">InputParametersDefinition</span><span class="p">(</span><span class="n">ConfigurationFileDefinition</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This class describes the format of a task file. &quot;&quot;&quot;</span>
 
@@ -187,7 +187,7 @@
       <span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="InputParametersDefinition.custom_value_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersDefinition.custom_value_grammar">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition.custom_value_grammar">[docs]</a>
   <span class="nd">@classmethod</span>
   <span class="nd">@cache</span>
   <span class="k">def</span> <span class="nf">custom_value_grammar</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -198,13 +198,13 @@
 
 
 <div class="viewcode-block" id="InputParametersDefinition._generic_info">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersDefinition._generic_info">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition._generic_info">[docs]</a>
   <span class="k">def</span> <span class="nf">_generic_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Input parameters for task </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="InputParametersDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.phagen.InputParametersDefinition.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../auto/ase2sprkkr.input_parameters.input_parameters_definitions.InputParametersDefinition.html#ase2sprkkr.input_parameters.definitions.arpes.InputParametersDefinition.__init__">[docs]</a>
   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">executable</span><span class="o">=</span><span class="s1">&#39;kkrscf&#39;</span><span class="p">,</span> <span class="n">mpi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">result_reader</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

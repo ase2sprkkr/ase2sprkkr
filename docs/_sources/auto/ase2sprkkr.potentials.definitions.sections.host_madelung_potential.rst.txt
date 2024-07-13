@@ -1,0 +1,52 @@
+host\_madelung\_potential
+=========================
+
+Full name: **ase2sprkkr.potentials.definitions.sections.host\_madelung\_potential**
+
+
+
+.. rubric:: Module class hierarchy
+
+.. inheritance-diagram::  ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSection  ase2sprkkr.potentials.definitions.sections.host_madelung_potential.HostMadelungPotentialSectionDefinition  ase2sprkkr.potentials.definitions.sections.host_madelung_potential.section 
+      :parts: 1
+
+|
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.potentials.definitions.sections.host_madelung_potential
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      HostMadelungPotentialSection
+      HostMadelungPotentialSectionDefinition
+      section
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  

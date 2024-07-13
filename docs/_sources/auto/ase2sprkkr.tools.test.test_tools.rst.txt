@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.tools.test.test\_tools**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.tools.test.test_tools.CommonTest 
+.. inheritance-diagram::  ase2sprkkr.tools.test.test_tools.TestCommon 
       :parts: 1
 
 |
@@ -35,7 +35,7 @@ Full name: **ase2sprkkr.tools.test.test\_tools**
       :toctree:
       :template: custom-class-template.rst
    
-      CommonTest
+      TestCommon
    
    
 
