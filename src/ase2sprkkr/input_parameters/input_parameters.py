@@ -7,6 +7,7 @@ executables.
 from __future__ import annotations
 
 import os
+import warnings
 import io
 import pkgutil
 import importlib
@@ -17,6 +18,7 @@ from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 import shutil
 from typing import Union
+from .. import config
 
 
 class InputSection(ConfigurationSection):
@@ -32,9 +34,6 @@ class InputParameters(ConfigurationFile):
   which then parse the output of the task.
   """
 
-  default_sprkkr_executable_suffix = os.getenv('SPRKKR_EXECUTABLE_SUFFIX', '')
-  """ This suffix is (if not stated otherwise) appended to the executable name. """
-
   def resolve_executable_suffix(self, postfix:Union[str,bool]):
       """" Return the postfix, that is appended after the name of SPR-KKR executable.
 
@@ -43,14 +42,15 @@ class InputParameters(ConfigurationFile):
       postfix
         - If str is given, it is left as is.
         - If True, return the default value:
-                   default_sprkkr_executable_suffix
-                   (content of SPRKKR_EXECUTABLE_SUFFIX or a user_defined_value)
+                    config.sprkkr_executable_suffix
+                   (content of SPRKKR_EXECUTABLE_SUFFIX env variable
+                    or a user_defined_value)
         - If False, return ''
       """
       if postfix is False:
           return ''
       if postfix is True:
-          return self.default_sprkkr_executable_suffix
+          return config.sprkkr_executable_suffix
       return postfix
 
   def __init__(self, definition, inputfile=None, outputfile=False):
@@ -85,16 +85,20 @@ class InputParameters(ConfigurationFile):
           E.g. [ 'mpirun' ]
           If no suitable runner is found, return False.
       """
+      if auto and hasattr(os, 'sched_getaffinity') and len(os.sched_getaffinity(0))==1:
+          return None
+
+      if config.mpi_runner:
+          return config.mpi_runner
+
       if cls._default_mpi_runner is None:
          for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich' ]:
              if shutil.which(r):
                 cls._default_mpi_runner = [ r ]
                 return cls._default_mpi_runner
          if not auto:
-             print("No MPI runner found. Disabling MPI!!!")
+             warnings.warn("No MPI runner found. Disabling MPI!!!")
          cls._default_mpi_runner=False
-      if auto and hasattr(os, 'sched_getaffinity') and len(os.sched_getaffinity(0))==1:
-          return None
       return cls._default_mpi_runner
 
   def mpi_runner(self, mpi):

@@ -30,6 +30,7 @@ from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
 from .. import config as config
+from ..common.misc import first_non_none
 
 
 class SPRKKR(Calculator):
@@ -49,11 +50,11 @@ class SPRKKR(Calculator):
     def __init__(self, restart=None,
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
-                 print_output='info',
-                 mpi=False,
+                 print_output=None,
+                 mpi=Optional[False],
                  input_parameters=None, options={}, potential=None,
                  executable_suffix=True,
-                 empty_spheres : Union[str, bool, Dict] = None,
+                 empty_spheres : Optional[Union[str, bool, Dict]] = None,
                  **kwargs):
         """
         Parameters
@@ -82,7 +83,7 @@ class SPRKKR(Calculator):
         potential_file: str or file or bool
           The template for the potential file name (see the input_file parameter).
 
-        print_output: Union[bool,str]
+        print_output: Optional[Union[bool,str]]
           Write the output of runned executables to stdout (in addition to the output file)?
           (Default value for the calculator)
           If print_output = 'info', only a few info lines per iteration will be printed.
@@ -114,10 +115,10 @@ class SPRKKR(Calculator):
           when calculate or save_input
           methods are called (either directly, or via atoms, input_parameters etc.)
 
-        executable_suffix: str or bool
+        executable_suffix: str or bool or None
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
-          True: use InputParameters.default_sprkkr_executable_suffix, by default initialized
+          True: use config.sprkkr_executable_suffix, by default initialized
                 by SPRKKR_EXECUTABLE_SUFFIX environment variable
           False: do not append anything (the same as '')
 
@@ -155,7 +156,7 @@ class SPRKKR(Calculator):
             self.directory = directory
         self.atoms = atoms
         self.potential = potential
-        self.mpi = mpi
+        self.mpi = first_non_none(mpi, config.calculator_parameters['mpi'], None)
         """ Default value for mpi parameter of calculate - it determine the way whether and how
         the mpi is employed. """
         self.input_file = input_file
@@ -168,9 +169,12 @@ class SPRKKR(Calculator):
         """ A pathname or an open named file for the potential file to be used (if not specified otherwise in the called method) """
         self.input_parameters = input_parameters
         if options:
-          self.input_parameters.set(options, unknown = 'find')
-        self.print_output = print_output
-        self.empty_spheres = empty_spheres
+            self.input_parameters.set(options, unknown = 'find')
+        self.print_output = first_non_none(print_output,
+                                           config.calculator_parameters['print_output'])
+        self.empty_spheres = first_non_none(empty_spheres,
+                                            config.calculator_parameters['empty_spheres'],
+                                            'auto')
         """ The default parameter for the print_output arguments of
         :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the
         runned SPR-KKR should be written to the standard ouput (in addition to the output file). """
@@ -549,8 +553,6 @@ class SPRKKR(Calculator):
         def resolve_empty_spheres(empty_spheres):
             if empty_spheres is None:
                empty_spheres = self.empty_spheres
-            if empty_spheres is None:
-               empty_spheres = config.empty_spheres
             if empty_spheres == 'auto':
                empty_spheres = atoms is not None and (
                    not atoms.has_potential() or
