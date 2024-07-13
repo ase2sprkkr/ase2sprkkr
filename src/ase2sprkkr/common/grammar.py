@@ -4,7 +4,9 @@ Various pyparsing grammar elements and a few useful routines.
 
 from contextlib import contextmanager
 import pyparsing as pp
+import re
 from .decorators import cache
+from typing import Optional
 
 
 @contextmanager
@@ -106,6 +108,39 @@ class White(pp.White):
   def __init__(self, white):
       super().__init__(white)
       self.setWhitespaceChars('')
+
+
+class SkipToRegex(pp.Token):
+   """ Skip to given regex """
+
+   def __init__(self, pattern, include_pattern:Optional[bool]=None,
+                               parse_pattern:bool=False):
+       if not isinstance(pattern, re.Pattern):
+           pattern = re.compile(pattern)
+       self.pattern = pattern
+       if include_pattern is None:
+           include_pattern = parse_pattern
+       self.include_pattern = include_pattern
+       self.parse_pattern = parse_pattern
+       super().__init__()
+
+   @property
+   def custom_name(self):
+       self.customName="skipTo{self.pattern}"
+
+   def parseImpl(self, instr, loc, doActions = True):
+       result = self.pattern.search(instr,loc)
+       if result:
+           start = result.start()
+           out = instr[loc:start]
+           if self.parse_pattern:
+               out = (out, instr[start:result.end()])
+           if self.include_pattern:
+               loc = result.end()
+           else:
+               loc = result.start()
+           return loc, pp.ParseResults(out)
+       raise pp.ParseException(instr, loc, "Pattern {self.pattern} not found", self)
 
 
 pp.ParserElement.addConditionEx = addConditionEx
