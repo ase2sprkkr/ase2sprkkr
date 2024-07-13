@@ -532,6 +532,8 @@ class SPRKKR(Calculator):
         def resolve_input_parameters(input_parameters, input_file, save_input):
             if input_parameters is None:
                 input_parameters=self.input_parameters
+            if task or options:
+                input_parameters = input_parameters.copy()
             if input_parameters:
                if isinstance(input_parameters, str):
                   if InputParameters.is_it_a_input_parameters_name(input_parameters):
