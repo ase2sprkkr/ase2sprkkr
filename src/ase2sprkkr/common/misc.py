@@ -10,6 +10,7 @@ def copy_list(src):
     the number of unique objects in the list is retained """
 
     mp = {}
+
     def cpy(i):
         if i in mp:
            return mp[i]
@@ -17,6 +18,7 @@ def copy_list(src):
         return mp[i]
 
     return [ cpy(i) for i in src ]
+
 
 try:
   from numba import njit
@@ -37,6 +39,7 @@ def numpy_index(array, item):
     # If no item was found return None, other return types might be a problem due to
     # numbas type inference.
 
+
 def as_integer(value):
     """ Interpret the value as integer, or raise (even for float, complex etc.) TypeError.i
     >>> as_integer(4)
@@ -50,6 +53,7 @@ def as_integer(value):
     """
     return operator.index(value)
 
+
 def dict_first_item(self):
     """
     Return the first item of the given dict.
@@ -57,3 +61,10 @@ def dict_first_item(self):
     4
     """
     return self[next(iter(self))]
+
+
+def first_non_none(*args):
+    for i in args:
+        if i is not None:
+            return i
+    return None
