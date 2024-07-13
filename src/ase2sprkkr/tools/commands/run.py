@@ -30,18 +30,17 @@ def parser(parser):
 
 
 def run(args):
-    pot = Potential.from_file(args.pot)
-    calc = SPRKKR(potential=pot)
+    calc = SPRKKR()
     if args.task:
         calc.input_parameters = args.task
-    if args.input_file:
-        calc.input_parameters = args.input_file
     kwargs = {}
     for i in 'empty_spheres', 'print_output', 'output_file':
         o=getattr(args, i)
         if o is not None:
             kwargs[i]=o
-    calc.calculate(options=dict(args.options), **kwargs)
+    calc.calculate(potential=args.pot,
+                   input_parameters=args.input_file,
+                   options=dict(args.options), **kwargs)
 
 
 if __name__ == "__main__":
