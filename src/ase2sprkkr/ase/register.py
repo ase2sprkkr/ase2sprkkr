@@ -4,11 +4,17 @@ import os
 registered = False
 
 
+def user_preferences_file():
+    """ Return filename with user preferences """
+    return os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), '__init__.py')
+
+
 def load_user_preferences():
     """ Load user defined preferences from
         ``$HOME/.config/ase2sprkkr/__init__.py``
     """
-    file = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), '__init__.py')
+    file = user_preferences_file()
+
     try:
        if os.path.isfile(file):
            import types
