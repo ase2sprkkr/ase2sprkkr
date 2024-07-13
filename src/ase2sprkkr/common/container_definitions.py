@@ -165,6 +165,9 @@ class ContainerDefinition(RealItemDefinition):
     configuration_type_name = 'SECTION'
     """ Name of the container type in the runtime documentation """
 
+    def __repr__(self):
+        return f"<{self.configuration_type_name} {self.name}>"
+
     def data_description(self, verbose:Union[bool,str,int]=False, show_hidden:bool=False, prefix:str=''):
         """
         Return the runtime documentation for the configuration described by this object.
