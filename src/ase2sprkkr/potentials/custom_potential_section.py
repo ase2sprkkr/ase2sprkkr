@@ -5,11 +5,12 @@ I.e. these sections can has any content (they are readed up to the section separ
 
 from ..common.grammar_types import GrammarType
 from ..sprkkr.configuration import ConfigurationValueDefinition, CustomConfigurationValue
-from ..common.grammar import separator_pattern, line_end
-from ..common.decorators import cached_class_property, class_property, cache
+from ..common.grammar import separator_pattern
+from ..common.decorators import cached_class_property
 
 import re
 import pyparsing as pp
+
 
 class CustomPotentialSectionDefinition(ConfigurationValueDefinition):
   """ The custom sections are in fact values - their content can be
@@ -21,9 +22,9 @@ class CustomPotentialSectionDefinition(ConfigurationValueDefinition):
 
   prefix = ''
 
-
   name_value_delimiter = '\n'
   """ The content of the section is delimited from the name by a newline """
+
 
 class CustomSectionToken(pp.Token):
    """ The grammar for a custom section - i.e. for unknown section, whose
@@ -32,8 +33,8 @@ class CustomSectionToken(pp.Token):
    The grammar just reads all  up to the section separator.
    """
 
-   pattern = re.compile('\n' + separator_pattern('*') + '[ \r\t]*\n',  re.DOTALL)
-   name = 'CustomSection'
+   pattern = re.compile('\n' + separator_pattern('*') + '[ \r\t]*\n', re.DOTALL)
+   name = 'EndOfSection'
 
    def parseImpl(self, instr, loc, doActions = True):
        result = self.pattern.search(instr,loc)
@@ -44,6 +45,7 @@ class CustomSectionToken(pp.Token):
           out = instr[loc:]
           loc = len(instr)
        return loc, pp.ParseResults(out.strip())
+
 
 class SectionString(GrammarType):
       """
@@ -57,7 +59,7 @@ class SectionString(GrammarType):
 
       @cached_class_property
       def grammar_of_delimiter():
-          return pp.Regex(SectionString.delimiter_pattern).setName('*'*79 + '<newline>').suppress()
+          return pp.Regex(SectionString.delimiter_pattern).setName('*' * 79 + '<newline>').suppress()
 
       @cached_class_property
       def _grammar():
@@ -70,7 +72,9 @@ class SectionString(GrammarType):
           super().write(f, value)
           f.write('\n')
 
+
 SectionString.I = SectionString()
+
 
 class CustomPotentialSection(CustomConfigurationValue):
       """
