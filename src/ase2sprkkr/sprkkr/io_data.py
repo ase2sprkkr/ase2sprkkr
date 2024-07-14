@@ -32,6 +32,7 @@ class WriteIoData(BaseIoData):
 
     def __init__(self, atoms):
         self.atoms = atoms
+        self._has_converged_data = None
 
     @unique_mapping
     def sites(self):
@@ -49,6 +50,21 @@ class WriteIoData(BaseIoData):
     @unique_mapping
     def meshes(self):
         return (s.mesh for s in self.sites.iter_unique())
+
+    def has_converged_data(self, potential):
+
+        def compute():
+            if potential.SCF_INFO.FULLPOT():
+                return False
+            for site, i in self.sites.unique_items():
+              if not site.charge or not site.potential or not site.moments:
+                  return False
+
+            return True
+
+        if self._has_converged_data is None:
+            self._has_converged_data = compute()
+        return self._has_converged_data
 
 
 class ReadIoData(BaseIoData):
