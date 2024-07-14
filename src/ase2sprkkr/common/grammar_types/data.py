@@ -8,6 +8,7 @@ from ..grammar import SkipToRegex
 import io
 import numpy as np
 import copy
+import os
 from typing import Union
 
 
@@ -205,7 +206,7 @@ class NumpyArray(RawData):
 
     @add_to_signature(GrammarType.__init__)
     def __init__(self, *args, delimiter=None, shape=None, written_shape=None,
-                              item_format='% .18e', dtype=None,
+                              item_format='% .18e', dtype=None, no_newline_at_end=True,
                               **kwargs):
         """
         Parameters
@@ -235,6 +236,7 @@ class NumpyArray(RawData):
         self.written_shape=written_shape
         self.item_format=item_format
         self.shape=shape
+        self.no_newline_at_end=no_newline_at_end
         self.dtype=dtype
         super().__init__(*args, **kwargs)
 
@@ -250,8 +252,11 @@ class NumpyArray(RawData):
        if isinstance(delimiter, int):
            delimiter = ''
        if self.written_shape:
-          out=out.reshape(self.written_shape)
+          value=value.reshape(self.written_shape)
        np.savetxt(out, value, delimiter=self.written_delimiter, fmt=self.item_format)
+       if self.no_newline_at_end:
+           out.seek(out.tell() - 1 , os.SEEK_SET)
+           out.truncate()
        out=out.getvalue()
        return super()._string(out)
 
