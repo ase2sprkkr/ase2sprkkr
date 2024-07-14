@@ -4,6 +4,7 @@ from ...potential_sections import PotentialSection as PotSection, RepeatedPotent
 from ....common.grammar_types import NumpyArray, RawData
 from ....common.unique_values import UniqueValuesMapping
 from ....common.warnings import DataValidityWarning
+from ....common.configuration_definitions import SeparatorDefinition
 import re
 
 
@@ -15,14 +16,12 @@ class ChargesSection(RepeatedPotentialSection):
 
   def _set_from_atoms(self, atoms, write_io_data):
       self.clear()
-      for site, i in write_io_data.sites.unique_items():
-          if not site.charge:
-              return
+      if not write_io_data.has_converged_data(self._container):
+          return
       for site, i in write_io_data.sites.unique_items():
           charge = self.add(i)
           charge.TYPE = i
           charge.DATA = site.charge.raw_value
-          charge.FULLPOT = ''
 
   def _update_atoms(self, atoms, read_io_data):
       if len(self):
@@ -38,7 +37,7 @@ class ChargesSection(RepeatedPotentialSection):
 
 class ChargeSectionDefinition(PotSectionDefinition):
 
-  def __init__(self, name='POTENTIAL', **kwargs):
+  def __init__(self, name='CHARGE', **kwargs):
       V = PotValueDefinition
       members = [
           V('TYPE', int),
@@ -46,8 +45,9 @@ class ChargeSectionDefinition(PotSectionDefinition):
                                ends_with_str = "=" * 79, item_format='% .14E', indented=1),
                     name_in_grammar=False,
            ),
-          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, include_ends_with=True),
-                    name_in_grammar=False),
+          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, condition=lambda x: len(x)), required=False,
+            name_in_grammar=False, write_condition = lambda x: x() != ''),
+          SeparatorDefinition('=', length=79)
       ]
       super().__init__(name, members, has_hidden_members=True, is_repeated=True, is_optional=True)
 

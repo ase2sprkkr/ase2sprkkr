@@ -16,8 +16,9 @@ class PotentialsSection(RepeatedPotentialSection):
 
   def _set_from_atoms(self, atoms, write_io_data):
       self.clear()
-      if self._container.SCF_INFO.FULLPOT():
+      if not write_io_data.has_converged_data(self._container):
           return
+
       for site, i in write_io_data.sites.unique_items():
           if not site.potential:
               return
@@ -25,7 +26,6 @@ class PotentialsSection(RepeatedPotentialSection):
           pot = self.add(i)
           pot.TYPE = i
           pot.DATA = site.potential.raw_value
-          pot.FULLPOT = ''
 
   def _update_atoms(self, atoms, read_io_data):
       if len(self):
@@ -49,7 +49,9 @@ class PotentialSectionDefinition(PotSectionDefinition):
                                ends_with_str = "=" * 79, item_format='% .14E', indented=1),
                     name_in_grammar=False,
            ),
-          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, include_ends_with=True), name_in_grammar=False),
+          V('FULLPOT', RawData(ends_with=re.compile("\n?={79}"), ends_with_str="=" * 79, condition=lambda x: len(x)), required=False,
+            name_in_grammar=False, write_condition = lambda x: x() != ''),
+          SeparatorDefinition('=', length=79)
       ]
       super().__init__(name, members, has_hidden_members=True, is_repeated=True, is_optional=True)
 
