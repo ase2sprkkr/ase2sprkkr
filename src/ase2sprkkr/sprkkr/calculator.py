@@ -357,7 +357,7 @@ class SPRKKR(Calculator):
              os.makedirs(dirs)
            except FileExistsError:
              pass
-
+        filename = os.path.abspath(filename)
         return open(filename, mode)
 
     def save_input(self, atoms=None, input_parameters=None, potential=None,
@@ -736,7 +736,7 @@ class SPRKKR(Calculator):
 
           with directory.chdir():
             return input_parameters.run_process(self, input_file, output_file,
-                                directory=str(directory),
+                                directory=os.path.abspath('.'),
                                 print_output=print_output,
                                 executable_suffix=executable_suffix,
                                 mpi=mpi, gdb=gdb
