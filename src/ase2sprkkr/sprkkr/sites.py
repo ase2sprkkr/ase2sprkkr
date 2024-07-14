@@ -3,6 +3,7 @@
 from .radial_meshes import Mesh
 from .radial import RadialPotential, RadialCharge
 from .reference_systems import ReferenceSystem
+from .moments import Moments
 import numpy as np
 from ..common.decorators import cached_property
 import copy
@@ -44,6 +45,7 @@ class SiteType:
       self._mesh = mesh or Mesh.default()
       self._potential = None
       self._charge = None
+      self._moments = None
       self._occupation = Occupation.to_occupation(occupation, None)
       self._occupation._site = self
       self.sites = set()
@@ -67,6 +69,7 @@ class SiteType:
   def _clear_data(self):
       self._potential = None
       self._charge = None
+      self._moments = None
 
   @property
   def mesh(self):
@@ -103,6 +106,17 @@ class SiteType:
           value = RadialCharge(value, self._mesh)
       self._charge = value
       self.mesh = value.mesh
+
+  @property
+  def moments(self):
+      """ The moments data of the site """
+      return self._moments
+
+  @moments.setter
+  def moments(self, value):
+      if not isinstance(value, Moments):
+          value = Moments(*value)
+      self._moments = value
 
   def copy(self, atoms=False):
       """ Create a copy of the site. """
@@ -306,6 +320,14 @@ class Site:
   @charge.setter
   def charge(self, charge):
       self._site_type.charge = charge
+
+  @property
+  def moments(self):
+      return self._site_type.moments
+
+  @moments.setter
+  def moments(self, moments):
+      self._site_type.moments = moments
 
   @property
   def occupation(self):

@@ -12,7 +12,8 @@ from .sections import \
     PotentialSectionDefinition, \
     ChargeSectionDefinition, \
     HostMadelungPotentialSectionDefinition, \
-    ChargeMomentsSectionDefinition
+    ChargeMomentsSectionDefinition, \
+    MomentsSectionDefinition
 
 
 def fce():
@@ -72,6 +73,7 @@ def fce():
   Section('TYPES', cls = TypesSectionDefinition)
   Section('POTENTIAL', cls = PotentialSectionDefinition)
   Section('CHARGE', cls = ChargeSectionDefinition)
+  Section('MOMENTS', cls = MomentsSectionDefinition)
 
   return PotentialDefinition(sections)
 
