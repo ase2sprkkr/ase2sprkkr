@@ -690,7 +690,7 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_suffix=None):
+                  print_output=None, executable_suffix=None, gdb=False):
         """
         Do the calculation, return various results.
 
@@ -739,7 +739,7 @@ class SPRKKR(Calculator):
                                 directory=str(directory),
                                 print_output=print_output,
                                 executable_suffix=executable_suffix,
-                                mpi=mpi,
+                                mpi=mpi, gdb=gdb
                                )
 
     def value_or_default(self, name, value):
@@ -755,7 +755,7 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_suffix=None):
+                  print_output=None, executable_suffix=None, gdb=False):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
         for the requested properties (currently always the SCF one) and updates the
@@ -803,7 +803,7 @@ class SPRKKR(Calculator):
                   empty_spheres,
                   mpi,
                   options, task,
-                  print_output, executable_suffix
+                  print_output, executable_suffix, gdb
         )
         if hasattr(out, 'energy'):
             self.results.update({

@@ -165,7 +165,7 @@ class InputParameters(ConfigurationFile):
       """
       return mpi and self._definition.mpi
 
-  def run_process(self, calculator, input_file, output_file, directory='.', print_output=None, executable_suffix=None, mpi=None):
+  def run_process(self, calculator, input_file, output_file, directory='.', print_output=None, executable_suffix=None, mpi=None, gdb=False):
       """
       Run the process that calculate the task specified by this input paameters
 
@@ -215,6 +215,15 @@ class InputParameters(ConfigurationFile):
         else:
              executable = [ executable ]
              stdin = input_file
+        if gdb:
+             stdin = None
+             if mpi:
+                print(f"run {input_file.name}")
+                executable = executable[:-1]
+             else:
+                print(f"run <{input_file.name}")
+             executable = [ 'gdb' ] + executable
+
         return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
         e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or ase2sprkkr.config.sprkkr_executable_suffix variable should be set?\n' + \
