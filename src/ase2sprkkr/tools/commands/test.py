@@ -22,12 +22,16 @@ unknowns = 'pytest_arguments'
 def parser(parser):
     parser.add_argument('pytest_arguments', help='Arguments for pytest.', nargs=argparse.REMAINDER)
     parser.add_argument('--no-kkr', help='Do not run SPRKKR executables, just test the interface only.', action='store_false', default=True)
+    parser.add_argument('--pp', help='Pyparsing verbose stacktrace.', action='store_true')
 
 
 def run(args):
     import pytest
     import os
     import subprocess
+    from pyparsing import ParserElement
+    if args.pp:
+        ParserElement.verbose_stacktrace=True
     if not args.no_kkr:
        os.environ['DO_NOT_RUN_SPRKKR'] = '1'
     a2s_path = os.path.join(root_path, 'ase2sprkkr')
