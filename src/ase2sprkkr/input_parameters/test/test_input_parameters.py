@@ -530,14 +530,16 @@ XSITES NR=3 FLAG
         with generate_grammar():
           self.assertEqual(np.asarray(val), na.parse(str))
 
-    test(gt.NumpyArray(item_format='%2.0f'),[[1,2,3],[4,5,6]], " 1  2  3\n 4  5  6\n")
+    test(gt.NumpyArray(item_format='%2.0f'),[[1,2,3],[4,5,6]], " 1  2  3\n 4  5  6")
     test(gt.NumpyArray(indented=2, item_format='%2.0f'), [[1,2,3],[4,5,6]],
-                       "   1  2  3\n   4  5  6\n")
+                       "   1  2  3\n   4  5  6")
     test(gt.NumpyArray(indented=(8, 2), item_format='%2.0f'),[[1,2,3,4,5,6],[4,5,6,7,8,9]],
+                       " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9")
+    test(gt.NumpyArray(indented=(8, 2), no_newline_at_end=False, item_format='%2.0f'),[[1,2,3,4,5,6],[4,5,6,7,8,9]],
                        " 1  2  3\n    4  5\n    6\n 4  5  6\n    7  8\n    9\n")
     test(gt.NumpyArray(line_length=8, item_format='%2.0f', shape=(2,-1)),
                        [[1,2,3,4,5,6],[4,5,6,7,8,9]],
-                       " 1  2  3\n 4  5  6\n 4  5  6\n 7  8  9\n")
+                       " 1  2  3\n 4  5  6\n 4  5  6\n 7  8  9")
 
   def test_repeated_value(self):
     assertParse = self.assertParse
