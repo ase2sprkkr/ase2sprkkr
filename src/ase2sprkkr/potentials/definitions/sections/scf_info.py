@@ -13,7 +13,25 @@ class ScfInfoSection(PotentialSection):
   """ This section retrieves the atomic positions and
       it creates (during reading) the ASE Atoms object """
 
+  def _depends_on(self):
+      return ['SITES']
+
+  def _update_atoms(self, atoms, read_io_data):
+      atoms.info['fermi_energy'] = self.EF()
+      atoms.info['sprkkr_rmsavv'] = self.RMSAVV()
+      atoms.info['sprkkr_rmsavb'] = self.RMSAVB()
+      atoms.info['sprkkr_vmtz'] = self.VMTZ()
+
   def _set_from_atoms(self, atoms, write_io_data):
+      info = atoms.info
+      if 'fermi_energy' in info:
+          self.EF = atoms.info['fermi_energy']
+      if 'sprkkr_rmsavv' in info:
+          self.RMSAVV = atoms.info['sprkkr_rmsavv']
+      if 'sprkkr_rmsavb' in info:
+          self.RMSAVB = atoms.info['sprkkr_rmsavb']
+      if 'sprkkr_vmtz' in info:
+          self.VMTZ = atoms.info['sprkkr_vmtz']
       if self.SCFSTATUS() == 'START':
           for i in atoms.sites:
               if i.potential is None:

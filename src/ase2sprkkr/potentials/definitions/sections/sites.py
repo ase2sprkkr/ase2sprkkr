@@ -11,6 +11,9 @@ class SitesSection(PotentialSection):
   """ This section retrieves the atomic positions and
       it creates (during reading) the ASE Atoms object """
 
+  def _depends_on(self):
+      return ['LATTICE']
+
   def _set_from_atoms(self, atoms, write_io_data):
       self['SCALED_ATOMIC_POSITIONS'].set(
           atoms.positions[write_io_data['sites_order']] / ( write_io_data['lattice.alat'] * self['BASSCALE']())
