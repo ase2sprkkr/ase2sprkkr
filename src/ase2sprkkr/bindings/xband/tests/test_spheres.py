@@ -29,12 +29,14 @@ class TestSpheres(TestCase):
 
       pot = Potential.from_file(os.path.join(dirr, 'Cu.pot'))
       full = pot.atoms
+      assert full.sites[0].site_type is full.sites[1].site_type
       cu = pot.atoms[:2]
-      assert full.sites[0].site_type is not full.sites[1].site_type
-      assert cu.sites[0].site_type is not cu.sites[1].site_type
-      cu.compute_sites_symmetry()
-      assert cu.sites[0].site_type is not cu.sites[1].site_type
+      assert cu.sites[0].site_type is cu.sites[1].site_type
       assert cu.spacegroup_info.number() == 227
+      cu.sites[0].break_symmetry()
+      assert cu.sites[0].site_type is not cu.sites[1].site_type
+      cu.compute_sites_symmetry(consider_old=False)
+      assert cu.sites[0].site_type is cu.sites[1].site_type
 
       sym = sy.find_symmetry(cu)
       should = np.array([[

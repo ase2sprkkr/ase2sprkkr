@@ -150,11 +150,7 @@ class SpacegroupInfo:
           return None, None, UniqueValuesMapping(np.arange(len(atoms)))
 
        spacegroup = Spacegroup(sg_dataset['number'])
-       try:
-           tags = spacegroup.tag_sites(spositions)
-       except AssertionError:
-           tags = np.arange(len(spositions))
-       equivalent_sites = equivalent_sites.merge(tags)
+       equivalent_sites = equivalent_sites.merge(sg_dataset['equivalent_atoms'])
        equivalent_sites.normalize(start_from=0)
        return spacegroup, sg_dataset, equivalent_sites
 
@@ -208,7 +204,7 @@ def possibly_equivalent_sites(atoms: Atoms,
 
     if consider_old:
         try:
-           equivalent_sites = equivalent_sites.merge(atoms.get_array(atoms.sites_array_name))
+           equivalent_sites = equivalent_sites.merge([i.site_type if i else None for i in atoms.get_array(atoms.sites_array_name)])
         except KeyError:
            pass
     else:
