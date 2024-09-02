@@ -56,8 +56,9 @@ class SiteType:
   def unregister(self, site):
       self.sites.remove(site)
 
+  @property
   def has_symmetry(self):
-      return len(self.sites > 1)
+      return len(self.sites) > 1
 
   def break_symmetry(self):
       if not self.sites:
@@ -297,11 +298,11 @@ class Site:
 
   @property
   def has_symmetry(self):
-      return self._site_type.has_symmetry()
+      return self._site_type.has_symmetry
 
   def break_symmetry(self):
-      if self.has_symmetry():
-          self._site_type = self.site_type.copy()
+      if self.has_symmetry:
+          self.site_type = self.site_type.copy()
 
   @property
   def mesh(self):
