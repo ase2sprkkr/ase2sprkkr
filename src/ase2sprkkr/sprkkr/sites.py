@@ -90,6 +90,9 @@ class SiteType:
 
   @potential.setter
   def potential(self, value):
+      if value is None:
+          self._potential = None
+          return
       if not isinstance(value, RadialPotential):
           value = RadialPotential(value, self._mesh, self.primary_atomic_number)
       self._potential = value
@@ -102,6 +105,9 @@ class SiteType:
 
   @charge.setter
   def charge(self, value):
+      if value is None:
+          self._charge = None
+          return
       if not isinstance(value, RadialCharge):
           value = RadialCharge(value, self._mesh)
       self._charge = value
