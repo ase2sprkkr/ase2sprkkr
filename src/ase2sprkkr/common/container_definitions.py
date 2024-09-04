@@ -319,9 +319,9 @@ class ContainerDefinition(RealItemDefinition):
         """ Copy a member, allowing to redefine its properties.
 
             Returns
-            ------mber:
+            -------
+            new_member: BaseDefinition
               The newly created member
-            new_mebere: BaseDefinition
         """
         out = self._members[name].copy()
         self._members[name] = out

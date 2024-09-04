@@ -67,7 +67,8 @@ class RawData(GrammarType):
         indented
 If there are <n> spaces before data, pass n to this arg.
 
-          If the file has the following structure::
+          If the file has the following structure:
+          .. code-block:: text
 
              .......................................
                   ....rest of the splitted line.....
