@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -94,9 +96,7 @@
 <span class="kn">from</span> <span class="nn">click</span> <span class="kn">import</span> <span class="n">Choice</span>
 
 
-<div class="viewcode-block" id="webpanel">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.webpanel.html#ase2sprkkr.asr.polarizability.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.webpanel.html#ase2sprkkr.asr.polarizability.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span><span class="p">,</span> <span class="n">table</span>
 
     <span class="n">opt</span> <span class="o">=</span> <span class="n">table</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="s1">&#39;Property&#39;</span><span class="p">,</span> <span class="p">[</span>
@@ -118,10 +118,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="get_kpts_size">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.get_kpts_size.html#ase2sprkkr.asr.polarizability.get_kpts_size">[docs]</a>
-<span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="p">):</span>
+<div class="viewcode-block" id="get_kpts_size"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.get_kpts_size.html#ase2sprkkr.asr.polarizability.get_kpts_size">[docs]</a><span class="k">def</span> <span class="nf">get_kpts_size</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Try to get a reasonable monkhorst size which hits high symmetry points.&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">gpaw.kpt_descriptor</span> <span class="kn">import</span> <span class="n">kpts2sizeandoffsets</span> <span class="k">as</span> <span class="n">k2so</span>
     <span class="n">size</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">k2so</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">atoms</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="p">)</span>
@@ -133,10 +130,7 @@
     <span class="k">return</span> <span class="n">kpts</span></div>
 
 
-
-<div class="viewcode-block" id="Result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.Result.html#ase2sprkkr.asr.polarizability.Result">[docs]</a>
-<span class="nd">@prepare_result</span>
+<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.Result.html#ase2sprkkr.asr.polarizability.Result">[docs]</a><span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
     <span class="n">alphax_el</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
     <span class="n">alphay_el</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span>
@@ -165,7 +159,6 @@
     <span class="p">}</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.polarizability&#39;</span><span class="p">,</span>
@@ -281,9 +274,7 @@
     <span class="k">return</span> <span class="n">data</span>
 
 
-<div class="viewcode-block" id="polarizability">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.polarizability.html#ase2sprkkr.asr.polarizability.polarizability">[docs]</a>
-<span class="k">def</span> <span class="nf">polarizability</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">fz</span><span class="p">):</span>
+<div class="viewcode-block" id="polarizability"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.polarizability.polarizability.html#ase2sprkkr.asr.polarizability.polarizability">[docs]</a><span class="k">def</span> <span class="nf">polarizability</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">fz</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
@@ -402,7 +393,6 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fz</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

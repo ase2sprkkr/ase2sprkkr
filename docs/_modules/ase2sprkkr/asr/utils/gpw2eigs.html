@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -90,9 +92,7 @@
   <h1>Source code for ase2sprkkr.asr.utils.gpw2eigs</h1><div class="highlight"><pre>
 <span></span>
 
-<div class="viewcode-block" id="calc2eigs">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.gpw2eigs.calc2eigs.html#ase2sprkkr.asr.utils.gpw2eigs.calc2eigs">[docs]</a>
-<span class="k">def</span> <span class="nf">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="calc2eigs"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.gpw2eigs.calc2eigs.html#ase2sprkkr.asr.utils.gpw2eigs.calc2eigs">[docs]</a><span class="k">def</span> <span class="nf">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">return_spin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
               <span class="n">theta</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
               <span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -159,10 +159,7 @@
         <span class="k">return</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;eps_nosoc_skn&#39;</span><span class="p">],</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;efermi_nosoc&#39;</span><span class="p">],</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;s_kvm&#39;</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="gpw2eigs">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.gpw2eigs.gpw2eigs.html#ase2sprkkr.asr.utils.gpw2eigs.gpw2eigs">[docs]</a>
-<span class="k">def</span> <span class="nf">gpw2eigs</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="gpw2eigs"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.utils.gpw2eigs.gpw2eigs.html#ase2sprkkr.asr.utils.gpw2eigs.gpw2eigs">[docs]</a><span class="k">def</span> <span class="nf">gpw2eigs</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
              <span class="n">theta</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Give the eigenvalues w or w/o spinorbit coupling and the corresponding fermi energy.</span>
 
@@ -185,7 +182,6 @@
     <span class="k">return</span> <span class="n">calc2eigs</span><span class="p">(</span><span class="n">calc</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="n">soc</span><span class="p">,</span> <span class="n">return_spin</span><span class="o">=</span><span class="n">return_spin</span><span class="p">,</span>
                      <span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span>
                      <span class="n">symmetry_tolerance</span><span class="o">=</span><span class="n">symmetry_tolerance</span><span class="p">)</span></div>
-
 </pre></div>
 
            </div>

@@ -1,0 +1,43 @@
+A4\_CPA\_Example
+================
+
+Full name: **ase2sprkkr.examples.A4\_CPA\_Example**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.examples.A4_CPA_Example
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.examples.A4_CPA_Example.Ni_doped_STO
+  
+  

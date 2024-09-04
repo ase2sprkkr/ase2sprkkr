@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>spglib &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -89,6 +91,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -120,7 +123,7 @@
            <div itemprop="articleBody">
              
   <section id="spglib">
-<h1>spglib<a class="headerlink" href="#spglib" title="Link to this heading"></a></h1>
+<h1>spglib<a class="headerlink" href="#spglib" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.bindings.spglib</strong></p>
 <p class="rubric">Module class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-52b691b2d441460fad3b2880639e6bd8a9448f50.png" alt="Inheritance diagram of ase2sprkkr.bindings.spglib.SpacegroupInfo" usemap="#inheritancea85ca806f1" class="inheritance graphviz" /></div>
@@ -130,17 +133,25 @@
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.bindings.spglib">Wrapper for spglib for computing symmetry of a primitive cell</p>
+<span class="target" id="module-ase2sprkkr.bindings.spglib"></span><p>Wrapper for spglib for computing symmetry of a primitive cell</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites" title="ase2sprkkr.bindings.spglib.possibly_equivalent_sites"><code class="xref py py-obj docutils literal notranslate"><span class="pre">possibly_equivalent_sites</span></code></a>(atoms[, ...])</p></td>
-<td><p>Return the object that describe equivalence classes of the atoms from the given Atoms object (i.e. in one equivalence class will be the atoms with the same atomic number, occupation, etc.).</p></td>
+<td><p>Return the object that describe equivalence classes of the atoms from the given Atoms object (i.e.</p></td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo" title="ase2sprkkr.bindings.spglib.SpacegroupInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpacegroupInfo</span></code></a>(atoms, spacegroup[, dataset, ...])</p></td>
 <td><p>Class, that carry information about spacegroup and symmetry of a structure</p></td>

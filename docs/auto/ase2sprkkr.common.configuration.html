@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>configuration &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -79,7 +81,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">configuration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html">Configuration</a></li>
@@ -97,16 +98,18 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -138,7 +141,7 @@
            <div itemprop="articleBody">
              
   <section id="configuration">
-<h1>configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h1>
+<h1>configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.configuration</strong></p>
 <p class="rubric">Module class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-f35137ee74087c177f61c1e4ce2ff0906eb17ec0.png" alt="Inheritance diagram of ase2sprkkr.common.configuration.Configuration" usemap="#inheritanced71f821248" class="inheritance graphviz" /></div>
@@ -148,10 +151,14 @@
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.common.configuration">This module contains just a base class for both configuration values - <a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">Options</span></code></a>
+<span class="target" id="module-ase2sprkkr.common.configuration"></span><p>This module contains just a base class for both configuration values - <a class="reference internal" href="ase2sprkkr.common.options.Option.html#ase2sprkkr.common.options.Option" title="ase2sprkkr.common.options.Option"><code class="xref py py-class docutils literal notranslate"><span class="pre">Options</span></code></a>
 and configuration containers - <a class="reference internal" href="ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.common.configuration_containers.Section" title="ase2sprkkr.common.configuration_containers.Section"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sections</span></code></a>.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration.Configuration.html#ase2sprkkr.common.configuration.Configuration" title="ase2sprkkr.common.configuration.Configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Configuration</span></code></a>(definition[, container])</p></td>
 <td><p>The common base class for all configurations values and containers.</p></td>

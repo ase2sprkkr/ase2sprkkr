@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -92,46 +94,29 @@
 <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
-<div class="viewcode-block" id="MaterialNotFoundError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.MaterialNotFoundError.html#ase2sprkkr.asr.fere.MaterialNotFoundError">[docs]</a>
-<span class="k">class</span> <span class="nc">MaterialNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="MaterialNotFoundError"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.MaterialNotFoundError.html#ase2sprkkr.asr.fere.MaterialNotFoundError">[docs]</a><span class="k">class</span> <span class="nc">MaterialNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-
-<div class="viewcode-block" id="DBAlreadyExistsError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.DBAlreadyExistsError.html#ase2sprkkr.asr.fere.DBAlreadyExistsError">[docs]</a>
-<span class="k">class</span> <span class="nc">DBAlreadyExistsError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="DBAlreadyExistsError"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.DBAlreadyExistsError.html#ase2sprkkr.asr.fere.DBAlreadyExistsError">[docs]</a><span class="k">class</span> <span class="nc">DBAlreadyExistsError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-
-<div class="viewcode-block" id="ParseError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.ParseError.html#ase2sprkkr.asr.fere.ParseError">[docs]</a>
-<span class="k">class</span> <span class="nc">ParseError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="ParseError"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.ParseError.html#ase2sprkkr.asr.fere.ParseError">[docs]</a><span class="k">class</span> <span class="nc">ParseError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-
-<div class="viewcode-block" id="where">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.where.html#ase2sprkkr.asr.fere.where">[docs]</a>
-<span class="k">def</span> <span class="nf">where</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
+<div class="viewcode-block" id="where"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.where.html#ase2sprkkr.asr.fere.where">[docs]</a><span class="k">def</span> <span class="nf">where</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="only">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.only.html#ase2sprkkr.asr.fere.only">[docs]</a>
-<span class="k">def</span> <span class="nf">only</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
+<div class="viewcode-block" id="only"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.only.html#ase2sprkkr.asr.fere.only">[docs]</a><span class="k">def</span> <span class="nf">only</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
     <span class="n">rs</span> <span class="o">=</span> <span class="n">where</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">rs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="single">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.single.html#ase2sprkkr.asr.fere.single">[docs]</a>
-<span class="k">def</span> <span class="nf">single</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
+<div class="viewcode-block" id="single"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.single.html#ase2sprkkr.asr.fere.single">[docs]</a><span class="k">def</span> <span class="nf">single</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
     <span class="n">rs</span> <span class="o">=</span> <span class="n">where</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">)</span>
     <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">1</span>
@@ -141,25 +126,16 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-
-<div class="viewcode-block" id="select">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.select.html#ase2sprkkr.asr.fere.select">[docs]</a>
-<span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
+<div class="viewcode-block" id="select"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.select.html#ase2sprkkr.asr.fere.select">[docs]</a><span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="count">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.count.html#ase2sprkkr.asr.fere.count">[docs]</a>
-<span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
+<div class="viewcode-block" id="count"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.count.html#ase2sprkkr.asr.fere.count">[docs]</a><span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">):</span>
     <span class="n">rs</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ls</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="unique">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.unique.html#ase2sprkkr.asr.fere.unique">[docs]</a>
-<span class="k">def</span> <span class="nf">unique</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="unique"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.unique.html#ase2sprkkr.asr.fere.unique">[docs]</a><span class="k">def</span> <span class="nf">unique</span><span class="p">(</span><span class="n">ls</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">selector</span><span class="p">:</span>
         <span class="n">rs</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">ls</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -168,10 +144,7 @@
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">count</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span> <span class="n">rs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="parse_reactions">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.parse_reactions.html#ase2sprkkr.asr.fere.parse_reactions">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_reactions</span><span class="p">(</span><span class="n">reactionsstr</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_reactions"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.parse_reactions.html#ase2sprkkr.asr.fere.parse_reactions">[docs]</a><span class="k">def</span> <span class="nf">parse_reactions</span><span class="p">(</span><span class="n">reactionsstr</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">re</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">reactionsstr</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -202,10 +175,7 @@
     <span class="k">return</span> <span class="n">reactions</span></div>
 
 
-
-<div class="viewcode-block" id="parse_refs">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.parse_refs.html#ase2sprkkr.asr.fere.parse_refs">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_refs</span><span class="p">(</span><span class="n">refsstr</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_refs"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.parse_refs.html#ase2sprkkr.asr.fere.parse_refs">[docs]</a><span class="k">def</span> <span class="nf">parse_refs</span><span class="p">(</span><span class="n">refsstr</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">re</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">refsstr</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -234,19 +204,13 @@
     <span class="k">return</span> <span class="n">refs</span></div>
 
 
-
-<div class="viewcode-block" id="load_data">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.load_data.html#ase2sprkkr.asr.fere.load_data">[docs]</a>
-<span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">reactionsstr</span><span class="p">,</span> <span class="n">refsstr</span><span class="p">):</span>
+<div class="viewcode-block" id="load_data"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.load_data.html#ase2sprkkr.asr.fere.load_data">[docs]</a><span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">reactionsstr</span><span class="p">,</span> <span class="n">refsstr</span><span class="p">):</span>
     <span class="n">reacts</span> <span class="o">=</span> <span class="n">parse_reactions</span><span class="p">(</span><span class="n">reactionsstr</span><span class="p">)</span>
     <span class="n">refs</span> <span class="o">=</span> <span class="n">parse_refs</span><span class="p">(</span><span class="n">refsstr</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">reacts</span><span class="p">,</span> <span class="n">refs</span></div>
 
 
-
-<div class="viewcode-block" id="elements_from_refs">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.elements_from_refs.html#ase2sprkkr.asr.fere.elements_from_refs">[docs]</a>
-<span class="k">def</span> <span class="nf">elements_from_refs</span><span class="p">(</span><span class="n">refs</span><span class="p">):</span>
+<div class="viewcode-block" id="elements_from_refs"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.elements_from_refs.html#ase2sprkkr.asr.fere.elements_from_refs">[docs]</a><span class="k">def</span> <span class="nf">elements_from_refs</span><span class="p">(</span><span class="n">refs</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
 
     <span class="n">els</span> <span class="o">=</span> <span class="p">[]</span>
@@ -256,20 +220,14 @@
     <span class="k">return</span> <span class="n">els</span></div>
 
 
-
-<div class="viewcode-block" id="multiply_formula">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.multiply_formula.html#ase2sprkkr.asr.fere.multiply_formula">[docs]</a>
-<span class="k">def</span> <span class="nf">multiply_formula</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+<div class="viewcode-block" id="multiply_formula"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.multiply_formula.html#ase2sprkkr.asr.fere.multiply_formula">[docs]</a><span class="k">def</span> <span class="nf">multiply_formula</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
 
     <span class="n">form</span> <span class="o">=</span> <span class="n">Formula</span><span class="p">(</span><span class="n">prod</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Formula</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="o">*</span> <span class="n">j</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span></div>
 
 
-
-<div class="viewcode-block" id="safe_get">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.safe_get.html#ase2sprkkr.asr.fere.safe_get">[docs]</a>
-<span class="k">def</span> <span class="nf">safe_get</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">prod</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="safe_get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.safe_get.html#ase2sprkkr.asr.fere.safe_get">[docs]</a><span class="k">def</span> <span class="nf">safe_get</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">prod</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
         <span class="n">formula</span> <span class="o">=</span> <span class="n">multiply_formula</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -290,10 +248,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-
-<div class="viewcode-block" id="get_hof">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.get_hof.html#ase2sprkkr.asr.fere.get_hof">[docs]</a>
-<span class="k">def</span> <span class="nf">get_hof</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_hof"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.get_hof.html#ase2sprkkr.asr.fere.get_hof">[docs]</a><span class="k">def</span> <span class="nf">get_hof</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
 
     <span class="n">elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">formula</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -311,10 +266,7 @@
     <span class="k">return</span> <span class="n">hof</span> <span class="o">/</span> <span class="n">num_atoms</span></div>
 
 
-
-<div class="viewcode-block" id="get_dE_alpha">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.get_dE_alpha.html#ase2sprkkr.asr.fere.get_dE_alpha">[docs]</a>
-<span class="k">def</span> <span class="nf">get_dE_alpha</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">reactions</span><span class="p">,</span> <span class="n">refs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dE_alpha"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.get_dE_alpha.html#ase2sprkkr.asr.fere.get_dE_alpha">[docs]</a><span class="k">def</span> <span class="nf">get_dE_alpha</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">reactions</span><span class="p">,</span> <span class="n">refs</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
     <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
 
@@ -337,10 +289,7 @@
     <span class="k">return</span> <span class="n">DE</span><span class="p">,</span> <span class="n">alpha</span></div>
 
 
-
-<div class="viewcode-block" id="minimize_error">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.minimize_error.html#ase2sprkkr.asr.fere.minimize_error">[docs]</a>
-<span class="k">def</span> <span class="nf">minimize_error</span><span class="p">(</span><span class="n">dE</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+<div class="viewcode-block" id="minimize_error"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.minimize_error.html#ase2sprkkr.asr.fere.minimize_error">[docs]</a><span class="k">def</span> <span class="nf">minimize_error</span><span class="p">(</span><span class="n">dE</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">spsolve</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -356,10 +305,7 @@
     <span class="k">return</span> <span class="n">dMu</span><span class="p">,</span> <span class="n">error</span></div>
 
 
-
-<div class="viewcode-block" id="formulas_eq">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.formulas_eq.html#ase2sprkkr.asr.fere.formulas_eq">[docs]</a>
-<span class="k">def</span> <span class="nf">formulas_eq</span><span class="p">(</span><span class="n">form1</span><span class="p">,</span> <span class="n">form2</span><span class="p">):</span>
+<div class="viewcode-block" id="formulas_eq"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.formulas_eq.html#ase2sprkkr.asr.fere.formulas_eq">[docs]</a><span class="k">def</span> <span class="nf">formulas_eq</span><span class="p">(</span><span class="n">form1</span><span class="p">,</span> <span class="n">form2</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">form1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
 
@@ -371,10 +317,7 @@
     <span class="k">return</span> <span class="n">form1</span><span class="o">.</span><span class="n">stoichiometry</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">form2</span><span class="o">.</span><span class="n">stoichiometry</span><span class="p">()[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="create_corrected_db">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.create_corrected_db.html#ase2sprkkr.asr.fere.create_corrected_db">[docs]</a>
-<span class="k">def</span> <span class="nf">create_corrected_db</span><span class="p">(</span><span class="n">newname</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">reactions</span><span class="p">,</span> <span class="n">els_dMu</span><span class="p">):</span>
+<div class="viewcode-block" id="create_corrected_db"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.fere.create_corrected_db.html#ase2sprkkr.asr.fere.create_corrected_db">[docs]</a><span class="k">def</span> <span class="nf">create_corrected_db</span><span class="p">(</span><span class="n">newname</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">reactions</span><span class="p">,</span> <span class="n">els_dMu</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.formula</span> <span class="kn">import</span> <span class="n">Formula</span>
     <span class="kn">from</span> <span class="nn">ase.db</span> <span class="kn">import</span> <span class="n">connect</span>
 
@@ -387,7 +330,6 @@
             <span class="n">el</span><span class="p">,</span> <span class="n">dmu</span> <span class="o">=</span> <span class="n">el_dmu</span>
             <span class="n">row</span><span class="o">.</span><span class="n">energy</span> <span class="o">+=</span> <span class="n">formula</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="n">el</span><span class="p">]</span> <span class="o">*</span> <span class="n">dmu</span>
         <span class="n">newdb</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">)</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s2">&quot;asr.fere&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="s2">&quot;1:1h&quot;</span><span class="p">)</span>

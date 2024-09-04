@@ -12,11 +12,12 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -955,15 +957,7 @@
 
         <span class="c1"># Add ideal gas contribution, if applicable</span>
         <span class="k">if</span> <span class="n">include_ideal_gas</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;momenta&#39;</span><span class="p">):</span>
-            <span class="n">stresscomp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_momenta</span><span class="p">()</span>
-            <span class="n">masses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span>
-            <span class="n">invmass</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">masses</span>
-            <span class="n">invvol</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
-                    <span class="n">stress</span><span class="p">[</span><span class="n">stresscomp</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">]]</span> <span class="o">-=</span> <span class="p">(</span>
-                        <span class="n">p</span><span class="p">[:,</span> <span class="n">alpha</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">[:,</span> <span class="n">beta</span><span class="p">]</span> <span class="o">*</span> <span class="n">invmass</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">invvol</span>
+            <span class="n">stress</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kinetic_stress</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">voigt</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">stress</span>
@@ -995,17 +989,47 @@
         <span class="c1"># It might be good to check this here, but adds computational overhead.</span>
 
         <span class="k">if</span> <span class="n">include_ideal_gas</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="s1">&#39;momenta&#39;</span><span class="p">):</span>
-            <span class="n">stresscomp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="p">,</span> <span class="s1">&#39;get_atomic_volumes&#39;</span><span class="p">):</span>
-                <span class="n">invvol</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">get_atomic_volumes</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">invvol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_number_of_atoms</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_momenta</span><span class="p">()</span>
-            <span class="n">invmass</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-                <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
-                    <span class="n">stresses</span><span class="p">[:,</span> <span class="n">stresscomp</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">]]</span> <span class="o">-=</span> <span class="p">(</span>
-                        <span class="n">p</span><span class="p">[:,</span> <span class="n">alpha</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">[:,</span> <span class="n">beta</span><span class="p">]</span> <span class="o">*</span> <span class="n">invmass</span> <span class="o">*</span> <span class="n">invvol</span><span class="p">)</span>
+            <span class="n">stresses</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kinetic_stresses</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">voigt</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">stresses</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stresses_3x3</span> <span class="o">=</span> <span class="p">[</span><span class="n">voigt_6_to_full_3x3_stress</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stresses</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stresses_3x3</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_kinetic_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the kinetic part of the Virial stress tensor.&quot;&quot;&quot;</span>
+        <span class="n">stress</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>  <span class="c1"># Voigt notation</span>
+        <span class="n">stresscomp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_momenta</span><span class="p">()</span>
+        <span class="n">masses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span>
+        <span class="n">invmass</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">masses</span>
+        <span class="n">invvol</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">stress</span><span class="p">[</span><span class="n">stresscomp</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">]]</span> <span class="o">-=</span> <span class="p">(</span>
+                    <span class="n">p</span><span class="p">[:,</span> <span class="n">alpha</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">[:,</span> <span class="n">beta</span><span class="p">]</span> <span class="o">*</span> <span class="n">invmass</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">invvol</span>
+
+        <span class="k">if</span> <span class="n">voigt</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">stress</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">voigt_6_to_full_3x3_stress</span><span class="p">(</span><span class="n">stress</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_kinetic_stresses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the kinetic part of the Virial stress of all the atoms.&quot;&quot;&quot;</span>
+        <span class="n">stresses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="mi">6</span><span class="p">))</span>  <span class="c1"># Voigt notation</span>
+        <span class="n">stresscomp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="p">,</span> <span class="s1">&#39;get_atomic_volumes&#39;</span><span class="p">):</span>
+            <span class="n">invvol</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">get_atomic_volumes</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">invvol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_global_number_of_atoms</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_volume</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_momenta</span><span class="p">()</span>
+        <span class="n">invmass</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_masses</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">stresses</span><span class="p">[:,</span> <span class="n">stresscomp</span><span class="p">[</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">]]</span> <span class="o">-=</span> <span class="p">(</span>
+                    <span class="n">p</span><span class="p">[:,</span> <span class="n">alpha</span><span class="p">]</span> <span class="o">*</span> <span class="n">p</span><span class="p">[:,</span> <span class="n">beta</span><span class="p">]</span> <span class="o">*</span> <span class="n">invmass</span> <span class="o">*</span> <span class="n">invvol</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">voigt</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">stresses</span>
         <span class="k">else</span><span class="p">:</span>

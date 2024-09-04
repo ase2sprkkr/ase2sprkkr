@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -107,22 +109,15 @@
     <span class="kn">from</span> <span class="nn">..build</span> <span class="kn">import</span> <span class="n">semiinfinite_system</span>
 
 
-<div class="viewcode-block" id="_fast_atoms">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator._fast_atoms.html#ase2sprkkr.sprkkr.test.test_calculator._fast_atoms">[docs]</a>
-<span class="k">def</span> <span class="nf">_fast_atoms</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">jrws</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">r1</span><span class="o">=</span><span class="mf">2e-6</span><span class="p">):</span>
+<div class="viewcode-block" id="_fast_atoms"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator._fast_atoms.html#ase2sprkkr.sprkkr.test.test_calculator._fast_atoms">[docs]</a><span class="k">def</span> <span class="nf">_fast_atoms</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">jrws</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">r1</span><span class="o">=</span><span class="mf">2e-6</span><span class="p">):</span>
      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">sites</span><span class="p">:</span>
          <span class="n">i</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">jrws</span> <span class="o">=</span> <span class="n">jrws</span>
          <span class="n">i</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">r1</span> <span class="o">=</span><span class="n">r1</span></div>
 
 
+<div class="viewcode-block" id="TestCalculator"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator">[docs]</a><span class="k">class</span> <span class="nc">TestCalculator</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestCalculator">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator">[docs]</a>
-<span class="k">class</span> <span class="nc">TestCalculator</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
-
-<div class="viewcode-block" id="TestCalculator.test_2D">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_2D">[docs]</a>
- <span class="k">def</span> <span class="nf">test_2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCalculator.test_2D"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_2D">[docs]</a> <span class="k">def</span> <span class="nf">test_2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
      <span class="n">a</span><span class="o">=</span><span class="n">Atoms</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span> <span class="n">cell</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span> <span class="n">pbc</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
      <span class="n">b</span><span class="o">=</span><span class="n">semiinfinite_system</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
      <span class="n">cal</span><span class="o">=</span><span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_calc_args</span><span class="p">)</span>
@@ -137,10 +132,7 @@
      <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;NKTAB3D=&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">to_string</span><span class="p">())))</span>
      <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;NKTAB=&#39;</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">to_string</span><span class="p">())))</span></div>
 
-
-<div class="viewcode-block" id="TestCalculator.test_calculator">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_calculator">[docs]</a>
- <span class="k">def</span> <span class="nf">test_calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCalculator.test_calculator"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_calculator">[docs]</a> <span class="k">def</span> <span class="nf">test_calculator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
      <span class="n">here</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
      <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
@@ -202,10 +194,7 @@
      <span class="n">calculator</span><span class="o">.</span><span class="n">save_input</span><span class="p">(</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">inp_file</span><span class="p">,</span> <span class="n">potential</span> <span class="o">=</span> <span class="n">pot_file</span><span class="p">)</span>
      <span class="n">assert_change</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="TestCalculator.test_run">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_run">[docs]</a>
- <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCalculator.test_run"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_run">[docs]</a> <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_sprkkr</span><span class="p">():</span>
          <span class="k">return</span>
 
@@ -253,10 +242,7 @@
      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">symbols</span><span class="p">))</span>
      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="TestCalculator.test_phagen">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_phagen">[docs]</a>
- <span class="k">def</span> <span class="nf">test_phagen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCalculator.test_phagen"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.html#ase2sprkkr.sprkkr.test.test_calculator.TestCalculator.test_phagen">[docs]</a> <span class="k">def</span> <span class="nf">test_phagen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temporary_dir</span><span class="p">):</span>
      <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_sprkkr</span><span class="p">():</span>
          <span class="k">return</span>
      <span class="n">atoms</span> <span class="o">=</span> <span class="n">bulk</span><span class="p">(</span><span class="s1">&#39;Li&#39;</span><span class="p">)</span>
@@ -277,9 +263,7 @@
      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">iterations</span><span class="p">))</span>
 
      <span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NKTAB&#39;</span> <span class="p">:</span> <span class="mi">30</span><span class="p">})</span>
-     <span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NKTAB&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">})</span></div>
-</div>
-
+     <span class="n">out</span><span class="o">.</span><span class="n">calculator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;NKTAB&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">})</span></div></div>
 </pre></div>
 
            </div>

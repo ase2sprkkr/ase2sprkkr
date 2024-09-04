@@ -1,0 +1,51 @@
+:py:mod:`A1_Fe_scf_simple <ase2sprkkr.examples.A1_Fe_scf_simple.Fe.main>` 
+--------------------------------------------------------------------------
+
+Simple SCF calculation for bcc Fe.  `[show source] <./_modules/ase2sprkkr/examples/A1_Fe_scf_simple/Fe.html#main>`_
+
+
+:py:mod:`A2_Fe_scf_input_modifications <ase2sprkkr.examples.A2_Fe_scf_input_modifications.Fe.main>` 
+----------------------------------------------------------------------------------------------------
+
+Demonstration how to chage input SPRKKR file.  `[show source] <./_modules/ase2sprkkr/examples/A2_Fe_scf_input_modifications/Fe.html#main>`_
+
+
+:py:mod:`A3_Fe_dos <ase2sprkkr.examples.A3_Fe_dos.Fe.main>` 
+------------------------------------------------------------
+
+SCF calculation for Fe using kkrscf and consequent DOS by kkrgen.  `[show source] <./_modules/ase2sprkkr/examples/A3_Fe_dos/Fe.html#main>`_
+
+
+:py:mod:`A4_CPA_Example <ase2sprkkr.examples.A4_CPA_Example.Ni_doped_STO.main>` 
+--------------------------------------------------------------------------------
+
+Ni Doped SrTiO3 as calculated by the CPA method. This example demonstrate partial occupations.  `[show source] <./_modules/ase2sprkkr/examples/A4_CPA_Example/Ni_doped_STO.html#main>`_
+
+
+:py:mod:`A5_Al_EOS <ase2sprkkr.examples.A5_Al_EOS.Al.main>` 
+------------------------------------------------------------
+
+Total energy SCF calculations as a function of Volume and corresponding
+equation of state fiting.  `[show source] <./_modules/ase2sprkkr/examples/A5_Al_EOS/Al.html#main>`_
+
+
+:py:mod:`A6_Cu_MSSPEC <ase2sprkkr.examples.A6_Cu_MSSPEC.Cu.main>` 
+------------------------------------------------------------------
+
+Simple SCF calculations for fcc Cu in combination with msspec code to generate
+photoelectron diffraction.  `[show source] <./_modules/ase2sprkkr/examples/A6_Cu_MSSPEC/Cu.html#main>`_
+
+
+:py:mod:`A7_SrTiO3_MSSPEC <ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO.main>` 
+---------------------------------------------------------------------------
+
+SCF calculations for  SrTiO3 in combination with msspec code to generate
+photoelectron diffraction.  `[show source] <./_modules/ase2sprkkr/examples/A7_SrTiO3_MSSPEC/STO.html#main>`_
+
+
+:py:mod:`A8_ARPES_and_plotting <ase2sprkkr.examples.A8_ARPES_and_plotting.arpes.main>` 
+---------------------------------------------------------------------------------------
+
+Example of an ARPES calculation and plotting its results.  `[show source] <./_modules/ase2sprkkr/examples/A8_ARPES_and_plotting/arpes.html#main>`_
+
+

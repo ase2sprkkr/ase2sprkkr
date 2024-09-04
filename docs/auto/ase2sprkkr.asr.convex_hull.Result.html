@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Result &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -132,6 +134,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -164,10 +167,10 @@
            <div itemprop="articleBody">
              
   <section id="result">
-<h1>Result<a class="headerlink" href="#result" title="Link to this heading"></a></h1>
+<h1>Result<a class="headerlink" href="#result" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.convex_hull.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ehull</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thermodynamic_stability_level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/convex_hull.html#Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.convex_hull.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermodynamic_stability_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ehull</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hform</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/convex_hull.html#Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result" title="Permalink to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-8d434a2ef8068f15097222366827699bafa9def0.png" alt="Inheritance diagram of ase2sprkkr.asr.convex_hull.Result" usemap="#inheritanced9fe524632" class="inheritance graphviz" /></div>
 <map id="inheritanced9fe524632" name="inheritanced9fe524632">
@@ -177,23 +180,23 @@
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coefs</strong> (<em>List</em><em>[</em><em>float</em><em>] </em><em>| </em><em>None</em>) – </p></li>
-<li><p><strong>references</strong> (<em>List</em><em>[</em><em>dict</em><em>]</em>) – </p></li>
-<li><p><strong>ehull</strong> (<em>float</em>) – </p></li>
-<li><p><strong>hform</strong> (<em>float</em>) – </p></li>
-<li><p><strong>indices</strong> (<em>List</em><em>[</em><em>int</em><em>] </em><em>| </em><em>None</em>) – </p></li>
 <li><p><strong>thermodynamic_stability_level</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ehull</strong> (<em>float</em>) – </p></li>
+<li><p><strong>references</strong> (<em>List</em><em>[</em><em>dict</em><em>]</em>) – </p></li>
+<li><p><strong>indices</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>coefs</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>hform</strong> (<em>float</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ehull</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thermodynamic_stability_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thermodynamic_stability_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ehull</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coefs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hform</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Instantiate result.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Input data to be wrapped.</p></li>
 <li><p><strong>metadata</strong> (<em>dict</em>) – Dictionary containing metadata.</p></li>
@@ -205,58 +208,58 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.ehull">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ehull</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.ehull" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ehull</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.ehull" title="Permalink to this definition"></a></dt>
 <dd><p>Energy above convex hull [eV/atom].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.hform">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.hform" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hform</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.hform" title="Permalink to this definition"></a></dt>
 <dd><p>Heat of formation [eV/atom].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.references">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">references</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.references" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">references</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.references" title="Permalink to this definition"></a></dt>
 <dd><p>List of relevant references.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.thermodynamic_stability_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thermodynamic_stability_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.thermodynamic_stability_level" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thermodynamic_stability_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.thermodynamic_stability_level" title="Permalink to this definition"></a></dt>
 <dd><p>Thermodynamic stability level.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.coefs">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coefs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.coefs" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coefs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.coefs" title="Permalink to this definition"></a></dt>
 <dd><p>Fraction of decomposing references (see indices doc).</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.indices">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.indices" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.indices" title="Permalink to this definition"></a></dt>
 <dd><p>Indices of references that this structure will decompose into.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.key_descriptions">
-<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'coefs':</span> <span class="pre">'Fraction</span> <span class="pre">of</span> <span class="pre">decomposing</span> <span class="pre">references</span> <span class="pre">(see</span> <span class="pre">indices</span> <span class="pre">doc).',</span> <span class="pre">'ehull':</span> <span class="pre">'Energy</span> <span class="pre">above</span> <span class="pre">convex</span> <span class="pre">hull</span> <span class="pre">[eV/atom].',</span> <span class="pre">'hform':</span> <span class="pre">'Heat</span> <span class="pre">of</span> <span class="pre">formation</span> <span class="pre">[eV/atom].',</span> <span class="pre">'indices':</span> <span class="pre">'Indices</span> <span class="pre">of</span> <span class="pre">references</span> <span class="pre">that</span> <span class="pre">this</span> <span class="pre">structure</span> <span class="pre">will</span> <span class="pre">decompose</span> <span class="pre">into.',</span> <span class="pre">'references':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">relevant</span> <span class="pre">references.',</span> <span class="pre">'thermodynamic_stability_level':</span> <span class="pre">'Thermodynamic</span> <span class="pre">stability</span> <span class="pre">level.'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.key_descriptions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'coefs':</span> <span class="pre">'Fraction</span> <span class="pre">of</span> <span class="pre">decomposing</span> <span class="pre">references</span> <span class="pre">(see</span> <span class="pre">indices</span> <span class="pre">doc).',</span> <span class="pre">'ehull':</span> <span class="pre">'Energy</span> <span class="pre">above</span> <span class="pre">convex</span> <span class="pre">hull</span> <span class="pre">[eV/atom].',</span> <span class="pre">'hform':</span> <span class="pre">'Heat</span> <span class="pre">of</span> <span class="pre">formation</span> <span class="pre">[eV/atom].',</span> <span class="pre">'indices':</span> <span class="pre">'Indices</span> <span class="pre">of</span> <span class="pre">references</span> <span class="pre">that</span> <span class="pre">this</span> <span class="pre">structure</span> <span class="pre">will</span> <span class="pre">decompose</span> <span class="pre">into.',</span> <span class="pre">'references':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">relevant</span> <span class="pre">references.',</span> <span class="pre">'thermodynamic_stability_level':</span> <span class="pre">'Thermodynamic</span> <span class="pre">stability</span> <span class="pre">level.'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.key_descriptions" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.formats">
-<span class="sig-name descname"><span class="pre">formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ase_webpanel':</span> <span class="pre">&lt;function</span> <span class="pre">webpanel&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.formats" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ase_webpanel':</span> <span class="pre">&lt;function</span> <span class="pre">webpanel&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.formats" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result._known_data_keys">
-<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'coefs',</span> <span class="pre">'ehull',</span> <span class="pre">'hform',</span> <span class="pre">'indices',</span> <span class="pre">'references',</span> <span class="pre">'thermodynamic_stability_level'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result._known_data_keys" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'coefs',</span> <span class="pre">'ehull',</span> <span class="pre">'hform',</span> <span class="pre">'indices',</span> <span class="pre">'references',</span> <span class="pre">'thermodynamic_stability_level'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result._known_data_keys" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.convex_hull.Result.strict">
-<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.strict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.convex_hull.Result.strict" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

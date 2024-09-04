@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -102,13 +104,9 @@
 <span class="kn">from</span> <span class="nn">..process_output_reader</span> <span class="kn">import</span> <span class="n">AsyncioFileReader</span>  <span class="c1"># NOQA: E402</span>
 
 
-<div class="viewcode-block" id="TestCommon">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon">[docs]</a>
-<span class="k">class</span> <span class="nc">TestCommon</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCommon"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon">[docs]</a><span class="k">class</span> <span class="nc">TestCommon</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestCommon.test_common">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon.test_common">[docs]</a>
-  <span class="k">def</span> <span class="nf">test_common</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCommon.test_common"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon.test_common">[docs]</a>  <span class="k">def</span> <span class="nf">test_common</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">kwargs</span>
@@ -191,10 +189,7 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="mi">7</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)),</span> <span class="n">ff</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">((</span><span class="mi">7</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)),</span> <span class="n">ff</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="TestCommon.test_asyncio_file_reader">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon.test_asyncio_file_reader">[docs]</a>
-  <span class="k">def</span> <span class="nf">test_asyncio_file_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCommon.test_asyncio_file_reader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon.test_asyncio_file_reader">[docs]</a>  <span class="k">def</span> <span class="nf">test_asyncio_file_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w+b&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tfile</span><span class="p">:</span>
       <span class="n">tfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;&quot;&quot;First line</span><span class="se">\n</span><span class="s2">Second line</span><span class="se">\n</span><span class="s2">Hi, this is a very long file!! really!!! 12345123456789&quot;&quot;&quot;</span><span class="p">)</span>
       <span class="n">tfile</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -208,10 +203,7 @@
       <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">IncompleteReadError</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runAsync</span><span class="p">(</span><span class="n">ar</span><span class="o">.</span><span class="n">readuntil</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;123456&#39;</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="TestCommon.test_cached_property">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon.test_cached_property">[docs]</a>
-  <span class="k">def</span> <span class="nf">test_cached_property</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCommon.test_cached_property"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.common.test.test_common.TestCommon.html#ase2sprkkr.common.test.test_common.TestCommon.test_cached_property">[docs]</a>  <span class="k">def</span> <span class="nf">test_cached_property</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="kn">from</span> <span class="nn">..decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 
       <span class="k">class</span> <span class="nc">A</span><span class="p">():</span>
@@ -287,9 +279,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">a</span><span class="p">)</span></div>
-</div>
-
+      <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">a</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

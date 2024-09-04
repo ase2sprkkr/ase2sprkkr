@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>definitions &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -76,10 +78,11 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
@@ -94,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -125,15 +129,19 @@
            <div itemprop="articleBody">
              
   <section id="definitions">
-<h1>definitions<a class="headerlink" href="#definitions" title="Link to this heading"></a></h1>
+<h1>definitions<a class="headerlink" href="#definitions" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.input_parameters.definitions</strong></p>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.input_parameters.definitions">sprkkr.input_parameters.definitions - definitions of InputParameterss: definition of configurtion options and their
+<span class="target" id="module-ase2sprkkr.input_parameters.definitions"></span><p>sprkkr.input_parameters.definitions - definitions of InputParameterss: definition of configurtion options and their
 default values for SPR-KKR input_parameters.</p>
 <p>Each contained module should have input_parameters attribute, that holds the definition of a task. The modules
 should be named according to the name of the contained task (e.g. DOS, ARPES, SCF, …)</p>
 <p class="rubric">Modules</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html#module-ase2sprkkr.input_parameters.definitions.arpes" title="ase2sprkkr.input_parameters.definitions.arpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.arpes</span></code></a></p></td>
 <td><p>ARPES task input parameters definition</p></td>
@@ -144,19 +152,22 @@ should be named according to the name of the contained task (e.g. DOS, ARPES, SC
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html#module-ase2sprkkr.input_parameters.definitions.scf" title="ase2sprkkr.input_parameters.definitions.scf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.scf</span></code></a></p></td>
 <td><p>SCF task input parameters definition</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html#module-ase2sprkkr.input_parameters.definitions.dos" title="ase2sprkkr.input_parameters.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.dos</span></code></a></p></td>
-<td><p>DOS task input parameters definition</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html#module-ase2sprkkr.input_parameters.definitions.gilbert" title="ase2sprkkr.input_parameters.definitions.gilbert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.gilbert</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html#module-ase2sprkkr.input_parameters.definitions.gilbert" title="ase2sprkkr.input_parameters.definitions.gilbert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.gilbert</span></code></a></p></td>
 <td><p>Gilbert task input parameters definition</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html#module-ase2sprkkr.input_parameters.definitions.jxc" title="ase2sprkkr.input_parameters.definitions.jxc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.jxc</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html#module-ase2sprkkr.input_parameters.definitions.jxc" title="ase2sprkkr.input_parameters.definitions.jxc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.jxc</span></code></a></p></td>
 <td><p>DOS task input parameters definition</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html#module-ase2sprkkr.input_parameters.definitions.phagen" title="ase2sprkkr.input_parameters.definitions.phagen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.phagen</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html#module-ase2sprkkr.input_parameters.definitions.phagen" title="ase2sprkkr.input_parameters.definitions.phagen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.phagen</span></code></a></p></td>
 <td><p>PHAGEN task input parameters definition</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html#module-ase2sprkkr.input_parameters.definitions.marpes" title="ase2sprkkr.input_parameters.definitions.marpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.marpes</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html#module-ase2sprkkr.input_parameters.definitions.dos" title="ase2sprkkr.input_parameters.definitions.dos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.dos</span></code></a></p></td>
+<td><p>DOS task input parameters definition</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html#module-ase2sprkkr.input_parameters.definitions.bsf" title="ase2sprkkr.input_parameters.definitions.bsf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.bsf</span></code></a></p></td>
+<td><p>DOS task input parameters definition</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html#module-ase2sprkkr.input_parameters.definitions.marpes" title="ase2sprkkr.input_parameters.definitions.marpes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ase2sprkkr.input_parameters.definitions.marpes</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

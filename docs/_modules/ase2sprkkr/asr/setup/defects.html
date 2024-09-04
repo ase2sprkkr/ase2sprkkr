@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -193,9 +195,7 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="setup_supercell">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_supercell.html#ase2sprkkr.asr.setup.defects.setup_supercell">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_supercell</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_supercell"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_supercell.html#ase2sprkkr.asr.setup.defects.setup_supercell">[docs]</a><span class="k">def</span> <span class="nf">setup_supercell</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up the supercell of a given structure depending.</span>
 
 <span class="sd">    Set up the supercell of a given structure depending on a</span>
@@ -247,10 +247,7 @@
     <span class="k">return</span> <span class="n">structure_sc</span><span class="p">,</span> <span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">z_size</span></div>
 
 
-
-<div class="viewcode-block" id="setup_defects">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_defects.html#ase2sprkkr.asr.setup.defects.setup_defects">[docs]</a>
-<span class="k">def</span> <span class="nf">setup_defects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">,</span> <span class="n">charge_states</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
+<div class="viewcode-block" id="setup_defects"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.setup_defects.html#ase2sprkkr.asr.setup.defects.setup_defects">[docs]</a><span class="k">def</span> <span class="nf">setup_defects</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">intrinsic</span><span class="p">,</span> <span class="n">charge_states</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span>
                   <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up all possible defects.</span>
 
@@ -366,10 +363,7 @@
     <span class="k">return</span> <span class="n">structure_dict</span></div>
 
 
-
-<div class="viewcode-block" id="create_folder_structure">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.create_folder_structure.html#ase2sprkkr.asr.setup.defects.create_folder_structure">[docs]</a>
-<span class="k">def</span> <span class="nf">create_folder_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">structure_dict</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">,</span>
+<div class="viewcode-block" id="create_folder_structure"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.create_folder_structure.html#ase2sprkkr.asr.setup.defects.create_folder_structure">[docs]</a><span class="k">def</span> <span class="nf">create_folder_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">structure_dict</span><span class="p">,</span> <span class="n">chargestates</span><span class="p">,</span>
                             <span class="n">intrinsic</span><span class="p">,</span> <span class="n">vacancies</span><span class="p">,</span> <span class="n">sc</span><span class="p">,</span> <span class="n">max_lattice</span><span class="p">,</span> <span class="n">is_2D</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create folder for all configurations.</span>
 
@@ -456,12 +450,8 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-
-<div class="viewcode-block" id="collect_data">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.collect_data.html#ase2sprkkr.asr.setup.defects.collect_data">[docs]</a>
-<span class="k">def</span> <span class="nf">collect_data</span><span class="p">():</span>
+<div class="viewcode-block" id="collect_data"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.setup.defects.collect_data.html#ase2sprkkr.asr.setup.defects.collect_data">[docs]</a><span class="k">def</span> <span class="nf">collect_data</span><span class="p">():</span>
     <span class="k">return</span> <span class="kc">None</span></div>
-
 
 
 <span class="c1"># def webpanel(result, row, key_descriptions):</span>

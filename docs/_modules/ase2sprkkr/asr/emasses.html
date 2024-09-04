@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -92,11 +94,8 @@
 <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span><span class="p">,</span> <span class="n">prepare_result</span>
 
 
-<div class="viewcode-block" id="NoGapError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.NoGapError.html#ase2sprkkr.asr.emasses.NoGapError">[docs]</a>
-<span class="k">class</span> <span class="nc">NoGapError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="NoGapError"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.NoGapError.html#ase2sprkkr.asr.emasses.NoGapError">[docs]</a><span class="k">class</span> <span class="nc">NoGapError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
-
 
 
 <span class="c1"># More that 90% of masses are less than this</span>
@@ -104,9 +103,7 @@
 <span class="n">MAXMASS</span> <span class="o">=</span> <span class="mi">10</span>
 
 
-<div class="viewcode-block" id="set_default">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.set_default.html#ase2sprkkr.asr.emasses.set_default">[docs]</a>
-<span class="k">def</span> <span class="nf">set_default</span><span class="p">(</span><span class="n">settings</span><span class="p">):</span>
+<div class="viewcode-block" id="set_default"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.set_default.html#ase2sprkkr.asr.emasses.set_default">[docs]</a><span class="k">def</span> <span class="nf">set_default</span><span class="p">(</span><span class="n">settings</span><span class="p">):</span>
     <span class="k">if</span> <span class="s1">&#39;erange1&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
         <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;erange1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">250e-3</span>
     <span class="k">if</span> <span class="s1">&#39;nkpts1&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
@@ -115,7 +112,6 @@
         <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;erange2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-3</span>
     <span class="k">if</span> <span class="s1">&#39;nkpts2&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
         <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;nkpts2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">9</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.emasses&#39;</span><span class="p">,</span>
@@ -163,16 +159,11 @@
                          <span class="n">bandtype</span><span class="o">=</span><span class="n">bt</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_name">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_name.html#ase2sprkkr.asr.emasses.get_name">[docs]</a>
-<span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">soc</span><span class="p">,</span> <span class="n">bt</span><span class="p">):</span>
+<div class="viewcode-block" id="get_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_name.html#ase2sprkkr.asr.emasses.get_name">[docs]</a><span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="n">soc</span><span class="p">,</span> <span class="n">bt</span><span class="p">):</span>
     <span class="k">return</span> <span class="s1">&#39;em_circle_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bt</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;nosoc&#39;</span><span class="p">,</span> <span class="s1">&#39;soc&#39;</span><span class="p">][</span><span class="n">soc</span><span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="preliminary_refine">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.preliminary_refine.html#ase2sprkkr.asr.emasses.preliminary_refine">[docs]</a>
-<span class="k">def</span> <span class="nf">preliminary_refine</span><span class="p">(</span><span class="n">gpw</span><span class="o">=</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bandtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="preliminary_refine"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.preliminary_refine.html#ase2sprkkr.asr.emasses.preliminary_refine">[docs]</a><span class="k">def</span> <span class="nf">preliminary_refine</span><span class="p">(</span><span class="n">gpw</span><span class="o">=</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bandtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">from</span> <span class="nn">asr.utils.gpw2eigs</span> <span class="kn">import</span> <span class="n">gpw2eigs</span>
@@ -224,10 +215,7 @@
     <span class="k">return</span> <span class="n">fname</span> <span class="o">+</span> <span class="s1">&#39;.gpw&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="get_gapskn">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_gapskn.html#ase2sprkkr.asr.emasses.get_gapskn">[docs]</a>
-<span class="k">def</span> <span class="nf">get_gapskn</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="get_gapskn"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_gapskn.html#ase2sprkkr.asr.emasses.get_gapskn">[docs]</a><span class="k">def</span> <span class="nf">get_gapskn</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">from</span> <span class="nn">ase.dft.bandgap</span> <span class="kn">import</span> <span class="n">bandgap</span>
     <span class="kn">from</span> <span class="nn">asr.magnetic_anisotropy</span> <span class="kn">import</span> <span class="n">get_spin_axis</span>
@@ -257,10 +245,7 @@
     <span class="k">return</span> <span class="n">gap</span><span class="p">,</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">k1</span><span class="p">,</span> <span class="n">n1</span><span class="p">),</span> <span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">k2</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="nonsc_sphere">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.nonsc_sphere.html#ase2sprkkr.asr.emasses.nonsc_sphere">[docs]</a>
-<span class="k">def</span> <span class="nf">nonsc_sphere</span><span class="p">(</span><span class="n">gpw</span><span class="o">=</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="nonsc_sphere"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.nonsc_sphere.html#ase2sprkkr.asr.emasses.nonsc_sphere">[docs]</a><span class="k">def</span> <span class="nf">nonsc_sphere</span><span class="p">(</span><span class="n">gpw</span><span class="o">=</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="s1">&#39;gs.gpw&#39;</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">bandtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Non sc calculation for kpts in a sphere around the VBM/CBM.</span>
 
@@ -319,10 +304,7 @@
         <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.gpw&#39;</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="kptsinsphere">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.kptsinsphere.html#ase2sprkkr.asr.emasses.kptsinsphere">[docs]</a>
-<span class="k">def</span> <span class="nf">kptsinsphere</span><span class="p">(</span><span class="n">cell_cv</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">erange</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="kptsinsphere"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.kptsinsphere.html#ase2sprkkr.asr.emasses.kptsinsphere">[docs]</a><span class="k">def</span> <span class="nf">kptsinsphere</span><span class="p">(</span><span class="n">cell_cv</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">erange</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">dimensionality</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Hartree</span><span class="p">,</span> <span class="n">Bohr</span>
     <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">kpoint_convert</span>
@@ -347,10 +329,7 @@
     <span class="k">return</span> <span class="n">kpts_kc</span></div>
 
 
-
-<div class="viewcode-block" id="get_bt_ks">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_bt_ks.html#ase2sprkkr.asr.emasses.get_bt_ks">[docs]</a>
-<span class="k">def</span> <span class="nf">get_bt_ks</span><span class="p">(</span><span class="n">bandtype</span><span class="p">,</span> <span class="n">k1_c</span><span class="p">,</span> <span class="n">k2_c</span><span class="p">):</span>
+<div class="viewcode-block" id="get_bt_ks"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_bt_ks.html#ase2sprkkr.asr.emasses.get_bt_ks">[docs]</a><span class="k">def</span> <span class="nf">get_bt_ks</span><span class="p">(</span><span class="n">bandtype</span><span class="p">,</span> <span class="n">k1_c</span><span class="p">,</span> <span class="n">k2_c</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">bandtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">bandtypes</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;vb&#39;</span><span class="p">,</span> <span class="s1">&#39;cb&#39;</span><span class="p">)</span>
         <span class="n">ks</span> <span class="o">=</span> <span class="p">(</span><span class="n">k1_c</span><span class="p">,</span> <span class="n">k2_c</span><span class="p">)</span>
@@ -363,10 +342,7 @@
     <span class="k">return</span> <span class="n">bandtypes</span><span class="p">,</span> <span class="n">ks</span></div>
 
 
-
-<div class="viewcode-block" id="convert_key_to_tuple">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.convert_key_to_tuple.html#ase2sprkkr.asr.emasses.convert_key_to_tuple">[docs]</a>
-<span class="k">def</span> <span class="nf">convert_key_to_tuple</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="convert_key_to_tuple"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.convert_key_to_tuple.html#ase2sprkkr.asr.emasses.convert_key_to_tuple">[docs]</a><span class="k">def</span> <span class="nf">convert_key_to_tuple</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
     <span class="n">ks</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="n">ks</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ks</span><span class="p">]</span>
@@ -374,10 +350,7 @@
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="get_emass_dict_from_row">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_emass_dict_from_row.html#ase2sprkkr.asr.emasses.get_emass_dict_from_row">[docs]</a>
-<span class="k">def</span> <span class="nf">get_emass_dict_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+<div class="viewcode-block" id="get_emass_dict_from_row"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_emass_dict_from_row.html#ase2sprkkr.asr.emasses.get_emass_dict_from_row">[docs]</a><span class="k">def</span> <span class="nf">get_emass_dict_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.emasses.json&#39;</span><span class="p">)</span>
 
@@ -436,18 +409,12 @@
     <span class="k">return</span> <span class="n">electron_dict</span><span class="p">,</span> <span class="n">hole_dict</span></div>
 
 
-
-<div class="viewcode-block" id="get_range">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_range.html#ase2sprkkr.asr.emasses.get_range">[docs]</a>
-<span class="k">def</span> <span class="nf">get_range</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">_erange</span><span class="p">):</span>
+<div class="viewcode-block" id="get_range"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_range.html#ase2sprkkr.asr.emasses.get_range">[docs]</a><span class="k">def</span> <span class="nf">get_range</span><span class="p">(</span><span class="n">mass</span><span class="p">,</span> <span class="n">_erange</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Ha</span><span class="p">,</span> <span class="n">Bohr</span>
     <span class="k">return</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mass</span> <span class="o">*</span> <span class="n">_erange</span> <span class="o">/</span> <span class="n">Ha</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">Bohr</span></div>
 
 
-
-<div class="viewcode-block" id="make_the_plots">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.make_the_plots.html#ase2sprkkr.asr.emasses.make_the_plots">[docs]</a>
-<span class="k">def</span> <span class="nf">make_the_plots</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="make_the_plots"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.make_the_plots.html#ase2sprkkr.asr.emasses.make_the_plots">[docs]</a><span class="k">def</span> <span class="nf">make_the_plots</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="c1"># Loop through directions, each direction is a column</span>
     <span class="c1"># For direction i, loop through cbs and plot on fig</span>
     <span class="c1"># -- Plot also quadratic fit from curvature/effective mass value</span>
@@ -659,10 +626,7 @@
     <span class="k">return</span></div>
 
 
-
-<div class="viewcode-block" id="custom_table">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.custom_table.html#ase2sprkkr.asr.emasses.custom_table">[docs]</a>
-<span class="k">def</span> <span class="nf">custom_table</span><span class="p">(</span><span class="n">values_dict</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+<div class="viewcode-block" id="custom_table"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.custom_table.html#ase2sprkkr.asr.emasses.custom_table">[docs]</a><span class="k">def</span> <span class="nf">custom_table</span><span class="p">(</span><span class="n">values_dict</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
     <span class="n">table</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;table&#39;</span><span class="p">,</span>
              <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">title</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]}</span>
 
@@ -674,10 +638,7 @@
     <span class="k">return</span> <span class="n">table</span></div>
 
 
-
-<div class="viewcode-block" id="webpanel">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.webpanel.html#ase2sprkkr.asr.emasses.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.webpanel.html#ase2sprkkr.asr.emasses.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="n">columns</span><span class="p">,</span> <span class="n">fnames</span> <span class="o">=</span> <span class="n">create_columns_fnames</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
     <span class="n">electron_dict</span><span class="p">,</span> <span class="n">hole_dict</span> <span class="o">=</span> <span class="n">get_emass_dict_from_row</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
@@ -697,10 +658,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="create_columns_fnames">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.create_columns_fnames.html#ase2sprkkr.asr.emasses.create_columns_fnames">[docs]</a>
-<span class="k">def</span> <span class="nf">create_columns_fnames</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+<div class="viewcode-block" id="create_columns_fnames"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.create_columns_fnames.html#ase2sprkkr.asr.emasses.create_columns_fnames">[docs]</a><span class="k">def</span> <span class="nf">create_columns_fnames</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span> <span class="k">as</span> <span class="n">asrfig</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.emasses.json&#39;</span><span class="p">)</span>
@@ -778,10 +736,7 @@
     <span class="k">return</span> <span class="n">columns</span><span class="p">,</span> <span class="n">cb_fnames</span> <span class="o">+</span> <span class="n">vb_fnames</span></div>
 
 
-
-<div class="viewcode-block" id="check_soc">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.check_soc.html#ase2sprkkr.asr.emasses.check_soc">[docs]</a>
-<span class="k">def</span> <span class="nf">check_soc</span><span class="p">(</span><span class="n">spin_band_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="check_soc"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.check_soc.html#ase2sprkkr.asr.emasses.check_soc">[docs]</a><span class="k">def</span> <span class="nf">check_soc</span><span class="p">(</span><span class="n">spin_band_dict</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">spin_band_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="k">if</span> <span class="s1">&#39;effmass&#39;</span> <span class="ow">in</span> <span class="n">k</span> <span class="ow">and</span> <span class="s1">&#39;nosoc&#39;</span> <span class="ow">in</span> <span class="n">k</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -789,14 +744,10 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-
-<div class="viewcode-block" id="Result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.Result.html#ase2sprkkr.asr.emasses.Result">[docs]</a>
-<span class="nd">@prepare_result</span>
+<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.Result.html#ase2sprkkr.asr.emasses.Result">[docs]</a><span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.emasses&#39;</span><span class="p">,</span>
@@ -845,9 +796,7 @@
     <span class="k">return</span> <span class="n">good_results</span>
 
 
-<div class="viewcode-block" id="unpack_masses">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.unpack_masses.html#ase2sprkkr.asr.emasses.unpack_masses">[docs]</a>
-<span class="k">def</span> <span class="nf">unpack_masses</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">soc</span><span class="p">,</span> <span class="n">bt</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="unpack_masses"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.unpack_masses.html#ase2sprkkr.asr.emasses.unpack_masses">[docs]</a><span class="k">def</span> <span class="nf">unpack_masses</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">soc</span><span class="p">,</span> <span class="n">bt</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">):</span>
     <span class="c1"># Structure of &#39;masses&#39; object:</span>
     <span class="c1"># There is an &#39;indices&#39; key which tells you at which spin-k indices</span>
     <span class="c1"># effective masses have been calculated</span>
@@ -904,10 +853,7 @@
         <span class="n">results_dict</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;wideareaMAE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_dict</span><span class="p">[</span><span class="s1">&#39;wideareaMAE&#39;</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="embands">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.embands.html#ase2sprkkr.asr.emasses.embands">[docs]</a>
-<span class="k">def</span> <span class="nf">embands</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">soc</span><span class="p">,</span> <span class="n">bandtype</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="embands"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.embands.html#ase2sprkkr.asr.emasses.embands">[docs]</a><span class="k">def</span> <span class="nf">embands</span><span class="p">(</span><span class="n">gpw</span><span class="p">,</span> <span class="n">soc</span><span class="p">,</span> <span class="n">bandtype</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Effective masses for bands within delta of extrema.</span>
 
 <span class="sd">    Parameters</span>
@@ -970,10 +916,7 @@
     <span class="k">return</span> <span class="n">masses</span></div>
 
 
-
-<div class="viewcode-block" id="wideMAE">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.wideMAE.html#ase2sprkkr.asr.emasses.wideMAE">[docs]</a>
-<span class="k">def</span> <span class="nf">wideMAE</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">bt</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">,</span> <span class="n">erange</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
+<div class="viewcode-block" id="wideMAE"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.wideMAE.html#ase2sprkkr.asr.emasses.wideMAE">[docs]</a><span class="k">def</span> <span class="nf">wideMAE</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">bt</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">,</span> <span class="n">erange</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">kpoint_convert</span>
     <span class="kn">from</span> <span class="nn">ase.units</span> <span class="kn">import</span> <span class="n">Ha</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -1008,10 +951,7 @@
     <span class="k">return</span> <span class="n">maes</span></div>
 
 
-
-<div class="viewcode-block" id="calculate_bs_along_emass_vecs">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.calculate_bs_along_emass_vecs.html#ase2sprkkr.asr.emasses.calculate_bs_along_emass_vecs">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_bs_along_emass_vecs</span><span class="p">(</span><span class="n">masses_dict</span><span class="p">,</span> <span class="n">soc</span><span class="p">,</span>
+<div class="viewcode-block" id="calculate_bs_along_emass_vecs"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.calculate_bs_along_emass_vecs.html#ase2sprkkr.asr.emasses.calculate_bs_along_emass_vecs">[docs]</a><span class="k">def</span> <span class="nf">calculate_bs_along_emass_vecs</span><span class="p">(</span><span class="n">masses_dict</span><span class="p">,</span> <span class="n">soc</span><span class="p">,</span>
                                   <span class="n">bt</span><span class="p">,</span> <span class="n">calc</span><span class="p">,</span>
                                   <span class="n">spin</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span>
                                   <span class="n">erange</span><span class="o">=</span><span class="mf">250e-3</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">91</span><span class="p">,</span>
@@ -1083,10 +1023,7 @@
     <span class="k">return</span> <span class="n">results_dicts</span></div>
 
 
-
-<div class="viewcode-block" id="get_vb_cb_indices">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_vb_cb_indices.html#ase2sprkkr.asr.emasses.get_vb_cb_indices">[docs]</a>
-<span class="k">def</span> <span class="nf">get_vb_cb_indices</span><span class="p">(</span><span class="n">e_skn</span><span class="p">,</span> <span class="n">efermi</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+<div class="viewcode-block" id="get_vb_cb_indices"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_vb_cb_indices.html#ase2sprkkr.asr.emasses.get_vb_cb_indices">[docs]</a><span class="k">def</span> <span class="nf">get_vb_cb_indices</span><span class="p">(</span><span class="n">e_skn</span><span class="p">,</span> <span class="n">efermi</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find CB and VB within a distance of delta of the CB and VB extrema.</span>
 
 <span class="sd">    Parameters</span>
@@ -1127,10 +1064,7 @@
     <span class="k">return</span> <span class="n">vb_indices</span><span class="p">,</span> <span class="n">cb_indices</span></div>
 
 
-
-<div class="viewcode-block" id="em">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.em.html#ase2sprkkr.asr.emasses.em">[docs]</a>
-<span class="k">def</span> <span class="nf">em</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">,</span> <span class="n">eps_k</span><span class="p">,</span> <span class="n">bandtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="em"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.em.html#ase2sprkkr.asr.emasses.em">[docs]</a><span class="k">def</span> <span class="nf">em</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">,</span> <span class="n">eps_k</span><span class="p">,</span> <span class="n">bandtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;TODO: Do me.</span>
 
 <span class="sd">    Parameters</span>
@@ -1231,10 +1165,7 @@
     <span class="k">return</span> <span class="n">out</span></div>
 
 
-
-<div class="viewcode-block" id="get_extremum_type">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_extremum_type.html#ase2sprkkr.asr.emasses.get_extremum_type">[docs]</a>
-<span class="k">def</span> <span class="nf">get_extremum_type</span><span class="p">(</span><span class="n">dxx</span><span class="p">,</span> <span class="n">dyy</span><span class="p">,</span> <span class="n">dzz</span><span class="p">,</span> <span class="n">dxy</span><span class="p">,</span> <span class="n">dxz</span><span class="p">,</span> <span class="n">dyz</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="get_extremum_type"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_extremum_type.html#ase2sprkkr.asr.emasses.get_extremum_type">[docs]</a><span class="k">def</span> <span class="nf">get_extremum_type</span><span class="p">(</span><span class="n">dxx</span><span class="p">,</span> <span class="n">dyy</span><span class="p">,</span> <span class="n">dzz</span><span class="p">,</span> <span class="n">dxy</span><span class="p">,</span> <span class="n">dxz</span><span class="p">,</span> <span class="n">dyz</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="c1"># Input: 2nd order derivatives at the extremum point</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
@@ -1280,10 +1211,7 @@
         <span class="k">return</span> <span class="n">etype</span></div>
 
 
-
-<div class="viewcode-block" id="get_2nd_order_extremum">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_2nd_order_extremum.html#ase2sprkkr.asr.emasses.get_2nd_order_extremum">[docs]</a>
-<span class="k">def</span> <span class="nf">get_2nd_order_extremum</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="get_2nd_order_extremum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_2nd_order_extremum.html#ase2sprkkr.asr.emasses.get_2nd_order_extremum">[docs]</a><span class="k">def</span> <span class="nf">get_2nd_order_extremum</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="c1"># fit is</span>
     <span class="c1"># fxx x^2 + fyy y^2 + fzz z^2 +</span>
@@ -1316,10 +1244,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">fz</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">fzz</span><span class="p">)])</span></div>
 
 
-
-<div class="viewcode-block" id="get_3rd_order_extremum">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_3rd_order_extremum.html#ase2sprkkr.asr.emasses.get_3rd_order_extremum">[docs]</a>
-<span class="k">def</span> <span class="nf">get_3rd_order_extremum</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">zm</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">extremum_type</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<div class="viewcode-block" id="get_3rd_order_extremum"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.get_3rd_order_extremum.html#ase2sprkkr.asr.emasses.get_3rd_order_extremum">[docs]</a><span class="k">def</span> <span class="nf">get_3rd_order_extremum</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">zm</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">extremum_type</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">extremum_type</span> <span class="o">==</span> <span class="s1">&#39;saddlepoint&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">zm</span>
 
@@ -1382,10 +1307,7 @@
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span></div>
 
 
-
-<div class="viewcode-block" id="fit">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.fit.html#ase2sprkkr.asr.emasses.fit">[docs]</a>
-<span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">,</span> <span class="n">eps_k</span><span class="p">,</span> <span class="n">thirdorder</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="fit"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.fit.html#ase2sprkkr.asr.emasses.fit">[docs]</a><span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">,</span> <span class="n">eps_k</span><span class="p">,</span> <span class="n">thirdorder</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">la</span>
     <span class="n">A_kp</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">thirdorder</span><span class="p">:</span>
@@ -1393,10 +1315,7 @@
     <span class="k">return</span> <span class="n">la</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">A_kp</span><span class="p">,</span> <span class="n">eps_k</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="model">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.model.html#ase2sprkkr.asr.emasses.model">[docs]</a>
-<span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">):</span>
+<div class="viewcode-block" id="model"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.model.html#ase2sprkkr.asr.emasses.model">[docs]</a><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate simple third order model.</span>
 
 <span class="sd">    Parameters</span>
@@ -1434,10 +1353,7 @@
     <span class="k">return</span> <span class="n">A_dp</span></div>
 
 
-
-<div class="viewcode-block" id="evalmodel">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.evalmodel.html#ase2sprkkr.asr.emasses.evalmodel">[docs]</a>
-<span class="k">def</span> <span class="nf">evalmodel</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">,</span> <span class="n">c_p</span><span class="p">,</span> <span class="n">thirdorder</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="evalmodel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.emasses.evalmodel.html#ase2sprkkr.asr.emasses.evalmodel">[docs]</a><span class="k">def</span> <span class="nf">evalmodel</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">,</span> <span class="n">c_p</span><span class="p">,</span> <span class="n">thirdorder</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="n">kpts_kv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">kpts_kv</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">kpts_kv</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1446,7 +1362,6 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">thirdorder</span><span class="p">:</span>
         <span class="n">A_kp</span> <span class="o">=</span> <span class="n">A_kp</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">10</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A_kp</span><span class="p">,</span> <span class="n">c_p</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

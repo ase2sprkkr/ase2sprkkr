@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO &mdash; ASE2SPRKKR  documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/mods.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            ASE2SPRKKR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">How to use the package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-install.html">More about the package installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://ase2sprkkr.github.io/ase2sprkkr/">ASE2SPRKKR homepage</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://wiki.fysik.dtu.dk/ase/">ASE - atomic simulation environment</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://ebert.cup.uni-muenchen.de/index.php/en/software-en/13-sprkkr">SPR-KKR</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/ase2sprkkr/ase2sprkkr">GitHub repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/ase2sprkkr">PyPI package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/">SPR-KKR manual</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Class documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../auto/ase2sprkkr.html">ase2sprkkr</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ASE2SPRKKR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">SCF calculations for  SrTiO3 in combination with msspec code to generate</span>
+<span class="sd">photoelectron diffraction.</span>
+
+<span class="sd">Call with ``msspec`` and/or ``sprkkr`` commandline argument.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">ase.lattice.tetragonal</span> <span class="kn">import</span> <span class="n">SimpleTetragonalFactory</span>
+<span class="kn">from</span> <span class="nn">ase.visualize</span> <span class="kn">import</span> <span class="n">view</span>
+<span class="kn">from</span> <span class="nn">ase2sprkkr</span> <span class="kn">import</span> <span class="n">SPRKKR</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO.main.html#ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+
+    <span class="c1"># Define a Perovskite Factory class</span>
+    <span class="k">class</span> <span class="nc">PerovskiteFactory</span><span class="p">(</span><span class="n">SimpleTetragonalFactory</span><span class="p">):</span>
+        <span class="n">bravais_basis</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]]</span>
+        <span class="n">element_basis</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">Perovskite</span> <span class="o">=</span> <span class="n">PerovskiteFactory</span><span class="p">()</span>
+
+    <span class="c1"># Generate the base STO cell</span>
+    <span class="n">a0</span> <span class="o">=</span> <span class="mf">3.905</span>
+    <span class="n">STO</span> <span class="o">=</span> <span class="n">Perovskite</span><span class="p">((</span><span class="s1">&#39;Sr&#39;</span><span class="p">,</span> <span class="s1">&#39;Ti&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">),</span>
+                     <span class="n">latticeconstant</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="n">a0</span><span class="p">,</span> <span class="s1">&#39;c/a&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">},</span>
+                     <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s1">&#39;view&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">view</span><span class="p">(</span><span class="n">STO</span><span class="p">)</span>
+
+    <span class="c1"># ########## SPRKKR part</span>
+    <span class="k">if</span> <span class="s1">&#39;sprkkr&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">SPRKKR</span><span class="p">(</span><span class="n">atoms</span><span class="o">=</span><span class="n">STO</span><span class="p">,</span><span class="n">mpi</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mpirun&#39;</span><span class="p">,</span><span class="s1">&#39;-np&#39;</span><span class="p">,</span><span class="s1">&#39;16&#39;</span><span class="p">])</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">NL</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">MIX</span><span class="o">=</span><span class="mf">0.01</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">SCF</span><span class="o">.</span><span class="n">NITER</span><span class="o">=</span><span class="mi">1000</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">CONTROL</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;NOSYM&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">out_scf</span><span class="o">=</span><span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">=</span><span class="s1">&#39;PHAGEN&#39;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">out_scf</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
+
+    <span class="c1"># ######### MsSpec part</span>
+    <span class="k">if</span> <span class="s1">&#39;msspec&#39;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+
+        <span class="kn">from</span> <span class="nn">msspec.calculator</span> <span class="kn">import</span> <span class="n">MSSPEC</span>
+        <span class="kn">from</span> <span class="nn">msspec.utils</span> <span class="kn">import</span> <span class="n">SPRKKRPotential</span><span class="p">,</span> <span class="n">hemispherical_cluster</span><span class="p">,</span> \
+                                 <span class="n">get_atom_index</span>
+
+        <span class="c1">###########################################################################</span>
+        <span class="c1"># Build the SrTiO3 cluster                                                #</span>
+        <span class="c1">###########################################################################</span>
+        <span class="c1"># We start by loading the potential since it updates info in the STO cell</span>
+        <span class="n">pot</span> <span class="o">=</span> <span class="n">SPRKKRPotential</span><span class="p">(</span><span class="n">STO</span><span class="p">,</span> <span class="s2">&quot;SrTiO3_scf.pot_new&quot;</span><span class="p">,</span>
+                              <span class="o">*</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*PHAGEN.pot&quot;</span><span class="p">))</span>
+
+        <span class="c1"># tag each atom in the STO object to easily set the emitter in the</span>
+        <span class="c1"># hemispherical_cluster function</span>
+        <span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;tag&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;Sr&#39;</span><span class="p">,</span> <span class="s1">&#39;Ti&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">symbol</span><span class="p">))</span> <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">STO</span><span class="p">]</span>
+
+        <span class="c1"># Create a hemispherical cluster centered on a Ti emitter from the</span>
+        <span class="c1"># STO primitive cell used in the SPRKKR step.</span>
+        <span class="c1"># For this example we use 4 planes and the Ti emitter (tag #1) is</span>
+        <span class="c1"># located in the 2nd plane (numbering starts at 0)</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="n">hemispherical_cluster</span><span class="p">(</span><span class="n">STO</span><span class="p">,</span>
+                                        <span class="n">planes</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                        <span class="n">emitter_plane</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">emitter_tag</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># The created cluster is centered on the emitter atom, so defining</span>
+        <span class="c1"># the absorber attribute is straightforward:</span>
+        <span class="n">cluster</span><span class="o">.</span><span class="n">absorber</span> <span class="o">=</span> <span class="n">get_atom_index</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1">###########################################################################</span>
+        <span class="c1"># Set up the PhotoElectron Diffraction calculator                         #</span>
+        <span class="c1">###########################################################################</span>
+        <span class="c1"># Create the calculator</span>
+        <span class="n">calc</span> <span class="o">=</span> <span class="n">MSSPEC</span><span class="p">(</span><span class="n">spectroscopy</span><span class="o">=</span><span class="s1">&#39;PED&#39;</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;expansion&#39;</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="s1">&#39;PED&#39;</span><span class="p">)</span>
+
+        <span class="c1"># minimalistic set of parameter for XPD scan</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">set_atoms</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">calculation_parameters</span><span class="o">.</span><span class="n">scattering_order</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="c1"># We need to impose a maximum number of tl to use because there is still</span>
+        <span class="c1"># a memory bug that I need to investigate. Anyway, usually 25 is not that</span>
+        <span class="c1"># bad for the kind of atoms and the photon energy of lab sources...</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">lmax_mode</span> <span class="o">=</span> <span class="s1">&#39;imposed&#39;</span>
+        <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">lmaxt</span> <span class="o">=</span> <span class="mi">25</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">source_energy</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">500.</span><span class="p">,</span> <span class="mf">1501.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">):</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">source_parameters</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="n">source_energy</span>
+            <span class="c1"># Run a polar scan with the default MuffinTin potential for Ti(2p3/2)</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="s1">&#39;muffin_tin&#39;</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;2p3/2&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="c1"># Now we use the previously generated SPRKKR potential and run the same</span>
+            <span class="c1"># calculation</span>
+            <span class="n">calc</span><span class="o">.</span><span class="n">tmatrix_parameters</span><span class="o">.</span><span class="n">potential</span> <span class="o">=</span> <span class="n">pot</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">calc</span><span class="o">.</span><span class="n">get_theta_scan</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;2p3/2&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+            <span class="c1"># To better see the differences, plot the normalized signal on the</span>
+            <span class="c1"># same graph</span>
+            <span class="c1"># add a new dataset for storing normalized values</span>
+            <span class="n">dset</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">add_dset</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;comparison at </span><span class="si">{</span><span class="n">source_energy</span><span class="si">}</span><span class="s2"> eV&quot;</span><span class="p">)</span>
+            <span class="c1"># make a copy of previous scans values</span>
+            <span class="n">theta</span><span class="p">,</span> <span class="n">muffintin_cs</span><span class="p">,</span> <span class="n">sprkkr_cs</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">theta</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                                            <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">cross_section</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                                            <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">cross_section</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+            <span class="c1"># divide by the max</span>
+            <span class="n">sprkkr_cs</span> <span class="o">/=</span> <span class="n">sprkkr_cs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="n">muffintin_cs</span> <span class="o">/=</span> <span class="n">muffintin_cs</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="c1"># add a new dataset with those values</span>
+            <span class="n">dset</span><span class="o">.</span><span class="n">add_columns</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="n">sprkkr</span><span class="o">=</span><span class="n">sprkkr_cs</span><span class="p">,</span> <span class="n">muffintin</span><span class="o">=</span><span class="n">muffintin_cs</span><span class="p">)</span>
+            <span class="c1"># add a view for this dataset</span>
+            <span class="n">dview</span> <span class="o">=</span> <span class="n">dset</span><span class="o">.</span><span class="n">add_view</span><span class="p">(</span><span class="s1">&#39;Comparison&#39;</span><span class="p">,</span>
+                                <span class="n">title</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Comparison of XPD polar scans for &#39;</span>
+                                       <span class="sa">r</span><span class="s1">&#39;Ti(2p3/2) at $h\nu$ = </span><span class="si">{:.0f}</span><span class="s1"> eV&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                           <span class="n">source_energy</span><span class="p">)),</span>
+                                <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Theta (\degree$)&#39;</span><span class="p">,</span>
+                                <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Normalized Signal (a.u.)&#39;</span><span class="p">)</span>
+            <span class="n">dview</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;theta&#39;</span><span class="p">,</span> <span class="s1">&#39;sprkkr&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s1">&#39;With SPRKKR potential&#39;</span><span class="p">)</span>
+            <span class="n">dview</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;theta&#39;</span><span class="p">,</span> <span class="s1">&#39;muffintin&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="s1">&#39;With internal MT potential&#39;</span><span class="p">)</span>
+            <span class="n">dview</span><span class="o">.</span><span class="n">set_plot_options</span><span class="p">(</span><span class="n">autoscale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Pop up the final result</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please specify either &#39;sprkkr&#39;, &#39;msspec&#39; keywords or both &quot;</span>
+              <span class="s2">&quot;of them on the command line&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># Just run the script only when directly called from command line</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Matyáš Novák &amp; Jano Minár.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

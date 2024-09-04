@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -102,25 +104,18 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
 
 
-<div class="viewcode-block" id="DisabledAttributeError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DisabledAttributeError.html#ase2sprkkr.potentials.definitions.sections.charge_moments.DisabledAttributeError">[docs]</a>
-<span class="k">class</span> <span class="nc">DisabledAttributeError</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
+<div class="viewcode-block" id="DisabledAttributeError"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DisabledAttributeError.html#ase2sprkkr.potentials.definitions.sections.charge_moments.DisabledAttributeError">[docs]</a><span class="k">class</span> <span class="nc">DisabledAttributeError</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; This exception is raised, if the attribute of a container exists,</span>
 <span class="sd">      but it is disabled. E.g. because it has no sense for the current data.</span>
 <span class="sd">      &quot;&quot;&quot;</span></div>
 
 
-
-<div class="viewcode-block" id="BaseConfigurationContainer">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseConfigurationContainer">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseConfigurationContainer</span><span class="p">(</span><span class="n">Configuration</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">BaseConfigurationContainer</span><span class="p">(</span><span class="n">Configuration</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Configuration container, that holds members, either in classical way</span>
 <span class="sd">    (see :class:ConfigurationContainer) or treat them in a special way</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseConfigurationContainer.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseConfigurationContainer.copy">[docs]</a>
-    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_values</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseConfigurationContainer.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseConfigurationContainer.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copy_values</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a copy of the container</span>
 
 <span class="sd">        Parameters</span>
@@ -135,10 +130,7 @@
         <span class="n">out</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
-
-<div class="viewcode-block" id="BaseConfigurationContainer.has_any_value">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseConfigurationContainer.has_any_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseConfigurationContainer.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseConfigurationContainer.has_any_value">[docs]</a>    <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return True if any member of the section has value.</span>
 
@@ -151,7 +143,6 @@
           <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
              <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -166,10 +157,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span></div>
 
 
-
-<div class="viewcode-block" id="ConfigurationContainer">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer">[docs]</a>
-<span class="k">class</span> <span class="nc">ConfigurationContainer</span><span class="p">(</span><span class="n">BaseConfigurationContainer</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationContainer</span><span class="p">(</span><span class="n">BaseConfigurationContainer</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A container for configuration (problem-definition) options and/or sections.</span>
 
 <span class="sd">  Options in the configuration (problem-definition) files are grouped to</span>
@@ -178,9 +166,7 @@
 
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Create the container and its members, according to the definition &quot;&quot;&quot;</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
@@ -188,10 +174,7 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_init_members_from_the_definition</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer._init_members_from_the_definition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._init_members_from_the_definition">[docs]</a>
-  <span class="k">def</span> <span class="nf">_init_members_from_the_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._init_members_from_the_definition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._init_members_from_the_definition">[docs]</a>  <span class="k">def</span> <span class="nf">_init_members_from_the_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_members</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Non-hidden members of the containers, accesible via sanitized names.</span>
@@ -204,10 +187,7 @@
           <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">create_object</span><span class="p">:</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.items">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.items">[docs]</a>
-  <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.items"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.items">[docs]</a>  <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Members of the container. I.e. the options of the section, or sections</span>
 <span class="sd">      of the configuration file e.t.c.</span>
 
@@ -219,10 +199,7 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer._get_member">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._get_member">[docs]</a>
-  <span class="k">def</span> <span class="nf">_get_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._get_member"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._get_member">[docs]</a>  <span class="k">def</span> <span class="nf">_get_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the member of the container of a given name.</span>
 <span class="sd">      It search either the members and interactive_members containers</span>
@@ -246,7 +223,6 @@
                                 <span class="s1">&#39;data for it). If you eally need an access to the attribute, you can use the &#39;</span>
                                 <span class="s1">&#39;&quot;container[&#39;&#39;name&#39;&#39;]&quot; notation.&#39;</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">out</span></div>
-
 
   <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
@@ -282,11 +258,8 @@
 
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
-<div class="viewcode-block" id="ConfigurationContainer._get">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._get">[docs]</a>
-  <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._get">[docs]</a>  <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
-
 
   <span class="k">def</span> <span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
@@ -318,9 +291,7 @@
               <span class="k">return</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="ow">in</span> <span class="n">member</span>
       <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.clear">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.clear">[docs]</a>
-  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.clear">[docs]</a>  <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">do_not_check_required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Erase all values (or reset to default) from all options in the container</span>
 <span class="sd">      (ad subcontainers)</span>
@@ -342,10 +313,7 @@
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
           <span class="n">i</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">do_not_check_required</span><span class="p">,</span> <span class="n">call_hooks</span><span class="o">=</span><span class="n">call_hooks</span><span class="p">,</span> <span class="n">generated</span><span class="o">=</span><span class="kc">False</span> <span class="k">if</span> <span class="n">generated</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">generated</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.get">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.get">[docs]</a>
-  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.get"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Get the value, either of self or of a child of a given name.</span>
 
@@ -383,10 +351,7 @@
          <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> member of </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">val</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.set">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.set">[docs]</a>
-  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">Any</span><span class="p">],</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="p">{},</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.set"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.set">[docs]</a>  <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="n">Any</span><span class="p">],</span><span class="nb">str</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span><span class="o">=</span><span class="p">{},</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Set the value(s) of parameter(s). Usage:</span>
 
@@ -456,10 +421,7 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
           <span class="n">set_value</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.add">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.add">[docs]</a>
-  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.add">[docs]</a>  <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Add custom value to the container</span>
 
@@ -480,10 +442,7 @@
       <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
           <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.remove_member">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.remove_member">[docs]</a>
-  <span class="k">def</span> <span class="nf">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.remove_member"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.remove_member">[docs]</a>  <span class="k">def</span> <span class="nf">remove_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Remove a (previously added) custom value from the container</span>
 <span class="sd">      &quot;&quot;&quot;</span>
@@ -499,14 +458,11 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">[</span><span class="n">iname</span><span class="p">]</span> <span class="o">==</span> <span class="n">member</span><span class="p">:</span>
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">[</span><span class="n">iname</span><span class="p">]</span></div>
 
-
   <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Iterate over all members of the container &quot;&quot;&quot;</span>
       <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.as_dict">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.as_dict">[docs]</a>
-  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.as_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.as_dict">[docs]</a>  <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_changed</span><span class="p">:</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">generated</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return the content of the container as a dictionary.</span>
 <span class="sd">      Nested containers will be transformed to dictionaries as well.</span>
@@ -530,10 +486,7 @@
               <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
       <span class="k">return</span> <span class="n">out</span> <span class="ow">or</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer._find_value">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._find_value">[docs]</a>
-  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._find_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._find_value">[docs]</a>  <span class="k">def</span> <span class="nf">_find_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Find a value of a given name in self or in any</span>
 <span class="sd">      of owned subcontainers.</span>
@@ -558,10 +511,7 @@
           <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
              <span class="k">return</span> <span class="n">out</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer._interactive_member_name">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._interactive_member_name">[docs]</a>
-  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="ConfigurationContainer._interactive_member_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._interactive_member_name">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">_interactive_member_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Create a sanitized name from a member-name.</span>
 
@@ -570,10 +520,7 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[()]&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-\s.]&#39;</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">))</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer._add">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._add">[docs]</a>
-  <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer._add"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._add">[docs]</a>  <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
       <span class="n">name</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_members</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">member</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">is_hidden</span><span class="p">:</span>
@@ -581,19 +528,13 @@
           <span class="k">if</span> <span class="ow">not</span> <span class="n">iname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">:</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">_interactive_members</span><span class="p">[</span><span class="n">iname</span><span class="p">]</span> <span class="o">=</span> <span class="n">member</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.is_changed">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.is_changed">[docs]</a>
-  <span class="k">def</span> <span class="nf">is_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.is_changed"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.is_changed">[docs]</a>  <span class="k">def</span> <span class="nf">is_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
           <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">is_changed</span><span class="p">():</span>
               <span class="k">return</span> <span class="kc">True</span>
       <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer._save_to_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._save_to_file">[docs]</a>
-  <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfigurationContainer._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer._save_to_file">[docs]</a>  <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Save the content of the container to the file (according to the definition)</span>
 
 <span class="sd">      Parameters</span>
@@ -611,7 +552,6 @@
 <span class="sd">      &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">always</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span></div>
 
-
   <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Setting the (unknown) attribute of a section sets the value of the member</span>
 <span class="sd">      with a given name &quot;&quot;&quot;</span>
@@ -622,9 +562,7 @@
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">val</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ConfigurationContainer.validate">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.validate">[docs]</a>
-  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ConfigurationContainer.validate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.validate">[docs]</a>  <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">why</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;save&#39;</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Validate the configuration data. Raise an exception, if the validation fail.</span>
 
 <span class="sd">      Parameters</span>
@@ -641,10 +579,7 @@
       <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
           <span class="n">o</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">why</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="ConfigurationContainer.has_any_value">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.has_any_value">[docs]</a>
-  <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="ConfigurationContainer.has_any_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.ConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.ConfigurationContainer.has_any_value">[docs]</a>  <span class="k">def</span> <span class="nf">has_any_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return True if any member of the section has value.</span>
 
@@ -656,23 +591,16 @@
       <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">has_any_value</span><span class="p">():</span>
            <span class="k">return</span> <span class="kc">True</span>
-      <span class="k">return</span> <span class="kc">False</span></div>
-</div>
+      <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
-
-<div class="viewcode-block" id="DictAdaptor">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.potentials.definitions.sections.charge_moments.DictAdaptor">[docs]</a>
-<span class="k">class</span> <span class="nc">DictAdaptor</span><span class="p">:</span>
+<div class="viewcode-block" id="DictAdaptor"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.potentials.definitions.sections.charge_moments.DictAdaptor">[docs]</a><span class="k">class</span> <span class="nc">DictAdaptor</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This class wraps a container to behave as a read-only dict.</span>
 <span class="sd">  It is used during validation of a container.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DictAdaptor.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.potentials.definitions.sections.charge_moments.DictAdaptor.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+<div class="viewcode-block" id="DictAdaptor.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.DictAdaptor.html#ase2sprkkr.potentials.definitions.sections.charge_moments.DictAdaptor.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">=</span><span class="n">container</span></div>
-
 
   <span class="k">def</span> <span class="nf">__hasitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">container__hasitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -681,17 +609,11 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)()</span></div>
 
 
-
-<div class="viewcode-block" id="BaseSection">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseSection">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.BaseSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.BaseSection">[docs]</a><span class="k">class</span> <span class="nc">BaseSection</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A section of SPRKKR configuration - i.e. part of the configuration file. &quot;&quot;&quot;</span></div>
 
 
-
-<div class="viewcode-block" id="Section">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.potentials.definitions.sections.charge_moments.Section">[docs]</a>
-<span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
+<div class="viewcode-block" id="Section"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.Section.html#ase2sprkkr.potentials.definitions.sections.charge_moments.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A standard section of a task or potential (whose content is predefinded by SectionDefinition) &quot;&quot;&quot;</span>
 
   <span class="nd">@property</span>
@@ -707,22 +629,14 @@
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_definition</span></div>
 
 
-
-<div class="viewcode-block" id="CustomSection">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.CustomSection">[docs]</a>
-<span class="k">class</span> <span class="nc">CustomSection</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomSection"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.CustomSection">[docs]</a><span class="k">class</span> <span class="nc">CustomSection</span><span class="p">(</span><span class="n">BaseSection</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Custom task section. Section created by user with no definition &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CustomSection.remove">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.CustomSection.remove">[docs]</a>
-  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomSection.remove"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.CustomSection.remove">[docs]</a>  <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Remove the custom section from the parent container &quot;&quot;&quot;</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="CustomSection.factory">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.CustomSection.factory">[docs]</a>
-  <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CustomSection.factory"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.CustomSection.html#ase2sprkkr.potentials.definitions.sections.charge_moments.CustomSection.factory">[docs]</a>  <span class="nd">@classmethod</span>
   <span class="k">def</span> <span class="nf">factory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">definition_type</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Create a factory for custom values.</span>
 
@@ -743,23 +657,17 @@
           <span class="n">definition</span> <span class="o">=</span> <span class="n">definition_type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
           <span class="n">definition</span><span class="o">.</span><span class="n">removable</span> <span class="o">=</span> <span class="kc">True</span>
           <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">create</span></div>
-</div>
+      <span class="k">return</span> <span class="n">create</span></div></div>
 
 
-
-<div class="viewcode-block" id="RootConfigurationContainer">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.RootConfigurationContainer">[docs]</a>
-<span class="k">class</span> <span class="nc">RootConfigurationContainer</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfigurationContainer"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.RootConfigurationContainer">[docs]</a><span class="k">class</span> <span class="nc">RootConfigurationContainer</span><span class="p">(</span><span class="n">ConfigurationContainer</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Base class for data of configuration/problem-definition files</span>
 
 <span class="sd">  In addition to container capabilities, it can read its data from/to file.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">name_in_grammar</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="RootConfigurationContainer.read_from_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.RootConfigurationContainer.read_from_file">[docs]</a>
-  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">clear_first</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfigurationContainer.read_from_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.RootConfigurationContainer.read_from_file">[docs]</a>  <span class="k">def</span> <span class="nf">read_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">clear_first</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Read data from a file</span>
 
 <span class="sd">      Parameters</span>
@@ -779,16 +687,11 @@
          <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">unknown</span><span class="o">=</span><span class="s1">&#39;add&#39;</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="RootConfigurationContainer.find">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.RootConfigurationContainer.find">[docs]</a>
-  <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="RootConfigurationContainer.find"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_containers.RootConfigurationContainer.html#ase2sprkkr.potentials.definitions.sections.charge_moments.RootConfigurationContainer.find">[docs]</a>  <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Find a configuration value of a given name in the owned sections &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="n">lower_case</span><span class="p">:</span>
          <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span></div>
-</div>
-
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_value</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

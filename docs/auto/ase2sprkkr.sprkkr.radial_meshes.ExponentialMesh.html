@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ExponentialMesh &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -76,18 +78,19 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes._clearing_property.html">_clearing_property</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">ExponentialMesh</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html">Mesh</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
@@ -101,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -133,10 +137,10 @@
            <div itemprop="articleBody">
              
   <section id="exponentialmesh">
-<h1>ExponentialMesh<a class="headerlink" href="#exponentialmesh" title="Link to this heading"></a></h1>
+<h1>ExponentialMesh<a class="headerlink" href="#exponentialmesh" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.radial_meshes.</span></span><span class="sig-name descname"><span class="pre">ExponentialMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rws</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.sprkkr.radial_meshes.</span></span><span class="sig-name descname"><span class="pre">ExponentialMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rws</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh" title="Permalink to this definition"></a></dt>
 <dd><p>Radial mesh definition for an atomic site.</p>
 <p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-43c047db25d164b9ab7cfd5abd82cae506dcc885.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh" usemap="#inheritance3353009ccf" class="inheritance graphviz" /></div>
@@ -149,9 +153,9 @@
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rws</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jrws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rws</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.__init__" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r1</strong> (<em>float</em>) – First mesh item</p></li>
 <li><p><strong>dx</strong> (<em>float</em>) – Multiplier: r_n = r_{n-1} * dx</p></li>
@@ -166,52 +170,52 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.r1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r1</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.r1" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r1</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.r1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.dx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dx</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.dx" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dx</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.dx" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.jrmt">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jrmt</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.jrmt" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jrmt</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.jrmt" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.rmt">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rmt</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.rmt" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rmt</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.rmt" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.jrws">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jrws</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.jrws" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jrws</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.jrws" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.rws">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rws</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.rws" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rws</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.rws" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh._clear">
-<span class="sig-name descname"><span class="pre">_clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh._clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh._clear" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh._clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh._clear" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.coors">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coors</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.coors" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coors</span></span><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.coors" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple">
-<span class="sig-name descname"><span class="pre">to_tuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh.to_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_tuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh.to_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.to_tuple" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.copy" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/sprkkr/radial_meshes.html#ExponentialMesh.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.copy" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

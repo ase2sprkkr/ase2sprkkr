@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.grammar**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.grammar.White 
+.. inheritance-diagram::  ase2sprkkr.common.grammar.SkipToRegex  ase2sprkkr.common.grammar.White 
       :parts: 1
 
 |
@@ -60,6 +60,7 @@ Full name: **ase2sprkkr.common.grammar**
       :toctree:
       :template: custom-class-template.rst
    
+      SkipToRegex
       White
    
    

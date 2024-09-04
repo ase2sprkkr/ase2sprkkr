@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -103,16 +105,11 @@
 <span class="kn">from</span> <span class="nn">asr.core</span> <span class="kn">import</span> <span class="n">command</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">DictStr</span><span class="p">,</span> <span class="n">ASRResult</span>
 
 
-<div class="viewcode-block" id="AtomsTooCloseToBoundary">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary.html#ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary">[docs]</a>
-<span class="k">class</span> <span class="nc">AtomsTooCloseToBoundary</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomsTooCloseToBoundary"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary.html#ase2sprkkr.asr.formalpolarization.AtomsTooCloseToBoundary">[docs]</a><span class="k">class</span> <span class="nc">AtomsTooCloseToBoundary</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
-
-<div class="viewcode-block" id="get_electronic_polarization_phase">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_electronic_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_electronic_polarization_phase">[docs]</a>
-<span class="k">def</span> <span class="nf">get_electronic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
+<div class="viewcode-block" id="get_electronic_polarization_phase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_electronic_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_electronic_polarization_phase">[docs]</a><span class="k">def</span> <span class="nf">get_electronic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">from</span> <span class="nn">gpaw.berryphase</span> <span class="kn">import</span> <span class="n">get_berry_phases</span>
     <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">SerialCommunicator</span>
@@ -135,10 +132,7 @@
     <span class="k">return</span> <span class="n">phase_c</span></div>
 
 
-
-<div class="viewcode-block" id="get_atomic_polarization_phase">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_atomic_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_atomic_polarization_phase">[docs]</a>
-<span class="k">def</span> <span class="nf">get_atomic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
+<div class="viewcode-block" id="get_atomic_polarization_phase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_atomic_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_atomic_polarization_phase">[docs]</a><span class="k">def</span> <span class="nf">get_atomic_polarization_phase</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
     <span class="n">Z_a</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_atomic_numbers</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">ida</span><span class="p">,</span> <span class="n">setup</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">setups</span><span class="o">.</span><span class="n">id_a</span><span class="p">,</span>
@@ -150,19 +144,13 @@
     <span class="k">return</span> <span class="n">phase_c</span></div>
 
 
-
-<div class="viewcode-block" id="get_dipole_polarization_phase">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_dipole_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_dipole_polarization_phase">[docs]</a>
-<span class="k">def</span> <span class="nf">get_dipole_polarization_phase</span><span class="p">(</span><span class="n">dipole_v</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">):</span>
+<div class="viewcode-block" id="get_dipole_polarization_phase"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_dipole_polarization_phase.html#ase2sprkkr.asr.formalpolarization.get_dipole_polarization_phase">[docs]</a><span class="k">def</span> <span class="nf">get_dipole_polarization_phase</span><span class="p">(</span><span class="n">dipole_v</span><span class="p">,</span> <span class="n">cell_cv</span><span class="p">):</span>
     <span class="n">B_cv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">cell_cv</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">dipole_phase_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">B_cv</span><span class="p">,</span> <span class="n">dipole_v</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dipole_phase_c</span></div>
 
 
-
-<div class="viewcode-block" id="get_wavefunctions">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_wavefunctions.html#ase2sprkkr.asr.formalpolarization.get_wavefunctions">[docs]</a>
-<span class="k">def</span> <span class="nf">get_wavefunctions</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
+<div class="viewcode-block" id="get_wavefunctions"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.get_wavefunctions.html#ase2sprkkr.asr.formalpolarization.get_wavefunctions">[docs]</a><span class="k">def</span> <span class="nf">get_wavefunctions</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">calculator</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">gpaw</span> <span class="kn">import</span> <span class="n">GPAW</span>
     <span class="kn">from</span> <span class="nn">gpaw.mpi</span> <span class="kn">import</span> <span class="n">serial_comm</span>
     <span class="kn">from</span> <span class="nn">ase.calculators.calculator</span> <span class="kn">import</span> <span class="n">get_calculator_class</span>
@@ -176,10 +164,7 @@
     <span class="k">return</span> <span class="n">calc</span></div>
 
 
-
-<div class="viewcode-block" id="distance_to_non_pbc_boundary">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.distance_to_non_pbc_boundary.html#ase2sprkkr.asr.formalpolarization.distance_to_non_pbc_boundary">[docs]</a>
-<span class="k">def</span> <span class="nf">distance_to_non_pbc_boundary</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="distance_to_non_pbc_boundary"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.formalpolarization.distance_to_non_pbc_boundary.html#ase2sprkkr.asr.formalpolarization.distance_to_non_pbc_boundary">[docs]</a><span class="k">def</span> <span class="nf">distance_to_non_pbc_boundary</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">pbc_c</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_pbc</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">pbc_c</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -189,7 +174,6 @@
     <span class="n">posnonpbc_av</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pos_ac</span><span class="p">[:,</span> <span class="o">~</span><span class="n">pbc_c</span><span class="p">],</span> <span class="n">cell_cv</span><span class="p">[</span><span class="o">~</span><span class="n">pbc_c</span><span class="p">])</span>
     <span class="n">dist_to_cell_edge_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">posnonpbc_av</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">dist_to_cell_edge_a</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.formalpolarization&#39;</span><span class="p">)</span>

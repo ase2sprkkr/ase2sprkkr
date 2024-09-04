@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -147,9 +149,7 @@
 <span class="c1"># ---------- Webpanel ---------- #</span>
 
 
-<div class="viewcode-block" id="webpanel">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.webpanel.html#ase2sprkkr.asr.pdos.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.webpanel.html#ase2sprkkr.asr.pdos.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
     <span class="c1"># PDOS without spin-orbit coupling</span>
     <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Projected band structure and DOS (PBE)&#39;</span><span class="p">,</span>
@@ -160,7 +160,6 @@
              <span class="s1">&#39;sort&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
-
 
 
 <span class="c1"># ---------- Main functionality ---------- #</span>
@@ -186,9 +185,7 @@
 <span class="c1"># ----- Fast steps ----- #</span>
 
 
-<div class="viewcode-block" id="Result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.Result.html#ase2sprkkr.asr.pdos.Result">[docs]</a>
-<span class="nd">@prepare_result</span>
+<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.Result.html#ase2sprkkr.asr.pdos.Result">[docs]</a><span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">pdos_nosoc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
@@ -206,7 +203,6 @@
         <span class="s2">&quot;Density of states at the Fermi level [states/(eV * unit cell)]&quot;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="s1">&#39;asr.pdos&#39;</span><span class="p">,</span>
@@ -252,9 +248,7 @@
 <span class="c1"># ----- PDOS ----- #</span>
 
 
-<div class="viewcode-block" id="pdos">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.pdos.html#ase2sprkkr.asr.pdos.pdos">[docs]</a>
-<span class="k">def</span> <span class="nf">pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+<div class="viewcode-block" id="pdos"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.pdos.html#ase2sprkkr.asr.pdos.pdos">[docs]</a><span class="k">def</span> <span class="nf">pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Do a single pdos calculation.</span>
 
 <span class="sd">    Main functionality to do a single pdos calculation.</span>
@@ -266,10 +260,7 @@
             <span class="s1">&#39;energies&#39;</span><span class="p">:</span> <span class="n">e_e</span><span class="p">,</span> <span class="s1">&#39;efermi&#39;</span><span class="p">:</span> <span class="n">ef</span><span class="p">}</span></div>
 
 
-
-<div class="viewcode-block" id="calculate_pdos">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.calculate_pdos.html#ase2sprkkr.asr.pdos.calculate_pdos">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
+<div class="viewcode-block" id="calculate_pdos"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.calculate_pdos.html#ase2sprkkr.asr.pdos.calculate_pdos">[docs]</a><span class="k">def</span> <span class="nf">calculate_pdos</span><span class="p">(</span><span class="n">dos</span><span class="p">,</span> <span class="n">calc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the projected density of states.</span>
 
 <span class="sd">    Returns</span>
@@ -327,10 +318,7 @@
     <span class="k">return</span> <span class="n">e_e</span><span class="p">,</span> <span class="n">pdos_syl</span><span class="p">,</span> <span class="n">calc</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_chemical_symbols</span><span class="p">(),</span> <span class="n">efermi</span></div>
 
 
-
-<div class="viewcode-block" id="get_l_a">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_l_a.html#ase2sprkkr.asr.pdos.get_l_a">[docs]</a>
-<span class="k">def</span> <span class="nf">get_l_a</span><span class="p">(</span><span class="n">zs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_l_a"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_l_a.html#ase2sprkkr.asr.pdos.get_l_a">[docs]</a><span class="k">def</span> <span class="nf">get_l_a</span><span class="p">(</span><span class="n">zs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Define which atoms and angular momentum to project onto.</span>
 
 <span class="sd">    Parameters</span>
@@ -361,13 +349,10 @@
     <span class="k">return</span> <span class="n">l_a</span></div>
 
 
-
 <span class="c1"># ---------- Plotting ---------- #</span>
 
 
-<div class="viewcode-block" id="get_ordered_syl_dict">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_ordered_syl_dict.html#ase2sprkkr.asr.pdos.get_ordered_syl_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">get_ordered_syl_dict</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ordered_syl_dict"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_ordered_syl_dict.html#ase2sprkkr.asr.pdos.get_ordered_syl_dict">[docs]</a><span class="k">def</span> <span class="nf">get_ordered_syl_dict</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Order a dictionary with syl keys.</span>
 
 <span class="sd">    Parameters</span>
@@ -399,10 +384,7 @@
     <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dct_syl</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">ssili</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span></div>
 
 
-
-<div class="viewcode-block" id="get_yl_colors">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_yl_colors.html#ase2sprkkr.asr.pdos.get_yl_colors">[docs]</a>
-<span class="k">def</span> <span class="nf">get_yl_colors</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">):</span>
+<div class="viewcode-block" id="get_yl_colors"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.get_yl_colors.html#ase2sprkkr.asr.pdos.get_yl_colors">[docs]</a><span class="k">def</span> <span class="nf">get_yl_colors</span><span class="p">(</span><span class="n">dct_syl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the color indices corresponding to each symbol and angular momentum.</span>
 
 <span class="sd">    Parameters</span>
@@ -431,24 +413,15 @@
     <span class="k">return</span> <span class="n">color_yl</span></div>
 
 
-
-<div class="viewcode-block" id="plot_pdos_nosoc">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_nosoc.html#ase2sprkkr.asr.pdos.plot_pdos_nosoc">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pdos_nosoc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_pdos_nosoc"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_nosoc.html#ase2sprkkr.asr.pdos.plot_pdos_nosoc">[docs]</a><span class="k">def</span> <span class="nf">plot_pdos_nosoc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">plot_pdos</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="plot_pdos_soc">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_soc.html#ase2sprkkr.asr.pdos.plot_pdos_soc">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pdos_soc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_pdos_soc"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos_soc.html#ase2sprkkr.asr.pdos.plot_pdos_soc">[docs]</a><span class="k">def</span> <span class="nf">plot_pdos_soc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">plot_pdos</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="plot_pdos">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos.html#ase2sprkkr.asr.pdos.plot_pdos">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_pdos</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="plot_pdos"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.pdos.plot_pdos.html#ase2sprkkr.asr.pdos.plot_pdos">[docs]</a><span class="k">def</span> <span class="nf">plot_pdos</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">soc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
               <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">smooth</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">npts</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
@@ -563,7 +536,6 @@
 
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

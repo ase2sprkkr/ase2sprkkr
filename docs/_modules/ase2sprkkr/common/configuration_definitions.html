@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -112,9 +114,7 @@
 <span class="kn">from</span> <span class="nn">.grammar_types.basic</span> <span class="kn">import</span> <span class="n">Separator</span>
 
 
-<div class="viewcode-block" id="BaseDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseDefinition</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition">[docs]</a><span class="k">class</span> <span class="nc">BaseDefinition</span><span class="p">:</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; This class is a member of definition of configuration, that can be both</span>
 <span class="sd">  real (holds a value or values) or just virtual.</span>
 <span class="sd">  Virtual definitions do not store values, generates grammar e.g. using other members</span>
@@ -136,9 +136,7 @@
 <span class="sd">        to hide the inactive members</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">name_lcase</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span><span class="o">=</span><span class="n">is_optional</span>
@@ -147,33 +145,21 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.has_name">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.has_name">[docs]</a>
-  <span class="k">def</span> <span class="nf">has_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.has_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.has_name">[docs]</a>  <span class="k">def</span> <span class="nf">has_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
        <span class="k">return</span> <span class="n">name</span> <span class="o">==</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_lcase</span> <span class="k">if</span> <span class="n">lower_case</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.add_grammar_hook">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.add_grammar_hook">[docs]</a>
-  <span class="k">def</span> <span class="nf">add_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.add_grammar_hook"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.add_grammar_hook">[docs]</a>  <span class="k">def</span> <span class="nf">add_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Added hooks process the grammar of the option/container.</span>
 <span class="sd">       E.g. it is used when the number of readed lines should depend</span>
 <span class="sd">       on the value of the option.</span>
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">grammar_hooks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.remove_grammar_hook">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.remove_grammar_hook">[docs]</a>
-  <span class="k">def</span> <span class="nf">remove_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.remove_grammar_hook"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.remove_grammar_hook">[docs]</a>  <span class="k">def</span> <span class="nf">remove_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Remove a grammar hook &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">grammar_hooks</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">hook</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.grammar">[docs]</a>
-  <span class="k">def</span> <span class="nf">grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.grammar">[docs]</a>  <span class="k">def</span> <span class="nf">grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Generate grammar with the correct settings of pyparsing global state.</span>
 
 <span class="sd">       Parameters</span>
@@ -184,7 +170,6 @@
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
          <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span></div>
-
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -199,17 +184,12 @@
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hooked_grammar</span>
 
-<div class="viewcode-block" id="BaseDefinition.has_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.has_grammar">[docs]</a>
-  <span class="k">def</span> <span class="nf">has_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.has_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.has_grammar">[docs]</a>  <span class="k">def</span> <span class="nf">has_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Returns, whether the definition generates a grammar or not. By default,</span>
 <span class="sd">       it just check the self._grammar &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grammar</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition._hooked_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._hooked_grammar">[docs]</a>
-  <span class="k">def</span> <span class="nf">_hooked_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition._hooked_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._hooked_grammar">[docs]</a>  <span class="k">def</span> <span class="nf">_hooked_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Generates grammar. Unlike :meth:`grammar`, it does not change the</span>
 <span class="sd">       global pyparsing state to ensure that the generated grammar will handle</span>
 <span class="sd">       whitespaces in a propper way. Unlike the :meth:`_create_grammar` method,</span>
@@ -220,49 +200,31 @@
        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_hooks_to_grammar</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition._add_hooks_to_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._add_hooks_to_grammar">[docs]</a>
-  <span class="k">def</span> <span class="nf">_add_hooks_to_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition._add_hooks_to_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._add_hooks_to_grammar">[docs]</a>  <span class="k">def</span> <span class="nf">_add_hooks_to_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Add registered grammar hooks to a grammar &quot;&quot;&quot;</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_hooks</span><span class="p">:</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grammar_hooks</span><span class="p">:</span>
                <span class="n">grammar</span><span class="o">=</span><span class="n">i</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">grammar</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.added_to_container">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.added_to_container">[docs]</a>
-  <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.added_to_container"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.added_to_container">[docs]</a>  <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Hook called, when the object is assigned to the container (currently from the container</span>
 <span class="sd">       constructor) &quot;&quot;&quot;</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">=</span><span class="n">container</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.get_path">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.get_path">[docs]</a>
-  <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.get_path"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.get_path">[docs]</a>  <span class="k">def</span> <span class="nf">get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
           <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_path</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">out</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.info">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.info">[docs]</a>
-  <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.info"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.info">[docs]</a>  <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
        <span class="k">return</span> <span class="s2">&quot;This object is not intended for a direct use.&quot;</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.description">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.description">[docs]</a>
-  <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.description"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.description">[docs]</a>  <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
        <span class="k">return</span> <span class="s2">&quot;This object is not intended for a direct use.&quot;</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition._get_copy_args">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._get_copy_args">[docs]</a>
-  <span class="k">def</span> <span class="nf">_get_copy_args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="BaseDefinition._get_copy_args"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition._get_copy_args">[docs]</a>  <span class="k">def</span> <span class="nf">_get_copy_args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Compute the dictionary that defines the attributes to create a copy of this object.</span>
 
@@ -279,21 +241,14 @@
                                        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_copy_excluded_args</span> <span class="p">}</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_copy_args</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.copy">[docs]</a>
-  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
      <span class="n">default</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_copy_args</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
      <span class="n">default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="o">**</span><span class="n">default</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="BaseDefinition.create_object">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.create_object">[docs]</a>
-  <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.create_object">[docs]</a>  <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">     </span><span class="sd">&quot;&quot;&quot; Creates Section/Option/.... object (whose properties I define) &quot;&quot;&quot;</span>
      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
-
 
   <span class="n">can_be_repeated</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; If True, the item can be repeated in the parsed file. The results will</span>
@@ -305,11 +260,8 @@
 
   <span class="n">_copy_excluded_args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;grammar_hooks&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="BaseDefinition.enrich">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.enrich">[docs]</a>
-  <span class="k">def</span> <span class="nf">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseDefinition.enrich"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.enrich">[docs]</a>  <span class="k">def</span> <span class="nf">enrich</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">option</span></div>
-
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">output_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -320,9 +272,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Set a special object for writing &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;_output_definition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">od</span>
 
-<div class="viewcode-block" id="BaseDefinition.accept_value">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.accept_value">[docs]</a>
-  <span class="k">def</span> <span class="nf">accept_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseDefinition.accept_value"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.BaseDefinition.html#ase2sprkkr.potentials.potential_definitions.BaseDefinition.accept_value">[docs]</a>  <span class="k">def</span> <span class="nf">accept_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">      Return, whether a given value is accepted by this type of object.</span>
 <span class="sd">      Accepting does not mean that the value can be validated. It is a</span>
@@ -331,14 +281,10 @@
 <span class="sd">      the container can try to find another object (e.g. contained value</span>
 <span class="sd">      of the same name) where the value is accepted.</span>
 <span class="sd">      &quot;&quot;&quot;</span>
-      <span class="k">return</span> <span class="kc">True</span></div>
-</div>
+      <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
-
-<div class="viewcode-block" id="RealItemDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">RealItemDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition">[docs]</a><span class="k">class</span> <span class="nc">RealItemDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot; A base class for a configuration definition, either of an option, or of a container.</span>
 <span class="sd">   The definition determine the type of value(s) in the configuration/problem-definition file,</span>
 <span class="sd">   the format of the values, the way how it/they is/are read etc...</span>
@@ -359,9 +305,7 @@
 <span class="sd">   the behavior.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RealItemDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.__init__">[docs]</a>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="RealItemDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">written_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alternative_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">is_optional</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_expert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">write_alternative_name</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -454,10 +398,7 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span> <span class="o">=</span> <span class="n">result_class</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">warning_condition</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="RealItemDefinition.has_name">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.has_name">[docs]</a>
-   <span class="k">def</span> <span class="nf">has_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition.has_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.has_name">[docs]</a>   <span class="k">def</span> <span class="nf">has_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
        <span class="k">if</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lower_case</span><span class="p">):</span>
            <span class="k">return</span> <span class="kc">True</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span><span class="p">:</span>
@@ -465,19 +406,13 @@
            <span class="k">return</span> <span class="kc">True</span>
        <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="RealItemDefinition.validate_warning">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.validate_warning">[docs]</a>
-   <span class="k">def</span> <span class="nf">validate_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition.validate_warning"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.validate_warning">[docs]</a>   <span class="k">def</span> <span class="nf">validate_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_condition</span><span class="p">:</span>
           <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_condition</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
           <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
               <span class="n">DataValidityWarning</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="RealItemDefinition.all_names_in_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.all_names_in_grammar">[docs]</a>
-   <span class="k">def</span> <span class="nf">all_names_in_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition.all_names_in_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.all_names_in_grammar">[docs]</a>   <span class="k">def</span> <span class="nf">all_names_in_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">:</span>
            <span class="k">return</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">written_name</span><span class="p">:</span>
@@ -488,13 +423,9 @@
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">alternative_names</span><span class="p">:</span>
                <span class="k">yield</span> <span class="n">i</span></div>
 
-
-<div class="viewcode-block" id="RealItemDefinition.allow_duplication">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.allow_duplication">[docs]</a>
-   <span class="k">def</span> <span class="nf">allow_duplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition.allow_duplication"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.allow_duplication">[docs]</a>   <span class="k">def</span> <span class="nf">allow_duplication</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Can be the item repeated in the output file &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="kc">False</span></div>
-
 
    <span class="nd">@property</span>
    <span class="k">def</span> <span class="nf">is_independent_on_the_predecessor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -503,9 +434,7 @@
 <span class="sd">       &quot;&quot;&quot;</span>
        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_in_grammar</span>
 
-<div class="viewcode-block" id="RealItemDefinition.info">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.info">[docs]</a>
-   <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generic</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="RealItemDefinition.info"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.info">[docs]</a>   <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generic</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot; Return short help string.</span>
 
 <span class="sd">       Parameters</span>
@@ -521,13 +450,10 @@
              <span class="n">out</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
        <span class="k">return</span> <span class="n">out</span></div>
 
-
    <span class="n">_description_indentation</span> <span class="o">=</span> <span class="s1">&#39;    &#39;</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot; Nested levels of description will be indented using this &#39;prefix&#39; &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RealItemDefinition.description">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.description">[docs]</a>
-   <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition.description"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition.description">[docs]</a>   <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_hidden</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Parameters</span>
 <span class="sd">       ----------</span>
@@ -553,10 +479,7 @@
           <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">prefix</span><span class="p">))</span>
        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="RealItemDefinition._grammar_of_name">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._grammar_of_name">[docs]</a>
-   <span class="k">def</span> <span class="nf">_grammar_of_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_numbered_array</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="RealItemDefinition._grammar_of_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._grammar_of_name">[docs]</a>   <span class="k">def</span> <span class="nf">_grammar_of_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_numbered_array</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return grammar for the name (and possible alternative names etc.)</span>
 
@@ -588,10 +511,7 @@
             <span class="n">name</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">name</span></div>
 
-
-<div class="viewcode-block" id="RealItemDefinition._tuple_with_my_name">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._tuple_with_my_name">[docs]</a>
-   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span>
+<div class="viewcode-block" id="RealItemDefinition._tuple_with_my_name"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.RealItemDefinition.html#ase2sprkkr.potentials.potential_definitions.RealItemDefinition._tuple_with_my_name">[docs]</a>   <span class="k">def</span> <span class="nf">_tuple_with_my_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span>
                            <span class="n">delimiter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">has_value</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                            <span class="n">is_numbered_array</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -624,30 +544,21 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span></div>
 
-
    <span class="n">do_not_skip_whitespaces_before_name</span> <span class="o">=</span> <span class="kc">False</span>
 
    <span class="n">_copy_excluded_args</span> <span class="o">=</span> <span class="n">BaseDefinition</span><span class="o">.</span><span class="n">_copy_excluded_args</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;expert&#39;</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="VirtualDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">VirtualDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="VirtualDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition">[docs]</a><span class="k">class</span> <span class="nc">VirtualDefinition</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">):</span>
 <span class="w">     </span><span class="sd">&quot;&quot;&quot; Base class for a definition, that do not have value, just control</span>
 <span class="sd">     the flow of the parsing &quot;&quot;&quot;</span>
      <span class="n">is_hidden</span> <span class="o">=</span> <span class="kc">True</span>
      <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
 
-<div class="viewcode-block" id="VirtualDefinition.create_object">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.create_object">[docs]</a>
-     <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="VirtualDefinition.create_object"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.create_object">[docs]</a>     <span class="k">def</span> <span class="nf">create_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
          <span class="k">return</span> <span class="n">Dummy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VirtualDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.__init__">[docs]</a>
-     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="VirtualDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.__init__">[docs]</a>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
          <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
              <span class="k">if</span> <span class="ow">not</span> <span class="n">template</span><span class="p">:</span>
                  <span class="n">template</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
@@ -655,61 +566,39 @@
              <span class="n">VirtualDefinition</span><span class="o">.</span><span class="n">counter</span><span class="o">+=</span><span class="mi">1</span>
          <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">condition</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="VirtualDefinition.all_names_in_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.all_names_in_grammar">[docs]</a>
-     <span class="k">def</span> <span class="nf">all_names_in_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-         <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span></div>
-</div>
+<div class="viewcode-block" id="VirtualDefinition.all_names_in_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.VirtualDefinition.html#ase2sprkkr.potentials.potential_definitions.VirtualDefinition.all_names_in_grammar">[docs]</a>     <span class="k">def</span> <span class="nf">all_names_in_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+         <span class="k">return</span> <span class="nb">iter</span><span class="p">(())</span></div></div>
 
 
-
-<div class="viewcode-block" id="ControlDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.potentials.potential_definitions.ControlDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">ControlDefinition</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="ControlDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.ControlDefinition.html#ase2sprkkr.potentials.potential_definitions.ControlDefinition">[docs]</a><span class="k">class</span> <span class="nc">ControlDefinition</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>
 <span class="w">     </span><span class="sd">&quot;&quot;&quot; Control definitions has no grammar, they just modify the other items of the container &quot;&quot;&quot;</span>
 
      <span class="n">_grammar</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">     </span><span class="sd">&quot;&quot;&quot; This object does not generate a grammar &quot;&quot;&quot;</span></div>
 
 
-
-<div class="viewcode-block" id="Stub">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub">[docs]</a>
-<span class="k">class</span> <span class="nc">Stub</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="Stub"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub">[docs]</a><span class="k">class</span> <span class="nc">Stub</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Item that allows to reuse existing item on the other place</span>
 <span class="sd">    e.g. in another branch of Switch &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Stub.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Stub.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;STUB FOR </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">=</span><span class="n">item</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="o">=</span><span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="Stub._save_to_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub._save_to_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Stub._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub._save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
          <span class="n">item</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
          <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
              <span class="k">return</span> <span class="kc">False</span>
          <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">_save_to_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="n">name_in_grammar</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="n">delimiter</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="Stub._create_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub._create_grammar">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Stub._create_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Stub.html#ase2sprkkr.potentials.potential_definitions.Stub._create_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
          <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
          <span class="n">out</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">_grammar</span><span class="p">(</span><span class="n">allow_dangerous</span><span class="p">)</span>
-         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">out</span></div>
-</div>
+         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">out</span></div></div>
 
 
-
-<div class="viewcode-block" id="Ignored">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored">[docs]</a>
-<span class="k">class</span> <span class="nc">Ignored</span><span class="p">:</span>
+<div class="viewcode-block" id="Ignored"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored">[docs]</a><span class="k">class</span> <span class="nc">Ignored</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Output definition for an ignored option.</span>
 <span class="sd">        Output definition can override the standard definition and</span>
 <span class="sd">        set a special way how the item is read/writen:</span>
@@ -717,40 +606,26 @@
 <span class="sd">        by an another option, see :meth:`gather`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Ignored.singleton">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored.singleton">[docs]</a>
-    <span class="nd">@cached_class_property</span>
+<div class="viewcode-block" id="Ignored.singleton"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored.singleton">[docs]</a>    <span class="nd">@cached_class_property</span>
     <span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">()</span></div>
 
-
     <span class="n">_grammar</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Ignored.has_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored.has_grammar">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Ignored.has_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored.has_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">has_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-
-<div class="viewcode-block" id="Ignored._save_to_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored._save_to_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
-</div>
+<div class="viewcode-block" id="Ignored._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Ignored.html#ase2sprkkr.potentials.potential_definitions.Ignored._save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
-
-<div class="viewcode-block" id="Gather">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather">[docs]</a>
-<span class="k">class</span> <span class="nc">Gather</span><span class="p">:</span>
+<div class="viewcode-block" id="Gather"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather">[docs]</a><span class="k">class</span> <span class="nc">Gather</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Output definition for the element of grammar, that reads besides himself</span>
 <span class="sd">    other grammar elements, such that their names goes first and then the</span>
 <span class="sd">    values go. See gather.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Gather.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">name_delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">value_delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">value_delimiter_grammar</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Gather.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">items</span><span class="p">,</span> <span class="n">name_delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">value_delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">value_delimiter_grammar</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Gather requires at least one value&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span>
@@ -758,10 +633,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">value_delimiter</span> <span class="o">=</span> <span class="n">value_delimiter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_delimiter_grammar</span> <span class="o">=</span> <span class="n">value_delimiter_grammar</span></div>
 
-
-<div class="viewcode-block" id="Gather._grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather._grammar">[docs]</a>
-    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Gather._grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather._grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">names</span> <span class="o">=</span> <span class="p">[</span> <span class="n">i</span><span class="o">.</span><span class="n">_grammar_of_name</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name_in_grammar</span> <span class="p">]</span>
         <span class="n">ln</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
         <span class="n">delimiter</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
@@ -784,10 +656,7 @@
         <span class="n">out</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="n">discard_names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
-
-<div class="viewcode-block" id="Gather._save_to_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather._save_to_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Gather._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Gather.html#ase2sprkkr.potentials.potential_definitions.Gather._save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">name_in_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
             <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_delimiter</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">formated_name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">name_in_grammar</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -810,14 +679,10 @@
         <span class="n">delimiter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_delimiter</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
              <span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-</div>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
-
-<div class="viewcode-block" id="gather">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.gather.html#ase2sprkkr.potentials.potential_definitions.gather">[docs]</a>
-<span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">members</span><span class="p">):</span>
+<div class="viewcode-block" id="gather"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.gather.html#ase2sprkkr.potentials.potential_definitions.gather">[docs]</a><span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="o">*</span><span class="n">members</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Modify the given option definitions, that they appears</span>
 <span class="sd">    in the output file in the form::</span>
 
@@ -830,18 +695,12 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">members</span></div>
 
 
-
-<div class="viewcode-block" id="switch">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.switch.html#ase2sprkkr.potentials.potential_definitions.switch">[docs]</a>
-<span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="switch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.switch.html#ase2sprkkr.potentials.potential_definitions.switch">[docs]</a><span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">switch</span> <span class="o">=</span> <span class="n">Switch</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">switch</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">switch</span><span class="o">.</span><span class="n">all_values</span><span class="p">())</span></div>
 
 
-
-<div class="viewcode-block" id="Switch">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch">[docs]</a>
-<span class="k">class</span> <span class="nc">Switch</span><span class="p">(</span><span class="n">ControlDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch">[docs]</a><span class="k">class</span> <span class="nc">Switch</span><span class="p">(</span><span class="n">ControlDefinition</span><span class="p">):</span>
 <span class="w">   </span><span class="sd">&quot;&quot;&quot; Items of this class can control, which elements of grammar will be active and which not &quot;&quot;&quot;</span>
 
    <span class="n">create_object</span> <span class="o">=</span> <span class="kc">None</span>
@@ -849,9 +708,7 @@
    <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
        <span class="n">empty</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Empty</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Switch.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.__init__">[docs]</a>
-   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">       </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">       Parameters</span>
 <span class="sd">       ----------</span>
@@ -907,25 +764,16 @@
           <span class="n">template</span><span class="o">=</span><span class="s1">&#39;_SWITCH_</span><span class="si">{item}</span><span class="s1">&#39;</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="Switch.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.copy">[docs]</a>
-   <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.copy">[docs]</a>   <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
 
    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
        <span class="k">return</span> <span class="n">option</span><span class="o">.</span><span class="n">_definition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]()]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Switch.all_values">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.all_values">[docs]</a>
-   <span class="k">def</span> <span class="nf">all_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.all_values"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.all_values">[docs]</a>   <span class="k">def</span> <span class="nf">all_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="Switch.item_hook">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.item_hook">[docs]</a>
-   <span class="k">def</span> <span class="nf">item_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.item_hook"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.item_hook">[docs]</a>   <span class="k">def</span> <span class="nf">item_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">force_order</span><span class="p">:</span>
           <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Switch for custom-order containers have not yet been implemented&quot;</span><span class="p">)</span>
 
@@ -951,10 +799,7 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span> <span class="o">=</span> <span class="n">grammar</span>
        <span class="k">return</span> <span class="n">grammar</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">item_value</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="n">x</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="Switch.prepare_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.prepare_grammar">[docs]</a>
-   <span class="k">def</span> <span class="nf">prepare_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.prepare_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.prepare_grammar">[docs]</a>   <span class="k">def</span> <span class="nf">prepare_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">grammar</span><span class="p">):</span>
        <span class="n">f</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Forward</span><span class="p">()</span>
        <span class="c1"># old pyparsing compatibility</span>
        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;set_name&#39;</span><span class="p">):</span>
@@ -962,20 +807,14 @@
        <span class="bp">self</span><span class="o">.</span><span class="n">grammar</span><span class="o">.</span><span class="n">_prepared</span><span class="p">[</span><span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">grammar</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">f</span></div>
 
-
-<div class="viewcode-block" id="Switch.remove_from_container">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.remove_from_container">[docs]</a>
-   <span class="k">def</span> <span class="nf">remove_from_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.remove_from_container"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.remove_from_container">[docs]</a>   <span class="k">def</span> <span class="nf">remove_from_container</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">]</span><span class="o">.</span><span class="n">remove_grammar_hook</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item_hook</span><span class="p">)</span>
            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                    <span class="n">j</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-
-<div class="viewcode-block" id="Switch.added_to_container">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.added_to_container">[docs]</a>
-   <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+<div class="viewcode-block" id="Switch.added_to_container"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.Switch.html#ase2sprkkr.potentials.potential_definitions.Switch.added_to_container">[docs]</a>   <span class="k">def</span> <span class="nf">added_to_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span>
        <span class="k">if</span> <span class="n">container</span><span class="p">:</span>
            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">copied</span><span class="p">:</span>
@@ -988,47 +827,33 @@
                     <span class="n">j</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="bp">self</span>
        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">added_to_container</span><span class="p">(</span><span class="n">container</span><span class="p">)</span></div>
 
-
    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
        <span class="bp">self</span><span class="o">.</span><span class="n">remove_from_container</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="SeparatorDefinition">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition">[docs]</a>
-<span class="k">class</span> <span class="nc">SeparatorDefinition</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>
+<div class="viewcode-block" id="SeparatorDefinition"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition">[docs]</a><span class="k">class</span> <span class="nc">SeparatorDefinition</span><span class="p">(</span><span class="n">VirtualDefinition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Basic class for separators &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;&lt;SEPARATOR&gt;&quot;</span>
 
-<div class="viewcode-block" id="SeparatorDefinition.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SeparatorDefinition.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">template</span><span class="o">=</span><span class="s1">&#39;SEPARATOR&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">separator_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">separator_type</span> <span class="o">=</span> <span class="n">Separator</span><span class="p">(</span><span class="n">char</span><span class="o">=</span><span class="n">separator_type</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">separator_type</span> <span class="o">=</span> <span class="n">separator_type</span></div>
 
-
-<div class="viewcode-block" id="SeparatorDefinition._create_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition._create_grammar">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="SeparatorDefinition._create_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition._create_grammar">[docs]</a>    <span class="k">def</span> <span class="nf">_create_grammar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_dangerous</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">pp</span><span class="o">.</span><span class="n">Suppress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">separator_type</span><span class="o">.</span><span class="n">grammar</span><span class="p">())</span></div>
 
-
-<div class="viewcode-block" id="SeparatorDefinition._save_to_file">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition._save_to_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SeparatorDefinition._save_to_file"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html#ase2sprkkr.potentials.potential_definitions.SeparatorDefinition._save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">_save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">always</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                     <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">delimiter</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">delimiter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">separator_type</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-</div>
-
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 </pre></div>
 
            </div>

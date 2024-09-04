@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -97,36 +99,24 @@
 <span class="kn">from</span> <span class="nn">.sites</span> <span class="kn">import</span> <span class="n">Site</span> <span class="k">as</span> <span class="n">_Site</span>
 <span class="kn">from</span> <span class="nn">.atomic_types</span> <span class="kn">import</span> <span class="n">AtomicType</span> <span class="k">as</span> <span class="n">_AtomicType</span>
 
-<div class="viewcode-block" id="Site">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site">[docs]</a>
-<span class="k">class</span> <span class="nc">Site</span><span class="p">(</span><span class="n">ObjectNumber</span><span class="p">):</span>
+<div class="viewcode-block" id="Site"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site">[docs]</a><span class="k">class</span> <span class="nc">Site</span><span class="p">(</span><span class="n">ObjectNumber</span><span class="p">):</span>
 
   <span class="nb">type</span> <span class="o">=</span> <span class="n">_Site</span>
 
-<div class="viewcode-block" id="Site.set_from_atoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.set_from_atoms">[docs]</a>
-  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="Site.set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.Site.set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
       <span class="n">value</span> <span class="o">=</span> <span class="n">option</span><span class="p">()</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Site</span><span class="p">):</span>
-          <span class="n">option</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">io_data</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="n">value</span><span class="p">]</span></div>
-</div>
-
+          <span class="n">option</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">io_data</span><span class="o">.</span><span class="n">sites</span><span class="p">[</span><span class="n">value</span><span class="p">]</span></div></div>
 <span class="n">Site</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">Site</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AtomicType">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType">[docs]</a>
-<span class="k">class</span> <span class="nc">AtomicType</span><span class="p">(</span><span class="n">ObjectNumber</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType">[docs]</a><span class="k">class</span> <span class="nc">AtomicType</span><span class="p">(</span><span class="n">ObjectNumber</span><span class="p">):</span>
 
   <span class="nb">type</span> <span class="o">=</span> <span class="n">_AtomicType</span>
 
-<div class="viewcode-block" id="AtomicType.set_from_atoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.set_from_atoms">[docs]</a>
-  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="AtomicType.set_from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.html#ase2sprkkr.sprkkr.sprkkr_grammar_types.AtomicType.set_from_atoms">[docs]</a>  <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
       <span class="n">value</span> <span class="o">=</span> <span class="n">option</span><span class="p">()</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Site</span><span class="p">):</span>
-          <span class="n">option</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">io_data</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">value</span><span class="p">]</span></div>
-</div>
-
+          <span class="n">option</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">io_data</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">value</span><span class="p">]</span></div></div>
 <span class="n">AtomicType</span><span class="o">.</span><span class="n">I</span> <span class="o">=</span> <span class="n">AtomicType</span><span class="p">()</span>
 </pre></div>
 

@@ -1,0 +1,43 @@
+A3\_Fe\_dos
+===========
+
+Full name: **ase2sprkkr.examples.A3\_Fe\_dos**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.examples.A3_Fe_dos
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.examples.A3_Fe_dos.Fe
+  
+  

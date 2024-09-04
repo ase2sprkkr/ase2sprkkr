@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -98,9 +100,7 @@
 <span class="kn">from</span> <span class="nn">..common.unique_values</span> <span class="kn">import</span> <span class="n">UniqueValuesMapping</span>
 
 
-<div class="viewcode-block" id="sysfile_content">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sysfile.sysfile_content.html#ase2sprkkr.sprkkr.sysfile.sysfile_content">[docs]</a>
-<span class="k">def</span> <span class="nf">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&lt;unknown&gt;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="sysfile_content"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sysfile.sysfile_content.html#ase2sprkkr.sprkkr.sysfile.sysfile_content">[docs]</a><span class="k">def</span> <span class="nf">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;&lt;unknown&gt;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the content of the xband sysfile for the given atoms object.</span>
 
 <span class="sd">    TODO</span>
@@ -275,13 +275,9 @@
     <span class="k">return</span> <span class="n">filestring</span></div>
 
 
-
-<div class="viewcode-block" id="write_sysfile">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sysfile.write_sysfile.html#ase2sprkkr.sprkkr.sysfile.write_sysfile">[docs]</a>
-<span class="k">def</span> <span class="nf">write_sysfile</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="write_sysfile"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.sysfile.write_sysfile.html#ase2sprkkr.sprkkr.sysfile.write_sysfile">[docs]</a><span class="k">def</span> <span class="nf">write_sysfile</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span><span class="nb">str</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
        <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sysfile_content</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">filename</span><span class="p">)))</span></div>
-
 </pre></div>
 
            </div>

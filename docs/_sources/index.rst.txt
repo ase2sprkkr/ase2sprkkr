@@ -12,6 +12,7 @@ ASE2SPRKKR software package
    Philosophy of the package (for developers) <philosophy.rst>
    Changelog <changelog.rst>
    Hastily written ASE2SPRKKR slides <_static/slides.pdf#http://>
+   Examples <examples.rst>
 
 .. sidebar-links::
    :caption: Links
@@ -22,6 +23,7 @@ ASE2SPRKKR software package
    GitHub repository <https://github.com/ase2sprkkr/ase2sprkkr>
    PyPI package <https://pypi.org/project/ase2sprkkr>
    SPR-KKR manual <https://www.ebert.cup.uni-muenchen.de/index.php/en/repository/func-startdown/251/lang,en-gb/>
+
 
 Class documentation
 -------------------

@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -98,9 +100,7 @@
 <span class="c1"># ---------- Webpanel ---------- #</span>
 
 
-<div class="viewcode-block" id="webpanel">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.webpanel.html#ase2sprkkr.asr.projected_bandstructure.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.webpanel.html#ase2sprkkr.asr.projected_bandstructure.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
 
     <span class="n">panel</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Projected band structure and DOS (PBE)&#39;</span><span class="p">,</span>
@@ -113,10 +113,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="Result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.Result.html#ase2sprkkr.asr.projected_bandstructure.Result">[docs]</a>
-<span class="nd">@prepare_result</span>
+<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.Result.html#ase2sprkkr.asr.projected_bandstructure.Result">[docs]</a><span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">weight_skni</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span>
@@ -130,7 +127,6 @@
     <span class="p">}</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ase_webpanel&#39;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
-
 
 
 <span class="c1"># ---------- Main functionality ---------- #</span>
@@ -160,9 +156,7 @@
 <span class="c1"># ---------- Recipe methodology ---------- #</span>
 
 
-<div class="viewcode-block" id="get_orbital_ldos">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_orbital_ldos.html#ase2sprkkr.asr.projected_bandstructure.get_orbital_ldos">[docs]</a>
-<span class="k">def</span> <span class="nf">get_orbital_ldos</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
+<div class="viewcode-block" id="get_orbital_ldos"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_orbital_ldos.html#ase2sprkkr.asr.projected_bandstructure.get_orbital_ldos">[docs]</a><span class="k">def</span> <span class="nf">get_orbital_ldos</span><span class="p">(</span><span class="n">calc</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the projection weights on different orbitals.</span>
 
 <span class="sd">    Returns</span>
@@ -228,13 +222,10 @@
     <span class="k">return</span> <span class="n">weight_skni</span><span class="p">,</span> <span class="n">yl_i</span></div>
 
 
-
 <span class="c1"># ---------- Plotting ---------- #</span>
 
 
-<div class="viewcode-block" id="get_yl_ordering">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_yl_ordering.html#ase2sprkkr.asr.projected_bandstructure.get_yl_ordering">[docs]</a>
-<span class="k">def</span> <span class="nf">get_yl_ordering</span><span class="p">(</span><span class="n">yl_i</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+<div class="viewcode-block" id="get_yl_ordering"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_yl_ordering.html#ase2sprkkr.asr.projected_bandstructure.get_yl_ordering">[docs]</a><span class="k">def</span> <span class="nf">get_yl_ordering</span><span class="p">(</span><span class="n">yl_i</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get standardized yl ordering of keys.</span>
 
 <span class="sd">    Parameters</span>
@@ -263,10 +254,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">i_c</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yl_i</span><span class="p">))]</span></div>
 
 
-
-<div class="viewcode-block" id="get_bs_sampling">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_bs_sampling.html#ase2sprkkr.asr.projected_bandstructure.get_bs_sampling">[docs]</a>
-<span class="k">def</span> <span class="nf">get_bs_sampling</span><span class="p">(</span><span class="n">bsp</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
+<div class="viewcode-block" id="get_bs_sampling"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_bs_sampling.html#ase2sprkkr.asr.projected_bandstructure.get_bs_sampling">[docs]</a><span class="k">def</span> <span class="nf">get_bs_sampling</span><span class="p">(</span><span class="n">bsp</span><span class="p">,</span> <span class="n">npoints</span><span class="o">=</span><span class="mi">40</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample band structure as evenly as possible.</span>
 
 <span class="sd">    Allways include special points.</span>
@@ -333,10 +321,7 @@
     <span class="k">return</span> <span class="n">chosenx_x</span><span class="p">,</span> <span class="n">k_x</span></div>
 
 
-
-<div class="viewcode-block" id="get_pie_slice">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_pie_slice.html#ase2sprkkr.asr.projected_bandstructure.get_pie_slice">[docs]</a>
-<span class="k">def</span> <span class="nf">get_pie_slice</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<div class="viewcode-block" id="get_pie_slice"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_pie_slice.html#ase2sprkkr.asr.projected_bandstructure.get_pie_slice">[docs]</a><span class="k">def</span> <span class="nf">get_pie_slice</span><span class="p">(</span><span class="n">theta0</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a single pie slice marker.</span>
 
 <span class="sd">    Parameters</span>
@@ -367,10 +352,7 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="n">xy</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="n">size</span><span class="p">,</span> <span class="s1">&#39;linewidths&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span></div>
 
 
-
-<div class="viewcode-block" id="get_pie_markers">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_pie_markers.html#ase2sprkkr.asr.projected_bandstructure.get_pie_markers">[docs]</a>
-<span class="k">def</span> <span class="nf">get_pie_markers</span><span class="p">(</span><span class="n">weight_xi</span><span class="p">,</span> <span class="n">scale_marker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+<div class="viewcode-block" id="get_pie_markers"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.get_pie_markers.html#ase2sprkkr.asr.projected_bandstructure.get_pie_markers">[docs]</a><span class="k">def</span> <span class="nf">get_pie_markers</span><span class="p">(</span><span class="n">weight_xi</span><span class="p">,</span> <span class="n">scale_marker</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get pie markers corresponding to a 2D array of weights.</span>
 
 <span class="sd">    Parameters</span>
@@ -409,10 +391,7 @@
     <span class="k">return</span> <span class="n">pie_xi</span></div>
 
 
-
-<div class="viewcode-block" id="projected_bs_pbe">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.projected_bs_pbe.html#ase2sprkkr.asr.projected_bandstructure.projected_bs_pbe">[docs]</a>
-<span class="k">def</span> <span class="nf">projected_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-projected-bs.png&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="projected_bs_pbe"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.projected_bandstructure.projected_bs_pbe.html#ase2sprkkr.asr.projected_bandstructure.projected_bs_pbe">[docs]</a><span class="k">def</span> <span class="nf">projected_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-projected-bs.png&#39;</span><span class="p">,</span>
                      <span class="n">npoints</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">36.</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
                      <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Produce the projected band structure.</span>
@@ -547,7 +526,6 @@
 
     <span class="c1"># ax.figure.set_figheight(1.2 * ax.figure.get_figheight())</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -93,9 +95,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="test_relax_basic">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_basic.html#ase2sprkkr.asr.test.test_relax.test_relax_basic">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<div class="viewcode-block" id="test_relax_basic"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_basic.html#ase2sprkkr.asr.test.test_relax.test_relax_basic">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
 <span class="k">def</span> <span class="nf">test_relax_basic</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">mockgpaw</span><span class="p">,</span> <span class="n">test_material</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that the relaxation recipe actually produces a structure.json.&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">asr.relax</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">relax</span>
@@ -110,10 +110,7 @@
     <span class="n">read</span><span class="p">(</span><span class="s1">&#39;structure.json&#39;</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="test_relax_magmoms">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_magmoms.html#ase2sprkkr.asr.test.test_relax.test_relax_magmoms">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<div class="viewcode-block" id="test_relax_magmoms"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_magmoms.html#ase2sprkkr.asr.test.test_relax.test_relax_magmoms">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;initial_magmoms&#39;</span><span class="p">,</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;set_magmoms&#39;</span><span class="p">,</span> <span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]))</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;final_magmoms&#39;</span><span class="p">,</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
@@ -150,10 +147,7 @@
         <span class="n">spy</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="test_relax_emt">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_emt.html#ase2sprkkr.asr.test.test_relax.test_relax_emt">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<div class="viewcode-block" id="test_relax_emt"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_emt.html#ase2sprkkr.asr.test.test_relax.test_relax_emt">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">,</span> <span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;Pd&#39;</span><span class="p">,</span> <span class="s1">&#39;Pt&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">test_relax_emt</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -164,10 +158,7 @@
     <span class="n">relax</span><span class="p">(</span><span class="n">unrelaxed</span><span class="p">,</span> <span class="n">calculator</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;emt&#39;</span><span class="p">})</span></div>
 
 
-
-<div class="viewcode-block" id="test_relax_emt_fail_broken_symmetry">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_emt_fail_broken_symmetry.html#ase2sprkkr.asr.test.test_relax.test_relax_emt_fail_broken_symmetry">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<div class="viewcode-block" id="test_relax_emt_fail_broken_symmetry"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_emt_fail_broken_symmetry.html#ase2sprkkr.asr.test.test_relax.test_relax_emt_fail_broken_symmetry">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Al&#39;</span><span class="p">,</span> <span class="s1">&#39;Cu&#39;</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;Pd&#39;</span><span class="p">,</span> <span class="s1">&#39;Pt&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">test_relax_emt_fail_broken_symmetry</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
@@ -189,10 +180,7 @@
     <span class="k">assert</span> <span class="s1">&#39;The symmetry was broken during the relaxation!&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">excinfo</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="test_relax_find_higher_symmetry">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_find_higher_symmetry.html#ase2sprkkr.asr.test.test_relax.test_relax_find_higher_symmetry">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
+<div class="viewcode-block" id="test_relax_find_higher_symmetry"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_find_higher_symmetry.html#ase2sprkkr.asr.test.test_relax.test_relax_find_higher_symmetry">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">ci</span>
 <span class="k">def</span> <span class="nf">test_relax_find_higher_symmetry</span><span class="p">(</span><span class="n">asr_tmpdir_w_params</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Test that a structure is allowed to find a higher symmetry without failing.&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">ase.build</span> <span class="kn">import</span> <span class="n">bulk</span>
@@ -225,10 +213,7 @@
     <span class="k">assert</span> <span class="s2">&quot;The spacegroup has changed during relaxation. &quot;</span> <span class="ow">in</span> <span class="n">captured</span><span class="o">.</span><span class="n">out</span></div>
 
 
-
-<div class="viewcode-block" id="test_relax_si_gpaw">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_si_gpaw.html#ase2sprkkr.asr.test.test_relax.test_relax_si_gpaw">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test</span>
+<div class="viewcode-block" id="test_relax_si_gpaw"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_si_gpaw.html#ase2sprkkr.asr.test.test_relax.test_relax_si_gpaw">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test_gpaw</span>
 <span class="k">def</span> <span class="nf">test_relax_si_gpaw</span><span class="p">(</span><span class="n">asr_tmpdir</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -246,10 +231,7 @@
     <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">3.978</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.001</span></div>
 
 
-
-<div class="viewcode-block" id="test_relax_bn_gpaw">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_bn_gpaw.html#ase2sprkkr.asr.test.test_relax.test_relax_bn_gpaw">[docs]</a>
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test</span>
+<div class="viewcode-block" id="test_relax_bn_gpaw"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.test.test_relax.test_relax_bn_gpaw.html#ase2sprkkr.asr.test.test_relax.test_relax_bn_gpaw">[docs]</a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test</span>
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration_test_gpaw</span>
 <span class="k">def</span> <span class="nf">test_relax_bn_gpaw</span><span class="p">(</span><span class="n">asr_tmpdir</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.setup.params</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">setupparams</span>
@@ -267,7 +249,6 @@
 
     <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;results-asr.relax.json&quot;</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span></div>
-
 </pre></div>
 
            </div>

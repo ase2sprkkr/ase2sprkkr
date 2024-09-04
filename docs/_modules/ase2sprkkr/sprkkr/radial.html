@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -94,16 +96,11 @@
 <span class="kn">from</span> <span class="nn">..common.decorators</span> <span class="kn">import</span> <span class="n">cached_property</span>
 
 
-<div class="viewcode-block" id="RadialValue">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue">[docs]</a>
-<span class="k">class</span> <span class="nc">RadialValue</span><span class="p">:</span>
+<div class="viewcode-block" id="RadialValue"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue">[docs]</a><span class="k">class</span> <span class="nc">RadialValue</span><span class="p">:</span>
 
-<div class="viewcode-block" id="RadialValue.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialValue.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span> <span class="o">=</span> <span class="n">mesh</span></div>
-
 
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">interpolator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -142,9 +139,7 @@
       <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="o">=</span><span class="n">mesh</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="RadialValue.copy">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.copy">[docs]</a>
-  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialValue.copy"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.copy">[docs]</a>  <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
       <span class="n">out</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span> <span class="ow">is</span> <span class="n">mesh</span><span class="p">:</span>
           <span class="n">out</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">)</span>
@@ -152,60 +147,42 @@
           <span class="n">out</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
-
-<div class="viewcode-block" id="RadialValue.for_mesh">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.for_mesh">[docs]</a>
-  <span class="k">def</span> <span class="nf">for_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialValue.for_mesh"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.for_mesh">[docs]</a>  <span class="k">def</span> <span class="nf">for_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
       <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">:</span>
           <span class="k">return</span> <span class="bp">self</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="RadialValue.interpolate">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.interpolate">[docs]</a>
-  <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coors</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialValue.interpolate"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialValue.html#ase2sprkkr.sprkkr.radial.RadialValue.interpolate">[docs]</a>  <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coors</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="n">coors</span><span class="p">)</span></div>
 
-
   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">at</span><span class="p">):</span>
-      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">at</span><span class="p">)</span></div>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">at</span><span class="p">)</span>
+
+  <span class="nd">@property</span>
+  <span class="k">def</span> <span class="nf">raw_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span></div>
 
 
-
-<div class="viewcode-block" id="RadialCharge">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialCharge.html#ase2sprkkr.sprkkr.radial.RadialCharge">[docs]</a>
-<span class="k">class</span> <span class="nc">RadialCharge</span><span class="p">(</span><span class="n">RadialValue</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialCharge"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialCharge.html#ase2sprkkr.sprkkr.radial.RadialCharge">[docs]</a><span class="k">class</span> <span class="nc">RadialCharge</span><span class="p">(</span><span class="n">RadialValue</span><span class="p">):</span>
       <span class="k">pass</span></div>
 
 
+<div class="viewcode-block" id="RadialPotential"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential">[docs]</a><span class="k">class</span> <span class="nc">RadialPotential</span><span class="p">(</span><span class="n">RadialValue</span><span class="p">):</span>
 
-<div class="viewcode-block" id="RadialPotential">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential">[docs]</a>
-<span class="k">class</span> <span class="nc">RadialPotential</span><span class="p">(</span><span class="n">RadialValue</span><span class="p">):</span>
-
-<div class="viewcode-block" id="RadialPotential.from_munchen">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential.from_munchen">[docs]</a>
-  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="RadialPotential.from_munchen"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential.from_munchen">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_munchen</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
       <span class="k">return</span> <span class="n">RadialPotential</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="RadialPotential.from_julich">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential.from_julich">[docs]</a>
-  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="RadialPotential.from_julich"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential.from_julich">[docs]</a>  <span class="nd">@staticmethod</span>
   <span class="k">def</span> <span class="nf">from_julich</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
       <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
       <span class="n">out</span> <span class="o">=</span> <span class="n">RadialPotential</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
       <span class="n">out</span><span class="o">.</span><span class="n">julich</span> <span class="o">=</span> <span class="n">value</span>
       <span class="k">return</span> <span class="n">out</span></div>
 
-
-<div class="viewcode-block" id="RadialPotential.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialPotential.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span></div>
-
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">vt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -256,18 +233,14 @@
   <span class="k">def</span> <span class="nf">down</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zr</span>
 
-<div class="viewcode-block" id="RadialPotential._clear">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential._clear">[docs]</a>
-  <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RadialPotential._clear"><a class="viewcode-back" href="../../../auto/ase2sprkkr.sprkkr.radial.RadialPotential.html#ase2sprkkr.sprkkr.radial.RadialPotential._clear">[docs]</a>  <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Clear cache on a value change &quot;&quot;&quot;</span>
       <span class="k">if</span> <span class="s1">&#39;interpolator&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
           <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;interpolator&#39;</span><span class="p">]</span></div>
 
-
   <span class="nd">@cached_property</span>
   <span class="k">def</span> <span class="nf">zr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh</span><span class="o">.</span><span class="n">coors</span></div>
-
 </pre></div>
 
            </div>

@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -93,18 +95,13 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="EmptySpheresResult">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.EmptySpheresResult.html#ase2sprkkr.bindings.empty_spheres.EmptySpheresResult">[docs]</a>
-<span class="k">class</span> <span class="nc">EmptySpheresResult</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EmptySpheresResult&#39;</span><span class="p">,</span> <span class="s1">&#39;positions radii&#39;</span><span class="p">)):</span>
+<div class="viewcode-block" id="EmptySpheresResult"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.EmptySpheresResult.html#ase2sprkkr.bindings.empty_spheres.EmptySpheresResult">[docs]</a><span class="k">class</span> <span class="nc">EmptySpheresResult</span><span class="p">(</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;EmptySpheresResult&#39;</span><span class="p">,</span> <span class="s1">&#39;positions radii&#39;</span><span class="p">)):</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="empty_spheres">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres.html#ase2sprkkr.bindings.empty_spheres.empty_spheres">[docs]</a>
-<span class="k">def</span> <span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="empty_spheres"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres.html#ase2sprkkr.bindings.empty_spheres.empty_spheres">[docs]</a><span class="k">def</span> <span class="nf">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns centres of empty spheres to add &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">es_finder</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">:</span>
@@ -115,10 +112,7 @@
         <span class="k">return</span> <span class="n">spheres</span><span class="o">.</span><span class="n">empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="empty_spheres_atoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms.html#ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms">[docs]</a>
-<span class="k">def</span> <span class="nf">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">round_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="empty_spheres_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms.html#ase2sprkkr.bindings.empty_spheres.empty_spheres_atoms">[docs]</a><span class="k">def</span> <span class="nf">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">round_zero</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the structure of the (SPRKKR) ASE atoms, adding the empty</span>
 <span class="sd">    spheres and updating the shpheres radii of the atomic sites, according</span>
@@ -138,22 +132,18 @@
     <span class="k">if</span> <span class="n">round_zero</span><span class="p">:</span>
         <span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">empty</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">return</span> <span class="n">empty</span></div>
-
     <span class="c1"># for i,radius in zip(empty.sites, res.radii):</span>
     <span class="c1"># not TO DO: set the radius of the sphere, since SPRKKR make it itself</span>
     <span class="c1">#    next(iter(i.occupation)).radius=radius</span>
 
 
-<div class="viewcode-block" id="add_empty_spheres">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.add_empty_spheres.html#ase2sprkkr.bindings.empty_spheres.add_empty_spheres">[docs]</a>
-<span class="k">def</span> <span class="nf">add_empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="add_empty_spheres"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.empty_spheres.add_empty_spheres.html#ase2sprkkr.bindings.empty_spheres.add_empty_spheres">[docs]</a><span class="k">def</span> <span class="nf">add_empty_spheres</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">empty</span> <span class="o">=</span> <span class="n">empty_spheres_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">empty</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
             <span class="n">atoms</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">atoms</span><span class="o">+=</span> <span class="n">empty</span>
     <span class="k">return</span> <span class="n">atoms</span></div>
-
 
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">es_finder</span>                   <span class="c1"># NOQA</span>

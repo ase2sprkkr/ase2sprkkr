@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pearson &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -87,6 +89,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -119,10 +122,10 @@
            <div itemprop="articleBody">
              
   <section id="pearson">
-<h1>Pearson<a class="headerlink" href="#pearson" title="Link to this heading"></a></h1>
+<h1>Pearson<a class="headerlink" href="#pearson" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.physics.lattice_data.</span></span><span class="sig-name descname"><span class="pre">Pearson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bravais_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centering_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herman_mauguin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoenflies</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.physics.lattice_data.</span></span><span class="sig-name descname"><span class="pre">Pearson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bravais_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centering_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">herman_mauguin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shoenflies</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson" title="Permalink to this definition"></a></dt>
 <dd><p>This class holds informations about translation symmetry of a lattice with a given
 Pearson symbol.</p>
 <p class="rubric">Class hierarchy</p>
@@ -135,22 +138,22 @@ Pearson symbol.</p>
 <p class="rubric">Constructor</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.__init__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.xband_data">
-<span class="sig-name descname"><span class="pre">xband_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.xband_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.xband_data" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">xband_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.xband_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.xband_data" title="Permalink to this definition"></a></dt>
 <dd><p>Data used by Xband sysfile and SPRKKR to describe translation symmetry.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.from_symbol">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.from_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.from_symbol" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.from_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.from_symbol" title="Permalink to this definition"></a></dt>
 <dd><p>Return the Pearson symbol (describing the translation symmetry) that corresponds to the
 given Pearson symbol</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>pearson_symbol</strong> (<em>str</em>) – </p>
 </dd>
 </dl>
@@ -158,19 +161,19 @@ given Pearson symbol</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.normalize_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_symbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pearson_symbol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/physics/lattice_data.html#Pearson.normalize_symbol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.normalize_symbol" title="Permalink to this definition"></a></dt>
 <dd><p>Normalize a Pearson symbol to its cannonical shape</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.pearson">
-<span class="sig-name descname"><span class="pre">pearson</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.pearson" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pearson</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.pearson" title="Permalink to this definition"></a></dt>
 <dd><p>Mapping of all possible Pearson symbols to Pearson objects</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.physics.lattice_data.Pearson.pearsons">
-<span class="sig-name descname"><span class="pre">pearsons</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'aP':</span> <span class="pre">('aP',</span> <span class="pre">1,</span> <span class="pre">'triclinic',</span> <span class="pre">'primitive',</span> <span class="pre">'-1',</span> <span class="pre">'C_i'),</span> <span class="pre">'cF':</span> <span class="pre">('cF',</span> <span class="pre">13,</span> <span class="pre">'cubic',</span> <span class="pre">'face-centered',</span> <span class="pre">'m3m',</span> <span class="pre">'O_h'),</span> <span class="pre">'cI':</span> <span class="pre">('cI',</span> <span class="pre">14,</span> <span class="pre">'cubic',</span> <span class="pre">'body-centered',</span> <span class="pre">'m3m',</span> <span class="pre">'O_h'),</span> <span class="pre">'cP':</span> <span class="pre">('cP',</span> <span class="pre">12,</span> <span class="pre">'cubic',</span> <span class="pre">'primitive',</span> <span class="pre">'m3m',</span> <span class="pre">'O_h'),</span> <span class="pre">'hP':</span> <span class="pre">('hP',</span> <span class="pre">11,</span> <span class="pre">'hexagonal',</span> <span class="pre">'primitive',</span> <span class="pre">'6/mmm',</span> <span class="pre">'D_6h'),</span> <span class="pre">'hR':</span> <span class="pre">('hR',</span> <span class="pre">10,</span> <span class="pre">'trigonal',</span> <span class="pre">'primitive',</span> <span class="pre">'-3m',</span> <span class="pre">'D_3d'),</span> <span class="pre">'mP':</span> <span class="pre">('mP',</span> <span class="pre">2,</span> <span class="pre">'monoclinic',</span> <span class="pre">'primitive',</span> <span class="pre">'2/m',</span> <span class="pre">'C_2h'),</span> <span class="pre">'mS':</span> <span class="pre">('mS',</span> <span class="pre">3,</span> <span class="pre">'monoclinic',</span> <span class="pre">'primitive',</span> <span class="pre">'2/m',</span> <span class="pre">'C_2h'),</span> <span class="pre">'oF':</span> <span class="pre">('oF',</span> <span class="pre">7,</span> <span class="pre">'orthorombic',</span> <span class="pre">'face-centered',</span> <span class="pre">'mmm',</span> <span class="pre">'D_2h'),</span> <span class="pre">'oI':</span> <span class="pre">('oI',</span> <span class="pre">6,</span> <span class="pre">'orthorombic',</span> <span class="pre">'body-centered',</span> <span class="pre">'mmm',</span> <span class="pre">'D_2h'),</span> <span class="pre">'oP':</span> <span class="pre">('oP',</span> <span class="pre">4,</span> <span class="pre">'orthorombic',</span> <span class="pre">'primitive',</span> <span class="pre">'mmm',</span> <span class="pre">'D_2h'),</span> <span class="pre">'oS':</span> <span class="pre">('oS',</span> <span class="pre">5,</span> <span class="pre">'orthorombic',</span> <span class="pre">'body-centered',</span> <span class="pre">'mmm',</span> <span class="pre">'D_2h'),</span> <span class="pre">'tI':</span> <span class="pre">('tI',</span> <span class="pre">9,</span> <span class="pre">'tetragonal',</span> <span class="pre">'body-centered',</span> <span class="pre">'4/mmm',</span> <span class="pre">'D_4h'),</span> <span class="pre">'tP':</span> <span class="pre">('tP',</span> <span class="pre">8,</span> <span class="pre">'tetragonal',</span> <span class="pre">'primitive',</span> <span class="pre">'4/mmm',</span> <span class="pre">'D_4h')}</span></em><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.pearsons" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">pearsons</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'aP':</span> <span class="pre">Pearson(pearson_symbol='aP',</span> <span class="pre">bravais_number=1,</span> <span class="pre">family='triclinic',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='-1',</span> <span class="pre">shoenflies='C_i'),</span> <span class="pre">'cF':</span> <span class="pre">Pearson(pearson_symbol='cF',</span> <span class="pre">bravais_number=13,</span> <span class="pre">family='cubic',</span> <span class="pre">centering_type='face-centered',</span> <span class="pre">herman_mauguin='m3m',</span> <span class="pre">shoenflies='O_h'),</span> <span class="pre">'cI':</span> <span class="pre">Pearson(pearson_symbol='cI',</span> <span class="pre">bravais_number=14,</span> <span class="pre">family='cubic',</span> <span class="pre">centering_type='body-centered',</span> <span class="pre">herman_mauguin='m3m',</span> <span class="pre">shoenflies='O_h'),</span> <span class="pre">'cP':</span> <span class="pre">Pearson(pearson_symbol='cP',</span> <span class="pre">bravais_number=12,</span> <span class="pre">family='cubic',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='m3m',</span> <span class="pre">shoenflies='O_h'),</span> <span class="pre">'hP':</span> <span class="pre">Pearson(pearson_symbol='hP',</span> <span class="pre">bravais_number=11,</span> <span class="pre">family='hexagonal',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='6/mmm',</span> <span class="pre">shoenflies='D_6h'),</span> <span class="pre">'hR':</span> <span class="pre">Pearson(pearson_symbol='hR',</span> <span class="pre">bravais_number=10,</span> <span class="pre">family='trigonal',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='-3m',</span> <span class="pre">shoenflies='D_3d'),</span> <span class="pre">'mP':</span> <span class="pre">Pearson(pearson_symbol='mP',</span> <span class="pre">bravais_number=2,</span> <span class="pre">family='monoclinic',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='2/m',</span> <span class="pre">shoenflies='C_2h'),</span> <span class="pre">'mS':</span> <span class="pre">Pearson(pearson_symbol='mS',</span> <span class="pre">bravais_number=3,</span> <span class="pre">family='monoclinic',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='2/m',</span> <span class="pre">shoenflies='C_2h'),</span> <span class="pre">'oF':</span> <span class="pre">Pearson(pearson_symbol='oF',</span> <span class="pre">bravais_number=7,</span> <span class="pre">family='orthorombic',</span> <span class="pre">centering_type='face-centered',</span> <span class="pre">herman_mauguin='mmm',</span> <span class="pre">shoenflies='D_2h'),</span> <span class="pre">'oI':</span> <span class="pre">Pearson(pearson_symbol='oI',</span> <span class="pre">bravais_number=6,</span> <span class="pre">family='orthorombic',</span> <span class="pre">centering_type='body-centered',</span> <span class="pre">herman_mauguin='mmm',</span> <span class="pre">shoenflies='D_2h'),</span> <span class="pre">'oP':</span> <span class="pre">Pearson(pearson_symbol='oP',</span> <span class="pre">bravais_number=4,</span> <span class="pre">family='orthorombic',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='mmm',</span> <span class="pre">shoenflies='D_2h'),</span> <span class="pre">'oS':</span> <span class="pre">Pearson(pearson_symbol='oS',</span> <span class="pre">bravais_number=5,</span> <span class="pre">family='orthorombic',</span> <span class="pre">centering_type='body-centered',</span> <span class="pre">herman_mauguin='mmm',</span> <span class="pre">shoenflies='D_2h'),</span> <span class="pre">'tI':</span> <span class="pre">Pearson(pearson_symbol='tI',</span> <span class="pre">bravais_number=9,</span> <span class="pre">family='tetragonal',</span> <span class="pre">centering_type='body-centered',</span> <span class="pre">herman_mauguin='4/mmm',</span> <span class="pre">shoenflies='D_4h'),</span> <span class="pre">'tP':</span> <span class="pre">Pearson(pearson_symbol='tP',</span> <span class="pre">bravais_number=8,</span> <span class="pre">family='tetragonal',</span> <span class="pre">centering_type='primitive',</span> <span class="pre">herman_mauguin='4/mmm',</span> <span class="pre">shoenflies='D_4h')}</span></em><a class="headerlink" href="#ase2sprkkr.physics.lattice_data.Pearson.pearsons" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

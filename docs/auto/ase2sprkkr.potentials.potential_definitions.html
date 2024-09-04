@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>potential_definitions &mdash; ASE2SPRKKR  documentation</title>
@@ -13,16 +13,17 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ASEArraySectionDefinition" href="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html" />
-    <link rel="prev" title="SectionString" href="ase2sprkkr.potentials.custom_potential_section.SectionString.html" /> 
+    <link rel="prev" title="potentials" href="ase2sprkkr.potentials.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -72,7 +74,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.input_parameters.html">input_parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.outputs.html">outputs</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">potential_definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html">ASEArraySectionDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html">PotSectionDefinition</a></li>
@@ -83,6 +84,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potentials.html">potentials</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.html">potential_sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.test.html">test</a></li>
 </ul>
@@ -93,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -124,7 +127,7 @@
            <div itemprop="articleBody">
              
   <section id="potential-definitions">
-<h1>potential_definitions<a class="headerlink" href="#potential-definitions" title="Link to this heading"></a></h1>
+<h1>potential_definitions<a class="headerlink" href="#potential-definitions" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.potentials.potential_definitions</strong></p>
 <p class="rubric">Module class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-196372e6001499995e038daf2dba9f40e489214f.png" alt="Inheritance diagram of ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition, ase2sprkkr.potentials.potential_definitions.PotSectionDefinition, ase2sprkkr.potentials.potential_definitions.PotValueDefinition, ase2sprkkr.potentials.potential_definitions.PotentialDefinition, ase2sprkkr.potentials.potential_definitions.Separator" usemap="#inheritanceaeda5028f1" class="inheritance graphviz" /></div>
@@ -149,13 +152,17 @@
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.potentials.potential_definitions">This file contains the classes for definitions of Potentials:
+<span class="target" id="module-ase2sprkkr.potentials.potential_definitions"></span><p>This file contains the classes for definitions of Potentials:
 the list of sections and their allowed (or standard) options
 and their value formats. InputParameterss and potentials have a simlilar
 structure, so they share common functionalities from
 sprkkr.common.configuration_definitions</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html#ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition" title="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASEArraySectionDefinition</span></code></a>(*args[, mandatory])</p></td>
 <td><p>A definition of a section, that contains an ASE datas (Atoms.setArray)</p></td>
@@ -180,7 +187,7 @@ sprkkr.common.configuration_definitions</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.potentials.custom_potential_section.SectionString.html" class="btn btn-neutral float-left" title="SectionString" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.potentials.html" class="btn btn-neutral float-left" title="potentials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html" class="btn btn-neutral float-right" title="ASEArraySectionDefinition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

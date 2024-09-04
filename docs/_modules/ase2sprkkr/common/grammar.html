@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -94,12 +96,12 @@
 
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">pyparsing</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">.decorators</span> <span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 
-<div class="viewcode-block" id="generate_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.generate_grammar.html#ase2sprkkr.common.grammar.generate_grammar">[docs]</a>
-<span class="nd">@contextmanager</span>
+<div class="viewcode-block" id="generate_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.generate_grammar.html#ase2sprkkr.common.grammar.generate_grammar">[docs]</a><span class="nd">@contextmanager</span>
 <span class="k">def</span> <span class="nf">generate_grammar</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Set the pyparsing newline handling</span>
 <span class="sd">        and then restore to the original state &quot;&quot;&quot;</span>
@@ -120,14 +122,10 @@
         <span class="n">pp</span><span class="o">.</span><span class="n">Keyword</span><span class="o">.</span><span class="n">DEFAULT_KEYWORD_CHARS</span> <span class="o">=</span> <span class="n">kchars</span></div>
 
 
-
-<div class="viewcode-block" id="replace_whitechars">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.replace_whitechars.html#ase2sprkkr.common.grammar.replace_whitechars">[docs]</a>
-<span class="k">def</span> <span class="nf">replace_whitechars</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+<div class="viewcode-block" id="replace_whitechars"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.replace_whitechars.html#ase2sprkkr.common.grammar.replace_whitechars">[docs]</a><span class="k">def</span> <span class="nf">replace_whitechars</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
     <span class="n">expr</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">expr</span><span class="o">.</span><span class="n">setWhitespaceChars</span><span class="p">(</span><span class="s1">&#39; </span><span class="se">\t\r</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">expr</span></div>
-
 
 
 <span class="k">with</span> <span class="n">generate_grammar</span><span class="p">():</span>
@@ -142,34 +140,23 @@
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Grammar for an optional quote &quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="separator_pattern">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.separator_pattern.html#ase2sprkkr.common.grammar.separator_pattern">[docs]</a>
-<span class="k">def</span> <span class="nf">separator_pattern</span><span class="p">(</span><span class="n">char</span><span class="p">):</span>
+<div class="viewcode-block" id="separator_pattern"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.separator_pattern.html#ase2sprkkr.common.grammar.separator_pattern">[docs]</a><span class="k">def</span> <span class="nf">separator_pattern</span><span class="p">(</span><span class="n">char</span><span class="p">):</span>
   <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s1">]&#39;</span> <span class="o">*</span> <span class="mi">11</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="separator_grammar">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.separator_grammar.html#ase2sprkkr.common.grammar.separator_grammar">[docs]</a>
-<span class="nd">@cache</span>
+<div class="viewcode-block" id="separator_grammar"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.separator_grammar.html#ase2sprkkr.common.grammar.separator_grammar">[docs]</a><span class="nd">@cache</span>
 <span class="k">def</span> <span class="nf">separator_grammar</span><span class="p">(</span><span class="n">char</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Pattern for separating sections in an input file &quot;&quot;&quot;</span>
   <span class="n">separator</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">Regex</span><span class="p">(</span><span class="n">separator_pattern</span><span class="p">(</span><span class="n">char</span><span class="p">))</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">char</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">char</span><span class="o">*</span><span class="mi">4</span><span class="si">}</span><span class="s2">....]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">suppress</span><span class="p">()</span>
   <span class="k">return</span> <span class="n">separator</span></div>
 
 
-
-<div class="viewcode-block" id="delimitedList">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.delimitedList.html#ase2sprkkr.common.grammar.delimitedList">[docs]</a>
-<span class="k">def</span> <span class="nf">delimitedList</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
+<div class="viewcode-block" id="delimitedList"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.delimitedList.html#ase2sprkkr.common.grammar.delimitedList">[docs]</a><span class="k">def</span> <span class="nf">delimitedList</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">delim</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Delimited list with already suppressed delimiter (or with a in-results-wanted one) &quot;&quot;&quot;</span>
   <span class="k">return</span> <span class="n">expr</span> <span class="o">+</span> <span class="n">pp</span><span class="o">.</span><span class="n">ZeroOrMore</span><span class="p">(</span><span class="n">delim</span> <span class="o">+</span> <span class="n">expr</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="addConditionEx">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.addConditionEx.html#ase2sprkkr.common.grammar.addConditionEx">[docs]</a>
-<span class="k">def</span> <span class="nf">addConditionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="addConditionEx"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.addConditionEx.html#ase2sprkkr.common.grammar.addConditionEx">[docs]</a><span class="k">def</span> <span class="nf">addConditionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Add check condition to the pyparsing ParseElement,</span>
 <span class="sd">  that, if it failed, raise a parse exception with a given message. &quot;&quot;&quot;</span>
 
@@ -184,10 +171,7 @@
   <span class="k">return</span> <span class="bp">self</span></div>
 
 
-
-<div class="viewcode-block" id="addParseActionEx">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.addParseActionEx.html#ase2sprkkr.common.grammar.addParseActionEx">[docs]</a>
-<span class="k">def</span> <span class="nf">addParseActionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="addParseActionEx"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.addParseActionEx.html#ase2sprkkr.common.grammar.addParseActionEx">[docs]</a><span class="k">def</span> <span class="nf">addParseActionEx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pa</span><span class="p">,</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Add parse action to a given pyparsing ParseElemenet,</span>
 <span class="sd">  that, if it raise an exception, fail with a given message</span>
@@ -206,23 +190,49 @@
   <span class="bp">self</span><span class="o">.</span><span class="n">addParseAction</span><span class="p">(</span><span class="n">parse_action</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="White">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White">[docs]</a>
-<span class="k">class</span> <span class="nc">White</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">White</span><span class="p">):</span>
+<div class="viewcode-block" id="White"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White">[docs]</a><span class="k">class</span> <span class="nc">White</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">White</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Fix for whitechars in pp.White</span>
 
 <span class="sd">      In Python 3.10, pyparsing.White do not respect default_white_chars.</span>
 <span class="sd">      This class fixes this.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="White.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White.__init__">[docs]</a>
-  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">white</span><span class="p">):</span>
+<div class="viewcode-block" id="White.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.White.html#ase2sprkkr.common.grammar.White.__init__">[docs]</a>  <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">white</span><span class="p">):</span>
       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">white</span><span class="p">)</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">setWhitespaceChars</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
-</div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">setWhitespaceChars</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div></div>
 
+
+<div class="viewcode-block" id="SkipToRegex"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.SkipToRegex.html#ase2sprkkr.common.grammar.SkipToRegex">[docs]</a><span class="k">class</span> <span class="nc">SkipToRegex</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Token</span><span class="p">):</span>
+<span class="w">   </span><span class="sd">&quot;&quot;&quot; Skip to given regex &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SkipToRegex.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.SkipToRegex.html#ase2sprkkr.common.grammar.SkipToRegex.__init__">[docs]</a>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">include_pattern</span><span class="p">:</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">parse_pattern</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+       <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">):</span>
+           <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
+       <span class="k">if</span> <span class="n">include_pattern</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+           <span class="n">include_pattern</span> <span class="o">=</span> <span class="n">parse_pattern</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">include_pattern</span> <span class="o">=</span> <span class="n">include_pattern</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">parse_pattern</span> <span class="o">=</span> <span class="n">parse_pattern</span>
+       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+
+   <span class="nd">@property</span>
+   <span class="k">def</span> <span class="nf">custom_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">customName</span><span class="o">=</span><span class="s2">&quot;skipTo</span><span class="si">{self.pattern}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="SkipToRegex.parseImpl"><a class="viewcode-back" href="../../../auto/ase2sprkkr.common.grammar.SkipToRegex.html#ase2sprkkr.common.grammar.SkipToRegex.parseImpl">[docs]</a>   <span class="k">def</span> <span class="nf">parseImpl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instr</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">doActions</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+       <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">instr</span><span class="p">,</span><span class="n">loc</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+           <span class="n">start</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+           <span class="n">out</span> <span class="o">=</span> <span class="n">instr</span><span class="p">[</span><span class="n">loc</span><span class="p">:</span><span class="n">start</span><span class="p">]</span>
+           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_pattern</span><span class="p">:</span>
+               <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">instr</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">result</span><span class="o">.</span><span class="n">end</span><span class="p">()])</span>
+           <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_pattern</span><span class="p">:</span>
+               <span class="n">loc</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+           <span class="k">else</span><span class="p">:</span>
+               <span class="n">loc</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+           <span class="k">return</span> <span class="n">loc</span><span class="p">,</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseResults</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+       <span class="k">raise</span> <span class="n">pp</span><span class="o">.</span><span class="n">ParseException</span><span class="p">(</span><span class="n">instr</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="s2">&quot;Pattern </span><span class="si">{self.pattern}</span><span class="s2"> not found&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div></div>
 
 
 <span class="n">pp</span><span class="o">.</span><span class="n">ParserElement</span><span class="o">.</span><span class="n">addConditionEx</span> <span class="o">=</span> <span class="n">addConditionEx</span>

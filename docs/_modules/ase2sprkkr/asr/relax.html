@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -145,11 +147,8 @@
 <span class="kn">import</span> <span class="nn">time</span>
 
 
-<div class="viewcode-block" id="BrokenSymmetryError">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.BrokenSymmetryError.html#ase2sprkkr.asr.relax.BrokenSymmetryError">[docs]</a>
-<span class="k">class</span> <span class="nc">BrokenSymmetryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="BrokenSymmetryError"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.BrokenSymmetryError.html#ase2sprkkr.asr.relax.BrokenSymmetryError">[docs]</a><span class="k">class</span> <span class="nc">BrokenSymmetryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
-
 
 
 <span class="n">Uvalues</span> <span class="o">=</span> <span class="p">{}</span>
@@ -165,9 +164,7 @@
     <span class="n">Uvalues</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;:d,</span><span class="si">{}</span><span class="s1">,0&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="is_relax_done">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.is_relax_done.html#ase2sprkkr.asr.relax.is_relax_done">[docs]</a>
-<span class="k">def</span> <span class="nf">is_relax_done</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">smax</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+<div class="viewcode-block" id="is_relax_done"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.is_relax_done.html#ase2sprkkr.asr.relax.is_relax_done">[docs]</a><span class="k">def</span> <span class="nf">is_relax_done</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">smax</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
                   <span class="n">smask</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])):</span>
     <span class="n">f</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_stress</span><span class="p">()</span> <span class="o">*</span> <span class="n">smask</span>
@@ -176,14 +173,9 @@
     <span class="k">return</span> <span class="n">done</span></div>
 
 
+<div class="viewcode-block" id="SpgAtoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms">[docs]</a><span class="k">class</span> <span class="nc">SpgAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
 
-<div class="viewcode-block" id="SpgAtoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms">[docs]</a>
-<span class="k">class</span> <span class="nc">SpgAtoms</span><span class="p">(</span><span class="n">Atoms</span><span class="p">):</span>
-
-<div class="viewcode-block" id="SpgAtoms.from_atoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.from_atoms">[docs]</a>
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="SpgAtoms.from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.from_atoms">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">atoms</span><span class="p">):</span>
         <span class="c1"># Due to technicalities we cannot mess with the __init__ constructor</span>
         <span class="c1"># -&gt; therefore we make our own</span>
@@ -191,10 +183,7 @@
         <span class="n">a</span><span class="o">.</span><span class="n">set_symmetries</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
         <span class="k">return</span> <span class="n">a</span></div>
 
-
-<div class="viewcode-block" id="SpgAtoms.set_symmetries">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.set_symmetries">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_symmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetries</span><span class="p">,</span> <span class="n">translations</span><span class="p">):</span>
+<div class="viewcode-block" id="SpgAtoms.set_symmetries"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.set_symmetries">[docs]</a>    <span class="k">def</span> <span class="nf">set_symmetries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetries</span><span class="p">,</span> <span class="n">translations</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_sc</span> <span class="o">=</span> <span class="n">translations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">op_svv</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">op_cc</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span> <span class="k">for</span>
                        <span class="n">op_cc</span> <span class="ow">in</span> <span class="n">symmetries</span><span class="p">]</span>
@@ -219,10 +208,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">a_sa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a_sa</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="SpgAtoms.get_stress">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.get_stress">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SpgAtoms.get_stress"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.get_stress">[docs]</a>    <span class="k">def</span> <span class="nf">get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">sigma0_vv</span> <span class="o">=</span> <span class="n">Atoms</span><span class="o">.</span><span class="n">get_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voigt</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">sigma_vv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -235,28 +221,19 @@
 
         <span class="k">return</span> <span class="n">sigma_vv</span></div>
 
-
-<div class="viewcode-block" id="SpgAtoms.get_forces">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.get_forces">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="SpgAtoms.get_forces"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.SpgAtoms.html#ase2sprkkr.asr.relax.SpgAtoms.get_forces">[docs]</a>    <span class="k">def</span> <span class="nf">get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">f0_av</span> <span class="o">=</span> <span class="n">Atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">f_av</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">f0_av</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">map_a</span><span class="p">,</span> <span class="n">op_vv</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_sa</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_svv</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">map_a</span><span class="p">):</span>
                 <span class="n">f_av</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f0_av</span><span class="p">[</span><span class="n">a1</span><span class="p">],</span> <span class="n">op_vv</span><span class="p">)</span>
         <span class="n">f_av</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsym</span>
-        <span class="k">return</span> <span class="n">f_av</span></div>
-</div>
+        <span class="k">return</span> <span class="n">f_av</span></div></div>
 
 
+<div class="viewcode-block" id="myBFGS"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS">[docs]</a><span class="k">class</span> <span class="nc">myBFGS</span><span class="p">(</span><span class="n">BFGS</span><span class="p">):</span>
 
-<div class="viewcode-block" id="myBFGS">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS">[docs]</a>
-<span class="k">class</span> <span class="nc">myBFGS</span><span class="p">(</span><span class="n">BFGS</span><span class="p">):</span>
-
-<div class="viewcode-block" id="myBFGS.log">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS.log">[docs]</a>
-    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="myBFGS.log"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.myBFGS.html#ase2sprkkr.asr.relax.myBFGS.log">[docs]</a>    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">forces</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">forces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_forces</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">stress</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -282,14 +259,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="si">:</span><span class="s1">&lt;4</span><span class="si">}</span><span class="s1"> &#39;</span>
                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">T</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">T</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">T</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1"> &#39;</span>
                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">e</span><span class="si">:</span><span class="s1">&lt;10.6f</span><span class="si">}{</span><span class="n">fc</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">fmax</span><span class="si">:</span><span class="s1">&lt;10.4f</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">smax</span><span class="si">:</span><span class="s1">&lt;10.4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
-</div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div></div>
 
 
-
-<div class="viewcode-block" id="relax">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.relax.html#ase2sprkkr.asr.relax.relax">[docs]</a>
-<span class="k">def</span> <span class="nf">relax</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tmp_atoms_file</span><span class="p">,</span> <span class="n">emin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">smask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dftd3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<div class="viewcode-block" id="relax"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.relax.html#ase2sprkkr.asr.relax.relax">[docs]</a><span class="k">def</span> <span class="nf">relax</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tmp_atoms_file</span><span class="p">,</span> <span class="n">emin</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">smask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dftd3</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
           <span class="n">fixcell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_symmetry_breaking</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dft</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
           <span class="n">fmax</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">enforce_symmetry</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
@@ -379,17 +352,11 @@
     <span class="k">return</span> <span class="n">atoms</span></div>
 
 
-
-<div class="viewcode-block" id="set_initial_magnetic_moments">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.set_initial_magnetic_moments.html#ase2sprkkr.asr.relax.set_initial_magnetic_moments">[docs]</a>
-<span class="k">def</span> <span class="nf">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
+<div class="viewcode-block" id="set_initial_magnetic_moments"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.set_initial_magnetic_moments.html#ase2sprkkr.asr.relax.set_initial_magnetic_moments">[docs]</a><span class="k">def</span> <span class="nf">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">atoms</span><span class="p">):</span>
     <span class="n">atoms</span><span class="o">.</span><span class="n">set_initial_magnetic_moments</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">),</span> <span class="nb">float</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="Result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.Result.html#ase2sprkkr.asr.relax.Result">[docs]</a>
-<span class="nd">@prepare_result</span>
+<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.relax.Result.html#ase2sprkkr.asr.relax.Result">[docs]</a><span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Result class for :py:func:`asr.relax.main`.&quot;&quot;&quot;</span>
 
@@ -420,7 +387,6 @@
          <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="s1">&#39;Cell parameter alpha [deg]&#39;</span><span class="p">,</span>
          <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="s1">&#39;Cell parameter beta [deg]&#39;</span><span class="p">,</span>
          <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="s1">&#39;Cell parameter gamma [deg]&#39;</span><span class="p">}</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.relax&#39;</span><span class="p">,</span>

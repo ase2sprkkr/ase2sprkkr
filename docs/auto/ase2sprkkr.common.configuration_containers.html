@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>configuration_containers &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -79,7 +81,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ase2sprkkr.common.html">common</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.alternative_types.html">alternative_types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration.html">configuration</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">configuration_containers</a><ul>
@@ -104,16 +105,18 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.process_output_reader.html">process_output_reader</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.unique_values.html">unique_values</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.html">generated_configuration_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.misc.html">misc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar_types.html">grammar_types</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -145,7 +148,7 @@
            <div itemprop="articleBody">
              
   <section id="configuration-containers">
-<h1>configuration_containers<a class="headerlink" href="#configuration-containers" title="Link to this heading"></a></h1>
+<h1>configuration_containers<a class="headerlink" href="#configuration-containers" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.common.configuration_containers</strong></p>
 <p class="rubric">Module class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-d54d83688fb3f721fb672364f9fcacb15877db83.png" alt="Inheritance diagram of ase2sprkkr.common.configuration_containers.BaseConfigurationContainer, ase2sprkkr.common.configuration_containers.BaseSection, ase2sprkkr.common.configuration_containers.ConfigurationContainer, ase2sprkkr.common.configuration_containers.CustomSection, ase2sprkkr.common.configuration_containers.DictAdaptor, ase2sprkkr.common.configuration_containers.RootConfigurationContainer, ase2sprkkr.common.configuration_containers.Section" usemap="#inheritance2e0474c1d8" class="inheritance graphviz" /></div>
@@ -162,13 +165,17 @@
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.common.configuration_containers">In this file the common containers of configuration values are,
+<span class="target" id="module-ase2sprkkr.common.configuration_containers"></span><p>In this file the common containers of configuration values are,
 either for task or potential.</p>
 <p>Configuration containers are classes, that holds configuration values
 and other containers, and are able to write them to a configuration file,
 and that are results of parsing of a configuration file.</p>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer.html#ase2sprkkr.common.configuration_containers.BaseConfigurationContainer" title="ase2sprkkr.common.configuration_containers.BaseConfigurationContainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseConfigurationContainer</span></code></a>(definition[, ...])</p></td>
 <td><p>Configuration container, that holds members, either in classical way (see :class:ConfigurationContainer) or treat them in a special way</p></td>
@@ -195,6 +202,10 @@ and that are results of parsing of a configuration file.</p>
 </table>
 <p class="rubric">Exceptions</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.common.configuration_containers.DisabledAttributeError.html#ase2sprkkr.common.configuration_containers.DisabledAttributeError" title="ase2sprkkr.common.configuration_containers.DisabledAttributeError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisabledAttributeError</span></code></a></p></td>
 <td><p>This exception is raised, if the attribute of a container exists, but it is disabled.</p></td>

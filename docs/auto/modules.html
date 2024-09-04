@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ase2sprkkr &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -49,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -89,7 +91,7 @@
            <div itemprop="articleBody">
              
   <section id="ase2sprkkr">
-<h1>ase2sprkkr<a class="headerlink" href="#ase2sprkkr" title="Link to this heading"></a></h1>
+<h1>ase2sprkkr<a class="headerlink" href="#ase2sprkkr" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="ase2sprkkr.html">ase2sprkkr</a><ul>
@@ -187,16 +189,25 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.Occupation.html">Occupation</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes._clearing_property.html">_clearing_property</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html">ExponentialMesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html">Mesh</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.sysfile_content.html">sysfile_content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.write_sysfile.html">write_sysfile</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.RadialCharge.html">RadialCharge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.RadialPotential.html">RadialPotential</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.RadialValue.html">RadialValue</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes._clearing_property.html">_clearing_property</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.ExponentialMesh.html">ExponentialMesh</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html">Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.Moments.html">Moments</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.html">io_data</a><ul>
@@ -206,9 +217,14 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.WriteIoData.html">WriteIoData</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.sysfile_content.html">sysfile_content</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.write_sysfile.html">write_sysfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html#module-calculator">Module calculator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html">FilenameTemplator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html">SPRKKR</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html">SPRKKRAtoms</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a><ul>
@@ -216,25 +232,15 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.SiteType.html">SiteType</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.SPRKKRAtoms.html">SPRKKRAtoms</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html#module-calculator">Module calculator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.FilenameTemplator.html">FilenameTemplator</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.SPRKKR.html">SPRKKR</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.init_tests.html">init_tests</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_build.html">test_build</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_sites.html">test_sites</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_sprkkr_atoms.html">test_sprkkr_atoms</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_sysfile.html">test_sysfile</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_arpes.html">test_arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_calculator.html">test_calculator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_occupation.html">test_occupation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.test.test_sites.html">test_sites</a></li>
 </ul>
 </li>
 </ul>
@@ -257,9 +263,9 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.plot.html">plot</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.show_structure.html">show_structure</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.info.html">info</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.test.html">test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.run.html">run</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.config.html">config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.run.html">run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.tools.commands.test.html">test</a></li>
 </ul>
 </li>
 </ul>
@@ -280,10 +286,11 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.arpes.html">arpes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.sections.html">sections</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.scf.html">scf</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.gilbert.html">gilbert</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.jxc.html">jxc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.phagen.html">phagen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.dos.html">dos</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.bsf.html">bsf</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.input_parameters.definitions.marpes.html">marpes</a></li>
 </ul>
 </li>
@@ -322,13 +329,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.potentials.html">potentials</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html">CustomPotentialSection</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html">CustomPotentialSectionDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html">CustomSectionToken</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.SectionString.html">SectionString</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.html">potential_definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.ASEArraySectionDefinition.html">ASEArraySectionDefinition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_definitions.PotSectionDefinition.html">PotSectionDefinition</a></li>
@@ -347,6 +347,13 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.PotentialSectionTrait.html">PotentialSectionTrait</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.RepeatedPotentialSection.html">RepeatedPotentialSection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.potential_sections.UniqueListSection.html">UniqueListSection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.html">custom_potential_section</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSection.html">CustomPotentialSection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomPotentialSectionDefinition.html">CustomPotentialSectionDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.CustomSectionToken.html">CustomSectionToken</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.potentials.custom_potential_section.SectionString.html">SectionString</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.potentials.definitions.html">definitions</a><ul>
@@ -904,11 +911,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.alternative_types.normalize_type.html">normalize_type</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.doc.process_input_parameters_definition.html">process_input_parameters_definition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.doc.verbatim.html">verbatim</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.no_output.html">no_output</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.no_output.NoOutput.html">NoOutput</a></li>
 </ul>
@@ -995,46 +997,8 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.generated_configuration_definitions.NumpyViewDefinition.html">NumpyViewDefinition</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_line_end.html">optional_line_end</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.line_end.html">line_end</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.end_of_file.html">end_of_file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_quote.html">optional_quote</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addConditionEx.html">addConditionEx</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addParseActionEx.html">addParseActionEx</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.delimitedList.html">delimitedList</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.generate_grammar.html">generate_grammar</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.replace_whitechars.html">replace_whitechars</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_grammar.html">separator_grammar</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_pattern.html">separator_pattern</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.White.html">White</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.add_excluded_names_condition.html">add_excluded_names_condition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.dict_from_parsed.html">dict_from_parsed</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html">ConfigurationRootDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html">ContainerDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.MergeDictAdaptor.html">MergeDictAdaptor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.SectionDefinition.html">SectionDefinition</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.value_definitions.html">value_definitions</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.value_definitions.ValueDefinition.html">ValueDefinition</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.gather.html">gather</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.switch.html">switch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html">BaseDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html">ControlDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Gather.html">Gather</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Ignored.html">Ignored</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html">RealItemDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html">SeparatorDefinition</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Stub.html">Stub</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Switch.html">Switch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html">VirtualDefinition</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.init_tests.html">init_tests</a><ul>
@@ -1058,6 +1022,50 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.misc.numpy_index.html">numpy_index</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.doc.html">doc</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.doc.process_input_parameters_definition.html">process_input_parameters_definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.doc.verbatim.html">verbatim</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.grammar.html">grammar</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_line_end.html">optional_line_end</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.line_end.html">line_end</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.end_of_file.html">end_of_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.optional_quote.html">optional_quote</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addConditionEx.html">addConditionEx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.addParseActionEx.html">addParseActionEx</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.delimitedList.html">delimitedList</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.generate_grammar.html">generate_grammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.replace_whitechars.html">replace_whitechars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_grammar.html">separator_grammar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.separator_pattern.html">separator_pattern</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.SkipToRegex.html">SkipToRegex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar.White.html">White</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.html">configuration_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.gather.html">gather</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.switch.html">switch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.BaseDefinition.html">BaseDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.ControlDefinition.html">ControlDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Gather.html">Gather</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Ignored.html">Ignored</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.RealItemDefinition.html">RealItemDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.SeparatorDefinition.html">SeparatorDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Stub.html">Stub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.Switch.html">Switch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.configuration_definitions.VirtualDefinition.html">VirtualDefinition</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.container_definitions.html">container_definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.add_excluded_names_condition.html">add_excluded_names_condition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.dict_from_parsed.html">dict_from_parsed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.ConfigurationRootDefinition.html">ConfigurationRootDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.ContainerDefinition.html">ContainerDefinition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.MergeDictAdaptor.html">MergeDictAdaptor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.container_definitions.SectionDefinition.html">SectionDefinition</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.common.test.html">test</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.test.init_tests.html">init_tests</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.test.test_common.html">test_common</a></li>
@@ -1068,12 +1076,47 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_type_map.html">type_from_type_map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.type_from_set_map.html">type_from_set_map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.recognized_set_types.html">recognized_set_types</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.data.html">data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.mixed.html">mixed</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.warnings.html">warnings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.basic.html">basic</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.grammar_type.html">grammar_type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.arrays.html">arrays</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.common.grammar_types.data.html">data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A1_Fe_scf_simple.html">A1_Fe_scf_simple</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A1_Fe_scf_simple.Fe.html">Fe</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A2_Fe_scf_input_modifications.html">A2_Fe_scf_input_modifications</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A2_Fe_scf_input_modifications.Fe.html">Fe</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A3_Fe_dos.html">A3_Fe_dos</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A3_Fe_dos.Fe.html">Fe</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A4_CPA_Example.html">A4_CPA_Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A4_CPA_Example.Ni_doped_STO.html">Ni_doped_STO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A5_Al_EOS.html">A5_Al_EOS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A5_Al_EOS.Al.html">Al</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A6_Cu_MSSPEC.html">A6_Cu_MSSPEC</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A6_Cu_MSSPEC.Cu.html">Cu</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A7_SrTiO3_MSSPEC.html">A7_SrTiO3_MSSPEC</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A7_SrTiO3_MSSPEC.STO.html">STO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.examples.A8_ARPES_and_plotting.html">A8_ARPES_and_plotting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.examples.A8_ARPES_and_plotting.arpes.html">arpes</a></li>
 </ul>
 </li>
 </ul>

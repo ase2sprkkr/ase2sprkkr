@@ -1,0 +1,43 @@
+A8\_ARPES\_and\_plotting
+========================
+
+Full name: **ase2sprkkr.examples.A8\_ARPES\_and\_plotting**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.examples.A8_ARPES_and_plotting
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.examples.A8_ARPES_and_plotting.arpes
+  
+  

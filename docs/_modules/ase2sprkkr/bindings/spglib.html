@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -102,14 +104,10 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="SpacegroupInfo">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo">[docs]</a>
-<span class="k">class</span> <span class="nc">SpacegroupInfo</span><span class="p">:</span>
+<div class="viewcode-block" id="SpacegroupInfo"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo">[docs]</a><span class="k">class</span> <span class="nc">SpacegroupInfo</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Class, that carry information about spacegroup and symmetry of a structure &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SpacegroupInfo.__init__">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="p">,</span>
+<div class="viewcode-block" id="SpacegroupInfo.__init__"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atoms</span><span class="p">:</span> <span class="n">sprkkr_atoms</span><span class="o">.</span><span class="n">SPRKKRAtoms</span><span class="p">,</span>
                        <span class="n">spacegroup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Spacegroup</span><span class="p">],</span>
                        <span class="n">dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">equivalent_sites</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">UniqueValuesMapping</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -139,16 +137,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span></div>
 
-
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;No spacegroup&#39;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="SpacegroupInfo.number">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.number">[docs]</a>
-    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="SpacegroupInfo.number"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.number">[docs]</a>    <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -156,7 +151,6 @@
 <span class="sd">          Spacegroup number or None, if there is no spacegroup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span><span class="o">.</span><span class="n">no</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacegroup</span> <span class="k">else</span> <span class="kc">None</span></div>
-
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
@@ -181,9 +175,7 @@
               <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span>
 
-<div class="viewcode-block" id="SpacegroupInfo.recompute">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.recompute">[docs]</a>
-    <span class="k">def</span> <span class="nf">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_change</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="SpacegroupInfo.recompute"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.recompute">[docs]</a>    <span class="k">def</span> <span class="nf">recompute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_change</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Recompute spacegroup, dataset and equivalent_sites.</span>
 
 <span class="sd">        allow_change</span>
@@ -207,10 +199,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span></div>
 
-
-<div class="viewcode-block" id="SpacegroupInfo.compute_spacegroup_info">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.compute_spacegroup_info">[docs]</a>
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SpacegroupInfo.compute_spacegroup_info"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.compute_spacegroup_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">compute_spacegroup_info</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span>
                        <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -253,18 +242,11 @@
           <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">UniqueValuesMapping</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">atoms</span><span class="p">)))</span>
 
        <span class="n">spacegroup</span> <span class="o">=</span> <span class="n">Spacegroup</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
-       <span class="k">try</span><span class="p">:</span>
-           <span class="n">tags</span> <span class="o">=</span> <span class="n">spacegroup</span><span class="o">.</span><span class="n">tag_sites</span><span class="p">(</span><span class="n">spositions</span><span class="p">)</span>
-       <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
-           <span class="n">tags</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spositions</span><span class="p">))</span>
-       <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+       <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">sg_dataset</span><span class="p">[</span><span class="s1">&#39;equivalent_atoms&#39;</span><span class="p">])</span>
        <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
        <span class="k">return</span> <span class="n">spacegroup</span><span class="p">,</span> <span class="n">sg_dataset</span><span class="p">,</span> <span class="n">equivalent_sites</span></div>
 
-
-<div class="viewcode-block" id="SpacegroupInfo.from_atoms">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms">[docs]</a>
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="SpacegroupInfo.from_atoms"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.SpacegroupInfo.html#ase2sprkkr.bindings.spglib.SpacegroupInfo.from_atoms">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_atoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span><span class="n">Atoms</span><span class="p">,</span>
                        <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -297,14 +279,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">out</span> <span class="o">=</span> <span class="n">SpacegroupInfo</span><span class="o">.</span><span class="n">compute_spacegroup_info</span><span class="p">(</span><span class="o">**</span><span class="nb">locals</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="n">out</span><span class="p">)</span></div>
-</div>
+        <span class="k">return</span> <span class="n">SpacegroupInfo</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="o">*</span><span class="n">out</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="possibly_equivalent_sites">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites">[docs]</a>
-<span class="k">def</span> <span class="nf">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
+<div class="viewcode-block" id="possibly_equivalent_sites"><a class="viewcode-back" href="../../../auto/ase2sprkkr.bindings.spglib.possibly_equivalent_sites.html#ase2sprkkr.bindings.spglib.possibly_equivalent_sites">[docs]</a><span class="k">def</span> <span class="nf">possibly_equivalent_sites</span><span class="p">(</span><span class="n">atoms</span><span class="p">:</span> <span class="n">Atoms</span><span class="p">,</span>
                        <span class="n">atomic_numbers</span> <span class="p">:</span> <span class="n">List</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">consider_old</span>   <span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UniqueValuesMapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the object that describe equivalence classes of the atoms</span>
@@ -318,7 +296,7 @@
 
     <span class="k">if</span> <span class="n">consider_old</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-           <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">))</span>
+           <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">site_type</span> <span class="k">if</span> <span class="n">i</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atoms</span><span class="o">.</span><span class="n">get_array</span><span class="p">(</span><span class="n">atoms</span><span class="o">.</span><span class="n">sites_array_name</span><span class="p">)])</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
            <span class="k">pass</span>
     <span class="k">else</span><span class="p">:</span>
@@ -335,7 +313,6 @@
             <span class="n">equivalent_sites</span> <span class="o">=</span> <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gen_occ</span><span class="p">())</span>
     <span class="n">equivalent_sites</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">start_from</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">equivalent_sites</span></div>
-
 </pre></div>
 
            </div>

@@ -1,0 +1,43 @@
+A1\_Fe\_scf\_simple
+===================
+
+Full name: **ase2sprkkr.examples.A1\_Fe\_scf\_simple**
+
+
+
+.. rubric:: Description
+
+.. automodule:: ase2sprkkr.examples.A1_Fe_scf_simple
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+   
+   
+   
+
+
+  
+  
+  .. rubric:: Modules
+
+  .. autosummary::
+     :toctree:
+     :template: custom-module-template.rst
+     :recursive:
+  
+     ase2sprkkr.examples.A1_Fe_scf_simple.Fe
+  
+  

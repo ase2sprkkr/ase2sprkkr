@@ -7,7 +7,7 @@ Full name: **ase2sprkkr.common.grammar\_types.data**
 
 .. rubric:: Module class hierarchy
 
-.. inheritance-diagram::  ase2sprkkr.common.grammar_types.data.NumpyArray  ase2sprkkr.common.grammar_types.data.Prefixed  ase2sprkkr.common.grammar_types.data.RestOfTheFile 
+.. inheritance-diagram::  ase2sprkkr.common.grammar_types.data.NumpyArray  ase2sprkkr.common.grammar_types.data.Prefixed  ase2sprkkr.common.grammar_types.data.RawData  ase2sprkkr.common.grammar_types.data.RestOfTheFile 
       :parts: 1
 
 |
@@ -37,6 +37,7 @@ Full name: **ase2sprkkr.common.grammar\_types.data**
    
       NumpyArray
       Prefixed
+      RawData
       RestOfTheFile
    
    

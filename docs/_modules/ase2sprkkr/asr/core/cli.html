@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -104,9 +106,7 @@
 <span class="n">prt</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">parprint</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="format">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.format.html#ase2sprkkr.asr.core.cli.format">[docs]</a>
-<span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="viewcode-block" id="format"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.format.html#ase2sprkkr.asr.core.cli.format">[docs]</a><span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="n">colwidth_c</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -132,7 +132,6 @@
         <span class="n">output</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
 
     <span class="k">return</span> <span class="n">output</span></div>
-
 
 
 <span class="n">CONTEXT_SETTINGS</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">help_option_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="s1">&#39;--help&#39;</span><span class="p">])</span>
@@ -224,9 +223,7 @@
         <span class="n">run_command</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="append_job">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.append_job.html#ase2sprkkr.asr.core.cli.append_job">[docs]</a>
-<span class="k">def</span> <span class="nf">append_job</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">job_num</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="append_job"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.append_job.html#ase2sprkkr.asr.core.cli.append_job">[docs]</a><span class="k">def</span> <span class="nf">append_job</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">job_num</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Append job number to message if provided.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">job_num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">string</span>
@@ -234,10 +231,7 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Job #</span><span class="si">{</span><span class="n">job_num</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">string</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-
-<div class="viewcode-block" id="run_command">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.run_command.html#ase2sprkkr.asr.core.cli.run_command">[docs]</a>
-<span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">not_recipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<div class="viewcode-block" id="run_command"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.run_command.html#ase2sprkkr.asr.core.cli.run_command">[docs]</a><span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">folders</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">not_recipe</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">dry_run</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                 <span class="n">skip_if_done</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">dont_raise</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
                 <span class="n">job_num</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -307,7 +301,6 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Unexpected error:&#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">dont_raise</span><span class="p">:</span>
                     <span class="k">raise</span></div>
-
 
 
 <span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
@@ -432,9 +425,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matching_files</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="extract_hash_from_file">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.extract_hash_from_file.html#ase2sprkkr.asr.core.cli.extract_hash_from_file">[docs]</a>
-<span class="k">def</span> <span class="nf">extract_hash_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="viewcode-block" id="extract_hash_from_file"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.extract_hash_from_file.html#ase2sprkkr.asr.core.cli.extract_hash_from_file">[docs]</a><span class="k">def</span> <span class="nf">extract_hash_from_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the ASR hash from an ASR results file.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">read_json</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -449,10 +440,7 @@
         <span class="k">return</span> <span class="n">version</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="check_git">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.check_git.html#ase2sprkkr.asr.core.cli.check_git">[docs]</a>
-<span class="k">def</span> <span class="nf">check_git</span><span class="p">():</span>
+<div class="viewcode-block" id="check_git"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.check_git.html#ase2sprkkr.asr.core.cli.check_git">[docs]</a><span class="k">def</span> <span class="nf">check_git</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check that Git is installed.&quot;&quot;&quot;</span>
     <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">],</span>
                             <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
@@ -462,10 +450,7 @@
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">err</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="se">\n</span><span class="s2">Problem with your Git installation.&quot;</span></div>
 
 
-
-<div class="viewcode-block" id="get_git_rev_list">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.get_git_rev_list.html#ase2sprkkr.asr.core.cli.get_git_rev_list">[docs]</a>
-<span class="k">def</span> <span class="nf">get_git_rev_list</span><span class="p">(</span><span class="n">hashes</span><span class="p">,</span> <span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_git_rev_list"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.get_git_rev_list.html#ase2sprkkr.asr.core.cli.get_git_rev_list">[docs]</a><span class="k">def</span> <span class="nf">get_git_rev_list</span><span class="p">(</span><span class="n">hashes</span><span class="p">,</span> <span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get Git rev list from HASH1 to HASH2.&quot;&quot;&quot;</span>
     <span class="n">cfgdir</span> <span class="o">=</span> <span class="n">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
 
@@ -482,33 +467,23 @@
     <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="is_asr_initialized">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.is_asr_initialized.html#ase2sprkkr.asr.core.cli.is_asr_initialized">[docs]</a>
-<span class="k">def</span> <span class="nf">is_asr_initialized</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="is_asr_initialized"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.is_asr_initialized.html#ase2sprkkr.asr.core.cli.is_asr_initialized">[docs]</a><span class="k">def</span> <span class="nf">is_asr_initialized</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if ASR is initialized.&quot;&quot;&quot;</span>
     <span class="n">cfgdir</span> <span class="o">=</span> <span class="n">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">cfgdir</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="initialize_asr_configuration_dir">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.initialize_asr_configuration_dir.html#ase2sprkkr.asr.core.cli.initialize_asr_configuration_dir">[docs]</a>
-<span class="k">def</span> <span class="nf">initialize_asr_configuration_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="initialize_asr_configuration_dir"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.initialize_asr_configuration_dir.html#ase2sprkkr.asr.core.cli.initialize_asr_configuration_dir">[docs]</a><span class="k">def</span> <span class="nf">initialize_asr_configuration_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct ASR configuration dir.&quot;&quot;&quot;</span>
     <span class="n">cfgdir</span> <span class="o">=</span> <span class="n">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="n">home</span><span class="p">)</span>
     <span class="n">cfgdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="get_config_dir">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.get_config_dir.html#ase2sprkkr.asr.core.cli.get_config_dir">[docs]</a>
-<span class="k">def</span> <span class="nf">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_config_dir"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.asr.core.cli.get_config_dir.html#ase2sprkkr.asr.core.cli.get_config_dir">[docs]</a><span class="k">def</span> <span class="nf">get_config_dir</span><span class="p">(</span><span class="n">home</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get path to ASR configuration dir.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">home</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">home</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">home</span> <span class="o">/</span> <span class="s1">&#39;.asr&#39;</span></div>
-
 </pre></div>
 
            </div>

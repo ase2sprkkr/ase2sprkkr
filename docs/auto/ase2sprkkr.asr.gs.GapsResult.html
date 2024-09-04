@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GapsResult &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -135,6 +137,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -167,10 +170,10 @@
            <div itemprop="articleBody">
              
   <section id="gapsresult">
-<h1>GapsResult<a class="headerlink" href="#gapsresult" title="Link to this heading"></a></h1>
+<h1>GapsResult<a class="headerlink" href="#gapsresult" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.gs.</span></span><span class="sig-name descname"><span class="pre">GapsResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn2_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/gs.html#GapsResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.gs.</span></span><span class="sig-name descname"><span class="pre">GapsResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skn2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn2_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/gs.html#GapsResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult" title="Permalink to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-cef969a6f2e4cadadcdf4dcdf6f9ccd0dc5b0d1f.png" alt="Inheritance diagram of ase2sprkkr.asr.gs.GapsResult" usemap="#inheritancef2cbc7b6de" class="inheritance graphviz" /></div>
 <map id="inheritancef2cbc7b6de" name="inheritancef2cbc7b6de">
@@ -180,32 +183,32 @@
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vbm_dir</strong> (<em>float</em>) – </p></li>
-<li><p><strong>k_vbm_dir_c</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
 <li><p><strong>skn2</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
 <li><p><strong>cbm</strong> (<em>float</em>) – </p></li>
-<li><p><strong>k_cbm_c</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>skn1</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>vbm_dir</strong> (<em>float</em>) – </p></li>
+<li><p><strong>skn2_dir</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>vbm</strong> (<em>float</em>) – </p></li>
+<li><p><strong>efermi</strong> (<em>float</em>) – </p></li>
+<li><p><strong>gap</strong> (<em>float</em>) – </p></li>
 <li><p><strong>k_cbm_dir_c</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
 <li><p><strong>skn1_dir</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>vbm</strong> (<em>float</em>) – </p></li>
-<li><p><strong>gap</strong> (<em>float</em>) – </p></li>
 <li><p><strong>k_vbm_c</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
-<li><p><strong>skn2_dir</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
 <li><p><strong>gap_dir</strong> (<em>float</em>) – </p></li>
-<li><p><strong>efermi</strong> (<em>float</em>) – </p></li>
 <li><p><strong>cbm_dir</strong> (<em>float</em>) – </p></li>
-<li><p><strong>skn1</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>k_vbm_dir_c</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>k_cbm_c</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn2_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">skn2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn2_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vbm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efermi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skn1_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbm_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_vbm_dir_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_cbm_c</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Instantiate result.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Input data to be wrapped.</p></li>
 <li><p><strong>metadata</strong> (<em>dict</em>) – Dictionary containing metadata.</p></li>
@@ -217,107 +220,107 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.gap">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.gap" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.gap" title="Permalink to this definition"></a></dt>
 <dd><p>Band gap [eV].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.vbm">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vbm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.vbm" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vbm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.vbm" title="Permalink to this definition"></a></dt>
 <dd><p>Valence band maximum [eV].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.cbm">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cbm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.cbm" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cbm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.cbm" title="Permalink to this definition"></a></dt>
 <dd><p>Conduction band minimum [eV].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.gap_dir">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gap_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.gap_dir" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gap_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.gap_dir" title="Permalink to this definition"></a></dt>
 <dd><p>Direct band gap [eV].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.vbm_dir">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vbm_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.vbm_dir" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vbm_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.vbm_dir" title="Permalink to this definition"></a></dt>
 <dd><p>Direct valence band maximum [eV].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.cbm_dir">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cbm_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.cbm_dir" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cbm_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.cbm_dir" title="Permalink to this definition"></a></dt>
 <dd><p>Direct conduction band minimum [eV].</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.k_vbm_c">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_vbm_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_vbm_c" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_vbm_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_vbm_c" title="Permalink to this definition"></a></dt>
 <dd><p>Scaled k-point coordinates of valence band maximum (VBM).</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.k_cbm_c">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_cbm_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_cbm_c" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_cbm_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_cbm_c" title="Permalink to this definition"></a></dt>
 <dd><p>Scaled k-point coordinates of conduction band minimum (CBM).</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.k_vbm_dir_c">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_vbm_dir_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_vbm_dir_c" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_vbm_dir_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_vbm_dir_c" title="Permalink to this definition"></a></dt>
 <dd><p>Scaled k-point coordinates of direct valence band maximum (VBM).</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.k_cbm_dir_c">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_cbm_dir_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_cbm_dir_c" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k_cbm_dir_c</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.k_cbm_dir_c" title="Permalink to this definition"></a></dt>
 <dd><p>Scaled k-point coordinates of direct calence band minimum (CBM).</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.skn1">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn1" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn1" title="Permalink to this definition"></a></dt>
 <dd><p>(spin,k-index,band-index)-tuple for valence band maximum.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.skn2">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn2" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn2" title="Permalink to this definition"></a></dt>
 <dd><p>(spin,k-index,band-index)-tuple for conduction band minimum.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.skn1_dir">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn1_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn1_dir" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn1_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn1_dir" title="Permalink to this definition"></a></dt>
 <dd><p>(spin,k-index,band-index)-tuple for direct valence band maximum.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.skn2_dir">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn2_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn2_dir" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skn2_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.skn2_dir" title="Permalink to this definition"></a></dt>
 <dd><p>(spin,k-index,band-index)-tuple for direct conduction band minimum.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.efermi">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">efermi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.efermi" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">efermi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.efermi" title="Permalink to this definition"></a></dt>
 <dd><p>Fermi level [eV].</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.key_descriptions">
-<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cbm':</span> <span class="pre">'Conduction</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">[eV].',</span> <span class="pre">'cbm_dir':</span> <span class="pre">'Direct</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">[eV].',</span> <span class="pre">'efermi':</span> <span class="pre">'Fermi</span> <span class="pre">level</span> <span class="pre">[eV].',</span> <span class="pre">'gap':</span> <span class="pre">'Band</span> <span class="pre">gap</span> <span class="pre">[eV].',</span> <span class="pre">'gap_dir':</span> <span class="pre">'Direct</span> <span class="pre">band</span> <span class="pre">gap</span> <span class="pre">[eV].',</span> <span class="pre">'k_cbm_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">(CBM).',</span> <span class="pre">'k_cbm_dir_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">direct</span> <span class="pre">calence</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">(CBM).',</span> <span class="pre">'k_vbm_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">(VBM).',</span> <span class="pre">'k_vbm_dir_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">direct</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">(VBM).',</span> <span class="pre">'skn1':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum.',</span> <span class="pre">'skn1_dir':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">direct</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum.',</span> <span class="pre">'skn2':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum.',</span> <span class="pre">'skn2_dir':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">direct</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum.',</span> <span class="pre">'vbm':</span> <span class="pre">'Valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">[eV].',</span> <span class="pre">'vbm_dir':</span> <span class="pre">'Direct</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">[eV].'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.key_descriptions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cbm':</span> <span class="pre">'Conduction</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">[eV].',</span> <span class="pre">'cbm_dir':</span> <span class="pre">'Direct</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">[eV].',</span> <span class="pre">'efermi':</span> <span class="pre">'Fermi</span> <span class="pre">level</span> <span class="pre">[eV].',</span> <span class="pre">'gap':</span> <span class="pre">'Band</span> <span class="pre">gap</span> <span class="pre">[eV].',</span> <span class="pre">'gap_dir':</span> <span class="pre">'Direct</span> <span class="pre">band</span> <span class="pre">gap</span> <span class="pre">[eV].',</span> <span class="pre">'k_cbm_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">(CBM).',</span> <span class="pre">'k_cbm_dir_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">direct</span> <span class="pre">calence</span> <span class="pre">band</span> <span class="pre">minimum</span> <span class="pre">(CBM).',</span> <span class="pre">'k_vbm_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">(VBM).',</span> <span class="pre">'k_vbm_dir_c':</span> <span class="pre">'Scaled</span> <span class="pre">k-point</span> <span class="pre">coordinates</span> <span class="pre">of</span> <span class="pre">direct</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">(VBM).',</span> <span class="pre">'skn1':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum.',</span> <span class="pre">'skn1_dir':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">direct</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum.',</span> <span class="pre">'skn2':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum.',</span> <span class="pre">'skn2_dir':</span> <span class="pre">'(spin,k-index,band-index)-tuple</span> <span class="pre">for</span> <span class="pre">direct</span> <span class="pre">conduction</span> <span class="pre">band</span> <span class="pre">minimum.',</span> <span class="pre">'vbm':</span> <span class="pre">'Valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">[eV].',</span> <span class="pre">'vbm_dir':</span> <span class="pre">'Direct</span> <span class="pre">valence</span> <span class="pre">band</span> <span class="pre">maximum</span> <span class="pre">[eV].'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.key_descriptions" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult._known_data_keys">
-<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cbm',</span> <span class="pre">'cbm_dir',</span> <span class="pre">'efermi',</span> <span class="pre">'gap',</span> <span class="pre">'gap_dir',</span> <span class="pre">'k_cbm_c',</span> <span class="pre">'k_cbm_dir_c',</span> <span class="pre">'k_vbm_c',</span> <span class="pre">'k_vbm_dir_c',</span> <span class="pre">'skn1',</span> <span class="pre">'skn1_dir',</span> <span class="pre">'skn2',</span> <span class="pre">'skn2_dir',</span> <span class="pre">'vbm',</span> <span class="pre">'vbm_dir'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult._known_data_keys" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'cbm',</span> <span class="pre">'cbm_dir',</span> <span class="pre">'efermi',</span> <span class="pre">'gap',</span> <span class="pre">'gap_dir',</span> <span class="pre">'k_cbm_c',</span> <span class="pre">'k_cbm_dir_c',</span> <span class="pre">'k_vbm_c',</span> <span class="pre">'k_vbm_dir_c',</span> <span class="pre">'skn1',</span> <span class="pre">'skn1_dir',</span> <span class="pre">'skn2',</span> <span class="pre">'skn2_dir',</span> <span class="pre">'vbm',</span> <span class="pre">'vbm_dir'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult._known_data_keys" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.gs.GapsResult.strict">
-<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.strict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.gs.GapsResult.strict" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

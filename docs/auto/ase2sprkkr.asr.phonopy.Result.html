@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Result &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -132,6 +134,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -164,10 +167,10 @@
            <div itemprop="articleBody">
              
   <section id="result">
-<h1>Result<a class="headerlink" href="#result" title="Link to this heading"></a></h1>
+<h1>Result<a class="headerlink" href="#result" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.phonopy.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_qc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irr_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_stability_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minhessianeig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigs_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_anv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_klav</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/phonopy.html#Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.phonopy.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_klav</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_qc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minhessianeig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigs_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_anv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irr_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_stability_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/phonopy.html#Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result" title="Permalink to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-8e98df8d4c6b0d17b20844e3742b888171184c59.png" alt="Inheritance diagram of ase2sprkkr.asr.phonopy.Result" usemap="#inheritance178aced6bf" class="inheritance graphviz" /></div>
 <map id="inheritance178aced6bf" name="inheritance178aced6bf">
@@ -177,26 +180,26 @@
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>u_klav</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>q_qc</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>irr_l</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>dynamic_stability_level</strong> (<em>int</em>) – </p></li>
 <li><p><strong>minhessianeig</strong> (<em>float</em>) – </p></li>
-<li><p><strong>omega_kl</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>eigs_kl</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>complex</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>phi_anv</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>u_klav</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>irr_l</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>omega_kl</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>dynamic_stability_level</strong> (<em>int</em>) – </p></li>
 <li><p><strong>path</strong> (<em>BandPath</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_qc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irr_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_stability_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minhessianeig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigs_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_anv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_klav</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_klav</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_qc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minhessianeig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eigs_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_anv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irr_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omega_kl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_stability_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Instantiate result.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Input data to be wrapped.</p></li>
 <li><p><strong>metadata</strong> (<em>dict</em>) – Dictionary containing metadata.</p></li>
@@ -208,76 +211,76 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.omega_kl">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">omega_kl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.omega_kl" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">omega_kl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.omega_kl" title="Permalink to this definition"></a></dt>
 <dd><p>Phonon frequencies.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.minhessianeig">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">minhessianeig</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.minhessianeig" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">minhessianeig</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.minhessianeig" title="Permalink to this definition"></a></dt>
 <dd><p>Minimum eigenvalue of Hessian [<cite>eV/Ang^2</cite>]</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.eigs_kl">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eigs_kl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.eigs_kl" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">eigs_kl</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.eigs_kl" title="Permalink to this definition"></a></dt>
 <dd><p>Dynamical matrix eigenvalues.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.q_qc">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">q_qc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.q_qc" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">q_qc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.q_qc" title="Permalink to this definition"></a></dt>
 <dd><p>List of momenta consistent with supercell.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.phi_anv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_anv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.phi_anv" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_anv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.phi_anv" title="Permalink to this definition"></a></dt>
 <dd><p>Force constants.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.u_klav">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u_klav</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.u_klav" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">u_klav</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.u_klav" title="Permalink to this definition"></a></dt>
 <dd><p>Phonon modes.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.irr_l">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">irr_l</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.irr_l" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">irr_l</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.irr_l" title="Permalink to this definition"></a></dt>
 <dd><p>Phonon irreducible representations.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.path">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BandPath</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.path" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">BandPath</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.path" title="Permalink to this definition"></a></dt>
 <dd><p>Phonon bandstructure path.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.dynamic_stability_level">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dynamic_stability_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.dynamic_stability_level" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dynamic_stability_level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.dynamic_stability_level" title="Permalink to this definition"></a></dt>
 <dd><p>Phonon dynamic stability (1,2,3)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.key_descriptions">
-<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'dynamic_stability_level':</span> <span class="pre">'Phonon</span> <span class="pre">dynamic</span> <span class="pre">stability</span> <span class="pre">(1,2,3)',</span> <span class="pre">'eigs_kl':</span> <span class="pre">'Dynamical</span> <span class="pre">matrix</span> <span class="pre">eigenvalues.',</span> <span class="pre">'irr_l':</span> <span class="pre">'Phonon</span> <span class="pre">irreducible</span> <span class="pre">representations.',</span> <span class="pre">'minhessianeig':</span> <span class="pre">'Minimum</span> <span class="pre">eigenvalue</span> <span class="pre">of</span> <span class="pre">Hessian</span> <span class="pre">[`eV/Ang^2`]',</span> <span class="pre">'omega_kl':</span> <span class="pre">'Phonon</span> <span class="pre">frequencies.',</span> <span class="pre">'path':</span> <span class="pre">'Phonon</span> <span class="pre">bandstructure</span> <span class="pre">path.',</span> <span class="pre">'phi_anv':</span> <span class="pre">'Force</span> <span class="pre">constants.',</span> <span class="pre">'q_qc':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">momenta</span> <span class="pre">consistent</span> <span class="pre">with</span> <span class="pre">supercell.',</span> <span class="pre">'u_klav':</span> <span class="pre">'Phonon</span> <span class="pre">modes.'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.key_descriptions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'dynamic_stability_level':</span> <span class="pre">'Phonon</span> <span class="pre">dynamic</span> <span class="pre">stability</span> <span class="pre">(1,2,3)',</span> <span class="pre">'eigs_kl':</span> <span class="pre">'Dynamical</span> <span class="pre">matrix</span> <span class="pre">eigenvalues.',</span> <span class="pre">'irr_l':</span> <span class="pre">'Phonon</span> <span class="pre">irreducible</span> <span class="pre">representations.',</span> <span class="pre">'minhessianeig':</span> <span class="pre">'Minimum</span> <span class="pre">eigenvalue</span> <span class="pre">of</span> <span class="pre">Hessian</span> <span class="pre">[`eV/Ang^2`]',</span> <span class="pre">'omega_kl':</span> <span class="pre">'Phonon</span> <span class="pre">frequencies.',</span> <span class="pre">'path':</span> <span class="pre">'Phonon</span> <span class="pre">bandstructure</span> <span class="pre">path.',</span> <span class="pre">'phi_anv':</span> <span class="pre">'Force</span> <span class="pre">constants.',</span> <span class="pre">'q_qc':</span> <span class="pre">'List</span> <span class="pre">of</span> <span class="pre">momenta</span> <span class="pre">consistent</span> <span class="pre">with</span> <span class="pre">supercell.',</span> <span class="pre">'u_klav':</span> <span class="pre">'Phonon</span> <span class="pre">modes.'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.key_descriptions" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.formats">
-<span class="sig-name descname"><span class="pre">formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ase_webpanel':</span> <span class="pre">&lt;function</span> <span class="pre">webpanel&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.formats" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ase_webpanel':</span> <span class="pre">&lt;function</span> <span class="pre">webpanel&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.formats" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result._known_data_keys">
-<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'dynamic_stability_level',</span> <span class="pre">'eigs_kl',</span> <span class="pre">'irr_l',</span> <span class="pre">'minhessianeig',</span> <span class="pre">'omega_kl',</span> <span class="pre">'path',</span> <span class="pre">'phi_anv',</span> <span class="pre">'q_qc',</span> <span class="pre">'u_klav'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result._known_data_keys" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'dynamic_stability_level',</span> <span class="pre">'eigs_kl',</span> <span class="pre">'irr_l',</span> <span class="pre">'minhessianeig',</span> <span class="pre">'omega_kl',</span> <span class="pre">'path',</span> <span class="pre">'phi_anv',</span> <span class="pre">'q_qc',</span> <span class="pre">'u_klav'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result._known_data_keys" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.phonopy.Result.strict">
-<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.strict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.phonopy.Result.strict" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

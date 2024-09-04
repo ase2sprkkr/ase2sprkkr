@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Result &mdash; ASE2SPRKKR  documentation</title>
@@ -13,11 +13,12 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -128,6 +130,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -160,10 +163,10 @@
            <div itemprop="articleBody">
              
   <section id="result">
-<h1>Result<a class="headerlink" href="#result" title="Link to this heading"></a></h1>
+<h1>Result<a class="headerlink" href="#result" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.plasmafrequency.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plasmafreq_vv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/plasmafrequency.html#Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ase2sprkkr.asr.plasmafrequency.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plasmafreq_vv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ase2sprkkr/asr/plasmafrequency.html#Result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result" title="Permalink to this definition"></a></dt>
 <dd><p class="rubric">Class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-d1944f613a03c65af53e7e26dfb594e7a33a8d63.png" alt="Inheritance diagram of ase2sprkkr.asr.plasmafrequency.Result" usemap="#inheritanceb0acf6704d" class="inheritance graphviz" /></div>
 <map id="inheritanceb0acf6704d" name="inheritanceb0acf6704d">
@@ -173,7 +176,7 @@
 </div>
 <p class="rubric">Constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>plasmafreq_vv</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>plasmafrequency_y</strong> (<em>float</em>) – </p></li>
@@ -183,10 +186,10 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plasmafreq_vv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plasmafreq_vv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plasmafrequency_x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>Instantiate result.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Input data to be wrapped.</p></li>
 <li><p><strong>metadata</strong> (<em>dict</em>) – Dictionary containing metadata.</p></li>
@@ -198,16 +201,16 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.plasmafreq_vv">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plasmafreq_vv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.plasmafreq_vv" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plasmafreq_vv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.plasmafreq_vv" title="Permalink to this definition"></a></dt>
 <dd><p>Plasma frequency tensor [Hartree]</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.plasmafrequency_x">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plasmafrequency_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.plasmafrequency_x" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plasmafrequency_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.plasmafrequency_x" title="Permalink to this definition"></a></dt>
 <dd><p>2D plasma frequency (x)[<cite>eV/Ang^0.5</cite>]</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>KVP</p>
 </dd>
 </dl>
@@ -215,10 +218,10 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.plasmafrequency_y">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plasmafrequency_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.plasmafrequency_y" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plasmafrequency_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.plasmafrequency_y" title="Permalink to this definition"></a></dt>
 <dd><p>2D plasma frequency (y)[<cite>eV/Ang^0.5</cite>]</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>KVP</p>
 </dd>
 </dl>
@@ -226,22 +229,22 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.key_descriptions">
-<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'plasmafreq_vv':</span> <span class="pre">'Plasma</span> <span class="pre">frequency</span> <span class="pre">tensor</span> <span class="pre">[Hartree]',</span> <span class="pre">'plasmafrequency_x':</span> <span class="pre">'KVP:</span> <span class="pre">2D</span> <span class="pre">plasma</span> <span class="pre">frequency</span> <span class="pre">(x)[`eV/Ang^0.5`]',</span> <span class="pre">'plasmafrequency_y':</span> <span class="pre">'KVP:</span> <span class="pre">2D</span> <span class="pre">plasma</span> <span class="pre">frequency</span> <span class="pre">(y)[`eV/Ang^0.5`]'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.key_descriptions" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">key_descriptions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'plasmafreq_vv':</span> <span class="pre">'Plasma</span> <span class="pre">frequency</span> <span class="pre">tensor</span> <span class="pre">[Hartree]',</span> <span class="pre">'plasmafrequency_x':</span> <span class="pre">'KVP:</span> <span class="pre">2D</span> <span class="pre">plasma</span> <span class="pre">frequency</span> <span class="pre">(x)[`eV/Ang^0.5`]',</span> <span class="pre">'plasmafrequency_y':</span> <span class="pre">'KVP:</span> <span class="pre">2D</span> <span class="pre">plasma</span> <span class="pre">frequency</span> <span class="pre">(y)[`eV/Ang^0.5`]'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.key_descriptions" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.formats">
-<span class="sig-name descname"><span class="pre">formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ase_webpanel':</span> <span class="pre">&lt;function</span> <span class="pre">webpanel&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.formats" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">formats</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ase_webpanel':</span> <span class="pre">&lt;function</span> <span class="pre">webpanel&gt;}</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.formats" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result._known_data_keys">
-<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'plasmafreq_vv',</span> <span class="pre">'plasmafrequency_x',</span> <span class="pre">'plasmafrequency_y'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result._known_data_keys" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_known_data_keys</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'plasmafreq_vv',</span> <span class="pre">'plasmafrequency_x',</span> <span class="pre">'plasmafrequency_y'}</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result._known_data_keys" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="ase2sprkkr.asr.plasmafrequency.Result.strict">
-<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.strict" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">strict</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#ase2sprkkr.asr.plasmafrequency.Result.strict" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

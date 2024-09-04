@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -108,17 +110,12 @@
 <span class="kn">from</span> <span class="nn">..task_result</span> <span class="kn">import</span> <span class="n">KkrProcess</span>
 
 
-<div class="viewcode-block" id="RealOrStars">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars">[docs]</a>
-<span class="k">class</span> <span class="nc">RealOrStars</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
+<div class="viewcode-block" id="RealOrStars"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.RealOrStars.html#ase2sprkkr.outputs.readers.scf.RealOrStars">[docs]</a><span class="k">class</span> <span class="nc">RealOrStars</span><span class="p">(</span><span class="n">Real</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; A real value, where ``****`` means ``NaN`` &quot;&quot;&quot;</span>
   <span class="n">_grammar</span> <span class="o">=</span> <span class="n">Real</span><span class="o">.</span><span class="n">_grammar</span> <span class="o">|</span> <span class="n">replace_whitechars</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">Word</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">setParseAction</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;NaN&#39;</span><span class="p">))</span></div>
 
 
-
-<div class="viewcode-block" id="ScfResult">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult">[docs]</a>
-<span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult">[docs]</a><span class="k">class</span> <span class="nc">ScfResult</span><span class="p">(</span><span class="n">TaskResult</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Objects of this class holds the results of computed SCF class &quot;&quot;&quot;</span>
 
   <span class="nd">@property</span>
@@ -151,15 +148,12 @@
       <span class="k">else</span><span class="p">:</span>
          <span class="n">SPRKKR</span><span class="p">(</span><span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ScfResult.new_task">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.new_task">[docs]</a>
-  <span class="k">def</span> <span class="nf">new_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult.new_task"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.new_task">[docs]</a>  <span class="k">def</span> <span class="nf">new_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
       <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculator</span><span class="o">.</span><span class="n">copy_with_potential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential_filename</span><span class="p">)</span>
       <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span> <span class="o">=</span> <span class="n">task</span>
       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">task</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;jxc&#39;</span><span class="p">:</span>
           <span class="n">out</span><span class="o">.</span><span class="n">input_parameters</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;EMIN&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="o">.</span><span class="n">energy</span><span class="o">.</span><span class="n">EMIN</span><span class="p">())</span>
       <span class="k">return</span> <span class="n">out</span></div>
-
 
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -171,9 +165,7 @@
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; The calculation coverged or not? &quot;&quot;&quot;</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="p">[</span><span class="s1">&#39;converged&#39;</span><span class="p">]()</span>
 
-<div class="viewcode-block" id="ScfResult.iteration_values">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.iteration_values">[docs]</a>
-  <span class="k">def</span> <span class="nf">iteration_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult.iteration_values"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.iteration_values">[docs]</a>  <span class="k">def</span> <span class="nf">iteration_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the array of values of given name from the</span>
 <span class="sd">      iterations (i.e. &quot;the column of the table of the values&quot;)</span>
 
@@ -199,7 +191,6 @@
               <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterations</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span>
             <span class="p">)</span></div>
 
-
   <span class="nd">@property</span>
   <span class="k">def</span> <span class="nf">last_iteration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Return the data of the last iteration &quot;&quot;&quot;</span>
@@ -211,9 +202,7 @@
   <span class="k">def</span> <span class="nf">energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_iteration</span><span class="o">.</span><span class="n">energy</span><span class="p">()</span>
 
-<div class="viewcode-block" id="ScfResult.plot">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.plot">[docs]</a>
-  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span><span class="s1">&#39;ETOT&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;EMIN&#39;</span><span class="p">)],</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logscale</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;err&#39;</span><span class="p">]),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfResult.plot"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfResult.html#ase2sprkkr.outputs.readers.scf.ScfResult.plot">[docs]</a>  <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span><span class="s1">&#39;ETOT&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="s1">&#39;EMIN&#39;</span><span class="p">)],</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logscale</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s1">&#39;err&#39;</span><span class="p">]),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">      </span><span class="sd">&quot;&quot;&quot; Plot the development of the given value(s) during iterations.</span>
 
 <span class="sd">      Parameters</span>
@@ -253,9 +242,7 @@
       <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
       <span class="k">else</span><span class="p">:</span>
-        <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
-</div>
-
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -309,16 +296,12 @@
 <span class="p">])</span>
 
 
-<div class="viewcode-block" id="ScfOutputReader">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader">[docs]</a>
-<span class="k">class</span> <span class="nc">ScfOutputReader</span><span class="p">(</span><span class="n">ProcessOutputReader</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfOutputReader"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader">[docs]</a><span class="k">class</span> <span class="nc">ScfOutputReader</span><span class="p">(</span><span class="n">ProcessOutputReader</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  This class reads and parses the output of the SCF task of the SPR-KKR.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ScfOutputReader.read_output">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output">[docs]</a>
-  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfOutputReader.read_output"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfOutputReader.html#ase2sprkkr.outputs.readers.scf.ScfOutputReader.read_output">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">read_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stdout</span><span class="p">):</span>
         <span class="n">iterations</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">async</span> <span class="k">def</span> <span class="nf">readline</span><span class="p">():</span>
@@ -402,18 +385,13 @@
           <span class="k">return</span> <span class="n">iterations</span>
 
         <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
-          <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span></div>
-</div>
+          <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The output ends unexpectedly&#39;</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="ScfProcess">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfProcess.html#ase2sprkkr.outputs.readers.scf.ScfProcess">[docs]</a>
-<span class="k">class</span> <span class="nc">ScfProcess</span><span class="p">(</span><span class="n">KkrProcess</span><span class="p">):</span>
+<div class="viewcode-block" id="ScfProcess"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.outputs.readers.scf.ScfProcess.html#ase2sprkkr.outputs.readers.scf.ScfProcess">[docs]</a><span class="k">class</span> <span class="nc">ScfProcess</span><span class="p">(</span><span class="n">KkrProcess</span><span class="p">):</span>
 
   <span class="n">result_class</span> <span class="o">=</span> <span class="n">ScfResult</span>
   <span class="n">reader_class</span> <span class="o">=</span> <span class="n">ScfOutputReader</span></div>
-
 </pre></div>
 
            </div>

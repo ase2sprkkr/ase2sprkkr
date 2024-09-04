@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>io_data &mdash; ASE2SPRKKR  documentation</title>
@@ -13,16 +13,17 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=888ff710"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="unique_mapping" href="ase2sprkkr.sprkkr.io_data.unique_mapping.html" />
-    <link rel="prev" title="Mesh" href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html" /> 
+    <link rel="prev" title="Moments" href="ase2sprkkr.sprkkr.moments.Moments.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -76,8 +78,10 @@
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.atomic_types.html">atomic_types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.configuration.html">configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.occupations.html">occupations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial_meshes.html">radial_meshes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.radial.html">radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.moments.html">moments</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">io_data</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.unique_mapping.html">unique_mapping</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.BaseIoData.html">BaseIoData</a></li>
@@ -85,10 +89,9 @@
 <li class="toctree-l4"><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.WriteIoData.html">WriteIoData</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sysfile.html">sysfile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.calculator.html">calculator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sprkkr_atoms.html">sprkkr_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.sites.html">sites</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ase2sprkkr.sprkkr.test.html">test</a></li>
 </ul>
 </li>
@@ -102,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.visualise.html">visualise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.output_files.html">output_files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.common.html">common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ase2sprkkr.examples.html">examples</a></li>
 </ul>
 </li>
 </ul>
@@ -133,7 +137,7 @@
            <div itemprop="articleBody">
              
   <section id="io-data">
-<h1>io_data<a class="headerlink" href="#io-data" title="Link to this heading"></a></h1>
+<h1>io_data<a class="headerlink" href="#io-data" title="Permalink to this heading"></a></h1>
 <p>Full name: <strong>ase2sprkkr.sprkkr.io_data</strong></p>
 <p class="rubric">Module class hierarchy</p>
 <div class="graphviz"><img src="../_images/inheritance-bd5ee1e437c44161b61c9c8f31534e64ff763809.png" alt="Inheritance diagram of ase2sprkkr.sprkkr.io_data.BaseIoData, ase2sprkkr.sprkkr.io_data.ReadIoData, ase2sprkkr.sprkkr.io_data.WriteIoData" usemap="#inheritancef2e98d7ec6" class="inheritance graphviz" /></div>
@@ -145,10 +149,14 @@
 <div class="line"><br /></div>
 </div>
 <p class="rubric">Description</p>
-<p id="module-ase2sprkkr.sprkkr.io_data">IoData classes serves are intermediate object used as storage during
+<span class="target" id="module-ase2sprkkr.sprkkr.io_data"></span><p>IoData classes serves are intermediate object used as storage during
 reading or writing of potential/input_parameters files.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.unique_mapping.html#ase2sprkkr.sprkkr.io_data.unique_mapping" title="ase2sprkkr.sprkkr.io_data.unique_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_mapping</span></code></a>(fce)</p></td>
 <td><p>Create function (with a cached result), that returns UniqueValuesMapping from a given iterator</p></td>
@@ -157,6 +165,10 @@ reading or writing of potential/input_parameters files.</p>
 </table>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="ase2sprkkr.sprkkr.io_data.BaseIoData.html#ase2sprkkr.sprkkr.io_data.BaseIoData" title="ase2sprkkr.sprkkr.io_data.BaseIoData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseIoData</span></code></a></p></td>
 <td><p>Base class for object used during reading/writing.</p></td>
@@ -175,7 +187,7 @@ reading or writing of potential/input_parameters files.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="ase2sprkkr.sprkkr.radial_meshes.Mesh.html" class="btn btn-neutral float-left" title="Mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ase2sprkkr.sprkkr.moments.Moments.html" class="btn btn-neutral float-left" title="Moments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="ase2sprkkr.sprkkr.io_data.unique_mapping.html" class="btn btn-neutral float-right" title="unique_mapping" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -101,13 +103,9 @@
 <span class="kn">from</span> <span class="nn">..sysfile</span> <span class="kn">import</span> <span class="n">sysfile_content</span><span class="p">,</span> <span class="n">write_sysfile</span>  <span class="c1"># NOQA: E402</span>
 
 
-<div class="viewcode-block" id="TestSysfile">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.html#ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile">[docs]</a>
-<span class="k">class</span> <span class="nc">TestSysfile</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSysfile"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.html#ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile">[docs]</a><span class="k">class</span> <span class="nc">TestSysfile</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
 
-<div class="viewcode-block" id="TestSysfile.test">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.html#ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.test">[docs]</a>
-    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSysfile.test"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.html#ase2sprkkr.sprkkr.test.test_sysfile.TestSysfile.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="mf">4.6</span>
         <span class="n">c</span> <span class="o">=</span> <span class="mf">2.95</span>
         <span class="n">atoms</span> <span class="o">=</span> <span class="n">crystal</span><span class="p">([</span><span class="s1">&#39;Ti&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">],</span> <span class="n">basis</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)],</span>
@@ -162,9 +160,7 @@
         <span class="n">sanitize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">sanitize</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="n">sanitize</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
-           <span class="n">write_sysfile</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
-</div>
-
+           <span class="n">write_sysfile</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -12,11 +12,12 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -99,9 +101,7 @@
 <span class="kn">from</span> <span class="nn">...sprkkr.sprkkr_grammar_types</span> <span class="kn">import</span> <span class="n">Site</span><span class="p">,</span> <span class="n">AtomicType</span>
 
 
-<div class="viewcode-block" id="CONTROL">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.CONTROL.html#ase2sprkkr.input_parameters.definitions.sections.CONTROL">[docs]</a>
-<span class="k">def</span> <span class="nf">CONTROL</span><span class="p">(</span><span class="n">ADSI</span><span class="p">):</span>
+<div class="viewcode-block" id="CONTROL"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.CONTROL.html#ase2sprkkr.input_parameters.definitions.sections.CONTROL">[docs]</a><span class="k">def</span> <span class="nf">CONTROL</span><span class="p">(</span><span class="n">ADSI</span><span class="p">):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Create the definition of the CONTROL section of the task input file.</span>
 
 <span class="sd">  Parameters</span>
@@ -134,15 +134,10 @@
   <span class="p">])</span></div>
 
 
-
-<div class="viewcode-block" id="TauSection">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TauSection.html#ase2sprkkr.input_parameters.definitions.sections.TauSection">[docs]</a>
-<span class="k">class</span> <span class="nc">TauSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
+<div class="viewcode-block" id="TauSection"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TauSection.html#ase2sprkkr.input_parameters.definitions.sections.TauSection">[docs]</a><span class="k">class</span> <span class="nc">TauSection</span><span class="p">(</span><span class="n">Section</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; TAU Section of input parameters. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TauSection.set_from_atoms">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TauSection.html#ase2sprkkr.input_parameters.definitions.sections.TauSection.set_from_atoms">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
+<div class="viewcode-block" id="TauSection.set_from_atoms"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TauSection.html#ase2sprkkr.input_parameters.definitions.sections.TauSection.set_from_atoms">[docs]</a>    <span class="k">def</span> <span class="nf">set_from_atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">io_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; NKTAB[xD] values has to be set according to the type of the problem.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">NKTAB</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">NKTAB2D</span><span class="p">,</span> <span class="n">section</span><span class="o">.</span><span class="n">NKTAB3D</span><span class="p">):</span>
             <span class="n">i</span><span class="o">.</span><span class="n">clear_result</span><span class="p">()</span>
@@ -155,16 +150,11 @@
                <span class="n">section</span><span class="o">.</span><span class="n">NKTAB2D</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">NKTAB2D</span><span class="o">.</span><span class="n">_create_dangerous_value</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
                <span class="n">section</span><span class="o">.</span><span class="n">NKTAB3D</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">NKTAB3D</span><span class="o">.</span><span class="n">_create_dangerous_value</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
            <span class="k">else</span><span class="p">:</span>
-               <span class="n">section</span><span class="o">.</span><span class="n">NKTAB</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">NKTAB</span><span class="o">.</span><span class="n">_create_dangerous_value</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
-</div>
+               <span class="n">section</span><span class="o">.</span><span class="n">NKTAB</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">NKTAB</span><span class="o">.</span><span class="n">_create_dangerous_value</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div></div>
 
 
-
-<div class="viewcode-block" id="_nktab_value">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections._nktab_value.html#ase2sprkkr.input_parameters.definitions.sections._nktab_value">[docs]</a>
-<span class="k">def</span> <span class="nf">_nktab_value</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
+<div class="viewcode-block" id="_nktab_value"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections._nktab_value.html#ase2sprkkr.input_parameters.definitions.sections._nktab_value">[docs]</a><span class="k">def</span> <span class="nf">_nktab_value</span><span class="p">(</span><span class="n">option</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">option</span><span class="o">.</span><span class="n">_container</span><span class="o">.</span><span class="n">NKTAB</span><span class="p">()</span></div>
-
 
 
 <span class="n">TAU</span> <span class="o">=</span> <span class="n">TauSection</span><span class="p">(</span><span class="s1">&#39;TAU&#39;</span><span class="p">,[</span>
@@ -308,9 +298,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="TASK">
-<a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TASK.html#ase2sprkkr.input_parameters.definitions.sections.TASK">[docs]</a>
-<span class="k">def</span> <span class="nf">TASK</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">add</span> <span class="o">=</span> <span class="p">[]):</span>
+<div class="viewcode-block" id="TASK"><a class="viewcode-back" href="../../../../auto/ase2sprkkr.input_parameters.definitions.sections.TASK.html#ase2sprkkr.input_parameters.definitions.sections.TASK">[docs]</a><span class="k">def</span> <span class="nf">TASK</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">add</span> <span class="o">=</span> <span class="p">[]):</span>
 <span class="w">  </span><span class="sd">&quot;&quot;&quot; Create the definition of the CONTROL section of the task input file.</span>
 
 <span class="sd">  Parameters</span>
@@ -328,7 +316,6 @@
   <span class="k">return</span> <span class="n">Section</span><span class="p">(</span><span class="s1">&#39;TASK&#39;</span><span class="p">,</span> <span class="p">[</span>
     <span class="n">V</span><span class="p">(</span><span class="s1">&#39;TASK&#39;</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">name_in_grammar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
   <span class="p">]</span> <span class="o">+</span> <span class="n">add</span><span class="p">)</span></div>
-
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>

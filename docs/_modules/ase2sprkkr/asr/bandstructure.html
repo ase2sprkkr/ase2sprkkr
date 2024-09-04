@@ -12,11 +12,12 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -48,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../philosophy.html">Philosophy of the package (for developers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference external" href="_static/slides.pdf#http://">Hastily written ASE2SPRKKR slides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -127,9 +129,7 @@
     <span class="n">calc</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;bs.gpw&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="bs_pbe_html">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe_html.html#ase2sprkkr.asr.bandstructure.bs_pbe_html">[docs]</a>
-<span class="k">def</span> <span class="nf">bs_pbe_html</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+<div class="viewcode-block" id="bs_pbe_html"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe_html.html#ase2sprkkr.asr.bandstructure.bs_pbe_html">[docs]</a><span class="k">def</span> <span class="nf">bs_pbe_html</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
                 <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-bs.html&#39;</span><span class="p">,</span>
                 <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">),</span>
                 <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -309,10 +309,7 @@
         <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="add_bs_pbe">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.add_bs_pbe.html#ase2sprkkr.asr.bandstructure.add_bs_pbe">[docs]</a>
-<span class="k">def</span> <span class="nf">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="add_bs_pbe"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.add_bs_pbe.html#ase2sprkkr.asr.bandstructure.add_bs_pbe">[docs]</a><span class="k">def</span> <span class="nf">add_bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot pbe with soc on ax.&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">ase.dft.kpoints</span> <span class="kn">import</span> <span class="n">labels_from_kpts</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;results-asr.bandstructure.json&#39;</span><span class="p">)</span>
@@ -327,10 +324,7 @@
     <span class="k">return</span> <span class="n">ax</span></div>
 
 
-
-<div class="viewcode-block" id="plot_with_colors">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.plot_with_colors.html#ase2sprkkr.asr.bandstructure.plot_with_colors">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_with_colors</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span>
+<div class="viewcode-block" id="plot_with_colors"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.plot_with_colors.html#ase2sprkkr.asr.bandstructure.plot_with_colors">[docs]</a><span class="k">def</span> <span class="nf">plot_with_colors</span><span class="p">(</span><span class="n">bs</span><span class="p">,</span>
                      <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">emin</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span>
                      <span class="n">emax</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -384,10 +378,7 @@
     <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="n">cbar</span></div>
 
 
-
-<div class="viewcode-block" id="bs_pbe">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe.html#ase2sprkkr.asr.bandstructure.bs_pbe">[docs]</a>
-<span class="k">def</span> <span class="nf">bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
+<div class="viewcode-block" id="bs_pbe"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.bs_pbe.html#ase2sprkkr.asr.bandstructure.bs_pbe">[docs]</a><span class="k">def</span> <span class="nf">bs_pbe</span><span class="p">(</span><span class="n">row</span><span class="p">,</span>
            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;pbe-bs.png&#39;</span><span class="p">,</span>
            <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
            <span class="n">show_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -486,10 +477,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="webpanel">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.webpanel.html#ase2sprkkr.asr.bandstructure.webpanel">[docs]</a>
-<span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
+<div class="viewcode-block" id="webpanel"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.webpanel.html#ase2sprkkr.asr.bandstructure.webpanel">[docs]</a><span class="k">def</span> <span class="nf">webpanel</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">key_descriptions</span><span class="p">):</span>
     <span class="kn">from</span> <span class="nn">asr.database.browser</span> <span class="kn">import</span> <span class="n">fig</span>
     <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
 
@@ -514,10 +502,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">panel</span><span class="p">]</span></div>
 
 
-
-<div class="viewcode-block" id="Result">
-<a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.Result.html#ase2sprkkr.asr.bandstructure.Result">[docs]</a>
-<span class="nd">@prepare_result</span>
+<div class="viewcode-block" id="Result"><a class="viewcode-back" href="../../../auto/ase2sprkkr.asr.bandstructure.Result.html#ase2sprkkr.asr.bandstructure.Result">[docs]</a><span class="nd">@prepare_result</span>
 <span class="k">class</span> <span class="nc">Result</span><span class="p">(</span><span class="n">ASRResult</span><span class="p">):</span>
 
     <span class="n">version</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
@@ -532,7 +517,6 @@
         <span class="p">}</span>
 
     <span class="n">formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ase_webpanel&quot;</span><span class="p">:</span> <span class="n">webpanel</span><span class="p">}</span></div>
-
 
 
 <span class="nd">@command</span><span class="p">(</span><span class="s1">&#39;asr.bandstructure&#39;</span><span class="p">,</span>
