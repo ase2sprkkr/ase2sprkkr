@@ -1,0 +1,23 @@
+Various examples how to use ASE2SPRKKR are present in this directory.
+
+1_Fe_scf_simple:
+             Simple SCF calculation for bcc Fe
+2_Fe_scf_input_modifications
+             Demonstration how to chage input SPRKKR file
+3_Fe_dos
+            SCF calculation for Fe using kkrscf and consequent DOS by kkrgen
+4_CPA_Example
+            Ni Doped SrTiO3 as calculated by the CPA method. This example demonstrate
+            partial occupations
+5_Al_EOS
+            Total energy SCF calculations as a function of Volume and corresponding
+            equation of state fiting
+6_Cu_MSSPEC
+           Simple SCF calculations for fcc Cu in combination with msspec code to generate
+           photoelectron diffraction
+7_SrTiO3_MSSPEC
+           SCF calculations for  SrTiO3 in combination with msspec code to generate
+           photoelectron diffraction
+
+8_ARPES
+					 Example of an ARPES calculation and plotting its results.

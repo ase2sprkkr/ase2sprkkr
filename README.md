@@ -153,6 +153,12 @@ the Sphinx behavior will be merged into Sphinx, please use the following
 fork for building the documentation.
 <https://github.com/lokik/sphinx.git>
 
+## Examples of the usage
+
+Please, see the ase2sprkkr.examples subpackage, or look to the documentation
+<https://ase2sprkkr.github.io/ase2sprkkr/>.
+
+
 ## How to contribute or to report a bug
 
 Please feel free to make a pull-request or post an issue at:
