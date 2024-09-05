@@ -589,7 +589,7 @@ class SPRKKR(Calculator):
         def open_input_file():
             ifile = input_file or self.input_file
             if ifile is True:
-                ifile = '%l%_%a_%t.inp'
+                ifile = '%l%_%a_%T.inp'
 
             return self._open_file(ifile, directory,
                                          templator,
@@ -619,7 +619,7 @@ class SPRKKR(Calculator):
         def open_output_file():
             """ Get and open the output file """
             ofile = output_file or self.output_file
-            ofile = from_input_name(ofile, '.out', '%a_%t.out')
+            ofile = from_input_name(ofile, '.out', '%a_%T.out')
             return self._open_file(ofile, directory, templator, False, mode='wb',
                                               allow_temporary=return_files,
                                               create_subdirs=create_subdirs)
@@ -876,6 +876,7 @@ class FilenameTemplator:
     replacements = {
           "%d" : lambda self: datetime.today().strftime('%Y-%m-%d_%H:%M'),
           "%t" : lambda self: self.task(),
+          "%T" : lambda self: self.task().upper(),
           "%a" : lambda self: self.symbols(),
           "%l" : lambda self: self.calculator.label or '',
           "%c" : lambda self: self.calculator._advance_counter()
