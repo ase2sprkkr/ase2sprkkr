@@ -21,6 +21,8 @@ def run():
       description='ASE2SPRKKR tool: tool for visualising SPRKKR result',
       formatter_class=argparse.RawDescriptionHelpFormatter
   )
+  parser.add_argument('--version', '-v', help='Print the version of ASE2SPRKKR.', action='store_true')
+
   subs = parser.add_subparsers( dest = 'ase2sprkkr_command', description='Run ase2sprkkr <subcommand> -h for futhrer info')
 
   names = (i for i in pkgutil.iter_modules(commands.__path__))
@@ -47,8 +49,14 @@ def run():
           where = getattr(args, where)
           where += remainder
 
+  help = True
+  if args.version:
+      import ase2sprkkr.version
+      print(ase2sprkkr.version.__version__)
+      help=False
   if args.ase2sprkkr_command is None:
-      parser.print_help()
+      if help:
+          parser.print_help()
   else:
       action = modules[ args.ase2sprkkr_command ].run
       del args.ase2sprkkr_command
