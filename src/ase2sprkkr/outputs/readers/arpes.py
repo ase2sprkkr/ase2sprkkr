@@ -21,7 +21,7 @@ class ArpesResult(TaskResult):
   @cached_property
   def spc(self):
       """ The new (output) potential - that contains the converged charge density etc. """
-      return OutputFile.from_file(self.spc_filename)
+      return OutputFile.from_file(self.spc_filename, try_only='spc')
 
 
 class ArpesProcess(KkrProcess):
