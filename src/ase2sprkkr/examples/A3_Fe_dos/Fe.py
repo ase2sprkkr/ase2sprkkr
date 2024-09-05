@@ -9,7 +9,7 @@ def main():
 
     atoms = bulk('Fe')
 
-    print("FIST STEP: SELF CONSISTENT CALCULATIONS====")
+    print("FIRST STEP: SELF CONSISTENT CALCULATIONS====")
     calculator = SPRKKR(atoms=atoms,mpi=True)
     calculator.input_parameters.set(NL=3)
     calculator.input_parameters.SCF.MIX=0.20
@@ -20,8 +20,8 @@ def main():
 
     print(out.energy)
     print(len(out.iterations))
-    print(out.iterations[-1]['error'])
-    print(out.last_iteration['moment'])
+    print(out.iterations[-1]['error']())
+    print(out.last_iteration['moment'].to_dict())
     print("SECOND STEP: CALCULATION OF DOS============")
     # Lets now calculate DOS
     # First we need to change task (there are several input data tabulated for
@@ -41,10 +41,11 @@ def main():
     calculator.input_parameters.set(NL=3)
 
     # Pass a newly converged potential to the DOS calculation
-    calculator.calculate(potential=out.potential_filename)
+    out = calculator.calculate(potential=out.potential_filename)
+    out.dos().plot()
 
     # For the processing of the results of the DOS task use xband
-    calculator.run_xband()
+    # calculator.run_xband()
 
 
 # Just run the script only when directly called from command line

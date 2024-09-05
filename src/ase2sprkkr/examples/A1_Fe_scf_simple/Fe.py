@@ -18,7 +18,7 @@ def main():
     # out object includes results
     print(out.energy)
     print(len(out.iterations))
-    print(out.iterations[-1]['error'])
+    print(out.iterations[-1]['error']())
     print(out.last_iteration['moment'])
 
 
