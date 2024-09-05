@@ -1,5 +1,9 @@
 Changelog
 =========
+Version 3.1.0-beta
+------------------
+* BSF task and result
+* Examples in package and documentation
 
 Version 3.0.2-beta
 ------------------
