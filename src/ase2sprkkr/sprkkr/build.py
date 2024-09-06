@@ -11,7 +11,8 @@ from ase import Atoms
 from ase.build import surface
 
 from numbers import Real
-from typing import Union, List, Tuple, Optional,Dict
+from typing import Union, Tuple, Optional,Dict
+
 
 def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2:Atoms=None,
                         hkl:Optional[Tuple[Real]]=None, hkl2:Optional[Tuple[Real]]=None,
@@ -71,6 +72,7 @@ def semiinfinite_system(atoms:Atoms, repeat:Union[Tuple[Real,Real],Real], atoms2
                   'central': catoms,
                   'right': atoms2}, axis=axis)
     return out
+
 
 def stack(atomses:Dict[str,Atoms], axis:int, *args, inherit_cell=True, **kwargs):
     """ Stack the atoms along given axis to a one object, creating the regions in the atoms.

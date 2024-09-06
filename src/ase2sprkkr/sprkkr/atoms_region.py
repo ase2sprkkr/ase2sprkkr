@@ -8,6 +8,7 @@ from typing import List, Union, Optional
 from ..common.decorators import cached_property
 from .sprkkr_atoms import SPRKKRAtoms
 
+
 class AtomsRegion:
   """ AtomsRegion define a region of Atoms object,
   that can have its own cell and pbc.
@@ -83,7 +84,7 @@ class AtomsRegion:
       cell = self.incomplete_cell.copy()
       if self.atoms is not None:
           for i,v in enumerate(cell):
-              if not v.any():     #no nonzero
+              if not v.any():     # no nonzero
                   v[:] = self.atoms.cell[i]
       return cell
 
@@ -130,7 +131,7 @@ class AtomsRegion:
   def set_atoms(self, atoms, add=True):
       """ Set the master atoms - of which the region is described """
       if add:
-         #atoms will call set_atoms again
+         # atoms will call set_atoms again
          SPRKKRAtoms.promote_ase_atoms(atoms)
          atoms.add_region(self)
       else:
@@ -154,7 +155,7 @@ class AtomsRegion:
   def shared_ids_with(self, region):
       """ Return ids of the sites, that belongs to the both regions """
       if self.atoms != region.atoms:
-         return false
+         return False
       return self.set_of_ids.intersection(region.set_of_ids)
 
   @cached_property
