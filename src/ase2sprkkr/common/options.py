@@ -475,8 +475,11 @@ class Option(BaseOption):
         else:
            value = self.result
            if d.is_numbered_array:
-              for i in value.values():
-                  vali(i)
+              if value is None:
+                 vali(value)
+              else:
+                 for i in value.values():
+                     vali(i)
            else:
               vali(value)
 
@@ -504,7 +507,7 @@ class Option(BaseOption):
       value = self._unpack_value(self._value)
       if value is not None:
          return value, not self.is_it_the_default_value(value)
-      if self._definition.is_numbered_array:
+      if self._definition.is_numbered_array and self.default_value is not None:
          return {'def' : self.default_value}, False
       else:
          return self.default_value, False
