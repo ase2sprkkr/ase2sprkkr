@@ -8,7 +8,8 @@ from typing import List, Optional, Union
 
 from ..grammar import generate_grammar, delimitedList, \
                       line_end, White
-from .grammar_type import GrammarType, compare_numpy_values, type_from_type, type_from_default_value
+from .grammar_type import GrammarType, compare_numpy_values, type_from_type, \
+                          type_from_default_value, TypedGrammarType
 from ..decorators import add_to_signature, cached_property
 from .basic import Integer, Real, Unsigned, real
 
@@ -177,8 +178,9 @@ class SetOf(Array):
       return copy.deepcopy(value)
 
 
-class Complex(SetOf):
+class Complex(SetOf, TypedGrammarType):
   array_access = False
+  numpy_type = complex
 
   @add_to_signature(SetOf.__init__)
   def __init__(self, *args, **kwargs):
