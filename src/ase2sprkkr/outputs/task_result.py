@@ -1,22 +1,58 @@
 """ This module contains classes, used by parsers of the output files """
 from ..common.decorators import cached_property
 import os
+import importlib
+from . import readers
+from ..potentials.potentials import Potential
+from ..input_parameters import input_parameters as input_parameters
 
 
 class TaskResult:
   """ A base class for a result of a runned task (kkrscf executable) """
-  def __init__(self, input_parameters, calculator, directory, result, error, return_code,
+  def __init__(self, input_parameters, calculator, directory,
                      output_file=None, input_file=None):
-      self.input_parameters = input_parameters
+      self._input_parameters = input_parameters
       self._calculator = calculator
       self.directory = directory or os.getcwd()
-      self.result = result
-      self.error = error
-      self.return_code = return_code
       self.output_file = output_file
       self.input_file = input_file
 
   @cached_property
+  def input_parameters(self):
+      if self._input_parameters:
+          return self._input_parameters
+      if 'input' in self.files and os.path.isfile(self.files['input']):
+          return input_parameters.InputParameters.from_file(self.files['input'])
+
+  @cached_property
+  def potential_filename(self):
+      """ New (output) potential file name """
+      potfil = self.input_parameters.CONTROL.POTFIL()
+      if not potfil:
+          potfil = self.files.get('potential', None)
+      if not potfil:
+         raise ValueError("Please set CONTROL.POTFIL of the input_parameters to read the potential")
+      if self.directory:
+         potfil = os.path.join(self.directory, potfil)
+      return potfil
+
+  @cached_property
+  def potential(self):
+      """ The new (output) potential - that contains the converged charge density etc. """
+      return Potential.from_file(self.potential_filename)
+
+  def new_task(self, task):
+      out = self._calculator.copy_with_potential(self.potential_filename)
+      out.input_parameters = task
+      if isinstance(task, str) and task.lower() == 'jxc':
+          out.input_parameters.set('EMIN', self.last_iteration.energy.EMIN())
+      return out
+
+  def complete(self, error, return_code):
+      self.error = error
+      self.return_code = return_code
+
+  @property
   def atoms(self):
       return self.potential.atoms
 
@@ -41,21 +77,42 @@ class KkrProcess:
       """ Directory, to wich are the relative paths in the output related. """
       self.reader = self.reader_class()
 
-  def run(self, cmd, outfile, print_output=False, directory=None, input_file=None, **kwargs):
-      return self._wraps(
-          getattr(outfile, "name", None),
-          *self.reader.run(cmd, outfile, print_output, directory, **kwargs),
-          input_file = input_file
-      )
-
-  def _wraps(self, output_file, *args, input_file=None):
-      return self.result_class(self.input_parameters, self.calculator, self.directory, *args,
+  def _wraps(self, fn, output_file, input_file=None):
+      result = self.result_class(self.input_parameters, self.calculator, self.directory,
                                output_file = output_file,
                                input_file = input_file
                                )
+      out, error, return_code = fn(result)
+      result.complete(error, return_code)
+      return result
+
+  def run(self, cmd, outfile, print_output=False, directory=None, input_file=None, **kwargs):
+      return self._wraps(
+          lambda result: self.reader.run(cmd, outfile, [result],
+                                          print_output, directory, **kwargs),
+          output_file = getattr(outfile, "name", None),
+          input_file = input_file
+      )
 
   def read_from_file(self, output, error=None, return_code=0, print_output=False):
       return self._wraps(
-          output,
-          *self.reader.read_from_file(output, error, return_code, print_output)
+          lambda result: self.reader.read_from_file(output, error, [result], return_code, print_output),
+          output_file = output
       )
+
+  @staticmethod
+  def class_for_task(task):
+       try:
+          mod = importlib.import_module(f'.{task}', readers.__name__)
+          clsname = task.title() + 'Process'
+          cls = getattr(mod, clsname)
+          if not cls:
+             raise Exception(f"Can not determine the class to read the results of task {task}"
+                              "No {clsname} class in the module {oo.__name__}.{task}")
+       except ModuleNotFoundError:
+          cls = DefaultProcess
+
+       return cls
+
+
+from ..outputs.readers.default import DefaultProcess   # NOQA

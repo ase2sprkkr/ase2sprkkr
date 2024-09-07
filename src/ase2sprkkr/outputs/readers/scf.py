@@ -1,6 +1,5 @@
 import pyparsing as pp
 import numpy as np
-import os
 from ase.units import Rydberg
 
 from ..output_definitions import OutputSectionDefinition as Section, \
@@ -9,13 +8,14 @@ from ..output_definitions import OutputSectionDefinition as Section, \
                                  OutputNonameValueDefinition as VN
 from ...common.grammar_types import Table, integer, string, Real, RealWithUnits,String, Sequence, Array
 from ..task_result import TaskResult
-from ...common.process_output_reader import ProcessOutputReader
+from ...common.process_output_reader import readline, readline_until
+from ..sprkkr_output_reader import SprKkrOutputReader
 from ...common.decorators import cached_property
-from ...potentials.potentials import Potential
 from ...sprkkr.calculator import SPRKKR
 from ...common.formats import fortran_format
 from ...common.grammar import replace_whitechars
 from ..task_result import KkrProcess
+from ...potentials.potentials import Potential
 
 
 class RealOrStars(Real):
@@ -26,27 +26,6 @@ class RealOrStars(Real):
 class ScfResult(TaskResult):
   """ Objects of this class holds the results of computed SCF class """
 
-  @property
-  def iterations(self):
-      """ Array of the results of iterations """
-      return self.result
-
-  @cached_property
-  def potential_filename(self):
-      """ New (output) potential file name """
-      potfil = self.input_parameters.CONTROL.POTFIL()
-      if not potfil:
-         raise ValueError("Please set CONTROL.POTFIL of the input_parameters to read the potential")
-      fname = self.input_parameters.CONTROL.POTFIL() + '_new'
-      if self.directory:
-         fname = os.path.join(self.directory, fname)
-      return fname
-
-  @cached_property
-  def potential(self):
-      """ The new (output) potential - that contains the converged charge density etc. """
-      return Potential.from_file(self.potential_filename)
-
   @cached_property
   def calculator(self):
       """ The calculator that has the new (output) potential assigned - i.e. that
@@ -56,12 +35,18 @@ class ScfResult(TaskResult):
       else:
          SPRKKR(potential = self.potential_filename)
 
-  def new_task(self, task):
-      out = self._calculator.copy_with_potential(self.potential_filename)
-      out.input_parameters = task
-      if isinstance(task, str) and task.lower() == 'jxc':
-          out.input_parameters.set('EMIN', self.last_iteration.energy.EMIN())
-      return out
+  @property
+  def potential_filename(self):
+      fname = super().potential_filename + '_new'
+      return fname
+
+  @property
+  def start_potential_filename(self):
+      return super().potential_filename
+
+  @property
+  def start_potential(self):
+      return Potential.from_file(self.potential_filename)
 
   @property
   def energy(self):
@@ -204,35 +189,21 @@ scf_section = Section('iteration', [
 ])
 
 
-class ScfOutputReader(ProcessOutputReader):
+class ScfOutputReader(SprKkrOutputReader):
   """
   This class reads and parses the output of the SCF task of the SPR-KKR.
   """
 
-  async def read_output(self, stdout):
+  async def read_output(self, stdout, result):
+        breakpoint()
+        await self.read_commons(stdout, result)
+
         iterations = []
-
-        async def readline():
-          line = await stdout.readline()
-          if not line:
-             raise EOFError()
-          return line.decode('utf8')
-
-        async def readlinecond(cond, canend=True):
-          while True:
-            line = await stdout.readline()
-            if not line:
-               if canend:
-                  return ''
-               raise EOFError()
-            if cond(line):
-              return line.decode('utf8')
-
         try:
           first = True
           while True:
             out = {}
-            line = await readlinecond(lambda line: b'EMIN   = ' in line)
+            line = await readline_until(stdout,lambda line: b'EMIN   = ' in line)
             if not line:
                 break
 
@@ -244,7 +215,7 @@ class ScfOutputReader(ProcessOutputReader):
             if b'ECTOP' in line:
                 out['energy']['ECTOP'] = float(line.split(b'=')[1])
 
-            line = await readlinecond(lambda line: b'SPRKKR-run for: ' in line)
+            line = await readline_until(stdout,lambda line: b'SPRKKR-run for: ' in line)
             line=line.strip()
             if first and self.print_output == 'info':
                print(line)
@@ -252,19 +223,19 @@ class ScfOutputReader(ProcessOutputReader):
             run = line.replace('SPRKKR-run for:', '')
             out['system_name'] = run
 
-            line = await readlinecond(lambda line: b' E=' in line)
+            line = await readline_until(stdout,lambda line: b' E=' in line)
             atoms = []
             while True:
               atoms.append(await atomic_types_definition.parse_from_stream(stdout,
                 up_to=b'\n -------------------------------------------------------------------------------',
                 start=line
               ))
-              line = await readlinecond(lambda line: line!=b'\n')
+              line = await readline_until(stdout,lambda line: line!=b'\n')
               if not 'E=' in line:
                 break
             out['atomic_types'] = atoms
 
-            line = await readlinecond(lambda line: b' ERR' in line and b'EF' in line)
+            line = await readline_until(stdout,lambda line: b' ERR' in line and b'EF' in line)
             items = line.split()
             out['iteration'] = int(items[0])
             out['error']=float(items[2])
@@ -290,7 +261,7 @@ class ScfOutputReader(ProcessOutputReader):
             else:
                 print("WARNING: The computation does not converged!!!")
 
-          return iterations
+          result.iterations = iterations
 
         except EOFError:
           raise Exception('The output ends unexpectedly')

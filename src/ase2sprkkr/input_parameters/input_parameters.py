@@ -11,14 +11,14 @@ import warnings
 import io
 import pkgutil
 import importlib
+from ..outputs.task_result import KkrProcess
 from . import definitions
-from ..outputs import readers
-from ..outputs.readers.default import DefaultProcess
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
 import shutil
 from typing import Union
 from .. import config
+from ..potentials.potentials import Potential
 
 
 class InputSection(ConfigurationSection):
@@ -33,6 +33,17 @@ class InputParameters(ConfigurationFile):
   execute the executable with proper parameters - and instantiate the result class,
   which then parse the output of the task.
   """
+
+  @property
+  def potential(self):
+      pot = getattr(self, '_potential', None)
+      potfil = self.CONTROL.POTFIL.result()
+      if pot:
+          if potfil == pot[0]:
+              return pot[1]
+      out = Potential(potfil) if potfil else None
+      self._potential = potfil, out
+      return out
 
   def resolve_executable_suffix(self, postfix:Union[str,bool]):
       """" Return the postfix, that is appended after the name of SPR-KKR executable.
@@ -253,15 +264,7 @@ class InputParameters(ConfigurationFile):
 
       if cls is None:
          task = self.TASK.TASK().lower()
-         try:
-            mod = importlib.import_module(f'.{task}', readers.__name__)
-            clsname = task.title() + 'Process'
-            cls = getattr(mod, clsname)
-            if not cls:
-               raise Exception(f"Can not determine the class to read the results of task {task}"
-                                "No {clsname} class in the module {oo.__name__}.{task}")
-         except ModuleNotFoundError:
-            cls = DefaultProcess
+         cls = KkrProcess.class_for_task(task)
       return cls(self, calculator, directory)
 
   def read_output_from_file(self, filename, directory=None):

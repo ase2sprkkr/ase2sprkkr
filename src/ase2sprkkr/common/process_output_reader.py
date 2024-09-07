@@ -19,7 +19,7 @@ class ProcessOutputReader:
 
   The descendant can redefine the routines to parse the output (or its parts).
   """
-  async def run_subprocess(self):
+  async def run_subprocess(self, read_args=[]):
 
       if self.directory:
          dr = os.getcwd()
@@ -60,8 +60,8 @@ class ProcessOutputReader:
         replace_feed_data(proc.stderr)
 
       out = await asyncio.gather(
-          self.read_output(proc.stdout),
-          self.read_error(proc.stderr),
+          self.read_output(proc.stdout, *read_args),
+          self.read_error(proc.stderr, *read_args),
           proc.wait(),
         )
 
@@ -102,7 +102,7 @@ class ProcessOutputReader:
          raise e
       return output, error, wait
 
-  def run(self, cmd, outfile, print_output=False, directory=None, **kwargs):
+  def run(self, cmd, outfile, read_args=[], print_output=False, directory=None, **kwargs):
       self.cmd = cmd
       self.kwargs = kwargs
       try:
@@ -112,30 +112,30 @@ class ProcessOutputReader:
 
         import logging
         logging.getLogger("asyncio").setLevel(logging.WARNING)
-        out = asyncio.run( self.run_subprocess() )
+        out = asyncio.run( self.run_subprocess(read_args) )
       finally:
         if self.outfile:
            self.outfile.close()
       return out
 
-  async def read_error(self, stderr):
+  async def read_error(self, stderr, *args):
       while True:
           line=await stderr.readline()
           if not line:
              return
           print(line.decode('utf8'))
 
-  async def read_output(self, stdout):
+  async def read_output(self, stdout, *args):
       raise NotImplementedError('Please, redefine BaseProcess.read_output coroutine')
 
   @maybeclassmethod
-  def result_from_file(self, cls, output, error=None, return_code=0, print_output=False):
+  def result_from_file(self, cls, output, error=None, read_args=[], return_code=0, print_output=False):
       if not self:
           self = cls()
-      return self.read_from_file(output, error, return_code, print_output)
+      return self.read_from_file(output, error, read_args, return_code, print_output)
 
   @maybeclassmethod
-  def read_from_file(self, cls, output, error=None, return_code=0, print_output=False):
+  def read_from_file(self, cls, output, error=None, read_args=[], return_code=0, print_output=False):
       """ Read the data from file."""
       if not self:
           self = cls()
@@ -144,14 +144,14 @@ class ProcessOutputReader:
 
       def out():
           with AsyncioFileReader(output) as air:
-              task = loop.create_task(self.read_output(air))
+              task = loop.create_task(self.read_output(air, *read_args))
               return loop.run_until_complete(task)
 
       def err():
           if not error:
               return None
           with AsyncioFileReader(error) as air:
-              task = loop.create_task(self.read_error(air))
+              task = loop.create_task(self.read_error(air, *read_args))
               return loop.run_until_complete(task)
 
       try:
@@ -241,3 +241,21 @@ class AsyncioFileReader:
         matchLen += 1
         if matchLen == lsep:
            return result()
+
+
+async def readline(stdout):
+    line = await stdout.readline()
+    if not line:
+        raise EOFError()
+    return line.decode('utf8')
+
+
+async def readline_until(stdout, cond, can_end=True):
+    while True:
+        line = await stdout.readline()
+        if not line:
+            if can_end:
+                return ''
+            raise EOFError()
+        if cond(line):
+            return line.decode('utf8')

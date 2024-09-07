@@ -1,16 +1,16 @@
 from ..task_result import TaskResult, KkrProcess
-from ...common.process_output_reader import ProcessOutputReader
+from ..sprkkr_output_reader import SprKkrOutputReader
 
 
 class DefaultResult(TaskResult):
       pass
 
 
-class DefaultOutputReader(ProcessOutputReader):
+class DefaultOutputReader(SprKkrOutputReader):
 
-  async def read_output(self, stdout):
-
-      # just read the whole output
+  async def read_output(self, stdout, result):
+      await self.read_commons(stdout, result)
+      # just consume the whole rest of output
       while await stdout.readline():
         pass
 
