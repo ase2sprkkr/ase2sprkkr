@@ -104,7 +104,13 @@ class Integer(FixedPointNumber):
     return '<int>'
 
 
-class Bool(TypedGrammarType):
+class BaseBool(TypedGrammarType):
+  """ A base type for all kind of boolean values."""
+  numpy_type = bool
+  type_name = 'boolean'
+
+
+class Bool(BaseBool):
   """ A bool type, whose value is represented by a letter (T or F) """
   _grammar = (pp.CaselessKeyword('T') | pp.CaselessKeyword('F')).setParseAction( lambda x: x[0] == 'T' )
 
@@ -114,11 +120,8 @@ class Bool(TypedGrammarType):
   def _string(self, val):
     return 'T' if val else 'F'
 
-  numpy_type = bool
-  type_name = 'boolean'
 
-
-class IntBool(TypedGrammarType):
+class IntBool(BaseBool):
   """ A bool type, whose value is represented by a letter (1 or 0) """
   _grammar = (pp.CaselessKeyword('1') | pp.CaselessKeyword('0')).setParseAction( lambda x: x[0] == '1' )
   _rev_grammar = _grammar.copy().setParseAction( lambda x: x[0] == '0' )
@@ -133,9 +136,6 @@ class IntBool(TypedGrammarType):
 
   def _string(self, val):
       return '1' if val != self.reversed else '0'
-
-  numpy_type = bool
-  type_name = 'boolean'
 
 
 class Real(Number):
@@ -326,12 +326,10 @@ def DefKeyword(default, *others, **kwargs):
   return Keyword(default, *others, default_value=def_val, **kwargs)
 
 
-class Flag(TypedGrammarType):
+class Flag(BaseBool):
   """
   A boolean value, which is True, if a name of the value appears in the input file.
-  """
-  numpy_type = bool
-  """ The resulting type of a Flag is bool """
+  The resulting type of a Flag value is bool """
 
   _grammar = pp.Empty().setParseAction(lambda x: True)
 
