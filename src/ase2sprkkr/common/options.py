@@ -1,8 +1,6 @@
 """ The classes for storing one configuration value. """
 
 from __future__ import annotations
-
-from typing import Union
 from ..common.grammar_types import mixed, GrammarType
 from .configuration import Configuration
 from ..common.misc import as_integer
@@ -68,7 +66,7 @@ class BaseOption(Configuration):
   def get_path(self):
       return self._get_path()
 
-  def as_dict(self, only_changed: Union[bool,str]='basic', generated:bool=False, copy:bool=False):
+  def _as_dict(self, get):
       return None
 
   def clear(self, do_not_check_required=False, call_hooks=True, generated=True):
@@ -486,19 +484,8 @@ class Option(BaseOption):
   def name(self):
       return self._definition.name
 
-  def as_dict(self, only_changed: Union[bool,str]='basic', generated:bool=False, copy:bool=False):
-      d = self._definition
-      if d.is_generated and not generated:
-           return None
-      if only_changed and (only_changed!='basic' or d.is_always_added):
-           v,c = self.value_and_changed()
-           if not c:
-                return None
-      else:
-           v = self(all_values=True)
-      if copy:
-           v = self._definition.copy_value(v, all_values=True)
-      return v
+  def _as_dict(self, get):
+      return get(self)
 
   def value_and_changed(self):
       """ Return value and whether the value was changed

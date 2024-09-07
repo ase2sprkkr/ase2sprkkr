@@ -370,26 +370,20 @@ class ConfigurationContainer(BaseConfigurationContainer):
       """ Iterate over all members of the container """
       yield from self._members.values()
 
-  def as_dict(self, only_changed:Union[bool,str]='basic', generated:bool=False, copy=False):
+  def _as_dict(self, get):
       """
       Return the content of the container as a dictionary.
       Nested containers will be transformed to dictionaries as well.
 
       Parameters
       ----------
-      only_changed
-        Return only changed values, or all of them?
-        If True, return only the values, that differ from the defaults.
-        If False, return all the values.
-        The default value 'basic' means, return all non-expert values
-        and all changed expert values.
-
-      generated: bool
-        Add generated values
+      get
+        This function will be applied to the options to (possible) obtain
+        the values
       """
       out = {}
       for i in self:
-          value = i.as_dict(only_changed, generated, copy)
+          value = i._as_dict(get)
           if value is not None:
               out[i.name] = value
       return out or None

@@ -67,7 +67,34 @@ class Configuration:
       """
       return self._definition.name
 
-  def as_dict(self, only_changed:Union[bool,str]='basic'):
+  def _as_dict(self, get):
+      raise NotImplementedError()
+
+  @staticmethod
+  def as_dict_getter(only_changed:Union[bool,str]='basic', generated=False, copy=False):
+
+      def get(self):
+          d = self._definition
+          if d.is_generated and not generated:
+               return None
+          if only_changed == 'explicit':
+                if self._definition.is_generated and not generated:
+                    return None
+                v = self._unpack_value(self._value)
+          elif only_changed and (only_changed!='basic' or d.is_always_added):
+               v,c = self.value_and_changed()
+               if not c:
+                    return None
+          else:
+               v = self(all_values=True)
+          if v is not None:
+              if copy:
+                   v = self._definition.copy_value(v, all_values=True)
+          return v
+
+      return get
+
+  def as_dict(self, only_changed:Union[bool,str]='basic', generated=False, copy=False, getter=None):
       """ Return the value of self, in the case of container as a dictionary. To be redefined in the descendants.
 
       Parameters
@@ -76,14 +103,16 @@ class Configuration:
         Return only changed values, or all of them?
         If True, return only the values, that differ from the defaults.
         If False, return all the values.
-        The default value 'basic' means, return all non-expert values
+        The default value ``basic`` means, return all non-expert values
         and all changed expert values.
+        ``explicit`` means just the values, that were explicitly set (even
+        if they are the same as the default value)
       """
-      raise NotImplementedError()
+      if not getter:
+          getter = self.as_dict_getter(only_changed, generated, copy)
+      return self._as_dict(getter)
 
-  def to_dict(self, only_changed:Union[bool,str]='basic'):
-      """ Alias of the method :meth:`as_dict`. """
-      return self.as_dict(only_changed)
+  to_dict = as_dict
 
   def show(self):
       """ Print the configuration, as it will be saved into the configuration/problem definition file. """
