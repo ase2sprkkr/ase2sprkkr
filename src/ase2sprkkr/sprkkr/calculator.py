@@ -735,12 +735,20 @@ class SPRKKR(Calculator):
                               directory=directory)
 
           with directory.chdir():
-            return input_parameters.run_process(self, input_file, output_file,
+            out = input_parameters.run_process(self, input_file, output_file,
                                 directory=os.path.abspath('.'),
                                 print_output=print_output,
                                 executable_suffix=executable_suffix,
                                 mpi=mpi, gdb=gdb
                                )
+          if input_parameters.TASK.TASK() == 'SCF' and not potential and not atoms:
+              try:
+                  pot = out.potential
+              except ValueError:
+                  pot = None
+              if pot:
+                  self.potential = pot
+          return out
 
     def value_or_default(self, name, value):
         """ Return the default value of the parameter, if the given value is None"""
