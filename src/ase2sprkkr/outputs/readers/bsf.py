@@ -24,7 +24,7 @@ class BsfResult(TaskResult):
       return OutputFile.from_file(self.spc_filename, try_only='bsf')
 
 
-class ArpesProcess(KkrProcess):
+class BsfProcess(KkrProcess):
   """ ARPES task output reader currently do nothing, just have a special
   result, that allow easy acces to spc output file """
 
