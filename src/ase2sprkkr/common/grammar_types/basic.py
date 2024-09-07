@@ -48,7 +48,7 @@ class FixedPointNumber(Number):
   def convert(self, value):
       if isinstance(value, float) and np.abs(int(value) - value) < 1e-15:
           from .warnings import SuspiciousValueWarning
-          SuspiciousValueWarning(value, 'An attemtp to set <float> value using an <integer>. I will do a conversion for you.').warn(
+          SuspiciousValueWarning(value, 'An attemtp to set <integer> value using an <float>. I will do a conversion for you.').warn(
               stacklevel=6
           )
           value=int(value)
