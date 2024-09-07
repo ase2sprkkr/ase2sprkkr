@@ -28,7 +28,7 @@ def main():
     # various tasks to help user.
 
     calculator = out.calculator
-    calculator.input_parameters='bsf'
+    calculator.input_parameters='bsfek'
     calculator.input_parameters.ENERGY.EMAX=0.2
     calculator.calculate()
     calculator.input_parameters='DOS'

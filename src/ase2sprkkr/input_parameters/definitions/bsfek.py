@@ -1,19 +1,17 @@
 """ DOS task input parameters definition"""
-from ...common.grammar_types import Array, Integer
-from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, SCF
+from ...common.grammar_types import SetOf, Integer
+from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V
 from ...common.doc import process_input_parameters_definition
 
 input_parameters = InputParameters(
-    'bsf', [
+    'bsfek', [
           CONTROL('BSF'),
           TAU,
-          TASK('BLOCHSF'),
-          ENERGY.copy([
-            V('EMAX', float, info="highest E-value"),
-            V('NK', 51, info="total number of k-points"),
+          TASK('BSF').copy([
+            V('NK', 300, info="total number of k-points"),
             V('KPATH', Integer(min=1, max=5), 1, info="Predefined path in k-space", description="""
 Bravais-lattice KPATH path
 ==========================
@@ -43,23 +41,23 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     3  Γ-D-H-G-N-Σ-Γ-Λ-P
     4  Γ-D-H-G-N-Σ-Γ
     5  Γ-D-H
-"""),
+""", is_optional=True),  # TODO -either KPATH for some lattices, or NKDIR, KA end KE, length(KA) = NKDIR
             V('NKDIR', 1, info="Number of directions treated in k-spaces"),
-            V('KA', Array(float, length=3), [0.,0.,0.], info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
-            V('KE', Array(float, length=3), [1.,0.,0.], info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
-            V('NK1', int, info="number of k-points along k1", is_optional=True),
-            V('NK2', int, info="number of k-points along k2", is_optional=True),
-            V('K1', Array(float, length=3), [1.,0.,0.], info="ﬁrst k-vector to span a two-dimensional region in k-space."),
-            V('K2', Array(float, length=3), [1.,0.,0.], info="second k-vector to span a two-dimensional region in k-space"),
+            V('KA', SetOf(float, length=3), is_numbered_array=True, info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
+            V('KE', SetOf(float, length=3), is_numbered_array=True, info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
+          ]),
+          ENERGY.copy([
+            V('EMAX', 1., info="highest E-value"),
           ], defaults={
-            'ImE' : 0.1
+            'EMIN': -0.2,
+            'GRID': 3,
+            'NE'  : 200,
+            'ImE' : 0.001,
           }),
-
-          CONTROL('BLOCHiSF'),
+          CONTROL('BLOCHSF'),
           TAU,
           MODE,
           STRCONST,
-          SCF,
           SITES
       ],
     executable='kkrgen',
@@ -68,3 +66,5 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
 """ JXC -JXC task input parameters definition"""
 
 process_input_parameters_definition(__name__)
+
+#TODO - AKI scripts to generate KA/KE
