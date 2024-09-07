@@ -42,7 +42,7 @@ def main():
 
     # Pass a newly converged potential to the DOS calculation
     out = calculator.calculate(potential=out.potential_filename)
-    out.dos().plot()
+    out.dos.plot()
 
     # For the processing of the results of the DOS task use xband
     # calculator.run_xband()
