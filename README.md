@@ -104,8 +104,17 @@ report the bugs).
 
 ### Using the package (without installing the pip/conda packages)
 
-You can either just add the src directory to your PYTHONPATH, or you can
-build and install the package, as it is described below.
+Install ninja a meson:
+```
+apt install ninja-build
+pip install meson-python
+``
+
+Do an editable install
+
+``
+pip install --editable .
+``
 
 ### Installation of the package from the sources
 
