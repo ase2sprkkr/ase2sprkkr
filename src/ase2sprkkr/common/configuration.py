@@ -194,5 +194,12 @@ class Configuration:
       self._save_to_file(s)
       return s.getvalue()
 
+  def _find_member(self, name, lower_case:bool=False, is_option=None):
+      item = self._find_members(name, lower_case, is_option)
+      try:
+          return next(item)
+      except StopIteration:
+          return None
+
 
 _help_warning_printed=False

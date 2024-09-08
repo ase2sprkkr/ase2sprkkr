@@ -269,7 +269,7 @@ class ContainerDefinition(RealItemDefinition):
                expert=True
 
         if expert:
-          out.append(f'\n{cprefix}Expert options:')
+          out.append(f'{cprefix}\n{cprefix}Expert options:')
           out.append(cprefix + '--------------')
           cprefix+=self._description_indentation
 
