@@ -84,6 +84,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
 
   def _init_members_from_the_definition(self):
       self._members = {}
+      self._lowercase_members = {}
       """
       Non-hidden members of the containers, accesible via sanitized names.
       I.e. via names with whitespaces and other special characters replaced by underscore.
@@ -248,15 +249,29 @@ class ConfigurationContainer(BaseConfigurationContainer):
 
       if name is None:
           yield self
-      elif '.' in name:
-          section, name = name.split('.')
-          yield from self._members[section].get_members(name, unknown, is_option)
-      elif name in self._members:
-          yield self._members[name]
-      elif unknown=='find':
-          yield from self._find_members(name.lower(), True, is_option)
-      elif unknown=='find_exact':
-          yield from self._find_members(name, False, is_option)
+          return
+      if '.' in name:
+          name, child = name.split('.')
+      else:
+          child=None
+      try:
+          v = self._members[name]
+      except KeyError:
+          try:
+              v = self._lowercase_members[name.lower()]
+          except KeyError:
+              if unknown=='find':
+                  yield from self._find_members(name.lower(), True, is_option)
+                  return
+              elif unknown=='find_exact':
+                  yield from self._find_members(name, False, is_option)
+                  return
+              else:
+                  raise
+      if child:
+          yield from v.get_members(child, unknown, is_option)
+      else:
+          yield v
 
   def get(self, name=None, unknown='find'):
       """
@@ -389,8 +404,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
       del self._members[name]
       iname = self._interactive_member_name(name)
       if iname in self._interactive_members and \
-           self._interactive_members[iname] == member:
+           self._interactive_members[iname] is member:
                 del self._interactive_members[iname]
+      for i in name.lower(), iname.lower():
+          if i in self._lowercase_members and self._lowercase_members[i] is member:
+                del self._interactive_members[i]
 
   def __iter__(self):
       """ Iterate over all members of the container """
@@ -455,10 +473,16 @@ class ConfigurationContainer(BaseConfigurationContainer):
   def _add(self, member):
       name = member.name
       self._members[name] = member
+      iname = self._interactive_member_name(name)
+      if not iname in self._lowercase_members:
+          self._lowercase_members[iname] = member
+      self._lowercase_members[name.lower()] = member
       if not member._definition.is_hidden:
-          iname = self._interactive_member_name(name)
           if not iname in self._interactive_members:
               self._interactive_members[iname] = member
+              iname = iname.lower()
+              if not iname in self._lowercase_members:
+                  self._lowercase_members[iname] = member
 
   def is_changed(self):
       for i in self:
