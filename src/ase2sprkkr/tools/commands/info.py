@@ -87,27 +87,35 @@ def run(args):
             path = None
             print("The known SPRKKR tasks (kind of input parameters)\n"
                   "---------------------------------------------------")
+            tasks = 'the known SPRKKR tasks'
+            anyof = 'any of '
         else:
             if '.' in filter:
                 filter,path = filter.split('.', 1)
+            else:
+                path = None
             input_parameters = [ i for i in input_parameters if filter in i.name.lower() ]
+            if len(input_parameters) == 0:
+                print("There is no known SPRKKR task with '{filter.upper()}' in its name")
+                return
+            if filter == '':
+                tasks = 'the known SPRKKR tasks'
+                anyof = 'any of '
+            elif len(input_parameters) == 1 and \
+               input_parameters[0].name.upper() == filter.upper():
+                   tasks = f"the task '{input_parameters[0].name.upper()}'"
+                   anyof = ''
+            else:
+                tasks = f"the tasks containing '{filter}'"
+                anyof = 'any of '
             if path:
-                if len(input_parameters) == 0:
-                    print("There is no known SPRKKR task with '{filter.upper()}' in its name")
-                    return
-                if filter == '':
-                    tasks = 'all tasks'
-                elif len(input_parameters) == 1 and \
-                   input_parameters[0].name.upper() == filter.upper():
-                       tasks = f"the task '{input_parameters[0].name.upper()}'"
-                else:
-                    tasks = f"the tasks containing '{filter}'"
-                x=f"The configuration sections/values '{path.upper()}' in {tasks}"
+                x=f"The configuration sections/values '{path.upper()}' in {anyof}{tasks}"
                 print(f"{x}\n{'-'*len(x)}")
             else:
-                x=f"The SPRKKR tasks containing '{filter}'"
+                x=f"{tasks.capitalize()}'"
                 print(f"{x}\n{'-'*len(x)}")
 
+        found = False
         for i in input_parameters:
             def print_ip(i, prefix='', add=None):
                 if args.verbose or args.verbose is None and filter is not True:
@@ -123,7 +131,8 @@ def run(args):
             if path is not None:
                 ii = list(i.create_object().get_members(path))
                 if not ii:
-                  print(f"No such member of TASK {'' if filter is True else filter} named {path}")
+                    continue
+                found = True
                 for val in ii:
                     val = val._definition
                     add = f"{val.item_type.capitalize()} {val.get_path()} of task {i.name.upper()}:"
@@ -131,10 +140,15 @@ def run(args):
             else:
                 print_ip(i, prefix='')
 
+        if path and not found:
+            out = f"There is no member named '{path}' in {anyof}{tasks}"
+            print(out)
+
     def info_output_file(args, filter):
         print("Known SPRKKR output files\n"
               "--------------------")
-        filter = filter.lower()
+        if filter is not True:
+            filter = filter.lower()
         for ext, i in OutputFile.definitions.items():
             i = i.definition
             if filter is not True and (
