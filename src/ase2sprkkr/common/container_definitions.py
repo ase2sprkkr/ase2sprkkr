@@ -104,6 +104,8 @@ class ContainerDefinition(RealItemDefinition):
 
     write_last_delimiter = True
 
+    item_type = 'section'
+
     @staticmethod
     def _dict_from_named_values(args, items=None):
         """auxiliary method that creates dictionary from the arguments"""
@@ -656,6 +658,7 @@ class ConfigurationRootDefinition(ContainerDefinition):
    However, in some cases the name_in_grammar could be used for some kind of
    prefix in the file, however, it is better to use a fixed value for this purpose.
    """
+   item_type = 'configuration'
 
    @classmethod
    def definition_from_dict(cls, name, defs=None):

@@ -24,6 +24,8 @@ class BaseGeneratedValueDefinition(RealItemDefinition):
   _grammar = None
   """ Do not generated grammar, since this item is not readed, but computed from other values. """
 
+  item_type = 'generated value'
+
   def enrich(self, option):
       """ By default, generated values recieve no enhancement from
       its definition """

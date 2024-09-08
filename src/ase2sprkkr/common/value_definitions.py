@@ -14,6 +14,7 @@ class ValueDefinition(RealItemDefinition):
 
   name_in_grammar = None
   is_generated = False
+  item_type = 'value'
 
   def __init__(self, name, type=None, default_value=None,
                default_value_from_container=None,

@@ -462,6 +462,7 @@ class VirtualDefinition(BaseDefinition):
      the flow of the parsing """
      is_hidden = True
      counter = 1
+     item_type = 'control item'
 
      def create_object(self, container=None):
          return Dummy(self, container)
