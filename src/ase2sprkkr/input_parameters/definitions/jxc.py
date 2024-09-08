@@ -1,4 +1,4 @@
-""" DOS task input parameters definition"""
+"""JXC task input parameters definition"""
 from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE, SCF
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
@@ -23,7 +23,8 @@ input_parameters = InputParameters(
           SITES
       ],
     executable='kkrgen',
-    mpi=True
+    mpi=True,
+    info="JXC"
 )
 """ JXC -JXC task input parameters definition"""
 

@@ -33,7 +33,8 @@ input_parameters = InputParameters(
           SITES
       ],
     executable='kkrgen',
-    mpi=True
+    mpi=True,
+    info="BSFKK - Bloch spectral functions in the K-K plane"
 )
 """ JXC -JXC task input parameters definition"""
 

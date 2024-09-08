@@ -16,7 +16,7 @@ input_parameters = InputParameters(
         CPA,
         MODE
       ],
-      info = "SCF - calculate a self-consistent potential",
+      info = "SCF - Calculate a self-consistent potential",
       description = "",
       executable = 'kkrscf',
       mpi = True

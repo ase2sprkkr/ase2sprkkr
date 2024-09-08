@@ -20,7 +20,8 @@ input_parameters = InputParameters(
       SITES
   ],
   executable='kkrgen',
-  mpi=True
+  mpi=True,
+  info="DOS - The density of states computation"
 )
 """ DOS - density of states input parameters definition"""
 

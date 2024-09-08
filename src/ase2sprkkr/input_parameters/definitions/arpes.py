@@ -108,7 +108,7 @@ input_parameters = InputParameters(
     ]),
   ],
   executable = 'kkrspec',
-  info = 'ARPES - angle resolved photoemission spectroscopy'
+  info = 'ARPES - Angle resolved photoemission spectroscopy'
 )
 """ ARPES task input parameters definition"""
 

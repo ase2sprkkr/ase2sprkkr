@@ -61,10 +61,11 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
           SITES
       ],
     executable='kkrgen',
-    mpi=True
+    mpi=True,
+    info="BSFEK - Bloch spectral functions in the E-K plane"
 )
 """ JXC -JXC task input parameters definition"""
 
 process_input_parameters_definition(__name__)
 
-#TODO - AKI scripts to generate KA/KE
+# TODO - AKI scripts to generate KA/KE
