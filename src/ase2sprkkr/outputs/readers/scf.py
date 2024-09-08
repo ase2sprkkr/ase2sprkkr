@@ -195,7 +195,6 @@ class ScfOutputReader(SprKkrOutputReader):
   """
 
   async def read_output(self, stdout, result):
-        breakpoint()
         await self.read_commons(stdout, result)
 
         iterations = []
@@ -242,7 +241,7 @@ class ScfOutputReader(SprKkrOutputReader):
             out['energy']['EF']=float(items[5])
             out['moment'] = {'spin' : float(items[10]),
                              'orbital' : float(items[11]) }
-            line = (await readline()).split()
+            line = (await readline(stdout)).split()
             out['energy']['ETOT'] = float(line[1]) * Rydberg
             out['converged'] = line[5] == 'converged'
 

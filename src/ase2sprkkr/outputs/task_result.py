@@ -103,7 +103,7 @@ class KkrProcess:
   @staticmethod
   def class_for_task(task):
        try:
-          mod = importlib.import_module(f'.{task}', readers.__name__)
+          mod = importlib.import_module(f'.{task.lower()}', readers.__name__)
           clsname = task.title() + 'Process'
           cls = getattr(mod, clsname)
           if not cls:
