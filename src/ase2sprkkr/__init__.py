@@ -22,6 +22,9 @@ from .sprkkr.sprkkr_atoms import SPRKKRAtoms  # NOQA: F401, E402
 """ SPRKKR Output File """
 from .output_files.output_files import OutputFile  # NOQA: F401, E402
 
+""" Task results """
+from .outputs.task_result import TaskResult   # NOQA E402
+
 """ Version of the package """
 from .version import __version__  # NOQA: F401, E402
 
