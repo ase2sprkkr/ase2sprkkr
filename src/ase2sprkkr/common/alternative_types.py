@@ -29,7 +29,10 @@ normalize_type_map = {}
 
 # fill the map
 for i in types_alternatives:
+  if i not in normalize_type_map:
+    normalize_type_map[i] = i
   for j in types_alternatives[i]:
+    if j not in normalize_type_map:
       normalize_type_map[j] = i
 del i,j
 
