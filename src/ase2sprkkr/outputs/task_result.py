@@ -1,8 +1,9 @@
 """ This module contains classes, used by parsers of the output files """
-from ..common.decorators import cached_property
 import os
+import re
 import importlib
 from . import readers
+from ..common.decorators import cached_property, cached_class_property
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
 
@@ -55,6 +56,21 @@ class TaskResult:
   @property
   def atoms(self):
       return self.potential.atoms
+
+  @cached_class_property
+  def _match_task_regex(self):
+      return re.compile(r" TASK\s+ = ([A-Z]+)\s+\n")
+
+  @classmethod
+  def from_file(cls, file):
+
+      with open(file, "rb") as f:
+          raw_out = f.read()
+          matches = cls._match_task_regex.search(raw_out.decode('utf8'))
+          process = KkrProcess.class_for_task(matches[1])
+          process = process(None, None, os.path.dirname(file))
+          f.seek(0)
+          return process.read_from_file(f)
 
 
 class KkrProcess:
