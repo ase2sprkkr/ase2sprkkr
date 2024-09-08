@@ -28,7 +28,13 @@ dipole moment   1      0.0000000000000000      0.0000000000000000      0.0000000
               '..', 'examples', 'scf.out'
       )
       for reader in ScfOutputReader,ScfOutputReader():
-          out=reader.read_from_file(path)
-          assert out is not None
-          self.assertEqual(out[0][-1]['energy']['EMIN'](), -0.5)
-          self.assertEqual(len(out[0][-1]['atomic_types']), 2)
+
+          class Out:
+              pass
+          out = Out()
+          reader.read_from_file(path, read_args = [out])
+
+          self.assertEqual(out.iterations[-1]['energy']['EMIN'](), -0.5)
+          self.assertEqual(len(out.iterations[-1]['atomic_types']), 2)
+          self.assertEqual(out.iterations[0].converged(), False)
+          self.assertEqual(out.iterations[-1].converged(), True)
