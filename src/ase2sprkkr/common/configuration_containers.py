@@ -429,7 +429,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       for i in self:
           value = i._as_dict(get)
           if value is not None:
-              out[i.name] = value
+              out[i._definition.real_name] = value
       return out or None
 
   def _find_members(self, name:str, lower:bool=False, is_option=None):

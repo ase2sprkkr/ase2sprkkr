@@ -16,7 +16,7 @@ from typing import Dict
 import itertools
 
 from .warnings import DataValidityWarning
-from .options import Dummy
+from .options import Dummy, DummyStub
 from .decorators import cached_class_property
 from .grammar import generate_grammar
 from .grammar_types.basic import Separator
@@ -52,6 +52,10 @@ class BaseDefinition:
        self.grammar_hooks = []
        self.condition = condition
        self.container = None
+
+  @property
+  def real_name(self):
+      return self.name
 
   def has_name(self, name, lower_case=False):
        return name == ( self.name_lcase if lower_case else self.name )
@@ -491,9 +495,12 @@ class Stub(VirtualDefinition):
     e.g. in another branch of Switch """
 
     def __init__(self, item, name=None, condition=None):
-        super().__init__(name=None, template=f'STUB FOR {name}', condition=None)
+        super().__init__(name=None, template=f'STUB_FOR_{name or item}', condition=None)
         self.item=item
         self.condition=None
+
+    def create_object(self, container=None):
+         return DummyStub(self, container)
 
     def _save_to_file(self, file, value, always=False, name_in_grammar=None, delimiter=''):
          item = value._container[self.item]
@@ -505,6 +512,10 @@ class Stub(VirtualDefinition):
          item = self.container[self.item]
          out=item._grammar(allow_dangerous)
          return pp.Forward() << out
+
+    @property
+    def real_name(self):
+        return self.item
 
 
 class Ignored:
@@ -670,14 +681,17 @@ class Switch(ControlDefinition):
        self.container = None
        self.copied = False
        if template is None:
-          template='_SWITCH_{item}'
+          template=f'_SWITCH_{item}'
        super().__init__(name, template)
 
    def copy(self):
        raise NotImplementedError
 
    def __call__(self, option):
-       return option._definition in self.values[option._container[self.item]()].values()
+       return option._definition in self.items_for(option._container[self.item]())
+
+   def items_for(self, value):
+       return self.values[value].values()
 
    def all_values(self):
        return itertools.chain.from_iterable( (i.values() for i in self.values.values()) )

@@ -85,6 +85,14 @@ class Dummy(BaseOption):
       return f'<DUMMY {self._definition.name}>'
 
 
+class DummyStub(Dummy):
+
+  def _as_dict(self, get):
+      if self._definition.condition and not self._definition.condition(self):
+          return None
+      return get(self._container[self._definition.item])
+
+
 class Option(BaseOption):
   """ Class for one option (a configuration value) of SPRKKR - either to
   be used as a part of InputParameters or Potential configuration.
@@ -488,6 +496,8 @@ class Option(BaseOption):
       return self._definition.name
 
   def _as_dict(self, get):
+      if self._definition.condition and not self._definition.condition(self):
+          return None
       return get(self)
 
   def value_and_changed(self):
