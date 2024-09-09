@@ -1,5 +1,5 @@
 """ SCF task input parameters definition"""
-from .sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE
+from .sections import CONTROL, TAU, ENERGY, SCF, SITES, STRCONST, CPA, MODE, TASK
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters \
     #   ,InputValueDefinition as V
@@ -8,6 +8,7 @@ from ...common.doc import process_input_parameters_definition
 input_parameters = InputParameters(
       'scf', [
         CONTROL('SCF'),
+        TASK('SCF'),
         TAU,
         ENERGY,
         SCF,

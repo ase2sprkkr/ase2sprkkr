@@ -108,7 +108,7 @@ class TestInputParameters(TestCase):
       'ENERGY' : [
         V('E', 1)
       ]})
-    del input_parameters_def._members['TASK']
+    #del input_parameters_def._members['TASK']
     id=input_parameters_def.read_from_file(io.StringIO('ENERGY E=1'))
     self.assertEqual(id.to_string(), "ENERGY\n\tE=1\n")
     input_parameters_def['ENERGY']['E'].write_condition = lambda o: True
@@ -469,7 +469,8 @@ XSITES NR=3 FLAG
     })
     assertParse("ENERGY GRID={3} A B=1 2 C=3", {'ENERGY': { 'GRID': ar(3), 'A' : 1, 'B' : 2, 'C' : 3 }}, ipd.grammar())
     out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
-    self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
+    #self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
+    self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
 
   def test_numpy_array(self):
     assertParse = self.assertParse
@@ -629,5 +630,5 @@ XSITES NR=3 FLAG
     assertNotValid('ENERGY A=1 B=5 D=3 C=5 E=6', grammar)
     assertNotValid('ENERGY A=2 B=5 C=4 E=3', grammar)
     out=ipd.read_from_string('ENERGY A=2 C=4 E=2 B=6')
-    self.assertEqual(out['ENERGY'].to_dict(), {'A': 2, 'B': 6, 'C': 4, 'E':2})
+    self.assertEqual(out['ENERGY'].to_dict(), {'A': 2, 'C': 4, 'E':2, 'B':6})
     self.assertEqual(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n\tE=2\n\tB=6\n')

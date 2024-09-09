@@ -124,7 +124,8 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       self.result_reader = result_reader
 
       super().__init__(name, members, **kwargs)
-      if not 'TASK' in self:
-         self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
-      elif not 'TASK' in self['TASK']:
-         self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)
+      #if not 'TASK' in self:
+      #   breakpoint()
+      #   self['TASK'] = InputSectionDefinition('TASK', [ InputValueDefinition('TASK', DefKeyword(self.name), name_in_grammar=False) ] )
+      #elif not 'TASK' in self['TASK']:
+      #   self['TASK']['TASK'] = InputValueDefinition(DefKeyword(self.name), name_in_grammar=False)

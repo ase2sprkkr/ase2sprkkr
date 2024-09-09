@@ -8,6 +8,7 @@ from ..input_parameters_definitions import \
 input_parameters = InputParameters(
       'phagen', [
         CONTROL('PHAGEN'),
+        TASK('PHAGEN'),
         TAU,
         ENERGY,
         SCF,
