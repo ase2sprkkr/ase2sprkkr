@@ -81,7 +81,7 @@ class Configuration:
                 if self._definition.is_generated and not generated:
                     return None
                 v = self._unpack_value(self._value)
-          elif only_changed and (only_changed!='basic' or d.is_always_added):
+          elif only_changed and (only_changed!='basic' or d.is_expert) and not d.is_always_added:
                v,c = self.value_and_changed()
                if not c:
                     return None
@@ -104,7 +104,7 @@ class Configuration:
         If True, return only the values, that differ from the defaults.
         If False, return all the values.
         The default value ``basic`` means, return all non-expert values
-        and all changed expert values.
+        and all the changed expert values.
         ``explicit`` means just the values, that were explicitly set (even
         if they are the same as the default value)
       """

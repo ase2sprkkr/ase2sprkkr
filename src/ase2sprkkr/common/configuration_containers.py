@@ -298,7 +298,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
           item=next(item)
       except StopIteration:
          raise ValueError(f"No {name} member of {self}")
-      return item.as_dict()
+      return item.as_dict(only_changed=False)
 
   def set(self, values:Union[Dict[str,Any],str,None]={}, value=None, *, unknown='find', error=None, **kwargs):
       """
@@ -408,7 +408,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
                 del self._interactive_members[iname]
       for i in name.lower(), iname.lower():
           if i in self._lowercase_members and self._lowercase_members[i] is member:
-                del self._interactive_members[i]
+                del self._lowercase_members[i]
 
   def __iter__(self):
       """ Iterate over all members of the container """
@@ -473,11 +473,13 @@ class ConfigurationContainer(BaseConfigurationContainer):
   def _add(self, member):
       name = member.name
       self._members[name] = member
-      iname = self._interactive_member_name(name)
-      if not iname in self._lowercase_members:
-          self._lowercase_members[iname] = member
-      self._lowercase_members[name.lower()] = member
+
+      lname = name.lower()
+      if not lname in self._lowercase_members:
+          self._lowercase_members[lname] = member
+
       if not member._definition.is_hidden:
+          iname = self._interactive_member_name(name)
           if not iname in self._interactive_members:
               self._interactive_members[iname] = member
               iname = iname.lower()
