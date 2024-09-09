@@ -29,8 +29,7 @@ import datetime
 from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
-from .. import config as config
-from ..common.misc import first_non_none
+from ..common.misc import config_property, first_non_none
 
 
 class SPRKKR(Calculator):
@@ -50,11 +49,12 @@ class SPRKKR(Calculator):
     def __init__(self, restart=None,
                  label=None, atoms=None, directory='.',
                  input_file=True, output_file=True, potential_file=True,
+                 input_parameters=None, options={}, potential=None,
                  print_output=None,
                  mpi:Optional[bool]=None,
-                 input_parameters=None, options={}, potential=None,
-                 executable_suffix=True,
                  empty_spheres : Optional[Union[str, bool, Dict]] = None,
+                 executable_suffix=None,
+                 executable_dir: Optional[Union[str, bool]] = None,
                  **kwargs):
         """
         Parameters
@@ -87,11 +87,13 @@ class SPRKKR(Calculator):
           Write the output of runned executables to stdout (in addition to the output file)?
           (Default value for the calculator)
           If print_output = 'info', only a few info lines per iteration will be printed.
+          None means use the value from config.config.calculator_parameters.print_output.
 
         mpi: Union[list,string,int,bool]
           Runner for mpi to run a mpi calculation. True and int means autodetect: use True
           for a cluster where mpi is able to autodetect the number of the processes, otherwise
-          use integer to specify the number of processes.
+          use integer to specify the number of processes. None means use the value from
+          config.config.calculator_parameters.mpi.
           E.g. mpi = [ 'mpirun', '-np', '4' ], mpi = 4
 
         input_parameters: sprkkr.input_parameters.input_parameters.InputParameters or str or None
@@ -118,13 +120,21 @@ class SPRKKR(Calculator):
         executable_suffix: str or bool or None
           String to be added to the runned executable. In some environments, the version
           and the hostname is added to the name of sprkkr executables.
-          True: use config.sprkkr_executable_suffix, by default initialized
+          True: use config.config.executable.suffix, by default initialized
                 by SPRKKR_EXECUTABLE_SUFFIX environment variable
           False: do not append anything (the same as '')
 
+        executable_dir
+          If the SPRKKR exacutables are not in path, or you want to control which
+          executables will be runned, please supply this parameter.
+          None means use the default from config.config.executable.dir (if exists).
+          False means use only the executable in PATH.
+
         empty_spheres
           Whether to add empty spheres to the structure or not.
-          Default 'auto' means add if no empty sphere is present.
+          'auto' means add if no empty sphere is present.
+          None means use the configuration value from
+          config.config.calculator_parameters.empty_spheres.
           Dict means True, and the dict is passed as kwargs to the
           ``ase.bindings.empty_spheres.add_empty_spheres`` method.
         """
@@ -145,9 +155,6 @@ class SPRKKR(Calculator):
         self._potential = None
         self.atoms = atoms
         self.potential = potential
-        self.executable_suffix = executable_suffix
-        """ The default postfix for the names of executables. False means no postfix, True means
-        to use ``SKRKKR_EXECUTABLE_POSTFIX`` environmental variable. """
 
         super().__init__(restart, label=label, atoms=atoms)
         if directory is False:
@@ -156,7 +163,6 @@ class SPRKKR(Calculator):
             self.directory = directory
         self.atoms = atoms
         self.potential = potential
-        self.mpi = first_non_none(mpi, config.calculator_parameters['mpi'], None)
         """ Default value for mpi parameter of calculate - it determine the way whether and how
         the mpi is employed. """
         self.input_file = input_file
@@ -170,17 +176,19 @@ class SPRKKR(Calculator):
         self.input_parameters = input_parameters
         if options:
             self.input_parameters.set(options, unknown = 'find')
-        self.print_output = first_non_none(print_output,
-                                           config.calculator_parameters['print_output'])
-        self.empty_spheres = first_non_none(empty_spheres,
-                                            config.calculator_parameters['empty_spheres'],
-                                            'auto')
-        """ The default parameter for the print_output arguments of
-        :meth:ase2sprkkr.sprkkr.calculator.SPRKKR.calculate` method - whether ouptut of the
-        runned SPR-KKR should be written to the standard ouput (in addition to the output file). """
-
+        self.print_output = print_output
+        self.empty_spheres = empty_spheres
+        self.executable_suffix = executable_suffix
+        self.executable_dir = executable_dir
+        self.mpi = mpi
         self._counter = 0
         # For %c template in file names
+
+    print_output = config_property('print_output', 'running.print_output')
+    mpi = config_property('mpi', 'running.mpi')
+    empty_spheres = config_property('empty_spheres', 'running.empty_spheres')
+    executable_dir = config_property('executable_dir', 'executables.dir')
+    executable_suffix = config_property('exectable_suffix', 'executables.suffix')
 
     @property
     def input_parameters(self):
@@ -363,9 +371,9 @@ class SPRKKR(Calculator):
     def save_input(self, atoms=None, input_parameters=None, potential=None,
                   input_file=None, potential_file=None, output_file=False,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
+                  options={}, task=None,
                   empty_spheres: Optional[str | bool] = None,
                   mpi=None,
-                  options={}, task=None,
                   return_files=False,
                   ):
         """
@@ -687,10 +695,12 @@ class SPRKKR(Calculator):
     def run(self, atoms=None, input_parameters=None,
                   potential=None, input_file=None, potential_file=None, output_file=None,
                   directory:Union[str,bool,Directory,None]=None, create_subdirs:bool=False,
+                  options={}, task=None,
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
-                  options={}, task=None,
-                  print_output=None, executable_suffix=None, gdb=False):
+                  print_output=None, executable_suffix=None,
+                  executable_dir=None,
+                  gdb=False):
         """
         Do the calculation, return various results.
 
@@ -704,6 +714,10 @@ class SPRKKR(Calculator):
 
         executable_suffix: str or bool or None
             If not None, it overrides the executable_postifx, that have been specified when the
+            calculator have been created.
+
+        executable_dir: str or bool or None
+            If not None, it overrides the executable_dir, that have been specified when the
             calculator have been created.
 
         mpi: bool or None
@@ -734,11 +748,21 @@ class SPRKKR(Calculator):
                               return_files=True,
                               directory=directory)
 
+          executable_suffix = first_non_none(executable_suffix,
+                                             self.executable_suffix)
+          executable_dir = first_non_none(executable_dir,
+                                             self.executable_dir)
+          print_output = first_non_none(print_output,
+                                        self.print_output)
+          mpi = first_non_none(mpi, self.mpi)
+          empty_spheres = first_non_none(empty_spheres, self.empty_spheres)
+
           with directory.chdir():
             out = input_parameters.run_process(self, input_file, output_file,
                                 directory=os.path.abspath('.'),
                                 print_output=print_output,
                                 executable_suffix=executable_suffix,
+                                executable_dir=executable_dir,
                                 mpi=mpi, gdb=gdb
                                )
           if input_parameters.TASK.TASK() == 'SCF' and not potential and not atoms:
@@ -763,7 +787,9 @@ class SPRKKR(Calculator):
                   empty_spheres : Optional[str | bool] = None,
                   mpi : bool=None,
                   options={}, task=None,
-                  print_output=None, executable_suffix=None, gdb=False):
+                  print_output=None, executable_suffix=None,
+                  executable_dir=None,
+                  gdb=False):
         """
         ASE-interface method for the calculation.  This method runs the appropriate task(s)
         for the requested properties (currently always the SCF one) and updates the
@@ -808,10 +834,12 @@ class SPRKKR(Calculator):
                   atoms, input_parameters, potential,
                   input_file, potential_file, output_file,
                   directory, create_subdirs,
+                  options, task,
                   empty_spheres,
                   mpi,
-                  options, task,
-                  print_output, executable_suffix, gdb
+                  print_output,
+                  executable_suffix, executable_dir,
+                  gdb
         )
         if hasattr(out, 'energy'):
             self.results.update({

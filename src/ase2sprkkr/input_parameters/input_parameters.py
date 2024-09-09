@@ -7,7 +7,6 @@ executables.
 from __future__ import annotations
 
 import os
-import warnings
 import io
 import pkgutil
 import importlib
@@ -15,9 +14,8 @@ from ..outputs.task_result import KkrProcess
 from . import definitions
 from ..sprkkr.configuration import ConfigurationFile, ConfigurationSection
 from ..common.decorators import cached_class_property
-import shutil
 from typing import Union
-from .. import config
+from ..config import config, mpi_runner
 from ..potentials.potentials import Potential
 
 
@@ -45,24 +43,24 @@ class InputParameters(ConfigurationFile):
       self._potential = potfil, out
       return out
 
-  def resolve_executable_suffix(self, postfix:Union[str,bool]):
-      """" Return the postfix, that is appended after the name of SPR-KKR executable.
+  def resolve_executable_suffix(self, suffix:Union[str,bool]):
+      """" Return the suffix, that is appended after the name of SPR-KKR executable.
 
       Parameters
       ----------
-      postfix
+      suffix
         - If str is given, it is left as is.
         - If True, return the default value:
-                    config.sprkkr_executable_suffix
+                    config.executable.suffix
                    (content of SPRKKR_EXECUTABLE_SUFFIX env variable
                     or a user_defined_value)
         - If False, return ''
       """
-      if postfix is False:
+      if suffix is False:
           return ''
-      if postfix is True:
-          return config.sprkkr_executable_suffix
-      return postfix
+      if suffix is True:
+          return config.executables.suffix()
+      return suffix
 
   def __init__(self, definition, inputfile=None, outputfile=False):
       super().__init__(definition)
@@ -74,89 +72,6 @@ class InputParameters(ConfigurationFile):
       """ Return the task name, as defined in the definition of the parameters
       (see InputParametersDefinition class) """
       return self._definition.name
-
-  _default_mpi_runner = None
-
-  @classmethod
-  def default_mpi_runner(cls, auto:bool=False):
-      """ Return the executable and its params to run a mpi task.
-          The runner is determined by autodetection.
-
-      Parameters
-      ----------
-      auto:bool
-          If true,
-             - do not warn if no mpi is found
-             - check the number of available cpus, do not return a runner, if there is only one
-
-      Return
-      ------
-      mpi_runner: list or False
-          List of strings with executable and its parameters to run a mpi task.
-          E.g. [ 'mpirun' ]
-          If no suitable runner is found, return False.
-      """
-      if auto and hasattr(os, 'sched_getaffinity') and len(os.sched_getaffinity(0))==1:
-          return None
-
-      if config.mpi_runner:
-          return config.mpi_runner
-
-      if cls._default_mpi_runner is None:
-         for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich' ]:
-             if shutil.which(r):
-                cls._default_mpi_runner = [ r ]
-                return cls._default_mpi_runner
-         if not auto:
-             warnings.warn("No MPI runner found. Disabling MPI!!!")
-         cls._default_mpi_runner=False
-      return cls._default_mpi_runner
-
-  def mpi_runner(self, mpi):
-      """ Return a shell command to execute a mpi task.
-
-      Parameters
-      ----------
-      mpi_runner: Union[bool,str,list,int]
-
-
-        - If True is given, return the default mpi-runner
-        - If False is given, no mpi-runner is returned.
-        - If 'auto' is given, it is the same as True, however
-             * no warning is given if no mpi is found
-             * MPI is not used, if only one CPU is available
-        - If a string is given, it is interpreted as a list of one item
-        - If a list (of strings) is given, the user specified its own runner, use it as is
-          as the parameters for subprocess.run.
-        - If an integer is given, it is interpreted as the number of
-          processes: the default mpi-runner is used, and the parameters
-          to specify the number of processes.
-
-      Return
-      ------
-      mpi_runner: list
-        List of strings with the executable and its parameters, e.g.
-
-        ::
-
-            ['mpirun', '-np', '4']
-      """
-      if mpi is False or not self._definition.mpi:
-          return None
-      if isinstance(mpi, list):
-          return mpi
-      if isinstance(mpi, str):
-          if mpi == 'auto':
-              return self.default_mpi_runner(auto=True) or None
-          return [ mpi ]
-      runner = self.default_mpi_runner()
-      if not runner:
-         return None
-      if mpi is True:
-         return runner
-      if isinstance(mpi, int):
-         return runner + ['-np', str(mpi)]
-      raise Exception("Unknown mpi argument: " + str(mpi))
 
   def is_mpi(self, mpi=True):
       """ Will be this task (the task described by this input parameters)
@@ -176,7 +91,9 @@ class InputParameters(ConfigurationFile):
       """
       return mpi and self._definition.mpi
 
-  def run_process(self, calculator, input_file, output_file, directory='.', print_output=None, executable_suffix=None, mpi=None, gdb=False):
+  def run_process(self, calculator, input_file, output_file, directory='.',
+                  print_output=None, executable_suffix=None, executable_dir=None,
+                  mpi=None, gdb=False):
       """
       Run the process that calculate the task specified by this input paameters
 
@@ -201,7 +118,7 @@ class InputParameters(ConfigurationFile):
         compiled so that the resulting executables has postfixies)
 
       mpi: list or str or bool
-        Run the task using mpi? See InputParameters.mpi_runner for the possible values of the parameter.
+        Run the task using mpi? See :func:`ase2sprkkr.config.mpi_runner` for the possible values.
 
       Return
       ------
@@ -211,15 +128,23 @@ class InputParameters(ConfigurationFile):
 
       """
       print_output = calculator.value_or_default('print_output', print_output)
+      executable_suffix = self.resolve_executable_suffix(executable_suffix)
       executable_suffix = calculator.value_or_default('executable_suffix', executable_suffix)
       mpi = calculator.value_or_default('mpi', mpi)
 
       d = self._definition
       executable = d.executable
-      executable += self.resolve_executable_suffix(executable_suffix)
+      executable += executable_suffix
+      if executable_dir is not False:
+          if executable_dir is None:
+             executable_dir=config.executables.dir()
+          if executable_dir:
+             executable = os.path.join(executable, executable_dir)
+
       process = self.result_reader(calculator)
       try:
-        mpi = self.mpi_runner(mpi)
+
+        mpi = mpi_runner(mpi) if self._definition.mpi else None
         if mpi:
              executable = mpi + [ executable + 'MPI', input_file.name ]
              stdin = None
@@ -237,7 +162,8 @@ class InputParameters(ConfigurationFile):
 
         return process.run(executable, output_file, stdin = stdin, print_output=print_output, directory=directory, input_file=input_file.name)
       except FileNotFoundError as e:
-        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable or ase2sprkkr.config.sprkkr_executable_suffix variable should be set?\n' + \
+        e.strerror = 'Cannot find SPRKKR executable. Maybe, the SPRKKR_EXECUTABLE_SUFFIX environment variable ' \
+                     'or ase2sp_rkkr.config.config.executable.suffix variable should be set?\n' + \
                      e.strerror
         raise
       finally:

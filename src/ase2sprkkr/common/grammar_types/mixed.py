@@ -129,6 +129,15 @@ class PotMixed(BaseMixed):
   is_the_same_value = staticmethod(compare_numpy_values)
 
 
+class CustomMixed(BaseMixed):
+
+  @add_to_signature(BaseMixed.__init__, prepend=True)
+  def __init__(self, types, string_type=LineString.I, *args, **kwargs):
+      self.types = types
+      self.string_type = string_type
+      super().__init__(*args, **kwargs)
+
+
 mixed = Mixed.I = Mixed()   # NOQA: E741
 """ A standard grammar type instance for variant (mixed) in input files """
 pot_mixed = PotMixed.I = PotMixed()    # NOQA: E741

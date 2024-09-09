@@ -3,6 +3,7 @@
 import copy
 import numpy as np
 import operator
+from .. import config
 
 
 def copy_list(src):
@@ -68,3 +69,17 @@ def first_non_none(*args):
         if i is not None:
             return i
     return None
+
+
+def config_property(name, config_path):
+    uname = '_' + name
+
+    @property
+    def getter(self):
+        return first_non_none(getattr(self, uname), config.config.get(config_path))
+
+    @getter.setter
+    def setter(self, val):
+        setattr(self, uname, val)
+
+    return setter
