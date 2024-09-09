@@ -27,6 +27,8 @@ class TestCalculator(TestCase):
       xx.set('NKTAB', 10)
       out = xx.calculate(**self.calc_args())
       calc = out.calculator
-      calc.change_task('arpes')
+      calc.input_parameters = 'arpes'
+      xx.set('NE', 10)
+      xx.set('NKTAB', 10)
       out2 = out.calculator.calculate(**self.calc_args())
       self.assertTrue(isinstance(out2.spc.ENERGY(), np.ndarray))
