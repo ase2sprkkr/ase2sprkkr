@@ -3,15 +3,18 @@ by .config/ase2sprkkr/__init__.py file"""
 
 import os
 from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
-from .common.container_definitions import SectionDefinition as Section
+from .common.container_definitions import SectionDefinition
 from .common.value_definitions import ValueDefinition as V
 import functools
 import warnings
 import shutil
 
 
+class Section(SectionDefinition):
+    info_in_data_description = True
+
+
 def _get_suffix(*_):
-    breakpoint()
     return os.environ.get('SPRKKR_EXECUTABLE_SUFFIX','')
 
 
@@ -89,13 +92,13 @@ definition = Section('config', [
     V('print_output', CustomMixed(Bool.I, Keyword('info')), default_value='info', info="Print output of SPRKKR calculation. Default value ``info`` prints only short info each iteration."),
     V('mpi', CustomMixed(Bool, Array(QString.I), Integer.I), is_optional=True, default_value=None,
              info='Use mpi for calculation? List of strings means yes, use the given strings as mpi runner and its params (e.g. [ "mpirun", "-n", "4" ]). Default None means try to autodetect. Integer number means use the standard runner with a given number of processes.'),
-    V('mpi_warning', True, info='Warn, if no MPI is found')
+    V('mpi_warning', True, info='Warn, if no MPI is found.')
   ], info='Default values for SPRKKR calculator parameters.'),
 
   Section('executables', [
     V('suffix', QString.I,
                 default_value=_get_suffix,
-                info="This suffix is appended (if not stated otherwise) the SPRKKR "
+                info="This suffix is appended (if not stated otherwise) to the SPRKKR "
                      "executable names."),
     V('dir', QString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism')
   ], info="Configuration, that affects how the execubables are runned")

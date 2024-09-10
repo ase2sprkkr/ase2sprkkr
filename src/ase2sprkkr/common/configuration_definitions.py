@@ -216,6 +216,7 @@ class RealItemDefinition(BaseDefinition):
    the attribute can be redefined in instantiated objects and/or descendant classes to change
    the behavior.
    """
+   info_in_data_description = False
 
    def __init__(self, name, written_name=None, alternative_names=None,
                 is_optional=False, is_hidden=False, is_expert=False,

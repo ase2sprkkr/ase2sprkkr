@@ -216,7 +216,12 @@ class ContainerDefinition(RealItemDefinition):
               verbose-=1
            else:
               verbose = verbose if verbose=='all' else False
+
            add = self.additional_data_description(verbose, show_hidden, prefix)
+           if self.info_in_data_description:
+               info = self.info(False)
+               if info:
+                   add = prefix + info + "\n\n" + add + "\n"
            if add:
               out+=' contains:'
               under=prefix + "-" * len(out) + '\n'
@@ -248,15 +253,16 @@ class ContainerDefinition(RealItemDefinition):
 
         def write(i):
            s = i.data_description(verbose, show_hidden, cprefix)
-           if not '\n' in s:
-              info = i.info(False)
-              if info:
-                 s = s + (' ' * (max(40 - len(s), 0) + 2)) + info
-           else:
-              ccprefix = cprefix + i._description_indentation
-              s+='\n\n'
-              s+= ccprefix + i.info(False).replace('\n', '\n' + ccprefix)
-              s+='\n'
+           if not i.info_in_data_description:
+               if not '\n' in s:
+                  info = i.info(False)
+                  if info:
+                     s = s + (' ' * (max(40 - len(s), 0) + 2)) + info
+               else:
+                  ccprefix = cprefix + i._description_indentation
+                  s+='\n\n'
+                  s+= ccprefix + i.info(False).replace('\n', '\n' + ccprefix)
+                  s+='\n'
            out.append(s)
 
         expert = False
