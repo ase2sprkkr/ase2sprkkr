@@ -19,6 +19,8 @@ description='On the most modern unix/linux systems, it is in the file ~/.config/
 
 def parser(parser):
     parser.add_argument('-p', '--path', help='Just print the path to the file.', action='store_true')
+    parser.add_argument('-i', '--info', help='Show the description of the configuration options.', action='store_true')
+    parser.add_argument('-s', '--show', help='Print the configuration.', action='store_true')
     parser.add_argument('-e', '--edit', help='Edit the file using the editor in the $EDITOR environment variable.', action='store_true')
     parser.add_argument('-d', '--default', help='Put the default values into the file, if it not exists', action='store_true')
     parser.add_argument('-D', '--show-default', help='Show the default values', action='store_true')
@@ -29,16 +31,26 @@ def default_content(file):
 # -------------------------------
 
 # Do not comment the following line.
-from ase2sprkkr import config
+from ase2sprkkr.config import config
 
 # This file is pure python and it is executed when ase2sprkkr is imported.
 # Place it into {file}
 
 # This string is appended to the runned executables
-# config.sprkkr_executable_suffix = ''
+# config.executables.suffix = ''
+
+# Do you want to run the executables from a specific directory?
+# config.executables.dir = ''
 
 # Uncomment, if you don't want to run empty-spheres finding by default
-# config.empty_spheres = False
+# config.runing.empty_spheres = False
+
+# Set to False if mpi should not be used. Or set to the number of processor,
+# or just command line to run mpi programm, e.g.: [ '/usr/bin/mpiexec', '-n', '4' ]
+# config.running.mpi = []
+
+# You can change verbosity of the output setting to False or True
+# config.runing.print_output = 'info'
 """
 
 
@@ -46,21 +58,33 @@ def run(args):
     import os
     from ...ase.register import user_preferences_file
     import subprocess
+    from ...config import config
     file = user_preferences_file()
 
+    run=True
     if args.default and not os.path.isfile(file):
         with open(file, 'w') as f:
             f.write(default_content(file))
+        run=False
     if args.path:
         print(file)
-    elif args.show_default:
+        run=False
+    if args.show_default:
         print(default_content(file))
-    elif args.edit:
+        run=False
+    if args.info:
+        print(config._definition.description(verbose = 'all'))
+        run=False
+    if args.show:
+        print(config.to_dict())
+        run=False
+    if args.edit:
         if 'EDITOR' not in os.environ:
             print("Please set the EDITOR environment variable.")
             exit(-1)
         subprocess.run([os.environ['EDITOR'], file])
-    else:
+        run=False
+    if run:
         if os.path.isfile(file):
              print("# Content of the ASE2SPRKKR user configuration file")
              print("#--------------------------------------------------")
