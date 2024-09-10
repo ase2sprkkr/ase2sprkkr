@@ -35,6 +35,7 @@ def parser(parser):
 
 def run(args):
   kwargs = vars(args)
+  del args.version
 
   of = OutputFile.from_file(args.output)
   del kwargs['output']
