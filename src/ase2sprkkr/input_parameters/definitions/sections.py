@@ -1,7 +1,7 @@
 """ Definitions of sections to be used in definitions of input parameters
 (input files for SPR-KKR tasks) """
 
-from ...common.grammar_types import DefKeyword, flag, energy, Integer, Array, Keyword
+from ...common.grammar_types import SetOf, DefKeyword, flag, energy, Integer, Array, Keyword
 
 from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
@@ -135,8 +135,9 @@ SCF = Section('SCF', [
       V('ISTBRY', 1, info='Start Broyden after ISTBRY iterations'),
       V('FULLPOT', False, info='Non-spherical callculation (full-potential) instead of ASA'),
       V('ITDEPT', 40, info='Iteration depth for Broyden algorithm (length of used history)'),
-      V('QION', Array(float), required=False, info='Guess for the ionic charges Qt for atomic types'),
-      V('MSPIN', Array(float), required=False, info='Guess for the magnetic moment μ_{spin,t} for atomic types'),
+      V('QION', SetOf(float), required=False, info='Guess for the ionic charges Qt for atomic types'),
+      V('QIONSCL', float, required=False, info='Guess for the ionic charges Qt for atomic types'),
+      V('MSPIN', SetOf(float), required=False, info='Guess for the magnetic moment μ_{spin,t} for atomic types'),
       V('USEVMATT', False, info='Set up the starting potential using the original Mattheiss'
                                  'construction for the potential V instead of the charge density')
   ])
