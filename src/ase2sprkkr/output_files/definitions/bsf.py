@@ -23,17 +23,17 @@ class BSFOutputFile(CommonOutputFile, Arithmetic):
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
+        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
         plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
         if self.KEYWORD() == 'BSF-SPOL':
-            mp.plot(self.I, **kwargs)
-            mp.plot(self.I_X, **kwargs)
-            mp.plot(self.I_Y, **kwargs)
-            mp.plot(self.I_Z, **kwargs)
+            mp.plot(self.I)
+            mp.plot(self.I_X)
+            mp.plot(self.I_Y)
+            mp.plot(self.I_Z)
         else:
-            mp.plot(self.I, **kwargs)
-            mp.plot(self.I_UP, **kwargs)
-            mp.plot(self.I_DOWN, **kwargs)
+            mp.plot(self.I)
+            mp.plot(self.I_UP)
+            mp.plot(self.I_DOWN)
         mp.finish(filename, show, dpi)
 
     _arithmetic_values = [('RAW_DATA', slice(None))]

@@ -142,17 +142,19 @@ def plotting_function(func):
     return plot_function
 
 
-def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, xticks=None, yticks=None):
+def set_up_common_plot(axis, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None, xticks=None, yticks=None, **kwargs):
    loc = locals()
    """
    This functions just set the properties of an matplotlib axis, that are common across various plots.
    """
    args = { n: loc[n]
             for n in ('xlabel', 'ylabel', 'xticks', 'yticks', 'xticklabels', 'yticklabels', 'title')
-            if loc[n] is not None }
-   for name in args:
-       if args[name] is not None:
-           getattr(axis, 'set_' + name)(args[name])
+            if n != 'kwargs' and loc[n] is not None }
+   kwargs.update(args)
+   for name in kwargs:
+       if not hasattr(axis, 'set_' + name):
+           raise ValueError(f"Axis has not set_{name} method, thus I don't know what to do with {name} argument")
+       getattr(axis, 'set_' + name)(kwargs[name])
 
 
 @plotting_function
@@ -200,22 +202,37 @@ def colormesh(x,y,c, xrange=None, yrange=None, colormap=None, show_zero_line=Fal
 class Multiplot:
   """ This class can be used for plotting more plots into one resulting image/window. """
 
-  def __init__(self, layout, figsize=(6,4), latex=True, updown_layout=False):
+  def __init__(self, layout, figsize=(6,4), latex=True, updown_layout=False, **kwargs):
       self.fig, self.axes = plt.subplots(figsize=figsize, nrows=layout[0], ncols=layout[1])
       plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
       self.free_axes = self.axes.ravel(order='F' if not updown_layout else 'C')
       self.free_axes = [ i for i in self.free_axes[::-1] ]
+      self.specific_kwargs = { k:v for k,v in kwargs.items() if str(k).isnumeric() }
+      for i in self.specific_kwargs:
+          del kwargs[i]
+      self.kwargs = kwargs
+      self.specific_kwargs = { int(k):v for k,v in self.specific_kwargs.items() }
+      self.index = 0
+
+  def get_new_axis(self):
+      axis = self.free_axes.pop()
+      self.index += 1
+      return axis
 
   def __iter__(self):
-      axis = self.free_axes.pop()
+      axis = self.get_new_axis()
       while axis:
           yield axis
-          axis = self.free_axes.pop()
+          axis = self.get_new_axis()
 
-  def plot(self, option, plot_info=None, **kwargs):
-      if not plot_info:
-         plot_info = option._definition.plot
-      plot_info(option, axis=self.free_axes.pop(), **kwargs)
+  def plot(self, option, plot_function=None, **kwargs):
+      axis = self.get_new_axis()
+      kw = self.kwargs.copy()
+      kw.update(self.specific_kwargs.get(self.index, {}))
+      kw.update(kwargs)
+      if not plot_function:
+          plot_function = lambda **kwargs: option.plot(**kwargs)
+      plot_function(axis=axis, **kw)
 
   def finish(self, filename:Optional[str]=None, show:Optional[bool]=None, dpi=600):
       """

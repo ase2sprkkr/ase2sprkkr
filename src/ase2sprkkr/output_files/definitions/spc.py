@@ -15,12 +15,12 @@ class ARPESOutputFile(CommonOutputFile, Arithmetic):
              filename:Optional[str]=None, show:Optional[bool]=None, dpi=600,
              **kwargs
              ):
-        mp=Multiplot(layout=layout, figsize=figsize, latex=latex)
+        mp=Multiplot(layout=layout, figsize=figsize, latex=latex, **kwargs)
         plt.subplots_adjust(left=0.12,right=0.95,bottom=0.17,top=0.90, hspace=0.75, wspace=0.5)
-        mp.plot(self.TOTAL, **kwargs)
-        mp.plot(self.UP, **kwargs)
-        mp.plot(self.DOWN, **kwargs)
-        mp.plot(self.POLARIZATION, **kwargs)
+        mp.plot(self.TOTAL)
+        mp.plot(self.UP)
+        mp.plot(self.DOWN)
+        mp.plot(self.POLARIZATION)
         mp.finish(filename, show, dpi)
 
     _arithmetic_values = [('RAW_DATA', (slice(None), slice(2,6)))]
