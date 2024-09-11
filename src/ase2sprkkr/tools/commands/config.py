@@ -27,14 +27,15 @@ def parser(parser):
 
 
 def default_content(file):
-    return f""" # ASE2SRPKKR configuration file
+    return f"""# ASE2SRPKKR configuration file
 # -------------------------------
 
-# Do not comment the following line.
+# Please, DO NOT comment the following line.
 from ase2sprkkr.config import config
 
 # This file is pure python and it is executed when ase2sprkkr is imported.
-# Place it into {file}
+# Place it into the following path:
+# {file}
 
 # This string is appended to the runned executables
 # config.executables.suffix = ''
@@ -45,11 +46,11 @@ from ase2sprkkr.config import config
 # Uncomment, if you don't want to run empty-spheres finding by default
 # config.runing.empty_spheres = False
 
-# Set to False if mpi should not be used. Or set to the number of processor,
+# Set to False if MPI should not be used. Or set to the number of processor,
 # or just command line to run mpi programm, e.g.: [ '/usr/bin/mpiexec', '-n', '4' ]
 # config.running.mpi = []
 
-# You can change verbosity of the output setting to False or True
+# You can change the verbosity of the output by setting the following to False or True
 # config.runing.print_output = 'info'
 """
 
