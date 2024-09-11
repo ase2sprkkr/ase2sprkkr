@@ -85,10 +85,10 @@ forward << dicti | tupl
 
 option = token ^ pp.Regex('.*').set_parse_action(lambda x: x[0])
 
-name_value = pp.Word(pp.alphas) + pp.Literal('=').suppress() + option
+equal_value = pp.Literal('=').suppress() + option
 
 
-def parse_named_option(x:str):
+def parse_named_option(x:str, numbers_allowed:bool=False):
     """ Parse a given string of the format `name=value`
     If it recognizes number, bool or tuple of values or quoted string in the value,
     it converts it to a given type.
@@ -100,7 +100,11 @@ def parse_named_option(x:str):
     value:Any
       Value of the parsed option
     """
-    return tuple(name_value.parse_string(x, True))
+    if numbers_allowed:
+        p = pp.Word(pp.alphanums)
+    else:
+        p = pp.Word(pp.alphas)
+    return tuple((p + equal_value).parse_string(x, True))
 
 
 def main(local):
