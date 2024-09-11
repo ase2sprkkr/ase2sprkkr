@@ -2,10 +2,10 @@
 by .config/ase2sprkkr/__init__.py file"""
 
 import os
+from .common.decorators import cache
 from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition
 from .common.value_definitions import ValueDefinition as V
-import functools
 import warnings
 import shutil
 
@@ -18,7 +18,7 @@ def _get_suffix(*_):
     return os.environ.get('SPRKKR_EXECUTABLE_SUFFIX','')
 
 
-@functools.lru_cache
+@cache
 def find_default_mpi_runner():
    for r in [ 'mpirun', 'mpirun.opmpirun', 'mpirun.mpich' ]:
        if shutil.which(r):
@@ -26,7 +26,7 @@ def find_default_mpi_runner():
    return False
 
 
-@functools.lru_cache
+@cache
 def get_default_mpi_runner():
 
    out = find_default_mpi_runner()
