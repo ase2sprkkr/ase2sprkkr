@@ -22,6 +22,7 @@ def run():
       formatter_class=argparse.RawDescriptionHelpFormatter
   )
   parser.add_argument('--version', '-v', help='Print the version of ASE2SPRKKR.', action='store_true')
+  parser.add_argument('--debug', '-G', help='Raise a debugger on an unhandled exception', action='store_true')
 
   subs = parser.add_subparsers( dest = 'ase2sprkkr_command', description='Run ase2sprkkr <subcommand> -h for futhrer info')
 
@@ -50,6 +51,9 @@ def run():
           where += remainder
 
   help = True
+  if args.debug:
+      from ase2sprkkr.common.debug import add_debug_hook
+      add_debug_hook()
   if args.version:
       import ase2sprkkr.version
       print(ase2sprkkr.version.__version__)
