@@ -29,42 +29,15 @@ description="""\n Example of usage:
     ase2sprkkr info --task=.energy
 """
 
-always_options = [
+
+""" This options will be printed, if no argument is given """
+default_options = [
   'task',
   'output_file',
 ]
 
-possible_options = [] + always_options
-
-
-class TestsArgAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        all_tests = possible_options
-        default_tests = always_options
-
-        if not values:
-            setattr(namespace, self.dest, default_tests)
-            return
-
-        # If no argument is specified, the default gets passed as a
-        # string 'default' instead of as a list ['default']. Probably
-        # a bug in argparse. The below gives us a list.
-        if not isinstance(values, list):
-            values = [values]
-
-        tests = set(values)
-
-        # If 'all', is found, replace it with the tests it represents.
-        # For reasons of compatibility, 'all' does not actually include
-        # one of the tests (let's call it 'e'). So we can't just do
-        # tests = all_tests.
-        try:
-            tests.remove('all')
-            tests.update(set(all_tests))
-        except KeyError:
-            pass
-
-        setattr(namespace, self.dest, sorted(list(tests)))
+""" These are the all options """
+possible_options = default_options
 
 
 def parser(parser):
@@ -180,5 +153,5 @@ def run(args):
             print_option(i, getattr(args, i))
             printed=True
     if not printed:
-        for i in always_options:
+        for i in default_options:
             print_option(i, True)
