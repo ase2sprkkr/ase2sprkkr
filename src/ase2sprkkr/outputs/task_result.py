@@ -16,6 +16,8 @@ class TaskResult:
       self._calculator = calculator
       self.directory = directory or os.getcwd()
       self.output_file = output_file
+      self.files={}
+      self.files['output'] = getattr(self.output_file, 'name')
       self.input_file = input_file
 
   @cached_property

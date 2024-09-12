@@ -29,16 +29,14 @@ class SprKkrOutputReader(ProcessOutputReader):
         await stdout.readline()
         line = (await stdout.readline())
         line=line.decode('utf8').strip()
-        files = {}
         while line:
             file=line.split(':')
-            files[file[0].strip()]=file[1].split(')',1)[1]
+            result.files[file[0].strip()]=file[1].split(')',1)[1].strip()
             line = await stdout.readline()
             line=line.decode('utf8').strip()
 
-        if not 'input' in files:
+        if not 'input' in result.files:
             if hasattr(stdout, 'file') and hasattr(stdout.file, 'name'):
                 filename = stdout.file.name
                 if filename.endswith('.out') and os.path.exists(filename[:-4] + '.inp'):
-                    files['input'] = filename[:-4] + '.inp'
-        result.files = files
+                    result.files['input'] = filename[:-4] + '.inp'
