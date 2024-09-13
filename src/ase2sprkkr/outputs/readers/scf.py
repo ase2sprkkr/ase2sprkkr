@@ -196,7 +196,7 @@ class ScfOutputReader(SprKkrOutputReader):
 
   async def read_output(self, stdout, result):
         await self.read_commons(stdout, result)
-
+        result.files['converged'] = result.files['potential'] + '_new'
         iterations = []
         try:
           first = True
