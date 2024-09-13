@@ -6,6 +6,7 @@ from . import readers
 from ..common.decorators import cached_property, cached_class_property
 from ..potentials.potentials import Potential
 from ..input_parameters import input_parameters as input_parameters
+from pathlib import Path
 
 
 class TaskResult:
@@ -20,6 +21,23 @@ class TaskResult:
       self.directory = directory or os.path.dirname(self.files['output'] or '') or os.getcwd()
       self.directory = os.path.realpath(self.directory)
       self.input_file = input_file
+
+  def path_to(self, file):
+      """ return full path to a given file
+
+      ..doctest::
+      >>> t = Task(None, None, '/example')
+      >>> t.files['input'] = 'input.txt'
+      >>> t.path_to('input')
+      """
+      file = self.files[file]
+      if Path(file).is_absolute():
+          return file
+      return os.path.join(self.directory, file)
+
+  @property
+  def task_name(self):
+      return self.input_parameters.task_name
 
   @cached_property
   def input_parameters(self):
