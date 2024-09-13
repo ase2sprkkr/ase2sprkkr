@@ -43,8 +43,13 @@ class TaskResult:
   def input_parameters(self):
       if self._input_parameters:
           return self._input_parameters
+      if self.input_parameters_file:
+          return input_parameters.InputParameters.from_file(self.input_parameters_file)
+
+  @cached_property
+  def input_parameters_file(self):
       if 'input' in self.files and os.path.isfile(self.files['input']):
-          return input_parameters.InputParameters.from_file(self.files['input'])
+          return self.files['input']
 
   @cached_property
   def potential_filename(self):
