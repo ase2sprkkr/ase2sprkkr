@@ -1,6 +1,6 @@
 [build-system]
 build-backend = 'mesonpy'
-requires = ['meson-python', 'cython', 'numpy' ]
+requires = ['meson-python', 'cython', 'numpy', 'ninja' ]
 
 [project.scripts]
 ase2sprkkr = "ase2sprkkr.tools.ase2sprkkr:run"
@@ -21,7 +21,7 @@ dependencies = [
   "setuptools",
   "pint",
   "pytest",
-  'pyaml',
+  'pyyaml',
   'importlib_metadata;python_version<"3.8"',
   'requests'
 ]
