@@ -14,10 +14,11 @@ class TaskResult:
                      output_file=None, input_file=None):
       self._input_parameters = input_parameters
       self._calculator = calculator
-      self.directory = directory or os.getcwd()
       self.output_file = output_file
       self.files={}
       self.files['output'] = getattr(self.output_file, 'name')
+      self.directory = directory or os.path.dirname(self.files['output'] or '') or os.getcwd()
+      self.directory = os.path.realpath(self.directory)
       self.input_file = input_file
 
   @cached_property
