@@ -7,6 +7,7 @@ from ..input_parameters_definitions import \
       InputSectionDefinition as Section, \
       InputValueDefinition as V
 from ...sprkkr.sprkkr_grammar_types import Site, AtomicType
+from types import MethodType
 
 
 def CONTROL(ADSI):
@@ -111,11 +112,47 @@ ENERGY = Section('ENERGY',[
   ])
 """The definition of the ENERGY section of the task input file """
 
+
+def xc(*args, **kwargs):
+    xc = V(*args, **kwargs)
+
+    xc_info = {
+     'VWN' : ( 'LDA', 'LDA_C_VWN'),  # TODO: which one?
+     'MJW' : ( 'LDA', '-'),          # NOT in LibXC ?
+     'VBH' :( 'LDA', 'LDA_C_VBH'),
+     'PBE' :( 'GGA', 'GGA_X_PBE'),   # TODO: which one
+     'PW92' : ('GGA', 'GGA_X_PW91'),
+     'EV-GGA':('GGA', 'GGA_X_EV93'),
+     'BJ'   :('metaGGA', 'MGGA_X_BJ06'),  # TODO: one of the two is wrong....
+     'MBJ'  :('metaGGA', 'MGGA_X_BJ06'),
+    }
+
+    def enrich(xc):
+
+        def libxc_name(self):
+            """ Return libxc name of the potential """
+            return xc_info.get(self(), (None, None))[1]
+
+        def jacobs_ladder(self):
+            """ Return NOMAD xc classification """
+            return xc_info.get(self(), (None, None))[0]
+
+        xc.libxc_name = MethodType(libxc_name, xc)
+        xc.jacobs_ladder = MethodType(jacobs_ladder, xc)
+        xc.xc_info = xc_info
+
+    xc.enrich = enrich
+    for k,v in xc.type.choices.items():
+        info = xc_info[k]
+        xc.type.choices[k] = v + f" (type: {info[0]}, libxc equivalent: {info[1] or '-'})"
+    return xc
+
+
 SCF = Section('SCF', [
       V('NITER', 200, info='Maximal number of iterations of the SCF cycle'),
       V('MIX', 0.2, info='Mixing parameter'),
       V('MIXOP', float, required=False),
-      V('VXC', DefKeyword({
+      xc('VXC', DefKeyword({
         'VWN' : 'Vosko, Wilk, Nusair',
         'MJW' : 'Janak, Williams, Moruzzigit g',
         'VBH' : 'von Barth, Hedin',
@@ -124,8 +161,7 @@ SCF = Section('SCF', [
         'EV-GGA' : 'Engel and Vosko GGA',
         'BJ' : 'Becke-Johnson',
         'MBJ' : 'modified Becke-Johnson'
-
-        }), info='parametrisation of the exchange-correlation potential'),
+         }), info='parametrisation of the exchange-correlation potential'),
       V('ALG', DefKeyword({
           'BROYDEN2': 'Broyden’s second method',
           'TCHEBY': 'Tchebychev'
