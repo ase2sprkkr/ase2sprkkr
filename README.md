@@ -34,6 +34,19 @@ or conda
 conda install -c ase2sprkkr ase2sprkkr
 ```
 
+I reccomend to install the beta version: there can be some bugs, but mostly it has
+more bugs repaired than introduced, moreover, you can enjoy new properties.
+
+``` bash
+pip install --pre ase2sprkkr
+```
+
+For using bleading edge sources, you can install the packages from github:
+```base
+pip install git+https://github.com/ase2sprkkr/ase2sprkkr.git@develop
+```
+
+
 ### Further notes
 
 In some systems, the `pip` utility for `python3` is called `pip3`. If it
@@ -77,7 +90,7 @@ git checkout release
 ```
 
 The first line fetches the code of the package. The second one checks
-out the recommended production version of the code.
+out (choose) the stable (production) version of the code.
 
 If you want to obtain the current version of the (earlier-downloaded)
 code, run
@@ -87,13 +100,13 @@ git fetch
 git checkout release
 ```
 
-Alternatively, you can checkout `master` or `develop` branch
+Alternatively, you can checkout ``master`` to obtain last beta version
 
 ``` bash
 git checkout master
 ```
 
-to obtain a newer (not thorougly tested yet) version or
+or ``develop``
 
 ``` bash
 git checkout develop
@@ -104,17 +117,18 @@ report the bugs).
 
 ### Using the package (without installing the pip/conda packages)
 
-Install ninja a meson:
+Install ninja and meson:
+``` bash
+pip install meson-python meson ninja
 ```
-apt install ninja-build
-pip install meson-python
-``
 
 Do an editable install
 
-``
-pip install --editable .
-``
+``` bash
+pip install --no-build-isolation --editable .
+```
+You can add ``--no-deps`` switch for a faster rebuild.
+
 
 ### Installation of the package from the sources
 
