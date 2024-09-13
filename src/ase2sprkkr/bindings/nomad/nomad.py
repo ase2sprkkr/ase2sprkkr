@@ -1,3 +1,7 @@
+"""
+This module handles archive creating and uploading to NOMAD
+"""
+
 import zipfile
 import tempfile
 import os
@@ -5,6 +9,7 @@ import filecmp
 import yaml
 from ...outputs.task_result import TaskResult
 from ...common.decorators import cached_property
+from ...common.yaml import IndentDumper
 from typing import Optional, Union, Dict
 
 
@@ -82,9 +87,8 @@ class NomadEntry():
 
     def task(self):
         return {
-            'm_def' : 'nomad.datamodel.metainfo.workflow.TaskReference',
-            'task'  : self._resource('workflow2'),
             'name'  : f"{self.output.task_name} for {self.symbols}",
+            'm_def' : 'nomad.datamodel.metainfo.workflow.TaskReference',
             'inputs': map_io_to_nomad(self.inputs()),
             'outputs':map_io_to_nomad(self.outputs()),
         }
@@ -190,7 +194,9 @@ class NomadArchive():
 
     def finalize(self):
         self.resolve_auto_dependencies()
-        self.zip.writestr('workflow.archive.yaml', yaml.dump(self.workflow()))
+        self.zip.writestr('workflow.archive.yaml', yaml.dump(self.workflow(),
+                                                   Dumper=IndentDumper,
+                                                   sort_keys=False))
         self.zip.close()
 
     def resolve_auto_dependencies(self):
