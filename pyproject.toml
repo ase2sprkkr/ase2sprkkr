@@ -20,8 +20,10 @@ dependencies = [
   "cython",
   "setuptools",
   "pint",
-	"pytest",
-  'importlib_metadata;python_version<"3.8"'
+  "pytest",
+  'pyaml',
+  'importlib_metadata;python_version<"3.8"',
+  'requests'
 ]
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },
