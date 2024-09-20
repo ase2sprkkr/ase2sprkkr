@@ -27,3 +27,12 @@ def add_debug_hook(only_original=False):
     if not only_original or sys.excepthook == sys.__excepthook__:
         # if someone already patched excepthook, let them win
         sys.excepthook = info
+
+
+def debug_pyparsing(term):
+    term.setDebug(True)
+    if hasattr(term, 'exprs'):
+        for i in term.exprs:
+            debug_pyparsing(i)
+    elif hasattr(term, 'expr'):
+        debug_pyparsing(term.expr)
