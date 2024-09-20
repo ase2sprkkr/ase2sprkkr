@@ -581,7 +581,7 @@ class SPRKKR(Calculator):
                        if site.is_vacuum():
                            empty_spheres = False
                            break
-            if empty_spheres:
+            if empty_spheres and atoms:
                 if not isinstance(empty_spheres, collections.abc.Mapping):
                     empty_spheres = {}
                 add_empty_spheres(atoms, **empty_spheres)
