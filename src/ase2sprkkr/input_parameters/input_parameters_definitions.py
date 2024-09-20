@@ -94,7 +94,7 @@ class InputParametersDefinition(ConfigurationFileDefinition):
       value = cls.child_class.custom_member_grammar()
       delim = cls.child_class.grammar_of_delimiter()
       return delimitedList(value, delim).\
-            setParseAction(lambda x: dict_from_parsed(x.asList(), lambda x: True))
+            setParseAction(lambda x: dict_from_parsed(x.asList()))
 
   def _generic_info(self):
       return f"Input parameters for task {self.name}"

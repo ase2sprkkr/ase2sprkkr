@@ -53,7 +53,7 @@ class TestInputParameters(TestCase):
 
   def test_custom_value(self):
      with generate_grammar():
-       cv = cd.InputSectionDefinition.custom_member_grammar(['aaa'])
+       cv = cd.InputSectionDefinition.custom_member_grammar(lambda x: x[0] not in ['aaa'])
      self.assertTrue('\n' not in cv.whiteChars)
 
      assertParse = partial(self.assertParse, grammar=lambda: cv)
@@ -108,7 +108,7 @@ class TestInputParameters(TestCase):
       'ENERGY' : [
         V('E', 1)
       ]})
-    #del input_parameters_def._members['TASK']
+    # del input_parameters_def._members['TASK']
     id=input_parameters_def.read_from_file(io.StringIO('ENERGY E=1'))
     self.assertEqual(id.to_string(), "ENERGY\n\tE=1\n")
     input_parameters_def['ENERGY']['E'].write_condition = lambda o: True
@@ -375,7 +375,89 @@ XSITES NR=3 FLAG
     self.assertEqual(ips.ENERGY.ENERGYY(), 7.)
 #
 
-  def test_numbered_array(self):
+  def test_repeated_value(self):
+
+    t=lambda x:re.sub(r'\s+',' ',x).strip()
+    assertParse = self.assertParse
+    assertNotValid = partial(self.assertNotValid, grammar=lambda: grammar)
+
+    ipd = cd.InputParametersDefinition.definition_from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('B', 2, is_repeated = True),
+        V('C', 3) ]})
+
+    data="""ENERGY A=3
+    B=2
+    C=77"""
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [2], 'C':77}}, ipd.grammar())
+    ip=ipd.read_from_string(data)
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : [2], 'C':77}}, ip.to_dict())
+    self.assertEqual('ENERGY A=3 B=2 C=77', t(ip.ENERGY.to_string()) )
+
+    data="""ENERGY A=3
+    B=2
+    B=5
+    B=8
+    C=77"""
+    grammar = ipd.grammar()
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [2,5,8], 'C':77}}, grammar)
+    ip=ipd.read_from_string(data)
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict())
+    self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', t(ip.ENERGY.to_string()))
+    ipd['ENERGY'].force_order=True
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [2,5,8], 'C':77}}, grammar)
+    ip=ipd.read_from_string(data)
+    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict())
+    self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', t(ip.ENERGY.to_string()))
+
+    ipd["ENERGY"]["B"].is_repeated = V.Repeated.NUMBERED
+    grammar = ipd.grammar()
+    data = """ENERGY A=3
+    B1=2
+    B2=5
+    B3=8
+    C=77"""
+    pp.ParserElement.verbose_stacktrace = True
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [2,5,8], 'C':77}}, grammar)
+    self.assertEqual(t(data), t(ip.ENERGY.to_string()) )
+    data = """ENERGY A=3
+    B1=2
+    B3=5
+    B2=8
+    C=77"""
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [2,8,5], 'C':77}}, grammar)
+
+    ipd = cd.InputParametersDefinition.definition_from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('B', gt.Array(int, length=2), is_repeated = True),
+        V('C', 3) ]})
+    grammar = ipd.grammar()
+
+    data = """ENERGY A=3
+    B=2 3
+    B=5 9
+    B=8 16
+    C=77"""
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [ar([2,3]),ar([5,9]),ar([8,16])], 'C':77}}, grammar)
+    ip=ipd.read_from_string(data)
+    self.assertEqual(t(data), t(ip.ENERGY.to_string()) )
+
+    ipd["ENERGY"]["B"].is_repeated = V.Repeated.NUMBERED
+    grammar = ipd.grammar()
+    assertNotValid(data)
+    data = """ENERGY A=3
+    B1=2 3
+    B2=5 9
+    B3=8 16
+    C=77"""
+    assertParse(data, {'ENERGY': {'A' : 3, 'B' : [ar([2,3]),ar([5,9]),ar([8,16])], 'C':77}}, grammar)
+    ip=ipd.read_from_string(data)
+    self.assertEqual(t(data), t(ip.ENERGY.to_string()) )
+
+#
+  def test_sparse_numbered(self):
     input_parameters_def = cd.InputParametersDefinition.definition_from_dict({
       'ENERGY' : [
         V('GRID', gt.SetOf(int, length=1), fixed_value=3),
@@ -394,10 +476,19 @@ XSITES NR=3 FLAG
 
     assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0")
     assertParse("ENERGY NE=1 Ime=0.5", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : 0.5}})
-    input_parameters_def.sections['ENERGY']['Ime'].is_numbered_array = True
+    input_parameters_def.sections['ENERGY']['Ime'].is_repeated = V.Repeated['DICT']
+
+    with generate_grammar():
+      grammar = input_parameters_def._grammar_of_values()
+    assertNotValid("ENERGY NE=1 Ime=0.5")
+    assertNotValid("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8")
+    assertParse("ENERGY NE=1 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {1:0.4, 5:0.8} }, })
+
+    input_parameters_def.sections['ENERGY']['Ime'].is_repeated = V.Repeated['DEFAULTDICT']
     with generate_grammar():
       grammar = input_parameters_def._grammar_of_values()
 
+    assertParse("ENERGY NE=1 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {1:0.4, 5:0.8} }, })
     assertNotValid("ENERGY NE=1 Ime=0.5 Ime=2.0")
     assertParse("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8", { 'ENERGY' : { 'NE' : ar(1), 'Ime' : {'def': 0.5, 1:0.4, 5:0.8} }, })
 
@@ -469,7 +560,7 @@ XSITES NR=3 FLAG
     })
     assertParse("ENERGY GRID={3} A B=1 2 C=3", {'ENERGY': { 'GRID': ar(3), 'A' : 1, 'B' : 2, 'C' : 3 }}, ipd.grammar())
     out = ipd.read_from_string("ENERGY GRID={3} A B=1 2 C=3")
-    #self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
+    # self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 TASK INPUTPARAMETERSDEFINITION ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
     self.assertEqual("ENERGY GRID={3} A B=1 2 C=3 ", re.sub(r'[\s\t\n]+',' ', out.to_string()))
 
   def test_numpy_array(self):
@@ -541,38 +632,6 @@ XSITES NR=3 FLAG
     test(gt.NumpyArray(line_length=8, item_format='%2.0f', shape=(2,-1)),
                        [[1,2,3,4,5,6],[4,5,6,7,8,9]],
                        " 1  2  3\n 4  5  6\n 4  5  6\n 7  8  9")
-
-  def test_repeated_value(self):
-    assertParse = self.assertParse
-    ipd = cd.InputParametersDefinition.definition_from_dict({
-      'ENERGY' : [
-        V('A', 1),
-        V('B', 2, is_repeated = True),
-        V('C', 3) ]})
-
-    data="""ENERGY A=3
-    B=2
-    B=5
-    B=8
-    C=77"""
-    grammar = ipd.grammar()
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar)
-    ip=ipd.read_from_string(data)
-    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict())
-    self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
-    ipd['ENERGY'].force_order=True
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, grammar)
-    ip=ipd.read_from_string(data)
-    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2,5,8]), 'C':77}}, ip.to_dict())
-    self.assertEqual('ENERGY A=3 B=2 B=5 B=8 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
-
-    data="""ENERGY A=3
-    B=2
-    C=77"""
-    assertParse(data, {'ENERGY': {'A' : 3, 'B' : 2, 'C':77}}, ipd.grammar())
-    ip=ipd.read_from_string(data)
-    self.assertEqual({'ENERGY': {'A' : 3, 'B' : ar([2]), 'C':77}}, ip.to_dict())
-    self.assertEqual('ENERGY A=3 B=2 C=77', re.sub(r'\s+',' ', ip.ENERGY.to_string()).strip() )
 
   def test_copy(self):
     ipd = cd.InputParametersDefinition.definition_from_dict({

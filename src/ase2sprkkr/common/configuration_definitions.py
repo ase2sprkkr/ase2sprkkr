@@ -12,14 +12,17 @@ e.g. an :py:class:`Option<ase2sprkkr.common.options.Option>` or
 
 import pyparsing as pp
 import inspect
-from typing import Dict
+from typing import Dict, Union
 import itertools
+from . import backward_compatibility  # NOQA
+from enum import Enum, nonmember
 
 from .warnings import DataValidityWarning
 from .options import Dummy, DummyStub
 from .decorators import cached_class_property
 from .grammar import generate_grammar
 from .grammar_types.basic import Separator
+from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey
 
 
 class BaseDefinition:
@@ -43,7 +46,98 @@ class BaseDefinition:
       - the condition() is invoked, when the elements of the container is listed
         to hide the inactive members
   """
+  class Repeated(Enum):
 
+      @nonmember
+      class Type(Enum):
+          """ Type of repetition. """
+          NO = 0
+          # No repetition allowed
+          ARRAY = 1
+          # The item can be repeated, the result is an (dense) array of values
+          DICT = 2
+          # The item can be repeated, the result is a (sparse) dict of values
+
+          def __bool__(self):
+              return self.value > 0
+
+      @nonmember
+      class Numbering(Enum):
+          """ Is the output numbered or not? """
+          NO = 0
+          # No numbering, just repeating (if allowed)
+          YES = 1
+          # Yes, number
+          WITH_DEFAULT = 2
+          # Numbered output, default value without number
+
+          def __bool__(self):
+              return self.value > 0
+
+          @property
+          def has_default(self):
+              return self.value == 2
+
+      def __init__(self, type:Type, key_type:Union[Key, callable]=Key.NONE,
+                   is_numbered:Numbering=Numbering.NO,
+                   has_header:bool=True):
+          """
+          Params
+          ------
+          type
+            Type of the repetition (and the resulting storage)
+
+          key_type
+            If grammar emits a special type for keys (name of the option), pass it here.
+            Such special keys takes care of aggregating the values into the propper storage (dict, list,...)
+
+          is_numbered
+            Whether the repeated occurences are numbered or not and how. Numbered
+            means, that there can be values in the form
+            NAME1=... NAME2=.... etc...
+          """
+
+          self.type = type
+          self.key_type = key_type
+          self.is_numbered = is_numbered
+          self.has_header = True
+
+      def __bool__(self):
+          return self.type != self.Type.NO
+
+      @classmethod
+      def create(cls, val):
+          if val is False:
+              return cls.NO
+          if val is True:
+              return cls.REPEATED
+          if isinstance(val, str):
+              return cls[val]
+          return val
+
+      @property
+      def is_array(self):
+          return self.type == self.Type.ARRAY
+
+      @property
+      def is_dict(self):
+          return self.type == self.Type.DICT
+
+      NO = (Type.NO)
+      # No repetition at all
+      REPEATED = (Type.ARRAY, RepeatedKey)
+      # Values can be repeated, the result is array of values
+      REPEATED_SECTION = (Type.ARRAY, Key.NONE, Numbering.NO, False)
+      # Repeated sections has no header, and their repetition solves themselves
+      NUMBERED = (Type.ARRAY, ArrayKey, Numbering.YES)
+      # Values are given in form "{NAME}{INDEX}", the result is array of values
+      DICT = (Type.DICT, DictKey, Numbering.YES)
+      # Values are given in form "{NAME}{INDEX}", the result is dict of values
+      DEFAULTDICT = (Type.DICT, DefDictKey, Numbering.WITH_DEFAULT)
+      # Same as NUMBERED_DICT, with non-numbered item possible, serving as default value
+
+#
+#
   def __init__(self, name, is_optional=False, condition=None):
        self.name = name
        self.name_lcase = name.lower()
@@ -52,6 +146,9 @@ class BaseDefinition:
        self.grammar_hooks = []
        self.condition = condition
        self.container = None
+
+  is_repeated = Repeated.NO
+  """ By default, the configuration items are not repeated """
 
   @property
   def real_name(self):
@@ -165,8 +262,7 @@ class BaseDefinition:
   can_be_repeated = False
   """ If True, the item can be repeated in the parsed file. The results will
   appear multiple times in the resulting dictionary after the parse.
-  This behavior have currently the same value as is_numbered_array property = True.
-  This function is to be redefined in descendants
+  This attribute/property function is to be redefined in descendants.
   """
   is_independent_on_the_predecessor = True
 
@@ -392,20 +488,13 @@ class RealItemDefinition(BaseDefinition):
           out.append(prefix + self._description.replace('\n', '\n' + prefix))
        return '\n'.join(out)
 
-   def _grammar_of_name(self, is_numbered_array:bool=False):
+   def _grammar_of_name(self):
         """
         Return grammar for the name (and possible alternative names etc.)
-
-          Parameters
-          ----------
-
-          is_numbered_array
-             If True, the resulting grammar is in the form
-             NAME[index]
         """
         if self.name_in_grammar:
             names = self.all_names_in_grammar()
-            keyword = pp.CaselessLiteral if is_numbered_array else pp.CaselessKeyword
+            keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
             if self.do_not_skip_whitespaces_before_name:
                names = [ keyword(i).leaveWhitespace() for i in names ]
             else:
@@ -416,10 +505,15 @@ class RealItemDefinition(BaseDefinition):
                     names=names.leaveWhitespace()
             else:
                 name = names[0]
-            name.setParseAction(lambda x: self.name)
-            if is_numbered_array:
-               name += pp.Optional(pp.Word(pp.nums), default='def')
-               name.setParseAction(lambda x: (x[0], 'def' if x[1]=='def' else int(x[1])) )
+            if self.is_repeated:
+                if self.is_repeated.is_numbered:
+                    idx = pp.Word(pp.nums)
+                    if self.is_repeated.is_numbered.has_default:
+                      name += pp.Optional(idx, default='def')
+                    else:
+                      name += idx
+                    name+= pp.WordEnd(pp.alphanums + "_")
+            name.setParseAction(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         else:
             name = pp.Empty().setParseAction(lambda x: self.name)
         return name
@@ -427,7 +521,6 @@ class RealItemDefinition(BaseDefinition):
    def _tuple_with_my_name(self, expr,
                            delimiter=None,
                            has_value:bool=True,
-                           is_numbered_array:bool=False,
                            name_in_grammar=None):
         """ Create the grammar returning tuple (self.name, <result of the expr>)
 
@@ -440,12 +533,9 @@ class RealItemDefinition(BaseDefinition):
             has_value
               If False, do not add the parsed value to the results.
               This can be used e.g. for separators (see :class:`ase2sprkkr.common.grammar_types.Separator`) etc.
-            is_numbered_array
-              If True, the resulting grammar is in the form
-              NAME[index]=....
         """
         if self.name_in_grammar if name_in_grammar is None else name_in_grammar:
-           name = self._grammar_of_name(is_numbered_array)
+           name = self._grammar_of_name()
            if delimiter:
               name += delimiter
            out = name - expr

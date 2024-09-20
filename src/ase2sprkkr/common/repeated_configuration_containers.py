@@ -192,12 +192,12 @@ class RepeatedConfigurationContainer(BaseConfigurationContainer):
         something_have_been_written
           If any value have been written return True, otherwise return False.
         """
-        delim = '' if self._definition.is_repeated is True else self._definition.is_repeated
         out = False
         for i in self.values():
-            if self._definition._save_to_file(file, i, always, name_in_grammar, delimiter=delimiter):
+            d=self._definition
+            if d._save_to_file(file, i, always, name_in_grammar, delimiter=delimiter):
                 name_in_grammar=False
-                delimiter=delim
+                delimiter=d.repeated_delimiter
                 out=True
         return out
 

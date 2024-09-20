@@ -138,10 +138,12 @@ class Option(BaseOption):
 
       Parameters
       ----------
-      all_values: For numbered_array (see :class:`ConfigurationDefinition.is_numbered_array <ConfigurationDefinition>`,
-      pass True as this argument to obtain array of all values. If False (the default) is given,
-      only the 'wildcard' value (i.e. the one without array index, which is used for the all values
-      not explicitly specified) is returned.
+      all_values: Control the behavior for the dict_like repeated values
+      (see `is_repeated` attribute of :class:`ConfigurationDefinition`).
+      Pass True as this argument to obtain dictionary
+      of all values. If False (the default) is given, only the 'wildcard' value
+      (i.e. the one without array index, which is used for the all values not explicitly specified)
+      is returned.
       """
       d = self._definition
       if d.is_generated:
@@ -149,11 +151,11 @@ class Option(BaseOption):
 
       value = self._unpack_value(self._value)
       if value is not None:
-          if d.is_numbered_array and not all_values:
+          if d.is_repeated.is_dict and not all_values:
               return value.get('def', self.default_value)
           return value
       dv = self.default_value
-      if d.is_numbered_array and all_values and dv is not None:
+      if d.is_repeated.is_dict and all_values and dv is not None:
           return { 'def' : dv }
       if d.init_by_default:
           self._value = self._pack_value( dv )
@@ -259,7 +261,7 @@ class Option(BaseOption):
 
       d.check_array_access()
 
-      if not self._definition.is_numbered_array:
+      if not d.is_repeated.is_dict:
           self()[name]=value
           self.validate(why='set')
       else:
@@ -287,7 +289,7 @@ class Option(BaseOption):
       """ Set a single item of a numbered array. For internal use - so no sanity checks """
       if self._value is None:
          self._value = {}
-      if name != 'def':
+      if not (self._definition.is_repeated.is_numbered.has_default and name == 'def'):
          try:
             name = as_integer(name)
          except TypeError as e:
@@ -312,7 +314,7 @@ class Option(BaseOption):
       if d.is_generated:
           return d.getter(self._container, name)
       d.check_array_access()
-      if not self._definition.is_numbered_array:
+      if not d.is_repeated.is_dict:
           return self()[name]
 
       if isinstance(name, (list, tuple)):
@@ -351,7 +353,7 @@ class Option(BaseOption):
       """ Unpack potentionally dangerous values. """
       if isinstance(value, DangerousValue):
          value = value()
-      if self._definition.is_numbered_array and isinstance(value, dict):
+      if self._definition.is_repeated.is_dict and isinstance(value, dict):
          value = { i: v() if isinstance(v, DangerousValue) else v for i,v in value.items() }
       return value
 
@@ -367,7 +369,7 @@ class Option(BaseOption):
   def __hasitem__(self, name):
       d = self._definition
       d.check_array_access()
-      if not self._definition.is_numbered_array:
+      if not d.is_repeated.is_dict:
           return name in self()
 
       if self._value is None:
@@ -485,7 +487,7 @@ class Option(BaseOption):
            vali(self())
         else:
            value = self.result
-           if d.is_numbered_array:
+           if d.is_repeated.is_dict:
               if value is None:
                  vali(value)
               else:
@@ -521,7 +523,7 @@ class Option(BaseOption):
       value = self._unpack_value(self._value)
       if value is not None:
          return value, not self.is_it_the_default_value(value)
-      if self._definition.is_numbered_array and self.default_value is not None:
+      if d.is_repeated.is_numbered.has_default and self.default_value is not None:
          return {'def' : self.default_value}, False
       else:
          return self.default_value, False
@@ -535,8 +537,7 @@ class Option(BaseOption):
           return True
 
       default = self.default_value
-      d = self._definition
-      if d.is_numbered_array:
+      if d.is_repeated.is_numbered.has_default:
           return 'def' in value and len(value) == 1 and \
                   d.type.is_the_same_value(value['def'], default)
       else:

@@ -229,9 +229,10 @@ MODE = Section('MODE', [
                 required=False, name_in_grammar=False,
                 info='Using this option you can switch on the spin polarization and relativistic mode. If it''s not set (or set to ''FREL''), the ''full'' relativity mode is used.'),
     V('LLOYD', False, info='Use LLoyd formula for scattering operator. It can improve the accuracy of the Fermi energy.'),
-    V('MDIR', Array(float, length=3), [1.,0.,0.], required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.", is_numbered_array=True, is_always_added=False ),
-    V('C', 1.0, info='Scale the speed of light for a given atom type.', is_numbered_array=True, required=False, is_always_added=False),
-    V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_numbered_array=True, required=False, is_always_added=False),
+    V('MDIR', Array(float, length=3), [1.,0.,0.], required=False, info="Common magnetisation direction vector with x, y and z in Cartesian coordinates. The normalisation is arbitrary.",
+                                      is_repeated='DEFAULTDICT', is_always_added=False ),
+    V('C', 1.0, info='Scale the speed of light for a given atom type.', is_repeated='DEFAULTDICT', required=False, is_always_added=False),
+    V('SOC', 1.0, info='Scale the strength of the spin-orbit coupling for atom type.', is_repeated='DEFAULTDICT', required=False, is_always_added=False),
   ], is_expert=True, is_optional=True, info=
       """This section contains options that describe, how to consider relativity and/or spin. If the MODE is not specified otherwise the programs of the SPRKKR-package assume that a magnetic system should be treated in a fully relativistic way. By setting the parameter SP-SREL a slightly faster scalar relativistic calculation can be done instead for a magnetic system.""",
 )
