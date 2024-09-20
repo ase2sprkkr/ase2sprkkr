@@ -30,6 +30,7 @@ from typing import Union, Any, Dict, Optional
 from pathlib import Path
 import re
 from ..common.misc import config_property, first_non_none
+from ..config import config
 
 
 class SPRKKR(Calculator):
@@ -184,11 +185,11 @@ class SPRKKR(Calculator):
         self._counter = 0
         # For %c template in file names
 
-    print_output = config_property('print_output', 'running.print_output')
-    mpi = config_property('mpi', 'running.mpi')
-    empty_spheres = config_property('empty_spheres', 'running.empty_spheres')
-    executable_dir = config_property('executable_dir', 'executables.dir')
-    executable_suffix = config_property('exectable_suffix', 'executables.suffix')
+    print_output = config_property('print_output', config.running.print_output)
+    mpi = config_property('mpi', config.running.mpi)
+    empty_spheres = config_property('empty_spheres', config.running.empty_spheres)
+    executable_dir = config_property('executable_dir', config.executables.dir)
+    executable_suffix = config_property('exectable_suffix', config.executables.suffix)
 
     @property
     def input_parameters(self):
