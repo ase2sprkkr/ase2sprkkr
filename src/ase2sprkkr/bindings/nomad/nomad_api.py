@@ -1,116 +1,142 @@
+""" This module contains routines to talk with NOMAD. They are only
+slightly modified routines provided by the NOMAD guys.
+"""
 import requests
+from ase2sprkkr.common.decorators import add_to_signature
+from functools import wraps
 
 
-def get_authentication_token(nomad_url, username, password):
-    '''Get the token for accessing your NOMAD unpublished uploads remotely'''
-    try:
-        response = requests.get(
-            nomad_url + 'auth/token', params=dict(username=username, password=password), timeout=10)
-        token = response.json().get('access_token')
-        if token:
-            return token
+def with_token(func):
 
-        raise ValueError('Noda response is missing token: \n' + response.json)
-    except Exception:
-        print('something went wrong trying to get authentication token')
-        return
+    @add_to_signature(func)
+    @wraps(func)
+    def func_with_token(self, token:str=None, *args, **kwargs):
+        token = token or self.token
+        if not token:
+            raise ValueError("Nomad authentication token not set")
+        func(*args, **kwargs, token=token)
+
+    return func_with_token
 
 
-def create_dataset(nomad_url, token, dataset_name):
-    '''Create a dataset to group a series of NOMAD entries'''
-    try:
-        response = requests.post(
-            nomad_url + 'datasets/',
-            headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
-            json={"dataset_name": dataset_name},
-            timeout=10
-        )
-        dataset_id = response.json().get('dataset_id')
-        if dataset_id:
-            return dataset_id
+class NomadApi():
 
-        raise ValueError('response is missing dataset_id:\n ' + response.json())
-        return
-    except Exception:
-        print('something went wrong trying to create a dataset')
-        return
+    default_api_url='https://nomad-lab.eu/prod/v1/api/v1/'
 
+    def __init__(self, nomad_url=None):
+        self.url = nomad_url or self.default_api_url
+        self.token = None
 
-def upload_to_nomad(nomad_url, token, upload_file):
-    '''Upload a single file for NOMAD upload, e.g., zip format'''
-    with open(upload_file, 'rb') as f:
+    def get_authentication_token(self, username, password, expires=None):
+        '''Get the token for accessing your NOMAD unpublished uploads remotely'''
+        try:
+            response = requests.get(
+                self.url + 'auth/token', params=dict(username=username, password=password), timeout=10)
+            token = response.json().get('access_token')
+            if token:
+                if expires:
+                    response = requests.get(
+                        self.url + 'auth/token', params=dict(token=token, username=username, password=password, expires=expires), timeout=10)
+                    token = response.json().get('access_token')
+
+                if token:
+                    return token
+
+            raise ValueError('Nomad response is missing token: \n' + str(response.json()))
+        except Exception:
+            raise RuntimeError('Something went wrong trying to get Nomad authentication token')
+
+    @with_token
+    def create_dataset(self, dataset_name, token=None):
+        '''Create a dataset to group a series of NOMAD entries'''
         try:
             response = requests.post(
-                nomad_url + 'uploads',
+                self.url + 'datasets/',
                 headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
-                data=f, timeout=30)
-            upload_id = response.json().get('upload_id')
-            if upload_id:
-                return upload_id
-            raise ValueError('response is missing upload_id:\n ' + response.json())
-            return
-        except Exception:
-            print('something went wrong uploading to NOMAD')
-            return
+                json={"dataset_name": dataset_name},
+                timeout=10
+            )
+            dataset_id = response.json().get('dataset_id')
+            if dataset_id:
+                return dataset_id
 
+            raise ValueError('Nomad response is missing dataset_id:\n ' + str(response.json()))
+        except Exception as e:
+            raise RuntimeError('Something went wrong trying to create a Nomad dataset') from e
 
-def check_upload_status(nomad_url, token, upload_id):
-    '''
-    # upload success => returns 'Process publish_upload completed successfully'
-    # publish success => 'Process publish_upload completed successfully'
-    '''
-    try:
-        response = requests.get(
-            nomad_url + 'uploads/' + upload_id,
-            headers={'Authorization': f'Bearer {token}'}, timeout=30)
-        status_message = response.json().get('data').get('last_status_message')
-        if status_message:
-            return status_message
+    @with_token
+    def upload(self, upload_file, token=None):
+        '''Upload a single file for NOMAD upload, e.g., zip format'''
+        def upload():
+            try:
+                response = requests.post(
+                    self.url + 'uploads',
+                    headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
+                    data=f, timeout=30)
+                upload_id = response.json().get('upload_id')
+                if upload_id:
+                    return upload_id
+                raise ValueError('Nomad response is missing upload_id:\n ' + str(response.json()))
+            except Exception as e:
+                raise RuntimeError('Something went wrong uploading to NOMAD') from e
+        if isinstance(upload_file, str):
+            with open(upload_file, 'rb') as f:
+                upload()
+        else:
+            upload()
 
-        print('response is missing status_message: ')
-        print(response.json())
-        return
-    except Exception:
-        print('something went wrong trying to check the status of upload' + upload_id)
-        # upload gets deleted from the upload staging area once published...or in this case something went wrong
-        return
+    @with_token
+    def check_upload_status(self, upload_id, token=None):
+        '''
+        # upload success => returns 'Process publish_upload completed successfully'
+        # publish success => 'Process publish_upload completed successfully'
+        '''
+        try:
+            response = requests.get(
+                self.url + 'uploads/' + upload_id,
+                headers={'Authorization': f'Bearer {token}'}, timeout=30)
+            status_message = response.json().get('data').get('last_status_message')
+            if status_message:
+                return status_message
 
+            raise ValueError('Nomad response is missing status_message: \n' + str(response.json()))
+        except Exception as e:
+            raise RuntimeError('Something went wrong trying to check the status of upload' + upload_id) from e
+            # upload gets deleted from the upload staging area once published...or in this case something went wrong
 
-def edit_upload_metadata(nomad_url, token, upload_id, metadata):
-    '''
-    Example of new metadata:
-    upload_name = 'Test_Upload_Name'
-    metadata = {
-        "metadata": {
-        "upload_name": upload_name,
-        "references": ["https://doi.org/xx.xxxx/xxxxxx"],
-        "datasets": dataset_id,
-        "embargo_length": 0,
-        "coauthors": ["coauthor@affiliation.de"],
-        "comment": 'This is a test upload...'
-        },
-    }
-    '''
+    @with_token
+    def edit_upload_metadata(self, upload_id, metadata, token=None):
+        '''
+        Example of new metadata:
+        upload_name = 'Test_Upload_Name'
+        metadata = {
+            "metadata": {
+            "upload_name": upload_name,
+            "references": ["https://doi.org/xx.xxxx/xxxxxx"],
+            "datasets": dataset_id,
+            "embargo_length": 0,
+            "coauthors": ["coauthor@affiliation.de"],
+            "comment": 'This is a test upload...'
+            },
+        }
+        '''
 
-    try:
-        response = requests.post(
-            nomad_url + 'uploads/' + upload_id + '/edit',
-            headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
-            json=metadata, timeout=30)
-        return response
-    except Exception:
-        print('something went wrong trying to add metadata to upload' + upload_id)
-        return
+        try:
+            response = requests.post(
+                self.url + 'uploads/' + upload_id + '/edit',
+                headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
+                json=metadata, timeout=30)
+            return response
+        except Exception as e:
+            raise RuntimeError('Something went wrong trying to add metadata to upload' + upload_id) from e
 
-
-def publish_upload(nomad_url, token, upload_id):
-    '''Publish an upload'''
-    try:
-        response = requests.post(
-            nomad_url + 'uploads/' + upload_id + '/action/publish',
-            headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
-            timeout=30)
-        return response
-    except Exception:
-        print('something went wrong trying to publish upload: ' + upload_id)
-        return
+    def publish_upload(self, upload_id, token=None):
+        '''Publish an upload'''
+        try:
+            response = requests.post(
+                self.url + 'uploads/' + upload_id + '/action/publish',
+                headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
+                timeout=30)
+            return response
+        except Exception as e:
+            raise RuntimeError('Something went wrong trying to publish upload: ' + upload_id) from e
