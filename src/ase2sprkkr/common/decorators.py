@@ -5,13 +5,8 @@ import heapq
 import asyncio
 import warnings
 import sys
-
-if hasattr(functools,'cache'):
-   cache = functools.cache
-   """ Functools.cache. Python 3.8 and earlier does not have this method, so it is mocked for this version of python. """
-else:
-   cache = functools.lru_cache(maxsize=None)
-   """ Functools.cache. Python 3.8 and earlier does not have this method, so it is mocked for this version of python. """
+from . import backward_compatibility # NOQA
+from functools import cache          # NOQA
 
 
 class cached_class_property:
