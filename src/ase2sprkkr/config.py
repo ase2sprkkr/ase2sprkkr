@@ -186,6 +186,10 @@ definition = ConfigFileDefinition('config', [
     V('dir', QString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism')
   ], info="Configuration, that affects how the execubables are runned"),
 
+  Section('nomad', [
+    V('token', QString.I, info = "Token for NOMAD upload", is_optional=True)
+  ])
+
 ])
 
 config = definition.create_object()

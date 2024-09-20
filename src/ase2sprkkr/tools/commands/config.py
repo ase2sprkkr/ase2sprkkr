@@ -52,6 +52,9 @@ from ase2sprkkr.config import config
 
 # You can change the verbosity of the output by setting the following to False or True
 # config.runing.print_output = 'info'
+
+# Authentication token to Nomad. You can set it using ase2sprkkr nomad -a -u <username>
+# config.nomad.token = None
 """
 
 
