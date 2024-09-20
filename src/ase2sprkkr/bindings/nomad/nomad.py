@@ -198,6 +198,7 @@ class NomadArchive():
                                                    Dumper=IndentDumper,
                                                    sort_keys=False))
         self.zip.close()
+        self.file.seek(0)
 
     def resolve_auto_dependencies(self):
         """ If there is any entry with 'auto' dependency,
