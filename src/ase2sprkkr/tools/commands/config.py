@@ -57,9 +57,8 @@ from ase2sprkkr.config import config
 
 def run(args):
     import os
-    from ...ase.register import user_preferences_file
+    from ...config import user_preferences_file, config
     import subprocess
-    from ...config import config
     file = user_preferences_file()
 
     run=True

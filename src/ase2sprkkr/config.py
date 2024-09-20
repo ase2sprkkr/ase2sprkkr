@@ -2,6 +2,7 @@
 by .config/ase2sprkkr/__init__.py file"""
 
 import os
+import re
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
 from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
@@ -9,6 +10,7 @@ from .common.configuration_containers import RootConfigurationContainer
 from .common.value_definitions import ValueDefinition as V
 import warnings
 import shutil
+import platformdirs
 
 
 class Section(SectionDefinition):
@@ -17,6 +19,29 @@ class Section(SectionDefinition):
 
 def _get_suffix(*_):
     return os.environ.get('SPRKKR_EXECUTABLE_SUFFIX','')
+
+
+def user_preferences_file():
+    """ Return filename with user preferences """
+    return os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), '__init__.py')
+
+
+def load_user_preferences():
+    """ Load user defined preferences from
+        ``$HOME/.config/ase2sprkkr/__init__.py``
+    """
+    file = user_preferences_file()
+
+    try:
+       if os.path.isfile(file):
+           import types
+           import importlib.machinery
+           loader = importlib.machinery.SourceFileLoader('ase2sprkkr.personal', file)
+           mod = types.ModuleType(loader.name)
+           loader.exec_module(mod)
+    except Exception as e:
+        import warnings
+        warnings.warn(f'Can not import {file} file with the user preferences: \n{e}')
 
 
 @cache
