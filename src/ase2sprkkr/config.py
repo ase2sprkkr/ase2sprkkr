@@ -4,7 +4,8 @@ by .config/ase2sprkkr/__init__.py file"""
 import os
 from .common.decorators import cache
 from .common.grammar_types import CustomMixed, QString, Array, Bool, Keyword, Integer
-from .common.container_definitions import SectionDefinition
+from .common.container_definitions import SectionDefinition, ConfigurationRootDefinition
+from .common.configuration_containers import RootConfigurationContainer
 from .common.value_definitions import ValueDefinition as V
 import warnings
 import shutil
@@ -84,8 +85,65 @@ def mpi_runner(mpi):
     return mpi
 
 
+class Configuration(RootConfigurationContainer):
+
+    def set_permanent(self, name, value, doc=None, doc_regex=False):
+        global user_preference_file
+        self.set(name, value)
+
+        file = user_preferences_file()
+        if not os.path.isfile(file):
+            raise ValueError("Please, generate the user prefernce file using 'ase2sprkkr config -d' first.")
+
+        with open(file, 'r+') as f:
+            content = f.read()
+            pattern=f"(#?\\s*)*config.{name}\\s+="
+            if value is None:
+                line = ''
+                cnt = 0
+                last = ''
+                if doc:
+                    if not doc_regex:
+                        pre = re.escape(doc)
+                    else:
+                        pre = doc
+                    pre = f"(?:(?:^|\n)# {pre} *)?"
+                else:
+                    pre = ''
+            else:
+                line = f"config.{name} = {value.__repr__()}\n"
+                cnt = 1
+                pre = ''
+                last= f"(?!(.*\n)*{pattern})"
+            breakpoint()
+            content, replaced = re.subn(f"{pre}(^|\n){pattern}[^\n]*(\n|$){last}", r'\1' + line, content, cnt)
+            if replaced:
+                f.seek(0)
+                f.write(content)
+            elif value is None:
+                return
+            else:
+                i=len(content) - 1
+                while i>=0:
+                    if content[i] not in ('\r','\n', ' ', '\t'):
+                        break
+                    i-=1
+                f.seek(i + 1)
+                if i>0:
+                    f.write("\n\n")
+                if doc:
+                    f.write(f"# {doc}\n")
+                f.write(line)
+            f.truncate()
+
+
+class ConfigFileDefinition(ConfigurationRootDefinition):
+
+    result_class = Configuration
+
+
 """ The definition of ASE2SPRKKR configuration """
-definition = Section('config', [
+definition = ConfigFileDefinition('config', [
 
   Section('running', [
     V('empty_spheres', CustomMixed(Bool.I, Keyword('auto')), default_value='auto', info="Run empty spheres finding before calculation? Default value ``auto`` means only for SCF calculations not containing any vacuum atom."),
@@ -101,7 +159,7 @@ definition = Section('config', [
                 info="This suffix is appended (if not stated otherwise) to the SPRKKR "
                      "executable names."),
     V('dir', QString.I, is_optional=True, info='Directory, from which the executables will be runned. None mean use the default environment variable PATH mechanism')
-  ], info="Configuration, that affects how the execubables are runned")
+  ], info="Configuration, that affects how the execubables are runned"),
 
 ])
 
