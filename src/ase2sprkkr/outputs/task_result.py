@@ -17,8 +17,9 @@ class TaskResult:
       self._calculator = calculator
       self.output_file = output_file
       self.files={}
-      self.files['output'] = getattr(self.output_file, 'name')
-      self.directory = directory or os.path.dirname(self.files['output'] or '') or os.getcwd()
+      if output_file:
+          self.files['output'] = output_file
+      self.directory = directory or os.path.dirname(self.files.get('output') or '') or os.getcwd()
       self.directory = os.path.realpath(self.directory)
       self.input_file = input_file
 
@@ -26,9 +27,10 @@ class TaskResult:
       """ return full path to a given file
 
       ..doctest::
-      >>> t = Task(None, None, '/example')
+      >>> t = TaskResult(None, None, '/example')
       >>> t.files['input'] = 'input.txt'
       >>> t.path_to('input')
+      '/example/input.txt'
       """
       file = self.files[file]
       if Path(file).is_absolute():
@@ -139,7 +141,7 @@ class KkrProcess:
   def read_from_file(self, output, error=None, return_code=0, print_output=False):
       return self._wraps(
           lambda result: self.reader.read_from_file(output, error, [result], return_code, print_output),
-          output_file = output
+          output_file = getattr(output, 'name', output)
       )
 
   @staticmethod
