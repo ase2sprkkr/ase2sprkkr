@@ -42,9 +42,9 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     4  Γ-D-H-G-N-Σ-Γ
     5  Γ-D-H
 """, is_optional=True),  # TODO -either KPATH for some lattices, or NKDIR, KA end KE, length(KA) = NKDIR
-            V('NKDIR', 1, info="Number of directions treated in k-spaces"),
-            V('KA', SetOf(float, length=3), is_numbered_array=True, info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
-            V('KE', SetOf(float, length=3), is_numbered_array=True, info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
+            V('NKDIR', int, required=False, info="Number of directions treated in k-spaces"),
+            V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
+            V('KE', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
           ]),
           ENERGY.copy([
             V('EMAX', 1., info="highest E-value"),
