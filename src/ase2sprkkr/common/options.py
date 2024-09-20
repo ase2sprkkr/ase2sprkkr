@@ -206,8 +206,9 @@ class Option(BaseOption):
 
       error:
       """
-      if self._definition.is_generated:
-          return self._definition.setter(self._container, value)
+      d = self._definition
+      if d.is_generated:
+          return d.setter(self._container, value)
 
       if value is None:
           try:
@@ -216,7 +217,7 @@ class Option(BaseOption):
               if not error=='ignore':
                   raise
               return
-      elif self._definition.is_numbered_array:
+      elif d.is_repeated.is_dict:
         if isinstance(value, dict):
            self.clear(do_not_check_required=value, call_hooks=False)
            for k,v in value.items():
@@ -246,17 +247,17 @@ class Option(BaseOption):
       self._hook = hook
 
   def _check_array_access(self):
-      """ Check, whether the option is numbered array and thus it can be accessed as array using [] """
-      if not self._definition.is_numbered_array and not self._definition.type.array_access:
-          raise TypeError('It is not allowed to access {self._get_path()} as array')
+      """ Check, whether the option is array type (or repeated) and thus it can be accessed as array using [] """
+      return self._definition.check_array_acces(self)
 
   def __setitem__(self, name, value):
       """ Set an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
-      if self._definition.is_generated:
-          self._definition.setter(self._container, value, name)
+      d = self._definition
+      if d.is_generated:
+          d.setter(self._container, value, name)
           return
 
-      self._check_array_access()
+      d.check_array_access()
 
       if not self._definition.is_numbered_array:
           self()[name]=value
@@ -307,9 +308,10 @@ class Option(BaseOption):
 
   def __getitem__(self, name):
       """ Get an item of a numbered array. If the Option is not a numbered array, throw an Exception. """
-      if self._definition.is_generated:
-          return self._definition.getter(self._container, name)
-      self._check_array_access()
+      d = self._definition
+      if d.is_generated:
+          return d.getter(self._container, name)
+      d.check_array_access()
       if not self._definition.is_numbered_array:
           return self()[name]
 
@@ -363,7 +365,8 @@ class Option(BaseOption):
       return value
 
   def __hasitem__(self, name):
-      self._check_array_access()
+      d = self._definition
+      d.check_array_access()
       if not self._definition.is_numbered_array:
           return name in self()
 
@@ -511,7 +514,8 @@ class Option(BaseOption):
           changed:bool
             Whether the value is the same as the default value or not
       """
-      if self._definition.is_generated:
+      d = self._definition
+      if d.is_generated:
           return self(), False
 
       value = self._unpack_value(self._value)
@@ -526,7 +530,8 @@ class Option(BaseOption):
       """ Return, whether the given value is the default value. For
       numbered array, only the wildcard value can be set and this value
       have to be the same as the default. """
-      if self._definition.is_generated:
+      d = self._definition
+      if d.is_generated:
           return True
 
       default = self.default_value

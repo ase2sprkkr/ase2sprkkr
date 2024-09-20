@@ -575,3 +575,8 @@ class ValueDefinition(RealItemDefinition):
       if not all_values or not self.is_numbered_array:
           return self.type.copy_value(value)
       return { k:self.type.copy_value(v) for k,v in value.items() }
+
+  def check_array_access(self):
+      """ Check, whether the option is array type (or repeated) and thus it can be accessed as array using [] """
+      if not self.is_repeated and not self.type.array_access:
+          raise TypeError('It is not allowed to access {self.get_path()} as array')
