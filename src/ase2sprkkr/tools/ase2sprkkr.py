@@ -54,6 +54,8 @@ def run():
   if args.debug:
       from ase2sprkkr.common.debug import add_debug_hook
       add_debug_hook()
+  del args.debug
+
   if args.version:
       import ase2sprkkr.version
       print(ase2sprkkr.version.__version__)
