@@ -1,15 +1,12 @@
-from ..sprkkr.configuration import ConfigurationValueDefinition, ConfigurationFileDefinition, \
-                                   CustomConfigurationValue
+from ..sprkkr.configuration import ConfigurationValueDefinition, ConfigurationFileDefinition
 
 from ..common.configuration_definitions import SeparatorDefinition
 from ..common.decorators import cached_class_property, cache
-from ..common.grammar_types  import unsigned, Array, Table, RestOfTheFile, Keyword, GrammarType, \
+from ..common.grammar_types import unsigned, Array, Table, Keyword, GrammarType, \
                                      pot_mixed, line_string, line_end, Separator as SeparatorType, BlankSeparator as BlankSeparatorType
-from ..common.grammar import generate_grammar
 import pyparsing as pp
-from ..common.decorators import cached_class_property
-import sys
 from .output_files import OutputFile
+
 
 class OutputFileValueDefinition(ConfigurationValueDefinition):
   """ This class describes the format of one value of
@@ -24,6 +21,7 @@ class OutputFileValueDefinition(ConfigurationValueDefinition):
   type_from_type_map = { str: line_string }
   type_of_dangerous = pot_mixed
 
+
 class BlankSeparator(SeparatorDefinition):
   """
   A special (hidden) value, that appears in a output file header
@@ -31,6 +29,7 @@ class BlankSeparator(SeparatorDefinition):
   The separator is a blank line
   """
   separator_type = BlankSeparatorType()
+
 
 class Separator(SeparatorDefinition):
   """
@@ -70,6 +69,7 @@ class OutputFileDefinition(ConfigurationFileDefinition):
       """ In the output files, do not ignore doublecrossed lines """
       return out
 
+
 @cache
 def output_file_header():
     """ Return the members of the common output file header, up to
@@ -89,6 +89,7 @@ def output_file_header():
       V('ORBITALS', Table({'NLQ' : unsigned}, numbering='IQ', flatten=True), name_in_grammar = False),
       V('TYPES', Table({'TXT_T': str, 'CONC': float, 'NAT': int, 'IQAT': Array(int)}, numbering='IT'), name_in_grammar=False),
     ]
+
 
 def create_output_file_definition(keyword, add, name=None,
                                   cls=OutputFileDefinition,
