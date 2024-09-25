@@ -5,29 +5,33 @@ def register():
     global registered
 
     if registered:
-        return True
-
-    # new plugin mechanism
-    if 'ase_register' in globals():
-        ase_register()
+        return
 
     # fallback to the old way
     else:
         from ase.calculators.calculator import register_calculator_class
         from ..sprkkr.calculator import SPRKKR  # NOQA: E402
-        register_calculator_class('sprkkr', SPRKKR)
+        registered=True
+        #register_calculator_class('sprkkr', SPRKKR)
 
 
 try:
-    from ase.plugins import register_calculator, register_io_format
 
-    def ase_register():
+    def ase_register(plugin=None):
         global registered
         if registered:
             return
-        register_calculator('ase2sprkkr.SPRKKR')
         registered = True
-        register_io_format('ase2sprkkr.ase.io', 'SPRKKR potential file',
+        if plugin:
+            rc=plugin.register_calculator
+            rio=plugin.register_io_format
+        else:
+            from ase.plugins.register import \
+                register_io_format as fio,   \
+                register_calculator as rc
+
+        rc('ase2sprkkr.SPRKKR')
+        rio('ase2sprkkr.ase.io', 'SPRKKR potential file',
                             '1F', name='sprkkr', ext='pot')
 
 
