@@ -180,7 +180,7 @@ class Configuration:
          file.flush()
       return out
 
-  def to_string(self):
+  def to_string(self, *, validate:Union[str, bool]='save'):
       """
       Return the configuration (problem definition) in a string.
 
@@ -191,7 +191,7 @@ class Configuration:
       """
       from io import StringIO
       s = StringIO()
-      self._save_to_file(s)
+      self.save_to_file(s, validate=validate)
       return s.getvalue()
 
   def _find_member(self, name, lower_case:bool=False, is_option=None):
