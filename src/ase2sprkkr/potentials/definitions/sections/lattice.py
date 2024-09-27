@@ -108,7 +108,6 @@ class LatticeSection(PotentialSection):
               AtomsRegion('right',  slice(-self.NQ_R(), None),          rc, [True, True, True])        # NOQA E241
           ]
           pbc = [True, True, False]
-          cell[2]+=lc[2] + rc[2]
       else:
           raise ValueError(f'Unknown problem periodicity type {self.SYSDIM()}')
 
