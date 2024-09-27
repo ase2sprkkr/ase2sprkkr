@@ -48,7 +48,7 @@ class ContainerDefinition(RealItemDefinition):
     def __init__(self, name, members=[], alternative_names=[], info=None, description=None,
                  is_optional=False, is_hidden=False, is_expert=False,
                  has_hidden_members=False, name_in_grammar=None, force_order=None,
-                 write_alternative_name:bool=False, result_class=None,
+                 write_alternative_name:bool=False, name_regex=False, result_class=None,
                  is_repeated=False
                  ):
        """
@@ -77,6 +77,7 @@ class ContainerDefinition(RealItemDefinition):
            info = info,
            description = description,
            write_alternative_name = write_alternative_name,
+           name_regex = name_regex,
            result_class = result_class
        )
 

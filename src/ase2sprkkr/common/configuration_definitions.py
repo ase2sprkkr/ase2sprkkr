@@ -316,8 +316,10 @@ class RealItemDefinition(BaseDefinition):
 
    def __init__(self, name, written_name=None, alternative_names=None,
                 is_optional=False, is_hidden=False, is_expert=False,
-                name_in_grammar=None, info=None, description=None,
+                name_in_grammar=None, name_format=None,
+                info=None, description=None,
                 write_alternative_name:bool=False,
+                name_regex=None,
                 condition=None, write_condition=None,
                 result_class=None, warning_condition=None,
                 ):
@@ -388,6 +390,7 @@ class RealItemDefinition(BaseDefinition):
            self.alternative_names_lcase = [ i.lower() for i in alternative_names ]
        else:
            self.alternative_names_lcase = self.alternative_names
+       self.name_regex = name_regex
        """ Alternative names of the option/section. The option/section can
        be "denoted" in the configuration file by either by its name or any
        of the alternative names.
@@ -493,12 +496,18 @@ class RealItemDefinition(BaseDefinition):
         Return grammar for the name (and possible alternative names etc.)
         """
         if self.name_in_grammar:
-            names = self.all_names_in_grammar()
-            keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
-            if self.do_not_skip_whitespaces_before_name:
-               names = [ keyword(i).leaveWhitespace() for i in names ]
+            if self.name_regex:
+                reg = pp.Regex(self.name_regex)
+                if self.do_not_skip_whitespaces_before_name:
+                   reg.leaveWhitespace()
+                names=[pp.Regex(self.name_regex)]
             else:
-               names = [ keyword(i) for i in names ]
+                names = self.all_names_in_grammar()
+                keyword = pp.CaselessLiteral if self.is_repeated.is_numbered else pp.CaselessKeyword
+                if self.do_not_skip_whitespaces_before_name:
+                   names = [ keyword(i).leaveWhitespace() for i in names ]
+                else:
+                   names = [ keyword(i) for i in names ]
             if len(names) > 1:
                 name = pp.Or(names)
                 if self.do_not_skip_whitespaces_before_name:
