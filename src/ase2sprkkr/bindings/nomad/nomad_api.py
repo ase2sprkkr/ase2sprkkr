@@ -1,8 +1,7 @@
 """ This module contains routines to talk with NOMAD. They are only
 slightly modified routines provided by the NOMAD guys.
 """
-import requests
-from ase2sprkkr.common.decorators import add_to_signature
+from ase2sprkkr.common.decorators import add_to_signature, cached_class_property
 from functools import wraps
 
 
@@ -23,6 +22,12 @@ class NomadApi():
 
     default_api_url='https://nomad-lab.eu/prod/v1/api/v1/'
 
+    @cached_class_property
+    def requests():
+        """ Loading requests lasts for ages """
+        import requests
+        return requests
+
     def __init__(self, nomad_url=None):
         self.url = nomad_url or self.default_api_url
         self.token = None
@@ -30,12 +35,12 @@ class NomadApi():
     def get_authentication_token(self, username, password, expires=None):
         '''Get the token for accessing your NOMAD unpublished uploads remotely'''
         try:
-            response = requests.get(
+            response = self.requests.get(
                 self.url + 'auth/token', params=dict(username=username, password=password), timeout=10)
             token = response.json().get('access_token')
             if token:
                 if expires:
-                    response = requests.get(
+                    response = self.requests.get(
                         self.url + 'auth/token', params=dict(token=token, username=username, password=password, expires=expires), timeout=10)
                     token = response.json().get('access_token')
 
@@ -50,7 +55,7 @@ class NomadApi():
     def create_dataset(self, dataset_name, token=None):
         '''Create a dataset to group a series of NOMAD entries'''
         try:
-            response = requests.post(
+            response = self.requests.post(
                 self.url + 'datasets/',
                 headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
                 json={"dataset_name": dataset_name},
@@ -69,7 +74,7 @@ class NomadApi():
         '''Upload a single file for NOMAD upload, e.g., zip format'''
         def upload():
             try:
-                response = requests.post(
+                response = self.requests.post(
                     self.url + 'uploads',
                     headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
                     data=f, timeout=30)
@@ -92,7 +97,7 @@ class NomadApi():
         # publish success => 'Process publish_upload completed successfully'
         '''
         try:
-            response = requests.get(
+            response = self.requests.get(
                 self.url + 'uploads/' + upload_id,
                 headers={'Authorization': f'Bearer {token}'}, timeout=30)
             status_message = response.json().get('data').get('last_status_message')
@@ -122,7 +127,7 @@ class NomadApi():
         '''
 
         try:
-            response = requests.post(
+            response = self.requests.post(
                 self.url + 'uploads/' + upload_id + '/edit',
                 headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
                 json=metadata, timeout=30)
@@ -133,7 +138,7 @@ class NomadApi():
     def publish_upload(self, upload_id, token=None):
         '''Publish an upload'''
         try:
-            response = requests.post(
+            response = self.requests.post(
                 self.url + 'uploads/' + upload_id + '/action/publish',
                 headers={'Authorization': f'Bearer {token}', 'Accept': 'application/json'},
                 timeout=30)
