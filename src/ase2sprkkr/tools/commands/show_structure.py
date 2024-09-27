@@ -9,11 +9,6 @@ if not __package__:
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ...potentials.potentials import Potential          # NOQA
-from ...sprkkr.structure import structure_file_to_atoms # NOQA
-from ...ase.visualise import view                       # NOQA
-
-
 help='Visualise potential (and possibly in_struct.inp) files.'
 description='You can either use ase visualisation tools or export it to cif file'
 
@@ -31,6 +26,9 @@ def parser(parser):
 
 
 def run(args):
+  from ...potentials.potentials import Potential          # NOQA
+  from ...sprkkr.structure import structure_file_to_atoms # NOQA
+  from ...ase.visualise import view                       # NOQA
   ciffile=args.out
   cifpotfile=ciffile + '_pot'
   outformat=args.format
