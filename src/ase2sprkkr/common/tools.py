@@ -3,7 +3,6 @@
 from pathlib import Path
 import pyparsing as pp
 import argparse
-from pint import UnitRegistry
 
 _unit_registry = None
 
@@ -20,6 +19,7 @@ def parse_inches(string):
     if isinstance(string, (int, float)):
         return float(string)
     if _unit_registry is None:
+        from pint import UnitRegistry
         _unit_registry = UnitRegistry()
     out = _unit_registry.parse_expression(string)
     if isinstance(out, (int, float)):
