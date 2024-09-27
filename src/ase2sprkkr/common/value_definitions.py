@@ -9,6 +9,28 @@ import pyparsing as pp
 from .warnings import warnings, DataValidityError
 
 
+class ValueModifier:
+    """ If this class is given as a type of a Value, it will modify the definition
+    of value somehow. It is responsibile to set the True type of the value """
+
+
+class InheritingValueModifier(ValueModifier):
+    """ The definition of the value will be inherited from this class as well. """
+
+    _enriching_classes = {}
+
+    def modify_definition(self, definition):
+        dcls = definition.__class__
+        cls = self._enriching_classes.get(dcls)
+        if not cls:
+            scls = self.__class__
+            self._enriching_classes[dcls] = cls = \
+                type(scls.__name__ + dcls.__name__, (scls, dcls), {})
+
+        definition.__class__ = cls
+        return self.type
+
+
 class ValueDefinition(RealItemDefinition):
 
   result_class = Option
@@ -69,6 +91,9 @@ class ValueDefinition(RealItemDefinition):
 
        * the value is not expert
        * the optional is not True and the option has not a default_value
+
+      If required is str, it means the same as True, the string will be
+      used as error message.
 
     init_by_default: bool
       If the value is not set, init it by default
@@ -161,6 +186,9 @@ class ValueDefinition(RealItemDefinition):
     else:
        default_value = fixed_value
        self.is_fixed = True
+
+    if isinstance(type, ValueModifier):
+        type = type.modify_definition(self)
 
     if default_value is None and not isinstance(type, (GrammarType, builtins.type)):
        self.type = type_from_value(type, type_map = self.type_from_type_map)
