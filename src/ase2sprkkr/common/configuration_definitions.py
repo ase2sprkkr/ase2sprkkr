@@ -16,13 +16,14 @@ from typing import Dict, Union
 import itertools
 from . import backward_compatibility  # NOQA
 from enum import Enum, nonmember
+import numpy as np
 
 from .warnings import DataValidityWarning
 from .options import Dummy, DummyStub
 from .decorators import cached_class_property
 from .grammar import generate_grammar
 from .grammar_types.basic import Separator
-from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey
+from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey, IgnoredKey
 
 
 class NotAllowed:
@@ -61,20 +62,23 @@ class BaseDefinition:
   """
   validate_section = None
   """ Can be redefined for validating whole section """
+
   class Repeated(Enum):
 
       @nonmember
       class Type(Enum):
           """ Type of repetition. """
-          NO = 0
+          NO = None
           # No repetition allowed
-          ARRAY = 1
+          ARRAY = np.ndarray
           # The item can be repeated, the result is an (dense) array of values
-          DICT = 2
+          LIST = list
+          # The item can be repeated, the result is an (dense) array of values
+          DICT = dict
           # The item can be repeated, the result is a (sparse) dict of values
 
           def __bool__(self):
-              return self.value > 0
+              return self.value
 
       @nonmember
       class Numbering(Enum):
@@ -121,18 +125,21 @@ class BaseDefinition:
           return self.type != self.Type.NO
 
       @classmethod
-      def create(cls, val):
+      def create(cls, val, grammar_type=None):
           if val is False:
               return cls.NO
           if val is True:
-              return cls.REPEATED
+              if hasattr(grammar_type, 'is_numpy_array') and grammar_type.is_numpy_array:
+                  return cls.ARRAY
+              else:
+                  return cls.REPEATED
           if isinstance(val, str):
               return cls[val]
           return val
 
       @property
       def is_array(self):
-          return self.type == self.Type.ARRAY
+          return self.type in (self.Type.ARRAY, self.Type.LIST)
 
       @property
       def is_dict(self):
@@ -140,7 +147,11 @@ class BaseDefinition:
 
       NO = (Type.NO)
       # No repetition at all
-      REPEATED = (Type.ARRAY, RepeatedKey)
+      IGNORED = (Type.NO, IgnoredKey)
+      # The value is completely ignored
+      REPEATED = (Type.LIST, RepeatedKey)
+      # Values can be repeated, the result is array of values
+      ARRAY = (Type.ARRAY, RepeatedKey)
       # Values can be repeated, the result is array of values
       REPEATED_SECTION = (Type.ARRAY, Key.NONE, Numbering.NO, False)
       # Repeated sections has no header, and their repetition solves themselves
