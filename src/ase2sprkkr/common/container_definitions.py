@@ -545,7 +545,7 @@ class ContainerDefinition(RealItemDefinition):
         if delimiter:
            file.write(delimiter)
         if name_in_grammar:
-           file.write(self.name)
+           file.write(self.formated_name)
            file.write('\n')
 
         members = iter(value)

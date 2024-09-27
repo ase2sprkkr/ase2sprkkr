@@ -355,6 +355,9 @@ class RealItemDefinition(BaseDefinition):
           configuration file. The variable is recognized by its position.
           If None, the default class value is used
 
+        name_format: str or None
+          The way how the name is written
+
         info: str
           A short help message for the value/section. It will be the perex for description.
 
@@ -409,6 +412,17 @@ class RealItemDefinition(BaseDefinition):
        if result_class:
            self.result_class = result_class
        self.warning_condition = None
+       self.name_format = name_format
+
+   @property
+   def formated_name(self):
+      if self.written_name:
+         name = self.written_name
+      else:
+         name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
+      if self.name_format:
+         return "{:{}}".format(name, self.name_format)
+      return name
 
    def has_name(self, name, lower_case=False):
        if super().has_name(name, lower_case):

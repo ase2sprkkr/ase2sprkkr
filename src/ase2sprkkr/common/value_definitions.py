@@ -202,6 +202,7 @@ class ValueDefinition(RealItemDefinition):
          info=info,
          description = description,
          write_alternative_name = write_alternative_name,
+         name_format = name_format,
          write_condition = write_condition,
          condition = condition,
          result_class = result_class,
@@ -212,8 +213,6 @@ class ValueDefinition(RealItemDefinition):
 
     if self.is_repeated.is_numbered and not self.name_in_grammar:
        raise ValueError('Repeated numbered values have to have its name in the grammar')
-
-    self.name_format = name_format
 
   configuration_type_name = 'OPTION'
 
@@ -235,16 +234,6 @@ class ValueDefinition(RealItemDefinition):
   def enrich(self, option):
       """ The Option can be enriched by the definition, e.g. the docsting can be extended. """
       self.type.enrich(option)
-
-  @property
-  def formated_name(self):
-    if self.written_name:
-       name = self.written_name
-    else:
-       name = next(iter(self.alternative_names)) if self.write_alternative_name else self.name
-    if self.name_format:
-       return "{:{}}".format(name, self.name_format)
-    return name
 
   def data_description(self, verbose:Union[bool,str]=False, show_hidden=False, prefix:str=''):
     """
