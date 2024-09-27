@@ -3,9 +3,8 @@ from .sections import CONTROL, TAU, ENERGY, TASK, SITES
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V
-from ...common.doc import process_input_parameters_definition
 
-input_parameters = InputParameters(
+input_parameters = lambda: InputParameters(
   'dos', [
       CONTROL('DOS'),
       TAU,
@@ -24,5 +23,3 @@ input_parameters = InputParameters(
   info="DOS - The density of states computation"
 )
 """ DOS - density of states input parameters definition"""
-
-process_input_parameters_definition(__name__)

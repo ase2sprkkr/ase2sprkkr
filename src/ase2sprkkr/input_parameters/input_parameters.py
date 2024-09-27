@@ -17,6 +17,8 @@ from ..common.decorators import cached_class_property
 from typing import Union
 from ..config import config, mpi_runner
 from ..potentials.potentials import Potential
+from ..common.doc import process_input_parameters_definition
+import warnings
 
 
 class InputSection(ConfigurationSection):
@@ -225,17 +227,46 @@ class InputParameters(ConfigurationFile):
           raise KeyError("No option with name {} in any of the members".format(name))
 
   @cached_class_property
-  def definitions():
-      # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
+  def definition_modules():
       names = (i for i in pkgutil.iter_modules(definitions.__path__))
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
-      return { m.input_parameters.name.upper(): m.input_parameters for m in modules if hasattr(m, 'input_parameters') }
+      return { m.__name__.rsplit('.', 1)[-1].upper(): m for m in modules if hasattr(m, 'input_parameters') }
+
+  _definitions = {}
 
   @classmethod
-  def is_it_a_input_parameters_name(cls, name):
+  def definition(cls, name):
       name = name.upper()
-      return name if name in cls.definitions else False
+      if not name in cls._definitions:
+          module = cls.definition_modules[name]
+          ip = module.input_parameters
+          if isinstance(ip, ipdefs.InputParametersDefinition):
+              warnings.warn(f"In the module '{module.__name__}' in file '{module.__file__}' "
+              "is an InputParametersDefinition object directly defined. "
+              "Consider to enclose its definition in a lambda function to "
+              "speed up ase2sprkkr loading.")
+          else:
+              try:
+                  ip = ip()
+              except Exception as e:
+                  breakpoint()
+                  raise RuntimeError(f"Can not load file {module.__name__} in {module.__file__} "
+                                     f"due to the following error:\n {e}") from e
+          cls._definitions[name] = ip
+          process_input_parameters_definition(module, ip)
+      return cls._definitions[name]
+
+  @cached_class_property
+  def definitions():
+      # user = os.path.join(platformdirs.user_config_dir('ase2sprkkr', 'ase2sprkkr'), 'input_parameters')
+        ip = InputParameters
+        return { n: ip.definition(n) for n in ip.definition_modules }
+
+  @classmethod
+  def is_it_an_input_parameters_name(cls, name):
+      name = name.upper()
+      return name if name in cls.definition_modules else False
 
   @classmethod
   def create_input_parameters(cls, arg):
@@ -255,7 +286,7 @@ class InputParameters(ConfigurationFile):
       input_parameters: InputParameters
       """
       if isinstance(arg, str):
-         name = cls.is_it_a_input_parameters_name(arg)
+         name = cls.is_it_an_input_parameters_name(arg)
          if name:
             return cls.create(arg)
          return cls.from_file(arg)
@@ -276,11 +307,7 @@ class InputParameters(ConfigurationFile):
       input_parameters: InputParameters
         Input parameters with the default values for the given task.
       """
-      return InputParameters(cls.task_definition(name))
-
-  @classmethod
-  def task_definition(cls, task_name):
-      return cls.definitions[task_name.upper()]
+      return InputParameters(cls.definition(name))
 
   @classmethod
   def default_parameters(cls):
@@ -325,7 +352,7 @@ class InputParameters(ConfigurationFile):
       that are present in the new task.
       """
       vals = self.to_dict()
-      self._definition = self.task_definition(task)
+      self._definition = self.definition(task)
       self._init_members_from_the_definition()
       self.set(vals, unknown = 'ignore', error='ignore')
 
@@ -340,3 +367,4 @@ class InputParameters(ConfigurationFile):
 
 # at least, to avoid a circular import
 from ..sprkkr import calculator   # NOQA: E402
+from . import input_parameters_definitions as ipdefs  # NOQA: E402

@@ -13,7 +13,8 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../src/'))
-
+from ase2sprkkr import InputParameters  # NOQA E402
+InputParameters.definitions
 
 # -- Project information -----------------------------------------------------
 
@@ -48,7 +49,7 @@ napoleon_attr_annotations = True
 autodoc_member_order = 'bysource'
 autosummary_generate = True
 
-#autoclass_content = "both"  # Add __init__ doc (ie. params) to class summaries
+# autoclass_content = "both"  # Add __init__ doc (ie. params) to class summaries
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -69,11 +70,12 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 autodoc_typehints = 'description'
-github_url =  'https://github.com/ase2sprkkr/ase2sprkkr/'
+github_url = 'https://github.com/ase2sprkkr/ase2sprkkr/'
 
 html_css_files = [
     'mods.css',
 ]
+
 
 def skip_member(app, what, name, obj, skip, options):
     if skip:
@@ -94,6 +96,7 @@ def skip_member(app, what, name, obj, skip, options):
        return True
     return False
 
+
 def setup(app):
     app.connect('autodoc-skip-member', skip_member)
 
@@ -105,6 +108,7 @@ inheritance_graph_attrs = dict(size='"10.0, 10.0"',
 inheritance_edge_attrs = { 'arrowsize': 0.7 }
 inheritance_parent_node_attrs = { 'color' : 'gray28', 'fontcolor' : 'gray28', 'style' : 'solid' }
 inheritance_node_attrs = { 'style' : '"filled"', 'fillcolor' : 'lightgray' }
+
 
 def inheritance_style_callback(class_names, current_module, styles):
     styles['graph']['rankdir'] = 'TB' if len(class_names) <= 2 else 'LR'

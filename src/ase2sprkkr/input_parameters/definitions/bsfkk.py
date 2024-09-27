@@ -4,9 +4,8 @@ from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V
-from ...common.doc import process_input_parameters_definition
 
-input_parameters = InputParameters(
+input_parameters = lambda: InputParameters(
     'bsfkk', [
           CONTROL('BSF'),
           TAU,
@@ -36,7 +35,5 @@ input_parameters = InputParameters(
     info="BSFKK - Bloch spectral functions in the K-K plane"
 )
 """ JXC -JXC task input parameters definition"""
-
-process_input_parameters_definition(__name__)
 
 # TODO - AKI scripts to generate KA/KE

@@ -7,7 +7,7 @@ from ..input_parameters_definitions import \
     InputSectionDefinition as Section
 from ...sprkkr.sprkkr_grammar_types import Site
 
-input_parameters = InputParameters(
+input_parameters = lambda: InputParameters(
     'arpes', [
       CONTROL('ARPES'),
       TAU,
@@ -121,6 +121,3 @@ input_parameters = InputParameters(
     info = 'ARPES - Angle resolved photoemission spectroscopy'
 )
 """ ARPES task input parameters definition"""
-
-from ...common.doc import process_input_parameters_definition
-process_input_parameters_definition(__name__)

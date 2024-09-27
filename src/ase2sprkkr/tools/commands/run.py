@@ -23,7 +23,7 @@ def parser(parser):
     parser.add_argument('pot', help='SPR-KKR potential file or input file. The type is determined by its content.')
 
     grp = parser.add_mutually_exclusive_group()
-    grp.add_argument('-t','--task', dest='task', choices=InputParameters.definitions.keys(), type = str.lower, help='Task to compute.')
+    grp.add_argument('-t','--task', dest='task', choices=InputParameters.definition_modules.keys(), type = str.lower, help='Task to compute.')
     grp.add_argument('--input-file', '-i', help='Run ase2sprkkr -i inputfile potfile, if you want to run task determined by the give input file with a given potential.', type=str)
 
     parser.add_argument('--print-output', '-O', help='Print the output of SPRKKR.', default='None', action=bool_arg)

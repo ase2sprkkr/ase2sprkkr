@@ -4,11 +4,10 @@ from .sections import TASK, CONTROL, TAU, ENERGY, SITES, STRCONST, MODE
 from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V
-from ...common.doc import process_input_parameters_definition
 from ...common.generated_configuration_definitions import Length
 from ...common.configuration_definitions import if_not_defined
 
-input_parameters = InputParameters(
+input_parameters = lambda: InputParameters(
     'bsfek', [
           CONTROL('BSF'),
           TAU,
@@ -43,7 +42,7 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     3  Γ-D-H-G-N-Σ-Γ-Λ-P
     4  Γ-D-H-G-N-Σ-Γ
     5  Γ-D-H
-""", is_optional=True),  # TODO -either KPATH for some lattices, or NKDIR, KA end KE, length(KA) = NKDIR
+""", is_optional=True),
             *if_not_defined('KPATH', [
                 V('NKDIR', Length('KA', 'KE', default_values=[[0.,0.,0.],[1.,1.,1.,]]), info="Number of directions treated in k-spaces", required="Please, specify either TASK.KPATH or TASK.NKDIR"),
                 V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
@@ -69,7 +68,5 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     info="BSFEK - Bloch spectral functions in the E-K plane"
 )
 """ JXC -JXC task input parameters definition"""
-
-process_input_parameters_definition(__name__)
 
 # TODO - AKI scripts to generate KA/KE
