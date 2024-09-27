@@ -5,6 +5,8 @@ from ..common.grammar_types import mixed, GrammarType
 from .configuration import Configuration
 from ..common.misc import as_integer
 from .decorators import warnings_from_here
+from .warnings import DataValidityError
+import warnings
 
 
 class DangerousValue:
@@ -31,8 +33,10 @@ class DangerousValue:
 
       if validate:
           if value_type:
-              value = value_type.convert(value)
-              value_type.validate(value)
+              with warnings.catch_warnings():
+                  warnings.simplefilter("error", DataValidityError)
+                  value = value_type.convert(value)
+                  value_type.validate(value)
           else:
               value = str(value)
       self.value = value
@@ -75,7 +79,7 @@ class BaseOption(Configuration):
 
 class Dummy(BaseOption):
 
-  def validate(self, why='save'):
+  def _validate(self, why='save'):
       return True
 
   def has_any_value(self):
@@ -88,7 +92,7 @@ class Dummy(BaseOption):
 class DummyStub(Dummy):
 
   def _as_dict(self, get):
-      if self._definition.condition and not self._definition.condition(self):
+      if not self._definition.allowed(self._container):
           return None
       return get(self._container[self._definition.item])
 
@@ -132,7 +136,20 @@ class Option(BaseOption):
       self._definition.enrich(self)
       self._value = value
 
-  def __call__(self, all_values:bool=False):
+  def _value_or_default(self):
+      d = self._definition
+      if d.is_generated:
+          return d.getter(self._container)
+      if hasattr(self, '_result'):
+          return self._result
+      if self._value is not None:
+          return self._value
+      value = self.default_value
+      if self._definition.is_repeated.is_dict and value is not None:
+          return { 'def' : value }
+      return value
+
+  def __call__(self, all_values:bool=False, unpack=True):
       """
       Return the value of the option.
 
@@ -146,20 +163,16 @@ class Option(BaseOption):
       is returned.
       """
       d = self._definition
-      if d.is_generated:
-         return d.getter(self._container)
-
-      value = self._unpack_value(self._value)
-      if value is not None:
-          if d.is_repeated.is_dict and not all_values:
-              return value.get('def', self.default_value)
-          return value
-      dv = self.default_value
-      if d.is_repeated.is_dict and all_values and dv is not None:
-          return { 'def' : dv }
-      if d.init_by_default:
-          self._value = self._pack_value( dv )
-      return self.default_value
+      value = self._value_or_default()
+      if not d.is_generated and d.init_by_default and self._value is None:
+          self._value = self._pack_value( value )
+      if isinstance(value, DangerousValue) and unpack:
+          value = value()
+      if d.is_repeated.is_dict and not all_values:
+           value = value.get('def', self.default_value)
+      if unpack:
+           value = self._unpack_value(value)
+      return value
 
   def is_dangerous(self):
       """ Return, whether the option is set to a dangerous value, i.e. a value
@@ -236,6 +249,8 @@ class Option(BaseOption):
          except ValueError:
              if not error=='ignore':
                   raise
+      if self._container and not error:
+          self._container._validate_section()
       self._post_set()
 
   def _post_set(self):
@@ -260,9 +275,8 @@ class Option(BaseOption):
           return
 
       d.check_array_access()
-
       if not d.is_repeated.is_dict:
-          self()[name]=value
+          self()[name]=d.convert_and_validate(value, item=True)
           self.validate(why='set')
       else:
         if isinstance(name, (list, tuple)):
@@ -468,33 +482,36 @@ class Option(BaseOption):
           return value, False
       return value, True
 
-  def validate(self, why='save'):
+  def _validate(self, why='save'):
       d = self._definition
-      if d.is_generated or self.is_dangerous():
-         return
+      if (not d.is_validated if d.is_validated is not None else d.is_generated) or \
+         not d.type.has_value:
+            return
 
-      if d.type.has_value:
-
-        def vali(value):
-          if value is None:
-             if not d.is_optional:
-                 name = self._get_root_container()
-                 raise Exception(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
-          else:
-             d.validate(value, why)
-
-        if why == 'set':
-           vali(self())
+      def vali(value):
+        if isinstance(value, DangerousValue):
+            return
+        if value is None:
+           if not d.is_optional:
+               name = self._get_root_container()
+               if d.required and d.required is not True:
+                    raise ValueError(d.required)
+               DataValidityError.warn(f'Value {self._get_path()} is None and it is not an optional value. Therefore, I cannot save the {name}')
+               return
         else:
-           value = self.result
-           if d.is_repeated.is_dict:
-              if value is None:
-                 vali(value)
-              else:
-                 for i in value.values():
-                     vali(i)
+           d.validate(value, why)
+
+      value = self(unpack=False, all_values=True)
+      if d.is_repeated.is_dict:
+           if value is None:
+               vali(value)
+           elif isinstance(value, DangerousValue):
+               return
            else:
-              vali(value)
+               for i in value.values():
+                   vali(i)
+      else:
+           vali(value)
 
   @property
   def name(self):

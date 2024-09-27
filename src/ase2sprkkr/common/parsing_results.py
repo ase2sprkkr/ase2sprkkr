@@ -26,7 +26,25 @@ class Key:
             return out
         out = self.ResultClass()
         too[self.key] = out
+        too.process.append(self.key)
         return out
+
+
+class IgnoredKey(Key):
+    """ This key is totaly and silently ignored. Use it
+    for the keys, that should be written, but not read.
+    """
+
+    def add(self, too, val):
+        return
+
+
+class ValidateKey(Key):
+    """ This key is totaly and silently ignored. Use it
+    for the keys, that should be written, but not read.
+    """
+    def add(self, too, val):
+        too.checks.append(val)
 
 
 class SubKey(Key):
@@ -82,7 +100,6 @@ class ArrayKey(SubKey):
             out.value.append(val)
         else:
             if out.value[i] is not out.NOT_SET:
-                breakpoint()
                 raise pp.ParseException(f"Duplicate key {self.sub} in {self.key}")
             out.value[i]=val
 
@@ -96,6 +113,18 @@ class RepeatedKey(Key):
 
     def add(self, too, val):
         self.get(too).value.append(val)
+
+
+class Values(dict):
+    """ Result of dict_from_parsed: dictionary with list of checks on the parsed values."""
+    def __init__(self):
+        super().__init__()
+        self.checks = []
+        self.process = []
+
+    def to_dict(self):
+        return { i: j.to_dict() if isinstance(j, Values) else j
+                    for i,j in self.items() }
 
 
 def dict_from_parsed(values):
@@ -112,15 +141,13 @@ def dict_from_parsed(values):
     >>> dict_from_parsed( [ (RepeatedKey('x'), 1), (RepeatedKey('x'), 2) ] )
     {'x': [1, 2]}
     """
-    out = {}
+    out = Values()
     duplicates = set()
     errors = []
-    keys = set()
 
     def add(key, value):
         if isinstance(key, Key):
             key.add(out, value)
-            keys.add(key.key)
         elif key in out:
             duplicates.add(k)
         else:
@@ -132,8 +159,14 @@ def dict_from_parsed(values):
         except Exception as e:
            errors.append(e)
 
-    for key in keys:
+    for key in out.process:
         out[key] = out[key].result()
+
+    for i in out.checks:
+         try:
+           i(out)
+         except Exception as e:
+           errors.append(e)
 
     if duplicates:
         duplicates = ", ".join((i.upper() for i in duplicates))

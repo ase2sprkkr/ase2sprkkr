@@ -3,6 +3,8 @@ and configuration containers - :class:`Sections<ase2sprkkr.common.configuration_
 """
 
 from typing import Union
+from .warnings import DataValidityWarning, DataValidityError
+import warnings
 
 
 class Configuration:
@@ -149,6 +151,24 @@ class Configuration:
       out = out + ' ' + d.name.upper()
       return out
 
+  def check_for_errors(self, validate='save', print=True):
+      with warnings.catch_warnings(category=DataValidityWarning, record = True) as lst:
+          warnings.simplefilter("always", DataValidityWarning)
+          self._validate(validate)
+      if lst and print:
+          for warning in lst:
+              warnings.showwarning(
+                  message=warning.message,
+                  category=warning.category,
+                  filename=warning.filename,
+                  lineno=warning.lineno
+              )
+
+  def validate(self, why='save'):
+      with warnings.catch_warnings(category=DataValidityError):
+          warnings.simplefilter("error", DataValidityError)
+          self._validate(why)
+
   def save_to_file(self, file, *, validate:Union[str, bool]='save'):
       """ Save the configuration to a file in a given format.
 
@@ -168,21 +188,29 @@ class Configuration:
         ``save`` means the full check (same as the default value ``True``),
         use ``set`` to allow some missing values.
       """
-      if validate:
-         self.validate(validate)
+      if validate == 'warning':
+          self.check_for_errors('save')
+      else:
+          self.validate(validate)
 
       if not hasattr(file, 'write'):
-         with open(file, "w") as file:
-           out=self._save_to_file(file)
-           file.flush()
+          with open(file, "w") as file:
+              out=self._save_to_file(file)
+              file.flush()
       else:
-         out=self._save_to_file(file)
-         file.flush()
+          out=self._save_to_file(file)
+          file.flush()
       return out
 
-  def to_string(self, *, validate:Union[str, bool]='save'):
+  def to_string(self, *, validate:Union[str, bool]='warning'):
       """
       Return the configuration (problem definition) in a string.
+
+      Parameters
+      ----------
+      Validate. How to validate before retrieving. See the method
+      validate.
+      Default 'warning' means the same as 'save', but only throw a warning.
 
       Returns
       -------

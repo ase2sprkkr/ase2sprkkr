@@ -3,6 +3,7 @@ from .grammar import delimitedList
 from .misc import dict_first_item
 from .repeated_configuration_containers import RepeatedConfigurationContainer
 from .configuration_containers import Section
+from .section_adaptors import MergeSectionDefinitionAdaptor
 from .decorators import cache
 from .parsing_results import dict_from_parsed
 
@@ -99,6 +100,9 @@ class ContainerDefinition(RealItemDefinition):
 
     configuration_type_name = 'SECTION'
     """ Name of the container type in the runtime documentation """
+
+    def allow_duplication(self):
+        return self.is_repeated
 
     def __repr__(self):
         return f"<{self.configuration_type_name} {self.name}>"
@@ -363,7 +367,7 @@ class ContainerDefinition(RealItemDefinition):
        if self.validate:
           def _validate(s, loc, value):
               # just pass the dict to the validate function
-              is_ok = self.validate(MergeDictAdaptor(value[0], self), 'parse')
+              is_ok = self.validate(MergeSectionDefinitionAdaptor(value[0], self), 'parse')
               if is_ok is not True:
                 if is_ok is None:
                    is_ok = f'Validation of parsed data of {self.name} section failed'
@@ -391,9 +395,6 @@ class ContainerDefinition(RealItemDefinition):
        out = self._tuple_with_my_name(values, delimiter)
        out.setName(self.name)
        return out
-
-    validate = None
-    """ A function for validation of just the parsed result (not the user input) """
 
     @classmethod
     @cache
@@ -492,6 +493,9 @@ class ContainerDefinition(RealItemDefinition):
 
     def validate(self, container, why:str='save'):
         self.validate_warning(container)
+        for i in self.members():
+            if i.validate_section and i.allowed(container):
+                i.validate_section(container)
         return True
 
     repeated_class = RepeatedConfigurationContainer
@@ -674,26 +678,3 @@ class ConfigurationRootDefinition(ContainerDefinition):
        grammar = pp.Suppress(pp.Regex(r'(\s*\n)*')) + grammar
        grammar = grammar.ignore("#" + pp.restOfLine + pp.LineEnd())
        return grammar
-
-
-class MergeDictAdaptor:
-    """ This class returns a read-only dict-like class
-    that merge values from a container and from the
-    definition of a section """
-
-    def __init__(self, values, definition):
-        self.values = values
-        self.definition = definition
-
-    def __hasitem__(self, name):
-        return self.values.__hasitem__(name) or \
-               self.definition.__hasitem__(name)
-
-    def __getitem__(self, name):
-        try:
-            return self.values[name]
-        except KeyError:
-            return self.definition[name].get_value()
-
-    def __repr__(self):
-        return f'Section {self.definition.name} with values {self.values}'

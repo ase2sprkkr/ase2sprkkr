@@ -6,6 +6,7 @@ import builtins
 from typing import Union, Dict
 import numpy as np
 import pyparsing as pp
+from .warnings import warnings, DataValidityError
 
 
 class ValueDefinition(RealItemDefinition):
@@ -14,6 +15,8 @@ class ValueDefinition(RealItemDefinition):
 
   name_in_grammar = None
   is_generated = False
+  is_validated = None  # default is is_generated
+
   item_type = 'value'
 
   def __init__(self, name, type=None, default_value=None,
@@ -313,20 +316,46 @@ class ValueDefinition(RealItemDefinition):
        self.container = container
        self.type.added_to_container(container)
 
-  def validate(self, value, why='set'):
-    if value is None:
-       if self.required:
-          raise ValueError(f"The value is required for {self.name}, cannot set it to None")
-       return True
-    if self.is_fixed and not np.array_equal(self.default_value, value):
-       raise ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
-    self.type.validate(value, self.get_path, why=why)
-    self.validate_warning(value)
+  def validate_type(self, item:bool):
+      """ Return the DataType against which should be data validated.
 
-  def convert_and_validate(self, value, why='set'):
-    value = self.type.convert(value)
-    self.validate(value, why)
-    return value
+      Parameters
+      ----------
+      item: if True, not the whole value is set, but only item of an array
+            (in the case of repeated option, or e.g. the one with :class:`ase2sprkkr.common.grammar_types.Array`
+            type)
+      """
+      if item:
+          if self.grammar_type is self.type:
+               return self.type.type
+          return self.grammar_type
+      return self.type
+
+  def validate(self, value, why='set', item=False):
+      try:
+          if value is None:
+             if self.required:
+                if self.required is True:
+                    raise ValueError(f"The value is required for {self.name}, cannot set it to None")
+                else:
+                    raise ValueError(self.required)
+             return True
+          if self.is_fixed and not np.array_equal(self.default_value, value):
+              ValueError(f'The value of {self.name} is required to be {self.default_value}, cannot set it to {value}')
+          self.validate_type(item).validate(value, self.get_path, why=why)
+          self.validate_warning(value)
+      except ValueError as e:
+          DataValidityError.warn(str(e))
+
+  def convert_and_validate(self, value, why='set', item=False):
+      with warnings.catch_warnings(category=DataValidityError):
+          warnings.simplefilter("error", DataValidityError)
+          try:
+              value = self.validate_type(item).convert(value)
+              self.validate(value, why, item)
+              return value
+          except ValueError as v:
+              DataValidityError.warn(str(v))
 
   @property
   def value_name_format(self):

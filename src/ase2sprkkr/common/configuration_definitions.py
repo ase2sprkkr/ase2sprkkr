@@ -59,6 +59,8 @@ class BaseDefinition:
       - the condition() is invoked, when the elements of the container is listed
         to hide the inactive members
   """
+  validate_section = None
+  """ Can be redefined for validating whole section """
   class Repeated(Enum):
 
       @nonmember

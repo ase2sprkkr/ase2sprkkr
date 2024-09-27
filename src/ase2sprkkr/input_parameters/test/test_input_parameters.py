@@ -19,6 +19,7 @@ if True:  # Just a linter worshiping
     from ...common.configuration_containers import Section, CustomSection
     from ...common.options import Option, CustomOption
     from ...common.configuration_definitions import gather, switch
+    from ...common.warnings import DataValidityError
 
 V = cd.InputValueDefinition
 
@@ -32,7 +33,10 @@ class TestInputParameters(TestCase):
   def assertParse(self, text, value, grammar):
       out = self.parse(text, grammar).asList()
       self.assertEqual(len(out),1)
-      self.assertEqual(out[0], value)
+      out = out[0]
+      if hasattr(out, 'to_dict'):
+          out = out.to_dict()
+      self.assertEqual(out, value)
 
   def parse(self, text, grammar):
         if not isinstance(grammar, pp.ParserElement):
@@ -330,7 +334,7 @@ XSITES NR=3 FLAG
     ips2 = input_parameters_def.read_from_file(output)
     self.assertEqual(str(ips.as_dict()), str(ips2.as_dict()))
 
-    with pytest.raises(ValueError):
+    with pytest.raises(DataValidityError):
         ips.ENERGY.NE = 'sss'
     ips.ENERGY.NE.set_dangerous('sss')
     output = io.StringIO()
@@ -526,7 +530,7 @@ XSITES NR=3 FLAG
     self.assertEqual([7.,7.,3.,8.], ip.ENERGY.Ime[:])
 
     ip=input_parameters_def.read_from_file(io.StringIO("ENERGY NE=1 Ime=0.5 Ime1=0.4 Ime5=0.8"))
-    with pytest.raises(ValueError):
+    with pytest.raises(DataValidityError):
       ip.ENERGY.Ime = 'ss'
     ip.ENERGY.Ime.set_dangerous('uu')
     self.assertEqual(ip.ENERGY.Ime(),'uu')
@@ -538,7 +542,7 @@ XSITES NR=3 FLAG
     self.assertEqual(ip.ENERGY.Ime(all_values=True), {'def': 'uu', 1:0.4, 5:0.8 } )
     ip.ENERGY.Ime = 1.0
 
-    with pytest.raises(ValueError):
+    with pytest.raises(DataValidityError):
       ip.ENERGY.Ime[5] = 'ss'
     ip.ENERGY.Ime.set_dangerous('yy', index=5)
     out=ip.ENERGY.to_string()

@@ -10,6 +10,8 @@ from .configuration import Configuration
 import itertools
 import re
 from typing import Union, Any, Dict
+from .warnings import warnings, DataValidityError
+from .section_adaptors import SectionAdaptor, MergeSectionAdaptor
 
 
 class DisabledAttributeError(AttributeError):
@@ -125,12 +127,16 @@ class ConfigurationContainer(BaseConfigurationContainer):
                                        'Probably it''s a hidden attribute used for some kind of logic, '
                                        'for which a direct access has no sense. If you really need '
                                        'an access to the attribute, you can use the "container[''name'']" notation.')
-      if d.condition and not d.condition(out):
-          raise DisabledAttributeError(f'member {name} of {self} is not accessible for '
-                                'the current data. It is probably not available or has no sense '
-                                'in this particular case (e.g. data file does not contain needed '
-                                'data for it). If you eally need an access to the attribute, you can use the '
-                                '"container[''name'']" notation.')
+      allowed = d.allowed(self)
+      if not allowed:
+          if allowed is False:
+              raise DisabledAttributeError(f'member {name} of {self} is not accessible for '
+                              'the current data. It is probably not available or has no sense '
+                              'in this particular case (e.g. data file does not contain needed '
+                              'data for it). If you eally need an access to the attribute, you can use the '
+                              '"container[''name'']" notation.')
+          else:
+              raise DisabledAttributeError(str(allowed))
       return out
 
   def __getattr__(self, name):
@@ -333,6 +339,8 @@ class ConfigurationContainer(BaseConfigurationContainer):
          raise ValueError("If value argument of Container.set method is given,"
          " the values have to be string name of the value")
 
+      error = error or 'section'
+
       def set_value(name, value):
         if '.' in name:
             section, name = name.split('.', 1)
@@ -348,7 +356,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
            if unknown == 'find':
               option = self._find_member(name.lower(), True, True)
               if option:
-                 option.set(value, error=error)
+                 option.set(value, error=error or 'section')
                  return
            if unknown == 'ignore':
                return
@@ -366,9 +374,11 @@ class ConfigurationContainer(BaseConfigurationContainer):
           raise ValueError('Only a dictionary can be assigned to a section.')
         for i,v in items:
            set_value(i,v)
+
       if kwargs:
-        for i,v in kwargs.items():
-          set_value(i,v)
+          self.validate_section(why='set', section_adaptor=MergeSectionAdaptor(kwargs, self))
+          for i,v in kwargs.items():
+              set_value(i,v)
 
   def add(self, name:str, value=None):
       """
@@ -520,7 +530,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
         val = self._get_member(name)
         val.set(value)
 
-  def validate(self, why:str='save'):
+  def _validate(self, why:str='save'):
       """ Validate the configuration data. Raise an exception, if the validation fail.
 
       Parameters
@@ -531,11 +541,32 @@ class ConfigurationContainer(BaseConfigurationContainer):
         ``set`` - Validation on user input. Allow required values not to be set.
         ``parse`` - Validation during parsing - some check, that are enforced by the parser, can be skipped.
       """
-      self._definition.validate(DictAdaptor(self), why)
+      sa = SectionAdaptor(self)
+      self._definition.validate(sa, why)
       if why == 'save' and not self._definition.is_optional and not self.has_any_value():
           raise ValueError(f"Non-optional section {self._definition.name} has no value to save")
       for o in self:
-          o.validate(why)
+          d = o._definition
+          if d.allowed(self):
+              o._validate(why)
+      self.validate_section(why, sa)
+
+  def validate_section(self, why:str='save', section_adaptor=None):
+      if why == 'warning':
+          self._validate_section('save', section_adaptor)
+      else:
+          with warnings.catch_warnings(category=DataValidityError):
+              warnings.simplefilter("error", DataValidityError)
+              self._validate_section(why)
+
+  def _validate_section(self, why:str='save', section_adaptor=None):
+      if section_adaptor is None:
+          section_adaptor = SectionAdaptor(self)
+
+      for o in self:
+          d = o._definition
+          if d.allowed(section_adaptor) and d.validate_section:
+                  d.validate_section(section_adaptor, why)
 
   def has_any_value(self) -> bool:
       """
@@ -550,21 +581,6 @@ class ConfigurationContainer(BaseConfigurationContainer):
         if i.has_any_value():
            return True
       return False
-
-
-class DictAdaptor:
-  """ This class wraps a container to behave as a read-only dict.
-  It is used during validation of a container.
-  """
-
-  def __init__(self, container):
-      self.container=container
-
-  def __hasitem__(self, name):
-      return self.container__hasitem__(name)
-
-  def __getitem__(self, name):
-      return self.container.__getitem__(name)()
 
 
 class BaseSection(ConfigurationContainer):
