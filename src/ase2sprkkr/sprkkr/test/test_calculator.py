@@ -31,6 +31,7 @@ class TestCalculator(TestCase):
      cal=SPRKKR(atoms=b, **self._calc_args)
      _fast_atoms(b)
      cal.input_parameters.set_from_atoms(b)
+     cal.input_parameters.CONTROL.POTFIL='xxx'
      self.assertTrue(bool(re.search('NKTAB3D=5', cal.input_parameters.to_string())))
      self.assertFalse(bool(re.match('NKTAB=', cal.input_parameters.to_string())))
      if not self.run_sprkkr():
