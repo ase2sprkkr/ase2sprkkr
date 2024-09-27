@@ -140,7 +140,6 @@ class Configuration(RootConfigurationContainer):
                 cnt = 1
                 pre = ''
                 last= f"(?!(.*\n)*{pattern})"
-            breakpoint()
             content, replaced = re.subn(f"{pre}(^|\n){pattern}[^\n]*(\n|$){last}", r'\1' + line, content, cnt)
             if replaced:
                 f.seek(0)
