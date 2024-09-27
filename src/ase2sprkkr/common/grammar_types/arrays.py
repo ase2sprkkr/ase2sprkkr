@@ -5,6 +5,7 @@ import pyparsing as pp
 import itertools
 import copy
 from typing import List, Optional, Union
+from ..alternative_types import numpy_types
 
 from ..grammar import generate_grammar, delimitedList, \
                       line_end, White
@@ -129,31 +130,50 @@ class Array(GrammarType):
        return f"The array can not have more than {self.max_length} items, it has {len(value)} items"
     return True
 
+  @cached_property
+  def _dtype_condition(self):
+
+      if np.__version__ >= '1.23':
+          return lambda type, shape: True
+      if np.__version__ >= '1.20':
+          return lambda type, shape: type != object
+      else:
+          return lambda type, shape: type != object and not len(shape)
+
   def convert(self, value):
     if self.as_list:
        if callable(self.as_list):
           return value if isinstance(value, self.as_list) else self.as_list(value)
        else:
           return list(value) if isinstance(value, tuple) else value
+
+    type, shape = self.type.numpy_dtype()
+    type = numpy_types.get(type,type)
+
     if not isinstance(value, np.ndarray):
-       if not hasattr(value, '__iter__'):
-           value = [ value ]
-           ln=1
-       else:
-           ln=len(value)
-       if np.__version__ >= '1.23' or self.type.numpy_type != object:
+        if not hasattr(value, '__iter__'):
+            value = [ value ]
+            ln=1
+        else:
+            ln=len(value)
 
-           def validate(v):
-               self.type.validate(v)
-               return v
+        if self._dtype_condition(type, shape):
+            def validate(v):
+                self.type.validate(v)
+                return v
 
-           value = ( validate(self.type.convert(i)) for i in value)
-           out = np.fromiter(value, dtype = self.type.numpy_type, count=ln)
-       else:
-           value = [ self.type.convert(i) for i in value ]
-           out = np.asarray(value)
-       return out
-
+            value = ( validate(self.type.convert(i)) for i in value)
+            out = np.fromiter(value, dtype = (type, shape), count=ln)
+        else:
+            value = [ self.type.convert(i) for i in value ]
+            out = np.asarray(value)
+        return out
+    elif type is not value.dtype and np.dtype(type) is not value.dtype:
+        for i in value:
+            self.type.validate(self.type.convert(i))
+            # check conversion of only first row is sufficient
+            break
+        value = value.astype((type, shape))
     return value
 
   is_the_same_value = staticmethod(compare_numpy_values)
