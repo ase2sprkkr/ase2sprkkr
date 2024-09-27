@@ -77,13 +77,18 @@ class TestCase:
           del self.dirname
 
   @classmethod
-  def calc_args(cls, **kwargs):
+  def calc_args(cls, TYPE=None, **kwargs):
       if not kwargs:
           return cls._calc_args
       out = cls._calc_args.copy()
       if 'options' in kwargs:
           kwargs['options'].update(cls._calc_args['options'])
       out.update(kwargs)
+      if TYPE == 'save_input':
+          try:
+              del out['print_output']
+          except KeyError:
+              pass
       return out
 
   def run_sprkkr(self):

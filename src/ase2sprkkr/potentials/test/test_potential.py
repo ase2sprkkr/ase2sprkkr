@@ -56,7 +56,7 @@ class TestPotential(TestCase):
     if os.environ.get('DO_NOT_RUN_SPRKKR', '') == '':
         SPRKKR().calculate(potential=p, **self.calc_args(options={'NITER':1, 'NKTAB':5, 'NE':5}))
     else:
-        SPRKKR().save_input(potential=p, **self.calc_args(options={'NITER':1}))
+        SPRKKR().save_input(potential=p, **self.calc_args(options={'NITER':1}, TYPE='save_input'))
 
   def test_potential_data(self, temporary_dir):
     path = os.path.join(os.path.dirname(__file__), '..','examples','FePt.new.pot')
