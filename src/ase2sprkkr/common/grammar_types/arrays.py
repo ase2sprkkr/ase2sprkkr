@@ -178,6 +178,10 @@ class Array(GrammarType):
 
   is_the_same_value = staticmethod(compare_numpy_values)
 
+  @property
+  def is_numpy_array(self):
+      return not self.as_list
+
 
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """
