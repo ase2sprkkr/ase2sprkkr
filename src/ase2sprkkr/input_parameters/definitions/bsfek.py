@@ -5,6 +5,8 @@ from ..input_parameters_definitions import \
     InputParametersDefinition as InputParameters, \
     InputValueDefinition as V
 from ...common.doc import process_input_parameters_definition
+from ...common.generated_configuration_definitions import Length
+from ...common.configuration_definitions import if_not_defined
 
 input_parameters = InputParameters(
     'bsfek', [
@@ -12,7 +14,7 @@ input_parameters = InputParameters(
           TAU,
           TASK('BSF').copy([
             V('NK', 300, info="total number of k-points"),
-            V('KPATH', Integer(min=1, max=5), 1, info="Predefined path in k-space", description="""
+            V('KPATH', Integer(min=1, max=5), info="Predefined path in k-space", description="""
 Bravais-lattice KPATH path
 ==========================
 orb 1  Γ-Σ-X-G-U-A-Z-Λ-Γ-∆-Y-H-T-B-Z
@@ -42,9 +44,11 @@ bcc 1  Γ-D-H-G-N-Σ-Γ-Λ-P-F-H + N-D-P
     4  Γ-D-H-G-N-Σ-Γ
     5  Γ-D-H
 """, is_optional=True),  # TODO -either KPATH for some lattices, or NKDIR, KA end KE, length(KA) = NKDIR
-            V('NKDIR', int, required=False, info="Number of directions treated in k-spaces"),
-            V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
-            V('KE', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR", is_optional=True),
+            *if_not_defined('KPATH', [
+                V('NKDIR', Length('KA', 'KE', default_values=[[0.,0.,0.],[1.,1.,1.,]]), info="Number of directions treated in k-spaces", required="Please, specify either TASK.KPATH or TASK.NKDIR"),
+                V('KA', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
+                V('KE', SetOf(float, length=3), is_repeated='NUMBERED', info="First k-vector segment in k-space in multiples of 2π/a and rectangular coordinates with * = 1, ...,NKDIR"),
+            ])
           ]),
           ENERGY.copy([
             V('EMAX', 1., info="highest E-value"),

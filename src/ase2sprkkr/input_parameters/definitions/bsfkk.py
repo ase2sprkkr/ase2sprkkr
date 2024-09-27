@@ -14,7 +14,6 @@ input_parameters = InputParameters(
             V('NK', 300, info="total number of k-points"),
             V('NK1', int, info="number of k-points along k1", is_optional=True),
             V('NK2', int, info="number of k-points along k2", is_optional=True),
-            V('KA', SetOf(float, length=3), default_value=[0.,0.,0.], info="Shift in the k-space."),
             V('K1', SetOf(float, length=3), is_optional=True, info="ﬁrst k-vector to span a two-dimensional region in k-space."),
             V('K2', SetOf(float, length=3), is_optional=True, info="second k-vector to span a two-dimensional region in k-space"),
           ]),
