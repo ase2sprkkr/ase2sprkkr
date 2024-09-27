@@ -23,7 +23,8 @@ dependencies = [
   "pytest",
   'pyyaml',
   'importlib_metadata;python_version<"3.8"',
-  'requests'
+  'requests',
+  'argcomplete'
 ]
 authors = [
   { name = "Matyáš Novák", email = "novakmat@fzu.cz" },

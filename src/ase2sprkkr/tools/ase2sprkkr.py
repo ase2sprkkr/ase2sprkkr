@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+# PYTHON_ARGCOMPLETE_OK
 """
 The main ase2sprkkr scripts. See the commands subdir for the available commands.
 """
 import argparse
+import argcomplete
 import sys
 import pkgutil
 import importlib
@@ -19,7 +21,9 @@ def run():
 
   parser = argparse.ArgumentParser(
       description='ASE2SPRKKR tool: tool for visualising SPRKKR result',
-      formatter_class=argparse.RawDescriptionHelpFormatter
+      formatter_class=argparse.RawDescriptionHelpFormatter,
+      epilog='You can install autocompleting for bash and zsh by running/adding to the .bashrc: \n'
+             'eval "$(register-python-argcomplete ase2sprkkr)"'
   )
   parser.add_argument('--version', '-v', help='Print the version of ASE2SPRKKR.', action='store_true')
   parser.add_argument('--debug', '-G', help='Raise a debugger on an unhandled exception.', action='store_true')
@@ -41,6 +45,8 @@ def run():
       if hasattr(m, 'unknowns'):
           unknowns[name] = m.unknowns
       m.parser( sub )
+
+  argcomplete.autocomplete(parser)
 
   args, remainder = parser.parse_known_args()
   if remainder:
