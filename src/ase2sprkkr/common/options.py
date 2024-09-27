@@ -118,6 +118,7 @@ class Option(BaseOption):
   >>> conf.ENERGY.ImE()
   '1J'
   """
+
   def __init__(self, definition, container=None, value=None):
       """"
       Parameters
@@ -463,10 +464,10 @@ class Option(BaseOption):
           return None, False
 
       if not always:
-          if d.condition and not d.condition(self):
+          if not d.allowed(self._container):
              return None, False
-          if not d.write_condition(self):
-             return None, False
+      if not d.write_condition(self):
+          return None, False
 
       if not d.type.has_value:
          return None, True
@@ -518,7 +519,7 @@ class Option(BaseOption):
       return self._definition.name
 
   def _as_dict(self, get):
-      if self._definition.condition and not self._definition.condition(self):
+      if not self._definition.allowed(self._container):
           return None
       return get(self)
 

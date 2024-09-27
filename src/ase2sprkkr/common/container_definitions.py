@@ -165,9 +165,6 @@ class ContainerDefinition(RealItemDefinition):
               out=f"{prefix}{out}\n{under}{add}"
         return out
 
-    def allow_duplication(self):
-        return self.is_repeated
-
     def additional_data_description(self, verbose:Union[bool,str,int]=False, show_hidden=False, prefix:str=''):
         """
         Return the description (documentation for runtime) of the items in the container.
@@ -534,7 +531,7 @@ class ContainerDefinition(RealItemDefinition):
           If any value have been written return True, otherwise return False.
         """
         if not always:
-            if not self.write_condition(self) or (self.condition and not self.condition(self)):
+            if not self.write_condition(self) or not self.allowed(value._container):
                 return
 
         if self.is_expert:
