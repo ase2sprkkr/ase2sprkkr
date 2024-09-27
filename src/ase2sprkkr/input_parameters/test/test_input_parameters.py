@@ -666,7 +666,11 @@ XSITES NR=3 FLAG
     assertParse('ENERGY A=2 C=4', {'ENERGY': {'A' : 2, 'C' : 4}}, grammar)
     out=ipd.read_from_string('ENERGY A=2 C=4')
     self.assertEqual(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n')
+    self.assertEqual(out['ENERGY'].to_string(), 'ENERGY\n\tA=2\n\tC=4\n')
     assertParse('ENERGY A=1 B=2', {'ENERGY': {'A' : 1, 'B' : 2}}, grammar)
+    out=ipd.read_from_string('ENERGY A=1 B=4')
+    self.assertEqual(out['ENERGY'].to_string(), 'ENERGY\n\tA=1\n\tB=4\n')
+
     assertNotValid('ENERGY A=2 B=2', grammar)
     assertNotValid('ENERGY A=1 C=1', grammar)
     assertNotValid('ENERGY A=1 B=2 C=1', grammar)

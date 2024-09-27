@@ -228,7 +228,12 @@ class BaseDefinition:
        return self._add_hooks_to_grammar(out)
 
   def _add_hooks_to_grammar(self, grammar):
-       """ Add registered grammar hooks to a grammar """
+       """ Add registered grammar hooks to a grammar.
+
+       Developer note: the hooks are added even by grammar types, so it
+       can not accept definition as argument, if you need it, use the closure
+       of the hook to "pass" the argument.
+       """
        if self.grammar_hooks:
            for i in self.grammar_hooks:
                grammar=i(grammar)
@@ -557,6 +562,7 @@ class RealItemDefinition(BaseDefinition):
             name.setParseAction(lambda x: self.is_repeated.key_type(self.name, *x.asList()[1:]))
         else:
             name = pp.Empty().setParseAction(lambda x: self.name)
+
         return name
 
    def _tuple_with_my_name(self, expr,
