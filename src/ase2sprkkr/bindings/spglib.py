@@ -12,6 +12,23 @@ from ..sprkkr import sprkkr_atoms
 import numpy as np
 
 
+def spglib_dataset(dataset):
+    """ Backward compatibility """
+    if dataset is None or \
+       hasattr(dataset, 'equivalent_atoms'):
+         return dataset
+
+    class Convertor:
+
+         def __hasattr__(self, name):
+             return name in dataset
+
+         def __getattr__(self, name):
+             return dataset[name]
+
+    return Convertor()
+
+
 class SpacegroupInfo:
     """ Class, that carry information about spacegroup and symmetry of a structure """
 
@@ -76,7 +93,7 @@ class SpacegroupInfo:
         """
         if self._equivalent_sites is None:
            if self._dataset:
-              return UniqueValuesMapping(self._dataset['equivalent_atoms'])
+              return UniqueValuesMapping(self._dataset.equivalent_atoms)
            elif self.spacegroup:
               self.recompute(allow_change=False)
            else:
@@ -146,11 +163,12 @@ class SpacegroupInfo:
                              equivalent_sites.mapping),
                              symprec = precision,
                              angle_tolerance = angular_precision)
+           sg_dataset = spglib_dataset(sg_dataset)
        if sg_dataset is None:
           return None, None, UniqueValuesMapping(np.arange(len(atoms)))
 
-       spacegroup = Spacegroup(sg_dataset['number'])
-       equivalent_sites = equivalent_sites.merge(sg_dataset['equivalent_atoms'])
+       spacegroup = Spacegroup(sg_dataset.number)
+       equivalent_sites = equivalent_sites.merge(sg_dataset.equivalent_atoms)
        equivalent_sites.normalize(start_from=0)
        return spacegroup, sg_dataset, equivalent_sites
 

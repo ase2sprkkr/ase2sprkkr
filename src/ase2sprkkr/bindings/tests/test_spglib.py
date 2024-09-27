@@ -46,11 +46,11 @@ class TestSpgilib(TestCase):
       ssert([0,1], sgi.equivalent_sites)
       self.assertEqual(225, sgi.spacegroup.no)
       self.assertEqual(225, sgi.number())
-      self.assertEqual(225, sgi.dataset['number'])
+      self.assertEqual(225, sgi.dataset.number)
 
       sgi = SpacegroupInfo(atoms, sgi.spacegroup)
       self.assertEqual(225, sgi.spacegroup.no)
-      self.assertEqual(225, sgi.dataset['number'])
+      self.assertEqual(225, sgi.dataset.number)
       ssert([0,1], sgi.equivalent_sites)
 
       atoms = SPRKKRAtoms('ION')
