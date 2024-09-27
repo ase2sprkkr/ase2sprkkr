@@ -10,7 +10,6 @@ if not __package__:
   __package__ = 'ase2sprkkr.tools.commands'
 sys.path.append(str(Path(__file__).resolve().parents[3]))
 
-from ... import InputParameters, OutputFile  # NOQA
 from ...common.tools import main  # NOQA
 from ...bindings.nomad.nomad_api import NomadApi  # NOQA
 
