@@ -376,7 +376,7 @@ class ValueDefinition(RealItemDefinition):
           DataValidityError.warn(str(e))
 
   def convert_and_validate(self, value, why='set', item=False):
-      with warnings.catch_warnings(category=DataValidityError):
+      with warnings.catch_warnings():
           warnings.simplefilter("error", DataValidityError)
           try:
               value = self.validate_type(item).convert(value)

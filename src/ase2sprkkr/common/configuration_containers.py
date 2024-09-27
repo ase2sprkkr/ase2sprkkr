@@ -555,7 +555,7 @@ class ConfigurationContainer(BaseConfigurationContainer):
       if why == 'warning':
           self._validate_section('save', section_adaptor)
       else:
-          with warnings.catch_warnings(category=DataValidityError):
+          with warnings.catch_warnings():
               warnings.simplefilter("error", DataValidityError)
               self._validate_section(why)
 

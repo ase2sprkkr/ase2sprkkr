@@ -152,7 +152,7 @@ class Configuration:
       return out
 
   def check_for_errors(self, validate='save', print=True):
-      with warnings.catch_warnings(category=DataValidityWarning, record = True) as lst:
+      with warnings.catch_warnings(record = True) as lst:
           warnings.simplefilter("always", DataValidityWarning)
           self._validate(validate)
       if lst and print:
@@ -165,7 +165,7 @@ class Configuration:
               )
 
   def validate(self, why='save'):
-      with warnings.catch_warnings(category=DataValidityError):
+      with warnings.catch_warnings():
           warnings.simplefilter("error", DataValidityError)
           self._validate(why)
 
