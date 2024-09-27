@@ -19,6 +19,7 @@ if True:  # Just a linter worshiping
     from ...common.configuration_containers import Section, CustomSection
     from ...common.options import Option, CustomOption
     from ...common.configuration_definitions import gather, switch
+    from ...common.generated_configuration_definitions import Length
     from ...common.warnings import DataValidityError
 
 V = cd.InputValueDefinition
@@ -647,6 +648,66 @@ XSITES NR=3 FLAG
     ipd2['ENERGY']['A'].default_value = 5
     assert ipd['ENERGY']['A'].default_value == 1
 
+  def test_length(self):
+    t=lambda x:re.sub(r'\s+',' ',x).strip()
+
+    ipd = cd.InputParametersDefinition.definition_from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('NK', Length('K1', 'K2')),
+        V('K1', gt.Array(int), is_optional=True),
+        V('K2', gt.Array(int), is_optional=True)
+      ]
+    })
+    ip = ipd.create_object()
+    with pytest.warns(DataValidityError):
+        ip.ENERGY.K1 = [1,2,3]
+    ip.ENERGY.K2 = [2,2,3]
+    assert t(ip.to_string()) == 'ENERGY A=1 NK=3 K1=1 2 3 K2=2 2 3'
+    ip2 = ipd.read_from_string(ip.to_string())
+    assert ip2.ENERGY.NK() == 3
+
+    with pytest.raises(DataValidityError):
+        ip2.ENERGY.NK=7
+
+    with pytest.warns(DataValidityError):
+        ip.ENERGY.K2 = [2,2]
+    with pytest.raises(DataValidityError):
+        ip.to_string()
+
+    ipd = cd.InputParametersDefinition.definition_from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('NK', Length('K1', 'K2', default_values=(1,2))),
+        V('K1', gt.Array(int), is_optional=True),
+        V('K2', gt.Array(int), is_optional=True)
+      ]
+    })
+    ip = ipd.create_object()
+    ip.ENERGY.NK = 3
+    assert (ip.ENERGY.K1() == [1,1,1]).all()
+    assert (ip.ENERGY.K2() == [2,2,2]).all()
+    ip.ENERGY.NK = 5
+    assert (ip.ENERGY.K1() == [1,1,1,1,1]).all()
+    ip.ENERGY.NK = 2
+    assert (ip.ENERGY.K1() == [1,1]).all()
+    ip.ENERGY.NK = 2
+
+    ipd = cd.InputParametersDefinition.definition_from_dict({
+      'ENERGY' : [
+        V('A', 1),
+        V('NK', Length('K1', default_values=[1,2,3])),
+        V('K1', gt.Array(int, length=3), is_repeated='REPEATED', is_optional=True),
+      ]
+    })
+    ip = ipd.create_object()
+    ip.ENERGY.NK = 2
+    assert (ip.ENERGY.K1() == [[1,2,3],[1,2,3]]).all()
+    ip.ENERGY.K1[1]= [3,3,3]
+    ip.ENERGY.NK = 3
+    assert (ip.ENERGY.K1() == [[1,2,3],[3,3,3],[1,2,3]]).all()
+
+#
   def test_switch(self):
     assertParse = self.assertParse
     assertNotValid = self.assertNotValid
