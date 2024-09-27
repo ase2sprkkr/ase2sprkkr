@@ -182,6 +182,12 @@ class Array(GrammarType):
   def is_numpy_array(self):
       return not self.as_list
 
+  def numpy_dtype(self):
+      dtype, shape = self.type.numpy_dtype()
+      if self.min_length and self.min_length == self.max_length:
+          return dtype, (self.min_length,) + shape
+      return object
+
 
 class SetOf(Array):
   """ Set of values of the same type. E.g. {1,2,3} """

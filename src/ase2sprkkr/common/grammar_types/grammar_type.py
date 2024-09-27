@@ -407,6 +407,10 @@ class GrammarType:
   def added_to_container(self, definition):
       pass
 
+  def numpy_dtype(self):
+      """ Return its numpy dtype and shape """
+      return self.numpy_type, tuple()
+
 
 @add_called_class_as_argument
 def add_to_parent_validation(validation):
