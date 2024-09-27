@@ -11,12 +11,19 @@ sys.path.append(str(Path(__file__).resolve().parents[3]))
 
 from ...common.tools import parse_tuple_function, parse_named_option, \
         append_id_to_filename, parse_inches, main # NOQA
-from ...output_files.output_files import OutputFile                                         # NOQA
+from ...common.lazy_string import LazyString      # NOQA
+
+
+@LazyString
+def description():
+    from ...output_files.output_files import OutputFile
+    out = 'The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n'
+    defs = OutputFile.definitions.items()
+    out += '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].definition.info()}", defs))
+    return out
 
 
 help='Plot SPR-KKR output files.'
-description='The type of the file is guessed from the content of the file and from the extension. The currently supported files are: \n' + \
-   '\n'.join(map(lambda x: f"    {x[0].upper()}: {x[1].definition.info()}", OutputFile.definitions.items()))
 
 
 def parser(parser):
@@ -34,6 +41,7 @@ def parser(parser):
 
 
 def run(args):
+  from ...output_files.output_files import OutputFile
   kwargs = vars(args)
   del args.version
 
