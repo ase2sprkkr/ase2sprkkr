@@ -2,6 +2,7 @@
 import functools
 import enum
 import pyparsing as pp
+from . import decorators
 
 if not hasattr(pp.ParserElement, "setName"):
     pp.ParserElement.setName = getattr(pp.ParserElement, "set_name", lambda x: None)
@@ -12,4 +13,14 @@ if not hasattr(functools,'cache'):
 
 if not hasattr(enum, 'nonmember'):
     """ I hope it will be working """
-    enum.nonmember = lambda x: x
+    def _nonmember(cls):
+        def fn(self):
+             return cls
+
+        class Nonmember(decorators.cached_class_property):
+
+            def __getattr__(self, name):
+                return getattr(cls, name)
+
+        return Nonmember(lambda: cls)
+    enum.nonmember = _nonmember
