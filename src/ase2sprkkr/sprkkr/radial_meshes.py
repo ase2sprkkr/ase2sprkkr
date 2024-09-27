@@ -2,7 +2,7 @@
 import copy
 import numpy as np
 import math
-from scipy.interpolate import CubicSpline
+from ..common.decorators import cached_class_property
 
 
 class Mesh:
@@ -22,8 +22,13 @@ class Mesh:
   def interpolator(self, values):
       return self.interpolator_for_coors(self.coors, values)
 
-  @staticmethod
-  def interpolator_for_coors(coors, values):
+  @cached_class_property
+  def CubicSpline():
+      from scipy.interpolate import CubicSpline
+      return CubicSpline
+
+  @classmethod
+  def interpolator_for_coors(cls, coors, values):
       v1 = abs(values[0])
       v2 = abs(values[-1])
 
@@ -39,10 +44,10 @@ class Mesh:
           r_method = abs(d) > abs(dr)
 
       if r_method:
-          spl = CubicSpline(coors, values * coors, extrapolate=True)
+          spl = cls.CubicSpline(coors, values * coors, extrapolate=True)
           return lambda x: spl(x) / x
 
-      return CubicSpline(coors, values)
+      return cls.CubicSpline(coors, values)
 
 
 def _clearing_property(name):
