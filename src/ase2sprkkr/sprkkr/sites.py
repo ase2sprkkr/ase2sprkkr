@@ -1,9 +1,7 @@
 """ The site class define the properties of an atom. """
 
 from .radial_meshes import Mesh
-from .radial import RadialPotential, RadialCharge
 from .reference_systems import ReferenceSystem
-from .moments import Moments
 import numpy as np
 from ..common.decorators import cached_property
 import copy
@@ -43,11 +41,7 @@ class SiteType:
       self.atoms = atoms
       self.reference_system = reference_system or ReferenceSystem.default()
       self._mesh = mesh or Mesh.default()
-      self._potential = None
-      self._charge = None
-      self._moments = None
-      self._occupation = Occupation.to_occupation(occupation, None)
-      self._occupation._site = self
+      self._occupation = Occupation.to_occupation(occupation, self)
       self.sites = set()
 
   def register(self, site):
@@ -68,9 +62,7 @@ class SiteType:
           i.break_symmetry()
 
   def _clear_data(self):
-      self._potential = None
-      self._charge = None
-      self._moments = None
+      self.occupation._clear_data()
 
   @property
   def mesh(self):
@@ -78,62 +70,53 @@ class SiteType:
 
   @mesh.setter
   def mesh(self, mesh):
+      self.remesh(mesh)
+
+  def remesh(self, mesh, map=None):
+      if map is None:
+          map = {}
       self._mesh = mesh
-      if self._potential:
-          self._potential = self._potential.for_mesh(mesh)
-      if self._charge:
-          self._charge = self._charge.for_mesh(mesh)
+      self.occupation.remesh(mesh, map)
+      return map
+
+  def _just_one_type(self):
+      if len(self.occupation) != 1:
+          raise ValueError("The site has multiple occupation, please use 'site_type.atomic_type(symbol/nb).desired_property'")
+      return self.atomic_type(0)
 
   @property
   def potential(self):
-      """ The radial potential data of the site """
-      return self._potential
+      """ The radial potential data of the site, if it has one atomic type """
+      return self._just_one_type().potential
 
   @potential.setter
   def potential(self, value):
-      if value is None:
-          self._potential = None
-          return
-      if not isinstance(value, RadialPotential):
-          value = RadialPotential(value, self._mesh, self.primary_atomic_number)
-      self._potential = value
-      self.mesh = value.mesh
+      self._just_one_type().potential = value
 
   @property
   def charge(self):
-      """ The radial charge data of the site """
-      return self._charge
+      """ The radial charge data of the site, if it has one atomic type """
+      return self._just_one_type().charge
 
   @charge.setter
   def charge(self, value):
-      if value is None:
-          self._charge = None
-          return
-      if not isinstance(value, RadialCharge):
-          value = RadialCharge(value, self._mesh)
-      self._charge = value
-      self.mesh = value.mesh
+      self._just_one_type().charge = value
 
   @property
   def moments(self):
-      """ The moments data of the site """
-      return self._moments
+      """ The moments data of the site, if it has one atomic type """
+      return self._just_one_type().moments
 
   @moments.setter
   def moments(self, value):
-      if not isinstance(value, Moments):
-          value = Moments(*value)
-      self._moments = value
+      self._just_one_type().moments = value
 
-  def copy(self, atoms=False):
+  def copy(self, atoms=False, copy_mesh=True):
       """ Create a copy of the site. """
-      site_type = SiteType(self.atoms, self.occupation.copy(),
-                           self.reference_system.copy(), self.mesh.copy())
+      mesh = self.mesh.copy() if copy_mesh else self.mesh
+      site_type = SiteType(self.atoms, self.occupation,  # occupation will be copied
+                           self.reference_system.copy(), mesh)
       site_type._occupation._site_type = site_type
-      if site_type.potential is not None:
-          site_type.potential = site_type.potential.copy()
-      if site_type.charge is not None:
-          site_type.charge = site_type.charge.copy()
       if atoms is not False:
           site_type.atoms = atoms
       return site_type
@@ -183,8 +166,7 @@ class SiteType:
       Currently, it resets the mesh.
       """
       self.mesh = Mesh.default()
-      self.potential = None
-      self.charge = None
+      self.occupation._clear_data()
 
   @property
   def primary_symbol(self):
@@ -209,8 +191,6 @@ class SiteType:
       an = self.atoms.get_atomic_numbers()
       pan = self.occupation.primary_atomic_number
       an[ index ] = pan
-      if self._potential:
-          self._potential.z = pan
       self.atoms.set_atomic_numbers(an)
       occ = self.atoms.info.get('occupancy', {})
       for i in index:
@@ -227,6 +207,10 @@ class SiteType:
       """ Is the site vacuum pseudoatom? """
       return len(self._occupation) == 1 and next(iter(self.occupation)).is_vacuum()
 
+  @property
+  def atomic_type(self):
+      return self.occupation.atomic_type
+
   @cached_property
   def atomic_types(self):
       """
@@ -241,7 +225,7 @@ class SiteType:
 
       class AtomicTypesLookup:
           def __getitem__(_self, name):
-              return self.occupation.atomic_type[name]
+              return self.occupation.atomic_type(name)
 
           def __setitem__(_self, name, value):
               return self.occupation.replace_type(name, value)
@@ -312,6 +296,9 @@ class Site:
   def mesh(self, mesh):
       self._site_type.mesh = mesh
 
+  def remesh(self, mesh, map=None):
+      return self._site_type.remesh(mesh, map)
+
   @property
   def potential(self):
       return self._site_type.potential
@@ -351,10 +338,6 @@ class Site:
   @reference_system.setter
   def reference_system(self, reference_system):
       self._site_type.reference_system = reference_system
-
-  @property
-  def atomic_types(self):
-      return self._site_type.atomic_types
 
   @property
   def primary_symbol(self):
@@ -400,6 +383,14 @@ class Site:
 
   def reset(self):
       return self._site_type.reset()
+
+  @property
+  def atomic_type(self):
+      return self.site_type.atomic_type
+
+  @cached_property
+  def atomic_types(self):
+      return self.site_type.atomic_types
 
 
 from .occupations import Occupation  # NOQA: E402

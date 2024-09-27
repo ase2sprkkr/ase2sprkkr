@@ -25,6 +25,19 @@ from .grammar_types.basic import Separator
 from .parsing_results import Key, ArrayKey, DictKey, RepeatedKey, DefDictKey
 
 
+class NotAllowed:
+  """ Object of this class can be returned as a result of a :func:ConfigurationDefinition.condition """
+  def __init__(self, msg):
+      self.msg = msg
+
+  def __str__(self):
+      return self.msg
+
+  def __bool__(self):
+      """ When returned, the value is NOT ALLOWED"""
+      return False
+
+
 class BaseDefinition:
   """ This class is a member of definition of configuration, that can be both
   real (holds a value or values) or just virtual.

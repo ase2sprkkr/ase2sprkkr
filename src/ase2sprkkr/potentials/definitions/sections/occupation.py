@@ -43,11 +43,12 @@ class OccupationSection(PotentialSection):
           ind = unique[i]
           if not ind in tags:
              occ = d['ITOQ CONC']
-             occ = Occupation({(read_io_data['types'][i - 1], oc) for i,oc in occ})
+             mesh = read_io_data['meshes'][d['IMQ'] - 1]
+             occ = Occupation({(read_io_data['types'][it - 1], oc) for it,oc in occ}, mesh=mesh)
              site = Site.create(atoms = atoms,
                          occupation = occ,
                          reference_system = read_io_data['reference_systems'][d['IREFQ'] - 1],
-                         mesh = read_io_data['meshes'][d['IMQ'] - 1])
+                         mesh = mesh)
              tags[ind] = site
              return site
           else:

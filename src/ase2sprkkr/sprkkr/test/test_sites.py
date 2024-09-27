@@ -45,18 +45,26 @@ class TestSites(TestCase):
       self.assertEqual(s1.potential(2.), 2.)
 
       s1.potential = s0.potential.copy()
+      self.assertNotEqual(s0.mesh, s1.mesh)
+      s1.remesh(s0.mesh)
       self.assertEqual(s0.mesh, s1.mesh)
 
       s0.potential = p2 = RadialPotential(m2.coors * 2, m2, 2)
       self.assertEqual(s0.potential(2.), 4.)
-      self.assertNotEqual(s0.mesh, s1.mesh)
+      self.assertEqual(s0.mesh, s1.mesh)
 
       s0.mesh = m1
+      self.assertEqual(s0.mesh, m1)
+      self.assertEqual(s0.potential.mesh, m1)
+      self.assertEqual(s0.potential.mesh, s0.mesh)
       self.assertEqual(s0.potential(2.), 4.)
       self.assertEqual(s0.potential(1.), 2.)
       self.assertEqual(s0.potential(1.5), 3.)
 
       self.assertEqual(s0.potential(2.), 4.)
+      self.assertNotEqual(s0.mesh, s1.mesh)
+      self.assertNotEqual(s0.potential.mesh, s1.mesh)
+      s1.remesh(s0.mesh)
       self.assertEqual(s0.mesh, s1.mesh)
       self.assertEqual(s0.potential.mesh, s1.mesh)
       s0.charge = m1.coors * 3
@@ -64,9 +72,9 @@ class TestSites(TestCase):
       self.assertEqual(s0.charge(2.), 6.)
       self.assertEqual(s0.charge(1.), 3.)
       s0.potential = p2
-      self.assertEqual(s0.mesh, m2)
-      self.assertEqual(s0.potential.mesh, m2)
-      self.assertEqual(s0.charge.mesh, m2)
+      self.assertNotEqual(s0.mesh, m2)
+      self.assertNotEqual(s0.potential.mesh, m2)
+      self.assertNotEqual(s0.charge.mesh, m2)
       self.assertEqual(s0.charge(2.), 6.)
       self.assertEqual(s0.charge(1.), 3.)
       s0.charge = RadialCharge(s1.potential._value, m1)

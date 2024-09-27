@@ -5,7 +5,8 @@ import numpy as np
 from .atomic_types import AtomicType
 from typing import Dict, Union, Optional
 from collections.abc import Iterable
-from .sites import Site
+from .sites import SiteType
+from .radial_meshes import Mesh
 
 
 class Occupation:
@@ -15,32 +16,62 @@ class Occupation:
    be found on a given place (which can be used e.g. for computing
    alloys).
   """
+  _occupation = {}
+  """ A bit hack for correct function of mesh property during the initialization """
+
+  @staticmethod
+  def to_occupation(occupation, site):
+      """ Create an occupation object associated with the given sites object """
+      if not isinstance(occupation, Occupation):
+         occupation = Occupation(occupation, site, update_atoms=False)
+      elif site is not None and occupation.site is not None:
+         occupation = Occupation.copy(occupation, site)
+      return occupation
 
   def __init__(self, dct:Dict[Union[AtomicType,str], float],
-                     site:Optional[Site]=None, update_atoms=False):
+                     site:Optional[SiteType]=None,
+                     mesh:Optional[Mesh]=None,
+                     update_atoms=False):
       self._site = site
-      self.set(dct, update_atoms)
+      if mesh is None and site:
+          mesh = site.mesh
+      self.set(dct, update_atoms, for_mesh=mesh)
 
-  def copy(self, site:Optional[Site]=None) -> Occupation:
+  def copy(self, site:Optional[SiteType]=None, for_mesh=None) -> Occupation:
       """ Create a copy of the object, associated with a given site. """
-      return Occupation({ a.copy(): v for a,v in self._occupation.items() }, site)
+      if for_mesh is None and site is not None:
+          for_mesh = site.mesh
+      return Occupation({ a.for_mesh(for_mesh): v for a,v in self._occupation.items() }, site)
 
-  def set(self, dct: Dict[AtomicType | str, float ], update_atoms=True) -> None:
+  def set(self, dct: Dict[AtomicType | str, float ], update_atoms=True, for_mesh=None) -> None:
       """ Set (replace) the occupation data.
 
       The method automatically updates the symbols, atomic numbers and the occupancy property (if exists)
       of the underlying Atoms object.
       """
+
       if isinstance(dct, (int, str, AtomicType)):
-         dct = {dct : 1.0}
+          dct = {dct : 1.0}
       if hasattr(dct, 'items'):
-         iterator = dct.items()  # dict
+          iterator = dct.items()  # dict
       else:
-         iterator = dct
-      self._occupation = dict( (AtomicType.to_atomic_type(i), j) for i,j in iterator )
+          iterator = dct
+      if not for_mesh:
+          for_mesh = self.mesh
+      self._occupation = dict( (AtomicType.to_atomic_type(i, for_mesh), j) for i,j in iterator )
       self._normalize()
       if update_atoms:
           self._update_atoms()
+
+  @property
+  def site(self):
+      return self._site
+
+  @property
+  def mesh(self):
+      (len(self._occupation) and self.atomic_type(0).mesh) or \
+          (self._site and self._site.mesh) or \
+          None
 
   def items(self):
       """ dict.items() like enumeration """
@@ -93,7 +124,7 @@ class Occupation:
       it can be identified) by the new one (given either by AtomicType or by its chemical symbol)
       """
       key = self._find_key(name)
-      to = AtomicType.to_atomic_type(to)
+      to = AtomicType.to_atomic_type(to, self.mesh)
       self._occupation = dict(
           (k if k is not key else to, v) for k,v in self._occupation.items()
         )
@@ -150,7 +181,7 @@ class Occupation:
       if value is None:
          value = 1. / (len(self) + 1.)
       self._normalize(1. - value)
-      self._occupation[AtomicType.to_atomic_type(name)] = value
+      self._occupation[AtomicType.to_atomic_type(name, self.mesh)] = value
       self._update_atoms()
 
   def __delitem__(self, name):
@@ -223,15 +254,6 @@ class Occupation:
   def total_occupation(self):
       return sum(self._occupation.values())
 
-  @staticmethod
-  def to_occupation(occupation, site):
-      """ Create an occupation object associated with the given sites object """
-      if not isinstance(occupation, Occupation):
-         occupation = Occupation(occupation, site)
-      elif site is not None:
-         occupation = Occupation.copy(occupation, site)
-      return occupation
-
   def check(self):
       if not np.isclose(sum(self),1.0):
          raise ValueError("Total occupation of the site should be equal to one")
@@ -242,3 +264,15 @@ class Occupation:
   def atomic_types(self) -> Iterable[AtomicType]:
       """ Returns the atomic types that can be present on the site. """
       return self._occupation.keys()
+
+  def remesh(self, mesh, map=None):
+      if map is None:
+          map = {}
+
+      self._occupation = { a.remesh(mesh, map):v for a,v in self._occupation.items() }
+      return map
+
+  def _clear_data(self):
+      self._potential = None
+      self._charge = None
+      self._moments = None

@@ -1,3 +1,5 @@
+import copy
+
 class Moments:
 
     def __init__(self, qel, nos, smt, omt, hff):
@@ -9,3 +11,6 @@ class Moments:
 
     def as_tuple(self):
         return (self.qel, self. nos, self. smt, self. omt, self. hff)
+
+    def copy(self):
+        return copy.copy(self)
