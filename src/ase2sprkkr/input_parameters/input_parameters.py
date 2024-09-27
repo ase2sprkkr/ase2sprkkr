@@ -230,7 +230,7 @@ class InputParameters(ConfigurationFile):
       names = (i for i in pkgutil.iter_modules(definitions.__path__))
       im = importlib.import_module
       modules = ( im('.definitions.' + i.name, __package__) for i in names )
-      return { m.__name__.rsplit('.',1)[1].upper(): m.input_parameters for m in modules if hasattr(m, 'input_parameters') }
+      return { m.input_parameters.name.upper(): m.input_parameters for m in modules if hasattr(m, 'input_parameters') }
 
   @classmethod
   def is_it_a_input_parameters_name(cls, name):
