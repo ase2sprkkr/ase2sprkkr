@@ -22,7 +22,8 @@ def run():
       formatter_class=argparse.RawDescriptionHelpFormatter
   )
   parser.add_argument('--version', '-v', help='Print the version of ASE2SPRKKR.', action='store_true')
-  parser.add_argument('--debug', '-G', help='Raise a debugger on an unhandled exception', action='store_true')
+  parser.add_argument('--debug', '-G', help='Raise a debugger on an unhandled exception.', action='store_true')
+  parser.add_argument('--profile', '-P', help='Run a python profiler on the command.', action='store_true')
 
   subs = parser.add_subparsers( dest = 'ase2sprkkr_command', description='Run ase2sprkkr <subcommand> -h for futhrer info')
 
@@ -70,4 +71,18 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    if '-P' in sys.argv:
+        import cProfile
+        import io
+        import pstats
+        pr = cProfile.Profile()
+        pr.enable()
+        run()
+        pr.disable()
+        s = io.StringIO()
+        sortby = pstats.SortKey.CUMULATIVE
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats(0.1)
+        print(s.getvalue())
+    else:
+        run()
