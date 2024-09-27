@@ -2,11 +2,16 @@
 that is generated from other values """
 
 from .configuration_definitions import RealItemDefinition
+from .value_definitions import InheritingValueModifier
 from .decorators import add_to_signature
 from .options import Option
 import copy
 import numpy as np
+import pyparsing as pp
+from .parsing_results import ValidateKey
 from typing import Union
+from .warnings import DataValidityError
+from .section_adaptors import MergeSectionDefinitionAdaptor
 
 
 class BaseGeneratedValueDefinition(RealItemDefinition):
@@ -48,6 +53,98 @@ class GeneratedValueDefinition(BaseGeneratedValueDefinition):
        if not self._setter:
            raise ValueError("Setting the value(s) of {self.name} is not allowed")
        return self._setter
+
+
+class Length(InheritingValueModifier):
+   """ Sometimes, the length of some array should appear in the config file """
+
+   is_generated = True
+   is_validated = True
+   is_stored = True
+
+   type = int
+
+   _NO_DEFAULT=object()
+
+   def __init__(self, *of, default_values=_NO_DEFAULT):
+       self._length_of = of
+       if default_values is not self._NO_DEFAULT:
+           if not isinstance(default_values, (list, tuple)) or \
+              (len(of) == 1 and len(default_values) != 1):
+                   default_values = ( default_values, ) * len(of)
+           else:
+                assert len(default_values) == len(of)
+       self._default_values = default_values
+
+   def modify_definition(self, what):
+       what._length_of = self._length_of
+       what._length_defaults = self._default_values
+       return super().modify_definition(what)
+
+   def setter(self, container, value, key=None):
+       if self._length_defaults is Length._NO_DEFAULT:
+           raise DataValidityError(f"{self.get_path()} is the length of {' and '.join(self._length_of)}: so it is generated automatically "
+                 "and can not be set.")
+       d = self._length_defaults
+       for i,d in zip(self._length_of, self._length_defaults):
+           item = container[i]
+           if value is None or value == 0:
+              item.set(None)
+              continue
+           val = item()
+           if val is None:
+              item.set([ d ] * value, error='section')
+              continue
+           ln = len(val)
+           if ln > value:
+               item.set(val[:value], error='section')
+           else:
+               if isinstance(val, np.ndarray):
+                  extra = len(val.shape) - 1
+                  shape = ((0, value - ln),) + ((0,0),) * extra
+                  val = np.pad(val, shape)
+                  val[ln:] = d
+               else:
+                  val = val + [d] * (value - ln)
+               item.set(val, error='section')
+       container.validate_section(why='warn')
+
+   def getter(self, container, key=None):
+       val = container[self._length_of[0]]()
+       if val is None:
+           return None
+       return len(val)
+
+   def validate_section(self, section, why='set', length=False):
+       for i in self._length_of:
+            if section.is_dangerous(i):
+                continue
+            ln = section[i]
+            if ln is not None:
+                ln = len(ln)
+            if length is False:
+                length = ln
+                ii=i
+            elif length != ln:
+                DataValidityError.warn(f"Lengths of {ii} and {i} should not differ")
+
+   def validate_parse(self, data, ln):
+       err = []
+       for i in self._length_of:
+           if len(data[i]) != ln:
+                err.append(i)
+       if err:
+           raise pp.ParseException(f"Length of {' and'.join(err)} should be {ln} as stated in {self.get_path()}")
+
+   def _create_grammar(self, allow_dangerous):
+       """ Add check for the length """
+       out = super()._create_grammar()
+
+       def validate(data, ln):
+          data = MergeSectionDefinitionAdaptor(data, self.container)
+          self.validate_section(data, length=ln)
+
+       return out.set_parse_action(lambda x: ( ValidateKey(x[0]), lambda d: validate(d, x[1])  ))
 
 
 class NumpyViewDefinition(BaseGeneratedValueDefinition):
